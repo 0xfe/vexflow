@@ -2,6 +2,7 @@
 // MIT License
 
 /* eslint-disable */
+// @ts-nocheck
 
 import { Vex } from 'vex';
 import { StaveNote } from 'stavenote';
@@ -40,7 +41,7 @@ const BachDemoTests = (function () {
         return system;
       }
 
-      function id(id) {
+      function id(id: any): any {
         return registry.getElementById(id);
       }
 

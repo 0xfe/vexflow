@@ -1,6 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { QUnit, ok } from './declarations';
 import { VexFlowTests } from './vexflow_test_helpers';
 
@@ -21,7 +24,7 @@ const AccidentalTests = (function () {
     };
   }
 
-  var Accidental = {
+  const Accidental = {
     Start: function () {
       QUnit.module('Accidental');
       VexFlowTests.runTests('Accidental Padding', Accidental.formatAccidentalSpaces);
@@ -48,11 +51,11 @@ const AccidentalTests = (function () {
       VexFlowTests.runTests('Factory API', Accidental.factoryAPI);
     },
     formatAccidentalSpaces: function (options) {
-      var vf = VF.Test.makeFactory(options, 750, 280);
+      const vf = VF.Test.makeFactory(options, 750, 280);
       const context = vf.getContext();
-      var softmaxFactor = 100;
+      const softmaxFactor = 100;
       // Create the notes
-      var notes = [
+      const notes = [
         new VF.StaveNote({
           keys: ['e##/5'],
           duration: '8d',
@@ -104,15 +107,15 @@ const AccidentalTests = (function () {
           duration: 'q',
         }),
       ];
-      var beams = VF.Beam.generateBeams(notes);
-      var voice = new VF.Voice({
+      const beams = VF.Beam.generateBeams(notes);
+      const voice = new VF.Voice({
         num_beats: 4,
         beat_value: 4,
       });
       voice.addTickables(notes);
-      var formatter = new VF.Formatter({ softmaxFactor }).joinVoices([voice]);
-      var width = formatter.preCalculateMinTotalWidth([voice]);
-      var stave = new VF.Stave(10, 40, width + 20);
+      const formatter = new VF.Formatter({ softmaxFactor }).joinVoices([voice]);
+      const width = formatter.preCalculateMinTotalWidth([voice]);
+      const stave = new VF.Stave(10, 40, width + 20);
       stave.setContext(context).draw();
       formatter.format([voice], width);
       voice.draw(context, stave);
@@ -129,11 +132,11 @@ const AccidentalTests = (function () {
     },
 
     basic: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
       vf.Stave({ x: 10, y: 10, width: 550 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
           .addAccidental(0, newAccid('b'))
@@ -187,21 +190,21 @@ const AccidentalTests = (function () {
     },
 
     cautionary: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 240);
-      var stave = vf.Stave({ x: 0, y: 10, width: 780 });
-      var score = vf.EasyScore();
+      const vf = VF.Test.makeFactory(options, 800, 240);
+      const stave = vf.Stave({ x: 0, y: 10, width: 780 });
+      const score = vf.EasyScore();
 
-      var accids = Object.keys(VF.accidentalMap).filter(function (accid) {
+      const accids = Object.keys(VF.accidentalMap).filter(function (accid) {
         return accid !== '{' && accid !== '}';
       });
 
-      var notes = accids.map(function (accid) {
+      const notes = accids.map(function (accid) {
         return vf
           .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: VF.Stem.UP })
           .addAccidental(0, vf.Accidental({ type: accid }));
       });
 
-      var voice = score.voice(notes, { time: accids.length + '/4' });
+      const voice = score.voice(notes, { time: accids.length + '/4' });
 
       voice.getTickables().forEach(function (tickable) {
         tickable.modifiers
@@ -221,11 +224,11 @@ const AccidentalTests = (function () {
     },
 
     specialCases: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
       vf.Stave({ x: 10, y: 10, width: 550 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['f/4', 'd/5'], duration: '1' })
           .addAccidental(0, newAccid('#'))
@@ -282,11 +285,11 @@ const AccidentalTests = (function () {
     },
 
     basicStemDown: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
       vf.Stave({ x: 10, y: 10, width: 550 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w', stem_direction: -1 })
           .addAccidental(0, newAccid('b'))
@@ -331,7 +334,7 @@ const AccidentalTests = (function () {
     },
 
     showNotes: function (note1, note2, stave, ctx, x) {
-      var modifierContext = new Vex.Flow.ModifierContext();
+      const modifierContext = new Vex.Flow.ModifierContext();
       note1.addToModifierContext(modifierContext);
       note2.addToModifierContext(modifierContext);
 
@@ -345,21 +348,21 @@ const AccidentalTests = (function () {
     },
 
     multiVoice: function (options) {
-      var vf = VF.Test.makeFactory(options, 460, 250);
-      var newAccid = makeNewAccid(vf);
-      var stave = vf.Stave({ x: 10, y: 45, width: 420 });
-      var ctx = vf.getContext();
+      const vf = VF.Test.makeFactory(options, 460, 250);
+      const newAccid = makeNewAccid(vf);
+      const stave = vf.Stave({ x: 10, y: 45, width: 420 });
+      const ctx = vf.getContext();
 
       stave.draw();
 
-      var note1 = vf
+      let note1 = vf
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
         .addAccidental(0, newAccid('b'))
         .addAccidental(1, newAccid('n'))
         .addAccidental(2, newAccid('#'))
         .setStave(stave);
 
-      var note2 = vf
+      let note2 = vf
         .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 })
         .addAccidental(0, newAccid('b'))
         .addAccidental(1, newAccid('bb'))
@@ -401,13 +404,13 @@ const AccidentalTests = (function () {
     },
 
     microtonal: function (options) {
-      var assert = options.assert;
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
-      var ctx = vf.getContext();
+      const assert = options.assert;
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
+      const ctx = vf.getContext();
       vf.Stave({ x: 10, y: 10, width: 650 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
           .addAccidental(0, newAccid('db'))
@@ -469,13 +472,13 @@ const AccidentalTests = (function () {
     },
 
     microtonal_iranian: function (options) {
-      var assert = options.assert;
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
-      var ctx = vf.getContext();
+      const assert = options.assert;
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
+      const ctx = vf.getContext();
       vf.Stave({ x: 10, y: 10, width: 650 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
           .addAccidental(0, newAccid('k'))
@@ -534,13 +537,13 @@ const AccidentalTests = (function () {
     },
 
     sagittal: function (options) {
-      var assert = options.assert;
-      var vf = VF.Test.makeFactory(options, 700, 240);
-      var newAccid = makeNewAccid(vf);
-      var ctx = vf.getContext();
+      const assert = options.assert;
+      const vf = VF.Test.makeFactory(options, 700, 240);
+      const newAccid = makeNewAccid(vf);
+      const ctx = vf.getContext();
       vf.Stave({ x: 10, y: 10, width: 650 });
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
           .addAccidental(1, newAccid('accSagittal11MediumDiesisUp'))
@@ -636,8 +639,8 @@ const AccidentalTests = (function () {
     },
 
     automaticAccidentals0: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 200);
-      var stave = vf.Stave();
+      const vf = VF.Test.makeFactory(options, 700, 200);
+      const stave = vf.Stave();
 
       const notes = [
         { keys: ['c/4', 'c/5'], duration: '4' },
@@ -673,10 +676,10 @@ const AccidentalTests = (function () {
     },
 
     automaticAccidentals1: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 150);
-      var stave = vf.Stave().addKeySignature('Ab');
+      const vf = VF.Test.makeFactory(options, 700, 150);
+      const stave = vf.Stave().addKeySignature('Ab');
 
-      var notes = [
+      const notes = [
         { keys: ['c/4'], duration: '4' },
         { keys: ['d/4'], duration: '4' },
         { keys: ['e/4'], duration: '4' },
@@ -687,7 +690,7 @@ const AccidentalTests = (function () {
         { keys: ['c/5'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
-      var voice = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
+      const voice = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
 
       Vex.Flow.Accidental.applyAccidentals([voice], 'Ab');
 
@@ -699,10 +702,10 @@ const AccidentalTests = (function () {
     },
 
     automaticAccidentals2: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 150);
-      var stave = vf.Stave().addKeySignature('A');
+      const vf = VF.Test.makeFactory(options, 700, 150);
+      const stave = vf.Stave().addKeySignature('A');
 
-      var notes = [
+      const notes = [
         { keys: ['a/4'], duration: '4' },
         { keys: ['b/4'], duration: '4' },
         { keys: ['c#/5'], duration: '4' },
@@ -713,7 +716,7 @@ const AccidentalTests = (function () {
         { keys: ['a/5'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
-      var voice = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
+      const voice = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
 
       Vex.Flow.Accidental.applyAccidentals([voice], 'A');
 
@@ -725,10 +728,10 @@ const AccidentalTests = (function () {
     },
 
     automaticAccidentalsMultiVoiceInline: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 150);
-      var stave = vf.Stave().addKeySignature('Ab');
+      const vf = VF.Test.makeFactory(options, 700, 150);
+      const stave = vf.Stave().addKeySignature('Ab');
 
-      var notes0 = [
+      const notes0 = [
         { keys: ['c/4'], duration: '4', stem_direction: -1 },
         { keys: ['d/4'], duration: '4', stem_direction: -1 },
         { keys: ['e/4'], duration: '4', stem_direction: -1 },
@@ -739,7 +742,7 @@ const AccidentalTests = (function () {
         { keys: ['c/5'], duration: '4', stem_direction: -1 },
       ].map(vf.StaveNote.bind(vf));
 
-      var notes1 = [
+      const notes1 = [
         { keys: ['c/5'], duration: '4' },
         { keys: ['d/5'], duration: '4' },
         { keys: ['e/5'], duration: '4' },
@@ -750,9 +753,9 @@ const AccidentalTests = (function () {
         { keys: ['c/6'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
-      var voice0 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes0);
+      const voice0 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes0);
 
-      var voice1 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes1);
+      const voice1 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes1);
 
       // Ab Major
       Vex.Flow.Accidental.applyAccidentals([voice0, voice1], 'Ab');
@@ -783,10 +786,10 @@ const AccidentalTests = (function () {
     },
 
     automaticAccidentalsMultiVoiceOffset: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 150);
-      var stave = vf.Stave().addKeySignature('Cb');
+      const vf = VF.Test.makeFactory(options, 700, 150);
+      const stave = vf.Stave().addKeySignature('Cb');
 
-      var notes0 = [
+      const notes0 = [
         { keys: ['c/4'], duration: '4', stem_direction: -1 },
         { keys: ['d/4'], duration: '4', stem_direction: -1 },
         { keys: ['e/4'], duration: '4', stem_direction: -1 },
@@ -797,7 +800,7 @@ const AccidentalTests = (function () {
         { keys: ['c/5'], duration: '4', stem_direction: -1 },
       ].map(vf.StaveNote.bind(vf));
 
-      var notes1 = [
+      const notes1 = [
         { keys: ['c/5'], duration: '8' },
         { keys: ['c/5'], duration: '4' },
         { keys: ['d/5'], duration: '4' },
@@ -809,9 +812,9 @@ const AccidentalTests = (function () {
         { keys: ['c/6'], duration: '4' },
       ].map(vf.StaveNote.bind(vf));
 
-      var voice0 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes0);
+      const voice0 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes0);
 
-      var voice1 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes1);
+      const voice1 = vf.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes1);
 
       // Cb Major (All flats)
       Vex.Flow.Accidental.applyAccidentals([voice0, voice1], 'Cb');
@@ -849,7 +852,7 @@ const AccidentalTests = (function () {
         return new VF.StaveNote(noteStruct);
       }
 
-      var notes = [
+      let notes = [
         { keys: ['bb/4'], duration: '4' },
         { keys: ['bb/4'], duration: '4' },
         { keys: ['g#/4'], duration: '4' },
@@ -860,7 +863,7 @@ const AccidentalTests = (function () {
         { keys: ['g#/4'], duration: '4' },
       ].map(makeNote);
 
-      var voice = new VF.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
+      let voice = new VF.Voice().setMode(Vex.Flow.Voice.Mode.SOFT).addTickables(notes);
 
       // F Major (Bb)
       Vex.Flow.Accidental.applyAccidentals([voice], 'F');
@@ -932,15 +935,15 @@ const AccidentalTests = (function () {
     },
 
     factoryAPI: function (options) {
-      var assert = options.assert;
-      var vf = VF.Test.makeFactory(options, 700, 240);
+      const assert = options.assert;
+      const vf = VF.Test.makeFactory(options, 700, 240);
       vf.Stave({ x: 10, y: 10, width: 550 });
 
       function newAcc(type) {
         return vf.Accidental({ type: type });
       }
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' })
           .addAccidental(0, newAcc('b'))

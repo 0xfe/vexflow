@@ -23,8 +23,13 @@
       }
 
       $(function () {
-        // Support a query param ver=(build|reference|releases|etc...)
+        // Support a query param to choose which VexFlow version to load.
+        // ver=(build|reference|releases|etc...)
         // If omitted, ver defaults to 'build'.
+        // TODO: ver can also specify a version hosted on unpkg.com:
+        // ver=unpkg@3.0.9
+        // ver=unpkg@1.2.77
+        // https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
         var params = new URLSearchParams(window.location.search);
         var param_ver = params.get('ver');
         var path = param_ver || 'build';
@@ -37,24 +42,27 @@
           .attr('href', vexURL)
           .text('VexFlow Source' + info);
 
-        //   loadScript(vexURL)
-        //     .then(function () {
-        //       return loadScript(testsURL);
-        //     })
-        //     .then(function () {
-        //       // Show only failed tests.
-        //       QUnit.config.hidepassed = true;
-        //       QUnit.config.noglobals = true;
-        //       VF.Test.run();
-        //     });
-        // });
-
-        loadScript(testsURL).then(function () {
-          // Show only failed tests.
-          QUnit.config.hidepassed = true;
-          QUnit.config.noglobals = true;
-          Vex.Flow.Test.run();
-        });
+        if (path === 'build') {
+          // When loading the current version, only load vexflow-tests.js
+          loadScript(testsURL).then(function () {
+            // Show only failed tests.
+            QUnit.config.hidepassed = true;
+            QUnit.config.noglobals = true;
+            Vex.Flow.Test.run();
+          });
+        } else {
+          // When loading previous versions, load both vexflow-debug.js and vexflow-tests.js
+          loadScript(vexURL)
+            .then(function () {
+              return loadScript(testsURL);
+            })
+            .then(function () {
+              // Show only failed tests.
+              QUnit.config.hidepassed = true;
+              QUnit.config.noglobals = true;
+              VF.Test.run();
+            });
+        }
       });
     </script>
   </head>

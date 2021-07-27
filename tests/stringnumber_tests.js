@@ -1,11 +1,18 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+import { VexFlowTests } from './vexflow_test_helpers';
+
+/* eslint-disable */
+// @ts-nocheck
+
 /**
- * VexFlow - StringNumber Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * StringNumber Tests
  */
 const StringNumberTests = (function () {
   var StringNumber = {
     Start: function () {
-      var run = VF.Test.runTests;
+      const run = VexFlowTests.runTests;
 
       QUnit.module('StringNumber');
 

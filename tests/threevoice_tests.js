@@ -1,6 +1,10 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+import { VexFlowTests } from './vexflow_test_helpers';
+
 /**
- * VexFlow - Three Voices in single staff tests.
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * Three voices in single staff.
  */
 const ThreeVoicesTests = (function () {
   function concat(a, b) {
@@ -9,7 +13,7 @@ const ThreeVoicesTests = (function () {
 
   function createThreeVoicesTest(noteGroup1, noteGroup2, noteGroup3, setup) {
     return function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VexFlowTests.makeFactory(options, 600, 200);
       var stave = vf.Stave().addTrebleGlyph().addTimeSignature('4/4');
       var score = vf.EasyScore();
 
@@ -44,7 +48,7 @@ const ThreeVoicesTests = (function () {
     Start: function () {
       var run = VF.Test.runTests;
 
-      QUnit.module('Three Voice Rests');
+      QUnit.module('Three Voices');
 
       run(
         'Three Voices - #1',

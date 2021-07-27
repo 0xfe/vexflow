@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { Vex } from 'vex';
 import { VexFlowTests } from './vexflow_test_helpers';
 import { AccidentalTests } from './accidental_tests';
@@ -104,9 +107,9 @@ VexFlowTests.run = function () {
   // TupletTests.Start();
   // BoundingBoxTests.Start();
   // StrokesTests.Start();
-  // StringNumberTests.Start();
+  StringNumberTests.Start();
   RestsTests.Start();
-  // ThreeVoicesTests.Start();
+  ThreeVoicesTests.Start();
   // CurveTests.Start();
   // TextNoteTests.Start();
   // StaveLineTests.Start();
@@ -117,8 +120,8 @@ VexFlowTests.run = function () {
   // GhostNoteTests.Start();
   // StyleTests.Start();
   // FactoryTests.Start();
-  // ParserTests.Start();
-  // EasyScoreTests.Start();
+  ParserTests.Start();
+  EasyScoreTests.Start();
   RegistryTests.Start();
   BachDemoTests.Start();
   // GlyphNoteTests.Start();

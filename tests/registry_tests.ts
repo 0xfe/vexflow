@@ -1,13 +1,22 @@
-/**
- * VexFlow - Registry Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
+/* eslint-disable */
+// @ts-nocheck
+
+import { Vex } from 'vex';
+import { QUnit } from './declarations';
+
+const VF = Vex.Flow;
+const VFT = VF.Test;
+
+/**
+ * Registry Tests
+ */
 const RegistryTests = (function () {
-  var Registry = {
+  const Registry = {
     Start: function () {
       QUnit.module('Registry');
-      var VFT = Vex.Flow.Test;
 
       QUnit.test('Register and Clear', VFT.Registry.registerAndClear);
       QUnit.test('Default Registry', VFT.Registry.defaultRegistry);
@@ -15,12 +24,12 @@ const RegistryTests = (function () {
     },
 
     registerAndClear: function (assert) {
-      var registry = new VF.Registry();
-      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
+      const registry = new VF.Registry();
+      const score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       registry.register(score.notes('C4')[0], 'foobar');
 
-      var foobar = registry.getElementById('foobar');
+      const foobar = registry.getElementById('foobar');
       assert.ok(foobar);
       assert.equal(foobar.getAttribute('id'), 'foobar');
 
@@ -35,8 +44,8 @@ const RegistryTests = (function () {
     },
 
     defaultRegistry: function (assert) {
-      var registry = new VF.Registry();
-      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
+      const registry = new VF.Registry();
+      const score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
@@ -51,17 +60,17 @@ const RegistryTests = (function () {
       assert.equal(registry.getElementsByType('StaveNote').length, 0);
 
       score.notes('C5');
-      var elements = registry.getElementsByType('StaveNote');
+      const elements = registry.getElementsByType('StaveNote');
       assert.equal(elements.length, 1);
     },
 
     classes: function (assert) {
-      var registry = new VF.Registry();
-      var score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
+      const registry = new VF.Registry();
+      const score = new VF.EasyScore({ factory: VF.Factory.newFromElementId(null) });
 
       VF.Registry.enableDefaultRegistry(registry);
       score.notes('C4[id="foobar"]');
-      const note = registry.getElementById('foobar');
+      const note: any = registry.getElementById('foobar');
 
       note.addClass('foo');
       assert.ok(note.hasClass('foo'));
@@ -86,5 +95,4 @@ const RegistryTests = (function () {
 
   return Registry;
 })();
-Vex.Flow.Test.Registry = RegistryTests;
 export { RegistryTests };

@@ -3,6 +3,7 @@
 //
 // EasyScore Tests
 
+import { Vex } from 'vex';
 import { EasyScore } from '../src/easyscore';
 import { StaveNote } from '../src/stavenote';
 import { System } from '../src/system';
@@ -11,8 +12,7 @@ import { QUnit, expect, Assert } from './declarations';
 import { Articulation } from '../src/articulation';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 
-// eslint-disable-next-line
-declare const VF: any; // TODO: Remove soon!
+const VF = Vex.Flow;
 
 const EasyScoreTests = {
   Start: function (): void {

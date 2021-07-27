@@ -1,6 +1,12 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+import { VexFlowTests } from './vexflow_test_helpers';
+
+/* eslint-disable */
+
 /**
- * VexFlow - Parser Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * Parser Tests
  */
 const ParserTests = (function () {
   var TestGrammar = function () {
@@ -123,15 +129,14 @@ const ParserTests = (function () {
     assert.equal(result.errorPos, expectedPos, msg);
   }
 
-  var Parser = {
+  const Parser = {
     Start: function () {
       QUnit.module('Parser');
-      var VFT = Vex.Flow.Test;
 
-      QUnit.test('Basic', VFT.Parser.basic);
-      QUnit.test('Advanced', VFT.Parser.advanced);
-      QUnit.test('Mixed', VFT.Parser.mixed);
-      QUnit.test('Micro Score', VFT.Parser.microscore);
+      QUnit.test('Basic', VexFlowTests.Parser.basic);
+      QUnit.test('Advanced', VexFlowTests.Parser.advanced);
+      QUnit.test('Mixed', VexFlowTests.Parser.mixed);
+      QUnit.test('Micro Score', VexFlowTests.Parser.microscore);
     },
 
     basic: function (assert) {
@@ -206,5 +211,4 @@ const ParserTests = (function () {
 
   return Parser;
 })();
-Vex.Flow.Test.Parser = ParserTests;
 export { ParserTests };
