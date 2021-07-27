@@ -13,7 +13,7 @@ module.exports = (grunt) => {
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
   const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
-  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
+  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.ts');
 
   // Get current build information from git and package.json.
   const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();

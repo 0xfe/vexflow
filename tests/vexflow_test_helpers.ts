@@ -285,7 +285,7 @@ class VexFlowTests {
     }
   }
 
-  // Defined in run.js
+  // Defined in run.ts
   // static run() { ... }
 
   /** Run QUnit.test(...) for each font. */
