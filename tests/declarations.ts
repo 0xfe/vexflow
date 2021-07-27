@@ -16,6 +16,7 @@ export const deepEqual = global.deepEqual;
 export const notDeepEqual = global.notDeepEqual;
 export const strictEqual = global.strictEqual;
 export const notStrictEqual = global.notStrictEqual;
+export const throws = global.throws;
 
 // See: https://api.qunitjs.com/assert/
 // TODO: npm install @types/qunit
