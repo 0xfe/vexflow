@@ -40,6 +40,7 @@ import { StaveHairpinTests } from './stavehairpin_tests';
 import { RhythmTests } from './rhythm_tests';
 import { TupletTests } from './tuplet_tests';
 import { BoundingBoxTests } from './boundingbox_tests';
+import { BoundingBoxComputationTests } from './boundingboxcomputation_tests';
 import { StrokesTests } from './strokes_tests';
 import { StringNumberTests } from './stringnumber_tests';
 import { RestsTests } from './rests_tests';
@@ -102,6 +103,7 @@ VexFlowTests.run = function () {
   RhythmTests.Start();
   TupletTests.Start();
   BoundingBoxTests.Start();
+  BoundingBoxComputationTests.Start();
   StrokesTests.Start();
   StringNumberTests.Start();
   RestsTests.Start();

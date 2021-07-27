@@ -8,6 +8,7 @@ import { BarNote } from './barnote';
 import { Beam } from './beam';
 import { Bend } from './bend';
 import { BoundingBox } from './boundingbox';
+import { BoundingBoxComputation } from './boundingboxcomputation';
 import { ChordSymbol } from './chordsymbol';
 import { Clef } from './clef';
 import { ClefNote } from './clefnote';
@@ -87,6 +88,7 @@ export const Flow = {
   Beam,
   Bend,
   BoundingBox,
+  BoundingBoxComputation,
   ChordSymbol,
   Clef,
   ClefNote,

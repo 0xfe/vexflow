@@ -59,53 +59,22 @@ export interface GlyphMetrics {
   font: Font;
 }
 
-function processOutline(
-  outline: string[],
-  originX: number,
-  originY: number,
-  scaleX: number,
-  scaleY: number,
-  // eslint-disable-next-line
-  outlineFns: Record<string, (...args: any[]) => void>
-): void {
-  let command: string;
-  let x: number;
-  let y: number;
-  let i = 0;
+class GlyphOutline {
+  private i: number = 0;
 
-  function nextX(): number {
-    return originX + parseInt(outline[i++]) * scaleX;
-  }
-  function nextY(): number {
-    return originY + parseInt(outline[i++]) * scaleY;
-  }
-  // eslint-disable-next-line
-  function doOutline(command: string, ...args: any[]) {
-    outlineFns[command](...args);
-  }
+  constructor(private outline: string[], private originX: number, private originY: number, private scale: number) {}
 
-  while (i < outline.length) {
-    command = outline[i++];
-    switch (command) {
-      case 'm':
-      case 'l':
-        doOutline(command, nextX(), nextY());
-        break;
-      case 'q':
-        x = nextX();
-        y = nextY();
-        doOutline(command, nextX(), nextY(), x, y);
-        break;
-      case 'b':
-        x = nextX();
-        y = nextY();
-        doOutline(command, nextX(), nextY(), nextX(), nextY(), x, y);
-        break;
-      case 'z':
-        break;
-      default:
-        break;
-    }
+  done(): boolean {
+    return this.i >= this.outline.length;
+  }
+  next(): string {
+    return this.outline[this.i++];
+  }
+  nextX(): number {
+    return this.originX + parseInt(this.outline[this.i++]) * this.scale;
+  }
+  nextY(): number {
+    return this.originY - parseInt(this.outline[this.i++]) * this.scale;
   }
 }
 
@@ -259,28 +228,71 @@ export class Glyph extends Element {
   }
 
   static renderOutline(ctx: RenderContext, outline: string[], scale: number, x_pos: number, y_pos: number): void {
+    const go = new GlyphOutline(outline, x_pos, y_pos, scale);
+
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
-    processOutline(outline, x_pos, y_pos, scale, -scale, {
-      m: ctx.moveTo.bind(ctx),
-      l: ctx.lineTo.bind(ctx),
-      q: ctx.quadraticCurveTo.bind(ctx),
-      b: ctx.bezierCurveTo.bind(ctx),
-      // z: ctx.fill.bind(ctx), // ignored
-    });
+    let x, y: number;
+    while (!go.done()) {
+      switch (go.next()) {
+        case 'm':
+          ctx.moveTo(go.nextX(), go.nextY());
+          break;
+        case 'l':
+          ctx.lineTo(go.nextX(), go.nextY());
+          break;
+        case 'q':
+          x = go.nextX();
+          y = go.nextY();
+          ctx.quadraticCurveTo(go.nextX(), go.nextY(), x, y);
+          break;
+        case 'b':
+          x = go.nextX();
+          y = go.nextY();
+          ctx.bezierCurveTo(go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
+          break;
+      }
+    }
     ctx.fill();
   }
 
   static getOutlineBoundingBox(outline: string[], scale: number, x_pos: number, y_pos: number): BoundingBox {
+    const go = new GlyphOutline(outline, x_pos, y_pos, scale);
     const bboxComp = new BoundingBoxComputation();
 
-    processOutline(outline, x_pos, y_pos, scale, -scale, {
-      m: bboxComp.addPoint.bind(bboxComp),
-      l: bboxComp.addPoint.bind(bboxComp),
-      q: bboxComp.addQuadraticCurve.bind(bboxComp),
-      b: bboxComp.addBezierCurve.bind(bboxComp),
-      z: bboxComp.noOp.bind(bboxComp),
-    });
+    // (penX, penY) hold the pen position: the start of each stroke.
+    let penX: number = x_pos;
+    let penY: number = y_pos;
+    let x, y: number;
+    while (!go.done()) {
+      switch (go.next()) {
+        case 'm':
+          // Note that we don't add any points to the bounding box until a srroke is actually drawn.
+          penX = go.nextX();
+          penY = go.nextY();
+          break;
+        case 'l':
+          bboxComp.addPoint(penX, penY);
+          penX = go.nextX();
+          penY = go.nextY();
+          bboxComp.addPoint(penX, penY);
+          break;
+        case 'q':
+          x = go.nextX();
+          y = go.nextY();
+          bboxComp.addQuadraticCurve(penX, penY, go.nextX(), go.nextY(), x, y);
+          penX = x;
+          penY = y;
+          break;
+        case 'b':
+          x = go.nextX();
+          y = go.nextY();
+          bboxComp.addBezierCurve(penX, penY, go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
+          penX = x;
+          penY = y;
+          break;
+      }
+    }
 
     return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
