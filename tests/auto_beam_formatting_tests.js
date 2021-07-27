@@ -4,10 +4,6 @@
  */
 
 const AutoBeamFormattingTests = (function () {
-  function concat(a, b) {
-    return a.concat(b);
-  }
-
   var AutoBeamFormatting = {
     Start: function () {
       var runTests = VF.Test.runTests;

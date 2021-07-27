@@ -114,7 +114,7 @@ VexFlowTests.run = function () {
   RestsTests.Start();
   ThreeVoicesTests.Start();
   */
-  // CurveTests.Start();
+  CurveTests.Start();
   // TextNoteTests.Start();
   // StaveLineTests.Start();
   // OrnamentTests.Start();
@@ -129,8 +129,8 @@ VexFlowTests.run = function () {
   EasyScoreTests.Start();
   RegistryTests.Start();
   BachDemoTests.Start();
-  */
   GlyphNoteTests.Start();
+  */
 };
 
 export default Vex;

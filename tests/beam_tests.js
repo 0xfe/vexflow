@@ -1,13 +1,11 @@
+import { concat } from './vexflow_test_helpers';
+
 /**
  * VexFlow - Beam Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const BeamTests = (function () {
   var runTests = VF.Test.runTests;
-
-  function concat(a, b) {
-    return a.concat(b);
-  }
 
   var Beam = {
     Start: function () {

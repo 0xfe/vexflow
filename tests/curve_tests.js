@@ -1,15 +1,16 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+import { VexFlowTests } from './vexflow_test_helpers';
+
 /**
  * VexFlow - Curve Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const CurveTests = (function () {
-  function concat(a, b) {
-    return a.concat(b);
-  }
-
   function createTest(beamGroup1, beamGroup2, setupCurves) {
     return function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 200);
+      var vf = VexFlowTests.makeFactory(options, 350, 200);
       var stave = vf.Stave({ y: 50 });
       var score = vf.EasyScore();
 
@@ -32,7 +33,7 @@ const CurveTests = (function () {
 
   return {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('Curve');
 
@@ -145,5 +146,5 @@ const CurveTests = (function () {
     },
   };
 })();
-VF.Test.Curve = CurveTests;
+
 export { CurveTests };

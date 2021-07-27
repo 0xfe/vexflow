@@ -4,14 +4,10 @@
 import { Vex } from 'vex';
 import { QUnit, ok } from './declarations';
 import { StaveNote } from 'stavenote';
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Factory } from 'factory';
 
 const VF = Vex.Flow;
-
-function concat(a: StaveNote[], b: StaveNote[]) {
-  return a.concat(b);
-}
 
 const BachDemoTests = {
   Start: function () {
