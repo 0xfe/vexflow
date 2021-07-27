@@ -27,9 +27,14 @@ if (process.argv.length >= 5) {
   }
 }
 
-// TODO: After vexflow-tests.js is fully migrated to TS, we will need to remove vexflow-debug.js from here.
-global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
-require(`${scriptDir}/vexflow-tests.js`);
+// TODO: Need a flag to determine whether to load BOTH JS files, or only one JS file.
+
+// THE OLD WAY
+// global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
+// require(`${scriptDir}/vexflow-tests.js`);
+
+// THE NEW WAY
+global['Vex'] = require(`${scriptDir}/vexflow-tests.js`);
 
 const VF = Vex.Flow;
 VF.shims = {
