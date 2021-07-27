@@ -108,9 +108,9 @@ VexFlowTests.run = function () {
   // RhythmTests.Start();
   // TupletTests.Start();
   // BoundingBoxTests.Start();
-  // StrokesTests.Start();
-  StringNumberTests.Start();
+  StrokesTests.Start();
   /*
+  StringNumberTests.Start();
   RestsTests.Start();
   ThreeVoicesTests.Start();
   */
