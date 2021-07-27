@@ -134,10 +134,10 @@ const ParserTests = (function () {
     Start: function () {
       QUnit.module('Parser');
 
-      QUnit.test('Basic', VexFlowTests.Parser.basic);
-      QUnit.test('Advanced', VexFlowTests.Parser.advanced);
-      QUnit.test('Mixed', VexFlowTests.Parser.mixed);
-      QUnit.test('Micro Score', VexFlowTests.Parser.microscore);
+      QUnit.test('Basic', Parser.basic);
+      QUnit.test('Advanced', Parser.advanced);
+      QUnit.test('Mixed', Parser.mixed);
+      QUnit.test('Micro Score', Parser.microscore);
     },
 
     basic: function (assert) {

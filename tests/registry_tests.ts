@@ -5,10 +5,9 @@
 // @ts-nocheck
 
 import { Vex } from 'vex';
-import { QUnit } from './declarations';
+import { QUnit, test } from './declarations';
 
 const VF = Vex.Flow;
-const VFT = VF.Test;
 
 /**
  * Registry Tests
@@ -17,10 +16,9 @@ const RegistryTests = (function () {
   const Registry = {
     Start: function () {
       QUnit.module('Registry');
-
-      QUnit.test('Register and Clear', VFT.Registry.registerAndClear);
-      QUnit.test('Default Registry', VFT.Registry.defaultRegistry);
-      QUnit.test('Multiple Classes', VFT.Registry.classes);
+      test('Register and Clear', Registry.registerAndClear);
+      test('Default Registry', Registry.defaultRegistry);
+      test('Multiple Classes', Registry.classes);
     },
 
     registerAndClear: function (assert) {
@@ -95,4 +93,5 @@ const RegistryTests = (function () {
 
   return Registry;
 })();
+
 export { RegistryTests };
