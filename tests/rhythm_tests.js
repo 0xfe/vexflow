@@ -1,3 +1,5 @@
+import { StaveNoteTests } from './stavenote_tests';
+
 /**
  * VexFlow - Rhythm Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -20,7 +22,7 @@ const RhythmTests = (function () {
       stave.setContext(ctx);
       stave.draw();
 
-      var showNote = VF.Test.StaveNote.showNote;
+      var showNote = StaveNoteTests.showNote;
       var notes = [
         { keys: ['b/4'], duration: 'ws', stem_direction: -1 },
         { keys: ['b/4'], duration: 'hs', stem_direction: -1 },
