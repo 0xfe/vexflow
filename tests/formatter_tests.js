@@ -20,6 +20,7 @@ const FormatterTests = (function () {
     Start: () => {
       QUnit.module('Formatter');
       test('TickContext Building', Formatter.buildTickContexts);
+      runSVG('Notehead padding', Formatter.noteHeadPadding);
       runSVG('Justification and alignment with accidentals', Formatter.accidentalJustification);
       runSVG('Long measure taking full space', Formatter.longMeasureProblems);
       runSVG('Vertical alignment - few unaligned beats', Formatter.unalignedNoteDurations);
@@ -103,6 +104,44 @@ const FormatterTests = (function () {
         tickables1[1].getX() < tickables2[1].getX(),
         'Second note of voice 2 is to the right of the second note of voice 1'
       );
+    },
+    noteHeadPadding: (options) => {
+      var registry = new VF.Registry();
+      VF.Registry.enableDefaultRegistry(registry);
+      var vf = VF.Test.makeFactory(options, 600, 300);
+      var score = vf.EasyScore();
+      score.set({
+        time: '9/8',
+      });
+      const notes1 = score.notes('(d5 f5)/8,(c5 e5)/8,(d5 f5)/8,(c5 e5)/2.');
+      const beams = [];
+      beams.push(new VF.Beam(notes1.slice(0, 3), true));
+      const voice1 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      const notes2 = score.notes('(g4 an4)/2.,(g4 a4)/4.', {
+        clef: 'treble',
+      });
+      const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+      voice2.addTickables(notes2);
+      voice1.addTickables(notes1);
+      var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+      const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
+      formatter.format([voice1, voice2], width);
+      const stave1 = vf.Stave({
+        y: 50,
+        width: width + VF.Stave.defaultPadding,
+      });
+      const stave2 = vf.Stave({
+        y: 150,
+        width: width + VF.Stave.defaultPadding,
+      });
+      stave1.draw();
+      stave2.draw();
+      voice1.draw(vf.context, stave1);
+      voice2.draw(vf.context, stave2);
+      beams.forEach((b) => {
+        b.setContext(vf.getContext()).draw();
+      });
+      ok(true);
     },
     longMeasureProblems: (options) => {
       var registry = new VF.Registry();
