@@ -108,8 +108,8 @@ VexFlowTests.run = function () {
   // RhythmTests.Start();
   // TupletTests.Start();
   // BoundingBoxTests.Start();
-  StrokesTests.Start();
   /*
+  StrokesTests.Start();
   StringNumberTests.Start();
   RestsTests.Start();
   ThreeVoicesTests.Start();
@@ -130,7 +130,7 @@ VexFlowTests.run = function () {
   RegistryTests.Start();
   BachDemoTests.Start();
   */
-  // GlyphNoteTests.Start();
+  GlyphNoteTests.Start();
 };
 
 export default Vex;
