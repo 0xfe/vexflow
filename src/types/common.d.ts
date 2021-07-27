@@ -100,6 +100,6 @@ export interface RenderContext {
 export interface TieNotes {
   first_note: Note;
   last_note: Note;
-  first_indices: number[];
-  last_indices: number[];
+  first_indices?: number[];
+  last_indices?: number[];
 }

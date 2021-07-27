@@ -8,6 +8,7 @@ import { Font } from '../src/font';
 import { ContextBuilder, Renderer } from '../src/renderer';
 import { RenderContext } from '../src/types/common';
 import { Assert } from './declarations';
+import { Factory } from 'factory';
 
 /* eslint-disable */
 declare var global: any;
@@ -227,7 +228,7 @@ class VexFlowTests {
     width: number = 450,
     height: number = 140
   ): any /* Factory */ /* eslint-disable-line */ {
-    return new VF.Factory({
+    return new Factory({
       renderer: {
         elementId: options.elementId,
         backend: options.backend,

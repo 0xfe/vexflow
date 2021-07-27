@@ -504,7 +504,7 @@ export class Stave extends Element {
     return this;
   }
 
-  addKeySignature(keySpec: string, cancelKeySpec: string, position?: number): this {
+  addKeySignature(keySpec: string, cancelKeySpec?: string, position?: number): this {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
     }

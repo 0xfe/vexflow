@@ -16,18 +16,18 @@ export class TabTie extends StaveTie {
     return new TabTie(notes, 'P');
   }
 
+  /**
+   * @param notes is a struct that has:
+   *  {
+   *    first_note: Note,
+   *    last_note: Note,
+   *    first_indices: [n1, n2, n3],
+   *    last_indices: [n1, n2, n3]
+   *  }
+   *
+   * @param text
+   */
   constructor(notes: TieNotes, text?: string) {
-    /**
-     * TieNotes is a struct that has:
-     *
-     *  {
-     *    first_note: Note,
-     *    last_note: Note,
-     *    first_indices: [n1, n2, n3],
-     *    last_indices: [n1, n2, n3]
-     *  }
-     *
-     **/
     super(notes, text);
     this.setAttribute('type', 'TabTie');
 
@@ -36,7 +36,5 @@ export class TabTie extends StaveTie {
     this.render_options.y_shift = 3;
 
     this.direction = -1; // Tab tie's are always face up.
-
-    this.setNotes(notes);
   }
 }

@@ -11,8 +11,8 @@ export interface CurveOptions {
   thickness: number;
   x_shift: number;
   y_shift: number;
-  position: number;
-  position_end: number;
+  position: string | number;
+  position_end: string | number;
   invert: boolean;
   cps: { x: number; y: number }[];
 }

@@ -1,11 +1,19 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+// @ts-nocheck
+
+import { Vex } from 'vex';
+import { QUnit, ok } from './declarations';
+
 /**
- * VexFlow - Stroke Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * Stroke Tests
  */
 const StrokesTests = (function () {
-  var Strokes = {
+  const Strokes = {
     Start: function () {
-      var run = VF.Test.runTests;
+      const run = VF.Test.runTests;
 
       QUnit.module('Strokes');
 
@@ -17,13 +25,13 @@ const StrokesTests = (function () {
     },
 
     brushRollRasquedo: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
-      var score = vf.EasyScore();
+      const vf = VF.Test.makeFactory(options, 600, 200);
+      const score = vf.EasyScore();
 
       // bar 1
-      var stave1 = vf.Stave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
+      const stave1 = vf.Stave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
 
-      var notes1 = score.notes('(a3 e4 a4)/4, (c4 e4 g4), (c4 e4 g4), (c4 e4 g4)', { stem: 'up' });
+      const notes1 = score.notes('(a3 e4 a4)/4, (c4 e4 g4), (c4 e4 g4), (c4 e4 g4)', { stem: 'up' });
 
       notes1[0].addStroke(0, new VF.Stroke(1));
       notes1[1]
@@ -34,16 +42,16 @@ const StrokesTests = (function () {
       notes1[2].addStroke(0, new VF.Stroke(1));
       notes1[3].addStroke(0, new VF.Stroke(2));
 
-      var voice1 = score.voice(notes1);
+      const voice1 = score.voice(notes1);
 
       vf.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
       // bar 2
-      var stave2 = vf
+      const stave2 = vf
         .Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 })
         .setEndBarType(VF.Barline.type.DOUBLE);
 
-      var notes2 = score.notes('(c4 d4 g4)/4, (c4 d4 g4), (c4 d4 g4), (c4 d4 a4)', { stem: 'up' });
+      const notes2 = score.notes('(c4 d4 g4)/4, (c4 d4 g4), (c4 d4 g4), (c4 d4 a4)', { stem: 'up' });
 
       notes2[0].addStroke(0, new VF.Stroke(3));
       notes2[1].addStroke(0, new VF.Stroke(4));
@@ -54,7 +62,7 @@ const StrokesTests = (function () {
         .addAccidental(1, vf.Accidental({ type: 'bb' }))
         .addAccidental(2, vf.Accidental({ type: 'bb' }));
 
-      var voice2 = score.voice(notes2);
+      const voice2 = score.voice(notes2);
 
       vf.Formatter().joinVoices([voice2]).formatToStave([voice2], stave2);
 
@@ -64,21 +72,21 @@ const StrokesTests = (function () {
     },
 
     arpeggioDirectionless: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 200);
-      var score = vf.EasyScore();
+      const vf = VF.Test.makeFactory(options, 700, 200);
+      const score = vf.EasyScore();
 
       // bar 1
-      var stave1 = vf.Stave({ x: 100, width: 500 }).setEndBarType(VF.Barline.type.DOUBLE);
+      const stave1 = vf.Stave({ x: 100, width: 500 }).setEndBarType(VF.Barline.type.DOUBLE);
 
-      var notes1 = score.notes('(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)', { stem: 'up' });
+      const notes1 = score.notes('(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)', { stem: 'up' });
 
-      var graceNotes = [
+      const graceNotes = [
         { keys: ['e/4'], duration: '32' },
         { keys: ['f/4'], duration: '32' },
         { keys: ['g/4'], duration: '32' },
       ].map(vf.GraceNote.bind(vf));
 
-      var graceNoteGroup = vf.GraceNoteGroup({ notes: graceNotes, slur: false });
+      const graceNoteGroup = vf.GraceNoteGroup({ notes: graceNotes, slur: false });
       graceNoteGroup.beamNotes();
 
       notes1[0].addStroke(0, new VF.Stroke(7));
@@ -99,7 +107,7 @@ const StrokesTests = (function () {
         0
       );
 
-      var voice1 = score.voice(notes1);
+      const voice1 = score.voice(notes1);
 
       vf.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
@@ -109,11 +117,11 @@ const StrokesTests = (function () {
     },
 
     multiVoice: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 200);
-      var score = vf.EasyScore();
-      var stave = vf.Stave();
+      const vf = VF.Test.makeFactory(options, 500, 200);
+      const score = vf.EasyScore();
+      const stave = vf.Stave();
 
-      var notes1 = score.notes('(c4 e4 g4)/4, (c4 e4 g4), (c4 d4 a4), (c4 d4 a4)', { stem: 'up' });
+      const notes1 = score.notes('(c4 e4 g4)/4, (c4 e4 g4), (c4 d4 a4), (c4 d4 a4)', { stem: 'up' });
 
       notes1[0].addStroke(0, new VF.Stroke(5));
       notes1[1]
@@ -123,12 +131,12 @@ const StrokesTests = (function () {
       notes1[2].addStroke(0, new VF.Stroke(2));
       notes1[3].addStroke(0, new VF.Stroke(1));
 
-      var notes2 = score.notes('e3/8, e3, e3, e3, e3, e3, e3, e3', { stem: 'down' });
+      const notes2 = score.notes('e3/8, e3, e3, e3, e3, e3, e3, e3', { stem: 'down' });
 
       vf.Beam({ notes: notes2.slice(0, 4) });
       vf.Beam({ notes: notes2.slice(4, 8) });
 
-      var voices = [notes1, notes2].map(score.voice.bind(score));
+      const voices = [notes1, notes2].map(score.voice.bind(score));
 
       vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -138,24 +146,24 @@ const StrokesTests = (function () {
     },
 
     multiNotationAndTab: function (options) {
-      var vf = VF.Test.makeFactory(options, 400, 275);
-      var score = vf.EasyScore();
-      var stave = vf.Stave().addClef('treble');
+      const vf = VF.Test.makeFactory(options, 400, 275);
+      const score = vf.EasyScore();
+      const stave = vf.Stave().addClef('treble');
 
       // notation upper voice notes
-      var notes1 = score.notes('(g4 b4 e5)/4, (g4 b4 e5), (g4 b4 e5), (g4 b4 e5)', { stem: 'up' });
+      const notes1 = score.notes('(g4 b4 e5)/4, (g4 b4 e5), (g4 b4 e5), (g4 b4 e5)', { stem: 'up' });
 
       notes1[0].addStroke(0, new VF.Stroke(3, { all_voices: false }));
       notes1[1].addStroke(0, new VF.Stroke(6));
       notes1[2].addStroke(0, new VF.Stroke(2, { all_voices: false }));
       notes1[3].addStroke(0, new VF.Stroke(1));
 
-      var notes2 = score.notes('g3/4, g3, g3, g3', { stem: 'down' });
+      const notes2 = score.notes('g3/4, g3, g3, g3', { stem: 'down' });
 
       vf.TabStave({ y: 100 }).addClef('tab').setNoteStartX(stave.getNoteStartX());
 
       // tablature upper voice notes
-      var tabNotes1 = [
+      const tabNotes1 = [
         vf.TabNote({
           positions: [
             { str: 3, fret: 0 },
@@ -195,14 +203,14 @@ const StrokesTests = (function () {
       tabNotes1[2].addStroke(0, new VF.Stroke(2, { all_voices: false }));
       tabNotes1[3].addStroke(0, new VF.Stroke(1));
 
-      var tabNotes2 = [
+      const tabNotes2 = [
         vf.TabNote({ positions: [{ str: 6, fret: 3 }], duration: '4' }),
         vf.TabNote({ positions: [{ str: 6, fret: 3 }], duration: '4' }),
         vf.TabNote({ positions: [{ str: 6, fret: 3 }], duration: '4' }),
         vf.TabNote({ positions: [{ str: 6, fret: 3 }], duration: '4' }),
       ];
 
-      var voices = [notes1, notes2, tabNotes1, tabNotes2].map(score.voice.bind(score));
+      const voices = [notes1, notes2, tabNotes1, tabNotes2].map(score.voice.bind(score));
 
       vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -212,10 +220,10 @@ const StrokesTests = (function () {
     },
 
     drawTabStrokes: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
-      var stave1 = vf.TabStave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
+      const vf = VF.Test.makeFactory(options, 600, 200);
+      const stave1 = vf.TabStave({ width: 250 }).setEndBarType(VF.Barline.type.DOUBLE);
 
-      var tabNotes1 = [
+      const tabNotes1 = [
         vf.TabNote({
           positions: [
             { str: 2, fret: 8 },
@@ -258,14 +266,14 @@ const StrokesTests = (function () {
       tabNotes1[2].addStroke(0, new VF.Stroke(3));
       tabNotes1[3].addStroke(0, new VF.Stroke(4));
 
-      var tabVoice1 = vf.Voice().addTickables(tabNotes1);
+      const tabVoice1 = vf.Voice().addTickables(tabNotes1);
 
       vf.Formatter().joinVoices([tabVoice1]).formatToStave([tabVoice1], stave1);
 
       // bar 2
-      var stave2 = vf.TabStave({ x: stave1.width + stave1.x, width: 300 }).setEndBarType(VF.Barline.type.DOUBLE);
+      const stave2 = vf.TabStave({ x: stave1.width + stave1.x, width: 300 }).setEndBarType(VF.Barline.type.DOUBLE);
 
-      var tabNotes2 = [
+      const tabNotes2 = [
         vf.TabNote({
           positions: [
             { str: 2, fret: 7 },
@@ -290,7 +298,7 @@ const StrokesTests = (function () {
       tabNotes2[0].addStroke(0, new VF.Stroke(6));
       tabNotes2[1].addStroke(0, new VF.Stroke(5));
 
-      var tabVoice2 = vf.Voice().addTickables(tabNotes2);
+      const tabVoice2 = vf.Voice().addTickables(tabNotes2);
 
       vf.Formatter().joinVoices([tabVoice2]).formatToStave([tabVoice2], stave2);
 
@@ -300,11 +308,11 @@ const StrokesTests = (function () {
     },
 
     notesWithTab: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 300);
+      const vf = VF.Test.makeFactory(options, 500, 300);
 
-      var stave = vf.Stave({ x: 15, y: 40, width: 450 }).addClef('treble');
+      const stave = vf.Stave({ x: 15, y: 40, width: 450 }).addClef('treble');
 
-      var notes = [
+      const notes = [
         vf
           .StaveNote({ keys: ['b/4', 'd/5', 'g/5'], stem_direction: -1, duration: '4' })
           .addAccidental(1, vf.Accidental({ type: 'b' }))
@@ -321,12 +329,12 @@ const StrokesTests = (function () {
           .addAccidental(4, vf.Accidental({ type: '#' })),
       ];
 
-      var tabstave = vf
+      const tabstave = vf
         .TabStave({ x: stave.x, y: 140, width: 450 })
         .addClef('tab')
         .setNoteStartX(stave.getNoteStartX());
 
-      var tabNotes = [
+      const tabNotes = [
         vf
           .TabNote({
             positions: [
@@ -414,9 +422,9 @@ const StrokesTests = (function () {
         type: 'single',
       });
 
-      var voice = vf.Voice().addTickables(notes);
-      var tabVoice = vf.Voice().addTickables(tabNotes);
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const voice = vf.Voice().addTickables(notes);
+      const tabVoice = vf.Voice().addTickables(tabNotes);
+      const beams = VF.Beam.applyAndGetBeams(voice);
 
       vf.Formatter().joinVoices([voice]).joinVoices([tabVoice]).formatToStave([voice, tabVoice], stave);
 
