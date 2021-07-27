@@ -6,11 +6,12 @@
   `tools/visual_regression.sh`.
 */
 const { JSDOM } = require('jsdom');
-const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
-window = dom.window;
-document = dom.window.document;
-
 const fs = require('fs');
+
+const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
+global.window = dom.window;
+global.document = dom.window.document;
+
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
 // Optional: 3rd argument specifies which font stacks to test. Defaults to all.
@@ -27,30 +28,29 @@ if (process.argv.length >= 5) {
   }
 }
 
-// TODO: Need a flag to determine whether to load BOTH JS files, or only one JS file.
+if (scriptDir.includes('build')) {
+  // THE NEW WAY loads a single JS file.
+  global.Vex = require(`${scriptDir}/vexflow-tests.js`);
+} else {
+  // THE OLD WAY loads two JS files.
+  global.Vex = require(`${scriptDir}/vexflow-debug.js`);
+  require(`${scriptDir}/vexflow-tests.js`);
+}
 
-// THE OLD WAY
-// global['Vex'] = require(`${scriptDir}/vexflow-debug.js`);
-// require(`${scriptDir}/vexflow-tests.js`);
-
-// THE NEW WAY
-global['Vex'] = require(`${scriptDir}/vexflow-tests.js`);
-
-const VF = Vex.Flow;
-VF.shims = {
+Vex.Flow.shims = {
   fs,
   process,
 };
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.
-VF.Test.RUN_CANVAS_TESTS = false;
-VF.Test.RUN_SVG_TESTS = false;
-VF.Test.RUN_NODE_TESTS = true;
-VF.Test.NODE_IMAGEDIR = imageDir;
-VF.Test.NODE_FONT_STACKS = fontStacksToTest;
+Vex.Flow.Test.RUN_CANVAS_TESTS = false;
+Vex.Flow.Test.RUN_SVG_TESTS = false;
+Vex.Flow.Test.RUN_NODE_TESTS = true;
+Vex.Flow.Test.NODE_IMAGEDIR = imageDir;
+Vex.Flow.Test.NODE_FONT_STACKS = fontStacksToTest;
 
 // Create the image directory if it doesn't exist.
-fs.mkdirSync(VF.Test.NODE_IMAGEDIR, { recursive: true });
+fs.mkdirSync(Vex.Flow.Test.NODE_IMAGEDIR, { recursive: true });
 
 // Run all tests.
-VF.Test.run();
+Vex.Flow.Test.run();

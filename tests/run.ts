@@ -65,9 +65,11 @@ import { BachDemoTests } from './bach_tests';
 import { GlyphNoteTests } from './glyphnote_tests';
 
 VexFlowTests.run = function () {
+  /*
   AccidentalTests.Start();
   StaveNoteTests.Start();
   VoiceTests.Start();
+  */
   // NoteHeadTests.Start();
   // TabNoteTests.Start();
   // TickContextTests.Start();
@@ -108,8 +110,10 @@ VexFlowTests.run = function () {
   // BoundingBoxTests.Start();
   // StrokesTests.Start();
   StringNumberTests.Start();
+  /*
   RestsTests.Start();
   ThreeVoicesTests.Start();
+  */
   // CurveTests.Start();
   // TextNoteTests.Start();
   // StaveLineTests.Start();
@@ -120,10 +124,12 @@ VexFlowTests.run = function () {
   // GhostNoteTests.Start();
   // StyleTests.Start();
   // FactoryTests.Start();
+  /*
   ParserTests.Start();
   EasyScoreTests.Start();
   RegistryTests.Start();
   BachDemoTests.Start();
+  */
   // GlyphNoteTests.Start();
 };
 

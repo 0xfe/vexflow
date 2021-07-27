@@ -251,7 +251,9 @@ const StringNumberTests = (function () {
       // Position string number 6 beneath the strum arrow: left (15) and down (18)
       notes2[4].addModifier(vf.StringNumber({ number: '6', position: 'left' }).setOffsetX(15).setOffsetY(18), 0);
 
-      const voices = [notes1, notes2].map(score.voice.bind(score));
+      // Important Note: notes2 must come first, otherwise ledger lines from notes2 will be drawn on top of notes from notes1!
+      // BUG: VexFlow draws TWO ledger lines for middle C, because both notes1 and notes2 require the middle C ledger line.
+      const voices = [notes2, notes1].map(score.voice.bind(score));
 
       vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 

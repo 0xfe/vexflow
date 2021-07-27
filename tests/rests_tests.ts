@@ -387,7 +387,7 @@ const RestsTests = {
     const beam2_1 = new VF.Beam(notes2.slice(0, 4));
     const beam2_2 = new VF.Beam(notes2.slice(4, 8));
 
-    // Note: we need to draw voice2 first, since voice2 generates ledger lines.
+    // Important Note: we need to draw voice2 first, since voice2 generates ledger lines.
     // Otherwise, the ledger lines will be drawn on top of middle C notes in voice1.
     voice2.draw(ctx);
     voice1.draw(ctx);
