@@ -27,9 +27,12 @@ export interface SystemParams {
 
 /**
  * Formatting for systems created/drawn from factory:
+ *
  * If width is provided, the system will use the specified width.
+ *
  * If noJustification flag is 'true', there is no justification between voices
  * Otherwise, autoWidth defaults to true.
+ *
  * If autowidth is true, the system uses format.preCalculateMinWidth
  * for the width of all voices, and default stave padding
  */
@@ -122,11 +125,17 @@ export class System extends Element {
    * Add stave to the system.
    *
    * Examples:
+   *
    *  (one voice)
+   *
    * `system.addStave({voices: [score.voice(score.notes('C#5/q, B4, A4, G#4'))]});`
+   *
    *  (two voices)
+   *
    * `system.addStave({voices: [`
+   *
    *  `score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),`
+   *
    *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});`
    */
   addStave(paramsItems: Partial<SystemParams>): Stave {

@@ -96,7 +96,9 @@ export class Factory {
    * Constructor.
    *
    * Example:
+   *
    * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
+   *
    * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
    */
   constructor(options: Partial<FactoryOptions> = {}) {
@@ -127,7 +129,9 @@ export class Factory {
    * Static simplified function to access constructor without providing FactoryOptions
    *
    * Example:
+   *
    * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
+   *
    * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
    */
   static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
@@ -660,11 +664,13 @@ export class Factory {
    * Creates EasyScore. Normally the first step after constructing a factory.
    *
    * Example:
+   *
    * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
+   *
    * `const score: EasyScore = vf.EasyScore();`
    * @param params.factory not required
-   * @param params.builder TODO @0xfe
-   * @param params.commitHooks TODO @0xfe
+   * @param params.builder instance of Builder
+   * @param params.commitHooks function to call after a note element is created
    * @param params.throwOnError throw error in case of parsing error
    */
   EasyScore(params: EasyScoreOptions = {}): EasyScore {

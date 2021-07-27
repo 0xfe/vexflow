@@ -527,6 +527,7 @@ export class Stave extends Element {
    * Add a clef to the stave.
    *
    * Example:
+   *
    * stave.addClef('treble')
    * @param clef clef (treble|bass|...) see {@link Clef.types}
    * @param size
@@ -554,6 +555,7 @@ export class Stave extends Element {
    * Add a time signature to the stave
    *
    * Example:
+   *
    * `stave.addTimeSignature('4/4');`
    * @param timeSpec time signature specification `(C\||C|\d\/\d)`
    * @param customPadding

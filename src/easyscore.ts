@@ -436,7 +436,8 @@ export class EasyScore {
     };
   }
 
-  /** Set the Score defaults (`Type` must be set appropriately to avoid Errors when adding Staves).
+  /**
+   * Set the Score defaults (`Type` must be set appropriately to avoid Errors when adding Staves).
    * @param defaults.clef default clef ( treble | bass ...) see {@link Clef.types}
    * @param defaults.type default time signature ( 4/4 | 9/8 ...)
    * @param defaults.stem default stem arrangement (auto | up | down)
