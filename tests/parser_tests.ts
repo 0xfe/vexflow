@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { VexFlowTests } from './vexflow_test_helpers';
-
 /* eslint-disable */
+// @ts-nocheck
+
+import { VexFlowTests } from './vexflow_test_helpers';
 
 /**
  * Parser Tests
  */
 const ParserTests = (function () {
-  var TestGrammar = function () {
+  const TestGrammar = function () {
     return {
       begin: function () {
         return this.BEGIN;
@@ -124,7 +125,7 @@ const ParserTests = (function () {
     }
   }
 
-  function assertParseFail(assert, result, expectedPos, msg) {
+  function assertParseFail(assert, result, expectedPos, msg): void {
     assert.notOk(result.success, msg);
     assert.equal(result.errorPos, expectedPos, msg);
   }
@@ -140,14 +141,14 @@ const ParserTests = (function () {
     },
 
     basic: function (assert) {
-      var grammar = new TestGrammar();
-      var parser = new VF.Parser(grammar);
+      const grammar = new TestGrammar();
+      const parser = new VF.Parser(grammar);
 
       grammar.BEGIN = function () {
         return { expect: [grammar.LITTLELINE, grammar.EOL] };
       };
 
-      var mustPass = ['first, second', 'first,second', 'first', 'first,second, third'];
+      const mustPass = ['first, second', 'first,second', 'first', 'first,second, third'];
       mustPass.forEach(function (line) {
         assert.equal(parser.parse(line).success, true, line);
       });
@@ -159,13 +160,13 @@ const ParserTests = (function () {
     },
 
     advanced: function (assert) {
-      var grammar = new TestGrammar();
-      var parser = new VF.Parser(grammar);
+      const grammar = new TestGrammar();
+      const parser = new VF.Parser(grammar);
 
       grammar.BEGIN = function () {
         return { expect: [grammar.BIGLINE, grammar.EOL] };
       };
-      var mustPass = ['{first}', '{first!}', '{first,second}', '{first,second!}', '{first,second,third!}'];
+      const mustPass = ['{first}', '{first!}', '{first,second}', '{first,second!}', '{first,second,third!}'];
 
       mustPass.forEach(function (line) {
         assert.equal(parser.parse(line).success, true, line);
@@ -177,10 +178,10 @@ const ParserTests = (function () {
     },
 
     mixed: function (assert) {
-      var grammar = new TestGrammar();
-      var parser = new VF.Parser(grammar);
+      const grammar = new TestGrammar();
+      const parser = new VF.Parser(grammar);
 
-      var mustPass = ['{first,second,third!}', 'first, second'];
+      const mustPass = ['{first,second,third!}', 'first, second'];
       mustPass.forEach(function (line) {
         assert.equal(parser.parse(line).success, true, line);
       });
@@ -188,17 +189,17 @@ const ParserTests = (function () {
     },
 
     microscore: function (assert) {
-      var grammar = new MicroScoreGrammar();
-      var parser = new VF.Parser(grammar);
+      const grammar = new MicroScoreGrammar();
+      const parser = new VF.Parser(grammar);
 
-      var mustPass = [
+      const mustPass = [
         '40 42 44 45 47 49 51 52', // Individual Notes: C Major Scale
         '[40.44.47] [45.49.52] [47.51.54] [49.52.56]', // Chord Progression: C-major F-major G-major A-minor
         '40 [40.44.47] 45 47 [44.47.51]', // Mixed Notes and Chords: C4 [Cmajor] F4 G4 [Eminor]
       ];
 
       mustPass.forEach(function (line) {
-        var result = parser.parse(line);
+        const result = parser.parse(line);
         assert.equal(result.success, true, line);
         assert.equal(result.matches.length, 3, line);
       });
@@ -211,4 +212,5 @@ const ParserTests = (function () {
 
   return Parser;
 })();
+
 export { ParserTests };

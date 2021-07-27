@@ -1,16 +1,17 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { VexFlowTests } from './vexflow_test_helpers';
-
 /* eslint-disable */
 // @ts-nocheck
+
+import { VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
 
 /**
  * StringNumber Tests
  */
 const StringNumberTests = (function () {
-  var StringNumber = {
+  const StringNumber = {
     Start: function () {
       const run = VexFlowTests.runTests;
 
@@ -23,13 +24,13 @@ const StringNumberTests = (function () {
     },
 
     drawMultipleMeasures: function (options) {
-      var vf = VF.Test.makeFactory(options, 775, 200);
-      var score = vf.EasyScore();
+      const vf = VF.Test.makeFactory(options, 775, 200);
+      const score = vf.EasyScore();
 
       // bar 1
-      var stave1 = vf.Stave({ width: 300 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave1 = vf.Stave({ width: 300 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
 
-      var notes1 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4', { stem: 'down' });
+      const notes1 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4', { stem: 'down' });
 
       notes1[0]
         .addModifier(vf.StringNumber({ number: '5', position: 'right' }), 0)
@@ -58,16 +59,16 @@ const StringNumberTests = (function () {
         .addModifier(vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6), 1)
         .addModifier(vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6), 2);
 
-      var voice1 = score.voice(notes1);
+      const voice1 = score.voice(notes1);
 
       vf.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
       // bar 2 - juxtaposing second bar next to first bar
-      var stave2 = vf
+      const stave2 = vf
         .Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 })
         .setEndBarType(VF.Barline.type.DOUBLE);
 
-      var notes2 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'up' });
+      const notes2 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'up' });
 
       notes2[0]
         .addModifier(vf.StringNumber({ number: '5', position: 'right' }), 0)
@@ -89,14 +90,16 @@ const StringNumberTests = (function () {
         .addModifier(vf.StringNumber({ number: '4', position: 'right' }).setOffsetY(6), 1)
         .addModifier(vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6), 2);
 
-      var voice2 = score.voice(notes2);
+      const voice2 = score.voice(notes2);
 
       vf.Formatter().joinVoices([voice2]).formatToStave([voice2], stave2);
 
       // bar 3 - juxtaposing third bar next to second bar
-      var stave3 = vf.Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 }).setEndBarType(VF.Barline.type.END);
+      const stave3 = vf
+        .Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 })
+        .setEndBarType(VF.Barline.type.END);
 
-      var notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
+      const notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
 
       notesBar3[0]
         .addModifier(vf.StringNumber({ number: '5', position: 'below' }), 0)
@@ -104,7 +107,7 @@ const StringNumberTests = (function () {
         .addModifier(vf.StringNumber({ number: '3', position: 'left' }), 2)
         .addModifier(vf.StringNumber({ number: '2', position: 'above' }), 3);
 
-      var voice3 = score.voice(notesBar3, { time: '6/4' });
+      const voice3 = score.voice(notesBar3, { time: '6/4' });
 
       vf.Formatter().joinVoices([voice3]).formatToStave([voice3], stave3);
 
@@ -114,13 +117,13 @@ const StringNumberTests = (function () {
     },
 
     drawFretHandFingers: function (options) {
-      var vf = VF.Test.makeFactory(options, 725, 200);
-      var score = vf.EasyScore();
+      const vf = VF.Test.makeFactory(options, 725, 200);
+      const score = vf.EasyScore();
 
       // bar 1
-      var stave1 = vf.Stave({ width: 350 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave1 = vf.Stave({ width: 350 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
 
-      var notes1 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'down' });
+      const notes1 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'down' });
 
       notes1[0]
         .addModifier(vf.Fingering({ number: '3', position: 'left' }), 0)
@@ -149,14 +152,18 @@ const StringNumberTests = (function () {
         .addModifier(vf.Fingering({ number: '0', position: 'right' }).setOffsetY(-5), 2)
         .addModifier(vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6), 2);
 
-      var voice1 = score.voice(notes1);
+      const voice1 = score.voice(notes1);
 
       vf.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
       // bar 2 - juxtaposing second bar next to first bar
-      var stave2 = vf.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 }).setEndBarType(VF.Barline.type.END);
+      const stave2 = vf
+        .Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 })
+        .setEndBarType(VF.Barline.type.END);
 
-      var notes2 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/8, (c4 f4 g4)/4.[stem="down"]', { stem: 'up' });
+      const notes2 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/8, (c4 f4 g4)/4.[stem="down"]', {
+        stem: 'up',
+      });
 
       notes2[0]
         .addModifier(vf.Fingering({ number: '3', position: 'right' }), 0)
@@ -186,7 +193,7 @@ const StringNumberTests = (function () {
         .addModifier(vf.Fingering({ number: '1', position: 'right' }).setOffsetY(-6), 2)
         .addModifier(vf.StringNumber({ number: '3', position: 'right' }).setOffsetY(-6), 2);
 
-      var voice2 = score.voice(notes2);
+      const voice2 = score.voice(notes2);
 
       vf.Formatter().joinVoices([voice2]).formatToStave([voice2], stave2);
 
@@ -196,11 +203,11 @@ const StringNumberTests = (function () {
     },
 
     multi: function (options) {
-      var vf = VF.Test.makeFactory(options, 700, 200);
-      var score = vf.EasyScore();
-      var stave = vf.Stave();
+      const vf = VF.Test.makeFactory(options, 700, 200);
+      const score = vf.EasyScore();
+      const stave = vf.Stave();
 
-      var notes1 = score.notes('(c4 e4 g4)/4, (a3 e4 g4), (c4 d4 a4), (c4 d4 a4)', { stem: 'up' });
+      const notes1 = score.notes('(c4 e4 g4)/4, (a3 e4 g4), (c4 d4 a4), (c4 d4 a4)', { stem: 'up' });
 
       notes1[0]
         .addStroke(0, new VF.Stroke(5))
@@ -231,7 +238,7 @@ const StringNumberTests = (function () {
         .addModifier(vf.StringNumber({ number: '3', position: 'left' }), 2)
         .addModifier(vf.StringNumber({ number: '4', position: 'right' }), 1);
 
-      var notes2 = score.notes('e3/8, e3, e3, e3, e3, e3, e3, e3', { stem: 'down' });
+      const notes2 = score.notes('e3/8, e3, e3, e3, e3, e3, e3, e3', { stem: 'down' });
 
       notes2[0]
         .addModifier(vf.Fingering({ number: '0', position: 'left' }), 0)
@@ -244,7 +251,7 @@ const StringNumberTests = (function () {
       // Position string number 6 beneath the strum arrow: left (15) and down (18)
       notes2[4].addModifier(vf.StringNumber({ number: '6', position: 'left' }).setOffsetX(15).setOffsetY(18), 0);
 
-      var voices = [notes1, notes2].map(score.voice.bind(score));
+      const voices = [notes1, notes2].map(score.voice.bind(score));
 
       vf.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -257,11 +264,11 @@ const StringNumberTests = (function () {
     },
 
     drawAccidentals: function (options) {
-      var vf = VF.Test.makeFactory(options, 500);
+      const vf = VF.Test.makeFactory(options, 500);
 
-      var stave = vf.Stave().setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave = vf.Stave().setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
 
-      var notes = [
+      const notes = [
         vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
         vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'd/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
         vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'd/5', 'e/5', 'g/5'], stem_direction: -1, duration: '4' }),
@@ -316,7 +323,7 @@ const StringNumberTests = (function () {
         .addAccidental(4, vf.Accidental({ type: '#' }))
         .addAccidental(5, vf.Accidental({ type: '#' }));
 
-      var voice = vf.Voice().addTickables(notes);
+      const voice = vf.Voice().addTickables(notes);
 
       vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -328,5 +335,5 @@ const StringNumberTests = (function () {
 
   return StringNumber;
 })();
-VF.Test.StringNumber = StringNumberTests;
+
 export { StringNumberTests };

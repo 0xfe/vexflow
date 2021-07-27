@@ -1,15 +1,23 @@
-/**
- * VexFlow - Voice Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+// @ts-nocheck
+
 import { MockTickable } from './mocks';
+import { VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, ok, expect } from './declarations';
+
+/**
+ * Voice Tests
+ */
 const VoiceTests = (function () {
-  var Voice = {
+  const Voice = {
     Start: function () {
       QUnit.module('Voice');
-      test('Strict Test', VF.Test.Voice.strict);
-      test('Ignore Test', VF.Test.Voice.ignore);
-      VF.Test.runTests('Full Voice Mode Test', VF.Test.Voice.full);
+      test('Strict Test', Voice.strict);
+      test('Ignore Test', Voice.ignore);
+      VexFlowTests.runTests('Full Voice Mode Test', Voice.full);
     },
 
     strict: function () {
@@ -111,5 +119,5 @@ const VoiceTests = (function () {
 
   return Voice;
 })();
-VF.Test.Voice = VoiceTests;
+
 export { VoiceTests };

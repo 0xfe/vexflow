@@ -1,6 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { VexFlowTests } from './vexflow_test_helpers';
 
 /**
@@ -13,19 +16,20 @@ const ThreeVoicesTests = (function () {
 
   function createThreeVoicesTest(noteGroup1, noteGroup2, noteGroup3, setup) {
     return function (options) {
-      var vf = VexFlowTests.makeFactory(options, 600, 200);
-      var stave = vf.Stave().addTrebleGlyph().addTimeSignature('4/4');
-      var score = vf.EasyScore();
+      const vf = VexFlowTests.makeFactory(options, 600, 200);
+      const stave = vf.Stave().addTrebleGlyph().addTimeSignature('4/4');
+      const score = vf.EasyScore();
 
-      var noteGroups = [noteGroup1, noteGroup2, noteGroup3].map(function (noteGroup) {
+      const noteGroups = [noteGroup1, noteGroup2, noteGroup3].map(function (noteGroup) {
+        // TODO: Use the spread operator instead of '.apply()'
         return score.notes.apply(score, noteGroup);
       });
 
-      var voices = noteGroups.map(score.voice.bind(score));
+      const voices = noteGroups.map(score.voice.bind(score));
 
       setup(vf, voices);
 
-      var beams = [
+      const beams = [
         VF.Beam.applyAndGetBeams(voices[0], +1),
         VF.Beam.applyAndGetBeams(voices[1], -1),
         VF.Beam.applyAndGetBeams(voices[2], -1),
@@ -36,7 +40,7 @@ const ThreeVoicesTests = (function () {
 
       vf.draw();
 
-      for (var i = 0; i < beams.length; i++) {
+      for (let i = 0; i < beams.length; i++) {
         beams[i].setContext(vf.getContext()).draw();
       }
 
@@ -44,9 +48,9 @@ const ThreeVoicesTests = (function () {
     };
   }
 
-  var ThreeVoices = {
+  const ThreeVoices = {
     Start: function () {
-      var run = VF.Test.runTests;
+      const run = VF.Test.runTests;
 
       QUnit.module('Three Voices');
 
@@ -112,17 +116,17 @@ const ThreeVoicesTests = (function () {
     },
 
     autoRestTwoVoices: function (options) {
-      var vf = VF.Test.makeFactory(options, 900, 200);
-      var score = vf.EasyScore();
-      var x = 10;
+      const vf = VF.Test.makeFactory(options, 900, 200);
+      const score = vf.EasyScore();
+      let x = 10;
 
-      var beams = [];
+      let beams = [];
 
       function createMeasure(measureTitle, width, alignRests) {
-        var stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
+        const stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
         x += width;
 
-        var voices = [
+        const voices = [
           score.notes('b4/8/r, e5/16, b4/r, b4/8/r, e5/16, b4/r, b4/8/r, d5/16, b4/r, e5/4', { stem: 'up' }),
           score.notes(
             'c5/16, c4, b4/r, d4, e4, f4, b4/r, g4, g4[stem="up"], a4[stem="up"], b4/r, b4[stem="up"], e4/4',
@@ -141,7 +145,7 @@ const ThreeVoicesTests = (function () {
 
       vf.draw();
 
-      for (var i = 0; i < beams.length; i++) {
+      for (let i = 0; i < beams.length; i++) {
         beams[i].setContext(vf.getContext()).draw();
       }
 
@@ -149,14 +153,14 @@ const ThreeVoicesTests = (function () {
     },
 
     autorestthreevoices: function (options) {
-      var vf = VF.Test.makeFactory(options, 850, 200);
-      var score = vf.EasyScore();
-      var x = 10;
+      const vf = VF.Test.makeFactory(options, 850, 200);
+      const score = vf.EasyScore();
+      let x = 10;
 
       function createMeasure(measureTitle, width, alignRests) {
-        var stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
+        const stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
 
-        var voices = [
+        const voices = [
           score.voice(score.notes('b4/4/r, e5, e5/r, e5/r, e5, e5, e5, e5/r', { stem: 'up' }), { time: '8/4' }),
           score.voice(score.notes('b4/4/r, b4/r, b4/r, b4, b4/r, b4/r, b4, b4', { stem: 'down' }), { time: '8/4' }),
           score.voice(score.notes('e4/4/r, e4/r, f4, b4/r, g4, c4, e4/r, c4', { stem: 'down' }), { time: '8/4' }),
@@ -182,14 +186,14 @@ const ThreeVoicesTests = (function () {
     },
 
     autorestthreevoices2: function (options) {
-      var vf = VF.Test.makeFactory(options, 850, 200);
-      var score = vf.EasyScore();
-      var x = 10;
+      const vf = VF.Test.makeFactory(options, 850, 200);
+      const score = vf.EasyScore();
+      let x = 10;
 
       function createMeasure(measureTitle, width, alignRests) {
-        var stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
+        const stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
 
-        var voices = [
+        const voices = [
           score.voice(score.notes('b4/16/r, e5, e5/r, e5/r, e5, e5, e5, e5/r'), { time: '2/4' }),
           score.voice(score.notes('b4/16/r, b4/r, b4/r, b4, b4/r, b4/r, b4, b4'), { time: '2/4' }),
           score.voice(score.notes('e4/16/r, e4/r, f4, b4/r, g4, c4, e4/r, c4'), { time: '2/4' }),

@@ -1,6 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { Vex } from 'vex';
 import { QUnit, ok } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';

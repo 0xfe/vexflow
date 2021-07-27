@@ -67,7 +67,7 @@ import { GlyphNoteTests } from './glyphnote_tests';
 VexFlowTests.run = function () {
   AccidentalTests.Start();
   // StaveNoteTests.Start();
-  // VoiceTests.Start();
+  VoiceTests.Start();
   // NoteHeadTests.Start();
   // TabNoteTests.Start();
   // TickContextTests.Start();
