@@ -120,5 +120,4 @@ const TimeSignatureTests = (function () {
     },
   };
 })();
-VexFlowTests.TimeSignature = TimeSignatureTests;
 export { TimeSignatureTests };

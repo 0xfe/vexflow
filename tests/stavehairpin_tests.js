@@ -15,25 +15,25 @@ const StaveHairpinTests = (function () {
 
   function createTest(drawHairpins) {
     return function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var ctx = vf.getContext();
-      var stave = vf.Stave();
+      var f = VexFlowTests.makeFactory(options);
+      var ctx = f.getContext();
+      var stave = f.Stave();
 
       var notes = [
-        vf
+        f
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
-          .addAccidental(0, vf.Accidental({ type: 'b' }))
-          .addAccidental(1, vf.Accidental({ type: '#' })),
-        vf.StaveNote({ keys: ['d/4'], stem_direction: 1, duration: '4' }),
-        vf.StaveNote({ keys: ['e/4'], stem_direction: 1, duration: '4' }),
-        vf.StaveNote({ keys: ['f/4'], stem_direction: 1, duration: '4' }),
+          .addAccidental(0, f.Accidental({ type: 'b' }))
+          .addAccidental(1, f.Accidental({ type: '#' })),
+        f.StaveNote({ keys: ['d/4'], stem_direction: 1, duration: '4' }),
+        f.StaveNote({ keys: ['e/4'], stem_direction: 1, duration: '4' }),
+        f.StaveNote({ keys: ['f/4'], stem_direction: 1, duration: '4' }),
       ];
 
-      var voice = vf.Voice().addTickables(notes);
+      var voice = f.Voice().addTickables(notes);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       drawHairpins(ctx, stave, notes);
 
@@ -111,5 +111,4 @@ const StaveHairpinTests = (function () {
     },
   };
 })();
-VexFlowTests.StaveHairpin = StaveHairpinTests;
 export { StaveHairpinTests };

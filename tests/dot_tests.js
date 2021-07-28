@@ -32,8 +32,8 @@ const DotTests = (function () {
   var Dot = {
     Start: function () {
       QUnit.module('Dot');
-      VexFlowTests.runTests('Basic', VexFlowTests.Dot.basic);
-      VexFlowTests.runTests('Multi Voice', VexFlowTests.Dot.multiVoice);
+      VexFlowTests.runTests('Basic', Dot.basic);
+      VexFlowTests.runTests('Multi Voice', Dot.multiVoice);
     },
 
     basic: function (options, contextBuilder) {
@@ -169,5 +169,4 @@ const DotTests = (function () {
 
   return Dot;
 })();
-VexFlowTests.Dot = DotTests;
 export { DotTests };

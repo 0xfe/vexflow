@@ -7,11 +7,11 @@ const ClefTests = (function () {
   var Clef = {
     Start: function () {
       QUnit.module('Clef');
-      VexFlowTests.runTests('Clef Test', VexFlowTests.Clef.draw);
-      VexFlowTests.runTests('Clef End Test', VexFlowTests.Clef.drawEnd);
-      VexFlowTests.runTests('Small Clef Test', VexFlowTests.Clef.drawSmall);
-      VexFlowTests.runTests('Small Clef End Test', VexFlowTests.Clef.drawSmallEnd);
-      VexFlowTests.runTests('Clef Change Test', VexFlowTests.Clef.drawClefChange);
+      VexFlowTests.runTests('Clef Test', Clef.draw);
+      VexFlowTests.runTests('Clef End Test', Clef.drawEnd);
+      VexFlowTests.runTests('Small Clef Test', Clef.drawSmall);
+      VexFlowTests.runTests('Small Clef End Test', Clef.drawSmallEnd);
+      VexFlowTests.runTests('Clef Change Test', Clef.drawClefChange);
     },
 
     draw: function (options) {

@@ -6,8 +6,8 @@ const TabStaveTests = (function () {
   var TabStave = {
     Start: function () {
       QUnit.module('TabStave');
-      VexFlowTests.runTests('TabStave Draw Test', VexFlowTests.TabStave.draw);
-      VexFlowTests.runTests('Vertical Bar Test', VexFlowTests.TabStave.drawVerticalBar);
+      VexFlowTests.runTests('TabStave Draw Test', TabStave.draw);
+      VexFlowTests.runTests('Vertical Bar Test', TabStave.drawVerticalBar);
     },
 
     draw: function (options, contextBuilder) {
@@ -42,5 +42,4 @@ const TabStaveTests = (function () {
 
   return TabStave;
 })();
-VexFlowTests.TabStave = TabStaveTests;
 export { TabStaveTests };

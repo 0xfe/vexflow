@@ -6,11 +6,11 @@ const BendTests = (function () {
   var Bend = {
     Start: function () {
       QUnit.module('Bend');
-      VexFlowTests.runTests('Double Bends', VexFlowTests.Bend.doubleBends);
-      VexFlowTests.runTests('Reverse Bends', VexFlowTests.Bend.reverseBends);
-      VexFlowTests.runTests('Bend Phrase', VexFlowTests.Bend.bendPhrase);
-      VexFlowTests.runTests('Double Bends With Release', VexFlowTests.Bend.doubleBendsWithRelease);
-      VexFlowTests.runTests('Whako Bend', VexFlowTests.Bend.whackoBends);
+      VexFlowTests.runTests('Double Bends', Bend.doubleBends);
+      VexFlowTests.runTests('Reverse Bends', Bend.reverseBends);
+      VexFlowTests.runTests('Bend Phrase', Bend.bendPhrase);
+      VexFlowTests.runTests('Double Bends With Release', Bend.doubleBendsWithRelease);
+      VexFlowTests.runTests('Whako Bend', Bend.whackoBends);
     },
 
     doubleBends: function (options, contextBuilder) {

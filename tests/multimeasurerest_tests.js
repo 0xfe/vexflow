@@ -6,13 +6,13 @@ const MultiMeasureRestTests = (function () {
   return {
     Start: function () {
       QUnit.module('MultiMeasureRest');
-      VexFlowTests.runTests('Simple Test', VexFlowTests.MultiMeasureRest.simple0);
-      VexFlowTests.runTests('Stave with modifiers Test', VexFlowTests.MultiMeasureRest.staveWithModifiers);
+      VexFlowTests.runTests('Simple Test', MultiMeasureRest.simple0);
+      VexFlowTests.runTests('Stave with modifiers Test', MultiMeasureRest.staveWithModifiers);
     },
 
     simple0: function (options) {
       const width = 910;
-      const vf = VexFlowTests.makeFactory(options, width, 300);
+      const f = VexFlowTests.makeFactory(options, width, 300);
       const params = [
         { number_of_measures: 2, show_number: false },
         { number_of_measures: 2 },
@@ -72,16 +72,16 @@ const MultiMeasureRestTests = (function () {
         x += staveWidth;
         staveParams.y = y;
         staveParams.width = staveWidth;
-        const stave = vf.Stave(staveParams);
-        return vf.MultiMeasureRest(mmrestParams).setStave(stave);
+        const stave = f.Stave(staveParams);
+        return f.MultiMeasureRest(mmrestParams).setStave(stave);
       });
 
-      vf.draw();
+      f.draw();
 
       var xs = mmrests[0].getXs();
       const strY = mmrests[0].getStave().getYForLine(-0.5);
       const str = 'TACET';
-      const context = vf.getContext();
+      const context = f.getContext();
       context.save();
       context.setFont('Times', 16, 'bold');
       const metrics = context.measureText('TACET');
@@ -92,7 +92,7 @@ const MultiMeasureRestTests = (function () {
     },
     staveWithModifiers: function (options) {
       const width = 910;
-      const vf = VexFlowTests.makeFactory(options, width, 200);
+      const f = VexFlowTests.makeFactory(options, width, 200);
       // const stave = vf.Stave({ y: 20, width: 270 });
       var x = 0;
       var y = 0;
@@ -124,7 +124,7 @@ const MultiMeasureRestTests = (function () {
         staveParams.x = x;
         x += staveParams.width;
         staveParams.y = y;
-        const stave = vf.Stave(staveParams);
+        const stave = f.Stave(staveParams);
         if (staveOptions.clef) {
           stave.addClef(staveOptions.clef);
         }
@@ -143,14 +143,13 @@ const MultiMeasureRestTests = (function () {
         if (staveOptions.endTimeSig) {
           stave.setEndTimeSignature(staveOptions.endTimeSig);
         }
-        return vf.MultiMeasureRest(mmrestParams).setStave(stave);
+        return f.MultiMeasureRest(mmrestParams).setStave(stave);
       });
 
-      vf.draw();
+      f.draw();
 
       ok(true, 'Stave with modifiers Test');
     },
   };
 })();
-VexFlowTests.MultiMeasureRest = MultiMeasureRestTests;
 export { MultiMeasureRestTests };

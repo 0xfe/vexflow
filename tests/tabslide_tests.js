@@ -46,12 +46,12 @@ const TabSlideTests = (function () {
 
     simple: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VexFlowTests.TabSlide.setupContext(options);
+      var c = TabSlide.setupContext(options);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
 
-      VexFlowTests.TabSlide.tieNotes(
+      TabSlide.tieNotes(
         [
           newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
           newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
@@ -64,7 +64,7 @@ const TabSlideTests = (function () {
     },
 
     multiTest: function (options, factory) {
-      var c = VexFlowTests.TabSlide.setupContext(options, 440, 100);
+      var c = TabSlide.setupContext(options, 440, 100);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -155,16 +155,15 @@ const TabSlideTests = (function () {
 
     slideUp: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VexFlowTests.TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
+      TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
     },
 
     slideDown: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VexFlowTests.TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
+      TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
     },
   };
 
   return TabSlide;
 })();
-VexFlowTests.TabSlide = TabSlideTests;
 export { TabSlideTests };

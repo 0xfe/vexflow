@@ -8,8 +8,8 @@ const TickContextTests = (function () {
   var TickContext = {
     Start: function () {
       QUnit.module('TickContext');
-      test('Current Tick Test', VexFlowTests.TickContext.currentTick);
-      test('Tracking Test', VexFlowTests.TickContext.tracking);
+      test('Current Tick Test', TickContext.currentTick);
+      test('Tracking Test', TickContext.tracking);
     },
 
     currentTick: function () {
@@ -53,5 +53,4 @@ const TickContextTests = (function () {
 
   return TickContext;
 })();
-VexFlowTests.TickContext = TickContextTests;
 export { TickContextTests };

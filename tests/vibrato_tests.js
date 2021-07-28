@@ -128,5 +128,4 @@ const VibratoTests = (function () {
 
   return Vibrato;
 })();
-VexFlowTests.Vibrato = VibratoTests;
 export { VibratoTests };

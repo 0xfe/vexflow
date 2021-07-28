@@ -72,5 +72,4 @@ const VibratoBracketTests = (function () {
     },
   };
 })();
-VexFlowTests.VibratoBracket = VibratoBracketTests;
 export { VibratoBracketTests };

@@ -6,8 +6,8 @@ const KeyManagerTests = (function () {
   var KeyManager = {
     Start: function () {
       QUnit.module('KeyManager');
-      test('Valid Notes', VexFlowTests.KeyManager.works);
-      test('Select Notes', VexFlowTests.KeyManager.selectNotes);
+      test('Valid Notes', KeyManager.works);
+      test('Select Notes', KeyManager.selectNotes);
     },
 
     works: function () {
@@ -81,5 +81,4 @@ const KeyManagerTests = (function () {
 
   return KeyManager;
 })();
-VexFlowTests.KeyManager = KeyManagerTests;
 export { KeyManagerTests };

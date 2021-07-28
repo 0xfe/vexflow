@@ -19,17 +19,14 @@ const GraceNoteTests = (function () {
   var GraceNote = {
     Start: function () {
       QUnit.module('Grace Notes');
-      VexFlowTests.runTests('Grace Note Basic', VexFlowTests.GraceNote.basic);
-      VexFlowTests.runTests('Grace Note Basic with Slurs', VexFlowTests.GraceNote.basicSlurred);
-      VexFlowTests.runTests('Grace Note Stem', VexFlowTests.GraceNote.stem);
-      VexFlowTests.runTests('Grace Note Stem with Beams', VexFlowTests.GraceNote.stemWithBeamed);
-      VexFlowTests.runTests('Grace Note Slash', VexFlowTests.GraceNote.slash);
-      VexFlowTests.runTests('Grace Note Slash with Beams', VexFlowTests.GraceNote.slashWithBeams);
-      VexFlowTests.runTests('Grace Notes Multiple Voices', VexFlowTests.GraceNote.multipleVoices);
-      VexFlowTests.runTests(
-        'Grace Notes Multiple Voices Multiple Draws',
-        VexFlowTests.GraceNote.multipleVoicesMultipleDraws
-      );
+      VexFlowTests.runTests('Grace Note Basic', GraceNote.basic);
+      VexFlowTests.runTests('Grace Note Basic with Slurs', GraceNote.basicSlurred);
+      VexFlowTests.runTests('Grace Note Stem', GraceNote.stem);
+      VexFlowTests.runTests('Grace Note Stem with Beams', GraceNote.stemWithBeamed);
+      VexFlowTests.runTests('Grace Note Slash', GraceNote.slash);
+      VexFlowTests.runTests('Grace Note Slash with Beams', GraceNote.slashWithBeams);
+      VexFlowTests.runTests('Grace Notes Multiple Voices', GraceNote.multipleVoices);
+      VexFlowTests.runTests('Grace Notes Multiple Voices Multiple Draws', GraceNote.multipleVoicesMultipleDraws);
     },
 
     basic: function (options) {
@@ -466,5 +463,4 @@ const GraceNoteTests = (function () {
 
   return GraceNote;
 })();
-VexFlowTests.GraceNote = GraceNoteTests;
 export { GraceNoteTests };

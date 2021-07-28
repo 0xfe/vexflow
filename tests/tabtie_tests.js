@@ -49,8 +49,8 @@ const TabTieTests = (function () {
     },
 
     drawTie: function (notes, indices, options, text) {
-      var c = VexFlowTests.TabTie.setupContext(options);
-      VexFlowTests.TabTie.tieNotes(notes, indices, c.stave, c.context, text);
+      var c = TabTie.setupContext(options);
+      TabTie.tieNotes(notes, indices, c.stave, c.context, text);
     },
 
     simple: function (options, contextBuilder) {
@@ -59,7 +59,7 @@ const TabTieTests = (function () {
         return new VF.TabNote(tab_struct);
       }
 
-      VexFlowTests.TabTie.drawTie(
+      TabTie.drawTie(
         [
           newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
           newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
@@ -77,7 +77,7 @@ const TabTieTests = (function () {
         return new VF.TabNote(tab_struct);
       }
 
-      VexFlowTests.TabTie.drawTie(
+      TabTie.drawTie(
         [
           newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new VF.Annotation('T'), 0),
           newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' }),
@@ -91,7 +91,7 @@ const TabTieTests = (function () {
     },
 
     multiTest: function (options, factory) {
-      var c = VexFlowTests.TabTie.setupContext(options, 440, 140);
+      var c = TabTie.setupContext(options, 440, 140);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -182,17 +182,17 @@ const TabTieTests = (function () {
 
     simpleHammeron: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VexFlowTests.TabTie.multiTest(options, VF.TabTie.createHammeron);
+      TabTie.multiTest(options, VF.TabTie.createHammeron);
     },
 
     simplePulloff: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VexFlowTests.TabTie.multiTest(options, VF.TabTie.createPulloff);
+      TabTie.multiTest(options, VF.TabTie.createPulloff);
     },
 
     continuous: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VexFlowTests.TabTie.setupContext(options, 440, 140);
+      var c = TabTie.setupContext(options, 440, 140);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -230,5 +230,4 @@ const TabTieTests = (function () {
 
   return TabTie;
 })();
-VexFlowTests.TabTie = TabTieTests;
 export { TabTieTests };
