@@ -115,16 +115,16 @@ VexFlowTests.run = function () {
   ThreeVoicesTests.Start();
   CurveTests.Start();
   */
-  // TextNoteTests.Start();
-  // StaveLineTests.Start();
-  // OrnamentTests.Start();
-  // PedalMarkingTests.Start();
-  // TextBracketTests.Start();
-  // StaveModifierTests.Start();
+  TextNoteTests.Start();
+  StaveLineTests.Start();
+  OrnamentTests.Start();
+  PedalMarkingTests.Start();
+  TextBracketTests.Start();
+  StaveModifierTests.Start();
+  /*
   GhostNoteTests.Start();
   StyleTests.Start();
   FactoryTests.Start();
-  /*
   ParserTests.Start();
   EasyScoreTests.Start();
   RegistryTests.Start();
