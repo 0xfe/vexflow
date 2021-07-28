@@ -121,7 +121,7 @@ export class StaveNote extends StemmableNote {
   static get DEFAULT_LEDGER_LINE_OFFSET(): number {
     return 3;
   }
-  static get minNoteheadPadding() {
+  static get minNoteheadPadding(): number {
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     return musicFont.lookupMetric('glyphs.noteHead.minPadding');
   }
