@@ -5,7 +5,7 @@
 const StaveTests = (function () {
   var Stave = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Stave');
       test('StaveModifiers SortByCategory', Stave.sortByCategory);
       runTests('Stave Draw Test', Stave.draw);
@@ -742,7 +742,7 @@ const StaveTests = (function () {
     },
 
     factoryAPI: function (options) {
-      var vf = VF.Test.makeFactory(options, 900, 200);
+      var vf = VexFlowTests.makeFactory(options, 900, 200);
       var stave = vf.Stave({ x: 300, y: 40, width: 300 });
       stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
       stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });
@@ -754,5 +754,5 @@ const StaveTests = (function () {
 
   return Stave;
 })();
-VF.Test.Stave = StaveTests;
+VexFlowTests.Stave = StaveTests;
 export { StaveTests };

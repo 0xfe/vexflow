@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const StyleTests = (function () {
-  var runTests = VF.Test.runTests;
+  var runTests = VexFlowTests.runTests;
   function FS(fill, stroke) {
     var ret = { fillStyle: fill };
     if (stroke) {
@@ -20,7 +20,7 @@ const StyleTests = (function () {
     },
 
     stave: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 150);
+      var vf = VexFlowTests.makeFactory(options, 600, 150);
       var stave = vf.Stave({ x: 25, y: 20, width: 500 });
 
       // Stave modifiers test.
@@ -116,5 +116,5 @@ const StyleTests = (function () {
 
   return Style;
 })();
-VF.Test.Style = StyleTests;
+VexFlowTests.Style = StyleTests;
 export { StyleTests };

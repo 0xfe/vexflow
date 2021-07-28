@@ -18,15 +18,15 @@ const KeySignatureTests = (function () {
 
     Start: function () {
       QUnit.module('KeySignature');
-      test('Key Parser Test', VF.Test.KeySignature.parser);
-      VF.Test.runTests('Major Key Test', VF.Test.KeySignature.majorKeys);
-      VF.Test.runTests('Minor Key Test', VF.Test.KeySignature.minorKeys);
-      VF.Test.runTests('Stave Helper', VF.Test.KeySignature.staveHelper);
-      VF.Test.runTests('Cancelled key test', VF.Test.KeySignature.majorKeysCanceled);
-      VF.Test.runTests('Cancelled key (for each clef) test', VF.Test.KeySignature.keysCanceledForEachClef);
-      VF.Test.runTests('Altered key test', VF.Test.KeySignature.majorKeysAltered);
-      VF.Test.runTests('End key with clef test', VF.Test.KeySignature.endKeyWithClef);
-      VF.Test.runTests('Key Signature Change test', VF.Test.KeySignature.changeKey);
+      test('Key Parser Test', VexFlowTests.KeySignature.parser);
+      VexFlowTests.runTests('Major Key Test', VexFlowTests.KeySignature.majorKeys);
+      VexFlowTests.runTests('Minor Key Test', VexFlowTests.KeySignature.minorKeys);
+      VexFlowTests.runTests('Stave Helper', VexFlowTests.KeySignature.staveHelper);
+      VexFlowTests.runTests('Cancelled key test', VexFlowTests.KeySignature.majorKeysCanceled);
+      VexFlowTests.runTests('Cancelled key (for each clef) test', VexFlowTests.KeySignature.keysCanceledForEachClef);
+      VexFlowTests.runTests('Altered key test', VexFlowTests.KeySignature.majorKeysAltered);
+      VexFlowTests.runTests('End key with clef test', VexFlowTests.KeySignature.endKeyWithClef);
+      VexFlowTests.runTests('Key Signature Change test', VexFlowTests.KeySignature.changeKey);
     },
 
     parser: function () {
@@ -58,7 +58,7 @@ const KeySignatureTests = (function () {
       var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
-      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+      var keys = VexFlowTests.KeySignature.MAJOR_KEYS;
 
       var keySig = null;
       for (var i = 0; i < 8; ++i) {
@@ -86,7 +86,7 @@ const KeySignatureTests = (function () {
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
       var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
       var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
-      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+      var keys = VexFlowTests.KeySignature.MAJOR_KEYS;
 
       var keySig = null;
       var i;
@@ -166,7 +166,7 @@ const KeySignatureTests = (function () {
       var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
       var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
       var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
-      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+      var keys = VexFlowTests.KeySignature.MAJOR_KEYS;
 
       var keySig = null;
       var i;
@@ -215,7 +215,7 @@ const KeySignatureTests = (function () {
       var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
-      var keys = VF.Test.KeySignature.MINOR_KEYS;
+      var keys = VexFlowTests.KeySignature.MINOR_KEYS;
 
       var keySig = null;
       for (var i = 0; i < 8; ++i) {
@@ -259,7 +259,7 @@ const KeySignatureTests = (function () {
       var ctx = contextBuilder(options.elementId, 400, 240);
       var stave = new VF.Stave(10, 10, 350);
       var stave2 = new VF.Stave(10, 90, 350);
-      var keys = VF.Test.KeySignature.MAJOR_KEYS;
+      var keys = VexFlowTests.KeySignature.MAJOR_KEYS;
 
       for (var i = 0; i < 8; ++i) {
         stave.addKeySignature(keys[i]);
@@ -278,7 +278,7 @@ const KeySignatureTests = (function () {
     },
 
     changeKey: function (options) {
-      var vf = VF.Test.makeFactory(options, 900);
+      var vf = VexFlowTests.makeFactory(options, 900);
 
       var stave = vf.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
 
@@ -309,5 +309,5 @@ const KeySignatureTests = (function () {
 
   return KeySignature;
 })();
-VF.Test.KeySignature = KeySignatureTests;
+VexFlowTests.KeySignature = KeySignatureTests;
 export { KeySignatureTests };

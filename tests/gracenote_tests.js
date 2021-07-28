@@ -19,18 +19,21 @@ const GraceNoteTests = (function () {
   var GraceNote = {
     Start: function () {
       QUnit.module('Grace Notes');
-      VF.Test.runTests('Grace Note Basic', VF.Test.GraceNote.basic);
-      VF.Test.runTests('Grace Note Basic with Slurs', VF.Test.GraceNote.basicSlurred);
-      VF.Test.runTests('Grace Note Stem', VF.Test.GraceNote.stem);
-      VF.Test.runTests('Grace Note Stem with Beams', VF.Test.GraceNote.stemWithBeamed);
-      VF.Test.runTests('Grace Note Slash', VF.Test.GraceNote.slash);
-      VF.Test.runTests('Grace Note Slash with Beams', VF.Test.GraceNote.slashWithBeams);
-      VF.Test.runTests('Grace Notes Multiple Voices', VF.Test.GraceNote.multipleVoices);
-      VF.Test.runTests('Grace Notes Multiple Voices Multiple Draws', VF.Test.GraceNote.multipleVoicesMultipleDraws);
+      VexFlowTests.runTests('Grace Note Basic', VexFlowTests.GraceNote.basic);
+      VexFlowTests.runTests('Grace Note Basic with Slurs', VexFlowTests.GraceNote.basicSlurred);
+      VexFlowTests.runTests('Grace Note Stem', VexFlowTests.GraceNote.stem);
+      VexFlowTests.runTests('Grace Note Stem with Beams', VexFlowTests.GraceNote.stemWithBeamed);
+      VexFlowTests.runTests('Grace Note Slash', VexFlowTests.GraceNote.slash);
+      VexFlowTests.runTests('Grace Note Slash with Beams', VexFlowTests.GraceNote.slashWithBeams);
+      VexFlowTests.runTests('Grace Notes Multiple Voices', VexFlowTests.GraceNote.multipleVoices);
+      VexFlowTests.runTests(
+        'Grace Notes Multiple Voices Multiple Draws',
+        VexFlowTests.GraceNote.multipleVoicesMultipleDraws
+      );
     },
 
     basic: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 130);
+      const vf = VexFlowTests.makeFactory(options, 700, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 650 });
 
       var gracenotes = [
@@ -91,7 +94,7 @@ const GraceNoteTests = (function () {
     },
 
     basicSlurred: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 130);
+      const vf = VexFlowTests.makeFactory(options, 700, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 650 });
 
       var gracenotes0 = [
@@ -154,7 +157,7 @@ const GraceNoteTests = (function () {
     },
 
     stem: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 130);
+      const vf = VexFlowTests.makeFactory(options, 700, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 650 });
 
       function createNotes(noteT, keys, stem_direction) {
@@ -182,7 +185,7 @@ const GraceNoteTests = (function () {
     },
 
     stemWithBeamed: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 130);
+      const vf = VexFlowTests.makeFactory(options, 700, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 650 });
 
       function createBeamdNotes(noteT, keys, stem_direction, beams, isGrace, notesToBeam) {
@@ -227,7 +230,7 @@ const GraceNoteTests = (function () {
     },
 
     slash: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 130);
+      const vf = VexFlowTests.makeFactory(options, 700, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 650 });
 
       function createNotes(noteT, keys, stem_direction, slash) {
@@ -282,7 +285,7 @@ const GraceNoteTests = (function () {
     },
 
     slashWithBeams: function (options) {
-      const vf = VF.Test.makeFactory(options, 800, 130);
+      const vf = VexFlowTests.makeFactory(options, 800, 130);
       const stave = vf.Stave({ x: 10, y: 10, width: 750 });
 
       function createNoteBlock(keys, stem_direction) {
@@ -330,7 +333,7 @@ const GraceNoteTests = (function () {
     },
 
     multipleVoices: function (options) {
-      const vf = VF.Test.makeFactory(options, 450, 140);
+      const vf = VexFlowTests.makeFactory(options, 450, 140);
       const stave = vf.Stave({ x: 10, y: 10, width: 450 });
 
       var notes = [
@@ -395,7 +398,7 @@ const GraceNoteTests = (function () {
     },
 
     multipleVoicesMultipleDraws: function (options) {
-      const vf = VF.Test.makeFactory(options, 450, 140);
+      const vf = VexFlowTests.makeFactory(options, 450, 140);
       const stave = vf.Stave({ x: 10, y: 10, width: 450 });
 
       var notes = [
@@ -463,5 +466,5 @@ const GraceNoteTests = (function () {
 
   return GraceNote;
 })();
-VF.Test.GraceNote = GraceNoteTests;
+VexFlowTests.GraceNote = GraceNoteTests;
 export { GraceNoteTests };

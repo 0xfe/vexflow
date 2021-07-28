@@ -6,8 +6,8 @@ const GraceTabNoteTests = (function () {
   var GraceTabNote = {
     Start: function () {
       QUnit.module('Grace Tab Notes');
-      VF.Test.runTests('Grace Tab Note Simple', VF.Test.GraceTabNote.simple);
-      VF.Test.runTests('Grace Tab Note Slurred', VF.Test.GraceTabNote.slurred);
+      VexFlowTests.runTests('Grace Tab Note Simple', VexFlowTests.GraceTabNote.simple);
+      VexFlowTests.runTests('Grace Tab Note Slurred', VexFlowTests.GraceTabNote.slurred);
     },
 
     setupContext: function (options, x) {
@@ -19,7 +19,7 @@ const GraceTabNoteTests = (function () {
 
     simple: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.GraceTabNote.setupContext(options);
+      var c = VexFlowTests.GraceTabNote.setupContext(options);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -69,7 +69,7 @@ const GraceTabNoteTests = (function () {
 
     slurred: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.GraceTabNote.setupContext(options);
+      var c = VexFlowTests.GraceTabNote.setupContext(options);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -111,5 +111,5 @@ const GraceTabNoteTests = (function () {
 
   return GraceTabNote;
 })();
-VF.Test.GraceTabNote = GraceTabNoteTests;
+VexFlowTests.GraceTabNote = GraceTabNoteTests;
 export { GraceTabNoteTests };

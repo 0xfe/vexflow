@@ -5,7 +5,7 @@
 const VibratoTests = (function () {
   var Vibrato = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Vibrato');
       runTests('Simple Vibrato', Vibrato.simple);
       runTests('Harsh Vibrato', Vibrato.harsh);
@@ -85,7 +85,7 @@ const VibratoTests = (function () {
       ctx.scale(1.3, 1.3);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
-      ctx.setFont('Arial', VF.Test.Font.size, '');
+      ctx.setFont('Arial', VexFlowTests.Font.size, '');
       var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
@@ -128,5 +128,5 @@ const VibratoTests = (function () {
 
   return Vibrato;
 })();
-VF.Test.Vibrato = VibratoTests;
+VexFlowTests.Vibrato = VibratoTests;
 export { VibratoTests };

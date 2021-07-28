@@ -6,10 +6,10 @@ const NoteHeadTests = (function () {
   var NoteHead = {
     Start: function () {
       QUnit.module('NoteHead');
-      VF.Test.runTests('Basic', VF.Test.NoteHead.basic);
-      VF.Test.runTests('Various Heads', VF.Test.NoteHead.variousHeads);
-      VF.Test.runTests('Drum Chord Heads', VF.Test.NoteHead.drumChordHeads);
-      VF.Test.runTests('Bounding Boxes', VF.Test.NoteHead.basicBoundingBoxes);
+      VexFlowTests.runTests('Basic', VexFlowTests.NoteHead.basic);
+      VexFlowTests.runTests('Various Heads', VexFlowTests.NoteHead.variousHeads);
+      VexFlowTests.runTests('Drum Chord Heads', VexFlowTests.NoteHead.drumChordHeads);
+      VexFlowTests.runTests('Bounding Boxes', VexFlowTests.NoteHead.basicBoundingBoxes);
     },
 
     setupContext: function (options, x, y) {
@@ -35,7 +35,7 @@ const NoteHeadTests = (function () {
 
     basic: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.NoteHead.setupContext(options, 450, 250);
+      var c = VexFlowTests.NoteHead.setupContext(options, 450, 250);
 
       c.stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
 
@@ -156,7 +156,7 @@ const NoteHeadTests = (function () {
 
     basicBoundingBoxes: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.NoteHead.setupContext(options, 350, 250);
+      var c = VexFlowTests.NoteHead.setupContext(options, 350, 250);
 
       c.stave = new VF.Stave(10, 0, 250).addTrebleGlyph();
 
@@ -196,5 +196,5 @@ const NoteHeadTests = (function () {
 
   return NoteHead;
 })();
-VF.Test.NoteHead = NoteHeadTests;
+VexFlowTests.NoteHead = NoteHeadTests;
 export { NoteHeadTests };

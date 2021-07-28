@@ -6,12 +6,12 @@ const StaveLineTests = (function () {
   var StaveLine = {
     Start: function () {
       QUnit.module('StaveLine');
-      VF.Test.runTests('Simple StaveLine', VF.Test.StaveLine.simple0);
-      VF.Test.runTests('StaveLine Arrow Options', VF.Test.StaveLine.simple1);
+      VexFlowTests.runTests('Simple StaveLine', VexFlowTests.StaveLine.simple0);
+      VexFlowTests.runTests('StaveLine Arrow Options', VexFlowTests.StaveLine.simple1);
     },
 
     simple0: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
@@ -50,7 +50,7 @@ const StaveLineTests = (function () {
     },
 
     simple1: function (options) {
-      var vf = VF.Test.makeFactory(options, 770);
+      var vf = VexFlowTests.makeFactory(options, 770);
       var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
@@ -152,5 +152,5 @@ const StaveLineTests = (function () {
 
   return StaveLine;
 })();
-VF.Test.StaveLine = StaveLineTests;
+VexFlowTests.StaveLine = StaveLineTests;
 export { StaveLineTests };

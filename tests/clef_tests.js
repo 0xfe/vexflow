@@ -7,15 +7,15 @@ const ClefTests = (function () {
   var Clef = {
     Start: function () {
       QUnit.module('Clef');
-      VF.Test.runTests('Clef Test', VF.Test.Clef.draw);
-      VF.Test.runTests('Clef End Test', VF.Test.Clef.drawEnd);
-      VF.Test.runTests('Small Clef Test', VF.Test.Clef.drawSmall);
-      VF.Test.runTests('Small Clef End Test', VF.Test.Clef.drawSmallEnd);
-      VF.Test.runTests('Clef Change Test', VF.Test.Clef.drawClefChange);
+      VexFlowTests.runTests('Clef Test', VexFlowTests.Clef.draw);
+      VexFlowTests.runTests('Clef End Test', VexFlowTests.Clef.drawEnd);
+      VexFlowTests.runTests('Small Clef Test', VexFlowTests.Clef.drawSmall);
+      VexFlowTests.runTests('Small Clef End Test', VexFlowTests.Clef.drawSmallEnd);
+      VexFlowTests.runTests('Clef Change Test', VexFlowTests.Clef.drawClefChange);
     },
 
     draw: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 120);
+      var vf = VexFlowTests.makeFactory(options, 800, 120);
 
       vf.Stave()
         .addClef('treble')
@@ -40,7 +40,7 @@ const ClefTests = (function () {
     },
 
     drawEnd: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 120);
+      var vf = VexFlowTests.makeFactory(options, 800, 120);
 
       vf.Stave()
         .addClef('bass')
@@ -65,7 +65,7 @@ const ClefTests = (function () {
     },
 
     drawSmall: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 120);
+      var vf = VexFlowTests.makeFactory(options, 800, 120);
 
       vf.Stave()
         .addClef('treble', 'small')
@@ -90,7 +90,7 @@ const ClefTests = (function () {
     },
 
     drawSmallEnd: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 120);
+      var vf = VexFlowTests.makeFactory(options, 800, 120);
 
       vf.Stave()
         .addClef('bass', 'small')
@@ -115,7 +115,7 @@ const ClefTests = (function () {
     },
 
     drawClefChange: function (options) {
-      var vf = VF.Test.makeFactory(options, 800, 180);
+      var vf = VexFlowTests.makeFactory(options, 800, 180);
       var stave = vf.Stave().addClef('treble');
 
       var notes = [
@@ -156,5 +156,5 @@ const ClefTests = (function () {
 
   return Clef;
 })();
-VF.Test.Clef = ClefTests;
+VexFlowTests.Clef = ClefTests;
 export { ClefTests };

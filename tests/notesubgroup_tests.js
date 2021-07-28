@@ -7,18 +7,18 @@
 const NoteSubGroupTests = (function () {
   var NoteSubGroup = {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('NoteSubGroup');
 
-      run('Basic - ClefNote, TimeSigNote and BarNote', VF.Test.NoteSubGroup.draw);
-      run('Multi Voice', VF.Test.NoteSubGroup.drawMultiVoice);
-      run('Multi Voice Multiple Draws', VF.Test.NoteSubGroup.drawMultiVoiceMultipleDraw);
-      run('Multi Staff', VF.Test.NoteSubGroup.drawMultiStaff);
+      run('Basic - ClefNote, TimeSigNote and BarNote', VexFlowTests.NoteSubGroup.draw);
+      run('Multi Voice', VexFlowTests.NoteSubGroup.drawMultiVoice);
+      run('Multi Voice Multiple Draws', VexFlowTests.NoteSubGroup.drawMultiVoiceMultipleDraw);
+      run('Multi Staff', VexFlowTests.NoteSubGroup.drawMultiStaff);
     },
 
     draw: function (options) {
-      var vf = VF.Test.makeFactory(options, 750, 200);
+      var vf = VexFlowTests.makeFactory(options, 750, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave({ width: 600 }).addClef('treble');
 
@@ -70,7 +70,7 @@ const NoteSubGroupTests = (function () {
     },
 
     drawMultiVoice: function (options) {
-      var vf = VF.Test.makeFactory(options, 550, 200);
+      var vf = VexFlowTests.makeFactory(options, 550, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave().addClef('treble');
 
@@ -127,7 +127,7 @@ const NoteSubGroupTests = (function () {
 
     // draws multiple times. prevents incremental x-shift each draw.
     drawMultiVoiceMultipleDraw: function (options) {
-      var vf = VF.Test.makeFactory(options, 550, 200);
+      var vf = VexFlowTests.makeFactory(options, 550, 200);
       var ctx = vf.getContext();
       var stave = vf.Stave().addClef('treble');
 
@@ -184,7 +184,7 @@ const NoteSubGroupTests = (function () {
     },
 
     drawMultiStaff: function (options) {
-      var vf = VF.Test.makeFactory(options, 550, 400);
+      var vf = VexFlowTests.makeFactory(options, 550, 400);
 
       vf.StaveNote = vf.StaveNote.bind(vf);
 
@@ -262,5 +262,5 @@ const NoteSubGroupTests = (function () {
 
   return NoteSubGroup;
 })();
-VF.Test.NoteSubGroup = NoteSubGroupTests;
+VexFlowTests.NoteSubGroup = NoteSubGroupTests;
 export { NoteSubGroupTests };

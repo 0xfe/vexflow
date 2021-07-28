@@ -4,7 +4,7 @@
  */
 function createSingleMeasureTest(setup) {
   return function (options) {
-    var vf = VF.Test.makeFactory(options, 500);
+    var vf = VexFlowTests.makeFactory(options, 500);
     var stave = vf.Stave().addClef('percussion');
 
     setup(vf);
@@ -30,7 +30,7 @@ const PercussionTests = (function () {
 
   var Percussion = {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('Percussion');
 
@@ -234,5 +234,5 @@ const PercussionTests = (function () {
 
   return Percussion;
 })();
-VF.Test.Percussion = PercussionTests;
+VexFlowTests.Percussion = PercussionTests;
 export { PercussionTests };

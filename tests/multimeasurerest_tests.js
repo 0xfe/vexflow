@@ -6,13 +6,13 @@ const MultiMeasureRestTests = (function () {
   return {
     Start: function () {
       QUnit.module('MultiMeasureRest');
-      VF.Test.runTests('Simple Test', VF.Test.MultiMeasureRest.simple0);
-      VF.Test.runTests('Stave with modifiers Test', VF.Test.MultiMeasureRest.staveWithModifiers);
+      VexFlowTests.runTests('Simple Test', VexFlowTests.MultiMeasureRest.simple0);
+      VexFlowTests.runTests('Stave with modifiers Test', VexFlowTests.MultiMeasureRest.staveWithModifiers);
     },
 
     simple0: function (options) {
       const width = 910;
-      const vf = VF.Test.makeFactory(options, width, 300);
+      const vf = VexFlowTests.makeFactory(options, width, 300);
       const params = [
         { number_of_measures: 2, show_number: false },
         { number_of_measures: 2 },
@@ -92,7 +92,7 @@ const MultiMeasureRestTests = (function () {
     },
     staveWithModifiers: function (options) {
       const width = 910;
-      const vf = VF.Test.makeFactory(options, width, 200);
+      const vf = VexFlowTests.makeFactory(options, width, 200);
       // const stave = vf.Stave({ y: 20, width: 270 });
       var x = 0;
       var y = 0;
@@ -152,5 +152,5 @@ const MultiMeasureRestTests = (function () {
     },
   };
 })();
-VF.Test.MultiMeasureRest = MultiMeasureRestTests;
+VexFlowTests.MultiMeasureRest = MultiMeasureRestTests;
 export { MultiMeasureRestTests };

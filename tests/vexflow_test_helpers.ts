@@ -363,6 +363,5 @@ global.almostEqual = (value: number, expectedValue: number, errorMargin: number)
 const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
 global.VF = VF;
-global.VF.Test = VexFlowTests;
 
 export { VexFlowTests, concat };

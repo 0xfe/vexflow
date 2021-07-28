@@ -24,7 +24,7 @@ const StringNumberTests = (function () {
     },
 
     drawMultipleMeasures: function (options) {
-      const vf = VF.Test.makeFactory(options, 775, 200);
+      const vf = VexFlowTests.makeFactory(options, 775, 200);
       const score = vf.EasyScore();
 
       // bar 1
@@ -117,7 +117,7 @@ const StringNumberTests = (function () {
     },
 
     drawFretHandFingers: function (options) {
-      const vf = VF.Test.makeFactory(options, 725, 200);
+      const vf = VexFlowTests.makeFactory(options, 725, 200);
       const score = vf.EasyScore();
 
       // bar 1
@@ -203,7 +203,7 @@ const StringNumberTests = (function () {
     },
 
     multi: function (options) {
-      const vf = VF.Test.makeFactory(options, 700, 200);
+      const vf = VexFlowTests.makeFactory(options, 700, 200);
       const score = vf.EasyScore();
       const stave = vf.Stave();
 
@@ -266,7 +266,7 @@ const StringNumberTests = (function () {
     },
 
     drawAccidentals: function (options) {
-      const vf = VF.Test.makeFactory(options, 500);
+      const vf = VexFlowTests.makeFactory(options, 500);
 
       const stave = vf.Stave().setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
 

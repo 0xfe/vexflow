@@ -112,14 +112,14 @@ const ThreeVoicesTests = {
   },
 
   autoRestTwoVoices: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 900, 200);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 900, 200);
+    const score = f.EasyScore();
     let x = 10;
 
     let beams = [];
 
     function createMeasure(measureTitle, width, alignRests) {
-      const stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
+      const stave = f.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
       x += width;
 
       const voices = [
@@ -127,33 +127,33 @@ const ThreeVoicesTests = {
         score.notes('c5/16, c4, b4/r, d4, e4, f4, b4/r, g4, g4[stem="up"], a4[stem="up"], b4/r, b4[stem="up"], e4/4', {
           stem: 'down',
         }),
-        [vf.TextNote({ text: measureTitle, line: -1, duration: '1', smooth: true })],
+        [f.TextNote({ text: measureTitle, line: -1, duration: '1', smooth: true })],
       ].map(score.voice.bind(score));
 
       beams = beams.concat(VF.Beam.applyAndGetBeams(voices[0], 1)).concat(VF.Beam.applyAndGetBeams(voices[1], -1));
 
-      vf.Formatter().joinVoices(voices).formatToStave(voices, stave, { align_rests: alignRests });
+      f.Formatter().joinVoices(voices).formatToStave(voices, stave, { align_rests: alignRests });
     }
 
     createMeasure('Default Rest Positions', 400, false);
     createMeasure('Rests Repositioned To Avoid Collisions', 400, true);
 
-    vf.draw();
+    f.draw();
 
     for (let i = 0; i < beams.length; i++) {
-      beams[i].setContext(vf.getContext()).draw();
+      beams[i].setContext(f.getContext()).draw();
     }
 
     ok(true, 'Auto Adjust Rests - Two Voices');
   },
 
   autorestthreevoices: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 850, 200);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 850, 200);
+    const score = f.EasyScore();
     let x = 10;
 
     function createMeasure(measureTitle, width, alignRests) {
-      const stave = vf.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
+      const stave = f.Stave({ x: x, y: 50, width: width }).setBegBarType(1);
 
       const voices = [
         score.voice(score.notes('b4/4/r, e5, e5/r, e5/r, e5, e5, e5, e5/r', { stem: 'up' }), { time: '8/4' }),
@@ -161,21 +161,21 @@ const ThreeVoicesTests = {
         score.voice(score.notes('e4/4/r, e4/r, f4, b4/r, g4, c4, e4/r, c4', { stem: 'down' }), { time: '8/4' }),
         score.voice(
           [
-            vf.TextNote({ text: measureTitle, duration: '1', line: -1, smooth: true }),
-            vf.TextNote({ text: '', duration: '1', line: -1, smooth: true }),
+            f.TextNote({ text: measureTitle, duration: '1', line: -1, smooth: true }),
+            f.TextNote({ text: '', duration: '1', line: -1, smooth: true }),
           ],
           { time: '8/4' }
         ),
       ];
 
-      vf.Formatter().joinVoices(voices).formatToStave(voices, stave, { align_rests: alignRests });
+      f.Formatter().joinVoices(voices).formatToStave(voices, stave, { align_rests: alignRests });
 
       x += width;
     }
 
     createMeasure('Default Rest Positions', 400, false);
     createMeasure('Rests Repositioned To Avoid Collisions', 400, true);
-    vf.draw();
+    f.draw();
 
     ok(true);
   },

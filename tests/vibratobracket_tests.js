@@ -7,17 +7,17 @@
 const VibratoBracketTests = (function () {
   function createTest(noteGroup1, setupVibratoBracket) {
     return function (options) {
-      var vf = VF.Test.makeFactory(options, 650, 200);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      var f = VexFlowTests.makeFactory(options, 650, 200);
+      var stave = f.Stave();
+      var score = f.EasyScore();
 
       var voice = score.voice(score.notes.apply(score, noteGroup1));
 
-      setupVibratoBracket(vf, voice.getTickables());
+      setupVibratoBracket(f, voice.getTickables());
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       ok(true);
     };
@@ -25,7 +25,7 @@ const VibratoBracketTests = (function () {
 
   return {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('VibratoBracket');
 
@@ -72,5 +72,5 @@ const VibratoBracketTests = (function () {
     },
   };
 })();
-VF.Test.VibratoBracket = VibratoBracketTests;
+VexFlowTests.VibratoBracket = VibratoBracketTests;
 export { VibratoBracketTests };

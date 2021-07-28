@@ -10,10 +10,10 @@ const ClefKeySignatureTests = (function () {
 
     Start: function () {
       QUnit.module('Clef Keys');
-      QUnit.test('Key Parser Test', VF.Test.ClefKeySignature.parser);
-      VF.Test.runTests('Major Key Clef Test', VF.Test.ClefKeySignature.keys, { majorKeys: true });
-      VF.Test.runTests('Minor Key Clef Test', VF.Test.ClefKeySignature.keys, { majorKeys: false });
-      VF.Test.runTests('Stave Helper', VF.Test.ClefKeySignature.staveHelper);
+      QUnit.test('Key Parser Test', VexFlowTests.ClefKeySignature.parser);
+      VexFlowTests.runTests('Major Key Clef Test', VexFlowTests.ClefKeySignature.keys, { majorKeys: true });
+      VexFlowTests.runTests('Minor Key Clef Test', VexFlowTests.ClefKeySignature.keys, { majorKeys: false });
+      VexFlowTests.runTests('Stave Helper', VexFlowTests.ClefKeySignature.staveHelper);
     },
 
     catchError: function (spec) {
@@ -26,17 +26,17 @@ const ClefKeySignatureTests = (function () {
 
     parser: function () {
       expect(11);
-      VF.Test.ClefKeySignature.catchError('asdf');
-      VF.Test.ClefKeySignature.catchError('D!');
-      VF.Test.ClefKeySignature.catchError('E#');
-      VF.Test.ClefKeySignature.catchError('D#');
-      VF.Test.ClefKeySignature.catchError('#');
-      VF.Test.ClefKeySignature.catchError('b');
-      VF.Test.ClefKeySignature.catchError('Kb');
-      VF.Test.ClefKeySignature.catchError('Fb');
-      VF.Test.ClefKeySignature.catchError('Ab');
-      VF.Test.ClefKeySignature.catchError('Dbm');
-      VF.Test.ClefKeySignature.catchError('B#m');
+      VexFlowTests.ClefKeySignature.catchError('asdf');
+      VexFlowTests.ClefKeySignature.catchError('D!');
+      VexFlowTests.ClefKeySignature.catchError('E#');
+      VexFlowTests.ClefKeySignature.catchError('D#');
+      VexFlowTests.ClefKeySignature.catchError('#');
+      VexFlowTests.ClefKeySignature.catchError('b');
+      VexFlowTests.ClefKeySignature.catchError('Kb');
+      VexFlowTests.ClefKeySignature.catchError('Fb');
+      VexFlowTests.ClefKeySignature.catchError('Ab');
+      VexFlowTests.ClefKeySignature.catchError('Dbm');
+      VexFlowTests.ClefKeySignature.catchError('B#m');
 
       VF.keySignature('B');
       VF.keySignature('C');
@@ -66,7 +66,9 @@ const ClefKeySignatureTests = (function () {
 
       var ctx = contextBuilder(options.elementId, 400, 20 + 80 * 2 * clefs.length);
       var staves = [];
-      var keys = options.params.majorKeys ? VF.Test.ClefKeySignature.MAJOR_KEYS : VF.Test.ClefKeySignature.MINOR_KEYS;
+      var keys = options.params.majorKeys
+        ? VexFlowTests.ClefKeySignature.MAJOR_KEYS
+        : VexFlowTests.ClefKeySignature.MINOR_KEYS;
 
       var i;
       var flat;
@@ -106,7 +108,7 @@ const ClefKeySignatureTests = (function () {
       var stave2 = new VF.Stave(10, 90, 370);
       var stave3 = new VF.Stave(10, 170, 370);
       var stave4 = new VF.Stave(10, 260, 370);
-      var keys = VF.Test.ClefKeySignature.MAJOR_KEYS;
+      var keys = VexFlowTests.ClefKeySignature.MAJOR_KEYS;
 
       stave.addClef('treble');
       stave2.addClef('bass');
@@ -138,5 +140,5 @@ const ClefKeySignatureTests = (function () {
 
   return ClefKeySignature;
 })();
-VF.Test.ClefKeySignature = ClefKeySignatureTests;
+VexFlowTests.ClefKeySignature = ClefKeySignatureTests;
 export { ClefKeySignatureTests };

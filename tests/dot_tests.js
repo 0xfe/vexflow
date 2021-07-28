@@ -10,7 +10,7 @@ const DotTests = (function () {
 
     note.setContext(ctx).draw();
 
-    VF.Test.plotNoteWidth(ctx, note, 140);
+    VexFlowTests.plotNoteWidth(ctx, note, 140);
 
     return note;
   }
@@ -25,15 +25,15 @@ const DotTests = (function () {
     note1.setContext(ctx).draw();
     note2.setContext(ctx).draw();
 
-    VF.Test.plotNoteWidth(ctx, note1, 180);
-    VF.Test.plotNoteWidth(ctx, note2, 20);
+    VexFlowTests.plotNoteWidth(ctx, note1, 180);
+    VexFlowTests.plotNoteWidth(ctx, note2, 20);
   }
 
   var Dot = {
     Start: function () {
       QUnit.module('Dot');
-      VF.Test.runTests('Basic', VF.Test.Dot.basic);
-      VF.Test.runTests('Multi Voice', VF.Test.Dot.multiVoice);
+      VexFlowTests.runTests('Basic', VexFlowTests.Dot.basic);
+      VexFlowTests.runTests('Multi Voice', VexFlowTests.Dot.multiVoice);
     },
 
     basic: function (options, contextBuilder) {
@@ -99,7 +99,7 @@ const DotTests = (function () {
 
       beam.setContext(ctx).draw();
 
-      VF.Test.plotLegendForNoteWidth(ctx, 890, 140);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 890, 140);
 
       ok(true, 'Full Dot');
     },
@@ -161,7 +161,7 @@ const DotTests = (function () {
 
       showNotes(note1, note2, stave, ctx, 450);
 
-      VF.Test.plotLegendForNoteWidth(ctx, 620, 180);
+      VexFlowTests.plotLegendForNoteWidth(ctx, 620, 180);
 
       ok(true, 'Full Dot');
     },
@@ -169,5 +169,5 @@ const DotTests = (function () {
 
   return Dot;
 })();
-VF.Test.Dot = DotTests;
+VexFlowTests.Dot = DotTests;
 export { DotTests };

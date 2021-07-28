@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const ChordSymbolTests = (function () {
-  var runSVG = VF.Test.runSVGTest;
+  var runSVG = VexFlowTests.runSVGTest;
   var ChordSymbol = {
     Start: function () {
       QUnit.module('ChordSymbol');
@@ -17,7 +17,7 @@ const ChordSymbolTests = (function () {
     },
 
     kern: function (options) {
-      var vf = VF.Test.makeFactory(options, 650, 650);
+      var vf = VexFlowTests.makeFactory(options, 650, 650);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -122,7 +122,7 @@ const ChordSymbolTests = (function () {
     },
 
     top: function (options) {
-      var vf = VF.Test.makeFactory(options, 650, 650);
+      var vf = VexFlowTests.makeFactory(options, 650, 650);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -177,7 +177,7 @@ const ChordSymbolTests = (function () {
     },
 
     fontSize: function (options) {
-      var vf = VF.Test.makeFactory(options, 750, 580);
+      var vf = VexFlowTests.makeFactory(options, 750, 580);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -304,7 +304,7 @@ const ChordSymbolTests = (function () {
     },
 
     topJustify: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 680);
+      var vf = VexFlowTests.makeFactory(options, 500, 680);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -362,7 +362,7 @@ const ChordSymbolTests = (function () {
     },
 
     dblbottom: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 260);
+      var vf = VexFlowTests.makeFactory(options, 600, 260);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -401,7 +401,7 @@ const ChordSymbolTests = (function () {
     },
 
     bottom: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -433,7 +433,7 @@ const ChordSymbolTests = (function () {
       ok(true, 'Bottom Chord Symbol');
     },
     bottomStemDown: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 330);
+      var vf = VexFlowTests.makeFactory(options, 600, 330);
       var ctx = vf.getContext();
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -468,5 +468,5 @@ const ChordSymbolTests = (function () {
 
   return ChordSymbol;
 })();
-VF.Test.ChordSymbol = ChordSymbolTests;
+VexFlowTests.ChordSymbol = ChordSymbolTests;
 export { ChordSymbolTests };

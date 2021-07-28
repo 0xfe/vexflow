@@ -26,7 +26,7 @@ const TimeSignatureTests = (function () {
         ok(true, 'all pass');
       });
 
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       run('Basic Time Signatures', function (options, contextBuilder) {
         var ctx = contextBuilder(options.elementId, 600, 120);
@@ -93,32 +93,32 @@ const TimeSignatureTests = (function () {
       });
 
       run('Time Signature Change Test', function (options) {
-        var vf = VF.Test.makeFactory(options, 900);
+        var f = VexFlowTests.makeFactory(options, 900);
 
-        var stave = vf.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
+        var stave = f.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
 
-        var voice = vf
+        var voice = f
           .Voice()
           .setStrict(false)
           .addTickables([
-            vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
-            vf.TimeSigNote({ time: '3/4' }),
-            vf.StaveNote({ keys: ['d/4'], duration: '4', clef: 'alto' }),
-            vf.StaveNote({ keys: ['b/3'], duration: '4r', clef: 'alto' }),
-            vf.TimeSigNote({ time: 'C' }),
-            vf.StaveNote({ keys: ['c/3', 'e/3', 'g/3'], duration: '4', clef: 'bass' }),
-            vf.TimeSigNote({ time: '9/8' }),
-            vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
+            f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
+            f.TimeSigNote({ time: '3/4' }),
+            f.StaveNote({ keys: ['d/4'], duration: '4', clef: 'alto' }),
+            f.StaveNote({ keys: ['b/3'], duration: '4r', clef: 'alto' }),
+            f.TimeSigNote({ time: 'C' }),
+            f.StaveNote({ keys: ['c/3', 'e/3', 'g/3'], duration: '4', clef: 'bass' }),
+            f.TimeSigNote({ time: '9/8' }),
+            f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
           ]);
 
-        vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+        f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-        vf.draw();
+        f.draw();
 
         ok(true, 'all pass');
       });
     },
   };
 })();
-VF.Test.TimeSignature = TimeSignatureTests;
+VexFlowTests.TimeSignature = TimeSignatureTests;
 export { TimeSignatureTests };

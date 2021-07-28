@@ -5,7 +5,7 @@
 
 function createTest(setup) {
   return function (options) {
-    var vf = VF.Test.makeFactory(options, 550);
+    var vf = VexFlowTests.makeFactory(options, 550);
     var stave = vf.Stave();
     var score = vf.EasyScore();
 
@@ -21,7 +21,7 @@ function createTest(setup) {
 
 const GhostNoteTests = {
   Start: function () {
-    var run = VF.Test.runTests;
+    var run = VexFlowTests.runTests;
 
     QUnit.module('GhostNote');
 
@@ -108,5 +108,5 @@ const GhostNoteTests = {
     );
   },
 };
-VF.Test.GhostNote = GhostNoteTests;
+VexFlowTests.GhostNote = GhostNoteTests;
 export { GhostNoteTests };

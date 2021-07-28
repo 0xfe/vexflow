@@ -8,7 +8,7 @@
 const TextNoteTests = (function () {
   var TextNote = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
 
       QUnit.module('TextNote');
       runTests('TextNote Formatting', TextNote.formatTextNotes);
@@ -21,37 +21,37 @@ const TextNoteTests = (function () {
     },
 
     formatTextNotes: function (options) {
-      var vf = VF.Test.makeFactory(options, 400, 200);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      var f = VexFlowTests.makeFactory(options, 400, 200);
+      var stave = f.Stave({ y: 40 });
+      var score = f.EasyScore();
 
       var voice1 = score.voice([
-        vf
+        f
           .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-          .addAccidental(0, vf.Accidental({ type: 'b' }))
-          .addAccidental(1, vf.Accidental({ type: '#' })),
-        vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: 'q' }),
-        vf
+          .addAccidental(0, f.Accidental({ type: 'b' }))
+          .addAccidental(1, f.Accidental({ type: '#' })),
+        f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: 'q' }),
+        f
           .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: 'q' })
-          .addAccidental(0, vf.Accidental({ type: 'n' }))
-          .addAccidental(1, vf.Accidental({ type: '#' })),
+          .addAccidental(0, f.Accidental({ type: 'n' }))
+          .addAccidental(1, f.Accidental({ type: '#' })),
       ]);
 
       var voice2 = score.voice([
-        vf.TextNote({ text: 'Center Justification', duration: 'h' }).setJustification(VF.TextNote.Justification.CENTER),
-        vf.TextNote({ text: 'Left Line 1', duration: 'q' }).setLine(1),
-        vf.TextNote({ text: 'Right', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+        f.TextNote({ text: 'Center Justification', duration: 'h' }).setJustification(VF.TextNote.Justification.CENTER),
+        f.TextNote({ text: 'Left Line 1', duration: 'q' }).setLine(1),
+        f.TextNote({ text: 'Right', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
       ]);
 
-      const formatter = vf.Formatter();
+      const formatter = f.Formatter();
       formatter.joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-      vf.draw();
+      f.draw();
       ok(true);
     },
 
     formatTextNotes2: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VexFlowTests.makeFactory(options, 600, 200);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -105,7 +105,7 @@ const TextNoteTests = (function () {
     },
 
     superscriptAndSubscript: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -144,7 +144,7 @@ const TextNoteTests = (function () {
     },
 
     formatTextGlyphs0: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -182,7 +182,7 @@ const TextNoteTests = (function () {
     },
 
     formatTextGlyphs1: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -219,7 +219,7 @@ const TextNoteTests = (function () {
     },
 
     crescendo: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -239,7 +239,7 @@ const TextNoteTests = (function () {
     },
 
     textDynamics: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 230);
+      var vf = VexFlowTests.makeFactory(options, 600, 230);
       var stave = vf.Stave({ y: 40 });
       var score = vf.EasyScore();
 
@@ -267,5 +267,5 @@ const TextNoteTests = (function () {
 
   return TextNote;
 })();
-VF.Test.TextNote = TextNoteTests;
+VexFlowTests.TextNote = TextNoteTests;
 export { TextNoteTests };

@@ -6,7 +6,7 @@
 const OrnamentTests = (function () {
   var Ornament = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Ornament');
       runTests('Ornaments', Ornament.drawOrnaments);
       runTests('Ornaments Vertically Shifted', Ornament.drawOrnamentsDisplaced);
@@ -230,7 +230,7 @@ const OrnamentTests = (function () {
 
     jazzOrnaments: function (options) {
       expect(0);
-      var vf = VF.Test.makeFactory(options, 950, 400);
+      var vf = VexFlowTests.makeFactory(options, 950, 400);
       var ctx = vf.getContext();
       ctx.scale(1, 1);
       ctx.fillStyle = '#221';
@@ -363,5 +363,5 @@ const OrnamentTests = (function () {
 
   return Ornament;
 })();
-VF.Test.Ornament = OrnamentTests;
+VexFlowTests.Ornament = OrnamentTests;
 export { OrnamentTests };

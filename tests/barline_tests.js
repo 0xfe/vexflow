@@ -5,12 +5,12 @@
 const BarlineTests = (function () {
   return {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('Barline');
 
       run('Simple BarNotes', function (options) {
-        var vf = VF.Test.makeFactory(options, 380, 160);
+        var vf = VexFlowTests.makeFactory(options, 380, 160);
         var stave = vf.Stave();
 
         var notes = [
@@ -31,7 +31,7 @@ const BarlineTests = (function () {
         ok(true, 'Simple Test');
       });
       run('Style BarNotes', function (options) {
-        var vf = VF.Test.makeFactory(options, 380, 160);
+        var vf = VexFlowTests.makeFactory(options, 380, 160);
         var stave = vf.Stave();
 
         var notes = [
@@ -55,5 +55,5 @@ const BarlineTests = (function () {
     },
   };
 })();
-VF.Test.Barline = BarlineTests;
+VexFlowTests.Barline = BarlineTests;
 export { BarlineTests };

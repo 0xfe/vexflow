@@ -7,12 +7,12 @@ const TabNoteTests = (function () {
     Start: function () {
       QUnit.module('TabNote');
 
-      test('Tick', VF.Test.TabNote.ticks);
-      test('TabStave Line', VF.Test.TabNote.tabStaveLine);
-      test('Width', VF.Test.TabNote.width);
-      test('TickContext', VF.Test.TabNote.tickContext);
+      test('Tick', VexFlowTests.TabNote.ticks);
+      test('TabStave Line', VexFlowTests.TabNote.tabStaveLine);
+      test('Width', VexFlowTests.TabNote.width);
+      test('TickContext', VexFlowTests.TabNote.tickContext);
 
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
       run('TabNote Draw', TabNote.draw);
       run('TabNote Stems Up', TabNote.drawStemsUp);
       run('TabNote Stems Down', TabNote.drawStemsDown);
@@ -103,7 +103,7 @@ const TabNoteTests = (function () {
       stave.setContext(ctx);
       stave.draw();
 
-      var showNote = VF.Test.TabNote.showNote;
+      var showNote = VexFlowTests.TabNote.showNote;
       var notes = [
         { positions: [{ str: 6, fret: 6 }], duration: '4' },
         {
@@ -522,5 +522,5 @@ const TabNoteTests = (function () {
 
   return TabNote;
 })();
-VF.Test.TabNote = TabNoteTests;
+VexFlowTests.TabNote = TabNoteTests;
 export { TabNoteTests };

@@ -3,7 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const AnnotationTests = (function () {
-  var runTests = VF.Test.runTests;
+  var runTests = VexFlowTests.runTests;
   var Annotation = {
     Start: function () {
       QUnit.module('Annotation');
@@ -28,7 +28,7 @@ const AnnotationTests = (function () {
       let ratio = 1;
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
-      var vf = VF.Test.makeFactory(options, 750, 260);
+      var vf = VexFlowTests.makeFactory(options, 750, 260);
       for (var i = 0; i < 3; ++i) {
         var score = vf.EasyScore();
         score.set({ time: '3/4' });
@@ -107,7 +107,7 @@ const AnnotationTests = (function () {
         return new VF.StaveNote(note_struct);
       }
       function newAnnotation(text) {
-        return new VF.Annotation(text).setFont('Times', VF.Test.Font.size, 'italic');
+        return new VF.Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
       }
 
       var notes = [
@@ -146,7 +146,7 @@ const AnnotationTests = (function () {
           positions: [{ str: 2, fret: 9 }],
           duration: 'h',
         })
-          .addModifier(newAnnotation('(8va)').setFont('Times', VF.Test.Font.size, 'italic'), 0)
+          .addModifier(newAnnotation('(8va)').setFont('Times', VexFlowTests.Font.size, 'italic'), 0)
           .addModifier(newAnnotation('A.H.'), 0),
       ];
 
@@ -159,14 +159,14 @@ const AnnotationTests = (function () {
       ctx.scale(1.5, 1.5);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
-      ctx.setFont('Arial', VF.Test.Font.size, '');
+      ctx.setFont('Arial', VexFlowTests.Font.size, '');
       var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
       function newAnnotation(text) {
-        return new VF.Annotation(text).setFont('Times', VF.Test.Font.size, 'italic');
+        return new VF.Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
       }
 
       var notes = [
@@ -214,7 +214,7 @@ const AnnotationTests = (function () {
       }
       function newAnnotation(text) {
         return new VF.Annotation(text)
-          .setFont('Times', VF.Test.Font.size)
+          .setFont('Times', VexFlowTests.Font.size)
           .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
       }
 
@@ -277,7 +277,7 @@ const AnnotationTests = (function () {
       }
       function newAnnotation(text, hJustifcation, vJustifcation) {
         return new VF.Annotation(text)
-          .setFont('Arial', VF.Test.Font.size)
+          .setFont('Arial', VexFlowTests.Font.size)
           .setJustification(hJustifcation)
           .setVerticalJustification(vJustifcation);
       }
@@ -309,7 +309,7 @@ const AnnotationTests = (function () {
       }
       function newAnnotation(text, hJustifcation, vJustifcation) {
         return new VF.Annotation(text)
-          .setFont('Arial', VF.Test.Font.size)
+          .setFont('Arial', VexFlowTests.Font.size)
           .setJustification(hJustifcation)
           .setVerticalJustification(vJustifcation);
       }
@@ -425,5 +425,5 @@ const AnnotationTests = (function () {
 
   return Annotation;
 })();
-VF.Test.Annotation = AnnotationTests;
+VexFlowTests.Annotation = AnnotationTests;
 export { AnnotationTests };

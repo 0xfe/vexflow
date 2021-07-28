@@ -5,7 +5,7 @@
 const TabSlideTests = (function () {
   var TabSlide = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('TabSlide');
       runTests('Simple TabSlide', TabSlide.simple);
       runTests('Slide Up', TabSlide.slideUp);
@@ -46,12 +46,12 @@ const TabSlideTests = (function () {
 
     simple: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.TabSlide.setupContext(options);
+      var c = VexFlowTests.TabSlide.setupContext(options);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
 
-      VF.Test.TabSlide.tieNotes(
+      VexFlowTests.TabSlide.tieNotes(
         [
           newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
           newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
@@ -64,7 +64,7 @@ const TabSlideTests = (function () {
     },
 
     multiTest: function (options, factory) {
-      var c = VF.Test.TabSlide.setupContext(options, 440, 100);
+      var c = VexFlowTests.TabSlide.setupContext(options, 440, 100);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -155,16 +155,16 @@ const TabSlideTests = (function () {
 
     slideUp: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VF.Test.TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
+      VexFlowTests.TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
     },
 
     slideDown: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VF.Test.TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
+      VexFlowTests.TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
     },
   };
 
   return TabSlide;
 })();
-VF.Test.TabSlide = TabSlideTests;
+VexFlowTests.TabSlide = TabSlideTests;
 export { TabSlideTests };

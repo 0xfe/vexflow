@@ -15,7 +15,7 @@ const StaveHairpinTests = (function () {
 
   function createTest(drawHairpins) {
     return function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var ctx = vf.getContext();
       var stave = vf.Stave();
 
@@ -43,7 +43,7 @@ const StaveHairpinTests = (function () {
 
   return {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('StaveHairpin');
 
@@ -111,5 +111,5 @@ const StaveHairpinTests = (function () {
     },
   };
 })();
-VF.Test.StaveHairpin = StaveHairpinTests;
+VexFlowTests.StaveHairpin = StaveHairpinTests;
 export { StaveHairpinTests };

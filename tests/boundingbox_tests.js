@@ -6,8 +6,8 @@ const BoundingBoxTests = (function () {
   var BoundingBox = {
     Start: function () {
       QUnit.module('BoundingBox');
-      test('Initialization Test', VF.Test.BoundingBox.initialization);
-      test('Merging Text', VF.Test.BoundingBox.merging);
+      test('Initialization Test', VexFlowTests.BoundingBox.initialization);
+      test('Merging Text', VexFlowTests.BoundingBox.merging);
     },
 
     initialization: function () {
@@ -60,5 +60,5 @@ const BoundingBoxTests = (function () {
 
   return BoundingBox;
 })();
-VF.Test.BoundingBox = BoundingBoxTests;
+VexFlowTests.BoundingBox = BoundingBoxTests;
 export { BoundingBoxTests };

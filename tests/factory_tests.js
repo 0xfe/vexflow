@@ -47,7 +47,7 @@ const FactoryTests = (function () {
     },
 
     drawTab: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 400);
+      var vf = VexFlowTests.makeFactory(options, 500, 400);
 
       var system = vf.System({ width: 500 });
 

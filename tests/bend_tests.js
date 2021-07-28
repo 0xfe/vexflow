@@ -6,11 +6,11 @@ const BendTests = (function () {
   var Bend = {
     Start: function () {
       QUnit.module('Bend');
-      VF.Test.runTests('Double Bends', VF.Test.Bend.doubleBends);
-      VF.Test.runTests('Reverse Bends', VF.Test.Bend.reverseBends);
-      VF.Test.runTests('Bend Phrase', VF.Test.Bend.bendPhrase);
-      VF.Test.runTests('Double Bends With Release', VF.Test.Bend.doubleBendsWithRelease);
-      VF.Test.runTests('Whako Bend', VF.Test.Bend.whackoBends);
+      VexFlowTests.runTests('Double Bends', VexFlowTests.Bend.doubleBends);
+      VexFlowTests.runTests('Reverse Bends', VexFlowTests.Bend.reverseBends);
+      VexFlowTests.runTests('Bend Phrase', VexFlowTests.Bend.bendPhrase);
+      VexFlowTests.runTests('Double Bends With Release', VexFlowTests.Bend.doubleBendsWithRelease);
+      VexFlowTests.runTests('Whako Bend', VexFlowTests.Bend.whackoBends);
     },
 
     doubleBends: function (options, contextBuilder) {
@@ -57,7 +57,7 @@ const BendTests = (function () {
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
       notes.forEach(function (note) {
-        VF.Test.plotNoteWidth(ctx, note, 140);
+        VexFlowTests.plotNoteWidth(ctx, note, 140);
       });
 
       ok(true, 'Double Bends');
@@ -67,7 +67,7 @@ const BendTests = (function () {
       var ctx = contextBuilder(options.elementId, 550, 240);
       ctx.scale(1.0, 1.0);
       ctx.setBackgroundFillStyle('#FFF');
-      ctx.setFont('Arial', VF.Test.Font.size);
+      ctx.setFont('Arial', VexFlowTests.Font.size);
       var stave = new VF.TabStave(10, 10, 550).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
@@ -112,7 +112,7 @@ const BendTests = (function () {
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
       notes.forEach(function (note) {
-        VF.Test.plotNoteWidth(ctx, note, 140);
+        VexFlowTests.plotNoteWidth(ctx, note, 140);
       });
       ok(true, 'Bend Release');
     },
@@ -172,7 +172,7 @@ const BendTests = (function () {
           .setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
-        VF.Test.plotNoteWidth(ctx, note, 140);
+        VexFlowTests.plotNoteWidth(ctx, note, 140);
         ok(true, 'Bend ' + i);
       }
     },
@@ -219,7 +219,7 @@ const BendTests = (function () {
           .setX(75 * i);
 
         note.setStave(stave).setContext(ctx).draw();
-        VF.Test.plotNoteWidth(ctx, note, 140);
+        VexFlowTests.plotNoteWidth(ctx, note, 140);
         ok(true, 'Bend ' + i);
       }
     },
@@ -228,7 +228,7 @@ const BendTests = (function () {
       var ctx = contextBuilder(options.elementId, 400, 240);
       ctx.scale(1.0, 1.0);
       ctx.setBackgroundFillStyle('#FFF');
-      ctx.setFont('Arial', VF.Test.Font.size);
+      ctx.setFont('Arial', VexFlowTests.Font.size);
       var stave = new VF.TabStave(10, 10, 350).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
@@ -269,12 +269,12 @@ const BendTests = (function () {
       ];
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
-      VF.Test.plotNoteWidth(ctx, notes[0], 140);
+      VexFlowTests.plotNoteWidth(ctx, notes[0], 140);
       ok(true, 'Whako Release');
     },
   };
 
   return Bend;
 })();
-VF.Test.Bend = BendTests;
+VexFlowTests.Bend = BendTests;
 export { BendTests };

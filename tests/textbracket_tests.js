@@ -6,19 +6,19 @@ const TextBracketTests = (function () {
   var TextBracket = {
     Start: function () {
       QUnit.module('TextBracket');
-      VF.Test.runTests('Simple TextBracket', VF.Test.TextBracket.simple0);
-      VF.Test.runTests('TextBracket Styles', VF.Test.TextBracket.simple1);
+      VexFlowTests.runTests('Simple TextBracket', VexFlowTests.TextBracket.simple0);
+      VexFlowTests.runTests('TextBracket Styles', VexFlowTests.TextBracket.simple1);
     },
 
     simple0: function (options) {
-      var vf = VF.Test.makeFactory(options, 550);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      var f = VexFlowTests.makeFactory(options, 550);
+      var stave = f.Stave();
+      var score = f.EasyScore();
 
       var notes = score.notes('c4/4, c4, c4, c4, c4', { stem: 'up' });
       var voice = score.voice(notes, { time: '5/4' });
 
-      vf.TextBracket({
+      f.TextBracket({
         from: notes[0],
         to: notes[4],
         text: '15',
@@ -28,7 +28,7 @@ const TextBracketTests = (function () {
         },
       });
 
-      vf.TextBracket({
+      f.TextBracket({
         from: notes[0],
         to: notes[4],
         text: '8',
@@ -39,15 +39,15 @@ const TextBracketTests = (function () {
         },
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       ok(true);
     },
 
     simple1: function (options) {
-      var vf = VF.Test.makeFactory(options, 550);
+      var vf = VexFlowTests.makeFactory(options, 550);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -119,5 +119,5 @@ const TextBracketTests = (function () {
 
   return TextBracket;
 })();
-VF.Test.TextBracket = TextBracketTests;
+VexFlowTests.TextBracket = TextBracketTests;
 export { TextBracketTests };

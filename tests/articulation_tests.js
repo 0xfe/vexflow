@@ -22,7 +22,7 @@ const ArticulationTests = (function () {
         sym2: sym2,
       };
 
-      VF.Test.runTests(name, func, params);
+      VexFlowTests.runTests(name, func, params);
     },
 
     drawArticulations: function (options, contextBuilder) {
@@ -357,5 +357,5 @@ const ArticulationTests = (function () {
 
   return Articulation;
 })();
-VF.Test.Articulation = ArticulationTests;
+VexFlowTests.Articulation = ArticulationTests;
 export { ArticulationTests };

@@ -5,7 +5,7 @@
 const TabTieTests = (function () {
   var TabTie = {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('TabTie');
 
@@ -41,7 +41,7 @@ const TabTieTests = (function () {
       var ctx = options.contextBuilder(options.elementId, x || 350, y || 160);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
-      ctx.setFont('Arial', VF.Test.Font.size, '');
+      ctx.setFont('Arial', VexFlowTests.Font.size, '');
 
       var stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().setContext(ctx).draw();
 
@@ -49,8 +49,8 @@ const TabTieTests = (function () {
     },
 
     drawTie: function (notes, indices, options, text) {
-      var c = VF.Test.TabTie.setupContext(options);
-      VF.Test.TabTie.tieNotes(notes, indices, c.stave, c.context, text);
+      var c = VexFlowTests.TabTie.setupContext(options);
+      VexFlowTests.TabTie.tieNotes(notes, indices, c.stave, c.context, text);
     },
 
     simple: function (options, contextBuilder) {
@@ -59,7 +59,7 @@ const TabTieTests = (function () {
         return new VF.TabNote(tab_struct);
       }
 
-      VF.Test.TabTie.drawTie(
+      VexFlowTests.TabTie.drawTie(
         [
           newNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
           newNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
@@ -77,7 +77,7 @@ const TabTieTests = (function () {
         return new VF.TabNote(tab_struct);
       }
 
-      VF.Test.TabTie.drawTie(
+      VexFlowTests.TabTie.drawTie(
         [
           newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new VF.Annotation('T'), 0),
           newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' }),
@@ -91,7 +91,7 @@ const TabTieTests = (function () {
     },
 
     multiTest: function (options, factory) {
-      var c = VF.Test.TabTie.setupContext(options, 440, 140);
+      var c = VexFlowTests.TabTie.setupContext(options, 440, 140);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -182,17 +182,17 @@ const TabTieTests = (function () {
 
     simpleHammeron: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VF.Test.TabTie.multiTest(options, VF.TabTie.createHammeron);
+      VexFlowTests.TabTie.multiTest(options, VF.TabTie.createHammeron);
     },
 
     simplePulloff: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      VF.Test.TabTie.multiTest(options, VF.TabTie.createPulloff);
+      VexFlowTests.TabTie.multiTest(options, VF.TabTie.createPulloff);
     },
 
     continuous: function (options, contextBuilder) {
       options.contextBuilder = contextBuilder;
-      var c = VF.Test.TabTie.setupContext(options, 440, 140);
+      var c = VexFlowTests.TabTie.setupContext(options, 440, 140);
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
       }
@@ -230,5 +230,5 @@ const TabTieTests = (function () {
 
   return TabTie;
 })();
-VF.Test.TabTie = TabTieTests;
+VexFlowTests.TabTie = TabTieTests;
 export { TabTieTests };

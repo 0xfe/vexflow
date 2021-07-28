@@ -5,7 +5,7 @@
 const StaveConnectorTests = (function () {
   var StaveConnector = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('StaveConnector');
       runTests('Single Draw Test', StaveConnector.drawSingle);
       runTests('Single Draw Test, 1px Stave Line Thickness', StaveConnector.drawSingle1pxBarlines);
@@ -451,5 +451,5 @@ const StaveConnectorTests = (function () {
 
   return StaveConnector;
 })();
-VF.Test.StaveConnector = StaveConnectorTests;
+VexFlowTests.StaveConnector = StaveConnectorTests;
 export { StaveConnectorTests };

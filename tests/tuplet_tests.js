@@ -22,7 +22,7 @@ const TupletTests = (function () {
 
   var Tuplet = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Tuplet');
       runTests('Simple Tuplet', Tuplet.simple);
       runTests('Beamed Tuplet', Tuplet.beamed);
@@ -38,7 +38,7 @@ const TupletTests = (function () {
     },
 
     simple: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/4');
 
       var notes = [
@@ -69,7 +69,7 @@ const TupletTests = (function () {
     },
 
     beamed: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/8');
 
       var notes = [
@@ -106,7 +106,7 @@ const TupletTests = (function () {
     },
 
     ratio: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('4/4');
 
       var notes = [
@@ -149,8 +149,8 @@ const TupletTests = (function () {
     },
 
     bottom: function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 160);
-      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('3/4');
+      var f = VexFlowTests.makeFactory(options, 350, 160);
+      var stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('3/4');
 
       var notes = [
         { keys: ['f/4'], duration: '4' },
@@ -161,37 +161,37 @@ const TupletTests = (function () {
         { keys: ['b/4'], duration: '8' },
       ]
         .map(stemDown)
-        .map(vf.StaveNote.bind(vf));
+        .map(f.StaveNote.bind(f));
 
-      vf.Beam({
+      f.Beam({
         notes: notes.slice(3, 6),
       });
 
-      vf.Tuplet({
+      f.Tuplet({
         notes: notes.slice(0, 3),
         options: { location: VF.Tuplet.LOCATION_BOTTOM },
       });
 
-      vf.Tuplet({
+      f.Tuplet({
         notes: notes.slice(3, 6),
         options: { location: VF.Tuplet.LOCATION_BOTTOM },
       });
 
-      var voice = vf
+      var voice = f
         .Voice({ time: { num_beats: 3, beat_value: 4 } })
         .setStrict(true)
         .addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       ok(true, 'Bottom Test');
     },
 
     bottom_ratio: function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 160);
-      var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('5/8');
+      var f = VexFlowTests.makeFactory(options, 350, 160);
+      var stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('5/8');
 
       var notes = [
         { keys: ['f/4'], duration: '4' },
@@ -202,13 +202,13 @@ const TupletTests = (function () {
         { keys: ['b/4'], duration: '8' },
       ]
         .map(stemDown)
-        .map(vf.StaveNote.bind(vf));
+        .map(f.StaveNote.bind(f));
 
-      vf.Beam({
+      f.Beam({
         notes: notes.slice(3, 6),
       });
 
-      vf.Tuplet({
+      f.Tuplet({
         notes: notes.slice(0, 3),
         options: {
           location: VF.Tuplet.LOCATION_BOTTOM,
@@ -216,7 +216,7 @@ const TupletTests = (function () {
         },
       });
 
-      vf.Tuplet({
+      f.Tuplet({
         notes: notes.slice(3, 6),
         options: {
           location: VF.Tuplet.LOCATION_BOTTOM,
@@ -224,20 +224,20 @@ const TupletTests = (function () {
         },
       });
 
-      var voice = vf
+      var voice = f
         .Voice({ time: { num_beats: 5, beat_value: 8 } })
         .setStrict(true)
         .addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       ok(true, 'Bottom Ratioed Test');
     },
 
     awkward: function (options) {
-      var vf = VF.Test.makeFactory(options, 370, 160);
+      var vf = VexFlowTests.makeFactory(options, 370, 160);
       var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
@@ -286,7 +286,7 @@ const TupletTests = (function () {
     },
 
     complex: function (options) {
-      var vf = VF.Test.makeFactory(options, 600);
+      var vf = VexFlowTests.makeFactory(options, 600);
       var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
       var notes1 = [
@@ -353,7 +353,7 @@ const TupletTests = (function () {
     },
 
     mixedTop: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
@@ -398,7 +398,7 @@ const TupletTests = (function () {
     },
 
     mixedBottom: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10 });
 
       var notes = [
@@ -443,7 +443,7 @@ const TupletTests = (function () {
     },
 
     nested: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
       var notes = [
@@ -491,7 +491,7 @@ const TupletTests = (function () {
     },
 
     single: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
       var notes = [
@@ -568,5 +568,5 @@ const TupletTests = (function () {
 
   return Tuplet;
 })();
-VF.Test.Tuplet = TupletTests;
+VexFlowTests.Tuplet = TupletTests;
 export { TupletTests };

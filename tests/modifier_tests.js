@@ -31,5 +31,5 @@ const ModifierContextTests = (function () {
 
   return ModifierContext;
 })();
-VF.Test.ModifierContext = ModifierContextTests;
+VexFlowTests.ModifierContext = ModifierContextTests;
 export { ModifierContextTests };

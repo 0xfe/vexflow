@@ -7,7 +7,7 @@ import { StaveNoteTests } from './stavenote_tests';
 const RhythmTests = (function () {
   var Rhythm = {
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('Rhythm');
       runTests('Rhythm Draw - slash notes', Rhythm.drawBasic);
       runTests('Rhythm Draw - beamed slash notes', Rhythm.drawBeamedSlashNotes);
@@ -255,7 +255,7 @@ const RhythmTests = (function () {
         new VF.StaveNote({ keys: ['b/4'], duration: '8s', stem_direction: -1 }),
       ];
 
-      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 2), 0);
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VexFlowTests.Font.size + 2), 0);
 
       var notesBar1_part2 = [
         new VF.StaveNote({
@@ -311,7 +311,7 @@ const RhythmTests = (function () {
         }),
       ];
 
-      notesBar2[0].addModifier(new VF.Annotation('F').setFont('Times', VF.Test.Font.size + 2), 0);
+      notesBar2[0].addModifier(new VF.Annotation('F').setFont('Times', VexFlowTests.Font.size + 2), 0);
       // Helper function to justify and draw a 4/4 voice
       VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
@@ -377,7 +377,7 @@ const RhythmTests = (function () {
         }),
       ];
 
-      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3), 0);
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
 
       // create the beams for 8th notes in 2nd measure
       var beam1 = new VF.Beam(notesBar1_part1);
@@ -449,7 +449,7 @@ const RhythmTests = (function () {
         }),
       ];
 
-      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VF.Test.Font.size + 3), 0);
+      notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
 
       // create the beams for 8th notes in 2nd measure
       var beam1 = new VF.Beam(notesBar1_part1);
@@ -466,5 +466,5 @@ const RhythmTests = (function () {
 
   return Rhythm;
 })();
-VF.Test.Rhythm = RhythmTests;
+VexFlowTests.Rhythm = RhythmTests;
 export { RhythmTests };

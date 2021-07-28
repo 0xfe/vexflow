@@ -6,7 +6,7 @@ const PedalMarkingTests = (function () {
   var PedalMarking = {
     test: function (makePedal) {
       return function (options) {
-        var vf = VF.Test.makeFactory(options, 550, 200);
+        var vf = VexFlowTests.makeFactory(options, 550, 200);
         var score = vf.EasyScore();
 
         var stave0 = vf.Stave({ width: 250 }).addTrebleGlyph();
@@ -26,7 +26,7 @@ const PedalMarkingTests = (function () {
     },
 
     Start: function () {
-      var runTests = VF.Test.runTests;
+      var runTests = VexFlowTests.runTests;
       QUnit.module('PedalMarking');
 
       var test = PedalMarking.test;
@@ -84,5 +84,5 @@ const PedalMarkingTests = (function () {
 
   return PedalMarking;
 })();
-VF.Test.PedalMarking = PedalMarkingTests;
+VexFlowTests.PedalMarking = PedalMarkingTests;
 export { PedalMarkingTests };

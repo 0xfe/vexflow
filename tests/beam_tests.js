@@ -5,7 +5,7 @@ import { concat } from './vexflow_test_helpers';
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const BeamTests = (function () {
-  var runTests = VF.Test.runTests;
+  var runTests = VexFlowTests.runTests;
 
   var Beam = {
     Start: function () {
@@ -33,7 +33,7 @@ const BeamTests = (function () {
     },
 
     simple: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -56,7 +56,7 @@ const BeamTests = (function () {
     },
 
     multi: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -85,7 +85,7 @@ const BeamTests = (function () {
     },
 
     sixteenth: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -118,7 +118,7 @@ const BeamTests = (function () {
     },
 
     breakSecondaryBeams: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VexFlowTests.makeFactory(options, 600, 200);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -153,7 +153,7 @@ const BeamTests = (function () {
     },
 
     slopey: function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 140);
+      var vf = VexFlowTests.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -174,7 +174,7 @@ const BeamTests = (function () {
     },
 
     autoStem: function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 140);
+      var vf = VexFlowTests.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -211,7 +211,7 @@ const BeamTests = (function () {
     },
 
     mixed: function (options) {
-      var vf = VF.Test.makeFactory(options, 350, 140);
+      var vf = VexFlowTests.makeFactory(options, 350, 140);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -247,7 +247,7 @@ const BeamTests = (function () {
     },
 
     mixed2: function (options) {
-      var vf = VF.Test.makeFactory(options, 450, 180);
+      var vf = VexFlowTests.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -276,7 +276,7 @@ const BeamTests = (function () {
     },
 
     dotted: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -298,7 +298,7 @@ const BeamTests = (function () {
     },
 
     partial: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -323,7 +323,7 @@ const BeamTests = (function () {
     },
 
     tradeoffs: function (options) {
-      var vf = VF.Test.makeFactory(options);
+      var vf = VexFlowTests.makeFactory(options);
       var stave = vf.Stave();
       var score = vf.EasyScore();
 
@@ -341,7 +341,7 @@ const BeamTests = (function () {
     },
 
     insane: function (options) {
-      var vf = VF.Test.makeFactory(options, 450, 180);
+      var vf = VexFlowTests.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -361,7 +361,7 @@ const BeamTests = (function () {
     },
 
     lenghty: function (options) {
-      var vf = VF.Test.makeFactory(options, 450, 180);
+      var vf = VexFlowTests.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -375,7 +375,7 @@ const BeamTests = (function () {
     },
 
     outlier: function (options) {
-      var vf = VF.Test.makeFactory(options, 450, 180);
+      var vf = VexFlowTests.makeFactory(options, 450, 180);
       var stave = vf.Stave({ y: 20 });
       var score = vf.EasyScore();
 
@@ -400,7 +400,7 @@ const BeamTests = (function () {
     },
 
     tabBeamsUp: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VexFlowTests.makeFactory(options, 600, 200);
       var stave = vf.TabStave({ y: 20 });
 
       var specs = [
@@ -479,7 +479,7 @@ const BeamTests = (function () {
     },
 
     tabBeamsDown: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 250);
+      var vf = VexFlowTests.makeFactory(options, 600, 250);
       var stave = vf.TabStave({ options: { num_lines: 10 } });
 
       var specs = [
@@ -574,7 +574,7 @@ const BeamTests = (function () {
     },
 
     autoTabBeams: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 200);
+      var vf = VexFlowTests.makeFactory(options, 600, 200);
       var stave = vf.TabStave();
 
       var specs = [
@@ -640,7 +640,7 @@ const BeamTests = (function () {
     // This tests makes sure the auto_stem functionality is works.
     // TabNote stems within a beam group should end up normalized
     tabBeamsAutoStem: function (options) {
-      var vf = VF.Test.makeFactory(options, 600, 300);
+      var vf = VexFlowTests.makeFactory(options, 600, 300);
       var stave = vf.TabStave();
 
       var specs = [
@@ -708,7 +708,7 @@ const BeamTests = (function () {
     },
 
     complexWithAnnotation: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 200);
+      var vf = VexFlowTests.makeFactory(options, 500, 200);
       var stave = vf.Stave({ y: 40 });
 
       var notes = [
@@ -752,7 +752,7 @@ const BeamTests = (function () {
     },
 
     complexWithArticulation: function (options) {
-      var vf = VF.Test.makeFactory(options, 500, 200);
+      var vf = VexFlowTests.makeFactory(options, 500, 200);
       var stave = vf.Stave({ y: 40 });
 
       var notes = [
@@ -798,5 +798,5 @@ const BeamTests = (function () {
 
   return Beam;
 })();
-VF.Test.Beam = BeamTests;
+VexFlowTests.Beam = BeamTests;
 export { BeamTests };

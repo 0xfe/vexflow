@@ -5,8 +5,8 @@
 import { MockTickable } from './mocks';
 
 const FormatterTests = (function () {
-  var run = VF.Test.runTests;
-  var runSVG = VF.Test.runSVGTest;
+  var run = VexFlowTests.runTests;
+  var runSVG = VexFlowTests.runSVGTest;
   // Should this be a static call in glyph?  Or font?
   const glyphWidth = (vexGlyph) => {
     const vf = VF.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
@@ -42,7 +42,7 @@ const FormatterTests = (function () {
       });
       run('Proportional Formatting - No Tuning', Formatter.proportionalFormatting, { debug: true, iterations: 0 });
 
-      VF.Test.runSVGTest('Proportional Formatting (20 iterations)', Formatter.proportionalFormatting, {
+      VexFlowTests.runSVGTest('Proportional Formatting (20 iterations)', Formatter.proportionalFormatting, {
         debug: true,
         iterations: 20,
         alpha: 0.5,
@@ -107,7 +107,7 @@ const FormatterTests = (function () {
     longMeasureProblems: (options) => {
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
-      var vf = VF.Test.makeFactory(options, 1500, 300);
+      var vf = VexFlowTests.makeFactory(options, 1500, 300);
       var score = vf.EasyScore();
       score.set({
         time: '4/4',
@@ -144,7 +144,7 @@ const FormatterTests = (function () {
     },
 
     accidentalJustification: (options) => {
-      var vf = VF.Test.makeFactory(options, 600, 300);
+      var vf = VexFlowTests.makeFactory(options, 600, 300);
       var score = vf.EasyScore();
 
       var notes11 = score.notes('a4/2, a4/4, a4/8, ab4/16, an4/16');
@@ -174,7 +174,7 @@ const FormatterTests = (function () {
     },
 
     unalignedNoteDurations: (options) => {
-      var vf = VF.Test.makeFactory(options, 600, 250);
+      var vf = VexFlowTests.makeFactory(options, 600, 250);
       var score = vf.EasyScore();
 
       var notes11 = [
@@ -243,7 +243,7 @@ const FormatterTests = (function () {
         new VF.StaveNote({ keys: ['e/4'], duration: '4' }),
       ];
 
-      var vf = VF.Test.makeFactory(options, 750, 280);
+      var vf = VexFlowTests.makeFactory(options, 750, 280);
       const context = vf.getContext();
       var voice1 = new VF.Voice({ num_beats: 4, beat_value: 4 });
       voice1.addTickables(notes1);
@@ -267,7 +267,7 @@ const FormatterTests = (function () {
     },
 
     justifyStaveNotes: (options) => {
-      var vf = VF.Test.makeFactory(options, 520, 280);
+      var vf = VexFlowTests.makeFactory(options, 520, 280);
       var ctx = vf.getContext();
       var score = vf.EasyScore();
 
@@ -283,11 +283,11 @@ const FormatterTests = (function () {
         vf.Formatter().joinVoices(voices).format(voices, width);
 
         voices[0].getTickables().forEach((note) => {
-          VF.Test.plotNoteWidth(ctx, note, y + 140);
+          VexFlowTests.plotNoteWidth(ctx, note, y + 140);
         });
 
         voices[1].getTickables().forEach((note) => {
-          VF.Test.plotNoteWidth(ctx, note, y - 20);
+          VexFlowTests.plotNoteWidth(ctx, note, y - 20);
         });
         y += 210;
       }
@@ -300,7 +300,7 @@ const FormatterTests = (function () {
     },
 
     notesWithTab: (options) => {
-      var vf = VF.Test.makeFactory(options, 420, 580);
+      var vf = VexFlowTests.makeFactory(options, 420, 580);
       var score = vf.EasyScore();
 
       var y = 10;
@@ -349,7 +349,7 @@ const FormatterTests = (function () {
     },
 
     multiStaves: (options) => {
-      var vf = VF.Test.makeFactory(options, 600, 400);
+      var vf = VexFlowTests.makeFactory(options, 600, 400);
       var ctx = vf.getContext();
       var score = vf.EasyScore();
       var staves = [];
@@ -443,7 +443,7 @@ const FormatterTests = (function () {
       var debug = options.params.debug;
       VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-      var vf = VF.Test.makeFactory(options, 650, 750);
+      var vf = VexFlowTests.makeFactory(options, 650, 750);
       var system = vf.System({
         x: 50,
         autoWidth: true,
@@ -490,7 +490,7 @@ const FormatterTests = (function () {
     },
 
     softMax: function (options) {
-      var vf = VF.Test.makeFactory(options, 550, 500);
+      var vf = VexFlowTests.makeFactory(options, 550, 500);
       vf.getContext().scale(0.8, 0.8);
 
       function draw(y, factor) {
@@ -529,7 +529,7 @@ const FormatterTests = (function () {
     },
 
     mixTime: function (options) {
-      var vf = VF.Test.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
+      var vf = VexFlowTests.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
@@ -559,7 +559,7 @@ const FormatterTests = (function () {
     },
 
     tightNotes: function (options) {
-      var vf = VF.Test.makeFactory(options, 440, 250);
+      var vf = VexFlowTests.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
@@ -591,7 +591,7 @@ const FormatterTests = (function () {
     },
 
     tightNotes2: function (options) {
-      var vf = VF.Test.makeFactory(options, 440, 250);
+      var vf = VexFlowTests.makeFactory(options, 440, 250);
       vf.getContext().scale(0.8, 0.8);
       var score = vf.EasyScore();
       var system = vf.System({
@@ -622,7 +622,7 @@ const FormatterTests = (function () {
     annotations: function (options) {
       const pageWidth = 916;
       const pageHeight = 600;
-      const vf = VF.Test.makeFactory(options, pageWidth, pageHeight);
+      const vf = VexFlowTests.makeFactory(options, pageWidth, pageHeight);
       const context = vf.getContext();
 
       var lyrics1 = ['ipso', 'ipso-', 'ipso', 'ipso', 'ipsoz', 'ipso-', 'ipso', 'ipso', 'ipso', 'ip', 'ipso'];
@@ -729,5 +729,5 @@ const FormatterTests = (function () {
 
   return Formatter;
 })();
-VF.Test.Formatter = FormatterTests;
+VexFlowTests.Formatter = FormatterTests;
 export { FormatterTests };

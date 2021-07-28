@@ -5,7 +5,7 @@
 const StaveTieTests = (function () {
   function createTest(notesData, setupTies) {
     return function (options) {
-      var vf = VF.Test.makeFactory(options, 300);
+      var vf = VexFlowTests.makeFactory(options, 300);
       var stave = vf.Stave();
       var score = vf.EasyScore();
       var voice = score.voice(score.notes.apply(score, notesData));
@@ -23,7 +23,7 @@ const StaveTieTests = (function () {
 
   return {
     Start: function () {
-      var run = VF.Test.runTests;
+      var run = VexFlowTests.runTests;
 
       QUnit.module('StaveTie');
 
@@ -123,5 +123,5 @@ const StaveTieTests = (function () {
     },
   };
 })();
-VF.Test.StaveTie = StaveTieTests;
+VexFlowTests.StaveTie = StaveTieTests;
 export { StaveTieTests };

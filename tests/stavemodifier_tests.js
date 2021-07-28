@@ -6,9 +6,9 @@ const StaveModifierTests = (function () {
   var StaveModifier = {
     Start: function () {
       QUnit.module('StaveModifier');
-      VF.Test.runTests('Stave Draw Test', VF.Test.Stave.draw);
-      VF.Test.runTests('Vertical Bar Test', VF.Test.Stave.drawVerticalBar);
-      VF.Test.runTests('Begin & End StaveModifier Test', StaveModifier.drawBeginAndEnd);
+      VexFlowTests.runTests('Stave Draw Test', VexFlowTests.Stave.draw);
+      VexFlowTests.runTests('Vertical Bar Test', VexFlowTests.Stave.drawVerticalBar);
+      VexFlowTests.runTests('Begin & End StaveModifier Test', StaveModifier.drawBeginAndEnd);
     },
 
     draw: function (options, contextBuilder) {
@@ -70,5 +70,5 @@ const StaveModifierTests = (function () {
 
   return StaveModifier;
 })();
-VF.Test.StaveModifier = StaveModifierTests;
+VexFlowTests.StaveModifier = StaveModifierTests;
 export { StaveModifierTests };
