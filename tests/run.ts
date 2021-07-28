@@ -107,21 +107,19 @@ VexFlowTests.run = function () {
   // StaveHairpinTests.Start();
   // RhythmTests.Start();
   // TupletTests.Start();
-  // BoundingBoxTests.Start();
+  BoundingBoxTests.Start();
   /*
   StrokesTests.Start();
   StringNumberTests.Start();
   RestsTests.Start();
   ThreeVoicesTests.Start();
   CurveTests.Start();
-  */
   TextNoteTests.Start();
   StaveLineTests.Start();
   OrnamentTests.Start();
   PedalMarkingTests.Start();
   TextBracketTests.Start();
   StaveModifierTests.Start();
-  /*
   GhostNoteTests.Start();
   StyleTests.Start();
   FactoryTests.Start();
