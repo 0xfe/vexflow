@@ -1,81 +1,86 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+// @ts-nocheck
+
+import { VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, equal, expect } from './declarations';
+import { Barline } from 'stavebarline';
+import { Factory } from 'factory';
+
 /**
- * VexFlow - Factory Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
+ * Factory Tests
  */
-const FactoryTests = (function () {
-  var Factory = {
-    Start: function () {
-      QUnit.module('Factory');
-      var VFT = Vex.Flow.Test;
+const FactoryTests = {
+  Start: function () {
+    QUnit.module('Factory');
 
-      QUnit.test('Defaults', VFT.Factory.defaults);
-      VFT.runSVGTest('Draw', VFT.Factory.draw);
-      VFT.runSVGTest('Draw Tab (repeat barlines must be aligned)', VFT.Factory.drawTab);
-    },
+    QUnit.test('Defaults', FactoryTests.defaults);
+    VexFlowTests.runSVGTest('Draw', FactoryTests.draw);
+    VexFlowTests.runSVGTest('Draw Tab (repeat barlines must be aligned)', FactoryTests.drawTab);
+  },
 
-    defaults: function (assert) {
-      assert.throws(function () {
-        return new VF.Factory({
-          renderer: {
-            elementId: '',
-            width: 700,
-            height: 500,
-          },
-        });
-      });
-
-      var vf = new VF.Factory({
+  defaults: function (assert) {
+    assert.throws(function () {
+      return new Factory({
         renderer: {
-          elementId: null,
+          elementId: '',
           width: 700,
           height: 500,
         },
       });
+    });
 
-      var options = vf.getOptions();
-      assert.equal(options.renderer.width, 700);
-      assert.equal(options.renderer.height, 500);
-      assert.equal(options.renderer.elementId, null);
-      assert.equal(options.stave.space, 10);
-    },
+    var f = new Factory({
+      renderer: {
+        elementId: null,
+        width: 700,
+        height: 500,
+      },
+    });
 
-    draw: function (options) {
-      var vf = VF.Factory.newFromElementId(options.elementId);
-      vf.Stave().setClef('treble');
-      vf.draw();
-      expect(0);
-    },
+    var options = f.getOptions();
+    assert.equal(options.renderer.width, 700);
+    assert.equal(options.renderer.height, 500);
+    assert.equal(options.renderer.elementId, null);
+    assert.equal(options.stave.space, 10);
+  },
 
-    drawTab: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 500, 400);
+  draw: function (options) {
+    var f = Factory.newFromElementId(options.elementId);
+    f.Stave().setClef('treble');
+    f.draw();
+    expect(0);
+  },
 
-      var system = vf.System({ width: 500 });
+  drawTab: function (options) {
+    var f = VexFlowTests.makeFactory(options, 500, 400);
 
-      var stave = vf.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+    var system = f.System({ width: 500 });
 
-      var voices = [vf.Voice().addTickables([vf.GhostNote({ duration: 'w' })])];
+    var stave = f.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Barline.type.REPEAT_BEGIN);
 
-      system.addStave({
-        stave: stave,
-        voices: voices,
-      });
+    var voices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
 
-      var tabStave = vf.TabStave().setClef('tab').setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+    system.addStave({
+      stave: stave,
+      voices: voices,
+    });
 
-      var tabVoices = [vf.Voice().addTickables([vf.GhostNote({ duration: 'w' })])];
+    var tabStave = f.TabStave().setClef('tab').setBegBarType(Barline.type.REPEAT_BEGIN);
 
-      system.addStave({
-        stave: tabStave,
-        voices: tabVoices,
-      });
+    var tabVoices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
 
-      vf.draw();
-      equal(stave.getModifiers()[0].getX(), tabStave.getModifiers()[0].getX());
-      expect(1);
-    },
-  };
+    system.addStave({
+      stave: tabStave,
+      voices: tabVoices,
+    });
 
-  return Factory;
-})();
-Vex.Flow.Test.Factory = FactoryTests;
+    f.draw();
+    equal(stave.getModifiers()[0].getX(), tabStave.getModifiers()[0].getX());
+    expect(1);
+  },
+};
+
 export { FactoryTests };

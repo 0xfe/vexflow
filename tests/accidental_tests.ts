@@ -532,7 +532,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any) {
         assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -634,7 +634,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any) {
         assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -649,7 +649,7 @@ const AccidentalTests = {
     const f = VexFlowTests.makeFactory(options, 700, 200);
     const stave = f.Stave();
 
-    const notes = [
+    const notes: any[] = [
       { keys: ['c/4', 'c/5'], duration: '4' },
       { keys: ['c#/4', 'c#/5'], duration: '4' },
       { keys: ['c#/4', 'c#/5'], duration: '4' },

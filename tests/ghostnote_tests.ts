@@ -1,24 +1,31 @@
-/**
- * VexFlow - Rest Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
-function createTest(setup) {
-  return function (options) {
-    var vf = VexFlowTests.makeFactory(options, 550);
-    var stave = vf.Stave();
-    var score = vf.EasyScore();
+/* eslint-disable */
+// @ts-nocheck
 
-    setup(vf, score);
+import { VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
 
-    vf.Formatter().joinVoices(vf.getVoices()).formatToStave(vf.getVoices(), stave);
+function createTest(setup: any) {
+  return function (options: any) {
+    var f = VexFlowTests.makeFactory(options, 550);
+    var stave = f.Stave();
+    var score = f.EasyScore();
 
-    vf.draw();
+    setup(f, score);
+
+    f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
+
+    f.draw();
 
     ok(true, 'all pass');
   };
 }
 
+/**
+ * GhostNote Tests
+ */
 const GhostNoteTests = {
   Start: function () {
     var run = VexFlowTests.runTests;
@@ -27,70 +34,70 @@ const GhostNoteTests = {
 
     run(
       'GhostNote Basic',
-      createTest(function (vf, score) {
+      createTest(function (f: any, score: any) {
         var voice1 = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
           time: '7/4',
         });
 
         score.voice(
           [
-            vf.GhostNote({ duration: '2' }),
-            vf.StaveNote({ keys: ['f/4'], stem_direction: -1, duration: '4' }),
-            vf.GhostNote({ duration: '4' }),
-            vf.StaveNote({ keys: ['e/4'], stem_direction: -1, duration: '4' }),
-            vf.GhostNote({ duration: '8' }),
-            vf
+            f.GhostNote({ duration: '2' }),
+            f.StaveNote({ keys: ['f/4'], stem_direction: -1, duration: '4' }),
+            f.GhostNote({ duration: '4' }),
+            f.StaveNote({ keys: ['e/4'], stem_direction: -1, duration: '4' }),
+            f.GhostNote({ duration: '8' }),
+            f
               .StaveNote({ keys: ['d/4'], stem_direction: -1, duration: '8' })
-              .addAccidental(0, vf.Accidental({ type: '##' })),
-            vf.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
-            vf.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
+              .addAccidental(0, f.Accidental({ type: '##' })),
+            f.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
+            f.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
           ],
           { time: '7/4' }
         );
 
-        vf.Beam({ notes: voice1.getTickables().slice(4, 8) });
-        vf.Beam({ notes: voice1.getTickables().slice(8, 10) });
+        f.Beam({ notes: voice1.getTickables().slice(4, 8) });
+        f.Beam({ notes: voice1.getTickables().slice(8, 10) });
       })
     );
 
     run(
       'GhostNote Dotted',
-      createTest(function (vf, score) {
-        function addAccidental(note, type) {
-          note.addAccidental(0, vf.Accidental({ type: type }));
-        }
-
+      createTest(function (f: any, score: any) {
         var voice1 = score.voice(
           [
-            vf.GhostNote({ duration: '4d' }),
-            vf.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
-            vf.StaveNote({ duration: '4', keys: ['d/5'], stem_direction: 1 }),
-            vf.StaveNote({ duration: '8', keys: ['c/5'], stem_direction: 1 }),
-            vf.StaveNote({ duration: '16', keys: ['c/5'], stem_direction: 1 }),
-            vf.StaveNote({ duration: '16', keys: ['d/5'], stem_direction: 1 }),
-            vf.GhostNote({ duration: '2dd' }),
-            vf.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
+            f.GhostNote({ duration: '4d' }),
+            f.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
+            f.StaveNote({ duration: '4', keys: ['d/5'], stem_direction: 1 }),
+            f.StaveNote({ duration: '8', keys: ['c/5'], stem_direction: 1 }),
+            f.StaveNote({ duration: '16', keys: ['c/5'], stem_direction: 1 }),
+            f.StaveNote({ duration: '16', keys: ['d/5'], stem_direction: 1 }),
+            f.GhostNote({ duration: '2dd' }),
+            f.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
           ],
           { time: '8/4' }
         );
 
         var voice2 = score.voice(
           [
-            vf.StaveNote({ duration: '4', keys: ['f/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '8', keys: ['e/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '8', keys: ['d/4'], stem_direction: -1 }),
-            vf.GhostNote({ duration: '4dd' }),
-            vf.StaveNote({ duration: '16', keys: ['c/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '2', keys: ['c/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '4', keys: ['d/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '8', keys: ['f/4'], stem_direction: -1 }),
-            vf.StaveNote({ duration: '8', keys: ['e/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '4', keys: ['f/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '8', keys: ['e/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '8', keys: ['d/4'], stem_direction: -1 }),
+            f.GhostNote({ duration: '4dd' }),
+            f.StaveNote({ duration: '16', keys: ['c/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '2', keys: ['c/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '4', keys: ['d/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '8', keys: ['f/4'], stem_direction: -1 }),
+            f.StaveNote({ duration: '8', keys: ['e/4'], stem_direction: -1 }),
           ],
           { time: '8/4' }
         );
 
         var notes1 = voice1.getTickables();
         var notes2 = voice2.getTickables();
+
+        const addAccidental = (note: any, type: any) => {
+          note.addAccidental(0, f.Accidental({ type: type }));
+        };
 
         addAccidental(notes1[1], 'bb');
         addAccidental(notes1[4], '#');
@@ -101,12 +108,12 @@ const GhostNoteTests = {
         addAccidental(notes2[5], '#');
         addAccidental(notes2[7], 'n');
 
-        vf.Beam({ notes: notes1.slice(3, 6) });
-        vf.Beam({ notes: notes2.slice(1, 3) });
-        vf.Beam({ notes: notes2.slice(7, 9) });
+        f.Beam({ notes: notes1.slice(3, 6) });
+        f.Beam({ notes: notes2.slice(1, 3) });
+        f.Beam({ notes: notes2.slice(7, 9) });
       })
     );
   },
 };
-VexFlowTests.GhostNote = GhostNoteTests;
+
 export { GhostNoteTests };
