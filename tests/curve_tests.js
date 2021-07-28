@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, concat } from './vexflow_test_helpers';
 
 function createTest(beamGroup1, beamGroup2, setupCurves) {
   return function (options) {

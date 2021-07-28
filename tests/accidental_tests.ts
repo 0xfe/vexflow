@@ -3,7 +3,7 @@
 
 import { Vex } from 'vex';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok, equal } from './declarations';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
 import { Stave } from 'stave';
@@ -13,15 +13,16 @@ import { Stem } from 'stem';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
 import { ModifierContext } from 'modifiercontext';
+import { Accidental } from 'accidental';
 
-function hasAccidental(note) {
-  return note.modifiers.reduce(function (hasAcc, modifier) {
+function hasAccidental(note: any) {
+  return note.modifiers.reduce(function (hasAcc: any, modifier: any) {
     return hasAcc || modifier.getCategory() === 'accidentals';
   }, false);
 }
 
-function makeNewAccid(factory) {
-  return function (accidType) {
+function makeNewAccid(factory: any) {
+  return function (accidType: any) {
     return factory.Accidental({ type: accidType });
   };
 }
@@ -30,7 +31,7 @@ function makeNewAccid(factory) {
  * Accidental Tests
  */
 const AccidentalTests = {
-  Start: function () {
+  Start() {
     QUnit.module('Accidental');
     VexFlowTests.runTests('Accidental Padding', AccidentalTests.formatAccidentalSpaces);
     VexFlowTests.runTests('Basic', AccidentalTests.basic);
@@ -55,7 +56,8 @@ const AccidentalTests = {
     );
     VexFlowTests.runTests('Factory API', AccidentalTests.factoryAPI);
   },
-  formatAccidentalSpaces: function (options) {
+
+  formatAccidentalSpaces(options: TestOptions) {
     const f = VexFlowTests.makeFactory(options, 750, 280);
     const context = f.getContext();
     const softmaxFactor = 100;
@@ -136,7 +138,7 @@ const AccidentalTests = {
     ok(true);
   },
 
-  basic: function (options) {
+  basic(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
@@ -182,7 +184,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any) {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -194,7 +196,7 @@ const AccidentalTests = {
     ok(true, 'Full Accidental');
   },
 
-  cautionary: function (options) {
+  cautionary(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 240);
     const stave = f.Stave({ x: 0, y: 10, width: 780 });
     const score = f.EasyScore();
@@ -211,12 +213,12 @@ const AccidentalTests = {
 
     const voice = score.voice(notes, { time: accids.length + '/4' });
 
-    voice.getTickables().forEach(function (tickable) {
+    voice.getTickables().forEach(function (tickable: any): void {
       tickable.modifiers
-        .filter(function (modifier) {
+        .filter(function (modifier: any) {
           return modifier.getAttribute('type') === 'Accidental';
         })
-        .forEach(function (accid) {
+        .forEach(function (accid: any): void {
           accid.setAsCautionary();
         });
     });
@@ -228,7 +230,7 @@ const AccidentalTests = {
     ok(true, 'Must successfully render cautionary accidentals');
   },
 
-  specialCases: function (options) {
+  specialCases(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
@@ -277,7 +279,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any): void {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -289,7 +291,7 @@ const AccidentalTests = {
     ok(true, 'Full Accidental');
   },
 
-  basicStemDown: function (options) {
+  basicStemDown(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
@@ -326,7 +328,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any) {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -338,7 +340,7 @@ const AccidentalTests = {
     ok(true, 'Full Accidental');
   },
 
-  showNotes: function (note1, note2, stave, ctx, x) {
+  showNotes(note1: any, note2: any, stave: any, ctx: any, x: any): void {
     const modifierContext = new ModifierContext();
     note1.addToModifierContext(modifierContext);
     note2.addToModifierContext(modifierContext);
@@ -352,7 +354,7 @@ const AccidentalTests = {
     VexFlowTests.plotNoteWidth(ctx, note2, 15);
   },
 
-  multiVoice: function (options) {
+  multiVoice(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 460, 250);
     const newAccid = makeNewAccid(f);
     const stave = f.Stave({ x: 10, y: 45, width: 420 });
@@ -408,7 +410,7 @@ const AccidentalTests = {
     ok(true, 'Full Accidental');
   },
 
-  microtonal: function (options: TestOptions): void {
+  microtonal(options: TestOptions): void {
     const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
@@ -465,7 +467,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid, index) {
+      note.getAccidentals().forEach(function (accid: any, index: any): void {
         assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -476,7 +478,7 @@ const AccidentalTests = {
     ok(true, 'Microtonal Accidental');
   },
 
-  microtonal_iranian: function (options) {
+  microtonal_iranian(options: TestOptions) {
     const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
@@ -541,7 +543,7 @@ const AccidentalTests = {
     ok(true, 'Microtonal Accidental (Iranian)');
   },
 
-  sagittal: function (options) {
+  sagittal(options: TestOptions): void {
     const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
@@ -643,7 +645,7 @@ const AccidentalTests = {
     ok(true, 'Sagittal');
   },
 
-  automaticAccidentals0: function (options) {
+  automaticAccidentals0(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 200);
     const stave = f.Stave();
 
@@ -680,7 +682,7 @@ const AccidentalTests = {
     ok(true);
   },
 
-  automaticAccidentals1: function (options) {
+  automaticAccidentals1(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 150);
     const stave = f.Stave().addKeySignature('Ab');
 
@@ -706,7 +708,7 @@ const AccidentalTests = {
     ok(true);
   },
 
-  automaticAccidentals2: function (options) {
+  automaticAccidentals2(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 150);
     const stave = f.Stave().addKeySignature('A');
 
@@ -732,7 +734,7 @@ const AccidentalTests = {
     ok(true);
   },
 
-  automaticAccidentalsMultiVoiceInline: function (options) {
+  automaticAccidentalsMultiVoiceInline(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 150);
     const stave = f.Stave().addKeySignature('Ab');
 
@@ -790,7 +792,7 @@ const AccidentalTests = {
     ok(true);
   },
 
-  automaticAccidentalsMultiVoiceOffset: function (options) {
+  automaticAccidentalsMultiVoiceOffset(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 150);
     const stave = f.Stave().addKeySignature('Cb');
 
@@ -852,8 +854,8 @@ const AccidentalTests = {
   /**
    *
    */
-  autoAccidentalWorking: function () {
-    function makeNote(noteStruct) {
+  autoAccidentalWorking(): void {
+    function makeNote(noteStruct: any) {
       return new StaveNote(noteStruct);
     }
 
@@ -939,12 +941,12 @@ const AccidentalTests = {
     equal(hasAccidental(notes[10]), false, 'Natural remembered');
   },
 
-  factoryAPI: function (options) {
+  factoryAPI(options: TestOptions): void {
     const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     f.Stave({ x: 10, y: 10, width: 550 });
 
-    function newAcc(type) {
+    function newAcc(type: any) {
       return f.Accidental({ type: type });
     }
 
@@ -988,7 +990,7 @@ const AccidentalTests = {
 
     notes.forEach(function (n, i) {
       assert.ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
-      n.getAccidentals().forEach(function (accid, i) {
+      n.getAccidentals().forEach(function (accid: any, i: any) {
         assert.ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
       });
     });

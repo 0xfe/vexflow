@@ -42,26 +42,21 @@
           .attr('href', vexURL)
           .text('VexFlow Source' + info);
 
+        const runTests = () => {
+          // Show only failed tests.
+          QUnit.config.hidepassed = true;
+          QUnit.config.noglobals = true;
+          Vex.Flow.Test.run();
+        };
+
         if (path === 'build') {
           // When loading the current version, only load vexflow-tests.js
-          loadScript(testsURL).then(function () {
-            // Show only failed tests.
-            QUnit.config.hidepassed = true;
-            QUnit.config.noglobals = true;
-            Vex.Flow.Test.run();
-          });
+          loadScript(testsURL).then(runTests);
         } else {
           // When loading previous versions, load both vexflow-debug.js and vexflow-tests.js
           loadScript(vexURL)
-            .then(function () {
-              return loadScript(testsURL);
-            })
-            .then(function () {
-              // Show only failed tests.
-              QUnit.config.hidepassed = true;
-              QUnit.config.noglobals = true;
-              VexFlowTests.run();
-            });
+            .then(() => loadScript(testsURL))
+            .then(runTests);
         }
       });
     </script>

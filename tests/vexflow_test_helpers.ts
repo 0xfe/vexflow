@@ -362,6 +362,7 @@ global.almostEqual = (value: number, expectedValue: number, errorMargin: number)
 // eslint-disable-next-line
 const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
-global.VF = VF;
+global.VF = VF; // TODO: Remove this!
+global.VF.Test = VexFlowTests;
 
 export { VexFlowTests, concat };
