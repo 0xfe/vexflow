@@ -4,8 +4,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
-
 /**
  * Parser Tests
  */
