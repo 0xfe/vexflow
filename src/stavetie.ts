@@ -129,7 +129,9 @@ export class StaveTie extends Element {
 
     // setNotes(...) verified that first_indices and last_indices are not undefined.
     // As a result, we use the ! non-null assertion operator here.
+    // eslint-disable-next-line
     const first_indices = this.notes.first_indices!;
+    // eslint-disable-next-line
     const last_indices = this.notes.last_indices!;
     for (let i = 0; i < first_indices.length; ++i) {
       const cp_x = (params.last_x_px + last_x_shift + (params.first_x_px + first_x_shift)) / 2;
