@@ -70,8 +70,8 @@ VexFlowTests.run = function () {
   StaveNoteTests.Start();
   VoiceTests.Start();
   */
-  // NoteHeadTests.Start();
-  // TabNoteTests.Start();
+  NoteHeadTests.Start();
+  TabNoteTests.Start();
   // TickContextTests.Start();
   // ModifierContextTests.Start();
   // DotTests.Start();
