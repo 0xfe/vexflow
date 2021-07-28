@@ -359,7 +359,8 @@ global.almostEqual = (value: number, expectedValue: number, errorMargin: number)
 /**
  * Used with array.reduce(...) to flatten arrays of arrays in the tests.
  */
-const concat = (a: any[], b: any[]) => a.concat(b);
+// eslint-disable-next-line
+const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
 global.VF = VF;
 global.VF.Test = VexFlowTests;

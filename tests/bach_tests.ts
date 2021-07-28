@@ -1,13 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Vex } from 'vex';
 import { QUnit, ok } from './declarations';
-import { StaveNote } from 'stavenote';
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Factory } from 'factory';
-
-const VF = Vex.Flow;
+import { Registry } from 'registry';
+import { Barline } from 'stavebarline';
 
 const BachDemoTests = {
   Start: function () {
@@ -17,8 +15,8 @@ const BachDemoTests = {
   },
 
   minuet1: function (options: TestOptions) {
-    const registry = new VF.Registry();
-    VF.Registry.enableDefaultRegistry(registry);
+    const registry = new Registry();
+    Registry.enableDefaultRegistry(registry);
     const f: Factory = VexFlowTests.makeFactory(options, 1100, 900);
     const score = f.EasyScore({ throwOnError: true });
 
@@ -357,11 +355,11 @@ const BachDemoTests = {
       .addStave({
         voices: [score.set({ clef: 'treble' }).voice([notes('g4/h.[id="m16a"]')].reduce(concat))],
       })
-      .setEndBarType(VF.Barline.type.REPEAT_END);
+      .setEndBarType(Barline.type.REPEAT_END);
 
     system
       .addStave({ voices: [voice(notes('g3/h[id="m16b"], g2/q', { clef: 'bass' }))] })
-      .setEndBarType(VF.Barline.type.REPEAT_END);
+      .setEndBarType(Barline.type.REPEAT_END);
     system.addConnector('boldDoubleRight');
 
     id('m16a').addModifier(f.Fingering({ number: '1' }), 0);
@@ -391,9 +389,9 @@ const BachDemoTests = {
           voice([f.TextDynamics({ text: 'mf', duration: 'h', dots: 1, line: 10 })]),
         ],
       })
-      .setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+      .setBegBarType(Barline.type.REPEAT_BEGIN);
 
-    system.addStave({ voices: [voice(notes('g3/h.', { clef: 'bass' }))] }).setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    system.addStave({ voices: [voice(notes('g3/h.', { clef: 'bass' }))] }).setBegBarType(Barline.type.REPEAT_BEGIN);
 
     system.addConnector('boldDoubleLeft');
     system.addConnector('singleRight');
@@ -431,7 +429,7 @@ const BachDemoTests = {
     /* Done */
 
     f.draw();
-    VF.Registry.disableDefaultRegistry();
+    Registry.disableDefaultRegistry();
     ok(true, 'Bach Minuet 1');
   },
 };

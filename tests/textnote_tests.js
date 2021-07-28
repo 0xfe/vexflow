@@ -1,3 +1,6 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
 /**
  * VexFlow - Text Note Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
