@@ -69,8 +69,8 @@ VexFlowTests.run = function () {
   AccidentalTests.Start();
   StaveNoteTests.Start();
   VoiceTests.Start();
-  */
   NoteHeadTests.Start();
+  */
   TabNoteTests.Start();
   // TickContextTests.Start();
   // ModifierContextTests.Start();
@@ -107,8 +107,8 @@ VexFlowTests.run = function () {
   // StaveHairpinTests.Start();
   // RhythmTests.Start();
   // TupletTests.Start();
-  BoundingBoxTests.Start();
   /*
+  BoundingBoxTests.Start();
   StrokesTests.Start();
   StringNumberTests.Start();
   RestsTests.Start();

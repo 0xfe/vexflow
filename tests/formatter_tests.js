@@ -2,6 +2,7 @@
  * VexFlow - TickContext Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
+import { Flow } from 'flow';
 import { MockTickable } from './mocks';
 
 const FormatterTests = (function () {
@@ -54,7 +55,7 @@ const FormatterTests = (function () {
         return new MockTickable();
       }
 
-      var R = VF.RESOLUTION;
+      var R = Flow.RESOLUTION;
       var BEAT = (1 * R) / 4;
 
       var tickables1 = [

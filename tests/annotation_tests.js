@@ -1,3 +1,5 @@
+import { Flow } from 'flow';
+
 /**
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
@@ -409,7 +411,7 @@ const AnnotationTests = (function () {
       notes3[2].addModifier(new VF.Annotation('Text').setVerticalJustification(3), 0); // U
       notes3[3].addModifier(new VF.Annotation('Text').setVerticalJustification(4), 0); // D
 
-      var voice = new VF.Voice(VF.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      var voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
 
       voice.addTickables(notes);
       voice.addTickables(notes2);

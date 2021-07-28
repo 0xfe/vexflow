@@ -7,6 +7,7 @@
 import { MockTickable } from './mocks';
 import { VexFlowTests } from './vexflow_test_helpers';
 import { QUnit, ok, expect } from './declarations';
+import { Flow } from 'flow';
 
 /**
  * Voice Tests
@@ -26,7 +27,7 @@ const VoiceTests = (function () {
         return new MockTickable(VF.TIME4_4);
       }
 
-      var R = VF.RESOLUTION;
+      var R = Flow.RESOLUTION;
       var BEAT = (1 * R) / 4;
 
       var tickables = [
@@ -64,7 +65,7 @@ const VoiceTests = (function () {
         return new MockTickable(VF.TIME4_4);
       }
 
-      var R = VF.RESOLUTION;
+      var R = Flow.RESOLUTION;
       var BEAT = (1 * R) / 4;
 
       var tickables = [
