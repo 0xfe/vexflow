@@ -1,761 +1,757 @@
 import { ContextBuilder } from 'renderer';
+import { expect, ok, QUnit, test } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 /**
  * VexFlow - Basic Stave Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
-const StaveTests = (function () {
-  const Stave = {
-    Start: function () {
-      const runTests = VexFlowTests.runTests;
-      QUnit.module('Stave');
-      test('StaveModifiers SortByCategory', Stave.sortByCategory);
-      runTests('Stave Draw Test', Stave.draw);
-      runTests('Open Stave Draw Test', Stave.drawOpenStave);
-      runTests('Vertical Bar Test', Stave.drawVerticalBar);
-      runTests('Multiple Stave Barline Test', Stave.drawMultipleMeasures);
-      runTests('Multiple Stave Repeats Test', Stave.drawRepeats);
-      runTests('Stave End Modifiers Test', Stave.drawEndModifiersTest);
-      runTests('Multiple Staves Volta Test', Stave.drawVoltaTest);
-      runTests('Volta + Modifier Measure Test', Stave.drawVoltaModifierTest);
-      runTests('Tempo Test', Stave.drawTempo);
-      runTests('Single Line Configuration Test', Stave.configureSingleLine);
-      runTests('Batch Line Configuration Test', Stave.configureAllLines);
-      runTests('Stave Text Test', Stave.drawStaveText);
-      runTests('Multiple Line Stave Text Test', Stave.drawStaveTextMultiLine);
-      runTests('Factory API', Stave.factoryAPI);
-    },
+const StaveTests = {
+  Start(): void {
+    const runTests = VexFlowTests.runTests;
+    QUnit.module('Stave');
+    test('StaveModifiers SortByCategory', this.sortByCategory);
+    runTests('Stave Draw Test', this.draw);
+    runTests('Open Stave Draw Test', this.drawOpenStave);
+    runTests('Vertical Bar Test', this.drawVerticalBar);
+    runTests('Multiple Stave Barline Test', this.drawMultipleMeasures);
+    runTests('Multiple Stave Repeats Test', this.drawRepeats);
+    runTests('Stave End Modifiers Test', this.drawEndModifiersTest);
+    runTests('Multiple Staves Volta Test', this.drawVoltaTest);
+    runTests('Volta + Modifier Measure Test', this.drawVoltaModifierTest);
+    runTests('Tempo Test', this.drawTempo);
+    runTests('Single Line Configuration Test', this.configureSingleLine);
+    runTests('Batch Line Configuration Test', this.configureAllLines);
+    runTests('Stave Text Test', this.drawStaveText);
+    runTests('Multiple Line Stave Text Test', this.drawStaveTextMultiLine);
+    runTests('Factory API', this.factoryAPI);
+  },
 
-    sortByCategory: function () {
-      const stave = new VF.Stave(0, 0, 300);
-      const clef0 = new VF.Clef('treble');
-      const clef1 = new VF.Clef('alto');
-      const clef2 = new VF.Clef('bass');
-      const time0 = new VF.TimeSignature('C');
-      const time1 = new VF.TimeSignature('C|');
-      const time2 = new VF.TimeSignature('9/8');
-      const key0 = new VF.KeySignature('G');
-      const key1 = new VF.KeySignature('F');
-      const key2 = new VF.KeySignature('D');
-      const bar0 = new VF.Barline(VF.Barline.type.SINGLE);
-      const bar1 = new VF.Barline(VF.Barline.type.DOUBLE);
-      const bar2 = new VF.Barline(VF.Barline.type.NONE);
-      const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
-      const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+  sortByCategory(): void {
+    const stave = new VF.Stave(0, 0, 300);
+    const clef0 = new VF.Clef('treble');
+    const clef1 = new VF.Clef('alto');
+    const clef2 = new VF.Clef('bass');
+    const time0 = new VF.TimeSignature('C');
+    const time1 = new VF.TimeSignature('C|');
+    const time2 = new VF.TimeSignature('9/8');
+    const key0 = new VF.KeySignature('G');
+    const key1 = new VF.KeySignature('F');
+    const key2 = new VF.KeySignature('D');
+    const bar0 = new VF.Barline(VF.Barline.type.SINGLE);
+    const bar1 = new VF.Barline(VF.Barline.type.DOUBLE);
+    const bar2 = new VF.Barline(VF.Barline.type.NONE);
+    const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
+    const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
 
-      const sortAndCompare = function (title, arr, arr2, order) {
-        stave.sortByCategory(arr, order);
+    const sortAndCompare = function (title, arr, arr2, order) {
+      stave.sortByCategory(arr, order);
 
-        let isSame = true;
-        arr2.forEach(function (modifier, i) {
-          if (modifier !== arr[i]) isSame = false;
-        });
+      let isSame = true;
+      arr2.forEach(function (modifier, i) {
+        if (modifier !== arr[i]) isSame = false;
+      });
 
-        ok(isSame, title);
-      };
+      ok(isSame, title);
+    };
 
-      sortAndCompare(
-        'Keep the original order',
-        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
-        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
-        order0
-      );
-      sortAndCompare(
-        'Keep the original order 2',
-        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
-        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
-        order1
-      );
-      sortAndCompare(
-        'Sort and keep',
-        [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
-        [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
-        order1
-      );
-      sortAndCompare(
-        'Sort and keep 2',
-        [bar0, clef0, key0, time0, key1, time1, clef1, bar1, time2, clef2, bar2, key2],
-        [bar0, bar1, bar2, clef0, clef1, clef2, key0, key1, key2, time0, time1, time2],
-        order0
-      );
-      sortAndCompare(
-        'Sort and keep 3',
-        [bar2, clef2, key2, time0, key0, time2, clef1, bar1, time1, clef0, bar0, key1],
-        [time0, time2, time1, key2, key0, key1, bar2, bar1, bar0, clef2, clef1, clef0],
-        order1
-      );
-    },
+    sortAndCompare(
+      'Keep the original order',
+      [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+      [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+      order0
+    );
+    sortAndCompare(
+      'Keep the original order 2',
+      [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+      [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+      order1
+    );
+    sortAndCompare(
+      'Sort and keep',
+      [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
+      [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
+      order1
+    );
+    sortAndCompare(
+      'Sort and keep 2',
+      [bar0, clef0, key0, time0, key1, time1, clef1, bar1, time2, clef2, bar2, key2],
+      [bar0, bar1, bar2, clef0, clef1, clef2, key0, key1, key2, time0, time1, time2],
+      order0
+    );
+    sortAndCompare(
+      'Sort and keep 3',
+      [bar2, clef2, key2, time0, key0, time2, clef1, bar1, time1, clef0, bar0, key1],
+      [time0, time2, time1, key2, key0, key1, bar2, bar1, bar0, clef2, clef1, clef0],
+      order1
+    );
+  },
 
-    draw: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 400, 150);
-      const stave = new VF.Stave(10, 10, 300);
-      stave.setContext(ctx);
-      stave.draw();
+  draw: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 150);
+    const stave = new VF.Stave(10, 10, 300);
+    stave.setContext(ctx);
+    stave.draw();
 
-      equal(stave.getYForNote(0), 100, 'getYForNote(0)');
-      equal(stave.getYForLine(5), 100, 'getYForLine(5)');
-      equal(stave.getYForLine(0), 50, 'getYForLine(0) - Top Line');
-      equal(stave.getYForLine(4), 90, 'getYForLine(4) - Bottom Line');
+    equal(stave.getYForNote(0), 100, 'getYForNote(0)');
+    equal(stave.getYForLine(5), 100, 'getYForLine(5)');
+    equal(stave.getYForLine(0), 50, 'getYForLine(0) - Top Line');
+    equal(stave.getYForLine(4), 90, 'getYForLine(4) - Bottom Line');
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    drawOpenStave: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 400, 350);
-      let stave = new VF.Stave(10, 10, 300, { left_bar: false });
-      stave.setContext(ctx);
-      stave.draw();
+  drawOpenStave: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 350);
+    let stave = new VF.Stave(10, 10, 300, { left_bar: false });
+    stave.setContext(ctx);
+    stave.draw();
 
-      stave = new VF.Stave(10, 150, 300, { right_bar: false });
-      stave.setContext(ctx);
-      stave.draw();
+    stave = new VF.Stave(10, 150, 300, { right_bar: false });
+    stave.setContext(ctx);
+    stave.draw();
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    drawVerticalBar: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 400, 120);
-      const stave = new VF.Stave(10, 10, 300);
-      stave.setContext(ctx);
-      stave.draw();
-      stave.drawVerticalBar(50, true);
-      stave.drawVerticalBar(150, false);
-      stave.drawVertical(250, true);
-      stave.drawVertical(300);
+  drawVerticalBar: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 120);
+    const stave = new VF.Stave(10, 10, 300);
+    stave.setContext(ctx);
+    stave.draw();
+    stave.drawVerticalBar(50, true);
+    stave.drawVerticalBar(150, false);
+    stave.drawVertical(250, true);
+    stave.drawVertical(300);
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    drawMultipleMeasures: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
+  drawMultipleMeasures: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
 
-      // Get the rendering context
-      const ctx = contextBuilder(options.elementId, 550, 200);
+    // Get the rendering context
+    const ctx = contextBuilder(options.elementId, 550, 200);
 
-      // bar 1
-      const staveBar1 = new VF.Stave(10, 50, 200);
-      staveBar1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      staveBar1.setEndBarType(VF.Barline.type.DOUBLE);
-      staveBar1.setSection('A', 0);
-      staveBar1.addClef('treble').setContext(ctx).draw();
-      const notesBar1 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
-      ];
+    // bar 1
+    const staveBar1 = new VF.Stave(10, 50, 200);
+    staveBar1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    staveBar1.setEndBarType(VF.Barline.type.DOUBLE);
+    staveBar1.setSection('A', 0);
+    staveBar1.addClef('treble').setContext(ctx).draw();
+    const notesBar1 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+      new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+    ];
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
-      // bar 2 - juxtaposing second bar next to first bar
-      const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
-      staveBar2.setSection('B', 0);
-      staveBar2.setEndBarType(VF.Barline.type.END);
-      staveBar2.setContext(ctx).draw();
+    // bar 2 - juxtaposing second bar next to first bar
+    const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
+    staveBar2.setSection('B', 0);
+    staveBar2.setEndBarType(VF.Barline.type.END);
+    staveBar2.setContext(ctx).draw();
 
-      const notesBar2_part1 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ];
+    const notesBar2_part1 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ];
 
-      const notesBar2_part2 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ];
+    const notesBar2_part2 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ];
 
-      // create the beams for 8th notes in 2nd measure
-      const beam1 = new VF.Beam(notesBar2_part1);
-      const beam2 = new VF.Beam(notesBar2_part2);
-      const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
+    // create the beams for 8th notes in 2nd measure
+    const beam1 = new VF.Beam(notesBar2_part1);
+    const beam2 = new VF.Beam(notesBar2_part2);
+    const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
-      // Render beams
-      beam1.setContext(ctx).draw();
-      beam2.setContext(ctx).draw();
-    },
+    // Render beams
+    beam1.setContext(ctx).draw();
+    beam2.setContext(ctx).draw();
+  },
 
-    drawRepeats: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
+  drawRepeats: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
 
-      // Get the rendering context
-      const ctx = contextBuilder(options.elementId, 750, 120);
+    // Get the rendering context
+    const ctx = contextBuilder(options.elementId, 750, 120);
 
-      // bar 1
-      const staveBar1 = new VF.Stave(10, 0, 250);
-      staveBar1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      staveBar1.setEndBarType(VF.Barline.type.REPEAT_END);
-      staveBar1.addClef('treble');
-      staveBar1.addKeySignature('A');
-      staveBar1.setContext(ctx).draw();
-      const notesBar1 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
-      ];
+    // bar 1
+    const staveBar1 = new VF.Stave(10, 0, 250);
+    staveBar1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    staveBar1.setEndBarType(VF.Barline.type.REPEAT_END);
+    staveBar1.addClef('treble');
+    staveBar1.addKeySignature('A');
+    staveBar1.setContext(ctx).draw();
+    const notesBar1 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+      new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+    ];
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
-      // bar 2 - juxtaposing second bar next to first bar
-      const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
-      staveBar2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      staveBar2.setEndBarType(VF.Barline.type.REPEAT_END);
-      staveBar2.setContext(ctx).draw();
+    // bar 2 - juxtaposing second bar next to first bar
+    const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
+    staveBar2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    staveBar2.setEndBarType(VF.Barline.type.REPEAT_END);
+    staveBar2.setContext(ctx).draw();
 
-      const notesBar2_part1 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ];
+    const notesBar2_part1 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ];
 
-      const notesBar2_part2 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ];
-      notesBar2_part2[0].addAccidental(0, new VF.Accidental('#'));
-      notesBar2_part2[1].addAccidental(0, new VF.Accidental('#'));
-      notesBar2_part2[3].addAccidental(0, new VF.Accidental('b'));
-      // create the beams for 8th notes in 2nd measure
-      const beam1 = new VF.Beam(notesBar2_part1);
-      const beam2 = new VF.Beam(notesBar2_part2);
-      const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
+    const notesBar2_part2 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ];
+    notesBar2_part2[0].addAccidental(0, new VF.Accidental('#'));
+    notesBar2_part2[1].addAccidental(0, new VF.Accidental('#'));
+    notesBar2_part2[3].addAccidental(0, new VF.Accidental('b'));
+    // create the beams for 8th notes in 2nd measure
+    const beam1 = new VF.Beam(notesBar2_part1);
+    const beam2 = new VF.Beam(notesBar2_part2);
+    const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
-      // Render beams
-      beam1.setContext(ctx).draw();
-      beam2.setContext(ctx).draw();
+    // Render beams
+    beam1.setContext(ctx).draw();
+    beam2.setContext(ctx).draw();
 
-      // bar 3 - juxtaposing third bar next to second bar
-      const staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 50);
-      staveBar3.setContext(ctx).draw();
-      const notesBar3 = [new VF.StaveNote({ keys: ['d/5'], duration: 'wr' })];
+    // bar 3 - juxtaposing third bar next to second bar
+    const staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 50);
+    staveBar3.setContext(ctx).draw();
+    const notesBar3 = [new VF.StaveNote({ keys: ['d/5'], duration: 'wr' })];
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
-      // bar 4 - juxtaposing third bar next to third bar
-      const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 250 - staveBar1.getModifierXShift());
-      staveBar4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      staveBar4.setEndBarType(VF.Barline.type.REPEAT_END);
-      staveBar4.setContext(ctx).draw();
-      const notesBar4 = [
-        new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
-        new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
-        new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
-      ];
+    // bar 4 - juxtaposing third bar next to third bar
+    const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 250 - staveBar1.getModifierXShift());
+    staveBar4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    staveBar4.setEndBarType(VF.Barline.type.REPEAT_END);
+    staveBar4.setContext(ctx).draw();
+    const notesBar4 = [
+      new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
+      new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+      new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
+    ];
 
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
-    },
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+  },
 
-    drawEndModifiersTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
+  drawEndModifiersTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
 
-      const staveWidth = 230;
-      const blockHeight = 80;
-      let x = 10;
-      let y = 0;
+    const staveWidth = 230;
+    const blockHeight = 80;
+    let x = 10;
+    let y = 0;
 
-      function drawAStaves(endBarLine) {
-        function drawAStave(ctx, x, y, width, begMods, endMods) {
-          const staveBar = new VF.Stave(x, y, width - 10);
-          if (begMods) {
-            if (begMods.barLine !== undefined) {
-              staveBar.setBegBarType(begMods.barLine);
-            }
-            if (begMods.clef !== undefined) {
-              staveBar.addClef(begMods.clef);
-            }
-            if (begMods.keySig !== undefined) {
-              staveBar.addKeySignature(begMods.keySig);
-            }
-            if (begMods.timeSig !== undefined) {
-              staveBar.setTimeSignature(begMods.timeSig);
-            }
+    function drawAStaves(endBarLine) {
+      function drawAStave(ctx, x, y, width, begMods, endMods) {
+        const staveBar = new VF.Stave(x, y, width - 10);
+        if (begMods) {
+          if (begMods.barLine !== undefined) {
+            staveBar.setBegBarType(begMods.barLine);
           }
-
-          if (endMods) {
-            if (endMods.barLine !== undefined) {
-              staveBar.setEndBarType(endMods.barLine);
-            }
-            if (endMods.clef !== undefined) {
-              staveBar.addEndClef(endMods.clef);
-            }
-            if (endMods.keySig !== undefined) {
-              staveBar.setEndKeySignature(endMods.keySig);
-            }
-            if (endMods.timeSig !== undefined) {
-              staveBar.setEndTimeSignature(endMods.timeSig);
-            }
+          if (begMods.clef !== undefined) {
+            staveBar.addClef(begMods.clef);
           }
-
-          staveBar.setContext(ctx).draw();
-          const notesBar = [
-            new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
-            new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
-            new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
-            new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
-          ];
-
-          VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+          if (begMods.keySig !== undefined) {
+            staveBar.addKeySignature(begMods.keySig);
+          }
+          if (begMods.timeSig !== undefined) {
+            staveBar.setTimeSignature(begMods.timeSig);
+          }
         }
 
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth + 50,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-            clef: 'treble',
-            keySig: 'A',
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
+        if (endMods) {
+          if (endMods.barLine !== undefined) {
+            staveBar.setEndBarType(endMods.barLine);
           }
-        );
-        x += staveWidth + 50;
-
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            keySig: 'E',
+          if (endMods.clef !== undefined) {
+            staveBar.addEndClef(endMods.clef);
           }
-        );
-        x += staveWidth;
-
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            timeSig: '2/4',
+          if (endMods.keySig !== undefined) {
+            staveBar.setEndKeySignature(endMods.keySig);
           }
-        );
-        x += staveWidth;
-
-        x = 10;
-        y += blockHeight;
-
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
-            timeSig: '2/4',
+          if (endMods.timeSig !== undefined) {
+            staveBar.setEndTimeSignature(endMods.timeSig);
           }
-        );
-        x += staveWidth;
+        }
 
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'treble',
-            keySig: 'Ab',
-          }
-        );
-        x += staveWidth;
-
-        drawAStave(
-          ctx,
-          x,
-          y,
-          staveWidth,
-          {
-            barLine: VF.Barline.type.REPEAT_BEGIN,
-          },
-          {
-            barLine: endBarLine,
-            clef: 'bass',
-            keySig: 'Ab',
-            timeSig: '2/4',
-          }
-        );
-        x += staveWidth;
-      }
-
-      var ctx = contextBuilder(options.elementId, 800, 700);
-
-      y = 0;
-      x = 10;
-      drawAStaves(VF.Barline.type.SINGLE);
-
-      y += blockHeight + 10;
-      x = 10;
-      drawAStaves(VF.Barline.type.DOUBLE);
-
-      y += blockHeight + 10;
-      x = 10;
-      drawAStaves(VF.Barline.type.REPEAT_END);
-
-      y += blockHeight + 10;
-      x = 10;
-      drawAStaves(VF.Barline.type.REPEAT_BOTH);
-    },
-
-    drawVoltaTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
-
-      // Get the rendering context
-      const ctx = contextBuilder(options.elementId, 725, 200);
-
-      // bar 1
-      const mm1 = new VF.Stave(10, 50, 125);
-      mm1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      mm1.setRepetitionTypeLeft(VF.Repetition.type.SEGNO_LEFT, -18);
-      mm1.addClef('treble');
-      mm1.addKeySignature('A');
-      mm1.setMeasure(1);
-      mm1.setSection('A', 0);
-      mm1.setContext(ctx).draw();
-      const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
-
-      // bar 2 - juxtapose second measure
-      const mm2 = new VF.Stave(mm1.width + mm1.x, mm1.y, 60);
-      mm2.setRepetitionTypeRight(VF.Repetition.type.CODA_RIGHT, 0);
-      mm2.setMeasure(2);
-      mm2.setContext(ctx).draw();
-      const notesmm2 = [new VF.StaveNote({ keys: ['d/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
-
-      // bar 3 - juxtapose third measure
-      const mm3 = new VF.Stave(mm2.width + mm2.x, mm1.y, 60);
-      mm3.setVoltaType(VF.Volta.type.BEGIN, '1.', -5);
-      mm3.setMeasure(3);
-      mm3.setContext(ctx).draw();
-      const notesmm3 = [new VF.StaveNote({ keys: ['e/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
-
-      // bar 4 - juxtapose fourth measure
-      const mm4 = new VF.Stave(mm3.width + mm3.x, mm1.y, 60);
-      mm4.setVoltaType(VF.Volta.type.MID, '', -5);
-      mm4.setMeasure(4);
-      mm4.setContext(ctx).draw();
-      const notesmm4 = [new VF.StaveNote({ keys: ['f/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
-
-      // bar 5 - juxtapose fifth measure
-      const mm5 = new VF.Stave(mm4.width + mm4.x, mm1.y, 60);
-      mm5.setEndBarType(VF.Barline.type.REPEAT_END);
-      mm5.setVoltaType(VF.Volta.type.END, '', -5);
-      mm5.setMeasure(5);
-      mm5.setContext(ctx).draw();
-      const notesmm5 = [new VF.StaveNote({ keys: ['g/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
-
-      // bar 6 - juxtapose sixth measure
-      const mm6 = new VF.Stave(mm5.width + mm5.x, mm1.y, 60);
-      mm6.setVoltaType(VF.Volta.type.BEGIN_END, '2.', -5);
-      mm6.setEndBarType(VF.Barline.type.DOUBLE);
-      mm6.setMeasure(6);
-      mm6.setContext(ctx).draw();
-      const notesmm6 = [new VF.StaveNote({ keys: ['a/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
-
-      // bar 7 - juxtapose seventh measure
-      const mm7 = new VF.Stave(mm6.width + mm6.x, mm1.y, 60);
-      mm7.setMeasure(7);
-      mm7.setSection('B', 0);
-      mm7.setContext(ctx).draw();
-      const notesmm7 = [new VF.StaveNote({ keys: ['b/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm7, notesmm7);
-
-      // bar 8 - juxtapose eighth measure
-      const mm8 = new VF.Stave(mm7.width + mm7.x, mm1.y, 60);
-      mm8.setEndBarType(VF.Barline.type.DOUBLE);
-      mm8.setRepetitionTypeRight(VF.Repetition.type.DS_AL_CODA, 25);
-      mm8.setMeasure(8);
-      mm8.setContext(ctx).draw();
-      const notesmm8 = [new VF.StaveNote({ keys: ['c/5'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm8, notesmm8);
-
-      // bar 9 - juxtapose ninth measure
-      const mm9 = new VF.Stave(mm8.width + mm8.x + 20, mm1.y, 125);
-      mm9.setEndBarType(VF.Barline.type.END);
-      mm9.setRepetitionTypeLeft(VF.Repetition.type.CODA_LEFT, 25);
-      mm9.addClef('treble');
-      mm9.addKeySignature('A');
-      mm9.setMeasure(9);
-      mm9.setContext(ctx).draw();
-      const notesmm9 = [new VF.StaveNote({ keys: ['d/5'], duration: 'w' })];
-
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
-    },
-
-    drawVoltaModifierTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
-
-      // Get the rendering context
-      const ctx = contextBuilder(options.elementId, 1100, 200);
-
-      // bar 1: volta begin, with modifiers (clef, keysignature)
-      const mm1 = new VF.Stave(10, 50, 175);
-      mm1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      mm1.setVoltaType(VF.Volta.type.BEGIN_END, '1.', -5);
-      mm1.addClef('treble');
-      mm1.addKeySignature('A');
-      mm1.setMeasure(1);
-      mm1.setSection('A', 0);
-      mm1.setContext(ctx).draw();
-      const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      // Helper function to justify and draw a 4/4 voice
-      VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
-
-      // bar 2: volta begin_mid, with modifiers (clef, keysignature)
-      const mm2 = new VF.Stave(mm1.x + mm1.width, mm1.y, 175);
-      mm2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      mm2.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
-      mm2.setVoltaType(VF.Volta.type.BEGIN_MID, '2.', -5);
-      mm2.addClef('treble');
-      mm2.addKeySignature('A');
-      mm2.setMeasure(2);
-      mm2.setContext(ctx).draw();
-      const notesmm2 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
-
-      // bar 3: volta mid, with modifiers (clef, keysignature)
-      const mm3 = new VF.Stave(mm2.x + mm2.width, mm2.y, 175);
-      mm3.setVoltaType(VF.Volta.type.MID, '', -5);
-      mm3.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
-      mm3.addClef('treble');
-      mm3.addKeySignature('B');
-      mm3.setMeasure(3);
-      mm3.setSection('B', 0);
-      mm3.setContext(ctx).draw();
-      const notesmm3 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
-
-      // bar 4: volta end, with modifiers (clef, keysignature)
-      const mm4 = new VF.Stave(mm3.x + mm3.width, mm3.y, 175);
-      mm4.setVoltaType(VF.Volta.type.END, '1.', -5);
-      mm4.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
-      mm4.addClef('treble');
-      mm4.addKeySignature('A');
-      mm4.setMeasure(4);
-      mm4.setSection('C', 0);
-      mm4.setContext(ctx).draw();
-      const notesmm4 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
-
-      // bar 5: d.s. shift (similar potential x-shift concern)
-      const mm5 = new VF.Stave(mm4.x + mm4.width, mm4.y, 175);
-      // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
-      mm5.setEndBarType(VF.Barline.type.DOUBLE);
-      mm5.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
-      mm5.addClef('treble');
-      mm5.addKeySignature('A');
-      mm5.setMeasure(5);
-      mm5.setSection('D', 0);
-      mm5.setContext(ctx).draw();
-      const notesmm5 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
-
-      // bar 6: d.s. without modifiers
-      const mm6 = new VF.Stave(mm5.x + mm5.width, mm5.y, 175);
-      // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
-      mm6.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
-      mm6.setMeasure(6);
-      mm6.setSection('E', 0);
-      mm6.setContext(ctx).draw();
-      const notesmm6 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-      VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
-    },
-
-    drawTempo: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      expect(0);
-
-      const ctx = contextBuilder(options.elementId, 725, 350);
-      const padding = 10;
-      let x = 0;
-      let y = 50;
-
-      function drawTempoStaveBar(width, tempo, tempo_y, notes) {
-        const staveBar = new VF.Stave(padding + x, y, width);
-        if (x === 0) staveBar.addClef('treble');
-        staveBar.setTempo(tempo, tempo_y);
         staveBar.setContext(ctx).draw();
-
-        const notesBar = notes || [
+        const notesBar = [
           new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
           new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
-          new VF.StaveNote({ keys: ['b/4'], duration: 'q' }),
-          new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+          new VF.StaveNote({ keys: ['b/4'], duration: 'qr' }),
+          new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
         ];
 
         VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
-        x += width;
       }
 
-      drawTempoStaveBar(120, { duration: 'q', dots: 1, bpm: 80 }, 0);
-      drawTempoStaveBar(100, { duration: '8', dots: 2, bpm: 90 }, 0);
-      drawTempoStaveBar(100, { duration: '16', dots: 1, bpm: 96 }, 0);
-      drawTempoStaveBar(100, { duration: '32', bpm: 70 }, 0);
-      drawTempoStaveBar(250, { name: 'Andante', note: '8', bpm: 120 }, -20, [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/5'], duration: '8' }),
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ]);
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth + 50,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+          clef: 'treble',
+          keySig: 'A',
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+        }
+      );
+      x += staveWidth + 50;
 
-      x = 0;
-      y += 150;
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          keySig: 'E',
+        }
+      );
+      x += staveWidth;
 
-      drawTempoStaveBar(120, { duration: 'w', bpm: 80 }, 0);
-      drawTempoStaveBar(100, { duration: 'h', bpm: 90 }, 0);
-      drawTempoStaveBar(100, { duration: 'q', bpm: 96 }, 0);
-      drawTempoStaveBar(100, { duration: '8', bpm: 70 }, 0);
-      drawTempoStaveBar(250, { name: 'Andante grazioso' }, 0, [
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
-        new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
-      ]);
-    },
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          timeSig: '2/4',
+        }
+      );
+      x += staveWidth;
 
-    configureSingleLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 400, 120);
-      const stave = new VF.Stave(10, 10, 300);
-      stave
-        .setConfigForLine(0, { visible: true })
-        .setConfigForLine(1, { visible: false })
-        .setConfigForLine(2, { visible: true })
-        .setConfigForLine(3, { visible: false })
-        .setConfigForLine(4, { visible: true });
-      stave.setContext(ctx).draw();
+      x = 10;
+      y += blockHeight;
 
-      const config = stave.getConfigForLines();
-      equal(config[0].visible, true, 'getLinesConfiguration() - Line 0');
-      equal(config[1].visible, false, 'getLinesConfiguration() - Line 1');
-      equal(config[2].visible, true, 'getLinesConfiguration() - Line 2');
-      equal(config[3].visible, false, 'getLinesConfiguration() - Line 3');
-      equal(config[4].visible, true, 'getLinesConfiguration() - Line 4');
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          timeSig: '2/4',
+        }
+      );
+      x += staveWidth;
 
-      ok(true, 'all pass');
-    },
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'treble',
+          keySig: 'Ab',
+        }
+      );
+      x += staveWidth;
 
-    configureAllLines: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 400, 120);
-      const stave = new VF.Stave(10, 10, 300);
-      stave
-        .setConfigForLines([{ visible: false }, null, { visible: false }, { visible: true }, { visible: false }])
-        .setContext(ctx)
-        .draw();
+      drawAStave(
+        ctx,
+        x,
+        y,
+        staveWidth,
+        {
+          barLine: VF.Barline.type.REPEAT_BEGIN,
+        },
+        {
+          barLine: endBarLine,
+          clef: 'bass',
+          keySig: 'Ab',
+          timeSig: '2/4',
+        }
+      );
+      x += staveWidth;
+    }
 
-      const config = stave.getConfigForLines();
-      equal(config[0].visible, false, 'getLinesConfiguration() - Line 0');
-      equal(config[1].visible, true, 'getLinesConfiguration() - Line 1');
-      equal(config[2].visible, false, 'getLinesConfiguration() - Line 2');
-      equal(config[3].visible, true, 'getLinesConfiguration() - Line 3');
-      equal(config[4].visible, false, 'getLinesConfiguration() - Line 4');
+    var ctx = contextBuilder(options.elementId, 800, 700);
 
-      ok(true, 'all pass');
-    },
+    y = 0;
+    x = 10;
+    drawAStaves(VF.Barline.type.SINGLE);
 
-    drawStaveText: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 900, 140);
-      const stave = new VF.Stave(300, 10, 300);
-      stave.setText('Violin', VF.Modifier.Position.LEFT);
-      stave.setText('Right Text', VF.Modifier.Position.RIGHT);
-      stave.setText('Above Text', VF.Modifier.Position.ABOVE);
-      stave.setText('Below Text', VF.Modifier.Position.BELOW);
-      stave.setContext(ctx).draw();
+    y += blockHeight + 10;
+    x = 10;
+    drawAStaves(VF.Barline.type.DOUBLE);
 
-      ok(true, 'all pass');
-    },
+    y += blockHeight + 10;
+    x = 10;
+    drawAStaves(VF.Barline.type.REPEAT_END);
 
-    drawStaveTextMultiLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
-      const ctx = contextBuilder(options.elementId, 900, 200);
-      const stave = new VF.Stave(300, 40, 300);
-      stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
-      stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });
-      stave.setText('Right Text', VF.Modifier.Position.RIGHT, { shift_y: -10 });
-      stave.setText('2nd line', VF.Modifier.Position.RIGHT, { shift_y: 10 });
-      stave.setText('Above Text', VF.Modifier.Position.ABOVE, { shift_y: -10 });
-      stave.setText('2nd line', VF.Modifier.Position.ABOVE, { shift_y: 10 });
-      stave.setText('Left Below Text', VF.Modifier.Position.BELOW, {
-        shift_y: -10,
-        justification: VF.TextNote.Justification.LEFT,
-      });
-      stave.setText('Right Below Text', VF.Modifier.Position.BELOW, {
-        shift_y: 10,
-        justification: VF.TextNote.Justification.RIGHT,
-      });
-      stave.setContext(ctx).draw();
+    y += blockHeight + 10;
+    x = 10;
+    drawAStaves(VF.Barline.type.REPEAT_BOTH);
+  },
 
-      ok(true, 'all pass');
-    },
+  drawVoltaTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
 
-    factoryAPI: function (options) {
-      const f = VexFlowTests.makeFactory(options, 900, 200);
-      const stave = f.Stave({ x: 300, y: 40, width: 300 });
-      stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
-      stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });
-      f.draw();
+    // Get the rendering context
+    const ctx = contextBuilder(options.elementId, 725, 200);
 
-      ok(true, 'all pass');
-    },
-  };
+    // bar 1
+    const mm1 = new VF.Stave(10, 50, 125);
+    mm1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    mm1.setRepetitionTypeLeft(VF.Repetition.type.SEGNO_LEFT, -18);
+    mm1.addClef('treble');
+    mm1.addKeySignature('A');
+    mm1.setMeasure(1);
+    mm1.setSection('A', 0);
+    mm1.setContext(ctx).draw();
+    const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
 
-  return Stave;
-})();
-VexFlowTests.Stave = StaveTests;
+    // bar 2 - juxtapose second measure
+    const mm2 = new VF.Stave(mm1.width + mm1.x, mm1.y, 60);
+    mm2.setRepetitionTypeRight(VF.Repetition.type.CODA_RIGHT, 0);
+    mm2.setMeasure(2);
+    mm2.setContext(ctx).draw();
+    const notesmm2 = [new VF.StaveNote({ keys: ['d/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+
+    // bar 3 - juxtapose third measure
+    const mm3 = new VF.Stave(mm2.width + mm2.x, mm1.y, 60);
+    mm3.setVoltaType(VF.Volta.type.BEGIN, '1.', -5);
+    mm3.setMeasure(3);
+    mm3.setContext(ctx).draw();
+    const notesmm3 = [new VF.StaveNote({ keys: ['e/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+
+    // bar 4 - juxtapose fourth measure
+    const mm4 = new VF.Stave(mm3.width + mm3.x, mm1.y, 60);
+    mm4.setVoltaType(VF.Volta.type.MID, '', -5);
+    mm4.setMeasure(4);
+    mm4.setContext(ctx).draw();
+    const notesmm4 = [new VF.StaveNote({ keys: ['f/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+
+    // bar 5 - juxtapose fifth measure
+    const mm5 = new VF.Stave(mm4.width + mm4.x, mm1.y, 60);
+    mm5.setEndBarType(VF.Barline.type.REPEAT_END);
+    mm5.setVoltaType(VF.Volta.type.END, '', -5);
+    mm5.setMeasure(5);
+    mm5.setContext(ctx).draw();
+    const notesmm5 = [new VF.StaveNote({ keys: ['g/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
+
+    // bar 6 - juxtapose sixth measure
+    const mm6 = new VF.Stave(mm5.width + mm5.x, mm1.y, 60);
+    mm6.setVoltaType(VF.Volta.type.BEGIN_END, '2.', -5);
+    mm6.setEndBarType(VF.Barline.type.DOUBLE);
+    mm6.setMeasure(6);
+    mm6.setContext(ctx).draw();
+    const notesmm6 = [new VF.StaveNote({ keys: ['a/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
+
+    // bar 7 - juxtapose seventh measure
+    const mm7 = new VF.Stave(mm6.width + mm6.x, mm1.y, 60);
+    mm7.setMeasure(7);
+    mm7.setSection('B', 0);
+    mm7.setContext(ctx).draw();
+    const notesmm7 = [new VF.StaveNote({ keys: ['b/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm7, notesmm7);
+
+    // bar 8 - juxtapose eighth measure
+    const mm8 = new VF.Stave(mm7.width + mm7.x, mm1.y, 60);
+    mm8.setEndBarType(VF.Barline.type.DOUBLE);
+    mm8.setRepetitionTypeRight(VF.Repetition.type.DS_AL_CODA, 25);
+    mm8.setMeasure(8);
+    mm8.setContext(ctx).draw();
+    const notesmm8 = [new VF.StaveNote({ keys: ['c/5'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm8, notesmm8);
+
+    // bar 9 - juxtapose ninth measure
+    const mm9 = new VF.Stave(mm8.width + mm8.x + 20, mm1.y, 125);
+    mm9.setEndBarType(VF.Barline.type.END);
+    mm9.setRepetitionTypeLeft(VF.Repetition.type.CODA_LEFT, 25);
+    mm9.addClef('treble');
+    mm9.addKeySignature('A');
+    mm9.setMeasure(9);
+    mm9.setContext(ctx).draw();
+    const notesmm9 = [new VF.StaveNote({ keys: ['d/5'], duration: 'w' })];
+
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
+  },
+
+  drawVoltaModifierTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
+
+    // Get the rendering context
+    const ctx = contextBuilder(options.elementId, 1100, 200);
+
+    // bar 1: volta begin, with modifiers (clef, keysignature)
+    const mm1 = new VF.Stave(10, 50, 175);
+    mm1.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    mm1.setVoltaType(VF.Volta.type.BEGIN_END, '1.', -5);
+    mm1.addClef('treble');
+    mm1.addKeySignature('A');
+    mm1.setMeasure(1);
+    mm1.setSection('A', 0);
+    mm1.setContext(ctx).draw();
+    const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    // Helper function to justify and draw a 4/4 voice
+    VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
+
+    // bar 2: volta begin_mid, with modifiers (clef, keysignature)
+    const mm2 = new VF.Stave(mm1.x + mm1.width, mm1.y, 175);
+    mm2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    mm2.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+    mm2.setVoltaType(VF.Volta.type.BEGIN_MID, '2.', -5);
+    mm2.addClef('treble');
+    mm2.addKeySignature('A');
+    mm2.setMeasure(2);
+    mm2.setContext(ctx).draw();
+    const notesmm2 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+
+    // bar 3: volta mid, with modifiers (clef, keysignature)
+    const mm3 = new VF.Stave(mm2.x + mm2.width, mm2.y, 175);
+    mm3.setVoltaType(VF.Volta.type.MID, '', -5);
+    mm3.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+    mm3.addClef('treble');
+    mm3.addKeySignature('B');
+    mm3.setMeasure(3);
+    mm3.setSection('B', 0);
+    mm3.setContext(ctx).draw();
+    const notesmm3 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+
+    // bar 4: volta end, with modifiers (clef, keysignature)
+    const mm4 = new VF.Stave(mm3.x + mm3.width, mm3.y, 175);
+    mm4.setVoltaType(VF.Volta.type.END, '1.', -5);
+    mm4.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+    mm4.addClef('treble');
+    mm4.addKeySignature('A');
+    mm4.setMeasure(4);
+    mm4.setSection('C', 0);
+    mm4.setContext(ctx).draw();
+    const notesmm4 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+
+    // bar 5: d.s. shift (similar potential x-shift concern)
+    const mm5 = new VF.Stave(mm4.x + mm4.width, mm4.y, 175);
+    // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
+    mm5.setEndBarType(VF.Barline.type.DOUBLE);
+    mm5.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+    mm5.addClef('treble');
+    mm5.addKeySignature('A');
+    mm5.setMeasure(5);
+    mm5.setSection('D', 0);
+    mm5.setContext(ctx).draw();
+    const notesmm5 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
+
+    // bar 6: d.s. without modifiers
+    const mm6 = new VF.Stave(mm5.x + mm5.width, mm5.y, 175);
+    // mm5.addModifier(new VF.Repetition(VF.Repetition.type.DS, mm4.x + mm4.width, 50), VF.StaveModifier.Position.RIGHT);
+    mm6.setRepetitionTypeRight(VF.Repetition.type.DS, 25);
+    mm6.setMeasure(6);
+    mm6.setSection('E', 0);
+    mm6.setContext(ctx).draw();
+    const notesmm6 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
+    VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
+  },
+
+  drawTempo: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    expect(0);
+
+    const ctx = contextBuilder(options.elementId, 725, 350);
+    const padding = 10;
+    let x = 0;
+    let y = 50;
+
+    function drawTempoStaveBar(width, tempo, tempo_y, notes) {
+      const staveBar = new VF.Stave(padding + x, y, width);
+      if (x === 0) staveBar.addClef('treble');
+      staveBar.setTempo(tempo, tempo_y);
+      staveBar.setContext(ctx).draw();
+
+      const notesBar = notes || [
+        new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+        new VF.StaveNote({ keys: ['d/4'], duration: 'q' }),
+        new VF.StaveNote({ keys: ['b/4'], duration: 'q' }),
+        new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
+      ];
+
+      VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+      x += width;
+    }
+
+    drawTempoStaveBar(120, { duration: 'q', dots: 1, bpm: 80 }, 0);
+    drawTempoStaveBar(100, { duration: '8', dots: 2, bpm: 90 }, 0);
+    drawTempoStaveBar(100, { duration: '16', dots: 1, bpm: 96 }, 0);
+    drawTempoStaveBar(100, { duration: '32', bpm: 70 }, 0);
+    drawTempoStaveBar(250, { name: 'Andante', note: '8', bpm: 120 }, -20, [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/5'], duration: '8' }),
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ]);
+
+    x = 0;
+    y += 150;
+
+    drawTempoStaveBar(120, { duration: 'w', bpm: 80 }, 0);
+    drawTempoStaveBar(100, { duration: 'h', bpm: 90 }, 0);
+    drawTempoStaveBar(100, { duration: 'q', bpm: 96 }, 0);
+    drawTempoStaveBar(100, { duration: '8', bpm: 70 }, 0);
+    drawTempoStaveBar(250, { name: 'Andante grazioso' }, 0, [
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['c/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['d/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['g/4'], duration: '8' }),
+      new VF.StaveNote({ keys: ['e/4'], duration: '8' }),
+    ]);
+  },
+
+  configureSingleLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 120);
+    const stave = new VF.Stave(10, 10, 300);
+    stave
+      .setConfigForLine(0, { visible: true })
+      .setConfigForLine(1, { visible: false })
+      .setConfigForLine(2, { visible: true })
+      .setConfigForLine(3, { visible: false })
+      .setConfigForLine(4, { visible: true });
+    stave.setContext(ctx).draw();
+
+    const config = stave.getConfigForLines();
+    equal(config[0].visible, true, 'getLinesConfiguration() - Line 0');
+    equal(config[1].visible, false, 'getLinesConfiguration() - Line 1');
+    equal(config[2].visible, true, 'getLinesConfiguration() - Line 2');
+    equal(config[3].visible, false, 'getLinesConfiguration() - Line 3');
+    equal(config[4].visible, true, 'getLinesConfiguration() - Line 4');
+
+    ok(true, 'all pass');
+  },
+
+  configureAllLines: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 120);
+    const stave = new VF.Stave(10, 10, 300);
+    stave
+      .setConfigForLines([{ visible: false }, null, { visible: false }, { visible: true }, { visible: false }])
+      .setContext(ctx)
+      .draw();
+
+    const config = stave.getConfigForLines();
+    equal(config[0].visible, false, 'getLinesConfiguration() - Line 0');
+    equal(config[1].visible, true, 'getLinesConfiguration() - Line 1');
+    equal(config[2].visible, false, 'getLinesConfiguration() - Line 2');
+    equal(config[3].visible, true, 'getLinesConfiguration() - Line 3');
+    equal(config[4].visible, false, 'getLinesConfiguration() - Line 4');
+
+    ok(true, 'all pass');
+  },
+
+  drawStaveText: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 900, 140);
+    const stave = new VF.Stave(300, 10, 300);
+    stave.setText('Violin', VF.Modifier.Position.LEFT);
+    stave.setText('Right Text', VF.Modifier.Position.RIGHT);
+    stave.setText('Above Text', VF.Modifier.Position.ABOVE);
+    stave.setText('Below Text', VF.Modifier.Position.BELOW);
+    stave.setContext(ctx).draw();
+
+    ok(true, 'all pass');
+  },
+
+  drawStaveTextMultiLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 900, 200);
+    const stave = new VF.Stave(300, 40, 300);
+    stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
+    stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });
+    stave.setText('Right Text', VF.Modifier.Position.RIGHT, { shift_y: -10 });
+    stave.setText('2nd line', VF.Modifier.Position.RIGHT, { shift_y: 10 });
+    stave.setText('Above Text', VF.Modifier.Position.ABOVE, { shift_y: -10 });
+    stave.setText('2nd line', VF.Modifier.Position.ABOVE, { shift_y: 10 });
+    stave.setText('Left Below Text', VF.Modifier.Position.BELOW, {
+      shift_y: -10,
+      justification: VF.TextNote.Justification.LEFT,
+    });
+    stave.setText('Right Below Text', VF.Modifier.Position.BELOW, {
+      shift_y: 10,
+      justification: VF.TextNote.Justification.RIGHT,
+    });
+    stave.setContext(ctx).draw();
+
+    ok(true, 'all pass');
+  },
+
+  factoryAPI: function (options) {
+    const f = VexFlowTests.makeFactory(options, 900, 200);
+    const stave = f.Stave({ x: 300, y: 40, width: 300 });
+    stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });
+    stave.setText('2nd line', VF.Modifier.Position.LEFT, { shift_y: 10 });
+    f.draw();
+
+    ok(true, 'all pass');
+  },
+};
 export { StaveTests };

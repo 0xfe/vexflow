@@ -3,11 +3,14 @@
 //
 // Clef Tests
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 
 const ClefTests = {
-  Start: function (): void {
+  Start(): void {
     QUnit.module('Clef');
     const runTests = VexFlowTests.runTests;
     runTests('Clef Test', this.draw);
@@ -17,7 +20,7 @@ const ClefTests = {
     runTests('Clef Change Test', this.drawClefChange);
   },
 
-  draw: function (options: TestOptions): void {
+  draw(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 120);
     f.Stave()
       .addClef('treble')
@@ -39,7 +42,7 @@ const ClefTests = {
     ok(true, 'all pass');
   },
 
-  drawEnd: function (options: TestOptions): void {
+  drawEnd(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 120);
     f.Stave()
       .addClef('bass')
@@ -61,7 +64,7 @@ const ClefTests = {
     ok(true, 'all pass');
   },
 
-  drawSmall: function (options: TestOptions): void {
+  drawSmall(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 120);
     f.Stave()
       .addClef('treble', 'small')
@@ -83,7 +86,7 @@ const ClefTests = {
     ok(true, 'all pass');
   },
 
-  drawSmallEnd: function (options: TestOptions): void {
+  drawSmallEnd(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 120);
     f.Stave()
       .addClef('bass', 'small')
@@ -105,7 +108,7 @@ const ClefTests = {
     ok(true, 'all pass');
   },
 
-  drawClefChange: function (options: TestOptions): void {
+  drawClefChange(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 180);
     const stave = f.Stave().addClef('treble');
     const notes = [

@@ -5,6 +5,9 @@
 //
 // TODO: How is this different from key_clef_tests.ts?
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { QUnit, ok, equal, test, expect } from './declarations';
 import { ContextBuilder } from 'renderer';
