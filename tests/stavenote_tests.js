@@ -648,7 +648,7 @@ const StaveNoteTests = (function () {
 
       var stave = new VF.Stave(10, 0, 100);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'b/4', 'd/5'], duration: 'q' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'))
         .setKeyStyle(1, { shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue' });
@@ -667,7 +667,7 @@ const StaveNoteTests = (function () {
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'b/4', 'd/5'], duration: '8' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
@@ -687,7 +687,7 @@ const StaveNoteTests = (function () {
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'b/4', 'd/5'], duration: 'q' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 
@@ -764,7 +764,7 @@ const StaveNoteTests = (function () {
       var stave = new VF.Stave(10, 0, 100);
       ctx.scale(3, 3);
 
-      var note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
+      var note = new VF.StaveNote({ keys: ['g/4', 'b/4', 'd/5'], duration: '8' })
         .setStave(stave)
         .addAccidental(1, new VF.Accidental('b'));
 

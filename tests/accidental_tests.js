@@ -55,7 +55,7 @@ const AccidentalTests = (function () {
       // Create the notes
       var notes = [
         new VF.StaveNote({
-          keys: ['e##/5'],
+          keys: ['e/5'],
           duration: '8d',
         })
           .addAccidental(0, new VF.Accidental('##'))

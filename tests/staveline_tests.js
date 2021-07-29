@@ -54,14 +54,14 @@ const StaveLineTests = (function () {
       var stave = vf.Stave().addTrebleGlyph();
 
       var notes = [
-        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }).addDotToAll(),
+        vf.StaveNote({ keys: ['c/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }).addDotToAll(),
         vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, vf.Accidental({ type: '#' })),
         vf.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', clef: 'treble' }),
         vf
           .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
           .addAccidental(2, vf.Accidental({ type: '#' })),
         vf.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, vf.Accidental({ type: '#' })),
-        vf.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
+        vf.StaveNote({ keys: ['c/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
         vf.StaveNote({ keys: ['c/4', 'd/4', 'g/4'], duration: '4', clef: 'treble' }),
         vf
           .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
