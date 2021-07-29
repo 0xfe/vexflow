@@ -16,7 +16,7 @@ import { VexFlowTests } from './vexflow_test_helpers';
  * StaveNote Tests
  */
 const StaveNoteTests = {
-  Start: function () {
+  Start() {
     const runTests = VexFlowTests.runTests;
 
     QUnit.module('StaveNote');
@@ -68,7 +68,7 @@ const StaveNoteTests = {
     runTests('Center Aligned Note with Multiple Modifiers', StaveNoteTests.centerAlignedNoteMultiModifiers);
   },
 
-  ticks: function () {
+  ticks() {
     const BEAT = (1 * Vex.Flow.RESOLUTION) / 4;
 
     const tickTests = {
@@ -125,7 +125,7 @@ const StaveNoteTests = {
     );
   },
 
-  ticksNewApi: function () {
+  ticksNewApi() {
     const BEAT = (1 * Vex.Flow.RESOLUTION) / 4;
 
     // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
@@ -185,12 +185,12 @@ const StaveNoteTests = {
     );
   },
 
-  stem: function () {
+  stem() {
     const note = new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
     equal(note.getStemDirection(), StaveNote.STEM_UP, 'Default note has UP stem');
   },
 
-  autoStem: function () {
+  autoStem() {
     [
       // [keys, expectedStemDirection]
       [['c/5', 'e/5', 'g/5'], StaveNote.STEM_DOWN],
@@ -210,7 +210,7 @@ const StaveNoteTests = {
     });
   },
 
-  stemExtensionPitch: function () {
+  stemExtensionPitch() {
     [
       // [keys, expectedStemExtension, override stem direction]
       [['c/5', 'e/5', 'g/5'], 0, 0],
@@ -256,7 +256,7 @@ const StaveNoteTests = {
     });
   },
 
-  setStemDirectionDisplacement: function () {
+  setStemDirectionDisplacement() {
     function getDisplacements(note) {
       return note.note_heads.map(function (notehead) {
         return notehead.isDisplaced();
@@ -274,7 +274,7 @@ const StaveNoteTests = {
     deepEqual(getDisplacements(note), stemUpDisplacements);
   },
 
-  staveLine: function () {
+  staveLine() {
     const stave = new Stave(10, 10, 300);
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
     note.setStave(stave);
@@ -291,7 +291,7 @@ const StaveNoteTests = {
     equal(ys[2], 75, 'Line for A/4');
   },
 
-  width: function () {
+  width() {
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
 
     throws(
@@ -303,7 +303,7 @@ const StaveNoteTests = {
     );
   },
 
-  tickContext: function () {
+  tickContext() {
     const stave = new Stave(10, 10, 400);
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 
@@ -312,7 +312,7 @@ const StaveNoteTests = {
     expect(0);
   },
 
-  showNote: function (note_struct, stave, ctx, x, drawBoundingBox: boolean) {
+  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean) {
     const note = new StaveNote(note_struct).setStave(stave);
 
     new TickContext().addTickable(note).preFormat().setX(x);
@@ -326,7 +326,7 @@ const StaveNoteTests = {
     return note;
   },
 
-  draw: function (options, contextBuilder) {
+  draw(options, contextBuilder) {
     const clef = options.params.clef;
     const octaveShift = options.params.octaveShift;
     const restKey = options.params.restKey;
@@ -404,7 +404,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawBoundingBoxes: function (options, contextBuilder) {
+  drawBoundingBoxes(options, contextBuilder) {
     const clef = options.params.clef;
     const octaveShift = options.params.octaveShift;
     const restKey = options.params.restKey;
@@ -466,7 +466,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawBass: function (options, contextBuilder) {
+  drawBass(options, contextBuilder) {
     expect(40);
     const ctx = contextBuilder(options.elementId, 600, 280);
     const stave = new Stave(10, 10, 650);
@@ -507,7 +507,7 @@ const StaveNoteTests = {
     }
   },
 
-  displacements: function (options, contextBuilder) {
+  displacements(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 700, 140);
     ctx.scale(0.9, 0.9);
     ctx.fillStyle = '#221';
@@ -548,7 +548,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawHarmonicAndMuted: function (options, contextBuilder) {
+  drawHarmonicAndMuted(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 1000, 180);
     const stave = new VF.Stave(10, 10, 950);
     stave.setContext(ctx);
@@ -604,7 +604,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawSlash: function (options, contextBuilder) {
+  drawSlash(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 700, 180);
     const stave = new VF.Stave(10, 10, 650);
     stave.setContext(ctx);
@@ -652,7 +652,7 @@ const StaveNoteTests = {
     ok('Slash Note Heads');
   },
 
-  drawKeyStyles: function (options, contextBuilder) {
+  drawKeyStyles(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 300, 280);
     ctx.scale(3, 3);
 
@@ -672,7 +672,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawNoteStyles: function (options, contextBuilder) {
+  drawNoteStyles(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -692,7 +692,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawNoteStemStyles: function (options, contextBuilder) {
+  drawNoteStemStyles(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -711,7 +711,7 @@ const StaveNoteTests = {
     ok('Note Stem Style');
   },
 
-  drawNoteStemLengths: function (options, contextBuilder) {
+  drawNoteStemLengths(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 975, 150);
     const stave = new VF.Stave(10, 10, 975);
     stave.setContext(ctx).draw();
@@ -769,7 +769,7 @@ const StaveNoteTests = {
     ok('Note Stem Length');
   },
 
-  drawNoteStylesWithFlag: function (options, contextBuilder) {
+  drawNoteStylesWithFlag(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -789,7 +789,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawBeamStyles: function (options, contextBuilder) {
+  drawBeamStyles(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 400, 160);
     const stave = new VF.Stave(10, 10, 380);
     stave.setStyle({
@@ -866,7 +866,7 @@ const StaveNoteTests = {
     ok('draw beam styles');
   },
 
-  renderNote: function (note, stave, ctx, x) {
+  renderNote(note, stave, ctx, x) {
     note.setStave(stave);
 
     const mc = new VF.ModifierContext();
@@ -880,7 +880,7 @@ const StaveNoteTests = {
     return note;
   },
 
-  dotsAndFlagsStemUp: function (options, contextBuilder) {
+  dotsAndFlagsStemUp(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 800, 150);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -920,7 +920,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndFlagsStemDown: function (options, contextBuilder) {
+  dotsAndFlagsStemDown(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 800, 160);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -956,7 +956,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndBeamsUp: function (options, contextBuilder) {
+  dotsAndBeamsUp(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 800, 150);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -998,7 +998,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndBeamsDown: function (options, contextBuilder) {
+  dotsAndBeamsDown(options, contextBuilder) {
     const ctx = contextBuilder(options.elementId, 800, 160);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -1036,62 +1036,56 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  centerAlignedRest: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400, 160);
-
-    const stave = vf.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
-
-    const note = vf.StaveNote({ keys: ['b/4'], duration: '1r', align_center: true });
-
-    const voice = vf.Voice().setStrict(false).addTickables([note]);
-
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-    vf.draw();
-
+  centerAlignedRest(options) {
+    const f = VexFlowTests.makeFactory(options, 400, 160);
+    const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
+    const note = f.StaveNote({ keys: ['b/4'], duration: '1r', align_center: true });
+    const voice = f.Voice().setStrict(false).addTickables([note]);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
     ok(true);
   },
 
-  centerAlignedRestFermata: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400, 160);
+  centerAlignedRestFermata(options) {
+    const f = VexFlowTests.makeFactory(options, 400, 160);
 
-    const stave = vf.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
+    const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
 
-    const note = vf
+    const note = f
       .StaveNote({ keys: ['b/4'], duration: '1r', align_center: true })
       .addArticulation(0, new VF.Articulation('a@a').setPosition(3));
 
-    const voice = vf.Voice().setStrict(false).addTickables([note]);
+    const voice = f.Voice().setStrict(false).addTickables([note]);
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  centerAlignedRestAnnotation: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400, 160);
+  centerAlignedRestAnnotation(options) {
+    const f = VexFlowTests.makeFactory(options, 400, 160);
 
-    const stave = vf.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
+    const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
 
-    const note = vf
+    const note = f
       .StaveNote({ keys: ['b/4'], duration: '1r', align_center: true })
       .addAnnotation(0, new VF.Annotation('Whole measure rest').setPosition(3));
 
-    const voice = vf.Voice().setStrict(false).addTickables([note]);
+    const voice = f.Voice().setStrict(false).addTickables([note]);
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  centerAlignedNoteMultiModifiers: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400, 160);
+  centerAlignedNoteMultiModifiers(options) {
+    const f = VexFlowTests.makeFactory(options, 400, 160);
 
-    const stave = vf.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
+    const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
 
     function newFinger(num, pos) {
       return new VF.FretHandFinger(num).setPosition(pos);
@@ -1100,7 +1094,7 @@ const StaveNoteTests = {
       return new VF.StringNumber(num).setPosition(pos);
     }
 
-    const note = vf
+    const note = f
       .StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', align_center: true })
       .addAnnotation(0, new VF.Annotation('Test').setPosition(3))
       .addStroke(0, new VF.Stroke(2))
@@ -1111,44 +1105,44 @@ const StaveNoteTests = {
       .addModifier(newStringNumber('4', VF.Modifier.Position.BELOW), 2)
       .addDotToAll();
 
-    const voice = vf.Voice().setStrict(false).addTickables([note]);
+    const voice = f.Voice().setStrict(false).addTickables([note]);
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  centerAlignedMultiVoice: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400, 160);
+  centerAlignedMultiVoice(options) {
+    const f = VexFlowTests.makeFactory(options, 400, 160);
 
-    const stave = vf.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('3/8');
+    const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('3/8');
 
     // Create custom duration
     const custom_duration = new VF.Fraction(3, 8);
 
     const notes0 = [{ keys: ['c/4'], duration: '1r', align_center: true, duration_override: custom_duration }].map(
-      vf.StaveNote.bind(vf)
+      f.StaveNote.bind(f)
     );
 
     const notes1 = [
       { keys: ['b/4'], duration: '8' },
       { keys: ['b/4'], duration: '8' },
       { keys: ['b/4'], duration: '8' },
-    ].map(vf.StaveNote.bind(vf));
+    ].map(f.StaveNote.bind(f));
 
-    notes1[1].addAccidental(0, vf.Accidental({ type: '#' }));
+    notes1[1].addAccidental(0, f.Accidental({ type: '#' }));
 
-    vf.Beam({ notes: notes1 });
+    f.Beam({ notes: notes1 });
 
-    const voice0 = vf.Voice({ time: '3/8' }).setStrict(false).addTickables(notes0);
+    const voice0 = f.Voice({ time: '3/8' }).setStrict(false).addTickables(notes0);
 
-    const voice1 = vf.Voice({ time: '3/8' }).setStrict(false).addTickables(notes1);
+    const voice1 = f.Voice({ time: '3/8' }).setStrict(false).addTickables(notes1);
 
-    vf.Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
+    f.Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },

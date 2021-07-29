@@ -3,10 +3,16 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 
+import { concat, VexFlowTests } from './vexflow_test_helpers';
+import { Stem } from 'stem';
+import { QUnit, equal, ok } from './declarations';
+import { Fraction } from 'fraction';
+import { Beam } from 'beam';
+
 const AutoBeamFormattingTests = (function () {
-  var AutoBeamFormatting = {
+  const AutoBeamFormatting = {
     Start: function () {
-      var runTests = VexFlowTests.runTests;
+      const runTests = VexFlowTests.runTests;
       QUnit.module('Auto-Beaming');
       runTests('Simple Auto Beaming', AutoBeamFormatting.simpleAuto);
       runTests('Auto Beaming With Overflow Group', AutoBeamFormatting.simpleAutoWithOverflowGroup);
@@ -53,14 +59,16 @@ const AutoBeamFormattingTests = (function () {
     },
 
     simpleAuto: function (options) {
-      var f = VexFlowTests.makeFactory(options);
-      var stave = f.Stave();
-      var score = f.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('f5/8, e5, d5, c5/16, c5, d5/8, e5, f5, f5/32, f5, f5, f5'), { time: '4/4' });
+      const voice = score.voice(score.notes('f5/8, e5, d5, c5/16, c5, d5/8, e5, f5, f5/32, f5, f5, f5'), {
+        time: '4/4',
+      });
 
       // Takes a voice and returns it's auto beamsj
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
       f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -74,48 +82,48 @@ const AutoBeamFormattingTests = (function () {
     },
 
     simpleAutoWithOverflowGroup: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('f5/4., e5/8, d5/8, d5/16, c5/16, c5/16, c5/16, f5/16, f5/32, f5/32'), {
+      const voice = score.voice(score.notes('f5/4., e5/8, d5/8, d5/16, c5/16, c5/16, c5/16, f5/16, f5/32, f5/32'), {
         time: '4/4',
       });
 
       // Takes a voice and returns it's auto beamsj
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beaming Applicator Test');
     },
 
     evenGroupStemDirections: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('a4/8, b4, g4, c5, f4, d5, e4, e5, b4, b4, g4, d5'), { time: '6/4' });
+      const voice = score.voice(score.notes('a4/8, b4, g4, c5, f4, d5, e4, e5, b4, b4, g4, d5'), { time: '6/4' });
 
       // Takes a voice and returns it's auto beams
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
-      var UP = VF.Stem.UP;
-      var DOWN = VF.Stem.DOWN;
+      const UP = Stem.UP;
+      const DOWN = Stem.DOWN;
       equal(beams[0].stem_direction, UP);
       equal(beams[1].stem_direction, UP);
       equal(beams[2].stem_direction, UP);
@@ -127,209 +135,207 @@ const AutoBeamFormattingTests = (function () {
     },
 
     oddGroupStemDirections: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('g4/8, b4, d5, c5, f4, d5, e4, g5, g4, b4, g4, d5, a4, c5, a4'), {
+      const voice = score.voice(score.notes('g4/8, b4, d5, c5, f4, d5, e4, g5, g4, b4, g4, d5, a4, c5, a4'), {
         time: '15/8',
       });
 
-      var groups = [new VF.Fraction(3, 8)];
-      var beams = VF.Beam.applyAndGetBeams(voice, null, groups);
+      const groups = [new Fraction(3, 8)];
+      const beams = Beam.applyAndGetBeams(voice, null, groups);
 
-      var UP = VF.Stem.UP;
-      var DOWN = VF.Stem.DOWN;
-      equal(beams[0].stem_direction, DOWN, 'Notes are equadistant from middle line');
-      equal(beams[1].stem_direction, DOWN);
-      equal(beams[2].stem_direction, UP);
-      equal(beams[3].stem_direction, DOWN, 'Notes are equadistant from middle line');
+      equal(beams[0].stem_direction, Stem.DOWN, 'Notes are equidistant from middle line');
+      equal(beams[1].stem_direction, Stem.DOWN);
+      equal(beams[2].stem_direction, Stem.UP);
+      equal(beams[3].stem_direction, Stem.DOWN, 'Notes are equidistant from middle line');
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beaming Applicator Test');
     },
 
     oddBeamGroups: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('f5, e5, d5, c5, c5, d5, e5, f5, f5, f4, f3, f5/16, f5'), { time: '6/4' });
+      const voice = score.voice(score.notes('f5, e5, d5, c5, c5, d5, e5, f5, f5, f4, f3, f5/16, f5'), { time: '6/4' });
 
-      var groups = [new VF.Fraction(2, 8), new VF.Fraction(3, 8), new VF.Fraction(1, 8)];
+      const groups = [new Fraction(2, 8), new Fraction(3, 8), new Fraction(1, 8)];
 
       // Takes a voice and returns it's auto beamsj
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, groups);
+      const beams = Beam.applyAndGetBeams(voice, undefined, groups);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     moreSimple0: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('c4/8, g4, c5, g5, a5, c4, d4, a5'), { time: '4/4' });
+      const voice = score.voice(score.notes('c4/8, g4, c5, g5, a5, c4, d4, a5'), { time: '4/4' });
 
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     moreSimple1: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c5/16, g5, c5, c5/r, c5/r, (c4 e4 g4), d4, a5, c4, g4, c5, b4/r, (c4 e4), b4/r, b4/r, a4'),
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     breakBeamsOnRests: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c5/16, g5, c5, c5/r, c5/r, (c4 e4 g4), d4, a5, c4, g4, c5, b4/r, (c4 e4), b4/r, b4/r, a4'),
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: false,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamAcrossAllRestsWithStemlets: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c5/16, g5, c5, c5/r, c5/r, (c4 e4 g4), d4, a5, c4, g4, c5, b4/r, (c4 e4), b4/r, b4/r, a4'),
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: true,
         show_stemlets: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamAcrossAllRests: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c5/16, g5, c5, c5/r, c5/r, (c4 e4 g4), d4, a5, c4, g4, c5, b4/r, (c4 e4), b4/r, b4/r, a4'),
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamAcrossMiddleRests: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c5/16, g5, c5, c5/r, c5/r, (c4 e4 g4), d4, a5, c4, g4, c5, b4/r, (c4 e4), b4/r, b4/r, a4'),
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: true,
         beam_middle_only: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     maintainStemDirections: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           [
             'b4/16,            b4,              b4[stem="down"], b4/r',
@@ -342,28 +348,28 @@ const AutoBeamFormattingTests = (function () {
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: false,
         maintain_stem_directions: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     maintainStemDirectionsBeamAcrossRests: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           [
             'b4/16,            b4,              b4[stem="down"], b4/r',
@@ -376,145 +382,149 @@ const AutoBeamFormattingTests = (function () {
         { time: '4/4' }
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         beam_rests: true,
         maintain_stem_directions: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     groupWithUnbeamableNote: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave().addTimeSignature('2/4');
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave().addTimeSignature('2/4');
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('b4/16, b4, b4/4, b4/16, b4'), { time: '2/4' });
+      const voice = score.voice(score.notes('b4/16, b4, b4/4, b4/16, b4'), { time: '2/4' });
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
-        groups: [new VF.Fraction(2, 2)],
+      const beams = Beam.generateBeams(voice.getTickables(), {
+        groups: [new Fraction(2, 2)],
         beam_rests: false,
         maintain_stem_directions: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     groupWithUnbeamableNote1: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave().addTimeSignature('6/8');
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave().addTimeSignature('6/8');
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('b4/4, b4/4, b4/8, b4/8'), { time: '6/8' });
+      const voice = score.voice(score.notes('b4/4, b4/4, b4/8, b4/8'), { time: '6/8' });
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
-        groups: [new VF.Fraction(3, 8)],
+      const beams = Beam.generateBeams(voice.getTickables(), {
+        groups: [new Fraction(3, 8)],
         beam_rests: false,
         maintain_stem_directions: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     autoOddBeamGroups: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 400);
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 400);
+      const score = f.EasyScore();
 
-      var stave1 = vf.Stave({ y: 10 }).addTimeSignature('5/4');
-      var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
+      const stave1 = f.Stave({ y: 10 }).addTimeSignature('5/4');
+      const voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave2 = vf.Stave({ y: 150 }).addTimeSignature('5/8');
-      var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
+      const stave2 = f.Stave({ y: 150 }).addTimeSignature('5/8');
+      const voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave3 = vf.Stave({ y: 290 }).addTimeSignature('13/16');
-      var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
+      const stave3 = f.Stave({ y: 290 }).addTimeSignature('13/16');
+      const voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), {
+        time: '13/16',
+      });
 
-      var beams = [
-        VF.Beam.applyAndGetBeams(voice1, undefined, VF.Beam.getDefaultBeamGroups('5/4')),
-        VF.Beam.applyAndGetBeams(voice2, undefined, VF.Beam.getDefaultBeamGroups('5/8')),
-        VF.Beam.applyAndGetBeams(voice3, undefined, VF.Beam.getDefaultBeamGroups('13/16')),
+      const beams = [
+        Beam.applyAndGetBeams(voice1, undefined, Beam.getDefaultBeamGroups('5/4')),
+        Beam.applyAndGetBeams(voice2, undefined, Beam.getDefaultBeamGroups('5/8')),
+        Beam.applyAndGetBeams(voice3, undefined, Beam.getDefaultBeamGroups('13/16')),
       ].reduce(concat);
 
-      vf.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
+      f.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     customBeamGroups: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 400);
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 400);
+      const score = f.EasyScore();
 
-      var stave1 = vf.Stave({ y: 10 }).addTimeSignature('5/4');
-      var voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
+      const stave1 = f.Stave({ y: 10 }).addTimeSignature('5/4');
+      const voice1 = score.voice(score.notes('c5/8, g5, c5, b4, b4, c4, d4, a5, c4, g4'), { time: '5/4' });
 
-      var stave2 = vf.Stave({ y: 150 }).addTimeSignature('5/8');
-      var voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
+      const stave2 = f.Stave({ y: 150 }).addTimeSignature('5/8');
+      const voice2 = score.voice(score.notes('c5/8, g5, c5, b4, b4'), { time: '5/8' });
 
-      var stave3 = vf.Stave({ y: 290 }).addTimeSignature('13/16');
-      var voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), { time: '13/16' });
+      const stave3 = f.Stave({ y: 290 }).addTimeSignature('13/16');
+      const voice3 = score.voice(score.notes('c5/16, g5, c5, b4, b4, c5, g5, c5, b4, b4, c5, b4, b4'), {
+        time: '13/16',
+      });
 
-      var group1 = [new VF.Fraction(5, 8)];
+      const group1 = [new Fraction(5, 8)];
 
-      var group2 = [new VF.Fraction(3, 8), new VF.Fraction(2, 8)];
+      const group2 = [new Fraction(3, 8), new Fraction(2, 8)];
 
-      var group3 = [new VF.Fraction(7, 16), new VF.Fraction(2, 16), new VF.Fraction(4, 16)];
+      const group3 = [new Fraction(7, 16), new Fraction(2, 16), new Fraction(4, 16)];
 
-      var beams = [
-        VF.Beam.applyAndGetBeams(voice1, undefined, group1),
-        VF.Beam.applyAndGetBeams(voice2, undefined, group2),
-        VF.Beam.applyAndGetBeams(voice3, undefined, group3),
+      const beams = [
+        Beam.applyAndGetBeams(voice1, undefined, group1),
+        Beam.applyAndGetBeams(voice2, undefined, group2),
+        Beam.applyAndGetBeams(voice3, undefined, group3),
       ].reduce(concat);
 
-      vf.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
+      f.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     simpleTuplets: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var notes = score.notes.bind(score);
-      var tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
+      const tuplet = score.tuplet.bind(score);
 
-      var voice = score.voice(
+      const voice = score.voice(
         [
           tuplet(notes('c4/8, g4, c5')),
           notes('g5/8, a5'),
@@ -526,169 +536,171 @@ const AutoBeamFormattingTests = (function () {
         { time: '3/4' }
       );
 
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     moreSimpleTuplets: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var notes = score.notes.bind(score);
-      var tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
+      const tuplet = score.tuplet.bind(score);
 
-      var voice = score.voice([tuplet(notes('d4/4, g4, c5')), notes('g5/16, a5, a5, (c5 e5)')].reduce(concat), {
+      const voice = score.voice([tuplet(notes('d4/4, g4, c5')), notes('g5/16, a5, a5, (c5 e5)')].reduce(concat), {
         time: '3/4',
       });
 
-      var beams = VF.Beam.applyAndGetBeams(voice);
+      const beams = Beam.applyAndGetBeams(voice);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     moreBeaming: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('c4/8, g4/4, c5/8., g5/16, a5/4, a5/16, (c5 e5)/16, a5/8'), { time: '9/8' });
+      const voice = score.voice(score.notes('c4/8, g4/4, c5/8., g5/16, a5/4, a5/16, (c5 e5)/16, a5/8'), {
+        time: '9/8',
+      });
 
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, VF.Beam.getDefaultBeamGroups('9/8'));
+      const beams = Beam.applyAndGetBeams(voice, undefined, Beam.getDefaultBeamGroups('9/8'));
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamingWithSeveralGroups1: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('c4/8, g4/4, c5/8, g5, a5, a5, f5'), { time: '4/4' });
+      const voice = score.voice(score.notes('c4/8, g4/4, c5/8, g5, a5, a5, f5'), { time: '4/4' });
 
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [
-        new VF.Fraction(3, 8),
-        new VF.Fraction(3, 8),
-        new VF.Fraction(2, 8),
+      const beams = Beam.applyAndGetBeams(voice, undefined, [
+        new Fraction(3, 8),
+        new Fraction(3, 8),
+        new Fraction(2, 8),
       ]);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamingWithSeveralGroupsOverflow: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('c4/8, g4/4., c5/8, g5, a5, a5'), { time: '4/4' });
+      const voice = score.voice(score.notes('c4/8, g4/4., c5/8, g5, a5, a5'), { time: '4/4' });
 
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [
-        new VF.Fraction(3, 8),
-        new VF.Fraction(3, 8),
-        new VF.Fraction(2, 8),
+      const beams = Beam.applyAndGetBeams(voice, undefined, [
+        new Fraction(3, 8),
+        new Fraction(3, 8),
+        new Fraction(2, 8),
       ]);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamingWithSeveralGroupsOverflow2: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes('c4/16, g4/2, f4/16, c5/8, a4/16, c4/16, g4/8, b4, c5, g5, f5, e5, c5, a4/4'),
         { time: '8/4' }
       );
 
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [
-        new VF.Fraction(3, 8),
-        new VF.Fraction(2, 8),
-        new VF.Fraction(3, 8),
+      const beams = Beam.applyAndGetBeams(voice, undefined, [
+        new Fraction(3, 8),
+        new Fraction(2, 8),
+        new Fraction(3, 8),
       ]);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     beamingWithSeveralGroupsOverflow3: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(score.notes('c4/16, g4/1, f4/16, c5/8, g5, f5, e5, c5, a4/4'), { time: '8/4' });
+      const voice = score.voice(score.notes('c4/16, g4/1, f4/16, c5/8, g5, f5, e5, c5, a4/4'), { time: '8/4' });
 
-      var beams = VF.Beam.applyAndGetBeams(voice, undefined, [
-        new VF.Fraction(3, 8),
-        new VF.Fraction(2, 8),
-        new VF.Fraction(3, 8),
+      const beams = Beam.applyAndGetBeams(voice, undefined, [
+        new Fraction(3, 8),
+        new Fraction(2, 8),
+        new Fraction(3, 8),
       ]);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Auto Beam Applicator Test');
     },
 
     secondaryBreaks: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           [
             'f5/32, f5, f5, f5, f5/16., f5/32',
@@ -699,30 +711,30 @@ const AutoBeamFormattingTests = (function () {
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         secondary_breaks: '8',
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
     secondaryBreaks2: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave();
+      const score = f.EasyScore();
 
-      var notes = score.notes.bind(score);
-      var tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
+      const tuplet = score.tuplet.bind(score);
 
-      var voice = score.voice(
+      const voice = score.voice(
         [
           tuplet(notes('e5/16, f5, f5')),
           tuplet(notes('f5/16, f5, c5')),
@@ -734,30 +746,30 @@ const AutoBeamFormattingTests = (function () {
         ].reduce(concat)
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         secondary_breaks: '8',
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
     flatBeamsUp: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var tuplet = score.tuplet.bind(score);
-      var notes = score.notes.bind(score);
+      const tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
 
-      var voice = score.voice(
+      const voice = score.voice(
         [
           tuplet(notes('c4/8, g4, f5')),
           notes('d5/8'),
@@ -766,171 +778,171 @@ const AutoBeamFormattingTests = (function () {
         ].reduce(concat)
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         stem_direction: 1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Up Test');
     },
 
     flatBeamsDown: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           'c5/64, c5, c5, c5, c5, c5, c5, c5, a5/8, g5, (d4 f4 a4)/16, d4, d5/8, e5, g5, a6/32, a6, a6, g4/64, g4'
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         stem_direction: -1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Down Test');
     },
 
     flatBeamsMixed: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           'c5/64, d5, e5, c5, f5, c5, a5, c5, a5/8, g5, (d4 f4 a4)/16, d4, d5/8, e5, c4, a4/32, a4, a4, g4/64, g4'
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Mixed Direction Test');
     },
 
     flatBeamsUpUniform: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var tuplet = score.tuplet.bind(score);
-      var notes = score.notes.bind(score);
+      const tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
 
-      var voice = score.voice(
+      const voice = score.voice(
         [tuplet(notes('c4/8, g4, g5')), notes('d5/8, c5/16, (c4 e4 g4), d5/8, e5, c4, f5/32, f5, f5, f5')].reduce(
           concat
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         flat_beam_offset: 50,
         stem_direction: 1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
     flatBeamsDownUniform: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           'c5/64, c5, c5, c5, c5, c5, c5, c5, a5/8, g5, (e4 g4 b4)/16, e5, d5/8, e5/8, g5/8, a6/32, a6, a6, g4/64, g4'
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         flat_beam_offset: 155,
         stem_direction: -1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Down (uniform) Test');
     },
 
     flatBeamsUpBounds: function (options) {
-      var vf = VexFlowTests.makeFactory(options);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var tuplet = score.tuplet.bind(score);
-      var notes = score.notes.bind(score);
-      var voice = score.voice(
+      const tuplet = score.tuplet.bind(score);
+      const notes = score.notes.bind(score);
+      const voice = score.voice(
         [
           tuplet(notes('c4/8, g4/8, g5/8')),
           notes('d5/8, c5/16, (c4 e4 g4)/16, d5/8, e5/8, c4/8, f5/32, f5/32, f5/32, f5/32'),
         ].reduce(concat)
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         flat_beam_offset: 60,
         stem_direction: 1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
     flatBeamsDownBounds: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 450, 200);
-      var stave = vf.Stave({ y: 40 });
-      var score = vf.EasyScore();
+      const f = VexFlowTests.makeFactory(options, 450, 200);
+      const stave = f.Stave({ y: 40 });
+      const score = f.EasyScore();
 
-      var voice = score.voice(
+      const voice = score.voice(
         score.notes(
           [
             'g5/8, a6/32, a6/32, a6/32, g4/64, g4/64',
@@ -942,18 +954,18 @@ const AutoBeamFormattingTests = (function () {
         )
       );
 
-      var beams = VF.Beam.generateBeams(voice.getTickables(), {
+      const beams = Beam.generateBeams(voice.getTickables(), {
         flat_beams: true,
         flat_beam_offset: 145,
         stem_direction: -1,
       });
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       beams.forEach(function (beam) {
-        return beam.setContext(vf.getContext()).draw();
+        return beam.setContext(f.getContext()).draw();
       });
 
       ok(true, 'Flat Beams Down (uniform) Test');
@@ -962,5 +974,4 @@ const AutoBeamFormattingTests = (function () {
 
   return AutoBeamFormatting;
 })();
-VexFlowTests.AutoBeamFormatting = AutoBeamFormattingTests;
 export { AutoBeamFormattingTests };

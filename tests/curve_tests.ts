@@ -1,37 +1,36 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Curve Tests
 
 import { VexFlowTests, concat } from './vexflow_test_helpers';
 
 function createTest(beamGroup1, beamGroup2, setupCurves) {
   return function (options) {
-    var vf = VexFlowTests.makeFactory(options, 350, 200);
-    var stave = vf.Stave({ y: 50 });
-    var score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 350, 200);
+    const stave = f.Stave({ y: 50 });
+    const score = f.EasyScore();
 
-    var notes = [
+    const notes = [
       score.beam(score.notes.apply(score, beamGroup1)),
       score.beam(score.notes.apply(score, beamGroup2)),
     ].reduce(concat);
 
-    setupCurves(vf, notes);
+    setupCurves(f, notes);
 
-    var voice = score.voice(notes, { time: '4/4' });
+    const voice = score.voice(notes, { time: '4/4' });
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok('Simple Curve');
   };
 }
 
-/**
- * Curve Tests
- */
 const CurveTests = {
-  Start: function () {
-    var run = VexFlowTests.runTests;
+  Start() {
+    const run = VexFlowTests.runTests;
 
     QUnit.module('Curve');
 

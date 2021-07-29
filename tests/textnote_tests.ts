@@ -1,18 +1,17 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Text Note Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { QUnit } from './declarations';
 
-/**
- * Text Note Tests
- */
 const TextNoteTests = {
-  Start: function () {
-    var runTests = VexFlowTests.runTests;
+  Start() {
+    const runTests = VexFlowTests.runTests;
 
     QUnit.module('TextNote');
     runTests('TextNote Formatting', TextNoteTests.formatTextNotes);
@@ -24,12 +23,12 @@ const TextNoteTests = {
     runTests('Text Dynamics', TextNoteTests.textDynamics);
   },
 
-  formatTextNotes: function (options) {
-    var f = VexFlowTests.makeFactory(options, 400, 200);
-    var stave = f.Stave({ y: 40 });
-    var score = f.EasyScore();
+  formatTextNotes(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 400, 200);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice1 = score.voice([
+    const voice1 = score.voice([
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
         .addAccidental(0, f.Accidental({ type: 'b' }))
@@ -41,7 +40,7 @@ const TextNoteTests = {
         .addAccidental(1, f.Accidental({ type: '#' })),
     ]);
 
-    var voice2 = score.voice([
+    const voice2 = score.voice([
       f.TextNote({ text: 'Center Justification', duration: 'h' }).setJustification(VF.TextNote.Justification.CENTER),
       f.TextNote({ text: 'Left Line 1', duration: 'q' }).setLine(1),
       f.TextNote({ text: 'Right', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
@@ -54,84 +53,84 @@ const TextNoteTests = {
     ok(true);
   },
 
-  formatTextNotes2: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 200);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  formatTextNotes2(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 200);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice1 = score.voice([
-      vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+    const voice1 = score.voice([
+      f.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+      f.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
+      f.StaveNote({ keys: ['g/4'], stem_direction: 1, duration: '16' }),
 
-      vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5'], stem_direction: -1, duration: '16' }),
 
-      vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
+      f.StaveNote({ keys: ['g/5', 'a/5'], stem_direction: -1, duration: '16' }),
 
-      vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
-      vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+      f.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+      f.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
+      f.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: '16' }),
 
-      vf.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: 'q' }),
+      f.StaveNote({ keys: ['g/4', 'a/4'], stem_direction: 1, duration: 'q' }),
     ]);
 
-    var voice2 = score.voice([
-      vf.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
-      vf.TextNote({ text: 'L', duration: '16' }),
-      vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+    const voice2 = score.voice([
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'L', duration: '16' }),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
 
-      vf.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
-      vf.TextNote({ text: 'L', duration: '16' }),
-      vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'L', duration: '16' }),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
 
-      vf.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
-      vf.TextNote({ text: 'L', duration: '16' }),
-      vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'L', duration: '16' }),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
 
-      vf.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
-      vf.TextNote({ text: 'L', duration: '16' }),
-      vf.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'L', duration: '16' }),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
 
-      vf.TextNote({ text: 'R', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
     ]);
 
-    vf.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+    f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-    voice2.getTickables().forEach((note) => VF.Note.plotMetrics(vf.getContext(), note, 170));
+    voice2.getTickables().forEach((note) => VF.Note.plotMetrics(f.getContext(), note, 170));
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  superscriptAndSubscript: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 230);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  superscriptAndSubscript(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 230);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice1 = score.voice([
-      vf
+    const voice1 = score.voice([
+      f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: 'h' })
-        .addAccidental(0, vf.Accidental({ type: 'b' }))
-        .addAccidental(1, vf.Accidental({ type: '#' })),
-      vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: 1, duration: 'q' }),
-      vf
+        .addAccidental(0, f.Accidental({ type: 'b' }))
+        .addAccidental(1, f.Accidental({ type: '#' })),
+      f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: 1, duration: 'q' }),
+      f
         .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: 1, duration: 'q' })
-        .addAccidental(0, vf.Accidental({ type: 'n' }))
-        .addAccidental(1, vf.Accidental({ type: '#' })),
+        .addAccidental(0, f.Accidental({ type: 'n' }))
+        .addAccidental(1, f.Accidental({ type: '#' })),
     ]);
 
-    var voice2 = score.voice([
-      vf.TextNote({ text: VF.unicode.flat + 'I', superscript: '+5', duration: '8' }),
-      vf.TextNote({ text: 'D' + VF.unicode.sharp + '/F', duration: '4d', superscript: 'sus2' }),
-      vf.TextNote({ text: 'ii', superscript: '6', subscript: '4', duration: '8' }),
-      vf.TextNote({ text: 'C', superscript: VF.unicode.triangle + '7', subscript: '', duration: '8' }),
-      vf.TextNote({ text: 'vii', superscript: VF.unicode['o-with-slash'] + '7', duration: '8' }),
-      vf.TextNote({ text: 'V', superscript: '7', duration: '8' }),
+    const voice2 = score.voice([
+      f.TextNote({ text: VF.unicode.flat + 'I', superscript: '+5', duration: '8' }),
+      f.TextNote({ text: 'D' + VF.unicode.sharp + '/F', duration: '4d', superscript: 'sus2' }),
+      f.TextNote({ text: 'ii', superscript: '6', subscript: '4', duration: '8' }),
+      f.TextNote({ text: 'C', superscript: VF.unicode.triangle + '7', subscript: '', duration: '8' }),
+      f.TextNote({ text: 'vii', superscript: VF.unicode['o-with-slash'] + '7', duration: '8' }),
+      f.TextNote({ text: 'V', superscript: '7', duration: '8' }),
     ]);
 
     voice2.getTickables().forEach(function (note) {
@@ -140,130 +139,130 @@ const TextNoteTests = {
       note.setJustification(VF.TextNote.Justification.LEFT);
     });
 
-    vf.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+    f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  formatTextGlyphs0: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 230);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  formatTextGlyphs0(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 230);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice1 = score.voice([
-      vf
+    const voice1 = score.voice([
+      f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-        .addAccidental(0, vf.Accidental({ type: 'b' }))
-        .addAccidental(1, vf.Accidental({ type: '#' })),
-      vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+        .addAccidental(0, f.Accidental({ type: 'b' }))
+        .addAccidental(1, f.Accidental({ type: '#' })),
+      f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
     ]);
 
-    var voice2 = score.voice([
-      vf.TextNote({ text: 'Center', duration: '8' }).setJustification(VF.TextNote.Justification.CENTER),
-      vf.TextNote({ glyph: 'f', duration: '8' }),
-      vf.TextNote({ glyph: 'p', duration: '8' }),
-      vf.TextNote({ glyph: 'm', duration: '8' }),
-      vf.TextNote({ glyph: 'z', duration: '8' }),
+    const voice2 = score.voice([
+      f.TextNote({ text: 'Center', duration: '8' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ glyph: 'f', duration: '8' }),
+      f.TextNote({ glyph: 'p', duration: '8' }),
+      f.TextNote({ glyph: 'm', duration: '8' }),
+      f.TextNote({ glyph: 'z', duration: '8' }),
 
-      vf.TextNote({ glyph: 'mordent_upper', duration: '16' }),
-      vf.TextNote({ glyph: 'mordent_lower', duration: '16' }),
-      vf.TextNote({ glyph: 'segno', duration: '8' }),
-      vf.TextNote({ glyph: 'coda', duration: '8' }),
+      f.TextNote({ glyph: 'mordent_upper', duration: '16' }),
+      f.TextNote({ glyph: 'mordent_lower', duration: '16' }),
+      f.TextNote({ glyph: 'segno', duration: '8' }),
+      f.TextNote({ glyph: 'coda', duration: '8' }),
     ]);
 
     voice2.getTickables().forEach((n) => n.setJustification(VF.TextNote.Justification.CENTER));
 
-    vf.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+    f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  formatTextGlyphs1: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 230);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  formatTextGlyphs1(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 230);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice1 = score.voice([
-      vf
+    const voice1 = score.voice([
+      f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-        .addAccidental(0, vf.Accidental({ type: 'b' }))
-        .addAccidental(1, vf.Accidental({ type: '#' })),
-      vf.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
-      vf.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+        .addAccidental(0, f.Accidental({ type: 'b' }))
+        .addAccidental(1, f.Accidental({ type: '#' })),
+      f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
+      f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
     ]);
 
-    var voice2 = score.voice([
-      vf.TextNote({ glyph: 'turn', duration: '16' }),
-      vf.TextNote({ glyph: 'turn_inverted', duration: '16' }),
-      vf.TextNote({ glyph: 'pedal_open', duration: '8' }).setLine(10),
-      vf.TextNote({ glyph: 'pedal_close', duration: '8' }).setLine(10),
-      vf.TextNote({ glyph: 'caesura_curved', duration: '8' }).setLine(3),
-      vf.TextNote({ glyph: 'caesura_straight', duration: '8' }).setLine(3),
-      vf.TextNote({ glyph: 'breath', duration: '8' }).setLine(2),
-      vf.TextNote({ glyph: 'tick', duration: '8' }).setLine(3),
-      vf.TextNote({ glyph: 'tr', duration: '8', smooth: true }).setJustification(VF.TextNote.Justification.CENTER),
+    const voice2 = score.voice([
+      f.TextNote({ glyph: 'turn', duration: '16' }),
+      f.TextNote({ glyph: 'turn_inverted', duration: '16' }),
+      f.TextNote({ glyph: 'pedal_open', duration: '8' }).setLine(10),
+      f.TextNote({ glyph: 'pedal_close', duration: '8' }).setLine(10),
+      f.TextNote({ glyph: 'caesura_curved', duration: '8' }).setLine(3),
+      f.TextNote({ glyph: 'caesura_straight', duration: '8' }).setLine(3),
+      f.TextNote({ glyph: 'breath', duration: '8' }).setLine(2),
+      f.TextNote({ glyph: 'tick', duration: '8' }).setLine(3),
+      f.TextNote({ glyph: 'tr', duration: '8', smooth: true }).setJustification(VF.TextNote.Justification.CENTER),
     ]);
 
     voice2.getTickables().forEach((n) => n.setJustification(VF.TextNote.Justification.CENTER));
 
-    vf.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+    f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  crescendo: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 230);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  crescendo(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 230);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice = score.voice([
-      vf.TextNote({ glyph: 'p', duration: '16' }),
+    const voice = score.voice([
+      f.TextNote({ glyph: 'p', duration: '16' }),
       new VF.Crescendo({ duration: '4d' }).setLine(0).setHeight(25).setStave(stave),
-      vf.TextNote({ glyph: 'f', duration: '16' }),
+      f.TextNote({ glyph: 'f', duration: '16' }),
       new VF.Crescendo({ duration: '4' }).setLine(5).setStave(stave),
       new VF.Crescendo({ duration: '4' }).setLine(10).setDecrescendo(true).setHeight(5).setStave(stave),
     ]);
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
-  textDynamics: function (options) {
-    var vf = VexFlowTests.makeFactory(options, 600, 230);
-    var stave = vf.Stave({ y: 40 });
-    var score = vf.EasyScore();
+  textDynamics(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 600, 230);
+    const stave = f.Stave({ y: 40 });
+    const score = f.EasyScore();
 
-    var voice = score.voice(
+    const voice = score.voice(
       [
-        vf.TextDynamics({ text: 'sfz', duration: '4' }),
-        vf.TextDynamics({ text: 'rfz', duration: '4' }),
-        vf.TextDynamics({ text: 'mp', duration: '4' }),
-        vf.TextDynamics({ text: 'ppp', duration: '4' }),
+        f.TextDynamics({ text: 'sfz', duration: '4' }),
+        f.TextDynamics({ text: 'rfz', duration: '4' }),
+        f.TextDynamics({ text: 'mp', duration: '4' }),
+        f.TextDynamics({ text: 'ppp', duration: '4' }),
 
-        vf.TextDynamics({ text: 'fff', duration: '4' }),
-        vf.TextDynamics({ text: 'mf', duration: '4' }),
-        vf.TextDynamics({ text: 'sff', duration: '4' }),
+        f.TextDynamics({ text: 'fff', duration: '4' }),
+        f.TextDynamics({ text: 'mf', duration: '4' }),
+        f.TextDynamics({ text: 'sff', duration: '4' }),
       ],
       { time: '7/4' }
     );
 
-    vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },

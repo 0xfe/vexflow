@@ -1,4 +1,5 @@
 import { Flow } from 'flow';
+import { Registry } from 'registry';
 import { QUnit } from './declarations';
 import { VexFlowTests } from './vexflow_test_helpers';
 
@@ -22,6 +23,7 @@ const AnnotationTests = (function () {
       runTests('Test Justification Annotation Stem Down', Annotation.justificationStemDown);
       runTests('TabNote Annotations', Annotation.tabNotes);
     },
+
     lyrics: function (options) {
       const id = (ii) => {
         return registry.getElementById(ii);
@@ -30,13 +32,13 @@ const AnnotationTests = (function () {
       let x = 10;
       let width = 170;
       let ratio = 1;
-      var registry = new VF.Registry();
-      VF.Registry.enableDefaultRegistry(registry);
-      const vf = VexFlowTests.makeFactory(options, 750, 260);
+      const registry = new Registry();
+      Registry.enableDefaultRegistry(registry);
+      const f = VexFlowTests.makeFactory(options, 750, 260);
       for (let i = 0; i < 3; ++i) {
-        const score = vf.EasyScore();
+        const score = f.EasyScore();
         score.set({ time: '3/4' });
-        const system = vf.System({ width, x });
+        const system = f.System({ width, x });
         system.addStave({
           voices: [
             score.voice(
@@ -52,9 +54,9 @@ const AnnotationTests = (function () {
         ['hand,', 'and', 'me', 'pears', 'lead', 'the'].forEach((text, ix) => {
           const verse = Math.floor(ix / 3);
           const nid = 'n' + (ix % 3);
-          id(nid).addModifier(vf.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
+          id(nid).addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
         });
-        vf.draw();
+        f.draw();
         ratio = (fontSize + 2) / fontSize;
         width = width * ratio;
         x = x + width;

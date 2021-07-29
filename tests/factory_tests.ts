@@ -32,7 +32,7 @@ const FactoryTests = {
       });
     });
 
-    var f = new Factory({
+    const f = new Factory({
       renderer: {
         elementId: null,
         width: 700,
@@ -40,7 +40,7 @@ const FactoryTests = {
       },
     });
 
-    var options = f.getOptions();
+    const options = f.getOptions();
     assert.equal(options.renderer.width, 700);
     assert.equal(options.renderer.height, 500);
     assert.equal(options.renderer.elementId, null);
@@ -48,29 +48,29 @@ const FactoryTests = {
   },
 
   draw: function (options) {
-    var f = Factory.newFromElementId(options.elementId);
+    const f = Factory.newFromElementId(options.elementId);
     f.Stave().setClef('treble');
     f.draw();
     expect(0);
   },
 
   drawTab: function (options) {
-    var f = VexFlowTests.makeFactory(options, 500, 400);
+    const f = VexFlowTests.makeFactory(options, 500, 400);
 
-    var system = f.System({ width: 500 });
+    const system = f.System({ width: 500 });
 
-    var stave = f.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Barline.type.REPEAT_BEGIN);
+    const stave = f.Stave().setClef('treble').setKeySignature('C#').setBegBarType(Barline.type.REPEAT_BEGIN);
 
-    var voices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
+    const voices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
 
     system.addStave({
       stave: stave,
       voices: voices,
     });
 
-    var tabStave = f.TabStave().setClef('tab').setBegBarType(Barline.type.REPEAT_BEGIN);
+    const tabStave = f.TabStave().setClef('tab').setBegBarType(Barline.type.REPEAT_BEGIN);
 
-    var tabVoices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
+    const tabVoices = [f.Voice().addTickables([f.GhostNote({ duration: 'w' })])];
 
     system.addStave({
       stave: tabStave,

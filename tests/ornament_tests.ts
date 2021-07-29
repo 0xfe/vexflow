@@ -5,15 +5,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { QUnit } from './declarations';
+import { ContextBuilder } from 'renderer';
 
 /**
  * Ornament Tests
  */
 const OrnamentTests = {
-  Start: function () {
-    var runTests = VexFlowTests.runTests;
+  Start() {
+    const runTests = VexFlowTests.runTests;
     QUnit.module('Ornament');
     runTests('Ornaments', OrnamentTests.drawOrnaments);
     runTests('Ornaments Vertically Shifted', OrnamentTests.drawOrnamentsDisplaced);
@@ -24,16 +25,16 @@ const OrnamentTests = {
     runTests('Jazz Ornaments', OrnamentTests.jazzOrnaments);
   },
 
-  drawOrnaments: function (options, contextBuilder) {
+  drawOrnaments(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 750, 195);
+    const ctx = contextBuilder(options.elementId, 750, 195);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 30, 700);
+    const staveBar1 = new VF.Stave(10, 30, 700);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
@@ -67,16 +68,16 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  drawOrnamentsDisplaced: function (options, contextBuilder) {
+  drawOrnamentsDisplaced(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 750, 195);
+    const ctx = contextBuilder(options.elementId, 750, 195);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 30, 700);
+    const staveBar1 = new VF.Stave(10, 30, 700);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['a/5'], duration: '4', stem_direction: -1 }),
       new VF.StaveNote({ keys: ['a/5'], duration: '4', stem_direction: -1 }),
       new VF.StaveNote({ keys: ['a/5'], duration: '4', stem_direction: -1 }),
@@ -111,16 +112,16 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  drawOrnamentsDelayed: function (options, contextBuilder) {
+  drawOrnamentsDelayed(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 550, 195);
+    const ctx = contextBuilder(options.elementId, 550, 195);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 30, 500);
+    const staveBar1 = new VF.Stave(10, 30, 500);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
@@ -136,16 +137,16 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  drawOrnamentsDelayedMultipleDraws: function (options, contextBuilder) {
+  drawOrnamentsDelayedMultipleDraws(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 550, 195);
+    const ctx = contextBuilder(options.elementId, 550, 195);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 30, 500);
+    const staveBar1 = new VF.Stave(10, 30, 500);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
@@ -162,16 +163,16 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  drawOrnamentsStacked: function (options, contextBuilder) {
+  drawOrnamentsStacked(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 550, 195);
+    const ctx = contextBuilder(options.elementId, 550, 195);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 30, 500);
+    const staveBar1 = new VF.Stave(10, 30, 500);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
@@ -192,16 +193,16 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  drawOrnamentsWithAccidentals: function (options, contextBuilder) {
+  drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(0);
 
     // Get the rendering context
-    var ctx = contextBuilder(options.elementId, 650, 250);
+    const ctx = contextBuilder(options.elementId, 650, 250);
 
     // bar 1
-    var staveBar1 = new VF.Stave(10, 60, 600);
+    const staveBar1 = new VF.Stave(10, 60, 600);
     staveBar1.setContext(ctx).draw();
-    var notesBar1 = [
+    const notesBar1 = [
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
       new VF.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
@@ -232,10 +233,10 @@ const OrnamentTests = {
     VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   },
 
-  jazzOrnaments: function (options) {
+  jazzOrnaments(options) {
     expect(0);
-    var vf = VexFlowTests.makeFactory(options, 950, 400);
-    var ctx = vf.getContext();
+    const f = VexFlowTests.makeFactory(options, 950, 400);
+    const ctx = f.getContext();
     ctx.scale(1, 1);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
@@ -251,15 +252,15 @@ const OrnamentTests = {
       return rv;
     }
 
-    var xStart = 10;
-    var xWidth = 300;
-    var yStart = 10;
-    var staffHeight = 70;
+    const xStart = 10;
+    const xWidth = 300;
+    const yStart = 10;
+    const staffHeight = 70;
 
     function draw(modifiers, keys, x, width, y, stemDirection) {
-      var notes = [];
+      const notes = [];
 
-      var stave = new VF.Stave(x, y, width).addClef('treble').setContext(ctx).draw();
+      const stave = new VF.Stave(x, y, width).addClef('treble').setContext(ctx).draw();
 
       notes.push(newNote(keys, '4d', modifiers[0], stemDirection));
       notes.push(newNote(keys, '8', modifiers[1], stemDirection));
@@ -280,9 +281,9 @@ const OrnamentTests = {
       stave.setContext(ctx).draw();
       voice.draw(ctx, stave);
     }
-    var mods = [];
-    var curX = xStart;
-    var curY = yStart;
+    let mods = [];
+    let curX = xStart;
+    let curY = yStart;
     mods.push(new VF.Ornament('scoop'));
     mods.push(new VF.Ornament('doit'));
     mods.push(new VF.Ornament('fall'));

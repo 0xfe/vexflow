@@ -430,7 +430,7 @@ export class Stave extends Element {
     return this;
   }
 
-  setClef(clefSpec: string, size: string, annotation: string, position?: number): this {
+  setClef(clefSpec: string, size?: string, annotation?: string, position?: number): this {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
     }
@@ -455,7 +455,7 @@ export class Stave extends Element {
     return this.clef;
   }
 
-  setEndClef(clefSpec: string, size: string, annotation: string): this {
+  setEndClef(clefSpec: string, size?: string, annotation?: string): this {
     this.setClef(clefSpec, size, annotation, StaveModifier.Position.END);
     return this;
   }
@@ -464,7 +464,7 @@ export class Stave extends Element {
     return this.endClef;
   }
 
-  setKeySignature(keySpec: string, cancelKeySpec: string, position?: number): this {
+  setKeySignature(keySpec: string, cancelKeySpec?: string, position?: number): this {
     if (position === undefined) {
       position = StaveModifier.Position.BEGIN;
     }
@@ -479,7 +479,7 @@ export class Stave extends Element {
     return this;
   }
 
-  setEndKeySignature(keySpec: string, cancelKeySpec: string): this {
+  setEndKeySignature(keySpec: string, cancelKeySpec?: string): this {
     this.setKeySignature(keySpec, cancelKeySpec, StaveModifier.Position.END);
     return this;
   }

@@ -352,7 +352,11 @@ global.almostEqual = (value: number, expectedValue: number, errorMargin: number)
 // eslint-disable-next-line
 const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
+/** Used in KeySignature and ClefKeySignature Tests. */
+const MAJOR_KEYS = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
+const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'];
+
 global.VF = VF; // TODO: Remove this!
 global.VF.Test = VexFlowTests;
 
-export { VexFlowTests, concat };
+export { VexFlowTests, concat, MAJOR_KEYS, MINOR_KEYS };

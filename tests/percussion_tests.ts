@@ -4,14 +4,14 @@
  */
 function createSingleMeasureTest(setup) {
   return function (options) {
-    var vf = VexFlowTests.makeFactory(options, 500);
-    var stave = vf.Stave().addClef('percussion');
+    const f = VexFlowTests.makeFactory(options, 500);
+    const stave = f.Stave().addClef('percussion');
 
-    setup(vf);
+    setup(f);
 
-    vf.Formatter().joinVoices(vf.getVoices()).formatToStave(vf.getVoices(), stave);
+    f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   };
@@ -19,7 +19,7 @@ function createSingleMeasureTest(setup) {
 
 const PercussionTests = (function () {
   function showNote(note_struct, stave, ctx, x) {
-    var note = new VF.StaveNote(note_struct).setStave(stave);
+    const note = new VF.StaveNote(note_struct).setStave(stave);
 
     new VF.TickContext().addTickable(note).preFormat().setX(x);
 
@@ -28,9 +28,9 @@ const PercussionTests = (function () {
     return note;
   }
 
-  var Percussion = {
+  const Percussion = {
     Start: function () {
-      var run = VexFlowTests.runTests;
+      const run = VexFlowTests.runTests;
 
       QUnit.module('Percussion');
 
@@ -40,7 +40,7 @@ const PercussionTests = (function () {
       run(
         'Percussion Basic0',
         createSingleMeasureTest(function (vf) {
-          var voice0 = vf
+          const voice0 = vf
             .Voice()
             .addTickables([
               vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
@@ -53,7 +53,7 @@ const PercussionTests = (function () {
               vf.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
             ]);
 
-          var voice1 = vf
+          const voice1 = vf
             .Voice()
             .addTickables([
               vf.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
@@ -92,7 +92,7 @@ const PercussionTests = (function () {
       run(
         'Percussion Basic2',
         createSingleMeasureTest(function (vf) {
-          var voice0 = vf
+          const voice0 = vf
             .Voice()
             .addTickables([
               vf.StaveNote({ keys: ['a/5/x3'], duration: '8' }),
@@ -106,7 +106,7 @@ const PercussionTests = (function () {
             ]);
           vf.Beam({ notes: voice0.getTickables().slice(1, 8) });
 
-          var voice1 = vf
+          const voice1 = vf
             .Voice()
             .addTickables([
               vf.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
@@ -187,7 +187,7 @@ const PercussionTests = (function () {
     },
 
     draw: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 120);
+      const ctx = contextBuilder(options.elementId, 400, 120);
 
       new VF.Stave(10, 10, 300).addClef('percussion').setContext(ctx).draw();
 
@@ -195,7 +195,7 @@ const PercussionTests = (function () {
     },
 
     drawNotes: function (options, contextBuilder) {
-      var notes = [
+      const notes = [
         { keys: ['g/5/d0'], duration: '4' },
         { keys: ['g/5/d1'], duration: '4' },
         { keys: ['g/5/d2'], duration: '4' },
@@ -214,16 +214,19 @@ const PercussionTests = (function () {
         { keys: ['g/5/x3'], duration: '4' },
       ];
 
-      var ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+      const ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
 
       // Draw two staves, one with up-stems and one with down-stems.
-      for (var h = 0; h < 2; ++h) {
-        var stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
+      for (let h = 0; h < 2; ++h) {
+        const stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75)
+          .addClef('percussion')
+          .setContext(ctx)
+          .draw();
 
-        for (var i = 0; i < notes.length; ++i) {
-          var note = notes[i];
+        for (let i = 0; i < notes.length; ++i) {
+          const note = notes[i];
           note.stem_direction = h === 0 ? -1 : 1;
-          var staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+          const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
           ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
           ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');

@@ -2,11 +2,10 @@
 // MIT License
 //
 // Key Signature Tests
+//
+// TODO: How is this different from key_clef_tests.ts?
 
-/* eslint-disable */
-// @ts-nocheck
-
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { QUnit, ok, equal, test, expect } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
@@ -14,18 +13,7 @@ import { Stave } from 'stave';
 import { KeySignature } from 'keysignature';
 import { BarlineType } from 'stavebarline';
 
-function catchError(spec: string) {
-  try {
-    Flow.keySignature(spec);
-  } catch (e) {
-    equal(e.code, 'BadKeySignature', e.message);
-  }
-}
 const KeySignatureTests = {
-  MAJOR_KEYS: ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
-
-  MINOR_KEYS: ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'],
-
   Start(): void {
     QUnit.module('KeySignature');
     const runTests = VexFlowTests.runTests;
@@ -42,6 +30,15 @@ const KeySignatureTests = {
 
   parser(): void {
     expect(11);
+
+    function catchError(spec: string): void {
+      try {
+        Flow.keySignature(spec);
+      } catch (e) {
+        equal(e.code, 'BadKeySignature', e.message);
+      }
+    }
+
     catchError('asdf');
     catchError('D!');
     catchError('E#');
@@ -65,11 +62,11 @@ const KeySignatureTests = {
     ok(true, 'all pass');
   },
 
-  majorKeys(options, contextBuilder): void {
+  majorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 240);
     const stave1 = new Stave(10, 10, 350);
     const stave2 = new Stave(10, 90, 350);
-    const keys = KeySignatureTests.MAJOR_KEYS;
+    const keys = MAJOR_KEYS;
 
     let keySig = null;
     for (let i = 0; i < 8; ++i) {
@@ -90,14 +87,14 @@ const KeySignatureTests = {
     ok(true, 'all pass');
   },
 
-  majorKeysCanceled(options, contextBuilder): void {
+  majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 780, 500);
     ctx.scale(0.9, 0.9);
     const stave1 = new Stave(10, 10, 750).addTrebleGlyph();
     const stave2 = new Stave(10, 90, 750).addTrebleGlyph();
     const stave3 = new Stave(10, 170, 750).addTrebleGlyph();
     const stave4 = new Stave(10, 250, 750).addTrebleGlyph();
-    const keys = KeySignatureTests.MAJOR_KEYS;
+    const keys = MAJOR_KEYS;
 
     let keySig = null;
     let i;
@@ -144,7 +141,7 @@ const KeySignatureTests = {
     ok(true, 'all pass');
   },
 
-  keysCanceledForEachClef(options, contextBuilder) {
+  keysCanceledForEachClef(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 380);
     ctx.scale(0.8, 0.8);
     const keys = ['C#', 'Cb'];
@@ -170,14 +167,14 @@ const KeySignatureTests = {
     ok(true, 'all pass');
   },
 
-  majorKeysAltered(options, contextBuilder) {
+  majorKeysAltered(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 780, 500);
     ctx.scale(0.9, 0.9);
     const stave1 = new Stave(10, 10, 750).addTrebleGlyph();
     const stave2 = new Stave(10, 90, 750).addTrebleGlyph();
     const stave3 = new Stave(10, 170, 750).addTrebleGlyph();
     const stave4 = new Stave(10, 250, 750).addTrebleGlyph();
-    const keys = KeySignatureTests.MAJOR_KEYS;
+    const keys = MAJOR_KEYS;
 
     let keySig = null;
     let i;
@@ -222,11 +219,11 @@ const KeySignatureTests = {
     ok(true, 'all pass');
   },
 
-  minorKeys(options, contextBuilder) {
+  minorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 240);
     const stave1 = new Stave(10, 10, 350);
     const stave2 = new Stave(10, 90, 350);
-    const keys = KeySignatureTests.MINOR_KEYS;
+    const keys = MINOR_KEYS;
 
     let keySig = null;
     for (let i = 0; i < 8; ++i) {
@@ -246,7 +243,8 @@ const KeySignatureTests = {
 
     ok(true, 'all pass');
   },
-  endKeyWithClef(options, contextBuilder) {
+
+  endKeyWithClef(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 200);
     ctx.scale(0.9, 0.9);
     const stave1 = new Stave(10, 10, 350);
@@ -270,7 +268,7 @@ const KeySignatureTests = {
     const ctx = contextBuilder(options.elementId, 400, 240);
     const stave1 = new Stave(10, 10, 350);
     const stave2 = new Stave(10, 90, 350);
-    const keys = KeySignatureTests.MAJOR_KEYS;
+    const keys = MAJOR_KEYS;
 
     for (let i = 0; i < 8; ++i) {
       stave1.addKeySignature(keys[i]);
@@ -291,7 +289,10 @@ const KeySignatureTests = {
   changeKey(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 900);
 
-    const stave = f.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
+    // TODO: Wrong number of arguments?
+    // TODO: @ronyeh fixed how params are passed to factory.Stave(...)
+    // BEFORE: f.Stave(10, 10, 800). Did this affect the test output?
+    const stave = f.Stave({ x: 10, y: 10, width: 800 }).addClef('treble').addTimeSignature('C|');
 
     const voice = f
       .Voice()
@@ -306,7 +307,7 @@ const KeySignatureTests = {
         f.KeySigNote({ key: 'Bb' }),
         f.StaveNote({ keys: ['c/4'], duration: '1' }),
         f.BarNote(),
-        f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
+        f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }), // TODO: alterKey needs to be a string[]
         f.StaveNote({ keys: ['c/4'], duration: '1' }),
       ]);
 

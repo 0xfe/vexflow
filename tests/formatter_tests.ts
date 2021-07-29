@@ -8,6 +8,7 @@ import { VexFlowTests } from './vexflow_test_helpers';
 import { QUnit, ok, equal, test } from './declarations';
 import { Flow } from 'flow';
 import { MockTickable } from './mocks';
+import { Formatter } from 'formatter';
 
 // Should this be a static call in glyph? Or font?
 function glyphWidth(vexGlyph: string): number {
@@ -63,7 +64,7 @@ const FormatterTests = {
     });
   },
 
-  buildTickContexts() {
+  buildTickContexts(): void {
     function createTickable() {
       return new MockTickable();
     }
@@ -93,7 +94,7 @@ const FormatterTests = {
     voice1.addTickables(tickables1);
     voice2.addTickables(tickables2);
 
-    const formatter = new VF.Formatter();
+    const formatter = new Formatter();
     const tContexts = formatter.createTickContexts([voice1, voice2]);
 
     equal(tContexts.list.length, 4, 'Voices should have four tick contexts');
@@ -122,8 +123,8 @@ const FormatterTests = {
   longMeasureProblems(options) {
     const registry = new VF.Registry();
     VF.Registry.enableDefaultRegistry(registry);
-    const vf = VexFlowTests.makeFactory(options, 1500, 300);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 1500, 300);
+    const score = f.EasyScore();
     score.set({
       time: '4/4',
     });
@@ -140,27 +141,27 @@ const FormatterTests = {
     const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
     voice2.addTickables(notes2);
     voice1.addTickables(notes1);
-    const formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+    const formatter = f.Formatter().joinVoices([voice1]).joinVoices([voice2]);
     const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
     formatter.format([voice1, voice2], width);
-    const stave1 = vf.Stave({
+    const stave1 = f.Stave({
       y: 50,
       width: width + VF.Stave.defaultPadding,
     });
-    const stave2 = vf.Stave({
+    const stave2 = f.Stave({
       y: 200,
       width: width + VF.Stave.defaultPadding,
     });
     stave1.draw();
     stave2.draw();
-    voice1.draw(vf.context, stave1);
-    voice2.draw(vf.context, stave2);
+    voice1.draw(f.context, stave1);
+    voice2.draw(f.context, stave2);
     ok(true);
   },
 
   accidentalJustification: (options) => {
-    const vf = VexFlowTests.makeFactory(options, 600, 300);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 600, 300);
+    const score = f.EasyScore();
 
     const notes11 = score.notes('a4/2, a4/4, a4/8, ab4/16, an4/16');
     const voice11 = score.voice(notes11, { time: '4/4' });
@@ -171,13 +172,13 @@ const FormatterTests = {
     let beams = VF.Beam.generateBeams(notes11.slice(2));
     beams = beams.concat(beams, VF.Beam.generateBeams(notes21.slice(1, 3)));
     beams = beams.concat(VF.Beam.generateBeams(notes21.slice(3)));
-    const formatter = vf.Formatter({ softmaxFactor: 100 }).joinVoices([voice11]).joinVoices([voice21]);
+    const formatter = f.Formatter({ softmaxFactor: 100 }).joinVoices([voice11]).joinVoices([voice21]);
 
     const width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
-    const stave11 = vf.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
-    const stave21 = vf.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
+    const stave11 = f.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
+    const stave21 = f.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
     formatter.format([voice11, voice21], width);
-    const ctx = vf.getContext();
+    const ctx = f.getContext();
     stave11.setContext(ctx).draw();
     stave21.setContext(ctx).draw();
     voice11.draw(ctx, stave11);
@@ -189,8 +190,8 @@ const FormatterTests = {
   },
 
   unalignedNoteDurations: (options) => {
-    const vf = VexFlowTests.makeFactory(options, 600, 250);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 600, 250);
+    const score = f.EasyScore();
 
     const notes11 = [
       new VF.StaveNote({ keys: ['a/4'], duration: '8' }),
@@ -203,7 +204,7 @@ const FormatterTests = {
       new VF.StaveNote({ keys: ['a/4'], duration: '8d' }).addDotToAll(),
     ];
 
-    const ctx = vf.getContext();
+    const ctx = f.getContext();
     const voice11 = score.voice(notes11, { time: '2/4' }).setMode(VF.Voice.Mode.SOFT);
     const voice21 = score.voice(notes21, { time: '2/4' }).setMode(VF.Voice.Mode.SOFT);
     const beams21 = VF.Beam.generateBeams(notes21);
@@ -213,8 +214,8 @@ const FormatterTests = {
     formatter.joinVoices([voice21]);
 
     const width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
-    const stave11 = vf.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
-    const stave21 = vf.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
+    const stave11 = f.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
+    const stave21 = f.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
     formatter.format([voice11, voice21], width);
     stave11.setContext(ctx).draw();
     stave21.setContext(ctx).draw();
@@ -258,8 +259,8 @@ const FormatterTests = {
       new VF.StaveNote({ keys: ['e/4'], duration: '4' }),
     ];
 
-    const vf = VexFlowTests.makeFactory(options, 750, 280);
-    const context = vf.getContext();
+    const f = VexFlowTests.makeFactory(options, 750, 280);
+    const context = f.getContext();
     const voice1 = new VF.Voice({ num_beats: 4, beat_value: 4 });
     voice1.addTickables(notes1);
     const voice2 = new VF.Voice({ num_beats: 4, beat_value: 4 });
@@ -282,20 +283,20 @@ const FormatterTests = {
   },
 
   justifyStaveNotes: (options) => {
-    const vf = VexFlowTests.makeFactory(options, 520, 280);
-    const ctx = vf.getContext();
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 520, 280);
+    const ctx = f.getContext();
+    const score = f.EasyScore();
 
     let y = 30;
     function justifyToWidth(width) {
-      vf.Stave({ y: y }).addTrebleGlyph();
+      f.Stave({ y: y }).addTrebleGlyph();
 
       const voices = [
         score.voice(score.notes('(cbb4 en4 a4)/2, (d4 e4 f4)/8, (d4 f4 a4)/8, (cn4 f#4 a4)/4', { stem: 'down' })),
         score.voice(score.notes('(bb4 e#5 a5)/4, (d5 e5 f5)/2, (c##5 fb5 a5)/4', { stem: 'up' })),
       ];
 
-      vf.Formatter().joinVoices(voices).format(voices, width);
+      f.Formatter().joinVoices(voices).format(voices, width);
 
       voices[0].getTickables().forEach((note) => {
         VexFlowTests.plotNoteWidth(ctx, note, y + 140);
@@ -309,28 +310,28 @@ const FormatterTests = {
 
     justifyToWidth(520);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
   notesWithTab: (options) => {
-    const vf = VexFlowTests.makeFactory(options, 420, 580);
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 420, 580);
+    const score = f.EasyScore();
 
     let y = 10;
     function justifyToWidth(width) {
-      const stave = vf.Stave({ y: y }).addTrebleGlyph();
+      const stave = f.Stave({ y: y }).addTrebleGlyph();
 
       const voice = score.voice(score.notes('d#4/2, (c4 d4)/8, d4/8, (c#4 e4 a4)/4', { stem: 'up' }));
 
       y += 100;
 
-      vf.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
+      f.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
 
       const tabVoice = score.voice([
-        vf.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new VF.Bend('Full'), 0),
-        vf
+        f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new VF.Bend('Full'), 0),
+        f
           .TabNote({
             positions: [
               { str: 2, fret: 3 },
@@ -339,8 +340,8 @@ const FormatterTests = {
             duration: '8',
           })
           .addModifier(new VF.Bend('Unison'), 1),
-        vf.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
-        vf.TabNote({
+        f.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
+        f.TabNote({
           positions: [
             { str: 3, fret: 6 },
             { str: 4, fret: 7 },
@@ -350,7 +351,7 @@ const FormatterTests = {
         }),
       ]);
 
-      vf.Formatter().joinVoices([voice]).joinVoices([tabVoice]).format([voice, tabVoice], width);
+      f.Formatter().joinVoices([voice]).joinVoices([tabVoice]).format([voice, tabVoice], width);
 
       y += 150;
     }
@@ -358,15 +359,15 @@ const FormatterTests = {
     justifyToWidth(0);
     justifyToWidth(300);
 
-    vf.draw();
+    f.draw();
 
     ok(true);
   },
 
   multiStaves: (options) => {
-    const vf = VexFlowTests.makeFactory(options, 600, 400);
-    const ctx = vf.getContext();
-    const score = vf.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 600, 400);
+    const ctx = f.getContext();
+    const score = f.EasyScore();
     let staves = [];
     let beams = [];
     let voices = [];
@@ -380,21 +381,21 @@ const FormatterTests = {
     const notes31 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
     voices.push(score.voice(notes31, { time: '6/8' }));
 
-    let formatter = vf.Formatter();
+    let formatter = f.Formatter();
     voices.forEach((vv) => formatter.joinVoices([vv]));
     let width = formatter.preCalculateMinTotalWidth(voices);
     let staveWidth = width + glyphWidth('gClef') + glyphWidth('timeSig8') + VF.Stave.defaultPadding;
 
-    staves.push(vf.Stave({ y: 20, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
-    staves.push(vf.Stave({ y: 130, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
-    staves.push(vf.Stave({ y: 250, width: staveWidth }).addClef('bass').addTimeSignature('6/8'));
+    staves.push(f.Stave({ y: 20, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
+    staves.push(f.Stave({ y: 130, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
+    staves.push(f.Stave({ y: 250, width: staveWidth }).addClef('bass').addTimeSignature('6/8'));
     formatter.format(voices, width);
     beams.push(new VF.Beam(notes21.slice(0, 3), true));
     beams.push(new VF.Beam(notes21.slice(3, 6), true));
     beams.push(new VF.Beam(notes31.slice(0, 3), true));
     beams.push(new VF.Beam(notes31.slice(3, 6), true));
 
-    vf.StaveConnector({
+    f.StaveConnector({
       top_stave: staves[1],
       bottom_stave: staves[2],
       type: 'brace',
@@ -416,26 +417,26 @@ const FormatterTests = {
     const notes32 = score.notes('a5/8, a5, a5, a5, a5, a5', { stem: 'down' });
     voices.push(score.voice(notes32, { time: '6/8' }));
 
-    formatter = vf.Formatter();
+    formatter = f.Formatter();
     voices.forEach((vv) => formatter.joinVoices([vv]));
     width = formatter.preCalculateMinTotalWidth(voices);
     staveWidth = width + VF.Stave.defaultPadding;
     staves.push(
-      vf.Stave({
+      f.Stave({
         x,
         y: ys[0],
         width: staveWidth,
       })
     );
     staves.push(
-      vf.Stave({
+      f.Stave({
         x,
         y: ys[1],
         width: staveWidth,
       })
     );
     staves.push(
-      vf.Stave({
+      f.Stave({
         x,
         y: ys[2],
         width: staveWidth,
@@ -458,8 +459,8 @@ const FormatterTests = {
     const debug = options.params.debug;
     VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-    const vf = VexFlowTests.makeFactory(options, 650, 750);
-    const system = vf.System({
+    const f = VexFlowTests.makeFactory(options, 650, 750);
+    const system = f.System({
       x: 50,
       autoWidth: true,
       debugFormatter: debug,
@@ -468,7 +469,7 @@ const FormatterTests = {
       options: { alpha: options.params.alpha },
     });
 
-    const score = vf.EasyScore();
+    const score = f.EasyScore();
 
     const newVoice = function (notes) {
       return score.voice(notes, { time: '1/4' });
@@ -492,7 +493,7 @@ const FormatterTests = {
     voices.map(newVoice).forEach(newStave);
     system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
-    vf.draw();
+    f.draw();
 
     // var typeMap = VF.Registry.getDefaultRegistry().index.type;
     // var table = Object.keys(typeMap).map(function(typeName) {
@@ -505,12 +506,12 @@ const FormatterTests = {
   },
 
   softMax: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 550, 500);
-    vf.getContext().scale(0.8, 0.8);
+    const f = VexFlowTests.makeFactory(options, 550, 500);
+    f.getContext().scale(0.8, 0.8);
 
     function draw(y, factor) {
-      const score = vf.EasyScore();
-      const system = vf.System({
+      const score = f.EasyScore();
+      const system = f.System({
         x: 100,
         y,
         details: { softmaxFactor: factor },
@@ -532,7 +533,7 @@ const FormatterTests = {
         .addClef('treble')
         .addTimeSignature('5/4');
 
-      vf.draw();
+      f.draw();
       ok(true);
     }
 
@@ -544,10 +545,10 @@ const FormatterTests = {
   },
 
   mixTime: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
-    vf.getContext().scale(0.8, 0.8);
-    const score = vf.EasyScore();
-    const system = vf.System({
+    const f = VexFlowTests.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
+    f.getContext().scale(0.8, 0.8);
+    const score = f.EasyScore();
+    const system = f.System({
       details: { softmaxFactor: 100 },
       autoWidth: true,
       debugFormatter: true,
@@ -569,15 +570,15 @@ const FormatterTests = {
       .addClef('treble')
       .addTimeSignature('4/4');
 
-    vf.draw();
+    f.draw();
     ok(true);
   },
 
   tightNotes: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 440, 250);
-    vf.getContext().scale(0.8, 0.8);
-    const score = vf.EasyScore();
-    const system = vf.System({
+    const f = VexFlowTests.makeFactory(options, 440, 250);
+    f.getContext().scale(0.8, 0.8);
+    const score = f.EasyScore();
+    const system = f.System({
       autoWidth: true,
       debugFormatter: true,
       details: { maxIterations: 10 },
@@ -601,15 +602,15 @@ const FormatterTests = {
       .addClef('treble')
       .addTimeSignature('4/4');
 
-    vf.draw();
+    f.draw();
     ok(true);
   },
 
   tightNotes2: function (options) {
-    const vf = VexFlowTests.makeFactory(options, 440, 250);
-    vf.getContext().scale(0.8, 0.8);
-    const score = vf.EasyScore();
-    const system = vf.System({
+    const f = VexFlowTests.makeFactory(options, 440, 250);
+    f.getContext().scale(0.8, 0.8);
+    const score = f.EasyScore();
+    const system = f.System({
       autoWidth: true,
       debugFormatter: true,
     });
@@ -630,15 +631,15 @@ const FormatterTests = {
       .addClef('treble')
       .addTimeSignature('4/4');
 
-    vf.draw();
+    f.draw();
     ok(true);
   },
 
   annotations: function (options) {
     const pageWidth = 916;
     const pageHeight = 600;
-    const vf = VexFlowTests.makeFactory(options, pageWidth, pageHeight);
-    const context = vf.getContext();
+    const f = VexFlowTests.makeFactory(options, pageWidth, pageHeight);
+    const context = f.getContext();
 
     const lyrics1 = ['ipso', 'ipso-', 'ipso', 'ipso', 'ipsoz', 'ipso-', 'ipso', 'ipso', 'ipso', 'ip', 'ipso'];
     const lyrics2 = ['ipso', 'ipso-', 'ipsoz', 'ipso', 'ipso', 'ipso-', 'ipso', 'ipso', 'ipso', 'ip', 'ipso'];

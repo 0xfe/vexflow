@@ -5,17 +5,17 @@
 const StaveTieTests = (function () {
   function createTest(notesData, setupTies) {
     return function (options) {
-      var vf = VexFlowTests.makeFactory(options, 300);
-      var stave = vf.Stave();
-      var score = vf.EasyScore();
-      var voice = score.voice(score.notes.apply(score, notesData));
-      var notes = voice.getTickables();
+      const f = VexFlowTests.makeFactory(options, 300);
+      const stave = f.Stave();
+      const score = f.EasyScore();
+      const voice = score.voice(score.notes.apply(score, notesData));
+      const notes = voice.getTickables();
 
-      setupTies(vf, notes, stave);
+      setupTies(f, notes, stave);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+      f.draw();
 
       ok(true);
     };
@@ -23,7 +23,7 @@ const StaveTieTests = (function () {
 
   return {
     Start: function () {
-      var run = VexFlowTests.runTests;
+      const run = VexFlowTests.runTests;
 
       QUnit.module('StaveTie');
 

@@ -67,8 +67,8 @@ const GlyphNoteTests = {
   basic: function (options) {
     VF.Registry.enableDefaultRegistry(new VF.Registry());
 
-    const vf = VexFlowTests.makeFactory(options, 300, 400);
-    const system = vf.System({
+    const f = VexFlowTests.makeFactory(options, 300, 400);
+    const system = f.System({
       x: 50,
       width: 250,
       debugFormatter: options.params.debug,
@@ -76,7 +76,7 @@ const GlyphNoteTests = {
       options: { alpha: options.params.alpha },
     });
 
-    const score = vf.EasyScore();
+    const score = f.EasyScore();
 
     const newVoice = function (notes) {
       return score.voice(notes, { time: '1/4' });
@@ -87,20 +87,20 @@ const GlyphNoteTests = {
     };
 
     const voices = [
-      [vf.GlyphNote(new VF.Glyph('repeat1Bar', 40), { duration: 'q' }, { line: 4 })],
-      [vf.GlyphNote(new VF.Glyph('repeat2Bars', 40), { duration: 'q', align_center: true })],
+      [f.GlyphNote(new VF.Glyph('repeat1Bar', 40), { duration: 'q' }, { line: 4 })],
+      [f.GlyphNote(new VF.Glyph('repeat2Bars', 40), { duration: 'q', align_center: true })],
       [
-        vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
-        vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
-        vf.GlyphNote(new VF.Glyph('repeat4Bars', 40), { duration: '16' }),
-        vf.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+        f.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+        f.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
+        f.GlyphNote(new VF.Glyph('repeat4Bars', 40), { duration: '16' }),
+        f.GlyphNote(new VF.Glyph('repeatBarSlash', 40), { duration: '16' }),
       ],
     ];
 
     voices.map(newVoice).forEach(newStave);
     system.addConnector().setType(VF.StaveConnector.type.BRACKET);
 
-    vf.draw();
+    f.draw();
 
     VF.Registry.disableDefaultRegistry();
     ok(true);
