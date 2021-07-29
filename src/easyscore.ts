@@ -231,7 +231,7 @@ interface BuilderElements {
   accidentals: (Accidental | undefined)[][];
 }
 
-interface BuilderOptions {
+export interface BuilderOptions {
   stem?: string;
   clef?: string;
   // eslint-disable-next-line

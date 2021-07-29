@@ -79,9 +79,9 @@ VexFlowTests.run = function () {
   FractionTests.Start();
   ClefTests.Start();
   KeySignatureTests.Start();
-  */
   TimeSignatureTests.Start();
-  // StaveTieTests.Start();
+  StaveTieTests.Start();
+  */
   // TabTieTests.Start();
   // StaveTests.Start();
   // TabStaveTests.Start();
