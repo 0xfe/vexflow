@@ -32,7 +32,6 @@ const RhythmTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const showNote = StaveNoteTests.showNote;
     const notes = [
       { keys: ['b/4'], duration: 'ws', stem_direction: -1 },
       { keys: ['b/4'], duration: 'hs', stem_direction: -1 },
@@ -46,7 +45,7 @@ const RhythmTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 25);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');

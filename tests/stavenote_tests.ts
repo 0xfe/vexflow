@@ -312,14 +312,16 @@ const StaveNoteTests = {
     expect(0);
   },
 
-  showNote: function (note_struct, stave, ctx, x, drawBoundingBox) {
+  showNote: function (note_struct, stave, ctx, x, drawBoundingBox: boolean) {
     const note = new StaveNote(note_struct).setStave(stave);
 
     new TickContext().addTickable(note).preFormat().setX(x);
 
     note.setContext(ctx).draw();
 
-    if (drawBoundingBox) note.getBoundingBox().draw(ctx);
+    if (drawBoundingBox) {
+      note.getBoundingBox().draw(ctx);
+    }
 
     return note;
   },
