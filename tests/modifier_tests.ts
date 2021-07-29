@@ -1,8 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-/* xeslint-disable */
-// x@ts-nocheck
+/* eslint-disable */
+// @ts-nocheck
+
+import { Modifier } from 'modifier';
+import { ModifierContext } from 'modifiercontext';
+import { QUnit, test, equal } from './declarations';
 
 /**
  * ModifierContext Tests
@@ -15,19 +19,19 @@ const ModifierContextTests = {
   },
 
   width() {
-    var mc = new VF.ModifierContext();
+    const mc = new ModifierContext();
     equal(mc.getWidth(), 0, 'New modifier context has no width');
   },
 
   management() {
-    var mc = new VF.ModifierContext();
-    var modifier1 = new VF.Modifier();
-    var modifier2 = new VF.Modifier();
+    const mc = new ModifierContext();
+    const modifier1 = new Modifier();
+    const modifier2 = new Modifier();
 
     mc.addMember(modifier1);
     mc.addMember(modifier2);
 
-    var accidentals = mc.getMembers('none');
+    const accidentals = mc.getMembers('none');
 
     equal(accidentals.length, 2, 'Added two modifiers');
   },

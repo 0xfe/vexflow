@@ -3,6 +3,7 @@
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const MT = (function () {
+  // TODO: this constructor takes 0 arguments, but other tests pass in a Flow.TIME4_4.
   function MockTickable() {
     this.ignore_ticks = false;
   }

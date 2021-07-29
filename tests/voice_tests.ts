@@ -24,7 +24,7 @@ const VoiceTests = (function () {
     strict: function () {
       expect(8);
       function createTickable() {
-        return new MockTickable(VF.TIME4_4);
+        return new MockTickable(Flow.TIME4_4);
       }
 
       var R = Flow.RESOLUTION;
@@ -62,7 +62,7 @@ const VoiceTests = (function () {
 
     ignore: function () {
       function createTickable() {
-        return new MockTickable(VF.TIME4_4);
+        return new MockTickable(Flow.TIME4_4);
       }
 
       var R = Flow.RESOLUTION;

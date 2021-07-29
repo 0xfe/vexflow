@@ -1,10 +1,17 @@
-/**
- * VexFlow - TickContext Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
+/* eslint-disable */
+// @ts-nocheck
+
 import { Flow } from 'flow';
+import { QUnit, test, equal } from './declarations';
+import { TickContext } from 'tickcontext';
 import { MockTickable } from './mocks';
 
+/**
+ * TickContext Tests
+ */
 const TickContextTests = {
   Start() {
     QUnit.module('TickContext');
@@ -13,19 +20,19 @@ const TickContextTests = {
   },
 
   currentTick() {
-    var tc = new VF.TickContext();
+    const tc = new VF.TickContext();
     equal(tc.getCurrentTick().value(), 0, 'New tick context has no ticks');
   },
 
   tracking() {
     function createTickable() {
-      return new MockTickable(VF.TIME4_4);
+      return new MockTickable(Flow.TIME4_4);
     }
 
-    var R = Flow.RESOLUTION;
-    var BEAT = (1 * R) / 4;
+    const R = Flow.RESOLUTION;
+    const BEAT = (1 * R) / 4;
 
-    var tickables = [
+    const tickables = [
       createTickable().setTicks(BEAT).setWidth(10),
       createTickable()
         .setTicks(BEAT * 2)
@@ -33,7 +40,7 @@ const TickContextTests = {
       createTickable().setTicks(BEAT).setWidth(30),
     ];
 
-    var tc = new VF.TickContext();
+    const tc = new TickContext();
     tc.setPadding(0);
 
     tc.addTickable(tickables[0]);
