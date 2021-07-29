@@ -1,312 +1,321 @@
-/**
- * VexFlow - Key Signature Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
-const KeySignatureTests = (function () {
-  function catchError(spec) {
-    try {
-      VF.keySignature(spec);
-    } catch (e) {
-      equal(e.code, 'BadKeySignature', e.message);
-    }
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Key Signature Tests
+
+/* eslint-disable */
+// @ts-nocheck
+
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok, equal, test, expect } from './declarations';
+import { ContextBuilder } from 'renderer';
+import { Flow } from 'flow';
+import { Stave } from 'stave';
+import { KeySignature } from 'keysignature';
+import { BarlineType } from 'stavebarline';
+
+function catchError(spec: string) {
+  try {
+    Flow.keySignature(spec);
+  } catch (e) {
+    equal(e.code, 'BadKeySignature', e.message);
   }
+}
+const KeySignatureTests = {
+  MAJOR_KEYS: ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
 
-  const KeySignature = {
-    MAJOR_KEYS: ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
+  MINOR_KEYS: ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'],
 
-    MINOR_KEYS: ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'],
+  Start(): void {
+    QUnit.module('KeySignature');
+    const runTests = VexFlowTests.runTests;
+    test('Key Parser Test', this.parser);
+    runTests('Major Key Test', this.majorKeys);
+    runTests('Minor Key Test', this.minorKeys);
+    runTests('Stave Helper', this.staveHelper);
+    runTests('Cancelled key test', this.majorKeysCanceled);
+    runTests('Cancelled key (for each clef) test', this.keysCanceledForEachClef);
+    runTests('Altered key test', this.majorKeysAltered);
+    runTests('End key with clef test', this.endKeyWithClef);
+    runTests('Key Signature Change test', this.changeKey);
+  },
 
-    Start: function () {
-      QUnit.module('KeySignature');
-      test('Key Parser Test', KeySignature.parser);
-      VexFlowTests.runTests('Major Key Test', KeySignature.majorKeys);
-      VexFlowTests.runTests('Minor Key Test', KeySignature.minorKeys);
-      VexFlowTests.runTests('Stave Helper', KeySignature.staveHelper);
-      VexFlowTests.runTests('Cancelled key test', KeySignature.majorKeysCanceled);
-      VexFlowTests.runTests('Cancelled key (for each clef) test', KeySignature.keysCanceledForEachClef);
-      VexFlowTests.runTests('Altered key test', KeySignature.majorKeysAltered);
-      VexFlowTests.runTests('End key with clef test', KeySignature.endKeyWithClef);
-      VexFlowTests.runTests('Key Signature Change test', KeySignature.changeKey);
-    },
+  parser(): void {
+    expect(11);
+    catchError('asdf');
+    catchError('D!');
+    catchError('E#');
+    catchError('D#');
+    catchError('#');
+    catchError('b');
+    catchError('Kb');
+    catchError('Fb');
+    catchError('Ab');
+    catchError('Dbm');
+    catchError('B#m');
 
-    parser: function () {
-      expect(11);
-      catchError('asdf');
-      catchError('D!');
-      catchError('E#');
-      catchError('D#');
-      catchError('#');
-      catchError('b');
-      catchError('Kb');
-      catchError('Fb');
-      catchError('Ab');
-      catchError('Dbm');
-      catchError('B#m');
+    Flow.keySignature('B');
+    Flow.keySignature('C');
+    Flow.keySignature('Fm');
+    Flow.keySignature('Ab');
+    Flow.keySignature('Abm');
+    Flow.keySignature('F#');
+    Flow.keySignature('G#m');
 
-      VF.keySignature('B');
-      VF.keySignature('C');
-      VF.keySignature('Fm');
-      VF.keySignature('Ab');
-      VF.keySignature('Abm');
-      VF.keySignature('F#');
-      VF.keySignature('G#m');
+    ok(true, 'all pass');
+  },
 
-      ok(true, 'all pass');
-    },
+  majorKeys(options, contextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 240);
+    const stave1 = new Stave(10, 10, 350);
+    const stave2 = new Stave(10, 90, 350);
+    const keys = KeySignatureTests.MAJOR_KEYS;
 
-    majorKeys: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 240);
-      var stave = new VF.Stave(10, 10, 350);
-      var stave2 = new VF.Stave(10, 90, 350);
-      var keys = KeySignature.MAJOR_KEYS;
+    let keySig = null;
+    for (let i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.addToStave(stave1);
+    }
 
-      var keySig = null;
-      for (var i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.addToStave(stave);
-      }
+    for (let n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.addToStave(stave2);
+    }
 
-      for (var n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.addToStave(stave2);
-      }
+    stave1.setContext(ctx);
+    stave1.draw();
+    stave2.setContext(ctx);
+    stave2.draw();
 
-      stave.setContext(ctx);
-      stave.draw();
-      stave2.setContext(ctx);
-      stave2.draw();
+    ok(true, 'all pass');
+  },
 
-      ok(true, 'all pass');
-    },
+  majorKeysCanceled(options, contextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 780, 500);
+    ctx.scale(0.9, 0.9);
+    const stave1 = new Stave(10, 10, 750).addTrebleGlyph();
+    const stave2 = new Stave(10, 90, 750).addTrebleGlyph();
+    const stave3 = new Stave(10, 170, 750).addTrebleGlyph();
+    const stave4 = new Stave(10, 250, 750).addTrebleGlyph();
+    const keys = KeySignatureTests.MAJOR_KEYS;
 
-    majorKeysCanceled: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 780, 500);
-      ctx.scale(0.9, 0.9);
-      var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
-      var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
-      var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
-      var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
-      var keys = KeySignature.MAJOR_KEYS;
+    let keySig = null;
+    let i;
+    let n;
+    for (i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.cancelKey('Cb');
 
-      var keySig = null;
-      var i;
-      var n;
-      for (i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.cancelKey('Cb');
+      keySig.padding = 18;
+      keySig.addToStave(stave1);
+    }
 
-        keySig.padding = 18;
-        keySig.addToStave(stave);
-      }
+    for (n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.cancelKey('C#');
+      keySig.padding = 20;
+      keySig.addToStave(stave2);
+    }
 
-      for (n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.cancelKey('C#');
-        keySig.padding = 20;
-        keySig.addToStave(stave2);
-      }
+    for (i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.cancelKey('E');
 
-      for (i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.cancelKey('E');
+      keySig.padding = 18;
+      keySig.addToStave(stave3);
+    }
 
-        keySig.padding = 18;
-        keySig.addToStave(stave3);
-      }
+    for (n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.cancelKey('Ab');
+      keySig.padding = 20;
+      keySig.addToStave(stave4);
+    }
 
-      for (n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.cancelKey('Ab');
-        keySig.padding = 20;
-        keySig.addToStave(stave4);
-      }
+    stave1.setContext(ctx);
+    stave1.draw();
+    stave2.setContext(ctx);
+    stave2.draw();
+    stave3.setContext(ctx);
+    stave3.draw();
+    stave4.setContext(ctx);
+    stave4.draw();
 
-      stave.setContext(ctx);
-      stave.draw();
-      stave2.setContext(ctx);
-      stave2.draw();
-      stave3.setContext(ctx);
-      stave3.draw();
-      stave4.setContext(ctx);
-      stave4.draw();
+    ok(true, 'all pass');
+  },
 
-      ok(true, 'all pass');
-    },
+  keysCanceledForEachClef(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 600, 380);
+    ctx.scale(0.8, 0.8);
+    const keys = ['C#', 'Cb'];
 
-    keysCanceledForEachClef: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 600, 380);
-      ctx.scale(0.8, 0.8);
-      var keys = ['C#', 'Cb'];
-
-      var x = 20;
-      var y = 20;
-      var tx = x;
-      ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function (clef) {
-        keys.forEach(function (key) {
-          var cancelKey = key === keys[0] ? keys[1] : keys[0];
-          var vStave = new Vex.Flow.Stave(tx, y, 350);
-          vStave.setClef(clef);
-          vStave.addKeySignature(cancelKey);
-          vStave.addKeySignature(key, cancelKey);
-          vStave.addKeySignature(key);
-          vStave.setContext(ctx).draw();
-          tx += 350;
-        });
-        tx = x;
-        y += 80;
+    const x = 20;
+    let y = 20;
+    let tx = x;
+    ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function (clef) {
+      keys.forEach(function (key) {
+        const cancelKey = key === keys[0] ? keys[1] : keys[0];
+        const stave = new Stave(tx, y, 350);
+        stave.setClef(clef);
+        stave.addKeySignature(cancelKey);
+        stave.addKeySignature(key, cancelKey);
+        stave.addKeySignature(key);
+        stave.setContext(ctx).draw();
+        tx += 350;
       });
+      tx = x;
+      y += 80;
+    });
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    majorKeysAltered: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 780, 500);
-      ctx.scale(0.9, 0.9);
-      var stave = new VF.Stave(10, 10, 750).addTrebleGlyph();
-      var stave2 = new VF.Stave(10, 90, 750).addTrebleGlyph();
-      var stave3 = new VF.Stave(10, 170, 750).addTrebleGlyph();
-      var stave4 = new VF.Stave(10, 250, 750).addTrebleGlyph();
-      var keys = KeySignature.MAJOR_KEYS;
+  majorKeysAltered(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 780, 500);
+    ctx.scale(0.9, 0.9);
+    const stave1 = new Stave(10, 10, 750).addTrebleGlyph();
+    const stave2 = new Stave(10, 90, 750).addTrebleGlyph();
+    const stave3 = new Stave(10, 170, 750).addTrebleGlyph();
+    const stave4 = new Stave(10, 250, 750).addTrebleGlyph();
+    const keys = KeySignatureTests.MAJOR_KEYS;
 
-      var keySig = null;
-      var i;
-      var n;
-      for (i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.alterKey(['bs', 'bs']);
-        keySig.padding = 18;
-        keySig.addToStave(stave);
-      }
+    let keySig = null;
+    let i;
+    let n;
+    for (i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.alterKey(['bs', 'bs']);
+      keySig.padding = 18;
+      keySig.addToStave(stave1);
+    }
 
-      for (n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.alterKey(['+', '+', '+']);
-        keySig.padding = 20;
-        keySig.addToStave(stave2);
-      }
+    for (n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.alterKey(['+', '+', '+']);
+      keySig.padding = 20;
+      keySig.addToStave(stave2);
+    }
 
-      for (i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.alterKey(['n', 'bs', 'bb']);
-        keySig.padding = 18;
-        keySig.addToStave(stave3);
-      }
+    for (i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.alterKey(['n', 'bs', 'bb']);
+      keySig.padding = 18;
+      keySig.addToStave(stave3);
+    }
 
-      for (n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.alterKey(['++', '+', 'n', '+']);
-        keySig.padding = 20;
-        keySig.addToStave(stave4);
-      }
+    for (n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.alterKey(['++', '+', 'n', '+']);
+      keySig.padding = 20;
+      keySig.addToStave(stave4);
+    }
 
-      stave.setContext(ctx);
-      stave.draw();
-      stave2.setContext(ctx);
-      stave2.draw();
-      stave3.setContext(ctx);
-      stave3.draw();
-      stave4.setContext(ctx);
-      stave4.draw();
+    stave1.setContext(ctx);
+    stave1.draw();
+    stave2.setContext(ctx);
+    stave2.draw();
+    stave3.setContext(ctx);
+    stave3.draw();
+    stave4.setContext(ctx);
+    stave4.draw();
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    minorKeys: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 240);
-      var stave = new VF.Stave(10, 10, 350);
-      var stave2 = new VF.Stave(10, 90, 350);
-      var keys = KeySignature.MINOR_KEYS;
+  minorKeys(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 400, 240);
+    const stave1 = new Stave(10, 10, 350);
+    const stave2 = new Stave(10, 90, 350);
+    const keys = KeySignatureTests.MINOR_KEYS;
 
-      var keySig = null;
-      for (var i = 0; i < 8; ++i) {
-        keySig = new VF.KeySignature(keys[i]);
-        keySig.addToStave(stave);
-      }
+    let keySig = null;
+    for (let i = 0; i < 8; ++i) {
+      keySig = new KeySignature(keys[i]);
+      keySig.addToStave(stave1);
+    }
 
-      for (var n = 8; n < keys.length; ++n) {
-        keySig = new VF.KeySignature(keys[n]);
-        keySig.addToStave(stave2);
-      }
+    for (let n = 8; n < keys.length; ++n) {
+      keySig = new KeySignature(keys[n]);
+      keySig.addToStave(stave2);
+    }
 
-      stave.setContext(ctx);
-      stave.draw();
-      stave2.setContext(ctx);
-      stave2.draw();
+    stave1.setContext(ctx);
+    stave1.draw();
+    stave2.setContext(ctx);
+    stave2.draw();
 
-      ok(true, 'all pass');
-    },
-    endKeyWithClef: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 200);
-      ctx.scale(0.9, 0.9);
-      var stave1 = new VF.Stave(10, 10, 350);
-      stave1
-        .setKeySignature('G')
-        .setBegBarType(VF.Barline.type.REPEAT_BEGIN)
-        .setEndBarType(VF.Barline.type.REPEAT_END)
-        .setClef('treble')
-        .addTimeSignature('4/4')
-        .setEndClef('bass')
-        .setEndKeySignature('Cb');
-      var stave2 = new VF.Stave(10, 90, 350);
-      stave2.setKeySignature('Cb').setClef('bass').setEndClef('treble').setEndKeySignature('G');
+    ok(true, 'all pass');
+  },
+  endKeyWithClef(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 400, 200);
+    ctx.scale(0.9, 0.9);
+    const stave1 = new Stave(10, 10, 350);
+    stave1
+      .setKeySignature('G')
+      .setBegBarType(BarlineType.REPEAT_BEGIN)
+      .setEndBarType(BarlineType.REPEAT_END)
+      .setClef('treble')
+      .addTimeSignature('4/4')
+      .setEndClef('bass')
+      .setEndKeySignature('Cb');
+    const stave2 = new Stave(10, 90, 350);
+    stave2.setKeySignature('Cb').setClef('bass').setEndClef('treble').setEndKeySignature('G');
 
-      stave1.setContext(ctx).draw();
-      stave2.setContext(ctx).draw();
-      ok(true, 'all pass');
-    },
+    stave1.setContext(ctx).draw();
+    stave2.setContext(ctx).draw();
+    ok(true, 'all pass');
+  },
 
-    staveHelper: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 240);
-      var stave = new VF.Stave(10, 10, 350);
-      var stave2 = new VF.Stave(10, 90, 350);
-      var keys = KeySignature.MAJOR_KEYS;
+  staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 400, 240);
+    const stave1 = new Stave(10, 10, 350);
+    const stave2 = new Stave(10, 90, 350);
+    const keys = KeySignatureTests.MAJOR_KEYS;
 
-      for (var i = 0; i < 8; ++i) {
-        stave.addKeySignature(keys[i]);
-      }
+    for (let i = 0; i < 8; ++i) {
+      stave1.addKeySignature(keys[i]);
+    }
 
-      for (var n = 8; n < keys.length; ++n) {
-        stave2.addKeySignature(keys[n]);
-      }
+    for (let n = 8; n < keys.length; ++n) {
+      stave2.addKeySignature(keys[n]);
+    }
 
-      stave.setContext(ctx);
-      stave.draw();
-      stave2.setContext(ctx);
-      stave2.draw();
+    stave1.setContext(ctx);
+    stave1.draw();
+    stave2.setContext(ctx);
+    stave2.draw();
 
-      ok(true, 'all pass');
-    },
+    ok(true, 'all pass');
+  },
 
-    changeKey: function (options) {
-      var vf = VexFlowTests.makeFactory(options, 900);
+  changeKey(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 900);
 
-      var stave = vf.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
+    const stave = f.Stave(10, 10, 800).addClef('treble').addTimeSignature('C|');
 
-      var voice = vf
-        .Voice()
-        .setStrict(false)
-        .addTickables([
-          vf.KeySigNote({ key: 'Bb' }),
-          vf.StaveNote({ keys: ['c/4'], duration: '1' }),
-          vf.BarNote(),
-          vf.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
-          vf.StaveNote({ keys: ['c/4'], duration: '1' }),
-          vf.BarNote(),
-          vf.KeySigNote({ key: 'Bb' }),
-          vf.StaveNote({ keys: ['c/4'], duration: '1' }),
-          vf.BarNote(),
-          vf.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
-          vf.StaveNote({ keys: ['c/4'], duration: '1' }),
-        ]);
+    const voice = f
+      .Voice()
+      .setStrict(false)
+      .addTickables([
+        f.KeySigNote({ key: 'Bb' }),
+        f.StaveNote({ keys: ['c/4'], duration: '1' }),
+        f.BarNote(),
+        f.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
+        f.StaveNote({ keys: ['c/4'], duration: '1' }),
+        f.BarNote(),
+        f.KeySigNote({ key: 'Bb' }),
+        f.StaveNote({ keys: ['c/4'], duration: '1' }),
+        f.BarNote(),
+        f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
+        f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      ]);
 
-      vf.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      vf.draw();
+    f.draw();
 
-      ok(true, 'all pass');
-    },
-  };
+    ok(true, 'all pass');
+  },
+};
 
-  return KeySignature;
-})();
 export { KeySignatureTests };

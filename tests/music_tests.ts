@@ -1,7 +1,8 @@
-/**
- * VexFlow - Music API Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Music Tests
+
 import { Music } from '../src/music';
 import { KeyManager } from '../src/keymanager';
 import { QUnit, ok, test, expect, equal } from './declarations';
@@ -9,16 +10,16 @@ import { QUnit, ok, test, expect, equal } from './declarations';
 const MusicTests = {
   Start(): void {
     QUnit.module('MusicTests');
-    test('Valid Notes', MusicTests.validNotes);
-    test('Valid Keys', MusicTests.validKeys);
-    test('Note Values', MusicTests.noteValue);
-    test('Interval Values', MusicTests.intervalValue);
-    test('Relative Notes', MusicTests.relativeNotes);
-    test('Relative Note Names', MusicTests.relativeNoteNames);
-    test('Canonical Notes', MusicTests.canonicalNotes);
-    test('Canonical Intervals', MusicTests.canonicalIntervals);
-    test('Scale Tones', MusicTests.scaleTones);
-    test('Scale Intervals', MusicTests.scaleIntervals);
+    test('Valid Notes', this.validNotes);
+    test('Valid Keys', this.validKeys);
+    test('Note Values', this.noteValue);
+    test('Interval Values', this.intervalValue);
+    test('Relative Notes', this.relativeNotes);
+    test('Relative Note Names', this.relativeNoteNames);
+    test('Canonical Notes', this.canonicalNotes);
+    test('Canonical Intervals', this.canonicalIntervals);
+    test('Scale Tones', this.scaleTones);
+    test('Scale Intervals', this.scaleIntervals);
   },
 
   validNotes(): void {
@@ -273,34 +274,16 @@ const MusicTests = {
   scaleIntervals(): void {
     expect(6);
 
-    const music = new Music();
+    const m = new Music();
 
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('d'))),
-      'M2'
-    );
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('g'), music.getNoteValue('c'))),
-      'p4'
-    );
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('c'), music.getNoteValue('c'))),
-      'unison'
-    );
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('f'), music.getNoteValue('cb'))),
-      'dim5'
-    );
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('c'), m.getNoteValue('d'))), 'M2');
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('g'), m.getNoteValue('c'))), 'p4');
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('c'), m.getNoteValue('c'))), 'unison');
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('f'), m.getNoteValue('cb'))), 'dim5');
 
     // Forwards and backwards
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), 1)),
-      'b7'
-    );
-    equal(
-      music.getCanonicalIntervalName(music.getIntervalBetween(music.getNoteValue('d'), music.getNoteValue('c'), -1)),
-      'M2'
-    );
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('d'), m.getNoteValue('c'), 1)), 'b7');
+    equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('d'), m.getNoteValue('c'), -1)), 'M2');
   },
 };
 export { MusicTests };
