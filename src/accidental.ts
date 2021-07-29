@@ -414,6 +414,13 @@ export class Accidental extends Modifier {
         // applied
         note.keys.forEach((keyString: string, keyIndex: number) => {
           const key = music.getNoteParts(keyString.split('/')[0]);
+          // Add accidentals to key.accidental
+          note.getModifiers().forEach((modifier) => {
+            if (modifier instanceof Accidental && modifier.getIndex() == keyIndex) {
+              if (!key.accidental) key.accidental = '';
+              key.accidental += modifier.type;
+            }
+          });
 
           // Force a natural for every key without an accidental
           const accidentalString = key.accidental || 'n';
@@ -426,6 +433,13 @@ export class Accidental extends Modifier {
           // Determine if an identical pitch in the chord already
           // modified the accidental state
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
+
+          // Remove accidentals
+          note.getModifiers().forEach(function (modifier, index) {
+            if (modifier instanceof Accidental && modifier.getIndex() == keyIndex) {
+              note.getModifiers().splice(index, 1);
+            }
+          });
 
           // Add the accidental to the StaveNote
           if (!sameAccidental || (sameAccidental && previouslyModified)) {
