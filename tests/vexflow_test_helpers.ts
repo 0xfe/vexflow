@@ -217,17 +217,7 @@ class VexFlowTests {
     return vexOutput;
   }
 
-  /**
-   * @param options
-   * @param width
-   * @param height
-   * @returns
-   */
-  static makeFactory(
-    options: { elementId: any; backend: any } /* eslint-disable-line */,
-    width: number = 450,
-    height: number = 140
-  ): any /* Factory */ /* eslint-disable-line */ {
+  static makeFactory(options: TestOptions, width: number = 450, height: number = 140): Factory {
     return new Factory({
       renderer: {
         elementId: options.elementId,

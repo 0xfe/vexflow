@@ -104,8 +104,8 @@ VexFlowTests.run = function () {
   // PercussionTests.Start();
   // NoteSubGroupTests.Start();
   // ClefKeySignatureTests.Start();
-  // StaveHairpinTests.Start();
-  // RhythmTests.Start();
+  StaveHairpinTests.Start();
+  RhythmTests.Start();
   /*
   TupletTests.Start();
   BoundingBoxTests.Start();
