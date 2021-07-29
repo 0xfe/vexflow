@@ -4,9 +4,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Vex } from 'vex';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok, equal } from './declarations';
+import { Flow } from 'flow';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
 import { Stave } from 'stave';
@@ -204,7 +204,7 @@ const AccidentalTests = {
     const stave = f.Stave({ x: 0, y: 10, width: 780 });
     const score = f.EasyScore();
 
-    const accids = Object.keys(Vex.Flow.accidentalMap).filter(function (accid) {
+    const accids = Object.keys(Flow.accidentalMap).filter(function (accid) {
       return accid !== '{' && accid !== '}';
     });
 

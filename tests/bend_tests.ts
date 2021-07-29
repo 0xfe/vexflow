@@ -1,280 +1,284 @@
-/**
- * VexFlow - Accidental Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
-const BendTests = (function () {
-  var Bend = {
-    Start: function () {
-      QUnit.module('Bend');
-      VexFlowTests.runTests('Double Bends', Bend.doubleBends);
-      VexFlowTests.runTests('Reverse Bends', Bend.reverseBends);
-      VexFlowTests.runTests('Bend Phrase', Bend.bendPhrase);
-      VexFlowTests.runTests('Double Bends With Release', Bend.doubleBendsWithRelease);
-      VexFlowTests.runTests('Whako Bend', Bend.whackoBends);
-    },
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Bend Tests
 
-    doubleBends: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5);
-      ctx.fillStyle = '#221';
-      ctx.strokeStyle = '#221';
-      ctx.setRawFont(' 10pt Arial');
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+/* eslint-disable */
+// @ts-nocheck
 
-      function newNote(tab_struct) {
-        return new VF.TabNote(tab_struct);
-      }
-      function newBend(text) {
-        return new VF.Bend(text);
-      }
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
+import { ContextBuilder } from 'renderer';
+import { Bend } from 'bend';
 
-      var notes = [
-        newNote({
-          positions: [
-            { str: 2, fret: 10 },
-            { str: 4, fret: 9 },
-          ],
-          duration: 'q',
-        })
-          .addModifier(newBend('Full'), 0)
-          .addModifier(newBend('1/2'), 1),
+const BendTests = {
+  Start(): void {
+    QUnit.module('Bend');
+    VexFlowTests.runTests('Double Bends', this.doubleBends);
+    VexFlowTests.runTests('Reverse Bends', this.reverseBends);
+    VexFlowTests.runTests('Bend Phrase', this.bendPhrase);
+    VexFlowTests.runTests('Double Bends With Release', this.doubleBendsWithRelease);
+    VexFlowTests.runTests('Whako Bend', this.whackoBends);
+  },
 
-        newNote({
-          positions: [
-            { str: 2, fret: 5 },
-            { str: 3, fret: 5 },
-          ],
-          duration: 'q',
-        })
-          .addModifier(newBend('1/4'), 0)
-          .addModifier(newBend('1/4'), 1),
+  doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void {
+    const ctx = contextBuilder(options.elementId, 500, 240);
+    ctx.scale(1.5, 1.5);
+    ctx.fillStyle = '#221';
+    ctx.strokeStyle = '#221';
+    ctx.setRawFont(' 10pt Arial');
+    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-        newNote({
-          positions: [{ str: 4, fret: 7 }],
-          duration: 'h',
-        }),
-      ];
+    function newNote(tab_struct) {
+      return new VF.TabNote(tab_struct);
+    }
+    function newBend(text) {
+      return new Bend(text);
+    }
 
-      VF.Formatter.FormatAndDraw(ctx, stave, notes);
-      notes.forEach(function (note) {
-        VexFlowTests.plotNoteWidth(ctx, note, 140);
-      });
+    const notes = [
+      newNote({
+        positions: [
+          { str: 2, fret: 10 },
+          { str: 4, fret: 9 },
+        ],
+        duration: 'q',
+      })
+        .addModifier(newBend('Full'), 0)
+        .addModifier(newBend('1/2'), 1),
 
-      ok(true, 'Double Bends');
-    },
+      newNote({
+        positions: [
+          { str: 2, fret: 5 },
+          { str: 3, fret: 5 },
+        ],
+        duration: 'q',
+      })
+        .addModifier(newBend('1/4'), 0)
+        .addModifier(newBend('1/4'), 1),
 
-    doubleBendsWithRelease: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 550, 240);
-      ctx.scale(1.0, 1.0);
-      ctx.setBackgroundFillStyle('#FFF');
-      ctx.setFont('Arial', VexFlowTests.Font.size);
-      var stave = new VF.TabStave(10, 10, 550).addTabGlyph().setContext(ctx).draw();
+      newNote({
+        positions: [{ str: 4, fret: 7 }],
+        duration: 'h',
+      }),
+    ];
 
-      function newNote(tab_struct) {
-        return new VF.TabNote(tab_struct);
-      }
-      function newBend(text, release) {
-        return new VF.Bend(text, release);
-      }
+    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    notes.forEach(function (note) {
+      VexFlowTests.plotNoteWidth(ctx, note, 140);
+    });
 
-      var notes = [
-        newNote({
-          positions: [
-            { str: 1, fret: 10 },
-            { str: 4, fret: 9 },
-          ],
-          duration: 'q',
-        })
-          .addModifier(newBend('1/2', true), 0)
-          .addModifier(newBend('Full', true), 1),
+    ok(true, 'Double Bends');
+  },
 
-        newNote({
-          positions: [
-            { str: 2, fret: 5 },
-            { str: 3, fret: 5 },
-            { str: 4, fret: 5 },
-          ],
-          duration: 'q',
-        })
-          .addModifier(newBend('1/4', true), 0)
-          .addModifier(newBend('Monstrous', true), 1)
-          .addModifier(newBend('1/4', true), 2),
+  doubleBendsWithRelease(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 550, 240);
+    ctx.scale(1.0, 1.0);
+    ctx.setBackgroundFillStyle('#FFF');
+    ctx.setFont('Arial', VexFlowTests.Font.size);
+    const stave = new VF.TabStave(10, 10, 550).addTabGlyph().setContext(ctx).draw();
 
-        newNote({
-          positions: [{ str: 4, fret: 7 }],
-          duration: 'q',
-        }),
-        newNote({
-          positions: [{ str: 4, fret: 7 }],
-          duration: 'q',
-        }),
-      ];
+    function newNote(tab_struct) {
+      return new VF.TabNote(tab_struct);
+    }
+    function newBend(text, release) {
+      return new Bend(text, release);
+    }
 
-      VF.Formatter.FormatAndDraw(ctx, stave, notes);
-      notes.forEach(function (note) {
-        VexFlowTests.plotNoteWidth(ctx, note, 140);
-      });
-      ok(true, 'Bend Release');
-    },
+    const notes = [
+      newNote({
+        positions: [
+          { str: 1, fret: 10 },
+          { str: 4, fret: 9 },
+        ],
+        duration: 'q',
+      })
+        .addModifier(newBend('1/2', true), 0)
+        .addModifier(newBend('Full', true), 1),
 
-    reverseBends: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      newNote({
+        positions: [
+          { str: 2, fret: 5 },
+          { str: 3, fret: 5 },
+          { str: 4, fret: 5 },
+        ],
+        duration: 'q',
+      })
+        .addModifier(newBend('1/4', true), 0)
+        .addModifier(newBend('Monstrous', true), 1)
+        .addModifier(newBend('1/4', true), 2),
 
-      ctx.scale(1.5, 1.5);
-      ctx.fillStyle = '#221';
-      ctx.strokeStyle = '#221';
-      ctx.setRawFont('10pt Arial');
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+      newNote({
+        positions: [{ str: 4, fret: 7 }],
+        duration: 'q',
+      }),
+      newNote({
+        positions: [{ str: 4, fret: 7 }],
+        duration: 'q',
+      }),
+    ];
 
-      function newNote(tab_struct) {
-        return new VF.TabNote(tab_struct);
-      }
-      function newBend(text) {
-        return new VF.Bend(text);
-      }
+    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    notes.forEach(function (note) {
+      VexFlowTests.plotNoteWidth(ctx, note, 140);
+    });
+    ok(true, 'Bend Release');
+  },
 
-      var notes = [
-        newNote({
-          positions: [
-            { str: 2, fret: 10 },
-            { str: 4, fret: 9 },
-          ],
-          duration: 'w',
-        })
-          .addModifier(newBend('Full'), 1)
-          .addModifier(newBend('1/2'), 0),
+  reverseBends(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 500, 240);
 
-        newNote({
-          positions: [
-            { str: 2, fret: 5 },
-            { str: 3, fret: 5 },
-          ],
-          duration: 'w',
-        })
-          .addModifier(newBend('1/4'), 1)
-          .addModifier(newBend('1/4'), 0),
+    ctx.scale(1.5, 1.5);
+    ctx.fillStyle = '#221';
+    ctx.strokeStyle = '#221';
+    ctx.setRawFont('10pt Arial');
+    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-        newNote({
-          positions: [{ str: 4, fret: 7 }],
-          duration: 'w',
-        }),
-      ];
+    function newNote(tab_struct) {
+      return new VF.TabNote(tab_struct);
+    }
+    function newBend(text) {
+      return new Bend(text);
+    }
 
-      for (var i = 0; i < notes.length; ++i) {
-        var note = notes[i];
-        var mc = new VF.ModifierContext();
-        note.addToModifierContext(mc);
+    const notes = [
+      newNote({
+        positions: [
+          { str: 2, fret: 10 },
+          { str: 4, fret: 9 },
+        ],
+        duration: 'w',
+      })
+        .addModifier(newBend('Full'), 1)
+        .addModifier(newBend('1/2'), 0),
 
-        var tickContext = new VF.TickContext();
-        tickContext
-          .addTickable(note)
-          .preFormat()
-          .setX(75 * i);
+      newNote({
+        positions: [
+          { str: 2, fret: 5 },
+          { str: 3, fret: 5 },
+        ],
+        duration: 'w',
+      })
+        .addModifier(newBend('1/4'), 1)
+        .addModifier(newBend('1/4'), 0),
 
-        note.setStave(stave).setContext(ctx).draw();
-        VexFlowTests.plotNoteWidth(ctx, note, 140);
-        ok(true, 'Bend ' + i);
-      }
-    },
+      newNote({
+        positions: [{ str: 4, fret: 7 }],
+        duration: 'w',
+      }),
+    ];
 
-    bendPhrase: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
-      ctx.scale(1.5, 1.5);
-      ctx.fillStyle = '#221';
-      ctx.strokeStyle = '#221';
-      ctx.setRawFont(' 10pt Arial');
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    for (let i = 0; i < notes.length; ++i) {
+      const note = notes[i];
+      const mc = new VF.ModifierContext();
+      note.addToModifierContext(mc);
 
-      function newNote(tab_struct) {
-        return new VF.TabNote(tab_struct);
-      }
-      function newBend(phrase) {
-        return new VF.Bend(null, null, phrase);
-      }
+      const tickContext = new VF.TickContext();
+      tickContext
+        .addTickable(note)
+        .preFormat()
+        .setX(75 * i);
 
-      var phrase1 = [
-        { type: VF.Bend.UP, text: 'Full' },
-        { type: VF.Bend.DOWN, text: 'Monstrous' },
-        { type: VF.Bend.UP, text: '1/2' },
-        { type: VF.Bend.DOWN, text: '' },
-      ];
-      var bend1 = newBend(phrase1).setContext(ctx);
+      note.setStave(stave).setContext(ctx).draw();
+      VexFlowTests.plotNoteWidth(ctx, note, 140);
+      ok(true, 'Bend ' + i);
+    }
+  },
 
-      var notes = [
-        newNote({
-          positions: [{ str: 2, fret: 10 }],
-          duration: 'w',
-        }).addModifier(bend1, 0),
-      ];
+  bendPhrase(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 500, 240);
+    ctx.scale(1.5, 1.5);
+    ctx.fillStyle = '#221';
+    ctx.strokeStyle = '#221';
+    ctx.setRawFont(' 10pt Arial');
+    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-      for (var i = 0; i < notes.length; ++i) {
-        var note = notes[i];
-        var mc = new VF.ModifierContext();
-        note.addToModifierContext(mc);
+    function newNote(tab_struct) {
+      return new VF.TabNote(tab_struct);
+    }
+    function newBend(phrase) {
+      return new Bend(null, null, phrase);
+    }
 
-        var tickContext = new VF.TickContext();
-        tickContext
-          .addTickable(note)
-          .preFormat()
-          .setX(75 * i);
+    const phrase1 = [
+      { type: Bend.UP, text: 'Full' },
+      { type: Bend.DOWN, text: 'Monstrous' },
+      { type: Bend.UP, text: '1/2' },
+      { type: Bend.DOWN, text: '' },
+    ];
+    const bend1 = newBend(phrase1).setContext(ctx);
 
-        note.setStave(stave).setContext(ctx).draw();
-        VexFlowTests.plotNoteWidth(ctx, note, 140);
-        ok(true, 'Bend ' + i);
-      }
-    },
+    const notes = [
+      newNote({
+        positions: [{ str: 2, fret: 10 }],
+        duration: 'w',
+      }).addModifier(bend1, 0),
+    ];
 
-    whackoBends: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 240);
-      ctx.scale(1.0, 1.0);
-      ctx.setBackgroundFillStyle('#FFF');
-      ctx.setFont('Arial', VexFlowTests.Font.size);
-      var stave = new VF.TabStave(10, 10, 350).addTabGlyph().setContext(ctx).draw();
+    for (let i = 0; i < notes.length; ++i) {
+      const note = notes[i];
+      const mc = new VF.ModifierContext();
+      note.addToModifierContext(mc);
 
-      function newNote(tab_struct) {
-        return new VF.TabNote(tab_struct);
-      }
-      function newBend(phrase) {
-        return new VF.Bend(null, null, phrase);
-      }
+      const tickContext = new VF.TickContext();
+      tickContext
+        .addTickable(note)
+        .preFormat()
+        .setX(75 * i);
 
-      var phrase1 = [
-        { type: VF.Bend.UP, text: 'Full' },
-        { type: VF.Bend.DOWN, text: '' },
-        { type: VF.Bend.UP, text: '1/2' },
-        { type: VF.Bend.DOWN, text: '' },
-      ];
+      note.setStave(stave).setContext(ctx).draw();
+      VexFlowTests.plotNoteWidth(ctx, note, 140);
+      ok(true, 'Bend ' + i);
+    }
+  },
 
-      var phrase2 = [
-        { type: VF.Bend.UP, text: 'Full' },
-        { type: VF.Bend.UP, text: 'Full' },
-        { type: VF.Bend.UP, text: '1/2' },
-        { type: VF.Bend.DOWN, text: '' },
-        { type: VF.Bend.DOWN, text: 'Full' },
-        { type: VF.Bend.DOWN, text: 'Full' },
-        { type: VF.Bend.UP, text: '1/2' },
-        { type: VF.Bend.DOWN, text: '' },
-      ];
+  whackoBends(options, contextBuilder) {
+    const ctx = contextBuilder(options.elementId, 400, 240);
+    ctx.scale(1.0, 1.0);
+    ctx.setBackgroundFillStyle('#FFF');
+    ctx.setFont('Arial', VexFlowTests.Font.size);
+    const stave = new VF.TabStave(10, 10, 350).addTabGlyph().setContext(ctx).draw();
 
-      var notes = [
-        newNote({
-          positions: [
-            { str: 2, fret: 10 },
-            { str: 3, fret: 9 },
-          ],
-          duration: 'q',
-        })
-          .addModifier(newBend(phrase1), 0)
-          .addModifier(newBend(phrase2), 1),
-      ];
+    function newNote(tab_struct) {
+      return new VF.TabNote(tab_struct);
+    }
+    function newBend(phrase) {
+      return new Bend(null, null, phrase);
+    }
 
-      VF.Formatter.FormatAndDraw(ctx, stave, notes);
-      VexFlowTests.plotNoteWidth(ctx, notes[0], 140);
-      ok(true, 'Whako Release');
-    },
-  };
+    const phrase1 = [
+      { type: Bend.UP, text: 'Full' },
+      { type: Bend.DOWN, text: '' },
+      { type: Bend.UP, text: '1/2' },
+      { type: Bend.DOWN, text: '' },
+    ];
 
-  return Bend;
-})();
-VexFlowTests.Bend = BendTests;
+    const phrase2 = [
+      { type: Bend.UP, text: 'Full' },
+      { type: Bend.UP, text: 'Full' },
+      { type: Bend.UP, text: '1/2' },
+      { type: Bend.DOWN, text: '' },
+      { type: Bend.DOWN, text: 'Full' },
+      { type: Bend.DOWN, text: 'Full' },
+      { type: Bend.UP, text: '1/2' },
+      { type: Bend.DOWN, text: '' },
+    ];
+
+    const notes = [
+      newNote({
+        positions: [
+          { str: 2, fret: 10 },
+          { str: 3, fret: 9 },
+        ],
+        duration: 'q',
+      })
+        .addModifier(newBend(phrase1), 0)
+        .addModifier(newBend(phrase2), 1),
+    ];
+
+    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    VexFlowTests.plotNoteWidth(ctx, notes[0], 140);
+    ok(true, 'Whako Release');
+  },
+};
 export { BendTests };

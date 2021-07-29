@@ -71,12 +71,13 @@ VexFlowTests.run = function () {
   VoiceTests.Start();
   NoteHeadTests.Start();
   TabNoteTests.Start();
-  */
   TickContextTests.Start();
   ModifierContextTests.Start();
-  // DotTests.Start();
-  // BendTests.Start();
-  FormatterTests.Start();
+  */
+  DotTests.Start();
+  BendTests.Start();
+  /*FormatterTests.Start();*/
+
   // FractionTests.Start();
   // ClefTests.Start();
   // KeySignatureTests.Start();
@@ -106,8 +107,8 @@ VexFlowTests.run = function () {
   // ClefKeySignatureTests.Start();
   // StaveHairpinTests.Start();
   // RhythmTests.Start();
-  // TupletTests.Start();
   /*
+  TupletTests.Start();
   BoundingBoxTests.Start();
   StrokesTests.Start();
   StringNumberTests.Start();
