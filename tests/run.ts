@@ -73,13 +73,12 @@ VexFlowTests.run = function () {
   TabNoteTests.Start();
   TickContextTests.Start();
   ModifierContextTests.Start();
-  */
   DotTests.Start();
   BendTests.Start();
-  /*FormatterTests.Start();*/
-
-  // FractionTests.Start();
-  // ClefTests.Start();
+  FormatterTests.Start();
+  FractionTests.Start();
+  ClefTests.Start();
+  */
   // KeySignatureTests.Start();
   // TimeSignatureTests.Start();
   // StaveTieTests.Start();

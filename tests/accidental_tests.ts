@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Accidental Tests
 
 /* eslint-disable */
 // @ts-nocheck
@@ -30,34 +32,25 @@ function makeNewAccid(factory: any) {
   };
 }
 
-/**
- * Accidental Tests
- */
 const AccidentalTests = {
   Start() {
     QUnit.module('Accidental');
-    VexFlowTests.runTests('Accidental Padding', AccidentalTests.formatAccidentalSpaces);
-    VexFlowTests.runTests('Basic', AccidentalTests.basic);
-    VexFlowTests.runTests('Stem Down', AccidentalTests.basicStemDown);
-    VexFlowTests.runTests('Cautionary Accidental', AccidentalTests.cautionary);
-    VexFlowTests.runTests('Accidental Arrangement Special Cases', AccidentalTests.specialCases);
-    VexFlowTests.runTests('Multi Voice', AccidentalTests.multiVoice);
-    VexFlowTests.runTests('Microtonal', AccidentalTests.microtonal);
-    VexFlowTests.runTests('Microtonal (Iranian)', AccidentalTests.microtonal_iranian);
-    VexFlowTests.runTests('Sagittal', AccidentalTests.sagittal);
-    QUnit.test('Automatic Accidentals - Simple Tests', AccidentalTests.autoAccidentalWorking);
-    VexFlowTests.runTests('Automatic Accidentals', AccidentalTests.automaticAccidentals0);
-    VexFlowTests.runTests('Automatic Accidentals - C major scale in Ab', AccidentalTests.automaticAccidentals1);
-    VexFlowTests.runTests('Automatic Accidentals - No Accidentals Necsesary', AccidentalTests.automaticAccidentals2);
-    VexFlowTests.runTests(
-      'Automatic Accidentals - Multi Voice Inline',
-      AccidentalTests.automaticAccidentalsMultiVoiceInline
-    );
-    VexFlowTests.runTests(
-      'Automatic Accidentals - Multi Voice Offset',
-      AccidentalTests.automaticAccidentalsMultiVoiceOffset
-    );
-    VexFlowTests.runTests('Factory API', AccidentalTests.factoryAPI);
+    VexFlowTests.runTests('Accidental Padding', this.formatAccidentalSpaces);
+    VexFlowTests.runTests('Basic', this.basic);
+    VexFlowTests.runTests('Stem Down', this.basicStemDown);
+    VexFlowTests.runTests('Cautionary Accidental', this.cautionary);
+    VexFlowTests.runTests('Accidental Arrangement Special Cases', this.specialCases);
+    VexFlowTests.runTests('Multi Voice', this.multiVoice);
+    VexFlowTests.runTests('Microtonal', this.microtonal);
+    VexFlowTests.runTests('Microtonal (Iranian)', this.microtonal_iranian);
+    VexFlowTests.runTests('Sagittal', this.sagittal);
+    QUnit.test('Automatic Accidentals - Simple Tests', this.autoAccidentalWorking);
+    VexFlowTests.runTests('Automatic Accidentals', this.automaticAccidentals0);
+    VexFlowTests.runTests('Automatic Accidentals - C major scale in Ab', this.automaticAccidentals1);
+    VexFlowTests.runTests('Automatic Accidentals - No Accidentals Necsesary', this.automaticAccidentals2);
+    VexFlowTests.runTests('Automatic Accidentals - Multi Voice Inline', this.automaticAccidentalsMultiVoiceInline);
+    VexFlowTests.runTests('Automatic Accidentals - Multi Voice Offset', this.automaticAccidentalsMultiVoiceOffset);
+    VexFlowTests.runTests('Factory API', this.factoryAPI);
   },
 
   formatAccidentalSpaces(options: TestOptions) {
@@ -379,7 +372,7 @@ const AccidentalTests = {
       .addAccidental(2, newAccid('##'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 60);
+    this.showNotes(note1, note2, stave, ctx, 60);
 
     note1 = f
       .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
@@ -393,7 +386,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 150);
+    this.showNotes(note1, note2, stave, ctx, 150);
 
     note1 = f
       .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
@@ -407,7 +400,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 250);
+    this.showNotes(note1, note2, stave, ctx, 250);
     VexFlowTests.plotLegendForNoteWidth(ctx, 350, 150);
 
     ok(true, 'Full Accidental');

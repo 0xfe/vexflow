@@ -1,13 +1,15 @@
 import { Flow } from 'flow';
+import { QUnit } from './declarations';
+import { VexFlowTests } from './vexflow_test_helpers';
 
 /**
  * VexFlow - Annotation Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const AnnotationTests = (function () {
-  var runTests = VexFlowTests.runTests;
-  var Annotation = {
+  const Annotation = {
     Start: function () {
+      const runTests = VexFlowTests.runTests;
       QUnit.module('Annotation');
       runTests('Lyrics', Annotation.lyrics);
       runTests('Simple Annotation', Annotation.simple);
@@ -30,11 +32,11 @@ const AnnotationTests = (function () {
       let ratio = 1;
       var registry = new VF.Registry();
       VF.Registry.enableDefaultRegistry(registry);
-      var vf = VexFlowTests.makeFactory(options, 750, 260);
-      for (var i = 0; i < 3; ++i) {
-        var score = vf.EasyScore();
+      const vf = VexFlowTests.makeFactory(options, 750, 260);
+      for (let i = 0; i < 3; ++i) {
+        const score = vf.EasyScore();
         score.set({ time: '3/4' });
-        var system = vf.System({ width, x });
+        const system = vf.System({ width, x });
         system.addStave({
           voices: [
             score.voice(
@@ -61,12 +63,12 @@ const AnnotationTests = (function () {
       ok(true);
     },
     simple: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
       ctx.font = ' 10pt Arial';
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+      const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
@@ -78,7 +80,7 @@ const AnnotationTests = (function () {
         return new VF.Annotation(text);
       }
 
-      var notes = [
+      const notes = [
         newNote({
           positions: [
             { str: 2, fret: 10 },
@@ -99,11 +101,11 @@ const AnnotationTests = (function () {
     },
 
     standard: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
-      var stave = new VF.Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
+      const stave = new VF.Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
       function newNote(note_struct) {
         return new VF.StaveNote(note_struct);
@@ -112,7 +114,7 @@ const AnnotationTests = (function () {
         return new VF.Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
       }
 
-      var notes = [
+      const notes = [
         newNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, newAnnotation('quiet')),
         newNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addAnnotation(2, newAnnotation('Allegro')),
       ];
@@ -122,12 +124,12 @@ const AnnotationTests = (function () {
     },
 
     harmonic: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
       ctx.font = ' 10pt Arial';
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+      const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
@@ -136,7 +138,7 @@ const AnnotationTests = (function () {
         return new VF.Annotation(text);
       }
 
-      var notes = [
+      const notes = [
         newNote({
           positions: [
             { str: 2, fret: 12 },
@@ -157,12 +159,12 @@ const AnnotationTests = (function () {
     },
 
     picking: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.setFillStyle('#221');
       ctx.setStrokeStyle('#221');
       ctx.setFont('Arial', VexFlowTests.Font.size, '');
-      var stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+      const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
@@ -171,7 +173,7 @@ const AnnotationTests = (function () {
         return new VF.Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
       }
 
-      var notes = [
+      const notes = [
         newNote({
           positions: [
             { str: 1, fret: 0 },
@@ -205,11 +207,11 @@ const AnnotationTests = (function () {
     },
 
     bottom: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
-      var stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
+      const stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
       function newNote(note_struct) {
         return new VF.StaveNote(note_struct);
@@ -220,7 +222,7 @@ const AnnotationTests = (function () {
           .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
       }
 
-      var notes = [
+      const notes = [
         newNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, newAnnotation('F')),
         newNote({ keys: ['a/4'], duration: 'w' }).addAnnotation(0, newAnnotation('A')),
         newNote({ keys: ['c/5'], duration: 'w' }).addAnnotation(0, newAnnotation('C')),
@@ -232,14 +234,14 @@ const AnnotationTests = (function () {
     },
 
     bottomWithBeam: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 500, 240);
+      const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
-      var stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
+      const stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
       // Create some notes
-      var notes = [
+      const notes = [
         new VF.StaveNote({ keys: ['a/3'], duration: '8' }).addModifier(
           new VF.Annotation('good').setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
           0
@@ -261,7 +263,7 @@ const AnnotationTests = (function () {
         ),
       ];
 
-      var beam = new VF.Beam(notes.slice(1));
+      const beam = new VF.Beam(notes.slice(1));
 
       VF.Formatter.FormatAndDraw(ctx, stave, notes);
       beam.setContext(ctx).draw();
@@ -269,7 +271,7 @@ const AnnotationTests = (function () {
     },
 
     justificationStemUp: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 650, 950);
+      const ctx = contextBuilder(options.elementId, 650, 950);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -284,10 +286,10 @@ const AnnotationTests = (function () {
           .setVerticalJustification(vJustifcation);
       }
 
-      for (var v = 1; v <= 4; ++v) {
-        var stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
+      for (let v = 1; v <= 4; ++v) {
+        const stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
-        var notes = [];
+        const notes = [];
 
         notes.push(newNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 1, v)));
         notes.push(newNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 2, v)));
@@ -301,7 +303,7 @@ const AnnotationTests = (function () {
     },
 
     justificationStemDown: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 650, 1000);
+      const ctx = contextBuilder(options.elementId, 650, 1000);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
       ctx.strokeStyle = '#221';
@@ -316,10 +318,10 @@ const AnnotationTests = (function () {
           .setVerticalJustification(vJustifcation);
       }
 
-      for (var v = 1; v <= 4; ++v) {
-        var stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
+      for (let v = 1; v <= 4; ++v) {
+        const stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
-        var notes = [];
+        const notes = [];
 
         notes.push(
           newNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, newAnnotation('Text', 1, v))
@@ -341,13 +343,13 @@ const AnnotationTests = (function () {
     },
 
     tabNotes: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 600, 200);
+      const ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
-      var stave = new VF.TabStave(10, 10, 550);
+      const stave = new VF.TabStave(10, 10, 550);
       stave.setContext(ctx);
       stave.draw();
 
-      var specs = [
+      const specs = [
         {
           positions: [
             { str: 3, fret: 6 },
@@ -378,21 +380,21 @@ const AnnotationTests = (function () {
         },
       ];
 
-      var notes = specs.map(function (noteSpec) {
-        var tabNote = new VF.TabNote(noteSpec);
+      const notes = specs.map(function (noteSpec) {
+        const tabNote = new VF.TabNote(noteSpec);
         tabNote.render_options.draw_stem = true;
         return tabNote;
       });
 
-      var notes2 = specs.map(function (noteSpec) {
-        var tabNote = new VF.TabNote(noteSpec);
+      const notes2 = specs.map(function (noteSpec) {
+        const tabNote = new VF.TabNote(noteSpec);
         tabNote.render_options.draw_stem = true;
         tabNote.setStemDirection(-1);
         return tabNote;
       });
 
-      var notes3 = specs.map(function (noteSpec) {
-        var tabNote = new VF.TabNote(noteSpec);
+      const notes3 = specs.map(function (noteSpec) {
+        const tabNote = new VF.TabNote(noteSpec);
         return tabNote;
       });
 
@@ -411,7 +413,7 @@ const AnnotationTests = (function () {
       notes3[2].addModifier(new VF.Annotation('Text').setVerticalJustification(3), 0); // U
       notes3[3].addModifier(new VF.Annotation('Text').setVerticalJustification(4), 0); // D
 
-      var voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+      const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
 
       voice.addTickables(notes);
       voice.addTickables(notes2);
@@ -427,5 +429,5 @@ const AnnotationTests = (function () {
 
   return Annotation;
 })();
-VexFlowTests.Annotation = AnnotationTests;
+
 export { AnnotationTests };
