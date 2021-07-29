@@ -76,7 +76,7 @@ VexFlowTests.run = function () {
   // ModifierContextTests.Start();
   // DotTests.Start();
   // BendTests.Start();
-  // FormatterTests.Start();
+  FormatterTests.Start();
   // FractionTests.Start();
   // ClefTests.Start();
   // KeySignatureTests.Start();
