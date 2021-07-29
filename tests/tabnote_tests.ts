@@ -12,12 +12,13 @@ import { Formatter } from 'formatter';
 import { TabNote } from 'tabnote';
 import { Stave } from 'stave';
 import { TickContext } from 'tickcontext';
+import { ContextBuilder } from 'renderer';
 
 /**
  * TabNote Tests
  */
 const TabNoteTests = {
-  Start() {
+  Start(): void {
     QUnit.module('TabNote');
 
     test('Tick', TabNoteTests.ticks);
@@ -34,7 +35,7 @@ const TabNoteTests = {
     run('TabNote Stems with Dots', TabNoteTests.drawStemsDotted);
   },
 
-  ticks() {
+  ticks(): void {
     const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     let note = new TabNote({ positions: [{ str: 6, fret: 6 }], duration: '1' });
@@ -108,7 +109,7 @@ const TabNoteTests = {
     return note;
   },
 
-  draw(options, contextBuilder) {
+  draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 140);
 
     ctx.font = '10pt Arial';
@@ -176,7 +177,7 @@ const TabNoteTests = {
     }
   },
 
-  drawStemsUp(options, contextBuilder) {
+  drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
     const stave = new VF.TabStave(10, 30, 550);
@@ -248,7 +249,7 @@ const TabNoteTests = {
     ok(true, 'TabNotes successfully drawn');
   },
 
-  drawStemsDown(options, contextBuilder) {
+  drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
 
     ctx.font = '10pt Arial';
@@ -322,7 +323,7 @@ const TabNoteTests = {
     ok(true, 'All objects have been drawn');
   },
 
-  drawStemsUpThrough(options, contextBuilder) {
+  drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
     const stave = new VF.TabStave(10, 30, 550);
@@ -396,7 +397,7 @@ const TabNoteTests = {
     ok(true, 'TabNotes successfully drawn');
   },
 
-  drawStemsDownThrough(options, contextBuilder) {
+  drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 250);
 
     ctx.font = '10pt Arial';
@@ -476,7 +477,7 @@ const TabNoteTests = {
     ok(true, 'All objects have been drawn');
   },
 
-  drawStemsDotted(options, contextBuilder) {
+  drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
     const stave = new VF.TabStave(10, 10, 550);

@@ -1,20 +1,21 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// StaveNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
+/* xeslint-disable */
+// x@ts-nocheck
 
+import { QUnit, ok, test, throws, equal, expect } from './declarations';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { Stem } from 'stem';
 import { TickContext } from 'tickcontext';
 import { Vex } from 'vex';
-import { QUnit, ok, test, throws, equal, expect } from './declarations';
-import { VexFlowTests } from './vexflow_test_helpers';
+import { Flow } from 'flow';
 
-/**
- * StaveNote Tests
- */
 const StaveNoteTests = {
   Start() {
     const runTests = VexFlowTests.runTests;
@@ -69,7 +70,7 @@ const StaveNoteTests = {
   },
 
   ticks() {
-    const BEAT = (1 * Vex.Flow.RESOLUTION) / 4;
+    const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     const tickTests = {
       // Key value pairs of `testName: [durationString, expectedBeats, expectedNoteType]`
@@ -126,7 +127,7 @@ const StaveNoteTests = {
   },
 
   ticksNewApi() {
-    const BEAT = (1 * Vex.Flow.RESOLUTION) / 4;
+    const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
     const tickTests = {
@@ -250,7 +251,7 @@ const StaveNoteTests = {
       const whole_note = new StaveNote({ keys: keys, duration: 'w' });
       equal(
         whole_note.getStemExtension(),
-        -1 * Vex.Flow.STEM_HEIGHT,
+        -1 * Flow.STEM_HEIGHT,
         'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * VF.STEM_HEIGHT'
       );
     });
@@ -326,7 +327,7 @@ const StaveNoteTests = {
     return note;
   },
 
-  draw(options, contextBuilder) {
+  draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const clef = options.params.clef;
     const octaveShift = options.params.octaveShift;
     const restKey = options.params.restKey;
@@ -404,7 +405,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawBoundingBoxes(options, contextBuilder) {
+  drawBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder): void {
     const clef = options.params.clef;
     const octaveShift = options.params.octaveShift;
     const restKey = options.params.restKey;
@@ -466,7 +467,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawBass(options, contextBuilder) {
+  drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
     expect(40);
     const ctx = contextBuilder(options.elementId, 600, 280);
     const stave = new Stave(10, 10, 650);
@@ -507,7 +508,7 @@ const StaveNoteTests = {
     }
   },
 
-  displacements(options, contextBuilder) {
+  displacements(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 700, 140);
     ctx.scale(0.9, 0.9);
     ctx.fillStyle = '#221';
@@ -548,7 +549,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawHarmonicAndMuted(options, contextBuilder) {
+  drawHarmonicAndMuted(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 1000, 180);
     const stave = new VF.Stave(10, 10, 950);
     stave.setContext(ctx);
@@ -604,7 +605,7 @@ const StaveNoteTests = {
     }
   },
 
-  drawSlash(options, contextBuilder) {
+  drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 700, 180);
     const stave = new VF.Stave(10, 10, 650);
     stave.setContext(ctx);
@@ -652,7 +653,7 @@ const StaveNoteTests = {
     ok('Slash Note Heads');
   },
 
-  drawKeyStyles(options, contextBuilder) {
+  drawKeyStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 300, 280);
     ctx.scale(3, 3);
 
@@ -672,7 +673,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawNoteStyles(options, contextBuilder) {
+  drawNoteStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -692,7 +693,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawNoteStemStyles(options, contextBuilder) {
+  drawNoteStemStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -711,7 +712,7 @@ const StaveNoteTests = {
     ok('Note Stem Style');
   },
 
-  drawNoteStemLengths(options, contextBuilder) {
+  drawNoteStemLengths(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 975, 150);
     const stave = new VF.Stave(10, 10, 975);
     stave.setContext(ctx).draw();
@@ -769,7 +770,7 @@ const StaveNoteTests = {
     ok('Note Stem Length');
   },
 
-  drawNoteStylesWithFlag(options, contextBuilder) {
+  drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 300, 280);
     const stave = new VF.Stave(10, 0, 100);
     ctx.scale(3, 3);
@@ -789,7 +790,7 @@ const StaveNoteTests = {
     ok(note.getYs().length > 0, 'Note has Y values');
   },
 
-  drawBeamStyles(options, contextBuilder) {
+  drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 160);
     const stave = new VF.Stave(10, 10, 380);
     stave.setStyle({
@@ -880,7 +881,7 @@ const StaveNoteTests = {
     return note;
   },
 
-  dotsAndFlagsStemUp(options, contextBuilder) {
+  dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -920,7 +921,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndFlagsStemDown(options, contextBuilder) {
+  dotsAndFlagsStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 160);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -956,7 +957,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndBeamsUp(options, contextBuilder) {
+  dotsAndBeamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');
@@ -998,7 +999,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  dotsAndBeamsDown(options, contextBuilder) {
+  dotsAndBeamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 160);
     ctx.scale(1.0, 1.0);
     ctx.setFillStyle('#221');

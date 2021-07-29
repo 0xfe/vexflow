@@ -1,84 +1,83 @@
-/**
- * VexFlow - Music Key Management Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
-const KeyManagerTests = (function () {
-  var KeyManager = {
-    Start: function () {
-      QUnit.module('KeyManager');
-      test('Valid Notes', KeyManager.works);
-      test('Select Notes', KeyManager.selectNotes);
-    },
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Music Key Management Tests
 
-    works: function () {
-      // expect(1);
+import { QUnit, test, equal } from './declarations';
+import { KeyManager } from 'keymanager';
 
-      var manager = new VF.KeyManager('g');
-      equal(manager.getAccidental('f').accidental, '#');
+const KeyManagerTests = {
+  Start(): void {
+    QUnit.module('KeyManager');
+    test('Valid Notes', this.works);
+    test('Select Notes', this.selectNotes);
+  },
 
-      manager.setKey('a');
-      equal(manager.getAccidental('c').accidental, '#');
-      equal(manager.getAccidental('a').accidental, null);
-      equal(manager.getAccidental('f').accidental, '#');
+  works(): void {
+    const manager = new KeyManager('g');
+    equal(manager.getAccidental('f').accidental, '#');
 
-      manager.setKey('A');
-      equal(manager.getAccidental('c').accidental, '#');
-      equal(manager.getAccidental('a').accidental, null);
-      equal(manager.getAccidental('f').accidental, '#');
-    },
+    manager.setKey('a');
+    equal(manager.getAccidental('c').accidental, '#');
+    equal(manager.getAccidental('a').accidental, null);
+    equal(manager.getAccidental('f').accidental, '#');
 
-    selectNotes: function () {
-      var manager = new VF.KeyManager('f');
-      equal(manager.selectNote('bb').note, 'bb');
-      equal(manager.selectNote('bb').accidental, 'b');
-      equal(manager.selectNote('g').note, 'g');
-      equal(manager.selectNote('g').accidental, null);
-      equal(manager.selectNote('b').note, 'b');
-      equal(manager.selectNote('b').accidental, null);
-      equal(manager.selectNote('a#').note, 'bb');
-      equal(manager.selectNote('g#').note, 'g#');
+    manager.setKey('A');
+    equal(manager.getAccidental('c').accidental, '#');
+    equal(manager.getAccidental('a').accidental, null);
+    equal(manager.getAccidental('f').accidental, '#');
+  },
 
-      // Changes have no effect?
-      equal(manager.selectNote('g#').note, 'g#');
-      equal(manager.selectNote('bb').note, 'bb');
-      equal(manager.selectNote('bb').accidental, 'b');
-      equal(manager.selectNote('g').note, 'g');
-      equal(manager.selectNote('g').accidental, null);
-      equal(manager.selectNote('b').note, 'b');
-      equal(manager.selectNote('b').accidental, null);
-      equal(manager.selectNote('a#').note, 'bb');
-      equal(manager.selectNote('g#').note, 'g#');
+  selectNotes(): void {
+    const manager = new KeyManager('f');
+    equal(manager.selectNote('bb').note, 'bb');
+    equal(manager.selectNote('bb').accidental, 'b');
+    equal(manager.selectNote('g').note, 'g');
+    equal(manager.selectNote('g').accidental, null);
+    equal(manager.selectNote('b').note, 'b');
+    equal(manager.selectNote('b').accidental, null);
+    equal(manager.selectNote('a#').note, 'bb');
+    equal(manager.selectNote('g#').note, 'g#');
 
-      // Changes should propagate
-      manager.reset();
-      equal(manager.selectNote('g#').change, true);
-      equal(manager.selectNote('g#').change, false);
-      equal(manager.selectNote('g').change, true);
-      equal(manager.selectNote('g').change, false);
-      equal(manager.selectNote('g#').change, true);
+    // Changes have no effect?
+    equal(manager.selectNote('g#').note, 'g#');
+    equal(manager.selectNote('bb').note, 'bb');
+    equal(manager.selectNote('bb').accidental, 'b');
+    equal(manager.selectNote('g').note, 'g');
+    equal(manager.selectNote('g').accidental, null);
+    equal(manager.selectNote('b').note, 'b');
+    equal(manager.selectNote('b').accidental, null);
+    equal(manager.selectNote('a#').note, 'bb');
+    equal(manager.selectNote('g#').note, 'g#');
 
-      manager.reset();
-      var note = manager.selectNote('bb');
-      equal(note.change, false);
-      equal(note.accidental, 'b');
-      note = manager.selectNote('g');
-      equal(note.change, false);
-      equal(note.accidental, null);
-      note = manager.selectNote('g#');
-      equal(note.change, true);
-      equal(note.accidental, '#');
-      note = manager.selectNote('g');
-      equal(note.change, true);
-      equal(note.accidental, null);
-      note = manager.selectNote('g');
-      equal(note.change, false);
-      equal(note.accidental, null);
-      note = manager.selectNote('g#');
-      equal(note.change, true);
-      equal(note.accidental, '#');
-    },
-  };
+    // Changes should propagate
+    manager.reset();
+    equal(manager.selectNote('g#').change, true);
+    equal(manager.selectNote('g#').change, false);
+    equal(manager.selectNote('g').change, true);
+    equal(manager.selectNote('g').change, false);
+    equal(manager.selectNote('g#').change, true);
 
-  return KeyManager;
-})();
+    manager.reset();
+    let note = manager.selectNote('bb');
+    equal(note.change, false);
+    equal(note.accidental, 'b');
+    note = manager.selectNote('g');
+    equal(note.change, false);
+    equal(note.accidental, null);
+    note = manager.selectNote('g#');
+    equal(note.change, true);
+    equal(note.accidental, '#');
+    note = manager.selectNote('g');
+    equal(note.change, true);
+    equal(note.accidental, null);
+    note = manager.selectNote('g');
+    equal(note.change, false);
+    equal(note.accidental, null);
+    note = manager.selectNote('g#');
+    equal(note.change, true);
+    equal(note.accidental, '#');
+  },
+};
+
 export { KeyManagerTests };

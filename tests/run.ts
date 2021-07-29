@@ -78,8 +78,8 @@ VexFlowTests.run = function () {
   FormatterTests.Start();
   FractionTests.Start();
   ClefTests.Start();
-  */
   KeySignatureTests.Start();
+  */
   // TimeSignatureTests.Start();
   // StaveTieTests.Start();
   // TabTieTests.Start();
@@ -98,15 +98,15 @@ VexFlowTests.run = function () {
   ChordSymbolTests.Start();
   TuningTests.Start();
   MusicTests.Start();
+  KeyManagerTests.Start();
   */
-  // KeyManagerTests.Start();
-  // ArticulationTests.Start();
+  ArticulationTests.Start();
   // StaveConnectorTests.Start();
   // MultiMeasureRestTests.Start();
   // PercussionTests.Start();
   // NoteSubGroupTests.Start();
-  ClefKeySignatureTests.Start();
   /*
+  ClefKeySignatureTests.Start();
   StaveHairpinTests.Start();
   RhythmTests.Start();
   TupletTests.Start();

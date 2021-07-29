@@ -1,4 +1,5 @@
-import { VexFlowTests } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 /**
  * VexFlow - Basic Stave Tests
@@ -86,7 +87,7 @@ const StaveTests = (function () {
       );
     },
 
-    draw: function (options, contextBuilder) {
+    draw: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 400, 150);
       const stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
@@ -100,7 +101,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawOpenStave: function (options, contextBuilder) {
+    drawOpenStave: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 400, 350);
       let stave = new VF.Stave(10, 10, 300, { left_bar: false });
       stave.setContext(ctx);
@@ -113,7 +114,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawVerticalBar: function (options, contextBuilder) {
+    drawVerticalBar: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 400, 120);
       const stave = new VF.Stave(10, 10, 300);
       stave.setContext(ctx);
@@ -126,7 +127,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawMultipleMeasures: function (options, contextBuilder) {
+    drawMultipleMeasures: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       // Get the rendering context
@@ -181,7 +182,7 @@ const StaveTests = (function () {
       beam2.setContext(ctx).draw();
     },
 
-    drawRepeats: function (options, contextBuilder) {
+    drawRepeats: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       // Get the rendering context
@@ -262,7 +263,7 @@ const StaveTests = (function () {
       VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
     },
 
-    drawEndModifiersTest: function (options, contextBuilder) {
+    drawEndModifiersTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       const staveWidth = 230;
@@ -433,7 +434,7 @@ const StaveTests = (function () {
       drawAStaves(VF.Barline.type.REPEAT_BOTH);
     },
 
-    drawVoltaTest: function (options, contextBuilder) {
+    drawVoltaTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       // Get the rendering context
@@ -532,7 +533,7 @@ const StaveTests = (function () {
       VF.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
     },
 
-    drawVoltaModifierTest: function (options, contextBuilder) {
+    drawVoltaModifierTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       // Get the rendering context
@@ -611,7 +612,7 @@ const StaveTests = (function () {
       VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
     },
 
-    drawTempo: function (options, contextBuilder) {
+    drawTempo: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       expect(0);
 
       const ctx = contextBuilder(options.elementId, 725, 350);
@@ -670,7 +671,7 @@ const StaveTests = (function () {
       ]);
     },
 
-    configureSingleLine: function (options, contextBuilder) {
+    configureSingleLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 400, 120);
       const stave = new VF.Stave(10, 10, 300);
       stave
@@ -691,7 +692,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    configureAllLines: function (options, contextBuilder) {
+    configureAllLines: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 400, 120);
       const stave = new VF.Stave(10, 10, 300);
       stave
@@ -709,7 +710,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawStaveText: function (options, contextBuilder) {
+    drawStaveText: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 900, 140);
       const stave = new VF.Stave(300, 10, 300);
       stave.setText('Violin', VF.Modifier.Position.LEFT);
@@ -721,7 +722,7 @@ const StaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawStaveTextMultiLine: function (options, contextBuilder) {
+    drawStaveTextMultiLine: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 900, 200);
       const stave = new VF.Stave(300, 40, 300);
       stave.setText('Violin', VF.Modifier.Position.LEFT, { shift_y: -10 });

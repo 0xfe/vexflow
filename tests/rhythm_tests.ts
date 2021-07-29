@@ -14,9 +14,10 @@ import { Formatter } from 'formatter';
 import { Beam } from 'beam';
 import { Annotation } from 'annotation';
 import { StaveNote } from 'stavenote';
+import { Stave } from 'stave';
 
 const RhythmTests = {
-  Start() {
+  Start(): void {
     const runTests = VexFlowTests.runTests;
     QUnit.module('Rhythm');
     runTests('Rhythm Draw - slash notes', this.drawBasic);
@@ -26,9 +27,9 @@ const RhythmTests = {
     runTests('Rhythm Draw - 32nd note rhythm with scratches', this.drawThirtySecondWithScratches);
   },
 
-  drawSlash(options: TestOptions, contextBuilder: ContextBuilder) {
+  drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 350, 180);
-    const stave = new VF.Stave(10, 10, 350);
+    const stave = new Stave(10, 10, 350);
     stave.setContext(ctx);
     stave.draw();
 
@@ -52,7 +53,7 @@ const RhythmTests = {
     }
   },
 
-  drawBasic(options, contextBuilder) {
+  drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
@@ -168,7 +169,7 @@ const RhythmTests = {
     expect(0);
   },
 
-  drawBeamedSlashNotes(options, contextBuilder) {
+  drawBeamedSlashNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
@@ -242,7 +243,7 @@ const RhythmTests = {
     expect(0);
   },
 
-  drawSlashAndBeamAndRests(options, contextBuilder) {
+  drawSlashAndBeamAndRests(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
@@ -327,7 +328,7 @@ const RhythmTests = {
     expect(0);
   },
 
-  drawSixtenthWithScratches(options, contextBuilder) {
+  drawSixtenthWithScratches(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1

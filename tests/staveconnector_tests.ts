@@ -1,11 +1,14 @@
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
+
 /**
  * VexFlow - StaveConnector Tests
  * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
  */
 const StaveConnectorTests = (function () {
-  var StaveConnector = {
-    Start: function () {
-      var runTests = VexFlowTests.runTests;
+  const StaveConnector = {
+    Start() {
+      const runTests = VexFlowTests.runTests;
       QUnit.module('StaveConnector');
       runTests('Single Draw Test', StaveConnector.drawSingle);
       runTests('Single Draw Test, 1px Stave Line Thickness', StaveConnector.drawSingle1pxBarlines);
@@ -23,13 +26,13 @@ const StaveConnectorTests = (function () {
       runTests('Combined Draw Test', StaveConnector.drawCombined);
     },
 
-    drawSingle: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawSingle(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.SINGLE);
       connector.setContext(ctx);
       stave.draw();
@@ -39,14 +42,14 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawSingle1pxBarlines: function (options, contextBuilder) {
+    drawSingle1pxBarlines(options: TestOptions, contextBuilder: ContextBuilder): void {
       VF.STAVE_LINE_THICKNESS = 1;
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.SINGLE);
       connector.setContext(ctx);
       stave.draw();
@@ -57,16 +60,16 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawSingleBoth: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawSingleBoth(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.SINGLE_LEFT);
       connector.setContext(ctx);
-      var connector2 = new VF.StaveConnector(stave, stave2);
+      const connector2 = new VF.StaveConnector(stave, stave2);
       connector2.setType(VF.StaveConnector.type.SINGLE_RIGHT);
       connector2.setContext(ctx);
       stave.draw();
@@ -77,14 +80,14 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawDouble: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var line = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.DOUBLE);
       connector.setContext(ctx);
       line.setType(VF.StaveConnector.type.SINGLE);
@@ -98,14 +101,14 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawBrace: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 450, 300);
-      var stave = new VF.Stave(100, 10, 300);
-      var stave2 = new VF.Stave(100, 120, 300);
+    drawBrace(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 450, 300);
+      const stave = new VF.Stave(100, 10, 300);
+      const stave2 = new VF.Stave(100, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var line = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.BRACE);
       connector.setContext(ctx);
       connector.setText('Piano');
@@ -120,14 +123,14 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawBraceWide: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, -20, 300);
-      var stave2 = new VF.Stave(25, 200, 300);
+    drawBraceWide(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, -20, 300);
+      const stave2 = new VF.Stave(25, 200, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var line = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.BRACE);
       connector.setContext(ctx);
       line.setType(VF.StaveConnector.type.SINGLE);
@@ -141,14 +144,14 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawBracket: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawBracket(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var line = new VF.StaveConnector(stave, stave2);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       connector.setType(VF.StaveConnector.type.BRACKET);
       connector.setContext(ctx);
       line.setType(VF.StaveConnector.type.SINGLE);
@@ -162,16 +165,16 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawRepeatBegin: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawRepeatBegin(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
 
-      var line = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       line.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
       line.setContext(ctx);
       stave.draw();
@@ -181,16 +184,16 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawRepeatEnd: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawRepeatEnd(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave.setEndBarType(VF.Barline.type.REPEAT_END);
       stave2.setEndBarType(VF.Barline.type.REPEAT_END);
 
-      var line = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       line.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
       line.setContext(ctx);
       stave.draw();
@@ -200,16 +203,16 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawThinDouble: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 300);
-      var stave2 = new VF.Stave(25, 120, 300);
+    drawThinDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 300);
+      const stave2 = new VF.Stave(25, 120, 300);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave.setEndBarType(VF.Barline.type.DOUBLE);
       stave2.setEndBarType(VF.Barline.type.DOUBLE);
 
-      var line = new VF.StaveConnector(stave, stave2);
+      const line = new VF.StaveConnector(stave, stave2);
       line.setType(VF.StaveConnector.type.THIN_DOUBLE);
       line.setContext(ctx);
       stave.draw();
@@ -219,12 +222,12 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawRepeatAdjacent: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 150);
-      var stave2 = new VF.Stave(25, 120, 150);
-      var stave3 = new VF.Stave(175, 10, 150);
-      var stave4 = new VF.Stave(175, 120, 150);
+    drawRepeatAdjacent(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 150);
+      const stave2 = new VF.Stave(25, 120, 150);
+      const stave3 = new VF.Stave(175, 10, 150);
+      const stave4 = new VF.Stave(175, 120, 150);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave3.setContext(ctx);
@@ -239,10 +242,10 @@ const StaveConnectorTests = (function () {
       stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var connector2 = new VF.StaveConnector(stave, stave2);
-      var connector3 = new VF.StaveConnector(stave3, stave4);
-      var connector4 = new VF.StaveConnector(stave3, stave4);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const connector2 = new VF.StaveConnector(stave, stave2);
+      const connector3 = new VF.StaveConnector(stave3, stave4);
+      const connector4 = new VF.StaveConnector(stave3, stave4);
       connector.setContext(ctx);
       connector2.setContext(ctx);
       connector3.setContext(ctx);
@@ -263,12 +266,12 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawRepeatOffset2: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 150);
-      var stave2 = new VF.Stave(25, 120, 150);
-      var stave3 = new VF.Stave(175, 10, 150);
-      var stave4 = new VF.Stave(175, 120, 150);
+    drawRepeatOffset2(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 150);
+      const stave2 = new VF.Stave(25, 120, 150);
+      const stave3 = new VF.Stave(175, 10, 150);
+      const stave4 = new VF.Stave(175, 120, 150);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave3.setContext(ctx);
@@ -295,11 +298,11 @@ const StaveConnectorTests = (function () {
       stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-      var connector = new VF.StaveConnector(stave, stave2);
-      var connector2 = new VF.StaveConnector(stave, stave2);
-      var connector3 = new VF.StaveConnector(stave3, stave4);
-      var connector4 = new VF.StaveConnector(stave3, stave4);
-      var connector5 = new VF.StaveConnector(stave3, stave4);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const connector2 = new VF.StaveConnector(stave, stave2);
+      const connector3 = new VF.StaveConnector(stave3, stave4);
+      const connector4 = new VF.StaveConnector(stave3, stave4);
+      const connector5 = new VF.StaveConnector(stave3, stave4);
 
       connector.setContext(ctx);
       connector2.setContext(ctx);
@@ -328,12 +331,12 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawRepeatOffset: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 400, 300);
-      var stave = new VF.Stave(25, 10, 150);
-      var stave2 = new VF.Stave(25, 120, 150);
-      var stave3 = new VF.Stave(185, 10, 150);
-      var stave4 = new VF.Stave(185, 120, 150);
+    drawRepeatOffset(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 400, 300);
+      const stave = new VF.Stave(25, 10, 150);
+      const stave2 = new VF.Stave(25, 120, 150);
+      const stave3 = new VF.Stave(185, 10, 150);
+      const stave4 = new VF.Stave(185, 120, 150);
       stave.setContext(ctx);
       stave2.setContext(ctx);
       stave3.setContext(ctx);
@@ -364,11 +367,11 @@ const StaveConnectorTests = (function () {
       stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
       stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
 
-      var connector = new VF.StaveConnector(stave, stave2);
-      var connector2 = new VF.StaveConnector(stave, stave2);
-      var connector3 = new VF.StaveConnector(stave3, stave4);
-      var connector4 = new VF.StaveConnector(stave3, stave4);
-      var connector5 = new VF.StaveConnector(stave3, stave4);
+      const connector = new VF.StaveConnector(stave, stave2);
+      const connector2 = new VF.StaveConnector(stave, stave2);
+      const connector3 = new VF.StaveConnector(stave3, stave4);
+      const connector4 = new VF.StaveConnector(stave3, stave4);
+      const connector5 = new VF.StaveConnector(stave3, stave4);
       connector.setContext(ctx);
       connector2.setContext(ctx);
       connector3.setContext(ctx);
@@ -396,15 +399,15 @@ const StaveConnectorTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawCombined: function (options, contextBuilder) {
-      var ctx = contextBuilder(options.elementId, 550, 700);
-      var stave = new VF.Stave(150, 10, 300);
-      var stave2 = new VF.Stave(150, 100, 300);
-      var stave3 = new VF.Stave(150, 190, 300);
-      var stave4 = new VF.Stave(150, 280, 300);
-      var stave5 = new VF.Stave(150, 370, 300);
-      var stave6 = new VF.Stave(150, 460, 300);
-      var stave7 = new VF.Stave(150, 560, 300);
+    drawCombined(options: TestOptions, contextBuilder: ContextBuilder): void {
+      const ctx = contextBuilder(options.elementId, 550, 700);
+      const stave = new VF.Stave(150, 10, 300);
+      const stave2 = new VF.Stave(150, 100, 300);
+      const stave3 = new VF.Stave(150, 190, 300);
+      const stave4 = new VF.Stave(150, 280, 300);
+      const stave5 = new VF.Stave(150, 370, 300);
+      const stave6 = new VF.Stave(150, 460, 300);
+      const stave7 = new VF.Stave(150, 560, 300);
       stave.setText('Violin', VF.Modifier.Position.LEFT);
       stave.setContext(ctx);
       stave2.setContext(ctx);
@@ -413,11 +416,11 @@ const StaveConnectorTests = (function () {
       stave5.setContext(ctx);
       stave6.setContext(ctx);
       stave7.setContext(ctx);
-      var conn_single = new VF.StaveConnector(stave, stave7);
-      var conn_double = new VF.StaveConnector(stave2, stave3);
-      var conn_bracket = new VF.StaveConnector(stave4, stave7);
-      var conn_none = new VF.StaveConnector(stave4, stave5);
-      var conn_brace = new VF.StaveConnector(stave6, stave7);
+      const conn_single = new VF.StaveConnector(stave, stave7);
+      const conn_double = new VF.StaveConnector(stave2, stave3);
+      const conn_bracket = new VF.StaveConnector(stave4, stave7);
+      const conn_none = new VF.StaveConnector(stave4, stave5);
+      const conn_brace = new VF.StaveConnector(stave6, stave7);
       conn_single.setType(VF.StaveConnector.type.SINGLE);
       conn_double.setType(VF.StaveConnector.type.DOUBLE);
       conn_bracket.setType(VF.StaveConnector.type.BRACKET);

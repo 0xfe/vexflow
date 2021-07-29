@@ -71,7 +71,7 @@ const BendTests = {
     ok(true, 'Double Bends');
   },
 
-  doubleBendsWithRelease(options, contextBuilder) {
+  doubleBendsWithRelease(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 550, 240);
     ctx.scale(1.0, 1.0);
     ctx.setBackgroundFillStyle('#FFF');
@@ -125,7 +125,7 @@ const BendTests = {
     ok(true, 'Bend Release');
   },
 
-  reverseBends(options, contextBuilder) {
+  reverseBends(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 500, 240);
 
     ctx.scale(1.5, 1.5);
@@ -185,7 +185,7 @@ const BendTests = {
     }
   },
 
-  bendPhrase(options, contextBuilder) {
+  bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 500, 240);
     ctx.scale(1.5, 1.5);
     ctx.fillStyle = '#221';
@@ -232,7 +232,7 @@ const BendTests = {
     }
   },
 
-  whackoBends(options, contextBuilder) {
+  whackoBends(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 240);
     ctx.scale(1.0, 1.0);
     ctx.setBackgroundFillStyle('#FFF');

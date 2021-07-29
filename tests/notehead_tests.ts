@@ -1,11 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// NoteHead Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
-import { QUnit, ok, expect, Assert } from './declarations';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
 import { Flow } from 'flow';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
@@ -14,11 +16,8 @@ import { Formatter } from 'formatter';
 import { Voice } from 'voice';
 import { ContextBuilder } from 'renderer';
 
-/**
- * NoteHead Tests
- */
 const NoteHeadTests = {
-  Start() {
+  Start(): void {
     QUnit.module('NoteHead');
     VexFlowTests.runTests('Basic', NoteHeadTests.basic);
     VexFlowTests.runTests('Various Heads', NoteHeadTests.variousHeads);
@@ -88,7 +87,7 @@ const NoteHeadTests = {
     ok('Basic NoteHead test');
   },
 
-  variousHeads(options, contextBuilder) {
+  variousHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
     const notes = [
       { keys: ['g/5/d0'], duration: '4' },
       { keys: ['g/5/d1'], duration: '4' },
@@ -133,7 +132,7 @@ const NoteHeadTests = {
     }
   },
 
-  drumChordHeads(options, contextBuilder) {
+  drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
     const notes = [
       { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
       { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
@@ -174,7 +173,7 @@ const NoteHeadTests = {
     }
   },
 
-  basicBoundingBoxes(options, contextBuilder) {
+  basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
     const c = NoteHeadTests.setupContext(options, 350, 250);
 

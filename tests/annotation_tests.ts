@@ -1,7 +1,8 @@
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { ok, QUnit } from './declarations';
 import { Flow } from 'flow';
 import { Registry } from 'registry';
-import { QUnit } from './declarations';
-import { VexFlowTests } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
 
 /**
  * VexFlow - Annotation Tests
@@ -9,7 +10,7 @@ import { VexFlowTests } from './vexflow_test_helpers';
  */
 const AnnotationTests = (function () {
   const Annotation = {
-    Start: function () {
+    Start() {
       const runTests = VexFlowTests.runTests;
       QUnit.module('Annotation');
       runTests('Lyrics', Annotation.lyrics);
@@ -24,7 +25,7 @@ const AnnotationTests = (function () {
       runTests('TabNote Annotations', Annotation.tabNotes);
     },
 
-    lyrics: function (options) {
+    lyrics(options: TestOptions): void {
       const id = (ii) => {
         return registry.getElementById(ii);
       };
@@ -64,7 +65,7 @@ const AnnotationTests = (function () {
       }
       ok(true);
     },
-    simple: function (options, contextBuilder) {
+    simple(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -102,7 +103,7 @@ const AnnotationTests = (function () {
       ok(true, 'Simple Annotation');
     },
 
-    standard: function (options, contextBuilder) {
+    standard(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -125,7 +126,7 @@ const AnnotationTests = (function () {
       ok(true, 'Standard Notation Annotation');
     },
 
-    harmonic: function (options, contextBuilder) {
+    harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -160,7 +161,7 @@ const AnnotationTests = (function () {
       ok(true, 'Simple Annotation');
     },
 
-    picking: function (options, contextBuilder) {
+    picking(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.setFillStyle('#221');
@@ -208,7 +209,7 @@ const AnnotationTests = (function () {
       ok(true, 'Fingerpicking');
     },
 
-    bottom: function (options, contextBuilder) {
+    bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -235,7 +236,7 @@ const AnnotationTests = (function () {
       ok(true, 'Bottom Annotation');
     },
 
-    bottomWithBeam: function (options, contextBuilder) {
+    bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 500, 240);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -272,7 +273,7 @@ const AnnotationTests = (function () {
       ok(true, 'Bottom Annotation with Beams');
     },
 
-    justificationStemUp: function (options, contextBuilder) {
+    justificationStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 650, 950);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -304,7 +305,7 @@ const AnnotationTests = (function () {
       ok(true, 'Test Justification Annotation');
     },
 
-    justificationStemDown: function (options, contextBuilder) {
+    justificationStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 650, 1000);
       ctx.scale(1.5, 1.5);
       ctx.fillStyle = '#221';
@@ -344,7 +345,7 @@ const AnnotationTests = (function () {
       ok(true, 'Test Justification Annotation');
     },
 
-    tabNotes: function (options, contextBuilder) {
+    tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
       const ctx = contextBuilder(options.elementId, 600, 200);
       ctx.font = '10pt Arial';
       const stave = new VF.TabStave(10, 10, 550);
