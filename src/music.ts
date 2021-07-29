@@ -11,7 +11,7 @@ export interface NoteAccidental {
 
 export interface NoteParts {
   root: string;
-  accidental: string;
+  accidental?: string;
 }
 
 export interface KeyParts {
@@ -184,7 +184,7 @@ export class Music {
 
     const note = noteString.toLowerCase();
 
-    const regex = /^([cdefgab])(b|bb|n|#|##)?$/;
+    const regex = /^([cdefgabrx])(b|bb|n|#|##)?$/;
     const match = regex.exec(note);
 
     if (match !== null) {

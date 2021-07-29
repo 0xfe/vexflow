@@ -22,7 +22,7 @@ const MusicTests = {
   },
 
   validNotes(): void {
-    expect(10);
+    expect(11);
 
     const music = new Music();
 
@@ -42,11 +42,9 @@ const MusicTests = {
     equal(parts.root, 'c');
     equal(parts.accidental, '##');
 
-    try {
-      music.getNoteParts('r');
-    } catch (e) {
-      equal(e.code, 'BadArguments', 'Invalid note: r');
-    }
+    parts = music.getNoteParts('r');
+    equal(parts.root, 'r');
+    equal(parts.accidental, null);
 
     try {
       music.getNoteParts('');
