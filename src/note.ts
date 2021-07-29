@@ -14,6 +14,8 @@ import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
+import { Music } from 'music';
+import { Accidental } from './accidental';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -245,8 +247,20 @@ export abstract class Note extends Tickable {
       throw new RuntimeError('BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`);
     }
 
-    // Set note properties from parameters.
-    this.keys = noteStruct.keys || [];
+    // Set keys and accidentals from parameters.
+    this.keys = [];
+    this.modifiers = [];
+    if (noteStruct.keys) {
+      noteStruct.keys.forEach((element, index) => {
+        const items = element.split('/');
+        const parts = new Music().getNoteParts(items[0]);
+        let key = parts.root + '/';
+        if (items[1]) key += items[1];
+        if (items[2]) key += '/' + items[2];
+        this.keys.push(key);
+        if (parts.accidental) this.addModifier(new Accidental(parts.accidental), index);
+      });
+    }
     // per-pitch properties
     this.keyProps = [];
 
@@ -262,8 +276,6 @@ export abstract class Note extends Tickable {
       // Default duration
       this.setIntrinsicTicks(initStruct.ticks);
     }
-
-    this.modifiers = [];
 
     // Get the glyph code for this note from the font.
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);

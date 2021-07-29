@@ -393,7 +393,6 @@ export class StaveNote extends StemmableNote {
 
     // Drawing
     this.note_heads = [];
-    this.modifiers = [];
 
     this.render_options = {
       ...this.render_options,
