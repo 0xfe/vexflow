@@ -99,12 +99,12 @@ VexFlowTests.run = function () {
   TuningTests.Start();
   MusicTests.Start();
   KeyManagerTests.Start();
-  */
   ArticulationTests.Start();
-  // StaveConnectorTests.Start();
-  // MultiMeasureRestTests.Start();
-  // PercussionTests.Start();
-  // NoteSubGroupTests.Start();
+  */
+  StaveConnectorTests.Start();
+  MultiMeasureRestTests.Start();
+  PercussionTests.Start();
+  NoteSubGroupTests.Start();
   /*
   ClefKeySignatureTests.Start();
   StaveHairpinTests.Start();

@@ -11,7 +11,7 @@ import { Beam } from 'beam';
 
 const AutoBeamFormattingTests = (function () {
   const AutoBeamFormatting = {
-    Start: function () {
+    Start() {
       const runTests = VexFlowTests.runTests;
       QUnit.module('Auto-Beaming');
       runTests('Simple Auto Beaming', AutoBeamFormatting.simpleAuto);
@@ -58,7 +58,7 @@ const AutoBeamFormattingTests = (function () {
       runTests('Flat Beams Down Bounds', AutoBeamFormatting.flatBeamsDownBounds);
     },
 
-    simpleAuto: function (options) {
+    simpleAuto(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -81,7 +81,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    simpleAutoWithOverflowGroup: function (options) {
+    simpleAutoWithOverflowGroup(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -104,7 +104,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    evenGroupStemDirections: function (options) {
+    evenGroupStemDirections(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -134,7 +134,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    oddGroupStemDirections: function (options) {
+    oddGroupStemDirections(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -162,7 +162,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beaming Applicator Test');
     },
 
-    oddBeamGroups: function (options) {
+    oddBeamGroups(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -185,7 +185,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimple0: function (options) {
+    moreSimple0(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -205,7 +205,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimple1: function (options) {
+    moreSimple1(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -228,7 +228,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    breakBeamsOnRests: function (options) {
+    breakBeamsOnRests(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -253,7 +253,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossAllRestsWithStemlets: function (options) {
+    beamAcrossAllRestsWithStemlets(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -279,7 +279,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossAllRests: function (options) {
+    beamAcrossAllRests(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -304,7 +304,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamAcrossMiddleRests: function (options) {
+    beamAcrossMiddleRests(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -330,7 +330,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    maintainStemDirections: function (options) {
+    maintainStemDirections(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -364,7 +364,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    maintainStemDirectionsBeamAcrossRests: function (options) {
+    maintainStemDirectionsBeamAcrossRests(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -398,7 +398,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    groupWithUnbeamableNote: function (options) {
+    groupWithUnbeamableNote(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave().addTimeSignature('2/4');
       const score = f.EasyScore();
@@ -422,7 +422,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    groupWithUnbeamableNote1: function (options) {
+    groupWithUnbeamableNote1(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave().addTimeSignature('6/8');
       const score = f.EasyScore();
@@ -446,7 +446,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    autoOddBeamGroups: function (options) {
+    autoOddBeamGroups(options) {
       const f = VexFlowTests.makeFactory(options, 450, 400);
       const score = f.EasyScore();
 
@@ -478,7 +478,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    customBeamGroups: function (options) {
+    customBeamGroups(options) {
       const f = VexFlowTests.makeFactory(options, 450, 400);
       const score = f.EasyScore();
 
@@ -516,7 +516,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    simpleTuplets: function (options) {
+    simpleTuplets(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -549,7 +549,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreSimpleTuplets: function (options) {
+    moreSimpleTuplets(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -574,7 +574,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    moreBeaming: function (options) {
+    moreBeaming(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -596,7 +596,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamingWithSeveralGroups1: function (options) {
+    beamingWithSeveralGroups1(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -620,7 +620,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamingWithSeveralGroupsOverflow: function (options) {
+    beamingWithSeveralGroupsOverflow(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -644,7 +644,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamingWithSeveralGroupsOverflow2: function (options) {
+    beamingWithSeveralGroupsOverflow2(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -671,7 +671,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    beamingWithSeveralGroupsOverflow3: function (options) {
+    beamingWithSeveralGroupsOverflow3(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -695,7 +695,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Auto Beam Applicator Test');
     },
 
-    secondaryBreaks: function (options) {
+    secondaryBreaks(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -726,7 +726,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
-    secondaryBreaks2: function (options) {
+    secondaryBreaks2(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave();
       const score = f.EasyScore();
@@ -761,7 +761,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Duration-Based Secondary Breaks Test');
     },
 
-    flatBeamsUp: function (options) {
+    flatBeamsUp(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -794,7 +794,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Up Test');
     },
 
-    flatBeamsDown: function (options) {
+    flatBeamsDown(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -821,7 +821,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Down Test');
     },
 
-    flatBeamsMixed: function (options) {
+    flatBeamsMixed(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -847,7 +847,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Mixed Direction Test');
     },
 
-    flatBeamsUpUniform: function (options) {
+    flatBeamsUpUniform(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -878,7 +878,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
-    flatBeamsDownUniform: function (options) {
+    flatBeamsDownUniform(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -906,7 +906,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Down (uniform) Test');
     },
 
-    flatBeamsUpBounds: function (options) {
+    flatBeamsUpBounds(options) {
       const f = VexFlowTests.makeFactory(options);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();
@@ -937,7 +937,7 @@ const AutoBeamFormattingTests = (function () {
       ok(true, 'Flat Beams Up (uniform) Test');
     },
 
-    flatBeamsDownBounds: function (options) {
+    flatBeamsDownBounds(options) {
       const f = VexFlowTests.makeFactory(options, 450, 200);
       const stave = f.Stave({ y: 40 });
       const score = f.EasyScore();

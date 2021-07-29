@@ -9,6 +9,7 @@ import { ContextBuilder, Renderer } from 'renderer';
 import { RenderContext } from 'types/common';
 import { Factory } from 'factory';
 import { Assert } from './declarations';
+import { Note } from 'note';
 
 /* eslint-disable */
 declare var global: any;
@@ -298,7 +299,7 @@ class VexFlowTests {
     });
   }
 
-  static plotNoteWidth = VF.Note.plotMetrics;
+  static plotNoteWidth = Note.plotMetrics;
 
   /**
    * @param ctx

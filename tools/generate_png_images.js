@@ -37,20 +37,22 @@ if (scriptDir.includes('build')) {
   require(`${scriptDir}/vexflow-tests.js`);
 }
 
+const VFT = Vex.Flow.Test;
+
 Vex.Flow.shims = {
   fs,
   process,
 };
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.
-Vex.Flow.Test.RUN_CANVAS_TESTS = false;
-Vex.Flow.Test.RUN_SVG_TESTS = false;
-Vex.Flow.Test.RUN_NODE_TESTS = true;
-Vex.Flow.Test.NODE_IMAGEDIR = imageDir;
-Vex.Flow.Test.NODE_FONT_STACKS = fontStacksToTest;
+VFT.RUN_CANVAS_TESTS = false;
+VFT.RUN_SVG_TESTS = false;
+VFT.RUN_NODE_TESTS = true;
+VFT.NODE_IMAGEDIR = imageDir;
+VFT.NODE_FONT_STACKS = fontStacksToTest;
 
 // Create the image directory if it doesn't exist.
-fs.mkdirSync(Vex.Flow.Test.NODE_IMAGEDIR, { recursive: true });
+fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
 // Run all tests.
-Vex.Flow.Test.run();
+VFT.run();
