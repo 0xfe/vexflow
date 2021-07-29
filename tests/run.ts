@@ -80,7 +80,7 @@ VexFlowTests.run = function () {
   ClefTests.Start();
   KeySignatureTests.Start();
   */
-  // TimeSignatureTests.Start();
+  TimeSignatureTests.Start();
   // StaveTieTests.Start();
   // TabTieTests.Start();
   // StaveTests.Start();
@@ -100,12 +100,10 @@ VexFlowTests.run = function () {
   MusicTests.Start();
   KeyManagerTests.Start();
   ArticulationTests.Start();
-  */
   StaveConnectorTests.Start();
   MultiMeasureRestTests.Start();
   PercussionTests.Start();
   NoteSubGroupTests.Start();
-  /*
   ClefKeySignatureTests.Start();
   StaveHairpinTests.Start();
   RhythmTests.Start();
