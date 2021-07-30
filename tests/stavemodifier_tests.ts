@@ -35,6 +35,10 @@ const StaveModifierTests = {
     ok(true, 'all pass');
   },
 
+  /**
+   * Draw three vertical lines. The last line is not visible, because it overlaps
+   * the right border of the stave at x = 300.
+   */
   drawVerticalBar(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 120);
     const stave = new Stave(10, 10, 300);
