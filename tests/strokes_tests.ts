@@ -16,15 +16,14 @@ import { Beam } from 'beam';
  */
 const StrokesTests = {
   Start: function () {
-    const run = VexFlowTests.runTests;
-
     QUnit.module('Strokes');
-
-    run('Brush/Roll/Rasquedo', StrokesTests.brushRollRasquedo);
-    run('Arpeggio directionless (without arrows)', StrokesTests.arpeggioDirectionless);
-    run('Multi Voice', StrokesTests.multiVoice);
-    run('Notation and Tab', StrokesTests.notesWithTab);
-    run('Multi-Voice Notation and Tab', StrokesTests.multiNotationAndTab);
+    const run = VexFlowTests.runTests;
+    // TODO: Rename tests by removing 'Strokes - '
+    run('Strokes - Brush/Roll/Rasquedo', this.brushRollRasquedo);
+    run('Strokes - Arpeggio directionless (without arrows)', this.arpeggioDirectionless);
+    run('Strokes - Multi Voice', this.multiVoice);
+    run('Strokes - Notation and Tab', this.notesWithTab);
+    run('Strokes - Multi-Voice Notation and Tab', this.multiNotationAndTab);
   },
 
   brushRollRasquedo: function (options) {

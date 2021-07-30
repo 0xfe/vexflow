@@ -23,15 +23,15 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 const ArticulationTests = {
   Start(): void {
     QUnit.module('Articulation');
-    const runTests = VexFlowTests.runTests;
-    runTests('Articulation - Staccato/Staccatissimo', this.drawArticulations, { sym1: 'a.', sym2: 'av' });
-    runTests('Articulation - Accent/Tenuto', this.drawArticulations, { sym1: 'a>', sym2: 'a-' });
-    runTests('Articulation - Marcato/L.H. Pizzicato', this.drawArticulations, { sym1: 'a^', sym2: 'a+' });
-    runTests('Articulation - Snap Pizzicato/Fermata', this.drawArticulations, { sym1: 'ao', sym2: 'ao' });
-    runTests('Articulation - Up-stroke/Down-Stroke', this.drawArticulations, { sym1: 'a|', sym2: 'am' });
-    runTests('Articulation - Fermata Above/Below', this.drawFermata, { sym1: 'a@a', sym2: 'a@u' });
-    runTests('Articulation - Inline/Multiple', this.drawArticulations2, { sym1: 'a.', sym2: 'a.' });
-    runTests('TabNote Articulation', this.tabNotes, { sym1: 'a.', sym2: 'a.' });
+    const run = VexFlowTests.runTests;
+    run('Articulation - Staccato/Staccatissimo', this.drawArticulations, { sym1: 'a.', sym2: 'av' });
+    run('Articulation - Accent/Tenuto', this.drawArticulations, { sym1: 'a>', sym2: 'a-' });
+    run('Articulation - Marcato/L.H. Pizzicato', this.drawArticulations, { sym1: 'a^', sym2: 'a+' });
+    run('Articulation - Snap Pizzicato/Fermata', this.drawArticulations, { sym1: 'ao', sym2: 'ao' });
+    run('Articulation - Up-stroke/Down-Stroke', this.drawArticulations, { sym1: 'a|', sym2: 'am' });
+    run('Articulation - Fermata Above/Below', this.drawFermata, { sym1: 'a@a', sym2: 'a@u' });
+    run('Articulation - Inline/Multiple', this.drawArticulations2, { sym1: 'a.', sym2: 'a.' });
+    run('TabNote Articulation', this.tabNotes, { sym1: 'a.', sym2: 'a.' });
   },
 
   drawArticulations(options: TestOptions, contextBuilder: ContextBuilder): void {

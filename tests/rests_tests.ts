@@ -3,6 +3,9 @@
 //
 // Rests Tests
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { QUnit, ok } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { RenderContext } from 'types/common';
@@ -21,15 +24,17 @@ const note = (s: StaveNoteStruct) => new StaveNote(s);
 const RestsTests = {
   Start(): void {
     QUnit.module('Rests');
-    const runTests = VexFlowTests.runTests;
-    runTests('Dotted', RestsTests.basic);
-    runTests('Auto Align - Beamed Notes Stems Up', RestsTests.beamsUp);
-    runTests('Auto Align - Beamed Notes Stems Down', RestsTests.beamsDown);
-    runTests('Auto Align - Tuplets Stems Up', RestsTests.tupletsUp);
-    runTests('Auto Align - Tuplets Stems Down', RestsTests.tupletsDown);
-    runTests('Auto Align - Single Voice (Default)', RestsTests.singleVoiceDefaultAlignment);
-    runTests('Auto Align - Single Voice (Align All)', RestsTests.singleVoiceAlignAll);
-    runTests('Auto Align - Multi Voice', RestsTests.multiVoice);
+    const run = VexFlowTests.runTests;
+
+    // TODO: Rename tests by removing 'Rests - ' or 'Rests '
+    run('Rests - Dotted', this.basic);
+    run('Auto Align Rests - Beamed Notes Stems Up', this.beamsUp);
+    run('Auto Align Rests - Beamed Notes Stems Down', this.beamsDown);
+    run('Auto Align Rests - Tuplets Stems Up', this.tupletsUp);
+    run('Auto Align Rests - Tuplets Stems Down', this.tupletsDown);
+    run('Auto Align Rests - Single Voice (Default)', this.singleVoiceDefaultAlignment);
+    run('Auto Align Rests - Single Voice (Align All)', this.singleVoiceAlignAll);
+    run('Auto Align Rests - Multi Voice', this.multiVoice);
   },
 
   /**
@@ -65,6 +70,7 @@ const RestsTests = {
   basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = RestsTests.setupContext(options, contextBuilder, 700);
 
+    // TODO: Reintroduce the 128th rest after PR #1074 is merged.
     const notes = [
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }).addDotToAll(),
@@ -73,7 +79,7 @@ const RestsTests = {
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }).addDotToAll(),
-      new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
+      /* new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(), */
     ];
 
     Formatter.FormatAndDraw(context, stave, notes);

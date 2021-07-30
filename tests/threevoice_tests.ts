@@ -48,10 +48,11 @@ function createThreeVoicesTest(noteGroup1, noteGroup2, noteGroup3, setup: (f: Fa
 
 const ThreeVoicesTests = {
   Start(): void {
-    QUnit.module('Three Voices');
+    QUnit.module('Three Voice Rests'); // TODO: Rename the module, because we aren't really testing rests.
+    // QUnit.module('Three Voices');
 
-    const runTests = VexFlowTests.runTests;
-    runTests(
+    const run = VexFlowTests.runTests;
+    run(
       'Three Voices - #1',
       createThreeVoicesTest(
         ['e5/2, e5', { stem: 'up' }],
@@ -68,7 +69,7 @@ const ThreeVoicesTests = {
       )
     );
 
-    runTests(
+    run(
       'Three Voices - #2 Complex',
       createThreeVoicesTest(
         ['(a4 e5)/16, e5, e5, e5, e5/8, e5, e5/2', { stem: 'up' }],
@@ -88,7 +89,7 @@ const ThreeVoicesTests = {
       )
     );
 
-    runTests(
+    run(
       'Three Voices - #3',
       createThreeVoicesTest(
         ['(g4 e5)/4, e5, (g4 e5)/2', { stem: 'up' }],
@@ -107,9 +108,9 @@ const ThreeVoicesTests = {
       )
     );
 
-    runTests('Auto Adjust Rest Positions - Two Voices', ThreeVoicesTests.autoRestTwoVoices);
-    runTests('Auto Adjust Rest Positions - Three Voices #1', ThreeVoicesTests.autoRestThreeVoices1);
-    runTests('Auto Adjust Rest Positions - Three Voices #2', ThreeVoicesTests.autoRestThreeVoices2);
+    run('Auto Adjust Rest Positions - Two Voices', ThreeVoicesTests.autoRestTwoVoices);
+    run('Auto Adjust Rest Positions - Three Voices #1', ThreeVoicesTests.autoRestThreeVoices1);
+    run('Auto Adjust Rest Positions - Three Voices #2', ThreeVoicesTests.autoRestThreeVoices2);
   },
 
   autoRestTwoVoices(options: TestOptions): void {

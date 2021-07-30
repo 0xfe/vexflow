@@ -26,18 +26,18 @@ const FONT_SIZE = VexFlowTests.Font.size;
 
 const AnnotationTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Annotation');
-    runTests('Lyrics', this.lyrics);
-    runTests('Simple Annotation', this.simple);
-    runTests('Standard Notation Annotation', this.standard);
-    runTests('Harmonics', this.harmonic);
-    runTests('Fingerpicking', this.picking);
-    runTests('Bottom Annotation', this.bottom);
-    runTests('Bottom Annotations with Beams', this.bottomWithBeam);
-    runTests('Test Justification Annotation Stem Up', this.justificationStemUp);
-    runTests('Test Justification Annotation Stem Down', this.justificationStemDown);
-    runTests('TabNote Annotations', this.tabNotes);
+    const run = VexFlowTests.runTests;
+    run('Lyrics', this.lyrics);
+    run('Simple Annotation', this.simple);
+    run('Standard Notation Annotation', this.standard);
+    run('Harmonics', this.harmonic);
+    run('Fingerpicking', this.picking);
+    run('Bottom Annotation', this.bottom);
+    run('Bottom Annotations with Beams', this.bottomWithBeam);
+    run('Test Justification Annotation Stem Up', this.justificationStemUp);
+    run('Test Justification Annotation Stem Down', this.justificationStemDown);
+    run('TabNote Annotations', this.tabNotes);
   },
 
   lyrics(options: TestOptions): void {
