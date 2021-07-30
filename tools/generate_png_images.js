@@ -35,7 +35,7 @@ if (scriptDir.includes('reference') || scriptDir.includes('releases')) {
   // TODO: Remove this entire block lines 32-40, after the new version has been moved to 'releases/'
   global.Vex = require(`${scriptDir}/vexflow-debug.js`);
   require(`${scriptDir}/vexflow-tests.js`);
-  VF.shims = { fs, process };
+  global.Vex.Flow.shims = { fs, process };
 } else {
   // THE NEW WAY loads a single JS file.
   // See: https://github.com/0xfe/vexflow/pull/1074
