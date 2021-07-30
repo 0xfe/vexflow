@@ -13,7 +13,7 @@ const TabSlideTests = (function () {
     },
 
     tieNotes: function (notes, indices, stave, ctx) {
-      var voice = new VF.Voice(VF.TIME4_4);
+      var voice = new VF.Voice(Flow.TIME4_4);
       voice.addTickables(notes);
 
       new VF.Formatter().joinVoices([voice]).format([voice], 100);
@@ -44,7 +44,7 @@ const TabSlideTests = (function () {
       return { context: ctx, stave: stave };
     },
 
-    simple: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    simple(options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       var c = TabSlide.setupContext(options);
       function newNote(tab_struct) {
@@ -104,7 +104,7 @@ const TabSlideTests = (function () {
         }),
       ];
 
-      var voice = new VF.Voice(VF.TIME4_4).addTickables(notes);
+      var voice = new VF.Voice(Flow.TIME4_4).addTickables(notes);
       new VF.Formatter().joinVoices([voice]).format([voice], 300);
       voice.draw(c.context, c.stave);
 
@@ -153,12 +153,12 @@ const TabSlideTests = (function () {
       ok(true, 'Chord high-fret');
     },
 
-    slideUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    slideUp(options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
     },
 
-    slideDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    slideDown(options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
     },

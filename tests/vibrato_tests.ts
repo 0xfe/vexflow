@@ -3,16 +3,20 @@
 //
 // Vibrato Tests
 
-/* xeslint-disable */
-// x@ts-nocheck
+/* eslint-disable */
+// @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { Formatter } from 'formatter';
+import { TabStave } from 'tabstave';
+import { Vibrato } from 'vibrato';
+import { Bend } from 'bend';
+import { TabNote } from 'tabnote';
 
 const VibratoTests = {
-  Start() {
+  Start(): void {
     const runTests = VexFlowTests.runTests;
     QUnit.module('Vibrato');
     runTests('Simple Vibrato', this.simple);
@@ -27,13 +31,13 @@ const VibratoTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newVibrato() {
-      return new VF.Vibrato();
+      return new Vibrato();
     }
 
     const notes = [
@@ -61,13 +65,13 @@ const VibratoTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newVibrato() {
-      return new VF.Vibrato();
+      return new Vibrato();
     }
 
     const notes = [
@@ -94,16 +98,16 @@ const VibratoTests = {
     ctx.setFillStyle('#221');
     ctx.setStrokeStyle('#221');
     ctx.setFont('Arial', VexFlowTests.Font.size, '');
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newBend(text, release) {
-      return new VF.Bend(text, release);
+      return new Bend(text, release);
     }
     function newVibrato() {
-      return new VF.Vibrato();
+      return new Vibrato();
     }
 
     const notes = [

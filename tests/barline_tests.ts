@@ -1,59 +1,64 @@
-/**
- * VexFlow - Barline Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
-const BarlineTests = (function () {
-  return {
-    Start: function () {
-      var run = VexFlowTests.runTests;
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Barline Tests
 
-      QUnit.module('Barline');
+/* eslint-disable */
+// @ts-nocheck
 
-      run('Simple BarNotes', function (options) {
-        var f = VexFlowTests.makeFactory(options, 380, 160);
-        var stave = f.Stave();
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
 
-        var notes = [
-          f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
-          f.BarNote({ type: 'single' }),
-          f
-            .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
-            .addAccidental(0, f.Accidental({ type: 'n' }))
-            .addAccidental(1, f.Accidental({ type: '#' })),
-        ];
+const BarlineTests = {
+  Start(): void {
+    QUnit.module('Barline');
+    const runTests = VexFlowTests.runTests;
 
-        var voice = f.Voice().addTickables(notes);
+    runTests('Simple BarNotes', function (options: TestOptions) {
+      const f = VexFlowTests.makeFactory(options, 380, 160);
+      const stave = f.Stave();
 
-        f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+      const notes = [
+        f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
+        f.BarNote({ type: 'single' }),
+        f
+          .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
+          .addAccidental(0, f.Accidental({ type: 'n' }))
+          .addAccidental(1, f.Accidental({ type: '#' })),
+      ];
 
-        f.draw();
+      const voice = f.Voice().addTickables(notes);
 
-        ok(true, 'Simple Test');
-      });
-      run('Style BarNotes', function (options) {
-        var f = VexFlowTests.makeFactory(options, 380, 160);
-        var stave = f.Stave();
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-        var notes = [
-          f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
-          f.BarNote({ type: 'single' }),
-          f
-            .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
-            .addAccidental(0, f.Accidental({ type: 'n' }))
-            .addAccidental(1, f.Accidental({ type: '#' })),
-        ];
-        notes[1].setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+      f.draw();
 
-        var voice = f.Voice().addTickables(notes);
+      ok(true, 'Simple Test');
+    });
 
-        f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    runTests('Style BarNotes', function (options: TestOptions) {
+      const f = VexFlowTests.makeFactory(options, 380, 160);
+      const stave = f.Stave();
 
-        f.draw();
+      const notes = [
+        f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
+        f.BarNote({ type: 'single' }),
+        f
+          .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
+          .addAccidental(0, f.Accidental({ type: 'n' }))
+          .addAccidental(1, f.Accidental({ type: '#' })),
+      ];
+      notes[1].setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
-        ok(true, 'Style');
-      });
-    },
-  };
-})();
-VexFlowTests.Barline = BarlineTests;
+      const voice = f.Voice().addTickables(notes);
+
+      f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+      f.draw();
+
+      ok(true, 'Style');
+    });
+  },
+};
+
 export { BarlineTests };

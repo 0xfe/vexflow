@@ -65,7 +65,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  basic: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 700);
 
     const notes = [
@@ -90,7 +90,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  beamsUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  beamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -129,7 +129,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  beamsDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  beamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -169,7 +169,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  tupletsUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  tupletsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -212,7 +212,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  tupletsDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  tupletsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -266,7 +266,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  singleVoiceDefaultAlignment: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  singleVoiceDefaultAlignment(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -309,7 +309,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  singleVoiceAlignAll: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  singleVoiceAlignAll(options: TestOptions, contextBuilder: ContextBuilder): void {
     const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
@@ -354,7 +354,7 @@ const RestsTests = {
    * @param options
    * @param contextBuilder
    */
-  multiVoice: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     const stave = new VF.Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
 

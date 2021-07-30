@@ -88,8 +88,8 @@ const FormatterTests = {
       createTickable().setTicks(BEAT).setWidth(30),
     ];
 
-    const voice1 = new VF.Voice(VF.TIME4_4);
-    const voice2 = new VF.Voice(VF.TIME4_4);
+    const voice1 = new VF.Voice(Flow.TIME4_4);
+    const voice2 = new VF.Voice(Flow.TIME4_4);
 
     voice1.addTickables(tickables1);
     voice2.addTickables(tickables2);

@@ -10,7 +10,7 @@ const TabStaveTests = (function () {
       VexFlowTests.runTests('Vertical Bar Test', TabStave.drawVerticalBar);
     },
 
-    draw: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    draw(options: TestOptions, contextBuilder: ContextBuilder): void {
       var ctx = contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);
@@ -25,7 +25,7 @@ const TabStaveTests = (function () {
       ok(true, 'all pass');
     },
 
-    drawVerticalBar: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+    drawVerticalBar(options: TestOptions, contextBuilder: ContextBuilder): void {
       var ctx = contextBuilder(options.elementId, 400, 160);
       var stave = new VF.TabStave(10, 10, 300);
       stave.setNumLines(6);

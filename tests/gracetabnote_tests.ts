@@ -60,7 +60,7 @@ const GraceTabNoteTests = {
     note2.addModifier(new VF.GraceNoteGroup(gracenotes2));
     note3.addModifier(new VF.GraceNoteGroup(gracenotes3));
 
-    const voice = new VF.Voice(VF.TIME4_4);
+    const voice = new VF.Voice(Flow.TIME4_4);
     voice.addTickables([note0, note1, note2, note3]);
 
     new VF.Formatter().joinVoices([voice]).format([voice], 250);
@@ -101,7 +101,7 @@ const GraceTabNoteTests = {
     note0.addModifier(new VF.GraceNoteGroup(gracenotes0, true));
     note1.addModifier(new VF.GraceNoteGroup(gracenotes1, true));
 
-    const voice = new VF.Voice(VF.TIME4_4);
+    const voice = new VF.Voice(Flow.TIME4_4);
     voice.addTickables([note0, note1]);
 
     new VF.Formatter().joinVoices([voice]).format([voice], 200);

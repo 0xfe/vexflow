@@ -21,7 +21,7 @@ const StaveModifierTests = {
     VexFlowTests.runTests('Begin & End StaveModifier Test', StaveModifierTests.drawBeginAndEnd);
   },
 
-  draw: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 120);
     const stave = new Stave(10, 10, 300);
     stave.setContext(ctx);
@@ -35,7 +35,7 @@ const StaveModifierTests = {
     ok(true, 'all pass');
   },
 
-  drawVerticalBar: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  drawVerticalBar(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 120);
     const stave = new Stave(10, 10, 300);
     stave.setContext(ctx);
@@ -47,7 +47,7 @@ const StaveModifierTests = {
     ok(true, 'all pass');
   },
 
-  drawBeginAndEnd: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  drawBeginAndEnd(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 500, 240);
     const stave = new Stave(10, 10, 400);
     stave.setContext(ctx);

@@ -3,8 +3,8 @@
 //
 // StaveNote Tests
 
-/* xeslint-disable */
-// x@ts-nocheck
+/* eslint-disable */
+// @ts-nocheck
 
 import { QUnit, ok, test, throws, equal, expect } from './declarations';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
@@ -15,9 +15,13 @@ import { Stem } from 'stem';
 import { TickContext } from 'tickcontext';
 import { Vex } from 'vex';
 import { Flow } from 'flow';
+import { Formatter } from 'formatter';
+import { Beam } from 'beam';
+import { Accidental } from 'accidental';
+import { Fraction } from 'fraction';
 
 const StaveNoteTests = {
-  Start() {
+  Start(): void {
     const runTests = VexFlowTests.runTests;
 
     QUnit.module('StaveNote');
@@ -267,7 +271,7 @@ const StaveNoteTests = {
     const stemUpDisplacements = [false, true, false];
     const stemDownDisplacements = [true, false, false];
 
-    const note = new StaveNote({ keys: ['c/5', 'd/5', 'g/5'], stem_direction: VF.Stem.UP, duration: '4' });
+    const note = new StaveNote({ keys: ['c/5', 'd/5', 'g/5'], stem_direction: Stem.UP, duration: '4' });
     deepEqual(getDisplacements(note), stemUpDisplacements);
     note.setStemDirection(Stem.DOWN);
     deepEqual(getDisplacements(note), stemDownDisplacements);
@@ -304,7 +308,7 @@ const StaveNoteTests = {
     );
   },
 
-  tickContext() {
+  tickContext(): void {
     const stave = new Stave(10, 10, 400);
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 
@@ -313,7 +317,7 @@ const StaveNoteTests = {
     expect(0);
   },
 
-  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean) {
+  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean): StaveNote {
     const note = new StaveNote(note_struct).setStave(stave);
 
     new TickContext().addTickable(note).preFormat().setX(x);
@@ -527,15 +531,15 @@ const StaveNoteTests = {
       { keys: ['a/3', 'c/4', 'e/4', 'g/4', 'a/4', 'b/4'], duration: '16' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: '32' },
       { keys: ['c/4', 'e/4', 'a/4', 'a/4'], duration: '64' },
-      { keys: ['g/3', 'c/4', 'd/4', 'e/4'], duration: 'h', stem_direction: VF.Stem.DOWN },
-      { keys: ['d/4', 'e/4', 'f/4'], duration: 'q', stem_direction: VF.Stem.DOWN },
-      { keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'd/4', 'e/4', 'f/4', 'g/4', 'a/4'], duration: '16', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6'], duration: '32', stem_direction: VF.Stem.DOWN },
+      { keys: ['g/3', 'c/4', 'd/4', 'e/4'], duration: 'h', stem_direction: Stem.DOWN },
+      { keys: ['d/4', 'e/4', 'f/4'], duration: 'q', stem_direction: Stem.DOWN },
+      { keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '8', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'd/4', 'e/4', 'f/4', 'g/4', 'a/4'], duration: '16', stem_direction: Stem.DOWN },
+      { keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6'], duration: '32', stem_direction: Stem.DOWN },
       {
         keys: ['b/3', 'c/4', 'e/4', 'a/4', 'b/5', 'c/6', 'e/6', 'e/6'],
         duration: '64',
-        stem_direction: VF.Stem.DOWN,
+        stem_direction: Stem.DOWN,
       },
     ];
     expect(notes.length * 2);
@@ -565,15 +569,15 @@ const StaveNoteTests = {
       { keys: ['c/4', 'e/4', 'a/4'], duration: '32h' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: '64h' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: '128h' },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2h', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'wh', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'hh', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'qh', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '8h', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '16h', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '32h', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '64h', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '128h', stem_direction: VF.Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2h', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'wh', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'hh', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'qh', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '8h', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '16h', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '32h', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '64h', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '128h', stem_direction: Stem.DOWN },
 
       { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm' },
@@ -584,15 +588,15 @@ const StaveNoteTests = {
       { keys: ['c/4', 'e/4', 'a/4'], duration: '32m' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: '64m' },
       { keys: ['c/4', 'e/4', 'a/4'], duration: '128m' },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'hm', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: 'qm', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '8m', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '16m', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '32m', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: VF.Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2m', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'wm', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'hm', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: 'qm', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '8m', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '16m', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '32m', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: Stem.DOWN },
+      { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: Stem.DOWN },
     ];
     expect(notes.length * 2);
 
@@ -612,38 +616,36 @@ const StaveNoteTests = {
     stave.draw();
 
     const notes = [
-      { keys: ['b/4'], duration: '1/2s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: 'ws', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: 'hs', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: 'qs', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '16s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '32s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '64s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '128s', stem_direction: VF.Stem.DOWN },
+      { keys: ['b/4'], duration: '1/2s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: 'ws', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: 'hs', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: 'qs', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '16s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '32s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '64s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '128s', stem_direction: Stem.DOWN },
 
-      { keys: ['b/4'], duration: '1/2s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: 'ws', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: 'hs', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: 'qs', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '16s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '32s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '64s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '128s', stem_direction: VF.Stem.UP },
+      { keys: ['b/4'], duration: '1/2s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: 'ws', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: 'hs', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: 'qs', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '16s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '32s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '64s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '128s', stem_direction: Stem.UP },
 
       // Beam
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '8s', stem_direction: VF.Stem.UP },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '8s', stem_direction: Stem.UP },
     ];
 
-    const stave_notes = notes.map(function (note) {
-      return new VF.StaveNote(note);
-    });
-    const beam1 = new VF.Beam([stave_notes[16], stave_notes[17]]);
-    const beam2 = new VF.Beam([stave_notes[18], stave_notes[19]]);
+    const stave_notes = notes.map((note_struct) => new StaveNote(note_struct));
+    const beam1 = new Beam([stave_notes[16], stave_notes[17]]);
+    const beam2 = new Beam([stave_notes[18], stave_notes[19]]);
 
     Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
 
@@ -657,14 +659,14 @@ const StaveNoteTests = {
     const ctx = contextBuilder(options.elementId, 300, 280);
     ctx.scale(3, 3);
 
-    const stave = new VF.Stave(10, 0, 100);
+    const stave = new Stave(10, 0, 100);
 
-    const note = new VF.StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
+    const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
       .setStave(stave)
-      .addAccidental(1, new VF.Accidental('b'))
+      .addAccidental(1, new Accidental('b'))
       .setKeyStyle(1, { shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue' });
 
-    new VF.TickContext().addTickable(note).preFormat().setX(25);
+    new TickContext().addTickable(note).preFormat().setX(25);
 
     stave.setContext(ctx).draw();
     note.setContext(ctx).draw();
@@ -802,29 +804,29 @@ const StaveNoteTests = {
 
     const notes = [
       // beam1
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.DOWN },
 
       // should be unstyled...
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.DOWN },
 
       // beam2 should also be unstyled
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.DOWN },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.DOWN },
 
       // beam3
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.UP },
-      { keys: ['b/4'], duration: '8', stem_direction: VF.Stem.UP },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.UP },
+      { keys: ['b/4'], duration: '8', stem_direction: Stem.UP },
 
       // beam4
-      { keys: ['d/6'], duration: '8', stem_direction: VF.Stem.DOWN },
-      { keys: ['c/6', 'd/6'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['d/6'], duration: '8', stem_direction: Stem.DOWN },
+      { keys: ['c/6', 'd/6'], duration: '8', stem_direction: Stem.DOWN },
 
       // unbeamed
-      { keys: ['d/6', 'e/6'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['d/6', 'e/6'], duration: '8', stem_direction: Stem.DOWN },
 
       // unbeamed, unstyled
-      { keys: ['e/6', 'f/6'], duration: '8', stem_direction: VF.Stem.DOWN },
+      { keys: ['e/6', 'f/6'], duration: '8', stem_direction: Stem.DOWN },
     ];
 
     const staveNotes = notes.map(function (note) {
@@ -894,20 +896,20 @@ const StaveNoteTests = {
     }
 
     const notes = [
-      newNote({ keys: ['f/4'], duration: '4', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '32', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '128', stem_direction: VF.Stem.UP })
+      newNote({ keys: ['f/4'], duration: '4', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '8', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '16', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '32', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '64', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '128', stem_direction: Stem.UP })
         .addDotToAll()
         .addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '4', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '4', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '8', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '16', stem_direction: Stem.UP }).addDotToAll(),
       newNote({ keys: ['g/4'], duration: '32' }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '128', stem_direction: VF.Stem.UP })
+      newNote({ keys: ['g/4'], duration: '64', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '128', stem_direction: Stem.UP })
         .addDotToAll()
         .addDotToAll(),
     ];
@@ -934,18 +936,18 @@ const StaveNoteTests = {
     }
 
     const notes = [
-      newNote({ keys: ['e/5'], duration: '4', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '4', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '4', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '8', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '16', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '32', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '64', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '128', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '4', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '8', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '16', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '32', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '64', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '128', stem_direction: Stem.DOWN }).addDotToAll(),
     ];
 
     stave.setContext(ctx).draw();
@@ -970,18 +972,18 @@ const StaveNoteTests = {
     }
 
     const notes = [
-      newNote({ keys: ['f/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '32', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['f/4'], duration: '128', stem_direction: VF.Stem.UP })
+      newNote({ keys: ['f/4'], duration: '8', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '16', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '32', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '64', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['f/4'], duration: '128', stem_direction: Stem.UP })
         .addDotToAll()
         .addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '8', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '16', stem_direction: VF.Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '8', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '16', stem_direction: Stem.UP }).addDotToAll(),
       newNote({ keys: ['g/4'], duration: '32' }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '64', stem_direction: VF.Stem.UP }).addDotToAll(),
-      newNote({ keys: ['g/4'], duration: '128', stem_direction: VF.Stem.UP })
+      newNote({ keys: ['g/4'], duration: '64', stem_direction: Stem.UP }).addDotToAll(),
+      newNote({ keys: ['g/4'], duration: '128', stem_direction: Stem.UP })
         .addDotToAll()
         .addDotToAll(),
     ];
@@ -1012,16 +1014,16 @@ const StaveNoteTests = {
     }
 
     const notes = [
-      newNote({ keys: ['e/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['e/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '8', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '16', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '32', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '64', stem_direction: VF.Stem.DOWN }).addDotToAll(),
-      newNote({ keys: ['d/5'], duration: '128', stem_direction: VF.Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '8', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '16', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '32', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '64', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['e/5'], duration: '128', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '8', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '16', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '32', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '64', stem_direction: Stem.DOWN }).addDotToAll(),
+      newNote({ keys: ['d/5'], duration: '128', stem_direction: Stem.DOWN }).addDotToAll(),
     ];
 
     const beam = new VF.Beam(notes);
@@ -1115,13 +1117,13 @@ const StaveNoteTests = {
     ok(true);
   },
 
-  centerAlignedMultiVoice(options) {
+  centerAlignedMultiVoice(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 160);
 
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('3/8');
 
     // Create custom duration
-    const custom_duration = new VF.Fraction(3, 8);
+    const custom_duration = new Fraction(3, 8);
 
     const notes0 = [{ keys: ['c/4'], duration: '1r', align_center: true, duration_override: custom_duration }].map(
       f.StaveNote.bind(f)

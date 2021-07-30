@@ -196,8 +196,8 @@ const BeamTests = (function () {
 
       f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
-      const UP = VF.Stem.UP;
-      const DOWN = VF.Stem.DOWN;
+      const UP = Stem.UP;
+      const DOWN = Stem.DOWN;
 
       equal(beams[0].stem_direction, UP);
       equal(beams[1].stem_direction, UP);

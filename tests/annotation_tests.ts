@@ -3,8 +3,8 @@
 //
 // Annotation Tests
 
-/* xeslint-disable */
-// x@ts-nocheck
+/* eslint-disable */
+// @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';

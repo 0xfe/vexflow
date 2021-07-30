@@ -79,7 +79,7 @@ const StyleTests = {
     ok(true, 'Basic Style');
   },
 
-  tab: function (options: TestOptions, contextBuilder: ContextBuilder): void {
+  tab(options: TestOptions, contextBuilder: ContextBuilder): void {
     var ctx = contextBuilder(options.elementId, 500, 140);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
