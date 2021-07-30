@@ -2,7 +2,11 @@
  * VexFlow - Declarations to interface with ./support/qunit.js
  */
 
-// eslint-disable-next-line
+/* eslint-disable */
+
+declare global {
+  var VF: any;
+}
 declare const global: any;
 
 export const QUnit = global.QUnit;
@@ -20,7 +24,6 @@ export const throws = global.throws;
 
 // See: https://api.qunitjs.com/assert/
 // TODO: npm install @types/qunit
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Assert {
   test: any;
   expect(amount: number): void;
@@ -45,4 +48,3 @@ export interface Assert {
   throws(block: () => void, expected?: any, message?: any): void;
   raises(block: () => void, expected?: any, message?: any): void;
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */

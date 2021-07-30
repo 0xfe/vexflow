@@ -9,9 +9,11 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { Stem } from 'stem';
+import { Formatter } from 'formatter';
+import { Tuplet } from 'tuplet';
 
 // Helper Functions
-const set = (key) => (value) => (object) => {
+const set = (key: string) => (value: number | string) => (object: any) => {
   object[key] = value;
   return object;
 };
@@ -21,7 +23,7 @@ const setStemDown = setStemDirection(Stem.DOWN);
 const setDurationToQuarterNote = set('duration')('4');
 
 const TupletTests = {
-  Start() {
+  Start(): void {
     const runTests = VexFlowTests.runTests;
     QUnit.module('Tuplet');
     runTests('Simple Tuplet', this.simple);
@@ -37,7 +39,7 @@ const TupletTests = {
     runTests('Single Tuplets', this.single);
   },
 
-  simple(options: TestOptions) {
+  simple(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/4');
 
@@ -61,7 +63,7 @@ const TupletTests = {
       .setStrict(true)
       .addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -98,14 +100,14 @@ const TupletTests = {
       .setStrict(true)
       .addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
     ok(true, 'Beamed Test');
   },
 
-  ratio(options) {
+  ratio(options): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('4/4');
 
@@ -141,14 +143,14 @@ const TupletTests = {
 
     const voice = f.Voice().setStrict(true).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
     ok(true, 'Ratioed Test');
   },
 
-  bottom(options) {
+  bottom(options): void {
     const f = VexFlowTests.makeFactory(options, 350, 160);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('3/4');
 
@@ -169,12 +171,12 @@ const TupletTests = {
 
     f.Tuplet({
       notes: notes.slice(0, 3),
-      options: { location: VF.Tuplet.LOCATION_BOTTOM },
+      options: { location: Tuplet.LOCATION_BOTTOM },
     });
 
     f.Tuplet({
       notes: notes.slice(3, 6),
-      options: { location: VF.Tuplet.LOCATION_BOTTOM },
+      options: { location: Tuplet.LOCATION_BOTTOM },
     });
 
     const voice = f
@@ -182,14 +184,14 @@ const TupletTests = {
       .setStrict(true)
       .addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
     ok(true, 'Bottom Test');
   },
 
-  bottom_ratio(options) {
+  bottom_ratio(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 350, 160);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('5/8');
 
@@ -211,7 +213,7 @@ const TupletTests = {
     f.Tuplet({
       notes: notes.slice(0, 3),
       options: {
-        location: VF.Tuplet.LOCATION_BOTTOM,
+        location: Tuplet.LOCATION_BOTTOM,
         ratioed: true,
       },
     });
@@ -219,7 +221,7 @@ const TupletTests = {
     f.Tuplet({
       notes: notes.slice(3, 6),
       options: {
-        location: VF.Tuplet.LOCATION_BOTTOM,
+        location: Tuplet.LOCATION_BOTTOM,
         notes_occupied: 1,
       },
     });
@@ -229,7 +231,7 @@ const TupletTests = {
       .setStrict(true)
       .addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -278,7 +280,7 @@ const TupletTests = {
 
     const voice = f.Voice().setStrict(false).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -345,7 +347,7 @@ const TupletTests = {
 
     const voice2 = f.Voice().setStrict(true).addTickables(notes2);
 
-    new VF.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
+    new Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
     f.draw();
 
@@ -390,7 +392,7 @@ const TupletTests = {
 
     const voice = f.Voice().setStrict(false).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -435,7 +437,7 @@ const TupletTests = {
 
     const voice = f.Voice().setStrict(false).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -483,14 +485,14 @@ const TupletTests = {
     // 4/4 time
     const voice = f.Voice().setStrict(true).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
     ok(true, 'Nested Tuplets');
   },
 
-  single(options) {
+  single(options): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
@@ -558,7 +560,7 @@ const TupletTests = {
       .setStrict(true)
       .addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
