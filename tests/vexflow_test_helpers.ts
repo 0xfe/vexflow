@@ -3,19 +3,17 @@
 //
 // VexFlow Test Support Library
 
-import { Vex } from 'vex';
-import { Font, Fonts } from 'font';
-import { ContextBuilder, Renderer } from 'renderer';
-import { RenderContext } from 'types/common';
-import { Factory } from 'factory';
-import { Assert } from './declarations';
-import { Note } from 'note';
+import { QUnit, Assert } from './declarations';
 import { Flow } from 'flow';
+import { RenderContext } from 'types/common';
+import { ContextBuilder, Renderer } from 'renderer';
+import { Factory } from 'factory';
+import { Font, Fonts } from 'font';
+import { Note } from 'note';
 
 /* eslint-disable */
 declare var global: any;
 declare var $: any;
-declare var QUnit: any;
 /* eslint-enable */
 
 export interface TestOptions {
