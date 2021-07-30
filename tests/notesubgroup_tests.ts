@@ -11,6 +11,8 @@ import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { Barline, BarlineType } from 'stavebarline';
 import { BarNote } from 'barnote';
+import { StaveNote } from 'stavenote';
+import { Note } from 'note';
 
 const NoteSubGroupTests = {
   Start(): void {
@@ -75,7 +77,7 @@ const NoteSubGroupTests = {
     ok(true, 'all pass');
   },
 
-  drawMultiVoice(options): void {
+  drawMultiVoice(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 550, 200);
     const ctx = f.getContext();
     const stave = f.Stave().addClef('treble');
@@ -94,10 +96,10 @@ const NoteSubGroupTests = {
       { keys: ['f/4'], stem_direction: -1, duration: '4', clef: 'soprano' },
     ].map(f.StaveNote.bind(f));
 
-    function addAccidental(note, accid) {
+    function addAccidental(note: StaveNote, accid: string) {
       return note.addModifier(f.Accidental({ type: accid }), 0);
     }
-    function addSubGroup(note, subNotes) {
+    function addSubGroup(note: StaveNote, subNotes: Note[]) {
       return note.addModifier(f.NoteSubGroup({ notes: subNotes }), 0);
     }
 
@@ -132,7 +134,7 @@ const NoteSubGroupTests = {
   },
 
   // draws multiple times. prevents incremental x-shift each draw.
-  drawMultiVoiceMultipleDraw(options): void {
+  drawMultiVoiceMultipleDraw(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 550, 200);
     const ctx = f.getContext();
     const stave = f.Stave().addClef('treble');
@@ -260,4 +262,5 @@ const NoteSubGroupTests = {
     ok(true, 'all pass');
   },
 };
+
 export { NoteSubGroupTests };

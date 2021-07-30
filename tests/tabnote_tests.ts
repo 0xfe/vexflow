@@ -1,11 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// TabNote Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
-import { QUnit, ok, expect, test, equal } from './declarations';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok, expect, test, equal } from './declarations';
 import { Flow } from 'flow';
 import { Voice } from 'voice';
 import { Formatter } from 'formatter';
@@ -13,26 +15,24 @@ import { TabNote } from 'tabnote';
 import { Stave } from 'stave';
 import { TickContext } from 'tickcontext';
 import { ContextBuilder } from 'renderer';
+import { TabStave } from 'tabstave';
 
-/**
- * TabNote Tests
- */
 const TabNoteTests = {
   Start(): void {
     QUnit.module('TabNote');
 
-    test('Tick', TabNoteTests.ticks);
-    test('TabStave Line', TabNoteTests.tabStaveLine);
-    test('Width', TabNoteTests.width);
-    test('TickContext', TabNoteTests.tickContext);
+    test('Tick', this.ticks);
+    test('TabStave Line', this.tabStaveLine);
+    test('Width', this.width);
+    test('TickContext', this.tickContext);
 
-    const run = VexFlowTests.runTests;
-    run('TabNote Draw', TabNoteTests.draw);
-    run('TabNote Stems Up', TabNoteTests.drawStemsUp);
-    run('TabNote Stems Down', TabNoteTests.drawStemsDown);
-    run('TabNote Stems Up Through Stave', TabNoteTests.drawStemsUpThrough);
-    run('TabNote Stems Down Through Stave', TabNoteTests.drawStemsDownThrough);
-    run('TabNote Stems with Dots', TabNoteTests.drawStemsDotted);
+    const runTests = VexFlowTests.runTests;
+    runTests('TabNote Draw', this.draw);
+    runTests('TabNote Stems Up', this.drawStemsUp);
+    runTests('TabNote Stems Down', this.drawStemsDown);
+    runTests('TabNote Stems Up Through Stave', this.drawStemsUpThrough);
+    runTests('TabNote Stems Down Through Stave', this.drawStemsDownThrough);
+    runTests('TabNote Stems with Dots', this.drawStemsDotted);
   },
 
   ticks(): void {
@@ -45,7 +45,7 @@ const TabNoteTests = {
     equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beat');
   },
 
-  tabStaveLine() {
+  tabStaveLine(): void {
     const note = new TabNote({
       positions: [
         { str: 6, fret: 6 },
@@ -69,7 +69,7 @@ const TabNoteTests = {
     equal(ys[1], 80, 'Line for String 4, Fret 5');
   },
 
-  width() {
+  width(): void {
     expect(1);
     const note = new TabNote({
       positions: [
@@ -113,7 +113,7 @@ const TabNoteTests = {
     const ctx = contextBuilder(options.elementId, 600, 140);
 
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 550);
+    const stave = new TabStave(10, 10, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -180,7 +180,7 @@ const TabNoteTests = {
   drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 30, 550);
+    const stave = new TabStave(10, 30, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -237,14 +237,14 @@ const TabNoteTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
 
-    const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
     voice.addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
     ok(true, 'TabNotes successfully drawn');
   },
@@ -253,7 +253,7 @@ const TabNoteTests = {
     const ctx = contextBuilder(options.elementId, 600, 200);
 
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 550);
+    const stave = new TabStave(10, 10, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -310,15 +310,15 @@ const TabNoteTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.setStemDirection(-1);
       return tabNote;
     });
 
-    const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
     voice.addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
     ok(true, 'All objects have been drawn');
   },
@@ -326,7 +326,7 @@ const TabNoteTests = {
   drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 30, 550);
+    const stave = new TabStave(10, 30, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -383,16 +383,16 @@ const TabNoteTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_stem_through_stave = true;
       return tabNote;
     });
 
     ctx.setFont('sans-serif', 10, 'bold');
-    const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
     voice.addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
     ok(true, 'TabNotes successfully drawn');
   },
@@ -401,7 +401,7 @@ const TabNoteTests = {
     const ctx = contextBuilder(options.elementId, 600, 250);
 
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 550, { num_lines: 8 });
+    const stave = new TabStave(10, 10, 550, { num_lines: 8 });
     stave.setContext(ctx);
     stave.draw();
 
@@ -461,7 +461,7 @@ const TabNoteTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_stem_through_stave = true;
       tabNote.setStemDirection(-1);
@@ -470,9 +470,9 @@ const TabNoteTests = {
 
     ctx.setFont('Arial', 10, 'bold');
 
-    const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
     voice.addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
     ok(true, 'All objects have been drawn');
   },
@@ -480,7 +480,7 @@ const TabNoteTests = {
   drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 550);
+    const stave = new TabStave(10, 10, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -518,7 +518,7 @@ const TabNoteTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec, true);
+      const tabNote = new TabNote(noteSpec, true);
       return tabNote;
     });
 

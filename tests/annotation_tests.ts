@@ -14,6 +14,15 @@ import { Registry } from 'registry';
 import { StaveNote } from 'stavenote';
 import { Annotation } from 'annotation';
 import { Formatter } from 'formatter';
+import { TabNote } from 'tabnote';
+import { Voice } from 'voice';
+import { TabStave } from 'tabstave';
+import { Bend } from 'bend';
+import { Stave } from 'stave';
+import { Vibrato } from 'vibrato';
+import { Beam } from 'beam';
+
+const FONT_SIZE = VexFlowTests.Font.size;
 
 const AnnotationTests = {
   Start(): void {
@@ -76,16 +85,16 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
     ctx.font = ' 10pt Arial';
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newBend(text) {
-      return new VF.Bend(text);
+      return new Bend(text);
     }
     function newAnnotation(text) {
-      return new VF.Annotation(text);
+      return new Annotation(text);
     }
 
     const notes = [
@@ -113,13 +122,13 @@ const AnnotationTests = {
     ctx.scale(1.5, 1.5);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
-    const stave = new VF.Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
+    const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
     function note(note_struct) {
       return new StaveNote(note_struct);
     }
     function annotation(text) {
-      return new Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
+      return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
     }
 
     const notes = [
@@ -137,13 +146,13 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
     ctx.font = ' 10pt Arial';
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newAnnotation(text) {
-      return new VF.Annotation(text);
+      return new Annotation(text);
     }
 
     const notes = [
@@ -158,7 +167,7 @@ const AnnotationTests = {
         positions: [{ str: 2, fret: 9 }],
         duration: 'h',
       })
-        .addModifier(newAnnotation('(8va)').setFont('Times', VexFlowTests.Font.size, 'italic'), 0)
+        .addModifier(newAnnotation('(8va)').setFont('Times', FONT_SIZE, 'italic'), 0)
         .addModifier(newAnnotation('A.H.'), 0),
     ];
 
@@ -171,14 +180,14 @@ const AnnotationTests = {
     ctx.scale(1.5, 1.5);
     ctx.setFillStyle('#221');
     ctx.setStrokeStyle('#221');
-    ctx.setFont('Arial', VexFlowTests.Font.size, '');
-    const stave = new VF.TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+    ctx.setFont('Arial', FONT_SIZE, '');
+    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
     function newAnnotation(text) {
-      return new VF.Annotation(text).setFont('Times', VexFlowTests.Font.size, 'italic');
+      return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
     }
 
     const notes = [
@@ -191,7 +200,7 @@ const AnnotationTests = {
           { str: 5, fret: 0 },
         ],
         duration: 'h',
-      }).addModifier(new VF.Vibrato().setVibratoWidth(40)),
+      }).addModifier(new Vibrato().setVibratoWidth(40)),
       newNote({
         positions: [{ str: 6, fret: 9 }],
         duration: '8',
@@ -219,15 +228,15 @@ const AnnotationTests = {
     ctx.scale(1.5, 1.5);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
-    const stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
+    const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
     function newNote(note_struct) {
-      return new VF.StaveNote(note_struct);
+      return new StaveNote(note_struct);
     }
     function newAnnotation(text) {
-      return new VF.Annotation(text)
-        .setFont('Times', VexFlowTests.Font.size)
-        .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+      return new Annotation(text)
+        .setFont('Times', FONT_SIZE)
+        .setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
     }
 
     const notes = [
@@ -246,32 +255,32 @@ const AnnotationTests = {
     ctx.scale(1.5, 1.5);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
-    const stave = new VF.Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
+    const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
     // Create some notes
     const notes = [
-      new VF.StaveNote({ keys: ['a/3'], duration: '8' }).addModifier(
-        new VF.Annotation('good').setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
+      new StaveNote({ keys: ['a/3'], duration: '8' }).addModifier(
+        new Annotation('good').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
         0
       ),
 
-      new VF.StaveNote({ keys: ['g/3'], duration: '8' }).addModifier(
-        new VF.Annotation('even').setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
+      new StaveNote({ keys: ['g/3'], duration: '8' }).addModifier(
+        new Annotation('even').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
         0
       ),
 
-      new VF.StaveNote({ keys: ['c/4'], duration: '8' }).addModifier(
-        new VF.Annotation('under').setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
+      new StaveNote({ keys: ['c/4'], duration: '8' }).addModifier(
+        new Annotation('under').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
         0
       ),
 
-      new VF.StaveNote({ keys: ['d/4'], duration: '8' }).addModifier(
-        new VF.Annotation('beam').setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
+      new StaveNote({ keys: ['d/4'], duration: '8' }).addModifier(
+        new Annotation('beam').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
         0
       ),
     ];
 
-    const beam = new VF.Beam(notes.slice(1));
+    const beam = new Beam(notes.slice(1));
 
     Formatter.FormatAndDraw(ctx, stave, notes);
     beam.setContext(ctx).draw();
@@ -285,17 +294,17 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
 
     function newNote(note_struct) {
-      return new VF.StaveNote(note_struct);
+      return new StaveNote(note_struct);
     }
     function newAnnotation(text, hJustifcation, vJustifcation) {
-      return new VF.Annotation(text)
-        .setFont('Arial', VexFlowTests.Font.size)
+      return new Annotation(text)
+        .setFont('Arial', FONT_SIZE)
         .setJustification(hJustifcation)
         .setVerticalJustification(vJustifcation);
     }
 
     for (let v = 1; v <= 4; ++v) {
-      const stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
+      const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
       const notes = [];
 
@@ -317,17 +326,17 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
 
     function newNote(note_struct) {
-      return new VF.StaveNote(note_struct);
+      return new StaveNote(note_struct);
     }
     function newAnnotation(text, hJustifcation, vJustifcation) {
-      return new VF.Annotation(text)
-        .setFont('Arial', VexFlowTests.Font.size)
+      return new Annotation(text)
+        .setFont('Arial', FONT_SIZE)
         .setJustification(hJustifcation)
         .setVerticalJustification(vJustifcation);
     }
 
     for (let v = 1; v <= 4; ++v) {
-      const stave = new VF.Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
+      const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
       const notes = [];
 
@@ -353,7 +362,7 @@ const AnnotationTests = {
   tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, 550);
+    const stave = new TabStave(10, 10, 550);
     stave.setContext(ctx);
     stave.draw();
 
@@ -389,45 +398,45 @@ const AnnotationTests = {
     ];
 
     const notes = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
 
     const notes2 = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.setStemDirection(-1);
       return tabNote;
     });
 
     const notes3 = specs.map(function (noteSpec) {
-      const tabNote = new VF.TabNote(noteSpec);
+      const tabNote = new TabNote(noteSpec);
       return tabNote;
     });
 
-    notes[0].addModifier(new VF.Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
-    notes[1].addModifier(new VF.Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
-    notes[2].addModifier(new VF.Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-    notes[3].addModifier(new VF.Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
+    notes[0].addModifier(new Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
+    notes[1].addModifier(new Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
+    notes[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
+    notes[3].addModifier(new Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
 
-    notes2[0].addModifier(new VF.Annotation('Text').setJustification(3).setVerticalJustification(1), 0); // U
-    notes2[1].addModifier(new VF.Annotation('Text').setJustification(3).setVerticalJustification(2), 0); // D
-    notes2[2].addModifier(new VF.Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-    notes2[3].addModifier(new VF.Annotation('Text').setJustification(3).setVerticalJustification(4), 0); // D
+    notes2[0].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(1), 0); // U
+    notes2[1].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(2), 0); // D
+    notes2[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
+    notes2[3].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(4), 0); // D
 
-    notes3[0].addModifier(new VF.Annotation('Text').setVerticalJustification(1), 0); // U
-    notes3[1].addModifier(new VF.Annotation('Text').setVerticalJustification(2), 0); // D
-    notes3[2].addModifier(new VF.Annotation('Text').setVerticalJustification(3), 0); // U
-    notes3[3].addModifier(new VF.Annotation('Text').setVerticalJustification(4), 0); // D
+    notes3[0].addModifier(new Annotation('Text').setVerticalJustification(1), 0); // U
+    notes3[1].addModifier(new Annotation('Text').setVerticalJustification(2), 0); // D
+    notes3[2].addModifier(new Annotation('Text').setVerticalJustification(3), 0); // U
+    notes3[3].addModifier(new Annotation('Text').setVerticalJustification(4), 0); // D
 
-    const voice = new VF.Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 
     voice.addTickables(notes);
     voice.addTickables(notes2);
     voice.addTickables(notes3);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     voice.draw(ctx, stave);
 

@@ -60,18 +60,18 @@ const TuningTests = {
 
     const tuning = new Tuning();
     tuning.setTuning('standardBanjo');
-    this.checkStandardBanjo(tuning);
+    TuningTests.checkStandardBanjo(tuning);
   },
 
   standard(): void {
     expect(16);
 
     const tuning = new Tuning();
-    this.checkStandard(tuning);
+    TuningTests.checkStandard(tuning);
 
     // Test named tuning
     tuning.setTuning('standard');
-    this.checkStandard(tuning);
+    TuningTests.checkStandard(tuning);
   },
 
   noteForFret(): void {
