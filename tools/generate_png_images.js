@@ -39,10 +39,7 @@ if (scriptDir.includes('build')) {
 
 const VFT = Vex.Flow.Test;
 
-Vex.Flow.shims = {
-  fs,
-  process,
-};
+VFT.shims = { fs, process };
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.
 VFT.RUN_CANVAS_TESTS = false;
