@@ -65,7 +65,6 @@ import { BachDemoTests } from './bach_tests';
 import { GlyphNoteTests } from './glyphnote_tests';
 
 VexFlowTests.run = function () {
-  /*
   AccidentalTests.Start();
   StaveNoteTests.Start();
   VoiceTests.Start();
@@ -87,11 +86,9 @@ VexFlowTests.run = function () {
   TabSlideTests.Start();
   BeamTests.Start();
   BarlineTests.Start();
-  */
-  // AutoBeamFormattingTests.Start();
-  // GraceNoteTests.Start();
-  // GraceTabNoteTests.Start();
-  /*
+  AutoBeamFormattingTests.Start();
+  GraceNoteTests.Start();
+  GraceTabNoteTests.Start();
   VibratoTests.Start();
   VibratoBracketTests.Start();
   AnnotationTests.Start();
@@ -128,7 +125,6 @@ VexFlowTests.run = function () {
   RegistryTests.Start();
   BachDemoTests.Start();
   GlyphNoteTests.Start();
-  */
 };
 
 export default Vex;

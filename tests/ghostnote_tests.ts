@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// GhostNote Tests
 
 /* eslint-disable */
 // @ts-nocheck
@@ -9,9 +11,9 @@ import { QUnit, ok } from './declarations';
 
 function createTest(setup: any) {
   return function (options: any) {
-    var f = VexFlowTests.makeFactory(options, 550);
-    var stave = f.Stave();
-    var score = f.EasyScore();
+    const f = VexFlowTests.makeFactory(options, 550);
+    const stave = f.Stave();
+    const score = f.EasyScore();
 
     setup(f, score);
 
@@ -23,19 +25,15 @@ function createTest(setup: any) {
   };
 }
 
-/**
- * GhostNote Tests
- */
 const GhostNoteTests = {
-  Start: function () {
-    var run = VexFlowTests.runTests;
-
+  Start() {
     QUnit.module('GhostNote');
+    const runTests = VexFlowTests.runTests;
 
-    run(
+    runTests(
       'GhostNote Basic',
       createTest(function (f: any, score: any) {
-        var voice1 = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
+        const voice1 = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
           time: '7/4',
         });
 
@@ -60,10 +58,10 @@ const GhostNoteTests = {
       })
     );
 
-    run(
+    runTests(
       'GhostNote Dotted',
       createTest(function (f: any, score: any) {
-        var voice1 = score.voice(
+        const voice1 = score.voice(
           [
             f.GhostNote({ duration: '4d' }),
             f.StaveNote({ duration: '8', keys: ['f/5'], stem_direction: 1 }),
@@ -77,7 +75,7 @@ const GhostNoteTests = {
           { time: '8/4' }
         );
 
-        var voice2 = score.voice(
+        const voice2 = score.voice(
           [
             f.StaveNote({ duration: '4', keys: ['f/4'], stem_direction: -1 }),
             f.StaveNote({ duration: '8', keys: ['e/4'], stem_direction: -1 }),
@@ -92,8 +90,8 @@ const GhostNoteTests = {
           { time: '8/4' }
         );
 
-        var notes1 = voice1.getTickables();
-        var notes2 = voice2.getTickables();
+        const notes1 = voice1.getTickables();
+        const notes2 = voice2.getTickables();
 
         const addAccidental = (note: any, type: any) => {
           note.addAccidental(0, f.Accidental({ type: type }));

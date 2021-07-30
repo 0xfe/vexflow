@@ -1,11 +1,17 @@
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { ok, QUnit } from './declarations';
-import { ContextBuilder } from 'renderer';
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// GraceTabNote Tests
 
-/**
- * VexFlow - GraceTabNote Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+/* eslint-disable */
+// @ts-nocheck
+
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
+import { ContextBuilder } from 'renderer';
+import { Flow } from 'flow';
+import { GraceNoteGroup } from 'gracenotegroup';
+
 const GraceTabNoteTests = {
   Start(): void {
     QUnit.module('Grace Tab Notes');
@@ -22,7 +28,7 @@ const GraceTabNoteTests = {
 
   simple(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    const c = GraceTabNote.setupContext(options);
+    const c = GraceTabNoteTests.setupContext(options);
     function newNote(tab_struct) {
       return new VF.TabNote(tab_struct);
     }
@@ -58,7 +64,7 @@ const GraceTabNoteTests = {
     note0.addModifier(new VF.GraceNoteGroup(gracenotes0));
     note1.addModifier(new VF.GraceNoteGroup(gracenotes1));
     note2.addModifier(new VF.GraceNoteGroup(gracenotes2));
-    note3.addModifier(new VF.GraceNoteGroup(gracenotes3));
+    note3.addModifier(new GraceNoteGroup(gracenotes3));
 
     const voice = new VF.Voice(Flow.TIME4_4);
     voice.addTickables([note0, note1, note2, note3]);
@@ -72,7 +78,7 @@ const GraceTabNoteTests = {
 
   slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    const c = GraceTabNote.setupContext(options);
+    const c = GraceTabNoteTests.setupContext(options);
     function newNote(tab_struct) {
       return new VF.TabNote(tab_struct);
     }
@@ -111,4 +117,5 @@ const GraceTabNoteTests = {
     ok(true, 'Slurred Test');
   },
 };
+
 export { GraceTabNoteTests };
