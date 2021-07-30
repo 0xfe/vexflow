@@ -53,7 +53,7 @@ const ArticulationTests = {
     notesBar1[3].addArticulation(0, new Articulation(sym1).setPosition(3));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
     const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 125);
@@ -72,7 +72,7 @@ const ArticulationTests = {
     notesBar2[3].addArticulation(0, new VF.Articulation(sym1).setPosition(4));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // bar 3 - juxtaposing second bar next to first bar
     const staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 125);
@@ -90,7 +90,7 @@ const ArticulationTests = {
     notesBar3[3].addArticulation(0, new VF.Articulation(sym2).setPosition(3));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+    Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
     // bar 4 - juxtaposing second bar next to first bar
     const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 125);
     staveBar4.setEndBarType(VF.Barline.type.END);
@@ -108,7 +108,7 @@ const ArticulationTests = {
     notesBar4[3].addArticulation(0, new VF.Articulation(sym2).setPosition(4));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+    Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
   },
 
   drawFermata(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -135,7 +135,7 @@ const ArticulationTests = {
     notesBar1[3].addArticulation(0, new VF.Articulation(sym2).setPosition(4));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
     const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 150);
@@ -154,7 +154,7 @@ const ArticulationTests = {
     notesBar2[3].addArticulation(0, new VF.Articulation(sym2).setPosition(4));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
   },
 
   drawArticulations2(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -198,7 +198,7 @@ const ArticulationTests = {
     const beam2 = new VF.Beam(notesBar1.slice(8, 16));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
     beam1.setContext(ctx).draw();
     beam2.setContext(ctx).draw();
 
@@ -236,7 +236,7 @@ const ArticulationTests = {
     const beam4 = new VF.Beam(notesBar2.slice(8, 16));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
     beam3.setContext(ctx).draw();
     beam4.setContext(ctx).draw();
 
@@ -250,7 +250,7 @@ const ArticulationTests = {
     notesBar3[0].addArticulation(0, new VF.Articulation('a@a').setPosition(3));
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+    Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
     // bar 4 - juxtaposing second bar next to first bar
     const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 150);
     staveBar4.setEndBarType(VF.Barline.type.END);
@@ -271,7 +271,7 @@ const ArticulationTests = {
     }
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+    Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
   },
 
   tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {

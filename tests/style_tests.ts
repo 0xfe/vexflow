@@ -79,7 +79,7 @@ const StyleTests = {
     ok(true, 'Basic Style');
   },
 
-  tab: function (options, contextBuilder) {
+  tab: function (options: TestOptions, contextBuilder: ContextBuilder): void {
     var ctx = contextBuilder(options.elementId, 500, 140);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
@@ -118,7 +118,7 @@ const StyleTests = {
         .addStroke(0, new VF.Stroke(1, { all_voices: false }).setStyle(FS('blue'))),
     ];
 
-    VF.Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes, 200);
     ok(true, 'TabNote modifiers Style');
   },
 };

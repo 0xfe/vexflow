@@ -91,10 +91,10 @@ VexFlowTests.run = function () {
   // AutoBeamFormattingTests.Start();
   // GraceNoteTests.Start();
   // GraceTabNoteTests.Start();
-  // VibratoTests.Start();
-  // VibratoBracketTests.Start();
-  // AnnotationTests.Start();
   /*
+  VibratoTests.Start();
+  VibratoBracketTests.Start();
+  AnnotationTests.Start();
   ChordSymbolTests.Start();
   TuningTests.Start();
   MusicTests.Start();

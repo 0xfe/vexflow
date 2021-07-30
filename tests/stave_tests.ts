@@ -147,7 +147,7 @@ const StaveTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
     const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
@@ -175,7 +175,7 @@ const StaveTests = {
     const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // Render beams
     beam1.setContext(ctx).draw();
@@ -203,7 +203,7 @@ const StaveTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
     const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
@@ -233,7 +233,7 @@ const StaveTests = {
     const notesBar2 = notesBar2_part1.concat(notesBar2_part2);
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // Render beams
     beam1.setContext(ctx).draw();
@@ -245,7 +245,7 @@ const StaveTests = {
     const notesBar3 = [new VF.StaveNote({ keys: ['d/5'], duration: 'wr' })];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+    Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
     // bar 4 - juxtaposing third bar next to third bar
     const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 250 - staveBar1.getModifierXShift());
@@ -260,7 +260,7 @@ const StaveTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+    Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
   },
 
   drawEndModifiersTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -312,7 +312,7 @@ const StaveTests = {
           new VF.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
         ];
 
-        VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+        Formatter.FormatAndDraw(ctx, staveBar, notesBar);
       }
 
       drawAStave(
@@ -451,7 +451,7 @@ const StaveTests = {
     mm1.setContext(ctx).draw();
     const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
+    Formatter.FormatAndDraw(ctx, mm1, notesmm1);
 
     // bar 2 - juxtapose second measure
     const mm2 = new VF.Stave(mm1.width + mm1.x, mm1.y, 60);
@@ -460,7 +460,7 @@ const StaveTests = {
     mm2.setContext(ctx).draw();
     const notesmm2 = [new VF.StaveNote({ keys: ['d/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+    Formatter.FormatAndDraw(ctx, mm2, notesmm2);
 
     // bar 3 - juxtapose third measure
     const mm3 = new VF.Stave(mm2.width + mm2.x, mm1.y, 60);
@@ -469,7 +469,7 @@ const StaveTests = {
     mm3.setContext(ctx).draw();
     const notesmm3 = [new VF.StaveNote({ keys: ['e/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+    Formatter.FormatAndDraw(ctx, mm3, notesmm3);
 
     // bar 4 - juxtapose fourth measure
     const mm4 = new VF.Stave(mm3.width + mm3.x, mm1.y, 60);
@@ -478,7 +478,7 @@ const StaveTests = {
     mm4.setContext(ctx).draw();
     const notesmm4 = [new VF.StaveNote({ keys: ['f/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+    Formatter.FormatAndDraw(ctx, mm4, notesmm4);
 
     // bar 5 - juxtapose fifth measure
     const mm5 = new VF.Stave(mm4.width + mm4.x, mm1.y, 60);
@@ -488,7 +488,7 @@ const StaveTests = {
     mm5.setContext(ctx).draw();
     const notesmm5 = [new VF.StaveNote({ keys: ['g/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
+    Formatter.FormatAndDraw(ctx, mm5, notesmm5);
 
     // bar 6 - juxtapose sixth measure
     const mm6 = new VF.Stave(mm5.width + mm5.x, mm1.y, 60);
@@ -498,7 +498,7 @@ const StaveTests = {
     mm6.setContext(ctx).draw();
     const notesmm6 = [new VF.StaveNote({ keys: ['a/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
+    Formatter.FormatAndDraw(ctx, mm6, notesmm6);
 
     // bar 7 - juxtapose seventh measure
     const mm7 = new VF.Stave(mm6.width + mm6.x, mm1.y, 60);
@@ -507,7 +507,7 @@ const StaveTests = {
     mm7.setContext(ctx).draw();
     const notesmm7 = [new VF.StaveNote({ keys: ['b/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm7, notesmm7);
+    Formatter.FormatAndDraw(ctx, mm7, notesmm7);
 
     // bar 8 - juxtapose eighth measure
     const mm8 = new VF.Stave(mm7.width + mm7.x, mm1.y, 60);
@@ -517,7 +517,7 @@ const StaveTests = {
     mm8.setContext(ctx).draw();
     const notesmm8 = [new VF.StaveNote({ keys: ['c/5'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm8, notesmm8);
+    Formatter.FormatAndDraw(ctx, mm8, notesmm8);
 
     // bar 9 - juxtapose ninth measure
     const mm9 = new VF.Stave(mm8.width + mm8.x + 20, mm1.y, 125);
@@ -530,7 +530,7 @@ const StaveTests = {
     const notesmm9 = [new VF.StaveNote({ keys: ['d/5'], duration: 'w' })];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm9, notesmm9);
+    Formatter.FormatAndDraw(ctx, mm9, notesmm9);
   },
 
   drawVoltaModifierTest: function (options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -550,7 +550,7 @@ const StaveTests = {
     mm1.setContext(ctx).draw();
     const notesmm1 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, mm1, notesmm1);
+    Formatter.FormatAndDraw(ctx, mm1, notesmm1);
 
     // bar 2: volta begin_mid, with modifiers (clef, keysignature)
     const mm2 = new VF.Stave(mm1.x + mm1.width, mm1.y, 175);
@@ -562,7 +562,7 @@ const StaveTests = {
     mm2.setMeasure(2);
     mm2.setContext(ctx).draw();
     const notesmm2 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-    VF.Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+    Formatter.FormatAndDraw(ctx, mm2, notesmm2);
 
     // bar 3: volta mid, with modifiers (clef, keysignature)
     const mm3 = new VF.Stave(mm2.x + mm2.width, mm2.y, 175);
@@ -574,7 +574,7 @@ const StaveTests = {
     mm3.setSection('B', 0);
     mm3.setContext(ctx).draw();
     const notesmm3 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-    VF.Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+    Formatter.FormatAndDraw(ctx, mm3, notesmm3);
 
     // bar 4: volta end, with modifiers (clef, keysignature)
     const mm4 = new VF.Stave(mm3.x + mm3.width, mm3.y, 175);
@@ -586,7 +586,7 @@ const StaveTests = {
     mm4.setSection('C', 0);
     mm4.setContext(ctx).draw();
     const notesmm4 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-    VF.Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+    Formatter.FormatAndDraw(ctx, mm4, notesmm4);
 
     // bar 5: d.s. shift (similar potential x-shift concern)
     const mm5 = new VF.Stave(mm4.x + mm4.width, mm4.y, 175);
@@ -599,7 +599,7 @@ const StaveTests = {
     mm5.setSection('D', 0);
     mm5.setContext(ctx).draw();
     const notesmm5 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-    VF.Formatter.FormatAndDraw(ctx, mm5, notesmm5);
+    Formatter.FormatAndDraw(ctx, mm5, notesmm5);
 
     // bar 6: d.s. without modifiers
     const mm6 = new VF.Stave(mm5.x + mm5.width, mm5.y, 175);
@@ -609,7 +609,7 @@ const StaveTests = {
     mm6.setSection('E', 0);
     mm6.setContext(ctx).draw();
     const notesmm6 = [new VF.StaveNote({ keys: ['c/4'], duration: 'w' })];
-    VF.Formatter.FormatAndDraw(ctx, mm6, notesmm6);
+    Formatter.FormatAndDraw(ctx, mm6, notesmm6);
   },
 
   drawTempo: function (options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -633,7 +633,7 @@ const StaveTests = {
         new VF.StaveNote({ keys: ['c/4'], duration: 'q' }),
       ];
 
-      VF.Formatter.FormatAndDraw(ctx, staveBar, notesBar);
+      Formatter.FormatAndDraw(ctx, staveBar, notesBar);
       x += width;
     }
 

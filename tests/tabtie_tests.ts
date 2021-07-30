@@ -53,7 +53,7 @@ const TabTieTests = (function () {
       TabTie.tieNotes(notes, indices, c.stave, c.context, text);
     },
 
-    simple: function (options, contextBuilder) {
+    simple: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
@@ -71,7 +71,7 @@ const TabTieTests = (function () {
       ok(true, 'Simple Test');
     },
 
-    tap: function (options, contextBuilder) {
+    tap: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       function newNote(tab_struct) {
         return new VF.TabNote(tab_struct);
@@ -180,17 +180,17 @@ const TabTieTests = (function () {
       ok(true, 'Chord high-fret');
     },
 
-    simpleHammeron: function (options, contextBuilder) {
+    simpleHammeron: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabTie.multiTest(options, VF.TabTie.createHammeron);
     },
 
-    simplePulloff: function (options, contextBuilder) {
+    simplePulloff: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabTie.multiTest(options, VF.TabTie.createPulloff);
     },
 
-    continuous: function (options, contextBuilder) {
+    continuous: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       var c = TabTie.setupContext(options, 440, 140);
       function newNote(tab_struct) {

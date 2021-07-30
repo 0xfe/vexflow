@@ -44,7 +44,7 @@ const TabSlideTests = (function () {
       return { context: ctx, stave: stave };
     },
 
-    simple: function (options, contextBuilder) {
+    simple: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       var c = TabSlide.setupContext(options);
       function newNote(tab_struct) {
@@ -153,12 +153,12 @@ const TabSlideTests = (function () {
       ok(true, 'Chord high-fret');
     },
 
-    slideUp: function (options, contextBuilder) {
+    slideUp: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabSlide.multiTest(options, VF.TabSlide.createSlideUp);
     },
 
-    slideDown: function (options, contextBuilder) {
+    slideDown: function (options: TestOptions, contextBuilder: ContextBuilder): void {
       options.contextBuilder = contextBuilder;
       TabSlide.multiTest(options, VF.TabSlide.createSlideDown);
     },

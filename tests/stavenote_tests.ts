@@ -645,7 +645,7 @@ const StaveNoteTests = {
     const beam1 = new VF.Beam([stave_notes[16], stave_notes[17]]);
     const beam2 = new VF.Beam([stave_notes[18], stave_notes[19]]);
 
-    VF.Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
+    Formatter.FormatAndDraw(ctx, stave, stave_notes, false);
 
     beam1.setContext(ctx).draw();
     beam2.setContext(ctx).draw();
@@ -765,7 +765,7 @@ const StaveNoteTests = {
       note.setContext(ctx);
       stave_notes.push(note);
     }
-    VF.Formatter.FormatAndDraw(ctx, stave, stave_notes);
+    Formatter.FormatAndDraw(ctx, stave, stave_notes);
 
     ok('Note Stem Length');
   },
@@ -857,7 +857,7 @@ const StaveNoteTests = {
     staveNotes[9].setLedgerLineStyle({ fillStyle: 'lawngreen', strokeStyle: 'lawngreen', lineWidth: 1 });
     staveNotes[9].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
 
-    VF.Formatter.FormatAndDraw(ctx, stave, staveNotes, false);
+    Formatter.FormatAndDraw(ctx, stave, staveNotes, false);
 
     beam1.setContext(ctx).draw();
     beam2.setContext(ctx).draw();

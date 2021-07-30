@@ -68,7 +68,7 @@ const RhythmTests = {
     const notesBar1 = [new StaveNote({ keys: ['b/4'], duration: '1s', stem_direction: -1 })];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
     const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 120);
@@ -83,7 +83,7 @@ const RhythmTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // bar 3 - juxtaposing second bar next to first bar
     const staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 170);
@@ -114,7 +114,7 @@ const RhythmTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+    Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
     // bar 4 - juxtaposing second bar next to first bar
     const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 200);
@@ -165,7 +165,7 @@ const RhythmTests = {
     ];
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+    Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
     expect(0);
   },
 
@@ -234,7 +234,7 @@ const RhythmTests = {
     const notesBar1 = notesBar1_part1.concat(notesBar1_part2);
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // Render beams
     beam1.setContext(ctx).draw();
@@ -304,7 +304,7 @@ const RhythmTests = {
     const beam1 = new VF.Beam(notesBar1_part1);
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
 
     // Render beams
     beam1.setContext(ctx).draw();
@@ -323,7 +323,7 @@ const RhythmTests = {
 
     notesBar2[0].addModifier(new VF.Annotation('F').setFont('Times', VexFlowTests.Font.size + 2), 0);
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+    Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     expect(0);
   },
@@ -394,7 +394,7 @@ const RhythmTests = {
     const beam2 = new VF.Beam(notesBar1_part2);
 
     // Helper function to justify and draw a 4/4 voice
-    VF.Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
+    Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
 
     // Render beams
     beam1.setContext(ctx).draw();

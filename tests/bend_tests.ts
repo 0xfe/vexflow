@@ -63,7 +63,7 @@ const BendTests = {
       }),
     ];
 
-    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     notes.forEach(function (note) {
       VexFlowTests.plotNoteWidth(ctx, note, 140);
     });
@@ -118,7 +118,7 @@ const BendTests = {
       }),
     ];
 
-    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     notes.forEach(function (note) {
       VexFlowTests.plotNoteWidth(ctx, note, 140);
     });
@@ -276,7 +276,7 @@ const BendTests = {
         .addModifier(newBend(phrase2), 1),
     ];
 
-    VF.Formatter.FormatAndDraw(ctx, stave, notes);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     VexFlowTests.plotNoteWidth(ctx, notes[0], 140);
     ok(true, 'Whako Release');
   },

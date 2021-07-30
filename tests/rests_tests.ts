@@ -80,7 +80,7 @@ const RestsTests = {
       new VF.StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
     ];
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     ok(true, 'Dotted Rest Test');
   },
@@ -114,7 +114,7 @@ const RestsTests = {
     const beam2 = new VF.Beam(notes.slice(4, 8));
     const beam3 = new VF.Beam(notes.slice(8, 12));
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     beam1.setContext(c.context).draw();
     beam2.setContext(c.context).draw();
@@ -153,7 +153,7 @@ const RestsTests = {
     const beam2 = new VF.Beam(notes.slice(4, 8));
     const beam3 = new VF.Beam(notes.slice(8, 12));
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     beam1.setContext(c.context).draw();
     beam2.setContext(c.context).draw();
@@ -195,7 +195,7 @@ const RestsTests = {
     const tuplet3 = new VF.Tuplet(notes.slice(6, 9)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
     const tuplet4 = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     tuplet1.setContext(c.context).draw();
     tuplet2.setContext(c.context).draw();
@@ -243,7 +243,7 @@ const RestsTests = {
     const tuplet3 = new VF.Tuplet(notes.slice(6, 9)).setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
     const tuplet4 = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_BOTTOM);
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     tuplet1.setContext(c.context).draw();
     tuplet2.setContext(c.context).draw();
@@ -294,7 +294,7 @@ const RestsTests = {
     const beam = new VF.Beam(notes.slice(5, 9));
     const tuplet = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(c.context, c.stave, notes);
 
     tuplet.setContext(c.context).draw();
     beam.setContext(c.context).draw();
@@ -338,7 +338,7 @@ const RestsTests = {
     const tuplet = new VF.Tuplet(notes.slice(9, 12)).setTupletLocation(VF.Tuplet.LOCATION_TOP);
 
     // Set { align_rests: true } to align rests (vertically) with nearby notes in each voice.
-    VF.Formatter.FormatAndDraw(c.context, c.stave, notes, { align_rests: true });
+    Formatter.FormatAndDraw(c.context, c.stave, notes, { align_rests: true });
 
     tuplet.setContext(c.context).draw();
     beam.setContext(c.context).draw();
