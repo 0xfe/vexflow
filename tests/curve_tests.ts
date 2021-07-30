@@ -3,15 +3,22 @@
 //
 // Curve Tests
 
-import { VexFlowTests, concat } from './vexflow_test_helpers';
+/* eslint-disable */
+// @ts-nocheck
 
-function createTest(beamGroup1, beamGroup2, setupCurves) {
-  return function (options) {
+import { VexFlowTests, concat, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './declarations';
+import { Curve } from 'curve';
+import { StaveNote } from 'stavenote';
+import { Factory } from 'factory';
+
+function createTest(beamGroup1, beamGroup2, setupCurves: (f: Factory, n: StaveNote[]) => void) {
+  return (options: TestOptions) => {
     const f = VexFlowTests.makeFactory(options, 350, 200);
     const stave = f.Stave({ y: 50 });
     const score = f.EasyScore();
 
-    const notes = [
+    const notes: StaveNote[] = [
       score.beam(score.notes.apply(score, beamGroup1)),
       score.beam(score.notes.apply(score, beamGroup2)),
     ].reduce(concat);
@@ -29,15 +36,14 @@ function createTest(beamGroup1, beamGroup2, setupCurves) {
 }
 
 const CurveTests = {
-  Start() {
-    const run = VexFlowTests.runTests;
-
+  Start(): void {
     QUnit.module('Curve');
+    const runTests = VexFlowTests.runTests;
 
-    run(
+    runTests(
       'Simple Curve',
-      createTest(['c4/8, f5, d5, g5', { stem: 'up' }], ['d6/8, f5, d5, g5', { stem: 'down' }], function (vf, notes) {
-        vf.Curve({
+      createTest(['c4/8, f5, d5, g5', { stem: 'up' }], ['d6/8, f5, d5, g5', { stem: 'down' }], function (f, notes) {
+        f.Curve({
           from: notes[0],
           to: notes[3],
           options: {
@@ -48,7 +54,7 @@ const CurveTests = {
           },
         });
 
-        vf.Curve({
+        f.Curve({
           from: notes[4],
           to: notes[7],
           options: {
@@ -61,10 +67,10 @@ const CurveTests = {
       })
     );
 
-    run(
+    runTests(
       'Rounded Curve',
-      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (vf, notes) {
-        vf.Curve({
+      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
+        f.Curve({
           from: notes[0],
           to: notes[3],
           options: {
@@ -77,7 +83,7 @@ const CurveTests = {
           },
         });
 
-        vf.Curve({
+        f.Curve({
           from: notes[4],
           to: notes[7],
           options: {
@@ -90,10 +96,10 @@ const CurveTests = {
       })
     );
 
-    run(
+    runTests(
       'Thick Thin Curves',
-      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (vf, notes) {
-        vf.Curve({
+      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
+        f.Curve({
           from: notes[0],
           to: notes[3],
           options: {
@@ -107,7 +113,7 @@ const CurveTests = {
           },
         });
 
-        vf.Curve({
+        f.Curve({
           from: notes[4],
           to: notes[7],
           options: {
@@ -121,17 +127,17 @@ const CurveTests = {
       })
     );
 
-    run(
+    runTests(
       'Top Curve',
-      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (vf, notes) {
-        vf.Curve({
+      createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
+        f.Curve({
           from: notes[0],
           to: notes[7],
           options: {
             x_shift: -3,
             y_shift: 10,
-            position: VF.Curve.Position.NEAR_TOP,
-            position_end: VF.Curve.Position.NEAR_HEAD,
+            position: Curve.Position.NEAR_TOP,
+            position_end: Curve.Position.NEAR_HEAD,
             cps: [
               { x: 0, y: 20 },
               { x: 40, y: 80 },

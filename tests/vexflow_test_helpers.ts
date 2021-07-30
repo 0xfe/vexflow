@@ -278,7 +278,7 @@ class VexFlowTests {
   }
 
   // Defined in run.ts
-  // static run() { ... }
+  static run: () => void;
 
   /** Run QUnit.test(...) for each font. */
   // eslint-disable-next-line

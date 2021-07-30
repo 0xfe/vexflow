@@ -8,18 +8,22 @@ import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { Factory } from 'factory';
 import { Registry } from 'registry';
-import { Barline } from 'stavebarline';
+import { BarlineType } from 'stavebarline';
+import { Element } from 'element';
 
 const BachDemoTests = {
-  Start: function () {
-    const runTests = VexFlowTests.runTests;
+  Start(): void {
     QUnit.module('Bach Demo');
-    runTests('Minuet 1', BachDemoTests.minuet1);
+    VexFlowTests.runTests('Minuet 1', this.minuet1);
   },
 
-  minuet1: function (options: TestOptions) {
+  minuet1(options: TestOptions): void {
     const registry = new Registry();
     Registry.enableDefaultRegistry(registry);
+    function id(id: string): Element {
+      return registry.getElementById(id) as Element;
+    }
+
     const f: Factory = VexFlowTests.makeFactory(options, 1100, 900);
     const score = f.EasyScore({ throwOnError: true });
 
@@ -29,14 +33,11 @@ const BachDemoTests = {
 
     let x = 120;
     let y = 80;
+
     function makeSystem(width: number) {
       const system = f.System({ x, y, width, spaceBetweenStaves: 10 });
       x += width;
       return system;
-    }
-
-    function id(id: any): any {
-      return registry.getElementById(id);
     }
 
     score.set({ time: '3/4' });
@@ -358,11 +359,11 @@ const BachDemoTests = {
       .addStave({
         voices: [score.set({ clef: 'treble' }).voice([notes('g4/h.[id="m16a"]')].reduce(concat))],
       })
-      .setEndBarType(Barline.type.REPEAT_END);
+      .setEndBarType(BarlineType.REPEAT_END);
 
     system
       .addStave({ voices: [voice(notes('g3/h[id="m16b"], g2/q', { clef: 'bass' }))] })
-      .setEndBarType(Barline.type.REPEAT_END);
+      .setEndBarType(BarlineType.REPEAT_END);
     system.addConnector('boldDoubleRight');
 
     id('m16a').addModifier(f.Fingering({ number: '1' }), 0);
@@ -392,9 +393,9 @@ const BachDemoTests = {
           voice([f.TextDynamics({ text: 'mf', duration: 'h', dots: 1, line: 10 })]),
         ],
       })
-      .setBegBarType(Barline.type.REPEAT_BEGIN);
+      .setBegBarType(BarlineType.REPEAT_BEGIN);
 
-    system.addStave({ voices: [voice(notes('g3/h.', { clef: 'bass' }))] }).setBegBarType(Barline.type.REPEAT_BEGIN);
+    system.addStave({ voices: [voice(notes('g3/h.', { clef: 'bass' }))] }).setBegBarType(BarlineType.REPEAT_BEGIN);
 
     system.addConnector('boldDoubleLeft');
     system.addConnector('singleRight');
@@ -430,7 +431,6 @@ const BachDemoTests = {
     });
 
     /* Done */
-
     f.draw();
     Registry.disableDefaultRegistry();
     ok(true, 'Bach Minuet 1');

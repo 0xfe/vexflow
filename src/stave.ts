@@ -523,7 +523,7 @@ export class Stave extends Element {
     return this;
   }
 
-  addEndClef(clef: string, size: string, annotation: string): this {
+  addEndClef(clef: string, size?: string, annotation?: string): this {
     this.addClef(clef, size, annotation, StaveModifier.Position.END);
     return this;
   }

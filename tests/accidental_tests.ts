@@ -3,8 +3,8 @@
 //
 // Accidental Tests
 
-/* eslint-disable */
-// @ts-nocheck
+/* xeslint-disable */
+// x@ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok, equal } from './declarations';
@@ -33,7 +33,7 @@ function makeNewAccid(factory: any) {
 }
 
 const AccidentalTests = {
-  Start() {
+  Start(): void {
     QUnit.module('Accidental');
     VexFlowTests.runTests('Accidental Padding', this.formatAccidentalSpaces);
     VexFlowTests.runTests('Basic', this.basic);
@@ -372,7 +372,7 @@ const AccidentalTests = {
       .addAccidental(2, newAccid('##'))
       .setStave(stave);
 
-    this.showNotes(note1, note2, stave, ctx, 60);
+    AccidentalTests.showNotes(note1, note2, stave, ctx, 60);
 
     note1 = f
       .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
@@ -386,7 +386,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    this.showNotes(note1, note2, stave, ctx, 150);
+    AccidentalTests.showNotes(note1, note2, stave, ctx, 150);
 
     note1 = f
       .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
@@ -400,7 +400,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    this.showNotes(note1, note2, stave, ctx, 250);
+    AccidentalTests.showNotes(note1, note2, stave, ctx, 250);
     VexFlowTests.plotLegendForNoteWidth(ctx, 350, 150);
 
     ok(true, 'Full Accidental');

@@ -3,6 +3,9 @@
 //
 // StaveTie Tests
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { Stem } from 'stem';

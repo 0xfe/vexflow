@@ -1,6 +1,3 @@
-/* eslint-disable */
-// @ts-nocheck
-
 import { Vex } from 'vex';
 import { VexFlowTests } from './vexflow_test_helpers';
 import { AccidentalTests } from './accidental_tests';
