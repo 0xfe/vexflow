@@ -3,8 +3,8 @@
 //
 // VexFlow Test Support Library
 
-import { QUnit, Assert } from './declarations';
 import { Flow } from 'flow';
+import { Assert } from './declarations';
 import { RenderContext } from 'types/common';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';
@@ -14,6 +14,7 @@ import { Note } from 'note';
 /* eslint-disable */
 declare var global: any;
 declare var $: any;
+declare var QUnit: any;
 /* eslint-enable */
 
 export interface TestOptions {
@@ -78,38 +79,36 @@ if (!global.$) {
   };
 }
 
-/**
- * When generating PNG images for the visual regression tests,
- * we mock out the QUnit methods (since we don't care about assertions).
- */
-function setupQUnitMockObject() {
+// When generating PNG images for the visual regression tests,
+// we mock out the QUnit methods (since we don't care about assertions).
+if (!global.QUnit) {
   // eslint-disable-next-line
-  const QUMock: any = {};
+  const QUMock: any = {
+    assertions: {
+      ok: () => true,
+      equal: () => true,
+      deepEqual: () => true,
+      expect: () => true,
+      throws: () => true,
+      notOk: () => true,
+      notEqual: () => true,
+      notDeepEqual: () => true,
+      strictEqual: () => true,
+      notStrictEqual: () => true,
+      test: { module: { name: '' } },
+    },
 
-  QUMock.assertions = {
-    ok: () => true,
-    equal: () => true,
-    deepEqual: () => true,
-    expect: () => true,
-    throws: () => true,
-    notOk: () => true,
-    notEqual: () => true,
-    notDeepEqual: () => true,
-    strictEqual: () => true,
-    notStrictEqual: () => true,
-    test: { module: { name: '' } },
-  };
+    module(name: string): void {
+      QUMock.current_module = name;
+    },
 
-  QUMock.module = (name: string): void => {
-    QUMock.current_module = name;
-  };
-
-  // See: https://api.qunitjs.com/QUnit/test/
-  QUMock.test = (name: number, callback: (assert: Assert) => void): void => {
-    QUMock.current_test = name;
-    QUMock.assertions.test.module.name = name;
-    VexFlowTests.shims.process.stdout.write(' \u001B[0G' + QUMock.current_module + ' :: ' + name + '\u001B[0K');
-    callback(QUMock.assertions);
+    // See: https://api.qunitjs.com/QUnit/test/
+    test(name: number, callback: (assert: Assert) => void): void {
+      QUMock.current_test = name;
+      QUMock.assertions.test.module.name = name;
+      VexFlowTests.shims.process.stdout.write(' \u001B[0G' + QUMock.current_module + ' :: ' + name + '\u001B[0K');
+      callback(QUMock.assertions);
+    },
   };
 
   global.QUnit = QUMock;
@@ -337,10 +336,6 @@ class VexFlowTests {
 
     ctx.restore();
   }
-}
-
-if (!global.QUnit) {
-  setupQUnitMockObject();
 }
 
 /** Currently unused. */
