@@ -83,11 +83,11 @@ VexFlowTests.run = function () {
   StaveTieTests.Start();
   TabTieTests.Start();
   StaveTests.Start();
-  */
-  // TabStaveTests.Start();
-  // TabSlideTests.Start();
-  // BeamTests.Start();
+  TabStaveTests.Start();
+  TabSlideTests.Start();
+  BeamTests.Start();
   BarlineTests.Start();
+  */
   // AutoBeamFormattingTests.Start();
   // GraceNoteTests.Start();
   // GraceTabNoteTests.Start();

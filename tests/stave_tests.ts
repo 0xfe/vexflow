@@ -7,13 +7,13 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, expect, ok, test } from './declarations';
+import { QUnit, expect, ok, test, equal } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { Clef } from 'clef';
 import { Formatter } from 'formatter';
 import { KeySignature } from 'keysignature';
 import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
+import { Barline, BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { TimeSignature } from 'timesignature';
 import { Beam } from 'beam';

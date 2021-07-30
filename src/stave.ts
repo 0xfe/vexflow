@@ -188,8 +188,8 @@ export class Stave extends Element {
     return this.options.num_lines;
   }
 
-  setNumLines(lines: string): this {
-    this.options.num_lines = parseInt(lines, 10);
+  setNumLines(lines: number): this {
+    this.options.num_lines = lines;
     this.resetLines();
     return this;
   }

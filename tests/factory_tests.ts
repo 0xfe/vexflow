@@ -16,9 +16,9 @@ const FactoryTests = {
   Start: function () {
     QUnit.module('Factory');
 
-    QUnit.test('Defaults', FactoryTests.defaults);
-    VexFlowTests.runSVGTest('Draw', FactoryTests.draw);
-    VexFlowTests.runSVGTest('Draw Tab (repeat barlines must be aligned)', FactoryTests.drawTab);
+    QUnit.test('Defaults', this.defaults);
+    VexFlowTests.runSVGTest('Draw', this.draw);
+    VexFlowTests.runSVGTest('Draw Tab (repeat barlines must be aligned)', this.drawTab);
   },
 
   defaults: function (assert) {

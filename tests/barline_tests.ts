@@ -7,12 +7,17 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok, Assert, equal } from './declarations';
+import { Barline, BarlineType } from 'stavebarline';
 
 const BarlineTests = {
   Start(): void {
     QUnit.module('Barline');
     const runTests = VexFlowTests.runTests;
+
+    QUnit.test('Enums', function (assert: Assert) {
+      equal(Barline.type, BarlineType);
+    });
 
     runTests('Simple BarNotes', function (options: TestOptions) {
       const f = VexFlowTests.makeFactory(options, 380, 160);
