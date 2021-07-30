@@ -182,7 +182,7 @@ function multistave(el, iterations, params) {
   f.Beam({ notes: notes31.slice(0, 3) });
   f.Beam({ notes: notes31.slice(3, 6) });
 
-  const formatter = f.Formatter().joinVoices([voice11]).joinVoices([voice21]).joinVoices([voice31]);
+  let formatter = f.Formatter().joinVoices([voice11]).joinVoices([voice21]).joinVoices([voice31]);
 
   if (options.justify) {
     formatter.formatToStave([voice11, voice21, voice31], stave11);
@@ -190,7 +190,7 @@ function multistave(el, iterations, params) {
     formatter.format([voice11, voice21, voice31], 0);
   }
 
-  for (const i = 0; i < iterations; i++) {
+  for (let i = 0; i < iterations; i++) {
     formatter.tune({ alphs: options.alpha });
   }
 
