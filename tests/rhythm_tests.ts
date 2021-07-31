@@ -57,7 +57,7 @@ const RhythmTests = {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
-    const staveBar1 = new VF.Stave(10, 30, 150);
+    const staveBar1 = new Stave(10, 30, 150);
     staveBar1.setBegBarType(VF.Barline.type.DOUBLE);
     staveBar1.setEndBarType(VF.Barline.type.SINGLE);
     staveBar1.addClef('treble');
@@ -71,7 +71,7 @@ const RhythmTests = {
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 120);
+    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 120);
     staveBar2.setBegBarType(VF.Barline.type.SINGLE);
     staveBar2.setEndBarType(VF.Barline.type.SINGLE);
     staveBar2.setContext(ctx).draw();
@@ -86,7 +86,7 @@ const RhythmTests = {
     Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // bar 3 - juxtaposing second bar next to first bar
-    const staveBar3 = new VF.Stave(staveBar2.width + staveBar2.x, staveBar2.y, 170);
+    const staveBar3 = new Stave(staveBar2.width + staveBar2.x, staveBar2.y, 170);
     staveBar3.setContext(ctx).draw();
 
     // bar 3
@@ -117,7 +117,7 @@ const RhythmTests = {
     Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
     // bar 4 - juxtaposing second bar next to first bar
-    const staveBar4 = new VF.Stave(staveBar3.width + staveBar3.x, staveBar3.y, 200);
+    const staveBar4 = new Stave(staveBar3.width + staveBar3.x, staveBar3.y, 200);
     staveBar4.setContext(ctx).draw();
 
     // bar 4
@@ -173,7 +173,7 @@ const RhythmTests = {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
-    const staveBar1 = new VF.Stave(10, 30, 300);
+    const staveBar1 = new Stave(10, 30, 300);
     staveBar1.setBegBarType(VF.Barline.type.DOUBLE);
     staveBar1.setEndBarType(VF.Barline.type.SINGLE);
     staveBar1.addClef('treble');
@@ -229,8 +229,8 @@ const RhythmTests = {
     ];
 
     // create the beams for 8th notes in 2nd measure
-    const beam1 = new VF.Beam(notesBar1_part1);
-    const beam2 = new VF.Beam(notesBar1_part2);
+    const beam1 = new Beam(notesBar1_part1);
+    const beam2 = new Beam(notesBar1_part2);
     const notesBar1 = notesBar1_part1.concat(notesBar1_part2);
 
     // Helper function to justify and draw a 4/4 voice
@@ -247,7 +247,7 @@ const RhythmTests = {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
-    const staveBar1 = new VF.Stave(10, 30, 300);
+    const staveBar1 = new Stave(10, 30, 300);
     staveBar1.setBegBarType(VF.Barline.type.DOUBLE);
     staveBar1.setEndBarType(VF.Barline.type.SINGLE);
     staveBar1.addClef('treble');
@@ -265,7 +265,7 @@ const RhythmTests = {
       new StaveNote({ keys: ['b/4'], duration: '8s', stem_direction: -1 }),
     ];
 
-    notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VexFlowTests.Font.size + 2), 0);
+    notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 2), 0);
 
     const notesBar1_part2 = [
       new StaveNote({
@@ -301,7 +301,7 @@ const RhythmTests = {
     ];
 
     // create the beams for 8th notes in 2nd measure
-    const beam1 = new VF.Beam(notesBar1_part1);
+    const beam1 = new Beam(notesBar1_part1);
 
     // Helper function to justify and draw a 4/4 voice
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
@@ -310,7 +310,7 @@ const RhythmTests = {
     beam1.setContext(ctx).draw();
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new VF.Stave(staveBar1.width + staveBar1.x, staveBar1.y, 220);
+    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 220);
     staveBar2.setContext(ctx).draw();
 
     const notesBar2 = [
@@ -321,7 +321,7 @@ const RhythmTests = {
       }),
     ];
 
-    notesBar2[0].addModifier(new VF.Annotation('F').setFont('Times', VexFlowTests.Font.size + 2), 0);
+    notesBar2[0].addModifier(new Annotation('F').setFont('Times', VexFlowTests.Font.size + 2), 0);
     // Helper function to justify and draw a 4/4 voice
     Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
@@ -332,7 +332,7 @@ const RhythmTests = {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
-    const staveBar1 = new VF.Stave(10, 30, 300);
+    const staveBar1 = new Stave(10, 30, 300);
     staveBar1.setBegBarType(VF.Barline.type.DOUBLE);
     staveBar1.setEndBarType(VF.Barline.type.SINGLE);
     staveBar1.addClef('treble');
@@ -387,11 +387,11 @@ const RhythmTests = {
       }),
     ];
 
-    notesBar1_part1[0].addModifier(new VF.Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
+    notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
 
     // create the beams for 8th notes in 2nd measure
-    const beam1 = new VF.Beam(notesBar1_part1);
-    const beam2 = new VF.Beam(notesBar1_part2);
+    const beam1 = new Beam(notesBar1_part1);
+    const beam2 = new Beam(notesBar1_part2);
 
     // Helper function to justify and draw a 4/4 voice
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1.concat(notesBar1_part2));
@@ -403,11 +403,11 @@ const RhythmTests = {
     expect(0);
   },
 
-  drawThirtySecondWithScratches(options: TestOptions, contextBuilder: ContextBuilder) {
+  drawThirtySecondWithScratches(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
 
     // bar 1
-    const staveBar1 = new VF.Stave(10, 30, 300);
+    const staveBar1 = new Stave(10, 30, 300);
     staveBar1.setBegBarType(VF.Barline.type.DOUBLE);
     staveBar1.setEndBarType(VF.Barline.type.SINGLE);
     staveBar1.addClef('treble');

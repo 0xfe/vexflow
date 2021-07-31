@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok, test, equal } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { StaveConnector } from 'staveconnector';
 import { Stave } from 'stave';
@@ -17,6 +17,7 @@ const StaveConnectorTests = {
   Start(): void {
     QUnit.module('StaveConnector');
     const run = VexFlowTests.runTests;
+    test('VF.* API', this.VF_Prefix);
     run('Single Draw Test', this.drawSingle);
     run('Single Draw Test, 1px Stave Line Thickness', this.drawSingle1pxBarlines);
     run('Single Both Sides Test', this.drawSingleBoth);
@@ -33,13 +34,17 @@ const StaveConnectorTests = {
     run('Combined Draw Test', this.drawCombined);
   },
 
+  VF_Prefix(): void {
+    equal(StaveConnector, VF.StaveConnector);
+  },
+
   drawSingle(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
     const stave = new Stave(25, 10, 300);
     const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     stave.draw();
@@ -52,11 +57,11 @@ const StaveConnectorTests = {
   drawSingle1pxBarlines(options: TestOptions, contextBuilder: ContextBuilder): void {
     VF.STAVE_LINE_THICKNESS = 1;
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     stave.draw();
@@ -69,14 +74,14 @@ const StaveConnectorTests = {
 
   drawSingleBoth(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.SINGLE_LEFT);
     connector.setContext(ctx);
-    const connector2 = new VF.StaveConnector(stave, stave2);
+    const connector2 = new StaveConnector(stave, stave2);
     connector2.setType(VF.StaveConnector.type.SINGLE_RIGHT);
     connector2.setContext(ctx);
     stave.draw();
@@ -89,12 +94,12 @@ const StaveConnectorTests = {
 
   drawDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const line = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.DOUBLE);
     connector.setContext(ctx);
     line.setType(VF.StaveConnector.type.SINGLE);
@@ -110,12 +115,12 @@ const StaveConnectorTests = {
 
   drawBrace(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 450, 300);
-    const stave = new VF.Stave(100, 10, 300);
-    const stave2 = new VF.Stave(100, 120, 300);
+    const stave = new Stave(100, 10, 300);
+    const stave2 = new Stave(100, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const line = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.BRACE);
     connector.setContext(ctx);
     connector.setText('Piano');
@@ -132,12 +137,12 @@ const StaveConnectorTests = {
 
   drawBraceWide(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, -20, 300);
-    const stave2 = new VF.Stave(25, 200, 300);
+    const stave = new Stave(25, -20, 300);
+    const stave2 = new Stave(25, 200, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const line = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.BRACE);
     connector.setContext(ctx);
     line.setType(VF.StaveConnector.type.SINGLE);
@@ -153,12 +158,12 @@ const StaveConnectorTests = {
 
   drawBracket(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const line = new VF.StaveConnector(stave, stave2);
+    const connector = new StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     connector.setType(VF.StaveConnector.type.BRACKET);
     connector.setContext(ctx);
     line.setType(VF.StaveConnector.type.SINGLE);
@@ -174,14 +179,14 @@ const StaveConnectorTests = {
 
   drawRepeatBegin(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
 
-    const line = new VF.StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     line.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
     line.setContext(ctx);
     stave.draw();
@@ -193,14 +198,14 @@ const StaveConnectorTests = {
 
   drawRepeatEnd(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave.setEndBarType(VF.Barline.type.REPEAT_END);
     stave2.setEndBarType(VF.Barline.type.REPEAT_END);
 
-    const line = new VF.StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     line.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
     line.setContext(ctx);
     stave.draw();
@@ -212,14 +217,14 @@ const StaveConnectorTests = {
 
   drawThinDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 300);
-    const stave2 = new VF.Stave(25, 120, 300);
+    const stave = new Stave(25, 10, 300);
+    const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave.setEndBarType(VF.Barline.type.DOUBLE);
     stave2.setEndBarType(VF.Barline.type.DOUBLE);
 
-    const line = new VF.StaveConnector(stave, stave2);
+    const line = new StaveConnector(stave, stave2);
     line.setType(VF.StaveConnector.type.THIN_DOUBLE);
     line.setContext(ctx);
     stave.draw();
@@ -231,10 +236,10 @@ const StaveConnectorTests = {
 
   drawRepeatAdjacent(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 150);
-    const stave2 = new VF.Stave(25, 120, 150);
-    const stave3 = new VF.Stave(175, 10, 150);
-    const stave4 = new VF.Stave(175, 120, 150);
+    const stave = new Stave(25, 10, 150);
+    const stave2 = new Stave(25, 120, 150);
+    const stave3 = new Stave(175, 10, 150);
+    const stave4 = new Stave(175, 120, 150);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave3.setContext(ctx);
@@ -249,10 +254,10 @@ const StaveConnectorTests = {
     stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const connector2 = new VF.StaveConnector(stave, stave2);
-    const connector3 = new VF.StaveConnector(stave3, stave4);
-    const connector4 = new VF.StaveConnector(stave3, stave4);
+    const connector = new StaveConnector(stave, stave2);
+    const connector2 = new StaveConnector(stave, stave2);
+    const connector3 = new StaveConnector(stave3, stave4);
+    const connector4 = new StaveConnector(stave3, stave4);
     connector.setContext(ctx);
     connector2.setContext(ctx);
     connector3.setContext(ctx);
@@ -276,9 +281,9 @@ const StaveConnectorTests = {
   drawRepeatOffset2(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
     const stave = new Stave(25, 10, 150);
-    const stave2 = new VF.Stave(25, 120, 150);
-    const stave3 = new VF.Stave(175, 10, 150);
-    const stave4 = new VF.Stave(175, 120, 150);
+    const stave2 = new Stave(25, 120, 150);
+    const stave3 = new Stave(175, 10, 150);
+    const stave4 = new Stave(175, 120, 150);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave3.setContext(ctx);
@@ -305,11 +310,11 @@ const StaveConnectorTests = {
     stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    const connector = new VF.StaveConnector(stave, stave2);
-    const connector2 = new VF.StaveConnector(stave, stave2);
-    const connector3 = new VF.StaveConnector(stave3, stave4);
-    const connector4 = new VF.StaveConnector(stave3, stave4);
-    const connector5 = new VF.StaveConnector(stave3, stave4);
+    const connector = new StaveConnector(stave, stave2);
+    const connector2 = new StaveConnector(stave, stave2);
+    const connector3 = new StaveConnector(stave3, stave4);
+    const connector4 = new StaveConnector(stave3, stave4);
+    const connector5 = new StaveConnector(stave3, stave4);
 
     connector.setContext(ctx);
     connector2.setContext(ctx);
@@ -340,10 +345,10 @@ const StaveConnectorTests = {
 
   drawRepeatOffset(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
-    const stave = new VF.Stave(25, 10, 150);
-    const stave2 = new VF.Stave(25, 120, 150);
-    const stave3 = new VF.Stave(185, 10, 150);
-    const stave4 = new VF.Stave(185, 120, 150);
+    const stave = new Stave(25, 10, 150);
+    const stave2 = new Stave(25, 120, 150);
+    const stave3 = new Stave(185, 10, 150);
+    const stave4 = new Stave(185, 120, 150);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     stave3.setContext(ctx);
@@ -374,11 +379,11 @@ const StaveConnectorTests = {
     stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
     stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
 
-    const connector = new VF.StaveConnector(stave, stave2);
-    const connector2 = new VF.StaveConnector(stave, stave2);
-    const connector3 = new VF.StaveConnector(stave3, stave4);
-    const connector4 = new VF.StaveConnector(stave3, stave4);
-    const connector5 = new VF.StaveConnector(stave3, stave4);
+    const connector = new StaveConnector(stave, stave2);
+    const connector2 = new StaveConnector(stave, stave2);
+    const connector3 = new StaveConnector(stave3, stave4);
+    const connector4 = new StaveConnector(stave3, stave4);
+    const connector5 = new StaveConnector(stave3, stave4);
     connector.setContext(ctx);
     connector2.setContext(ctx);
     connector3.setContext(ctx);
@@ -408,13 +413,13 @@ const StaveConnectorTests = {
 
   drawCombined(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 550, 700);
-    const stave = new VF.Stave(150, 10, 300);
-    const stave2 = new VF.Stave(150, 100, 300);
-    const stave3 = new VF.Stave(150, 190, 300);
-    const stave4 = new VF.Stave(150, 280, 300);
-    const stave5 = new VF.Stave(150, 370, 300);
-    const stave6 = new VF.Stave(150, 460, 300);
-    const stave7 = new VF.Stave(150, 560, 300);
+    const stave = new Stave(150, 10, 300);
+    const stave2 = new Stave(150, 100, 300);
+    const stave3 = new Stave(150, 190, 300);
+    const stave4 = new Stave(150, 280, 300);
+    const stave5 = new Stave(150, 370, 300);
+    const stave6 = new Stave(150, 460, 300);
+    const stave7 = new Stave(150, 560, 300);
     stave.setText('Violin', Modifier.Position.LEFT);
     stave.setContext(ctx);
     stave2.setContext(ctx);
@@ -423,11 +428,11 @@ const StaveConnectorTests = {
     stave5.setContext(ctx);
     stave6.setContext(ctx);
     stave7.setContext(ctx);
-    const conn_single = new VF.StaveConnector(stave, stave7);
-    const conn_double = new VF.StaveConnector(stave2, stave3);
-    const conn_bracket = new VF.StaveConnector(stave4, stave7);
-    const conn_none = new VF.StaveConnector(stave4, stave5);
-    const conn_brace = new VF.StaveConnector(stave6, stave7);
+    const conn_single = new StaveConnector(stave, stave7);
+    const conn_double = new StaveConnector(stave2, stave3);
+    const conn_bracket = new StaveConnector(stave4, stave7);
+    const conn_none = new StaveConnector(stave4, stave5);
+    const conn_brace = new StaveConnector(stave6, stave7);
     conn_single.setType(VF.StaveConnector.type.SINGLE);
     conn_double.setType(VF.StaveConnector.type.DOUBLE);
     conn_bracket.setType(VF.StaveConnector.type.BRACKET);

@@ -15,6 +15,7 @@ import { NoteHead } from 'notehead';
 import { Formatter } from 'formatter';
 import { Voice } from 'voice';
 import { ContextBuilder } from 'renderer';
+import { TickContext } from 'tickcontext';
 
 const NoteHeadTests = {
   Start(): void {
@@ -45,7 +46,7 @@ const NoteHeadTests = {
   showNote(note_struct, stave, ctx, x) {
     const note = new StaveNote(note_struct).setStave(stave);
 
-    new VF.TickContext().addTickable(note).preFormat().setX(x);
+    new TickContext().addTickable(note).preFormat().setX(x);
 
     note.setContext(ctx).draw();
 
@@ -119,7 +120,7 @@ const NoteHeadTests = {
 
     // Draw two staves, one with up-stems and one with down-stems.
     for (let h = 0; h < 2; ++h) {
-      const stave = new VF.Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
+      const stave = new Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
 
       for (let i = 0; i < notes.length; ++i) {
         const note = notes[i];
@@ -195,7 +196,7 @@ const NoteHeadTests = {
       line: 2.5,
     });
 
-    const note_head3 = new VF.NoteHead({
+    const note_head3 = new NoteHead({
       duration: '1',
       line: 0,
     });
