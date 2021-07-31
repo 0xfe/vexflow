@@ -292,9 +292,8 @@ const KeySignatureTests = {
   changeKey(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 900);
 
-    // TODO: Wrong number of arguments?
-    // TODO: @ronyeh fixed how params are passed to factory.Stave(...)
-    // BEFORE: f.Stave(10, 10, 800). Did this affect the test output?
+    // @ronyeh fixed how params are passed to factory.Stave(...)
+    // The previous code was buggy: f.Stave(10, 10, 800), even though factory.Stave() only accepts 1 param.
     const stave = f.Stave({ x: 10, y: 10, width: 800 }).addClef('treble').addTimeSignature('C|');
 
     const voice = f

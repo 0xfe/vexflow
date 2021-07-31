@@ -35,7 +35,7 @@ const StaveNoteTests = {
   Start(): void {
     QUnit.module('StaveNote');
     const run = VexFlowTests.runTests;
-    test('VF.* API', this.VF_prefix_API);
+    test('VF.* API', this.VF_Prefix);
     test('Tick', this.ticks);
     test('Tick - New API', this.ticksNewApi);
     test('Stem', this.stem);
@@ -84,7 +84,7 @@ const StaveNoteTests = {
     run('Center Aligned Note with Multiple Modifiers', this.centerAlignedNoteMultiModifiers);
   },
 
-  VF_prefix_API(): void {
+  VF_Prefix(): void {
     equal(Flow.RESOLUTION, VF.RESOLUTION);
     equal(StaveNote, VF.StaveNote);
   },

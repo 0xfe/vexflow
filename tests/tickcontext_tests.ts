@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// TickContext Tests
 
 /* eslint-disable */
 // @ts-nocheck
@@ -9,22 +11,24 @@ import { QUnit, test, equal } from './declarations';
 import { TickContext } from 'tickcontext';
 import { MockTickable } from './mocks';
 
-/**
- * TickContext Tests
- */
 const TickContextTests = {
-  Start() {
+  Start(): void {
     QUnit.module('TickContext');
+    test('VF.* API', this.VF_Prefix);
     test('Current Tick Test', this.currentTick);
     test('Tracking Test', this.tracking);
   },
 
-  currentTick() {
-    const tc = new VF.TickContext();
+  VF_Prefix(): void {
+    equal(TickContext, VF.TickContext);
+  },
+
+  currentTick(): void {
+    const tc = new TickContext();
     equal(tc.getCurrentTick().value(), 0, 'New tick context has no ticks');
   },
 
-  tracking() {
+  tracking(): void {
     function createTickable() {
       return new MockTickable(Flow.TIME4_4);
     }

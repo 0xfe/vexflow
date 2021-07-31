@@ -1,14 +1,16 @@
-/**
- * VexFlow - Declarations to interface with ./support/qunit.js
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
 
 /* eslint-disable */
 
+// global.VF == Vex.Flow and is available in all of the tests.
 declare global {
   var VF: any;
 }
 declare const global: any;
 
+// Declarations to interface with ./support/qunit.js
 export const QUnit = global.QUnit;
 export const test = global.test;
 export const expect = global.expect;
@@ -20,6 +22,7 @@ export const deepEqual = global.deepEqual;
 export const notDeepEqual = global.notDeepEqual;
 export const strictEqual = global.strictEqual;
 export const notStrictEqual = global.notStrictEqual;
+export const propEqual = global.propEqual;
 export const throws = global.throws;
 
 // See: https://api.qunitjs.com/assert/

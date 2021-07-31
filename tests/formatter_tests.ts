@@ -6,11 +6,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok, equal, test } from './declarations';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, ok, equal, test, propEqual, notEqual } from './declarations';
 import { Flow } from 'flow';
 import { MockTickable } from './mocks';
 import { Formatter } from 'formatter';
+import { Voice } from 'voice';
+import { Registry } from 'registry';
+import { StaveNote } from 'stavenote';
+import { Stave } from 'stave';
+import { Beam } from 'beam';
+import { StaveConnector } from 'staveconnector';
+import { Note } from 'note';
+import { Bend } from 'bend';
+import { Annotation } from 'annotation';
 
 // Should this be a static call in glyph? Or font?
 function glyphWidth(vexGlyph: string): number {
@@ -23,8 +32,9 @@ function glyphPixels(): number {
 }
 
 const FormatterTests = {
-  Start() {
+  Start(): void {
     QUnit.module('Formatter');
+    test('VF.* API', this.VF_Prefix);
     test('TickContext Building', this.buildTickContexts);
 
     const runTests = VexFlowTests.runTests;
@@ -61,6 +71,20 @@ const FormatterTests = {
     });
   },
 
+  VF_Prefix(): void {
+    equal(Voice, VF.Voice);
+    equal(Registry, VF.Registry);
+    propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
+    equal(StaveNote, VF.StaveNote);
+    notEqual(Stave, VF.StaveNote);
+    equal(Stave, VF.Stave);
+    equal(Beam, VF.Beam);
+    equal(Note, VF.Note);
+    equal(Bend, VF.Bend);
+    equal(Annotation, VF.Annotation);
+    equal(StaveConnector, VF.StaveConnector);
+  },
+
   buildTickContexts(): void {
     function createTickable() {
       return new MockTickable();
@@ -85,8 +109,8 @@ const FormatterTests = {
       createTickable().setTicks(BEAT).setWidth(30),
     ];
 
-    const voice1 = new VF.Voice(Flow.TIME4_4);
-    const voice2 = new VF.Voice(Flow.TIME4_4);
+    const voice1 = new Voice(Flow.TIME4_4);
+    const voice2 = new Voice(Flow.TIME4_4);
 
     voice1.addTickables(tickables1);
     voice2.addTickables(tickables2);
@@ -117,9 +141,9 @@ const FormatterTests = {
     );
   },
 
-  longMeasureProblems(options): void {
-    const registry = new VF.Registry();
-    VF.Registry.enableDefaultRegistry(registry);
+  longMeasureProblems(options: TestOptions): void {
+    const registry = new Registry();
+    Registry.enableDefaultRegistry(registry);
     const f = VexFlowTests.makeFactory(options, 1500, 300);
     const score = f.EasyScore();
     score.set({
@@ -128,14 +152,14 @@ const FormatterTests = {
     const notes1 = score.notes(
       'b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/8,b4/8,b4/4,b4/4,b4/2,b4/2,b4/4,b4/2,b4/8,b4/8'
     );
-    const voice1 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+    const voice1 = new Voice().setMode(Voice.Mode.SOFT);
     const notes2 = score.notes(
       'd3/4,(ab3 f4)/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d3/4,ab3/2,d3/4,ab3/4,d3/2,ab3/4,d4/4,d4/2,d4/4',
       {
         clef: 'bass',
       }
     );
-    const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+    const voice2 = new Voice().setMode(Voice.Mode.SOFT);
     voice2.addTickables(notes2);
     voice1.addTickables(notes1);
     const formatter = f.Formatter().joinVoices([voice1]).joinVoices([voice2]);
@@ -143,11 +167,11 @@ const FormatterTests = {
     formatter.format([voice1, voice2], width);
     const stave1 = f.Stave({
       y: 50,
-      width: width + VF.Stave.defaultPadding,
+      width: width + Stave.defaultPadding,
     });
     const stave2 = f.Stave({
       y: 200,
-      width: width + VF.Stave.defaultPadding,
+      width: width + Stave.defaultPadding,
     });
     stave1.draw();
     stave2.draw();
@@ -156,7 +180,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  accidentalJustification: (options) => {
+  accidentalJustification(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 300);
     const score = f.EasyScore();
 
@@ -166,14 +190,14 @@ const FormatterTests = {
     const notes21 = score.notes('c4/2, d4/8, d4/8, e4/8, e4/8');
     const voice21 = score.voice(notes21, { time: '4/4' });
 
-    let beams = VF.Beam.generateBeams(notes11.slice(2));
-    beams = beams.concat(beams, VF.Beam.generateBeams(notes21.slice(1, 3)));
-    beams = beams.concat(VF.Beam.generateBeams(notes21.slice(3)));
+    let beams = Beam.generateBeams(notes11.slice(2));
+    beams = beams.concat(beams, Beam.generateBeams(notes21.slice(1, 3)));
+    beams = beams.concat(Beam.generateBeams(notes21.slice(3)));
     const formatter = f.Formatter({ softmaxFactor: 100 }).joinVoices([voice11]).joinVoices([voice21]);
 
     const width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
-    const stave11 = f.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
-    const stave21 = f.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
+    const stave11 = f.Stave({ y: 20, width: width + Stave.defaultPadding });
+    const stave21 = f.Stave({ y: 130, width: width + Stave.defaultPadding });
     formatter.format([voice11, voice21], width);
     const ctx = f.getContext();
     stave11.setContext(ctx).draw();
@@ -186,33 +210,33 @@ const FormatterTests = {
     ok(true);
   },
 
-  unalignedNoteDurations: (options) => {
+  unalignedNoteDurations(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 250);
     const score = f.EasyScore();
 
     const notes11 = [
-      new VF.StaveNote({ keys: ['a/4'], duration: '8' }),
-      new VF.StaveNote({ keys: ['b/4'], duration: '4' }),
-      new VF.StaveNote({ keys: ['b/4'], duration: '8' }),
+      new StaveNote({ keys: ['a/4'], duration: '8' }),
+      new StaveNote({ keys: ['b/4'], duration: '4' }),
+      new StaveNote({ keys: ['b/4'], duration: '8' }),
     ];
     const notes21 = [
-      new VF.StaveNote({ keys: ['a/4'], duration: '16' }),
-      new VF.StaveNote({ keys: ['b/4.'], duration: '4' }),
-      new VF.StaveNote({ keys: ['a/4'], duration: '8d' }).addDotToAll(),
+      new StaveNote({ keys: ['a/4'], duration: '16' }),
+      new StaveNote({ keys: ['b/4.'], duration: '4' }),
+      new StaveNote({ keys: ['a/4'], duration: '8d' }).addDotToAll(),
     ];
 
     const ctx = f.getContext();
-    const voice11 = score.voice(notes11, { time: '2/4' }).setMode(VF.Voice.Mode.SOFT);
-    const voice21 = score.voice(notes21, { time: '2/4' }).setMode(VF.Voice.Mode.SOFT);
-    const beams21 = VF.Beam.generateBeams(notes21);
-    const beams11 = VF.Beam.generateBeams(notes11);
-    const formatter = new VF.Formatter();
+    const voice11 = score.voice(notes11, { time: '2/4' }).setMode(Voice.Mode.SOFT);
+    const voice21 = score.voice(notes21, { time: '2/4' }).setMode(Voice.Mode.SOFT);
+    const beams21 = Beam.generateBeams(notes21);
+    const beams11 = Beam.generateBeams(notes11);
+    const formatter = new Formatter();
     formatter.joinVoices([voice11]);
     formatter.joinVoices([voice21]);
 
     const width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
-    const stave11 = f.Stave({ y: 20, width: width + VF.Stave.defaultPadding });
-    const stave21 = f.Stave({ y: 130, width: width + VF.Stave.defaultPadding });
+    const stave11 = f.Stave({ y: 20, width: width + Stave.defaultPadding });
+    const stave21 = f.Stave({ y: 130, width: width + Stave.defaultPadding });
     formatter.format([voice11, voice21], width);
     stave11.setContext(ctx).draw();
     stave21.setContext(ctx).draw();
@@ -229,48 +253,48 @@ const FormatterTests = {
     ok(voice11.tickables[1].getX() > voice21.tickables[1].getX());
   },
 
-  unalignedNoteDurations2: (options) => {
+  unalignedNoteDurations2(options: TestOptions): void {
     const notes1 = [
-      new VF.StaveNote({ keys: ['b/4'], duration: '8r' }),
-      new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
-      new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
-      new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['b/4'], duration: '8r' }),
-      new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
-      new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['g/4'], duration: '16' }),
-      new VF.StaveNote({ keys: ['c/5'], duration: '16' }),
-      new VF.StaveNote({ keys: ['e/5'], duration: '16' }),
+      new StaveNote({ keys: ['b/4'], duration: '8r' }),
+      new StaveNote({ keys: ['g/4'], duration: '16' }),
+      new StaveNote({ keys: ['c/5'], duration: '16' }),
+      new StaveNote({ keys: ['e/5'], duration: '16' }),
+      new StaveNote({ keys: ['g/4'], duration: '16' }),
+      new StaveNote({ keys: ['c/5'], duration: '16' }),
+      new StaveNote({ keys: ['e/5'], duration: '16' }),
+      new StaveNote({ keys: ['b/4'], duration: '8r' }),
+      new StaveNote({ keys: ['g/4'], duration: '16' }),
+      new StaveNote({ keys: ['c/5'], duration: '16' }),
+      new StaveNote({ keys: ['e/5'], duration: '16' }),
+      new StaveNote({ keys: ['g/4'], duration: '16' }),
+      new StaveNote({ keys: ['c/5'], duration: '16' }),
+      new StaveNote({ keys: ['e/5'], duration: '16' }),
     ];
 
     const notes2 = [
-      new VF.StaveNote({ keys: ['a/4'], duration: '16r' }),
-      new VF.StaveNote({ keys: ['e/4.'], duration: '8d' }),
-      new VF.StaveNote({ keys: ['e/4'], duration: '4' }),
-      new VF.StaveNote({ keys: ['a/4'], duration: '16r' }),
-      new VF.StaveNote({ keys: ['e/4.'], duration: '8d' }),
-      new VF.StaveNote({ keys: ['e/4'], duration: '4' }),
+      new StaveNote({ keys: ['a/4'], duration: '16r' }),
+      new StaveNote({ keys: ['e/4.'], duration: '8d' }),
+      new StaveNote({ keys: ['e/4'], duration: '4' }),
+      new StaveNote({ keys: ['a/4'], duration: '16r' }),
+      new StaveNote({ keys: ['e/4.'], duration: '8d' }),
+      new StaveNote({ keys: ['e/4'], duration: '4' }),
     ];
 
     const f = VexFlowTests.makeFactory(options, 750, 280);
     const context = f.getContext();
-    const voice1 = new VF.Voice({ num_beats: 4, beat_value: 4 });
+    const voice1 = new Voice({ num_beats: 4, beat_value: 4 });
     voice1.addTickables(notes1);
-    const voice2 = new VF.Voice({ num_beats: 4, beat_value: 4 });
+    const voice2 = new Voice({ num_beats: 4, beat_value: 4 });
     voice2.addTickables(notes2);
 
-    const formatter = new VF.Formatter({ softmaxFactor: 100, globalSoftmax: options.params.globalSoftmax });
+    const formatter = new Formatter({ softmaxFactor: 100, globalSoftmax: options.params.globalSoftmax });
     formatter.joinVoices([voice1]);
     formatter.joinVoices([voice2]);
     const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
 
     formatter.format([voice1, voice2], width);
-    const stave1 = new VF.Stave(10, 40, width + VF.Stave.defaultPadding);
-    const stave2 = new VF.Stave(10, 100, width + VF.Stave.defaultPadding);
+    const stave1 = new Stave(10, 40, width + Stave.defaultPadding);
+    const stave2 = new Stave(10, 100, width + Stave.defaultPadding);
     stave1.setContext(context).draw();
     stave2.setContext(context).draw();
     voice1.draw(context, stave1);
@@ -327,7 +351,7 @@ const FormatterTests = {
       f.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
 
       const tabVoice = score.voice([
-        f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new VF.Bend('Full'), 0),
+        f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new Bend('Full'), 0),
         f
           .TabNote({
             positions: [
@@ -336,7 +360,7 @@ const FormatterTests = {
             ],
             duration: '8',
           })
-          .addModifier(new VF.Bend('Unison'), 1),
+          .addModifier(new Bend('Unison'), 1),
         f.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
         f.TabNote({
           positions: [
@@ -381,16 +405,16 @@ const FormatterTests = {
     let formatter = f.Formatter();
     voices.forEach((vv) => formatter.joinVoices([vv]));
     let width = formatter.preCalculateMinTotalWidth(voices);
-    let staveWidth = width + glyphWidth('gClef') + glyphWidth('timeSig8') + VF.Stave.defaultPadding;
+    let staveWidth = width + glyphWidth('gClef') + glyphWidth('timeSig8') + Stave.defaultPadding;
 
     staves.push(f.Stave({ y: 20, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
     staves.push(f.Stave({ y: 130, width: staveWidth }).addTrebleGlyph().addTimeSignature('6/8'));
     staves.push(f.Stave({ y: 250, width: staveWidth }).addClef('bass').addTimeSignature('6/8'));
     formatter.format(voices, width);
-    beams.push(new VF.Beam(notes21.slice(0, 3), true));
-    beams.push(new VF.Beam(notes21.slice(3, 6), true));
-    beams.push(new VF.Beam(notes31.slice(0, 3), true));
-    beams.push(new VF.Beam(notes31.slice(3, 6), true));
+    beams.push(new Beam(notes21.slice(0, 3), true));
+    beams.push(new Beam(notes21.slice(3, 6), true));
+    beams.push(new Beam(notes31.slice(0, 3), true));
+    beams.push(new Beam(notes31.slice(3, 6), true));
 
     f.StaveConnector({
       top_stave: staves[1],
@@ -417,7 +441,7 @@ const FormatterTests = {
     formatter = f.Formatter();
     voices.forEach((vv) => formatter.joinVoices([vv]));
     width = formatter.preCalculateMinTotalWidth(voices);
-    staveWidth = width + VF.Stave.defaultPadding;
+    staveWidth = width + Stave.defaultPadding;
     staves.push(
       f.Stave({
         x,
@@ -441,12 +465,12 @@ const FormatterTests = {
     );
     formatter.format(voices, width);
     beams = [];
-    beams.push(new VF.Beam(notes32.slice(0, 3), true));
-    beams.push(new VF.Beam(notes32.slice(3, 6), true));
+    beams.push(new Beam(notes32.slice(0, 3), true));
+    beams.push(new Beam(notes32.slice(3, 6), true));
     for (i = 0; i < staves.length; ++i) {
       staves[i].setContext(ctx).draw();
       voices[i].draw(ctx, staves[i]);
-      voices[i].getTickables().forEach((note) => VF.Note.plotMetrics(ctx, note, ys[i] - 20));
+      voices[i].getTickables().forEach((note) => Note.plotMetrics(ctx, note, ys[i] - 20));
     }
     beams.forEach((beam) => beam.setContext(ctx).draw());
     ok(true);
@@ -454,7 +478,7 @@ const FormatterTests = {
 
   proportionalFormatting(options) {
     const debug = options.params.debug;
-    VF.Registry.enableDefaultRegistry(new VF.Registry());
+    Registry.enableDefaultRegistry(new Registry());
 
     const f = VexFlowTests.makeFactory(options, 650, 750);
     const system = f.System({
@@ -488,7 +512,7 @@ const FormatterTests = {
     ];
 
     voices.map(newVoice).forEach(newStave);
-    system.addConnector().setType(VF.StaveConnector.type.BRACKET);
+    system.addConnector().setType(StaveConnector.type.BRACKET);
 
     f.draw();
 
@@ -498,11 +522,11 @@ const FormatterTests = {
     // });
 
     // console.log(table);
-    VF.Registry.disableDefaultRegistry();
+    Registry.disableDefaultRegistry();
     ok(true);
   },
 
-  softMax(options) {
+  softMax(options): void {
     const f = VexFlowTests.makeFactory(options, 550, 500);
     f.getContext().scale(0.8, 0.8);
 
@@ -542,7 +566,7 @@ const FormatterTests = {
   },
 
   mixTime(options) {
-    const f = VexFlowTests.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
+    const f = VexFlowTests.makeFactory(options, 400 + Stave.defaultPadding, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
     const system = f.System({
@@ -678,22 +702,22 @@ const FormatterTests = {
     let y = 40;
 
     smar.forEach((sm) => {
-      const stave = new VF.Stave(10, y, sm.width);
+      const stave = new Stave(10, y, sm.width);
       const notes = [];
       let iii = 0;
       context.fillText(sm.title, 100, y);
       y += rowSize;
 
       durations.forEach((dd) => {
-        const newNote = new VF.StaveNote({ keys: ['b/4'], duration: dd });
+        const newNote = new StaveNote({ keys: ['b/4'], duration: dd });
         if (dd.indexOf('d') >= 0) {
           newNote.addDotToAll();
         }
         if (sm.lyrics.length > iii) {
           newNote.addAnnotation(
             0,
-            new VF.Annotation(sm.lyrics[iii])
-              .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM)
+            new Annotation(sm.lyrics[iii])
+              .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
               .setFont('Times', 12, 'normal')
           );
         }
@@ -713,7 +737,7 @@ const FormatterTests = {
         if (note.intrinsicTicks < 4096) {
           beam.push(note);
           if (beam.length >= beamGroup) {
-            beams.push(new VF.Beam(beam));
+            beams.push(new Beam(beam));
             beam = [];
           }
         } else {
@@ -721,11 +745,11 @@ const FormatterTests = {
         }
       });
 
-      const voice1 = new VF.Voice({ num_beats: beats, beat_value: beatsPer })
+      const voice1 = new Voice({ num_beats: beats, beat_value: beatsPer })
         .setMode(Vex.Flow.Voice.Mode.SOFT)
         .addTickables(notes);
 
-      const fmt = new VF.Formatter({ softmaxFactor: sm.sm, maxIterations: 2 }).joinVoices([voice1]);
+      const fmt = new Formatter({ softmaxFactor: sm.sm, maxIterations: 2 }).joinVoices([voice1]);
       fmt.format([voice1], sm.width - 11);
 
       stave.setContext(context).draw();

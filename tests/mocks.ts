@@ -7,31 +7,34 @@
 // @ts-nocheck
 
 import { Fraction } from 'fraction';
+import { TickContext } from 'tickcontext';
+import { Voice } from 'voice';
 
 class MockTickable {
-  ignore_ticks: boolean;
-  tickContext: any;
-  ticks: any;
-  width: number;
+  tickContext: TickContext;
+  ticks: Fraction;
+  voice: Voice;
+  width: number = 0;
+  ignore_ticks: boolean = false;
 
   // TODO: this constructor takes 0 arguments, but other tests pass in a Flow.TIME4_4.
   constructor() {
-    this.ignore_ticks = false;
+    // DO NOTHING
   }
 
   init(): void {
     // DO NOTHING
   }
 
-  getX() {
+  getX(): number {
     return this.tickContext.getX();
   }
 
-  getIntrinsicTicks() {
+  getIntrinsicTicks(): Fraction {
     return this.ticks;
   }
 
-  getTicks() {
+  getTicks(): Fraction {
     return this.ticks;
   }
 
@@ -58,32 +61,32 @@ class MockTickable {
     return this.width;
   }
 
-  setWidth(w: number): void {
+  setWidth(w: number): this {
     this.width = w;
     return this;
   }
 
-  setVoice(v) {
+  setVoice(v: Voice): this {
     this.voice = v;
     return this;
   }
 
-  setStave(stave) {
+  setStave(stave: any): this {
     this.stave = stave;
     return this;
   }
 
-  setTickContext(tc) {
+  setTickContext(tc: TickContext): this {
     this.tickContext = tc;
     return this;
   }
 
-  setIgnoreTicks(ignore_ticks) {
-    this.ignore_ticks = ignore_ticks;
+  setIgnoreTicks(flag: boolean): this {
+    this.ignore_ticks = flag;
     return this;
   }
 
-  shouldIgnoreTicks() {
+  shouldIgnoreTicks(): boolean {
     return this.ignore_ticks;
   }
 

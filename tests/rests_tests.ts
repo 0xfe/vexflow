@@ -70,7 +70,6 @@ const RestsTests = {
   basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = RestsTests.setupContext(options, contextBuilder, 700);
 
-    // TODO: Reintroduce the 128th rest after PR #1074 is merged.
     const notes = [
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }).addDotToAll(),
@@ -79,7 +78,7 @@ const RestsTests = {
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }).addDotToAll(),
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }).addDotToAll(),
-      /* new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(), */
+      new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
     ];
 
     Formatter.FormatAndDraw(context, stave, notes);
