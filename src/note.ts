@@ -14,7 +14,7 @@ import { KeyProps, RenderContext } from './types/common';
 import { GlyphProps } from './glyph';
 import { Fraction } from './fraction';
 import { Beam } from './beam';
-import { Music } from 'music';
+import { Music } from './music';
 import { Accidental } from './accidental';
 
 export interface NoteMetrics {
