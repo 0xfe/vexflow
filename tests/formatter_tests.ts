@@ -520,8 +520,8 @@ const FormatterTests = {
     // var table = Object.keys(typeMap).map(function(typeName) {
     //   return typeName + ': ' + Object.keys(typeMap[typeName]).length;
     // });
-
     // console.log(table);
+
     Registry.disableDefaultRegistry();
     ok(true);
   },

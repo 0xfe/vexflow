@@ -37,7 +37,6 @@
         //   ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
         // https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
         if (param_ver && param_ver.includes('unpkg')) {
-          console.log('UNPKG ' + param_ver);
           var version = param_ver.split('@')[1];
           vexURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-debug.js`;
           testsURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-tests.js`;
