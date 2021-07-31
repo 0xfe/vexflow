@@ -27,8 +27,9 @@ export class StaveHairpin extends Element {
   protected position: number;
   protected render_options: StaveHairpinRenderOptions;
 
-  // Initialized by this.setNotes(notes) in the constructor.
+  // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: Record<string, Note>;
+
   protected first_note?: Note;
   protected last_note?: Note;
 

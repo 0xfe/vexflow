@@ -40,11 +40,11 @@ export abstract class Element {
   protected style?: ElementStyle;
   private attrs: ElementAttributes;
   protected boundingBox?: BoundingBox;
-  // Initialized in the constructor via setFontStack(...).
-  protected fontStack!: Font[];
-  // Initialized in the constructor via setFontStack(...).
-  protected musicFont!: Font;
   protected registry?: Registry;
+
+  // fontStack and musicFont are both initialized by the constructor via this.setFontStack(...).
+  protected fontStack!: Font[];
+  protected musicFont!: Font;
 
   protected static newID(): string {
     return `auto${Element.ID++}`;

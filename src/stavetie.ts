@@ -24,8 +24,7 @@ export class StaveTie extends Element {
 
   protected font: FontInfo;
 
-  // Initialized by this.setNotes(notes) in the constructor.
-  // eslint-disable-next-line
+  // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: TieNotes;
 
   protected direction?: number;

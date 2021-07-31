@@ -73,7 +73,10 @@ export class Tuplet extends Element {
   protected y_pos: number;
   protected x_pos: number;
   protected width: number;
+
+  // location is initialized by the constructor via setTupletLocation(...).
   protected location!: number;
+
   protected notes_occupied: number;
   protected ratioed: boolean;
   protected numerator_glyphs: Glyph[] = [];

@@ -61,7 +61,7 @@ export class SVGContext implements RenderContext {
   groups: SVGGElement[];
   fontString: string = '';
   fontSize: number = 0;
-  ie!: boolean; // true if the browser is Internet Explorer.
+  ie: boolean = false; // true if the browser is Internet Explorer.
 
   constructor(element: HTMLElement) {
     this.element = element;
