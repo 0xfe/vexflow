@@ -95,6 +95,7 @@ if (!global.QUnit) {
       notDeepEqual: () => true,
       strictEqual: () => true,
       notStrictEqual: () => true,
+      propEqual: () => true,
       test: { module: { name: '' } },
     },
 
@@ -113,16 +114,10 @@ if (!global.QUnit) {
 
   global.QUnit = QUMock;
   global.test = QUMock.test;
-  global.ok = QUMock.assertions.ok;
-  global.equal = QUMock.assertions.equal;
-  global.deepEqual = QUMock.assertions.deepEqual;
-  global.expect = QUMock.assertions.expect;
-  global.throws = QUMock.assertions.throws;
-  global.notOk = QUMock.assertions.notOk;
-  global.notEqual = QUMock.assertions.notEqual;
-  global.notDeepEqual = QUMock.assertions.notDeepEqual;
-  global.strictEqual = QUMock.assertions.strictEqual;
-  global.notStrictEqual = QUMock.assertions.notStrictEqual;
+  // Make all methods & properties of QUMock.assertions global.
+  for (const k in QUMock.assertions) {
+    global[k] = QUMock.assertions[k];
+  }
 }
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
