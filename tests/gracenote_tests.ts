@@ -8,6 +8,7 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
+import { Formatter } from 'formatter';
 
 const stem_test_util = {
   durations: ['8', '16', '32', '64', '128'],
@@ -90,7 +91,7 @@ const GraceNoteTests = {
 
     const voice = f.Voice().setStrict(false).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
@@ -153,14 +154,14 @@ const GraceNoteTests = {
 
     const voice = f.Voice().setStrict(false).addTickables(notes);
 
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
     ok(true, 'GraceNoteBasic');
   },
 
-  stem(options) {
+  stem(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
@@ -188,11 +189,11 @@ const GraceNoteTests = {
     ok(true, 'GraceNoteStem');
   },
 
-  stemWithBeamed(options) {
+  stemWithBeamed(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
-    function createBeamdNotes(noteT, keys, stem_direction, beams, isGrace, notesToBeam) {
+    function createBeamedNotes(noteT, keys, stem_direction, beams, isGrace = false, notesToBeam?: any[]) {
       const ret = [];
       stem_test_util.durations.map(function (d) {
         const n0 = stem_test_util.createNote(d, noteT, keys, stem_direction);
@@ -211,10 +212,10 @@ const GraceNoteTests = {
       return ret;
     }
 
-    function createBeamdNoteBlock(keys, stem_direction, beams) {
-      const bnotes = createBeamdNotes(f.StaveNote.bind(f), keys, stem_direction, beams);
+    function createBeamedNoteBlock(keys, stem_direction, beams) {
+      const bnotes = createBeamedNotes(f.StaveNote.bind(f), keys, stem_direction, beams);
       const notesToBeam = [];
-      const gracenotes = createBeamdNotes(f.GraceNote.bind(f), keys, stem_direction, beams, true, notesToBeam);
+      const gracenotes = createBeamedNotes(f.GraceNote.bind(f), keys, stem_direction, beams, true, notesToBeam);
       const graceNoteGroup = f.GraceNoteGroup({ notes: gracenotes });
       notesToBeam.map(graceNoteGroup.beamNotes.bind(graceNoteGroup));
       bnotes[0].addModifier(graceNoteGroup, 0);
@@ -223,8 +224,8 @@ const GraceNoteTests = {
 
     const beams = [];
     const voice = f.Voice().setStrict(false);
-    voice.addTickables(createBeamdNoteBlock(['g/4'], 1, beams));
-    voice.addTickables(createBeamdNoteBlock(['d/5'], -1, beams));
+    voice.addTickables(createBeamedNoteBlock(['g/4'], 1, beams));
+    voice.addTickables(createBeamedNoteBlock(['d/5'], -1, beams));
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -233,7 +234,7 @@ const GraceNoteTests = {
     ok(true, 'GraceNoteStem');
   },
 
-  slash(options) {
+  slash(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
@@ -288,7 +289,7 @@ const GraceNoteTests = {
     ok(true, 'GraceNoteSlash');
   },
 
-  slashWithBeams(options) {
+  slashWithBeams(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 750 });
 
@@ -336,7 +337,7 @@ const GraceNoteTests = {
     ok(true, 'GraceNoteSlashWithBeams');
   },
 
-  multipleVoices(options) {
+  multipleVoices(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 140);
     const stave = f.Stave({ x: 10, y: 10, width: 450 });
 
@@ -401,7 +402,7 @@ const GraceNoteTests = {
     ok(true, 'Sixteenth Test');
   },
 
-  multipleVoicesMultipleDraws(options): void {
+  multipleVoicesMultipleDraws(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 140);
     const stave = f.Stave({ x: 10, y: 10, width: 450 });
 
