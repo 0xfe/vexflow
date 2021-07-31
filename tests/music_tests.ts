@@ -3,8 +3,8 @@
 //
 // Music Tests
 
-import { Music } from '../src/music';
-import { KeyManager } from '../src/keymanager';
+import { Music } from 'music';
+import { KeyManager } from 'keymanager';
 import { QUnit, ok, test, expect, equal } from './declarations';
 
 const MusicTests = {

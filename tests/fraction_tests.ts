@@ -4,7 +4,7 @@
 // Fraction Tests
 
 import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
-import { Fraction } from '../src/fraction';
+import { Fraction } from 'fraction';
 
 const FractionTests = {
   Start(): void {

@@ -5,11 +5,11 @@
 
 import { QUnit, expect, Assert } from './declarations';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { EasyScore } from '../src/easyscore';
-import { StaveNote } from '../src/stavenote';
-import { System } from '../src/system';
-import { FretHandFinger } from '../src/frethandfinger';
-import { Articulation } from '../src/articulation';
+import { EasyScore } from 'easyscore';
+import { StaveNote } from 'stavenote';
+import { System } from 'system';
+import { FretHandFinger } from 'frethandfinger';
+import { Articulation } from 'articulation';
 import { StaveConnector } from 'staveconnector';
 import { Tuplet } from 'tuplet';
 import { Modifier } from 'modifier';

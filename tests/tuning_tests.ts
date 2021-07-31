@@ -3,7 +3,7 @@
 //
 // Tuning Tests
 
-import { Tuning } from '../src/tuning';
+import { Tuning } from 'tuning';
 import { QUnit, test, equal, expect } from './declarations';
 
 const TuningTests = {
