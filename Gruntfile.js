@@ -62,7 +62,7 @@ module.exports = (grunt) => {
         ],
       },
       plugins: [
-        // Add VERSION and BUILD properties to both Vex.Flow and Vex.Flow.Test.
+        // Add VERSION and BUILD properties to Vex.Flow.
         new InjectPlugin(function () {
           return `import{Flow}from'flow';Flow.VERSION="${packageJSON.version}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
         }),
