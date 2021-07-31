@@ -1,22 +1,21 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Factory Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, equal, expect } from './declarations';
+import { QUnit, equal, expect, test } from './declarations';
 import { Barline } from 'stavebarline';
 import { Factory } from 'factory';
 
-/**
- * Factory Tests
- */
 const FactoryTests = {
   Start: function () {
     QUnit.module('Factory');
 
-    QUnit.test('Defaults', this.defaults);
+    test('Defaults', this.defaults);
     VexFlowTests.runSVGTest('Draw', this.draw);
     VexFlowTests.runSVGTest('Draw Tab (repeat barlines must be aligned)', this.drawTab);
   },

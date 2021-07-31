@@ -96,7 +96,6 @@ if (!global.QUnit) {
       strictEqual: () => true,
       notStrictEqual: () => true,
       propEqual: () => true,
-      test: { module: { name: '' } },
     },
 
     module(name: string): void {
@@ -113,11 +112,14 @@ if (!global.QUnit) {
   };
 
   global.QUnit = QUMock;
-  global.test = QUMock.test;
-  // Make all methods & properties of QUMock.assertions global.
   for (const k in QUMock.assertions) {
+    // Make all methods & properties of QUMock.assertions global.
     global[k] = QUMock.assertions[k];
   }
+  global.test = QUMock.test;
+  // Enable us to pass the name of the module around.
+  // See: QUMock.test(...) and VexFlowTests.runWithParams(...)
+  QUMock.assertions.test = { module: { name: '' } };
 }
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
