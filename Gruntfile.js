@@ -64,18 +64,7 @@ module.exports = (grunt) => {
       plugins: [
         // Add VERSION and BUILD properties to both Vex.Flow and Vex.Flow.Test.
         new InjectPlugin(function () {
-          const isVexSRC = moduleEntry === MODULE_ENTRY_SRC;
-          const importVex = isVexSRC
-            ? `import { Vex } from './src/vex';`
-            : `import { VexFlowTests } from './tests/vexflow_test_helpers';`;
-          const vf = isVexSRC ? 'Vex.Flow' : 'Vex.Flow.Test';
-
-          return '';
-
-          // TODO: Fix this!
-          // return `${importVex}
-          //   ${vf}.VERSION = "${packageJSON.version}";
-          //   ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
+          return `import{Flow}from'flow';Flow.VERSION="${packageJSON.version}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
         }),
         // Add a banner at the top of the file.
         new webpack.BannerPlugin(BANNER),
