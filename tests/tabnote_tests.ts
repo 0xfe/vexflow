@@ -26,13 +26,13 @@ const TabNoteTests = {
     test('Width', this.width);
     test('TickContext', this.tickContext);
 
-    const runTests = VexFlowTests.runTests;
-    runTests('TabNote Draw', this.draw);
-    runTests('TabNote Stems Up', this.drawStemsUp);
-    runTests('TabNote Stems Down', this.drawStemsDown);
-    runTests('TabNote Stems Up Through Stave', this.drawStemsUpThrough);
-    runTests('TabNote Stems Down Through Stave', this.drawStemsDownThrough);
-    runTests('TabNote Stems with Dots', this.drawStemsDotted);
+    const run = VexFlowTests.runTests;
+    run('TabNote Draw', this.draw);
+    run('TabNote Stems Up', this.drawStemsUp);
+    run('TabNote Stems Down', this.drawStemsDown);
+    run('TabNote Stems Up Through Stave', this.drawStemsUpThrough);
+    run('TabNote Stems Down Through Stave', this.drawStemsDownThrough);
+    run('TabNote Stems with Dots', this.drawStemsDotted);
   },
 
   ticks(): void {

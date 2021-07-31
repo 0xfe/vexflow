@@ -24,19 +24,19 @@ const setDurationToQuarterNote = set('duration')('4');
 
 const TupletTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Tuplet');
-    runTests('Simple Tuplet', this.simple);
-    runTests('Beamed Tuplet', this.beamed);
-    runTests('Ratioed Tuplet', this.ratio);
-    runTests('Bottom Tuplet', this.bottom);
-    runTests('Bottom Ratioed Tuplet', this.bottom_ratio);
-    runTests('Awkward Tuplet', this.awkward);
-    runTests('Complex Tuplet', this.complex);
-    runTests('Mixed Stem Direction Tuplet', this.mixedTop);
-    runTests('Mixed Stem Direction Bottom Tuplet', this.mixedBottom);
-    runTests('Nested Tuplets', this.nested);
-    runTests('Single Tuplets', this.single);
+    const run = VexFlowTests.runTests;
+    run('Simple Tuplet', this.simple);
+    run('Beamed Tuplet', this.beamed);
+    run('Ratioed Tuplet', this.ratio);
+    run('Bottom Tuplet', this.bottom);
+    run('Bottom Ratioed Tuplet', this.bottom_ratio);
+    run('Awkward Tuplet', this.awkward);
+    run('Complex Tuplet', this.complex);
+    run('Mixed Stem Direction Tuplet', this.mixedTop);
+    run('Mixed Stem Direction Bottom Tuplet', this.mixedBottom);
+    run('Nested Tuplets', this.nested);
+    run('Single Tuplets', this.single);
   },
 
   simple(options: TestOptions): void {

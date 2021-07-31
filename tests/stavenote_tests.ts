@@ -33,9 +33,8 @@ function note(note_struct: StaveNoteStruct) {
 
 const StaveNoteTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
-
     QUnit.module('StaveNote');
+    const run = VexFlowTests.runTests;
     test('VF.* API', this.VF_prefix_API);
     test('Tick', this.ticks);
     test('Tick - New API', this.ticksNewApi);
@@ -55,34 +54,34 @@ const StaveNoteTests = {
       ui: true,
     });
 
-    runTests('StaveNote Draw - Treble', this.draw, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
-    runTests('StaveNote BoundingBoxes - Treble', this.drawBoundingBoxes, {
+    run('StaveNote Draw - Treble', this.draw, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
+    run('StaveNote BoundingBoxes - Treble', this.drawBoundingBoxes, {
       clef: 'treble',
       octaveShift: 0,
       restKey: 'r/4',
     });
-    runTests('StaveNote Draw - Alto', this.draw, { clef: 'alto', octaveShift: -1, restKey: 'r/4' });
-    runTests('StaveNote Draw - Tenor', this.draw, { clef: 'tenor', octaveShift: -1, restKey: 'r/3' });
-    runTests('StaveNote Draw - Bass', this.draw, { clef: 'bass', octaveShift: -2, restKey: 'r/3' });
-    runTests('StaveNote Draw - Harmonic And Muted', this.drawHarmonicAndMuted);
-    runTests('StaveNote Draw - Slash', this.drawSlash);
-    runTests('Displacements', this.displacements);
-    runTests('StaveNote Draw - Bass 2', this.drawBass);
-    runTests('StaveNote Draw - Key Styles', this.drawKeyStyles);
-    runTests('StaveNote Draw - StaveNote Stem Styles', this.drawNoteStemStyles);
-    runTests('StaveNote Draw - StaveNote Stem Lengths', this.drawNoteStemLengths);
-    runTests('StaveNote Draw - StaveNote Flag Styles', this.drawNoteStylesWithFlag);
-    runTests('StaveNote Draw - StaveNote Styles', this.drawNoteStyles);
-    runTests('Stave, Ledger Line, Beam, Stem and Flag Styles', this.drawBeamStyles);
-    runTests('Flag and Dot Placement - Stem Up', this.dotsAndFlagsStemUp);
-    runTests('Flag and Dots Placement - Stem Down', this.dotsAndFlagsStemDown);
-    runTests('Beam and Dot Placement - Stem Up', this.dotsAndBeamsUp);
-    runTests('Beam and Dot Placement - Stem Down', this.dotsAndBeamsDown);
-    runTests('Center Aligned Note', this.centerAlignedRest);
-    runTests('Center Aligned Note with Articulation', this.centerAlignedRestFermata);
-    runTests('Center Aligned Note with Annotation', this.centerAlignedRestAnnotation);
-    runTests('Center Aligned Note - Multi Voice', this.centerAlignedMultiVoice);
-    runTests('Center Aligned Note with Multiple Modifiers', this.centerAlignedNoteMultiModifiers);
+    run('StaveNote Draw - Alto', this.draw, { clef: 'alto', octaveShift: -1, restKey: 'r/4' });
+    run('StaveNote Draw - Tenor', this.draw, { clef: 'tenor', octaveShift: -1, restKey: 'r/3' });
+    run('StaveNote Draw - Bass', this.draw, { clef: 'bass', octaveShift: -2, restKey: 'r/3' });
+    run('StaveNote Draw - Harmonic And Muted', this.drawHarmonicAndMuted);
+    run('StaveNote Draw - Slash', this.drawSlash);
+    run('Displacements', this.displacements);
+    run('StaveNote Draw - Bass 2', this.drawBass);
+    run('StaveNote Draw - Key Styles', this.drawKeyStyles);
+    run('StaveNote Draw - StaveNote Stem Styles', this.drawNoteStemStyles);
+    run('StaveNote Draw - StaveNote Stem Lengths', this.drawNoteStemLengths);
+    run('StaveNote Draw - StaveNote Flag Styles', this.drawNoteStylesWithFlag);
+    run('StaveNote Draw - StaveNote Styles', this.drawNoteStyles);
+    run('Stave, Ledger Line, Beam, Stem and Flag Styles', this.drawBeamStyles);
+    run('Flag and Dot Placement - Stem Up', this.dotsAndFlagsStemUp);
+    run('Flag and Dots Placement - Stem Down', this.dotsAndFlagsStemDown);
+    run('Beam and Dot Placement - Stem Up', this.dotsAndBeamsUp);
+    run('Beam and Dot Placement - Stem Down', this.dotsAndBeamsDown);
+    run('Center Aligned Note', this.centerAlignedRest);
+    run('Center Aligned Note with Articulation', this.centerAlignedRestFermata);
+    run('Center Aligned Note with Annotation', this.centerAlignedRestAnnotation);
+    run('Center Aligned Note - Multi Voice', this.centerAlignedMultiVoice);
+    run('Center Aligned Note with Multiple Modifiers', this.centerAlignedNoteMultiModifiers);
   },
 
   VF_prefix_API(): void {

@@ -17,12 +17,11 @@ import { Note } from 'note';
 const NoteSubGroupTests = {
   Start(): void {
     QUnit.module('NoteSubGroup');
-    const runTests = VexFlowTests.runTests;
-
-    runTests('Basic - ClefNote, TimeSigNote and BarNote', this.draw);
-    runTests('Multi Voice', this.drawMultiVoice);
-    runTests('Multi Voice Multiple Draws', this.drawMultiVoiceMultipleDraw);
-    runTests('Multi Staff', this.drawMultiStaff);
+    const run = VexFlowTests.runTests;
+    run('Basic - ClefNote, TimeSigNote and BarNote', this.draw);
+    run('Multi Voice', this.drawMultiVoice);
+    run('Multi Voice Multiple Draws', this.drawMultiVoiceMultipleDraw);
+    run('Multi Staff', this.drawMultiStaff);
   },
 
   draw(options: TestOptions): void {

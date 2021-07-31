@@ -52,9 +52,9 @@ function createTest(drawHairpins) {
 const StaveHairpinTests = {
   Start(): void {
     QUnit.module('StaveHairpin');
-    const runTests = VexFlowTests.runTests;
+    const run = VexFlowTests.runTests;
 
-    runTests(
+    run(
       'Simple StaveHairpin',
       createTest(function (ctx, stave, notes) {
         drawHairpin(notes[0], notes[2], stave, ctx, 1, 4);
@@ -62,7 +62,7 @@ const StaveHairpinTests = {
       })
     );
 
-    runTests(
+    run(
       'Horizontal Offset StaveHairpin',
       createTest(function (ctx, stave, notes) {
         drawHairpin(notes[0], notes[2], stave, ctx, 1, 3, {
@@ -80,7 +80,7 @@ const StaveHairpinTests = {
       })
     );
 
-    runTests(
+    run(
       'Vertical Offset StaveHairpin',
       createTest(function (ctx, stave, notes) {
         drawHairpin(notes[0], notes[2], stave, ctx, 1, 4, {
@@ -98,7 +98,7 @@ const StaveHairpinTests = {
       })
     );
 
-    runTests(
+    run(
       'Height StaveHairpin',
       createTest(function (ctx, stave, notes) {
         drawHairpin(notes[0], notes[2], stave, ctx, 1, 4, {

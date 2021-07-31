@@ -16,21 +16,21 @@ import { Modifier } from 'modifier';
 const StaveConnectorTests = {
   Start(): void {
     QUnit.module('StaveConnector');
-    const runTests = VexFlowTests.runTests;
-    runTests('Single Draw Test', this.drawSingle);
-    runTests('Single Draw Test, 1px Stave Line Thickness', this.drawSingle1pxBarlines);
-    runTests('Single Both Sides Test', this.drawSingleBoth);
-    runTests('Double Draw Test', this.drawDouble);
-    runTests('Bold Double Line Left Draw Test', this.drawRepeatBegin);
-    runTests('Bold Double Line Right Draw Test', this.drawRepeatEnd);
-    runTests('Thin Double Line Right Draw Test', this.drawThinDouble);
-    runTests('Bold Double Lines Overlapping Draw Test', this.drawRepeatAdjacent);
-    runTests('Bold Double Lines Offset Draw Test', this.drawRepeatOffset);
-    runTests('Bold Double Lines Offset Draw Test 2', this.drawRepeatOffset2);
-    runTests('Brace Draw Test', this.drawBrace);
-    runTests('Brace Wide Draw Test', this.drawBraceWide);
-    runTests('Bracket Draw Test', this.drawBracket);
-    runTests('Combined Draw Test', this.drawCombined);
+    const run = VexFlowTests.runTests;
+    run('Single Draw Test', this.drawSingle);
+    run('Single Draw Test, 1px Stave Line Thickness', this.drawSingle1pxBarlines);
+    run('Single Both Sides Test', this.drawSingleBoth);
+    run('Double Draw Test', this.drawDouble);
+    run('Bold Double Line Left Draw Test', this.drawRepeatBegin);
+    run('Bold Double Line Right Draw Test', this.drawRepeatEnd);
+    run('Thin Double Line Right Draw Test', this.drawThinDouble);
+    run('Bold Double Lines Overlapping Draw Test', this.drawRepeatAdjacent);
+    run('Bold Double Lines Offset Draw Test', this.drawRepeatOffset);
+    run('Bold Double Lines Offset Draw Test 2', this.drawRepeatOffset2);
+    run('Brace Draw Test', this.drawBrace);
+    run('Brace Wide Draw Test', this.drawBraceWide);
+    run('Bracket Draw Test', this.drawBracket);
+    run('Combined Draw Test', this.drawCombined);
   },
 
   drawSingle(options: TestOptions, contextBuilder: ContextBuilder): void {

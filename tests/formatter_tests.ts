@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Formatter Tests
 
 /* eslint-disable */
 // @ts-nocheck
@@ -20,44 +22,39 @@ function glyphPixels(): number {
   return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
 }
 
-/**
- * Formatter Tests
- */
 const FormatterTests = {
   Start() {
+    QUnit.module('Formatter');
+    test('TickContext Building', this.buildTickContexts);
+
     const runTests = VexFlowTests.runTests;
     const runSVG = VexFlowTests.runSVGTest;
-
-    QUnit.module('Formatter');
-    test('TickContext Building', FormatterTests.buildTickContexts);
-    runSVG('Justification and alignment with accidentals', FormatterTests.accidentalJustification);
-    runSVG('Long measure taking full space', FormatterTests.longMeasureProblems);
-    runSVG('Vertical alignment - few unaligned beats', FormatterTests.unalignedNoteDurations);
-    runSVG('Vertical alignment - many unaligned beats', FormatterTests.unalignedNoteDurations2, {
-      globalSoftmax: false,
-    });
-    runSVG('Vertical alignment - many unaligned beats (global softmax)', FormatterTests.unalignedNoteDurations2, {
+    // TODO: Why do we just do VexFlowTests.runSVGTest? Why not use VexFlowTests.runTests like in all other tests? It would be more consistent.
+    runSVG('Justification and alignment with accidentals', this.accidentalJustification);
+    runSVG('Long measure taking full space', this.longMeasureProblems);
+    runSVG('Vertical alignment - few unaligned beats', this.unalignedNoteDurations);
+    runSVG('Vertical alignment - many unaligned beats', this.unalignedNoteDurations2, { globalSoftmax: false });
+    runSVG('Vertical alignment - many unaligned beats (global softmax)', this.unalignedNoteDurations2, {
       globalSoftmax: true,
     });
-    runSVG('StaveNote - Justification', FormatterTests.justifyStaveNotes);
-    runSVG('Notes with Tab', FormatterTests.notesWithTab);
-    runSVG('Multiple Staves - Justified', FormatterTests.multiStaves, { debug: true });
-    runSVG('Softmax', FormatterTests.softMax);
-    runSVG('Mixtime', FormatterTests.mixTime);
-    runSVG('Tight', FormatterTests.tightNotes);
-    runSVG('Tight 2', FormatterTests.tightNotes2);
-    runSVG('Annotations', FormatterTests.annotations);
-    runSVG('Proportional Formatting - No Justification', FormatterTests.proportionalFormatting, {
+    runSVG('StaveNote - Justification', this.justifyStaveNotes);
+    runSVG('Notes with Tab', this.notesWithTab);
+    runSVG('Multiple Staves - Justified', this.multiStaves, { debug: true });
+    runSVG('Softmax', this.softMax);
+    runSVG('Mixtime', this.mixTime);
+    runSVG('Tight', this.tightNotes);
+    runSVG('Tight 2', this.tightNotes2);
+    runSVG('Annotations', this.annotations);
+    runSVG('Proportional Formatting - No Justification', this.proportionalFormatting, {
       justify: false,
       debug: true,
       iterations: 0,
     });
-    runTests('Proportional Formatting - No Tuning', FormatterTests.proportionalFormatting, {
+    runTests('Proportional Formatting - No Tuning', this.proportionalFormatting, {
       debug: true,
       iterations: 0,
     });
-
-    VexFlowTests.runSVGTest('Proportional Formatting (20 iterations)', FormatterTests.proportionalFormatting, {
+    runSVG('Proportional Formatting (20 iterations)', this.proportionalFormatting, {
       debug: true,
       iterations: 20,
       alpha: 0.5,
@@ -120,7 +117,7 @@ const FormatterTests = {
     );
   },
 
-  longMeasureProblems(options) {
+  longMeasureProblems(options): void {
     const registry = new VF.Registry();
     VF.Registry.enableDefaultRegistry(registry);
     const f = VexFlowTests.makeFactory(options, 1500, 300);
@@ -455,7 +452,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  proportionalFormatting: function (options) {
+  proportionalFormatting(options) {
     const debug = options.params.debug;
     VF.Registry.enableDefaultRegistry(new VF.Registry());
 
@@ -505,7 +502,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  softMax: function (options) {
+  softMax(options) {
     const f = VexFlowTests.makeFactory(options, 550, 500);
     f.getContext().scale(0.8, 0.8);
 
@@ -544,7 +541,7 @@ const FormatterTests = {
     draw(450, 200);
   },
 
-  mixTime: function (options) {
+  mixTime(options) {
     const f = VexFlowTests.makeFactory(options, 400 + VF.Stave.defaultPadding, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -574,7 +571,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  tightNotes: function (options) {
+  tightNotes(options) {
     const f = VexFlowTests.makeFactory(options, 440, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -606,7 +603,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  tightNotes2: function (options) {
+  tightNotes2(options) {
     const f = VexFlowTests.makeFactory(options, 440, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -635,7 +632,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  annotations: function (options) {
+  annotations(options) {
     const pageWidth = 916;
     const pageHeight = 600;
     const f = VexFlowTests.makeFactory(options, pageWidth, pageHeight);

@@ -12,28 +12,28 @@ import { Stem } from 'stem';
 
 const BeamTests = {
   Start: function () {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Beam');
-    runTests('Simple Beam', this.simple);
-    runTests('Multi Beam', this.multi);
-    runTests('Sixteenth Beam', this.sixteenth);
-    runTests('Slopey Beam', this.slopey);
-    runTests('Auto-stemmed Beam', this.autoStem);
-    runTests('Mixed Beam 1', this.mixed);
-    runTests('Mixed Beam 2', this.mixed2);
-    runTests('Dotted Beam', this.dotted);
-    runTests('Partial Beam', this.partial);
-    runTests('Close Trade-offs Beam', this.tradeoffs);
-    runTests('Insane Beam', this.insane);
-    runTests('Lengthy Beam', this.lenghty);
-    runTests('Outlier Beam', this.outlier);
-    runTests('Break Secondary Beams', this.breakSecondaryBeams);
-    runTests('TabNote Beams Up', this.tabBeamsUp);
-    runTests('TabNote Beams Down', this.tabBeamsDown);
-    runTests('TabNote Auto Create Beams', this.autoTabBeams);
-    runTests('TabNote Beams Auto Stem', this.tabBeamsAutoStem);
-    runTests('Complex Beams with Annotations', this.complexWithAnnotation);
-    runTests('Complex Beams with Articulations', this.complexWithArticulation);
+    const run = VexFlowTests.runTests;
+    run('Simple Beam', this.simple);
+    run('Multi Beam', this.multi);
+    run('Sixteenth Beam', this.sixteenth);
+    run('Slopey Beam', this.slopey);
+    run('Auto-stemmed Beam', this.autoStem);
+    run('Mixed Beam 1', this.mixed);
+    run('Mixed Beam 2', this.mixed2);
+    run('Dotted Beam', this.dotted);
+    run('Partial Beam', this.partial);
+    run('Close Trade-offs Beam', this.tradeoffs);
+    run('Insane Beam', this.insane);
+    run('Lengthy Beam', this.lenghty);
+    run('Outlier Beam', this.outlier);
+    run('Break Secondary Beams', this.breakSecondaryBeams);
+    run('TabNote Beams Up', this.tabBeamsUp);
+    run('TabNote Beams Down', this.tabBeamsDown);
+    run('TabNote Auto Create Beams', this.autoTabBeams);
+    run('TabNote Beams Auto Stem', this.tabBeamsAutoStem);
+    run('Complex Beams with Annotations', this.complexWithAnnotation);
+    run('Complex Beams with Articulations', this.complexWithArticulation);
   },
 
   simple: function (options) {

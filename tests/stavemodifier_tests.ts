@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// StaveModifier Tests
 
 /* eslint-disable */
 // @ts-nocheck
@@ -10,9 +12,6 @@ import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
 import { StaveModifier } from 'stavemodifier';
 
-/**
- * StaveModifier Tests
- */
 const StaveModifierTests = {
   Start: function () {
     QUnit.module('StaveModifier');

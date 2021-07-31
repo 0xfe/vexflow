@@ -13,13 +13,13 @@ import { Barline, BarlineType } from 'stavebarline';
 const BarlineTests = {
   Start(): void {
     QUnit.module('Barline');
-    const runTests = VexFlowTests.runTests;
 
     QUnit.test('Enums', function (assert: Assert) {
       equal(Barline.type, BarlineType);
     });
 
-    runTests('Simple BarNotes', function (options: TestOptions) {
+    const run = VexFlowTests.runTests;
+    run('Simple BarNotes', function (options: TestOptions) {
       const f = VexFlowTests.makeFactory(options, 380, 160);
       const stave = f.Stave();
 
@@ -41,7 +41,7 @@ const BarlineTests = {
       ok(true, 'Simple Test');
     });
 
-    runTests('Style BarNotes', function (options: TestOptions) {
+    run('Style BarNotes', function (options: TestOptions) {
       const f = VexFlowTests.makeFactory(options, 380, 160);
       const stave = f.Stave();
 

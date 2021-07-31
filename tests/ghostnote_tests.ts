@@ -28,9 +28,9 @@ function createTest(setup: any) {
 const GhostNoteTests = {
   Start() {
     QUnit.module('GhostNote');
-    const runTests = VexFlowTests.runTests;
+    const run = VexFlowTests.runTests;
 
-    runTests(
+    run(
       'GhostNote Basic',
       createTest(function (f: any, score: any) {
         const voice1 = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
@@ -58,7 +58,7 @@ const GhostNoteTests = {
       })
     );
 
-    runTests(
+    run(
       'GhostNote Dotted',
       createTest(function (f: any, score: any) {
         const voice1 = score.voice(

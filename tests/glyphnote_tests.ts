@@ -16,11 +16,11 @@ import { StaveConnector } from 'staveconnector';
 const GlyphNoteTests = {
   Start(): void {
     QUnit.module('GlyphNote');
-    const runTests = VexFlowTests.runTests;
-    runTests('GlyphNote with ChordSymbols', this.chordChanges, { debug: false, noPadding: false });
-    runTests('GlyphNote Positioning', this.basic, { debug: false, noPadding: false });
-    runTests('GlyphNote No Stave Padding', this.basic, { debug: true, noPadding: true });
-    runTests('GlyphNote RepeatNote', this.repeatNote, { debug: false, noPadding: true });
+    const run = VexFlowTests.runTests;
+    run('GlyphNote with ChordSymbols', this.chordChanges, { debug: false, noPadding: false });
+    run('GlyphNote Positioning', this.basic, { debug: false, noPadding: false });
+    run('GlyphNote No Stave Padding', this.basic, { debug: true, noPadding: true });
+    run('GlyphNote RepeatNote', this.repeatNote, { debug: false, noPadding: true });
   },
 
   chordChanges(options: TestOptions): void {

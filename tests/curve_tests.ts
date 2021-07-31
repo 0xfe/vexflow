@@ -38,9 +38,9 @@ function createTest(beamGroup1, beamGroup2, setupCurves: (f: Factory, n: StaveNo
 const CurveTests = {
   Start(): void {
     QUnit.module('Curve');
-    const runTests = VexFlowTests.runTests;
+    const run = VexFlowTests.runTests;
 
-    runTests(
+    run(
       'Simple Curve',
       createTest(['c4/8, f5, d5, g5', { stem: 'up' }], ['d6/8, f5, d5, g5', { stem: 'down' }], function (f, notes) {
         f.Curve({
@@ -67,7 +67,7 @@ const CurveTests = {
       })
     );
 
-    runTests(
+    run(
       'Rounded Curve',
       createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
         f.Curve({
@@ -96,7 +96,7 @@ const CurveTests = {
       })
     );
 
-    runTests(
+    run(
       'Thick Thin Curves',
       createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
         f.Curve({
@@ -127,7 +127,7 @@ const CurveTests = {
       })
     );
 
-    runTests(
+    run(
       'Top Curve',
       createTest(['c5/8, f4, d4, g5', { stem: 'up' }], ['d5/8, d6, d6, g5', { stem: 'down' }], function (f, notes) {
         f.Curve({

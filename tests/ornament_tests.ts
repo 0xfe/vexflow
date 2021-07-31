@@ -20,15 +20,15 @@ import { Accidental } from 'accidental';
 
 const OrnamentTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Ornament');
-    runTests('Ornaments', this.drawOrnaments);
-    runTests('Ornaments Vertically Shifted', this.drawOrnamentsDisplaced);
-    runTests('Ornaments - Delayed turns', this.drawOrnamentsDelayed);
-    runTests('Ornaments - Delayed turns, Multiple Draws', this.drawOrnamentsDelayedMultipleDraws);
-    runTests('Stacked', this.drawOrnamentsStacked);
-    runTests('With Upper/Lower Accidentals', this.drawOrnamentsWithAccidentals);
-    runTests('Jazz Ornaments', this.jazzOrnaments);
+    const run = VexFlowTests.runTests;
+    run('Ornaments', this.drawOrnaments);
+    run('Ornaments Vertically Shifted', this.drawOrnamentsDisplaced);
+    run('Ornaments - Delayed turns', this.drawOrnamentsDelayed);
+    run('Ornaments - Delayed turns, Multiple Draws', this.drawOrnamentsDelayedMultipleDraws);
+    run('Stacked', this.drawOrnamentsStacked);
+    run('With Upper/Lower Accidentals', this.drawOrnamentsWithAccidentals);
+    run('Jazz Ornaments', this.jazzOrnaments);
   },
 
   drawOrnaments(options: TestOptions, contextBuilder: ContextBuilder): void {

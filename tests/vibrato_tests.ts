@@ -17,11 +17,11 @@ import { TabNote } from 'tabnote';
 
 const VibratoTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Vibrato');
-    runTests('Simple Vibrato', this.simple);
-    runTests('Harsh Vibrato', this.harsh);
-    runTests('Vibrato with Bend', this.withBend);
+    const run = VexFlowTests.runTests;
+    run('Simple Vibrato', this.simple);
+    run('Harsh Vibrato', this.harsh);
+    run('Vibrato with Bend', this.withBend);
   },
 
   simple(options: TestOptions, contextBuilder: ContextBuilder): void {

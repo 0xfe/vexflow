@@ -15,11 +15,11 @@ import { Formatter } from 'formatter';
 
 const TabSlideTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('TabSlide');
-    runTests('Simple TabSlide', this.simple);
-    runTests('Slide Up', this.slideUp);
-    runTests('Slide Down', this.slideDown);
+    const run = VexFlowTests.runTests;
+    run('Simple TabSlide', this.simple);
+    run('Slide Up', this.slideUp);
+    run('Slide Down', this.slideDown);
   },
 
   tieNotes(notes, indices, stave, ctx) {

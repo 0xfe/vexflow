@@ -38,14 +38,15 @@ function showNote(note_struct: any, stave: any, ctx: any, x: any): StaveNote {
 
 const PercussionTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
-
     QUnit.module('Percussion');
 
-    runTests('Percussion Clef', this.draw);
-    runTests('Percussion Notes', this.drawNotes);
+    const run = VexFlowTests.runTests;
 
-    runTests(
+    run('Percussion Clef', this.draw);
+
+    run('Percussion Notes', this.drawNotes);
+
+    run(
       'Percussion Basic0',
       createSingleMeasureTest(function (f: Factory) {
         const voice0 = f
@@ -78,7 +79,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Basic1',
       createSingleMeasureTest(function (f: Factory) {
         f.Voice().addTickables([
@@ -97,7 +98,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Basic2',
       createSingleMeasureTest(function (f: Factory) {
         const voice0 = f
@@ -130,7 +131,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Snare0',
       createSingleMeasureTest(function (f: Factory) {
         f.Voice().addTickables([
@@ -145,7 +146,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Snare1',
       createSingleMeasureTest(function (f: Factory) {
         f.Voice().addTickables([
@@ -163,7 +164,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Snare2',
       createSingleMeasureTest(function (factory) {
         factory
@@ -177,7 +178,7 @@ const PercussionTests = {
       })
     );
 
-    runTests(
+    run(
       'Percussion Snare3',
       createSingleMeasureTest(function (factory: Factory) {
         factory

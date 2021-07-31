@@ -19,13 +19,12 @@ import { TabNote } from 'tabnote';
 const TabTieTests = {
   Start(): void {
     QUnit.module('TabTie');
-    const runTests = VexFlowTests.runTests;
-
-    runTests('Simple TabTie', this.simple);
-    runTests('Hammerons', this.simpleHammeron);
-    runTests('Pulloffs', this.simplePulloff);
-    runTests('Tapping', this.tap);
-    runTests('Continuous', this.continuous);
+    const run = VexFlowTests.runTests;
+    run('Simple TabTie', this.simple);
+    run('Hammerons', this.simpleHammeron);
+    run('Pulloffs', this.simplePulloff);
+    run('Tapping', this.tap);
+    run('Continuous', this.continuous);
   },
 
   tieNotes(notes: any, indices: any, stave: any, ctx: any, text?: any): void {

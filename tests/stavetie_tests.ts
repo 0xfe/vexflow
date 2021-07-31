@@ -6,7 +6,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok } from './declarations';
 import { Stem } from 'stem';
 import { BuilderOptions } from 'easyscore';
@@ -34,9 +34,9 @@ const createTest =
 const StaveTieTests = {
   Start(): void {
     QUnit.module('StaveTie');
-    const runTests = VexFlowTests.runTests;
 
-    runTests(
+    const run = VexFlowTests.runTests;
+    run(
       'Simple StaveTie',
       createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], function (f, notes) {
         f.StaveTie({
@@ -48,7 +48,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'Chord StaveTie',
       createTest(['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'down' }], function (f, notes) {
         f.StaveTie({
@@ -60,7 +60,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'Stem Up StaveTie',
       createTest(['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' }], function (f, notes) {
         f.StaveTie({
@@ -72,7 +72,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'No End Note',
       createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], function (f, notes, stave) {
         stave.addEndClef('treble');
@@ -86,7 +86,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'No Start Note',
       createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], function (f, notes, stave) {
         stave.addClef('treble');
@@ -100,7 +100,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'Set Direction Down',
       createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], function (f, notes) {
         f.StaveTie({
@@ -113,7 +113,7 @@ const StaveTieTests = {
       })
     );
 
-    runTests(
+    run(
       'Set Direction Up',
       createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], function (f, notes) {
         f.StaveTie({

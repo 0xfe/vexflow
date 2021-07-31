@@ -12,12 +12,12 @@ import { QUnit, ok } from './declarations';
 const ClefTests = {
   Start(): void {
     QUnit.module('Clef');
-    const runTests = VexFlowTests.runTests;
-    runTests('Clef Test', this.draw);
-    runTests('Clef End Test', this.drawEnd);
-    runTests('Small Clef Test', this.drawSmall);
-    runTests('Small Clef End Test', this.drawSmallEnd);
-    runTests('Clef Change Test', this.drawClefChange);
+    const run = VexFlowTests.runTests;
+    run('Clef Test', this.draw);
+    run('Clef End Test', this.drawEnd);
+    run('Small Clef Test', this.drawSmall);
+    run('Small Clef End Test', this.drawSmallEnd);
+    run('Clef Change Test', this.drawClefChange);
   },
 
   draw(options: TestOptions): void {

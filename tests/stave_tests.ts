@@ -25,23 +25,23 @@ import { TextNote } from 'textnote';
 
 const StaveTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Stave');
+    const run = VexFlowTests.runTests;
     test('StaveModifiers SortByCategory', this.sortByCategory);
-    runTests('Stave Draw Test', this.draw);
-    runTests('Open Stave Draw Test', this.drawOpenStave);
-    runTests('Vertical Bar Test', this.drawVerticalBar);
-    runTests('Multiple Stave Barline Test', this.drawMultipleMeasures);
-    runTests('Multiple Stave Repeats Test', this.drawRepeats);
-    runTests('Stave End Modifiers Test', this.drawEndModifiersTest);
-    runTests('Multiple Staves Volta Test', this.drawVoltaTest);
-    runTests('Volta + Modifier Measure Test', this.drawVoltaModifierTest);
-    runTests('Tempo Test', this.drawTempo);
-    runTests('Single Line Configuration Test', this.configureSingleLine);
-    runTests('Batch Line Configuration Test', this.configureAllLines);
-    runTests('Stave Text Test', this.drawStaveText);
-    runTests('Multiple Line Stave Text Test', this.drawStaveTextMultiLine);
-    runTests('Factory API', this.factoryAPI);
+    run('Stave Draw Test', this.draw);
+    run('Open Stave Draw Test', this.drawOpenStave);
+    run('Vertical Bar Test', this.drawVerticalBar);
+    run('Multiple Stave Barline Test', this.drawMultipleMeasures);
+    run('Multiple Stave Repeats Test', this.drawRepeats);
+    run('Stave End Modifiers Test', this.drawEndModifiersTest);
+    run('Multiple Staves Volta Test', this.drawVoltaTest);
+    run('Volta + Modifier Measure Test', this.drawVoltaModifierTest);
+    run('Tempo Test', this.drawTempo);
+    run('Single Line Configuration Test', this.configureSingleLine);
+    run('Batch Line Configuration Test', this.configureAllLines);
+    run('Stave Text Test', this.drawStaveText);
+    run('Multiple Line Stave Text Test', this.drawStaveTextMultiLine);
+    run('Factory API', this.factoryAPI);
   },
 
   sortByCategory(): void {

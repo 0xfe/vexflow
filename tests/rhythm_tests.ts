@@ -18,13 +18,13 @@ import { Stave } from 'stave';
 
 const RhythmTests = {
   Start(): void {
-    const runTests = VexFlowTests.runTests;
     QUnit.module('Rhythm');
-    runTests('Rhythm Draw - slash notes', this.drawBasic);
-    runTests('Rhythm Draw - beamed slash notes', this.drawBeamedSlashNotes);
-    runTests('Rhythm Draw - beamed slash notes, some rests', this.drawSlashAndBeamAndRests);
-    runTests('Rhythm Draw - 16th note rhythm with scratches', this.drawSixtenthWithScratches);
-    runTests('Rhythm Draw - 32nd note rhythm with scratches', this.drawThirtySecondWithScratches);
+    const run = VexFlowTests.runTests;
+    run('Rhythm Draw - slash notes', this.drawBasic);
+    run('Rhythm Draw - beamed slash notes', this.drawBeamedSlashNotes);
+    run('Rhythm Draw - beamed slash notes, some rests', this.drawSlashAndBeamAndRests);
+    run('Rhythm Draw - 16th note rhythm with scratches', this.drawSixtenthWithScratches);
+    run('Rhythm Draw - 32nd note rhythm with scratches', this.drawThirtySecondWithScratches);
   },
 
   drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {

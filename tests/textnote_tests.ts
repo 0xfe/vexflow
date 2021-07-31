@@ -10,17 +10,16 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { QUnit } from './declarations';
 
 const TextNoteTests = {
-  Start() {
-    const runTests = VexFlowTests.runTests;
-
+  Start(): void {
     QUnit.module('TextNote');
-    runTests('TextNote Formatting', TextNoteTests.formatTextNotes);
-    runTests('TextNote Formatting 2', TextNoteTests.formatTextNotes2);
-    runTests('TextNote Superscript and Subscript', TextNoteTests.superscriptAndSubscript);
-    runTests('TextNote Formatting With Glyphs 0', TextNoteTests.formatTextGlyphs0);
-    runTests('TextNote Formatting With Glyphs 1', TextNoteTests.formatTextGlyphs1);
-    runTests('Crescendo', TextNoteTests.crescendo);
-    runTests('Text Dynamics', TextNoteTests.textDynamics);
+    const run = VexFlowTests.runTests;
+    run('TextNote Formatting', this.formatTextNotes);
+    run('TextNote Formatting 2', this.formatTextNotes2);
+    run('TextNote Superscript and Subscript', this.superscriptAndSubscript);
+    run('TextNote Formatting With Glyphs 0', this.formatTextGlyphs0);
+    run('TextNote Formatting With Glyphs 1', this.formatTextGlyphs1);
+    run('Crescendo', this.crescendo);
+    run('Text Dynamics', this.textDynamics);
   },
 
   formatTextNotes(options: TestOptions): void {

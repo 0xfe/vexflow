@@ -13,14 +13,12 @@ import { QUnit, ok } from './declarations';
 const StringNumberTests = (function () {
   const StringNumber = {
     Start() {
-      const runTests = VexFlowTests.runTests;
-
       QUnit.module('StringNumber');
-
-      runTests('String Number In Notation', this.drawMultipleMeasures);
-      runTests('Fret Hand Finger In Notation', this.drawFretHandFingers);
-      runTests('Multi Voice With Strokes, String & Finger Numbers', this.multi);
-      runTests('Complex Measure With String & Finger Numbers', this.drawAccidentals);
+      const run = VexFlowTests.runTests;
+      run('String Number In Notation', this.drawMultipleMeasures);
+      run('Fret Hand Finger In Notation', this.drawFretHandFingers);
+      run('Multi Voice With Strokes, String & Finger Numbers', this.multi);
+      run('Complex Measure With String & Finger Numbers', this.drawAccidentals);
     },
 
     drawMultipleMeasures(options) {

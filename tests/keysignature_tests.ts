@@ -19,16 +19,16 @@ import { BarlineType } from 'stavebarline';
 const KeySignatureTests = {
   Start(): void {
     QUnit.module('KeySignature');
-    const runTests = VexFlowTests.runTests;
     test('Key Parser Test', this.parser);
-    runTests('Major Key Test', this.majorKeys);
-    runTests('Minor Key Test', this.minorKeys);
-    runTests('Stave Helper', this.staveHelper);
-    runTests('Cancelled key test', this.majorKeysCanceled);
-    runTests('Cancelled key (for each clef) test', this.keysCanceledForEachClef);
-    runTests('Altered key test', this.majorKeysAltered);
-    runTests('End key with clef test', this.endKeyWithClef);
-    runTests('Key Signature Change test', this.changeKey);
+    const run = VexFlowTests.runTests;
+    run('Major Key Test', this.majorKeys);
+    run('Minor Key Test', this.minorKeys);
+    run('Stave Helper', this.staveHelper);
+    run('Cancelled key test', this.majorKeysCanceled);
+    run('Cancelled key (for each clef) test', this.keysCanceledForEachClef);
+    run('Altered key test', this.majorKeysAltered);
+    run('End key with clef test', this.endKeyWithClef);
+    run('Key Signature Change test', this.changeKey);
   },
 
   parser(): void {

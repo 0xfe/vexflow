@@ -16,10 +16,10 @@ const ClefKeySignatureTests = {
   Start(): void {
     QUnit.module('Clef Keys');
     test('Key Parser Test', this.parser);
-    const runTests = VexFlowTests.runTests;
-    runTests('Major Key Clef Test', this.keys, { majorKeys: true });
-    runTests('Minor Key Clef Test', this.keys, { majorKeys: false });
-    runTests('Stave Helper', this.staveHelper);
+    const run = VexFlowTests.runTests;
+    run('Major Key Clef Test', this.keys, { majorKeys: true });
+    run('Minor Key Clef Test', this.keys, { majorKeys: false });
+    run('Stave Helper', this.staveHelper);
   },
 
   parser(): void {
