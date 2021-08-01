@@ -378,7 +378,7 @@ export class Music {
     const tones = [key];
 
     let nextNote = key;
-    for (let i = 0; i < intervals.length; i += 1) {
+    for (let i = 0; i < intervals.length; i++) {
       nextNote = this.getRelativeNoteValue(nextNote, intervals[i]);
       if (nextNote !== key) tones.push(nextNote);
     }

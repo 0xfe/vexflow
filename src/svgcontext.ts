@@ -59,8 +59,9 @@ export class SVGContext implements RenderContext {
   state_stack: State[];
   parent: SVGGElement;
   groups: SVGGElement[];
+  fontString: string = '';
   fontSize: number = 0;
-  ie!: boolean; // true if the browser is Internet Explorer.
+  ie: boolean = false; // true if the browser is Internet Explorer.
 
   constructor(element: HTMLElement) {
     this.element = element;
@@ -161,44 +162,44 @@ export class SVGContext implements RenderContext {
   // ### Styling & State Methods:
 
   setFont(family: string, size: number, weight: string): this {
-    // Unlike canvas, in SVG italic is handled by font-style,
-    // not weight. So: we search the weight argument and
-    // apply bold and italic to weight and style respectively.
-    let bold = false;
-    let italic = false;
-    let style = 'normal';
+    // In SVG italic is handled by font-style.
+    // We search the weight argument and apply bold and italic
+    // to font-weight and font-style respectively.
+    let foundBold = false;
+    let foundItalic = false;
     // Weight might also be a number (200, 400, etc...) so we
     // test its type to be sure we have access to String methods.
     if (typeof weight === 'string') {
       // look for "italic" in the weight:
       if (weight.indexOf('italic') !== -1) {
         weight = weight.replace(/italic/g, '');
-        italic = true;
+        foundItalic = true;
       }
       // look for "bold" in weight
       if (weight.indexOf('bold') !== -1) {
         weight = weight.replace(/bold/g, '');
-        bold = true;
+        foundBold = true;
       }
       // remove any remaining spaces
       weight = weight.replace(/ /g, '');
     }
-    weight = bold ? 'bold' : weight;
-    weight = typeof weight === 'undefined' || weight === '' ? 'normal' : weight;
-
-    style = italic ? 'italic' : style;
+    const noWeightProvided = typeof weight === 'undefined' || weight === '';
+    if (noWeightProvided) {
+      weight = 'normal';
+    }
 
     const fontAttributes = {
       'font-family': family,
       'font-size': size + 'pt',
-      'font-weight': weight,
-      'font-style': style,
+      'font-weight': foundBold ? 'bold' : weight,
+      'font-style': foundItalic ? 'italic' : 'normal',
     };
 
     // Store the font size so that if the browser is Internet
     // Explorer we can fix its calculations of text width.
     this.fontSize = Number(size);
-
+    // Currently this.fontString only supports size & family. See setRawFont().
+    this.fontString = `${size}pt ${family}`;
     this.attributes = { ...this.attributes, ...fontAttributes };
     this.state = { ...this.state, ...fontAttributes };
 
@@ -206,19 +207,18 @@ export class SVGContext implements RenderContext {
   }
 
   setRawFont(font: string): this {
-    font = font.trim();
+    this.fontString = font.trim();
     // Assumes size first, splits on space -- which is presently
     // how all existing modules are calling this.
-    const fontArray = font.split(' ');
+    const fontArray = this.fontString.split(' ');
 
-    const family = fontArray[1];
     const size = fontArray[0];
-
-    this.attributes['font-family'] = family;
-    this.state['font-family'] = family;
-
     this.attributes['font-size'] = size;
     this.state['font-size'] = size;
+
+    const family = fontArray[1];
+    this.attributes['font-family'] = family;
+    this.state['font-family'] = family;
 
     // Saves fontSize for IE polyfill.
     // Use the Number() function to parse the array returned by String.prototype.match()!
@@ -722,18 +722,27 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
   set font(value: string) {
     this.setRawFont(value);
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  set fillStyle(style: string) {
-    this.setFillStyle(style);
+  get font(): string {
+    return this.fontString;
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  set strokeStyle(style: string) {
-    this.setStrokeStyle(style);
+  set fillStyle(style: string | CanvasGradient | CanvasPattern) {
+    this.setFillStyle(style as string);
+  }
+
+  get fillStyle(): string | CanvasGradient | CanvasPattern {
+    return this.attributes.fill;
+  }
+
+  set strokeStyle(style: string | CanvasGradient | CanvasPattern) {
+    this.setStrokeStyle(style as string);
+  }
+
+  get strokeStyle(): string | CanvasGradient | CanvasPattern {
+    return this.attributes.stroke;
   }
 }

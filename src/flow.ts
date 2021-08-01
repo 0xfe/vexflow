@@ -155,4 +155,8 @@ export const Flow = {
   VibratoBracket,
   Voice,
   Volta,
+
+  // BUILD and VERSION are set by webpack. See: Gruntfile.js.
+  BUILD: '',
+  VERSION: '',
 };

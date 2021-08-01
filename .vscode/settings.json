@@ -1,6 +1,14 @@
 // Place your settings in this file to overwrite default and user settings.
 {
   "eslint.enable": true,
+  "files.exclude": {
+    "**/build": true,
+    "**/releases": true,
+    "**/reference": true,
+    "**/node_modules": true,
+    "**/.git**": true,
+    "**/.vscode": true
+  },
   "files.associations": {
     "src/*.js": "javascript"
   },

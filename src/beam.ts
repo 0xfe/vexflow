@@ -176,10 +176,8 @@ export class Beam extends Element {
       beam_rests?: boolean;
       groups?: Fraction[];
       stem_direction?: number;
-    }
+    } = {}
   ): Beam[] {
-    if (!config) config = {};
-
     if (!config.groups || !config.groups.length) {
       config.groups = [new Fraction(2, 8)];
     }

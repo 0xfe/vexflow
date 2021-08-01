@@ -13,7 +13,7 @@ module.exports = (grunt) => {
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
   const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
-  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.js');
+  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.ts');
 
   // Get current build information from git and package.json.
   const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
@@ -62,16 +62,9 @@ module.exports = (grunt) => {
         ],
       },
       plugins: [
-        // Add VERSION and BUILD properties to both Vex.Flow and Vex.Flow.Test.
+        // Add VERSION and BUILD properties to Vex.Flow.
         new InjectPlugin(function () {
-          const isVexSRC = moduleEntry === MODULE_ENTRY_SRC;
-          const importVex = isVexSRC
-            ? `import { Vex } from './src/vex';`
-            : `import { VexFlowTests } from './tests/vexflow_test_helpers';`;
-          const vf = isVexSRC ? 'Vex.Flow' : 'Vex.Flow.Test';
-          return `${importVex}
-            ${vf}.VERSION = "${packageJSON.version}";
-            ${vf}.BUILD = "${GIT_COMMIT_HASH}";`;
+          return `import{Flow}from'flow';Flow.VERSION="${packageJSON.version}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
         }),
         // Add a banner at the top of the file.
         new webpack.BannerPlugin(BANNER),
@@ -117,7 +110,7 @@ module.exports = (grunt) => {
     'tsconfig.json',
     MODULE_ENTRY_TESTS,
     'development',
-    'VFTests'
+    'Vex' /* Previously VFTests. TODO: Remove this! */
   );
 
   grunt.initConfig({

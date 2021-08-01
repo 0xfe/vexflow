@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
-// MIT License
 
 import { RuntimeError, log, check } from './util';
 import { Fraction } from './fraction';

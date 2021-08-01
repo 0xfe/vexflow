@@ -6,6 +6,7 @@ import { KeySignature } from './keysignature';
 
 export class KeySigNote extends Note {
   protected keySignature: KeySignature;
+
   constructor(keySpec: string, cancelKeySpec: string, alterKeySpec: string) {
     super({ duration: 'b' });
     this.setAttribute('type', 'KeySigNote');

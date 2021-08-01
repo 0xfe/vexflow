@@ -1,16 +1,17 @@
-/**
- * VexFlow - Tuning Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
-import { Tuning } from '../src/tuning';
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Tuning Tests
+
+import { Tuning } from 'tuning';
 import { QUnit, test, equal, expect } from './declarations';
 
 const TuningTests = {
   Start(): void {
     QUnit.module('Tuning');
-    test('Standard Tuning', TuningTests.standard);
-    test('Standard Banjo Tuning', TuningTests.banjo);
-    test('Return note for fret', TuningTests.noteForFret);
+    test('Standard Tuning', this.standard);
+    test('Standard Banjo Tuning', this.banjo);
+    test('Return note for fret', this.noteForFret);
   },
 
   checkStandard(tuning: Tuning): void {
@@ -96,4 +97,5 @@ const TuningTests = {
     equal(tuning.getNoteForFret(0, 6), 'E/3', 'Low E string');
   },
 };
+
 export { TuningTests };

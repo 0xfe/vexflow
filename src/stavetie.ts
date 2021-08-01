@@ -23,24 +23,28 @@ export class StaveTie extends Element {
   protected text?: string;
 
   protected font: FontInfo;
-  protected notes: TieNotes;
+
+  // notes is initialized by the constructor via this.setNotes(notes).
+  protected notes!: TieNotes;
+
   protected direction?: number;
 
+  /**
+   * @param notes is a struct that has:
+   *
+   *  {
+   *    first_note: Note,
+   *    last_note: Note,
+   *    first_indices: [n1, n2, n3],
+   *    last_indices: [n1, n2, n3]
+   *  }
+   *
+   * @param text
+   */
   constructor(notes: TieNotes, text?: string) {
-    /**
-     * TieNotes is a struct that has:
-     *
-     *  {
-     *    first_note: Note,
-     *    last_note: Note,
-     *    first_indices: [n1, n2, n3],
-     *    last_indices: [n1, n2, n3]
-     *  }
-     *
-     **/
     super();
     this.setAttribute('type', 'StaveTie');
-    this.notes = notes;
+    this.setNotes(notes);
     this.text = text;
     this.render_options = {
       cp1: 8, // Curve control point 1
@@ -54,7 +58,6 @@ export class StaveTie extends Element {
     };
 
     this.font = this.render_options.font;
-    this.setNotes(notes);
   }
 
   setFont(font: FontInfo): this {
@@ -77,14 +80,17 @@ export class StaveTie extends Element {
       throw new RuntimeError('BadArguments', 'Tie needs to have either first_note or last_note set.');
     }
 
-    if (!notes.first_indices) notes.first_indices = [0];
-    if (!notes.last_indices) notes.last_indices = [0];
-
-    if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new RuntimeError('BadArguments', 'Tied notes must have similar index sizes');
+    if (!notes.first_indices) {
+      notes.first_indices = [0];
+    }
+    if (!notes.last_indices) {
+      notes.last_indices = [0];
     }
 
-    // Success. Lets grab 'em notes.
+    if (notes.first_indices.length !== notes.last_indices.length) {
+      throw new RuntimeError('BadArguments', 'Tied notes must have same number of indices.');
+    }
+
     this.notes = notes;
     return this;
   }
@@ -120,10 +126,16 @@ export class StaveTie extends Element {
     const last_x_shift = this.render_options.last_x_shift;
     const y_shift = this.render_options.y_shift * params.direction;
 
-    for (let i = 0; i < this.notes.first_indices.length; ++i) {
+    // setNotes(...) verified that first_indices and last_indices are not undefined.
+    // As a result, we use the ! non-null assertion operator here.
+    // eslint-disable-next-line
+    const first_indices = this.notes.first_indices!;
+    // eslint-disable-next-line
+    const last_indices = this.notes.last_indices!;
+    for (let i = 0; i < first_indices.length; ++i) {
       const cp_x = (params.last_x_px + last_x_shift + (params.first_x_px + first_x_shift)) / 2;
-      const first_y_px = params.first_ys[this.notes.first_indices[i]] + y_shift;
-      const last_y_px = params.last_ys[this.notes.last_indices[i]] + y_shift;
+      const first_y_px = params.first_ys[first_indices[i]] + y_shift;
+      const last_y_px = params.last_ys[last_indices[i]] + y_shift;
 
       if (isNaN(first_y_px) || isNaN(last_y_px)) {
         throw new RuntimeError('BadArguments', 'Bad indices for tie rendering.');
