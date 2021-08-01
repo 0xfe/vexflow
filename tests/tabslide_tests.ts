@@ -7,23 +7,35 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok, test, equal } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { TabSlide } from 'tabslide';
 import { Formatter } from 'formatter';
+import { TabNote } from 'tabnote';
+import { Voice } from 'voice';
+import { TabStave } from 'tabstave';
 
 const TabSlideTests = {
   Start(): void {
     QUnit.module('TabSlide');
+    test('VF.* API', this.VF_Prefix);
+
     const run = VexFlowTests.runTests;
     run('Simple TabSlide', this.simple);
     run('Slide Up', this.slideUp);
     run('Slide Down', this.slideDown);
   },
 
-  tieNotes(notes, indices, stave, ctx) {
-    const voice = new VF.Voice(Flow.TIME4_4);
+  VF_Prefix(): void {
+    equal(TabSlide, VF.TabSlide);
+    equal(TabNote, VF.TabNote);
+    equal(Voice, VF.Voice);
+    equal(TabStave, VF.TabStave);
+  },
+
+  tieNotes(notes, indices, stave, ctx): void {
+    const voice = new Voice(Flow.TIME4_4);
     voice.addTickables(notes);
 
     new Formatter().joinVoices([voice]).format([voice], 100);
@@ -43,13 +55,13 @@ const TabSlideTests = {
     tie.draw();
   },
 
-  setupContext(options, x) {
+  setupContext(options: TestOptions, width?: number): any {
     const ctx = options.contextBuilder(options.elementId, 350, 140);
     ctx.scale(0.9, 0.9);
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
     ctx.font = '10pt Arial';
-    const stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().setContext(ctx).draw();
+    const stave = new TabStave(10, 10, width || 350).addTabGlyph().setContext(ctx).draw();
 
     return { context: ctx, stave: stave };
   },
@@ -73,11 +85,9 @@ const TabSlideTests = {
     ok(true, 'Simple Test');
   },
 
-  multiTest(options, factory) {
-    const c = TabSlideTests.setupContext(options, 440, 100);
-    function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
-    }
+  multiTest(options: TestOptions, factory): void {
+    const c = TabSlideTests.setupContext(options, 440);
+    const newNote = (tab_struct: any) => new TabNote(tab_struct);
 
     const notes = [
       newNote({ positions: [{ str: 4, fret: 4 }], duration: '8' }),
@@ -114,8 +124,8 @@ const TabSlideTests = {
       }),
     ];
 
-    const voice = new VF.Voice(Flow.TIME4_4).addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).format([voice], 300);
+    const voice = new Voice(Flow.TIME4_4).addTickables(notes);
+    new Formatter().joinVoices([voice]).format([voice], 300);
     voice.draw(c.context, c.stave);
 
     factory({
@@ -165,12 +175,12 @@ const TabSlideTests = {
 
   slideUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    TabSlideTests.multiTest(options, VF.TabSlide.createSlideUp);
+    TabSlideTests.multiTest(options, TabSlide.createSlideUp);
   },
 
   slideDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    TabSlideTests.multiTest(options, VF.TabSlide.createSlideDown);
+    TabSlideTests.multiTest(options, TabSlide.createSlideDown);
   },
 };
 

@@ -1,19 +1,23 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// StringNumber Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, ok, test, equal } from './declarations';
+import { Stroke } from 'strokes';
+import { Barline } from 'stavebarline';
+import { Renderer } from 'renderer';
 
-/**
- * StringNumber Tests
- */
 const StringNumberTests = (function () {
   const StringNumber = {
     Start() {
       QUnit.module('StringNumber');
+      test('VF.* API', this.VF_Prefix);
+
       const run = VexFlowTests.runTests;
       run('String Number In Notation', this.drawMultipleMeasures);
       run('Fret Hand Finger In Notation', this.drawFretHandFingers);
@@ -21,12 +25,18 @@ const StringNumberTests = (function () {
       run('Complex Measure With String & Finger Numbers', this.drawAccidentals);
     },
 
-    drawMultipleMeasures(options) {
+    VF_Prefix(): void {
+      equal(Stroke, VF.Stroke);
+      equal(Renderer, VF.Renderer);
+      equal(Barline, VF.Barline);
+    },
+
+    drawMultipleMeasures(options: TestOptions): void {
       const f = VexFlowTests.makeFactory(options, 775, 200);
       const score = f.EasyScore();
 
       // bar 1
-      const stave1 = f.Stave({ width: 300 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave1 = f.Stave({ width: 300 }).setEndBarType(Barline.type.DOUBLE).addClef('treble');
 
       const notes1 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4', { stem: 'down' });
 
@@ -43,7 +53,7 @@ const StringNumberTests = (function () {
           f
             .StringNumber({ number: '3', position: 'above' })
             .setLastNote(notes1[3])
-            .setLineEndType(VF.Renderer.LineEndType.DOWN),
+            .setLineEndType(Renderer.LineEndType.DOWN),
           2
         );
 
@@ -64,7 +74,7 @@ const StringNumberTests = (function () {
       // bar 2 - juxtaposing second bar next to first bar
       const stave2 = f
         .Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 })
-        .setEndBarType(VF.Barline.type.DOUBLE);
+        .setEndBarType(Barline.type.DOUBLE);
 
       const notes2 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'up' });
 
@@ -93,9 +103,7 @@ const StringNumberTests = (function () {
       f.Formatter().joinVoices([voice2]).formatToStave([voice2], stave2);
 
       // bar 3 - juxtaposing third bar next to second bar
-      const stave3 = f
-        .Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 })
-        .setEndBarType(VF.Barline.type.END);
+      const stave3 = f.Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 }).setEndBarType(Barline.type.END);
 
       const notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
 
@@ -114,12 +122,12 @@ const StringNumberTests = (function () {
       ok(true, 'String Number');
     },
 
-    drawFretHandFingers(options) {
+    drawFretHandFingers(options: TestOptions): void {
       const f = VexFlowTests.makeFactory(options, 725, 200);
       const score = f.EasyScore();
 
       // bar 1
-      const stave1 = f.Stave({ width: 350 }).setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave1 = f.Stave({ width: 350 }).setEndBarType(Barline.type.DOUBLE).addClef('treble');
 
       const notes1 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'down' });
 
@@ -155,9 +163,7 @@ const StringNumberTests = (function () {
       f.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
       // bar 2 - juxtaposing second bar next to first bar
-      const stave2 = f
-        .Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 })
-        .setEndBarType(VF.Barline.type.END);
+      const stave2 = f.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 }).setEndBarType(Barline.type.END);
 
       const notes2 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/8, (c4 f4 g4)/4.[stem="down"]', {
         stem: 'up',
@@ -200,7 +206,7 @@ const StringNumberTests = (function () {
       ok(true, 'String Number');
     },
 
-    multi(options) {
+    multi(options: TestOptions): void {
       const f = VexFlowTests.makeFactory(options, 700, 200);
       const score = f.EasyScore();
       const stave = f.Stave();
@@ -208,7 +214,7 @@ const StringNumberTests = (function () {
       const notes1 = score.notes('(c4 e4 g4)/4, (a3 e4 g4), (c4 d4 a4), (c4 d4 a4)', { stem: 'up' });
 
       notes1[0]
-        .addStroke(0, new VF.Stroke(5))
+        .addStroke(0, new Stroke(5))
         .addModifier(f.Fingering({ number: '3', position: 'left' }), 0)
         .addModifier(f.Fingering({ number: '2', position: 'left' }), 1)
         .addModifier(f.Fingering({ number: '0', position: 'left' }), 2)
@@ -216,7 +222,7 @@ const StringNumberTests = (function () {
         .addModifier(f.StringNumber({ number: '3', position: 'above' }), 2);
 
       notes1[1]
-        .addStroke(0, new VF.Stroke(6))
+        .addStroke(0, new Stroke(6))
         .addModifier(f.StringNumber({ number: '4', position: 'right' }), 1)
         .addModifier(f.StringNumber({ number: '3', position: 'above' }), 2)
         .addAccidental(0, f.Accidental({ type: '#' }))
@@ -224,7 +230,7 @@ const StringNumberTests = (function () {
         .addAccidental(2, f.Accidental({ type: '#' }));
 
       notes1[2]
-        .addStroke(0, new VF.Stroke(2))
+        .addStroke(0, new Stroke(2))
         .addModifier(f.Fingering({ number: '3', position: 'left' }), 0)
         .addModifier(f.Fingering({ number: '0', position: 'right' }), 1)
         .addModifier(f.StringNumber({ number: '4', position: 'right' }), 1)
@@ -232,7 +238,7 @@ const StringNumberTests = (function () {
         .addModifier(f.StringNumber({ number: '3', position: 'right' }), 2);
 
       notes1[3]
-        .addStroke(0, new VF.Stroke(1))
+        .addStroke(0, new Stroke(1))
         .addModifier(f.StringNumber({ number: '3', position: 'left' }), 2)
         .addModifier(f.StringNumber({ number: '4', position: 'right' }), 1);
 
@@ -263,10 +269,10 @@ const StringNumberTests = (function () {
       ok(true, 'Strokes Test Multi Voice');
     },
 
-    drawAccidentals(options) {
+    drawAccidentals(options: TestOptions): void {
       const f = VexFlowTests.makeFactory(options, 500);
 
-      const stave = f.Stave().setEndBarType(VF.Barline.type.DOUBLE).addClef('treble');
+      const stave = f.Stave().setEndBarType(Barline.type.DOUBLE).addClef('treble');
 
       const notes = [
         f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
