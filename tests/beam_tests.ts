@@ -7,12 +7,15 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { QUnit, equal, ok } from './declarations';
+import { QUnit, equal, ok, test } from './declarations';
+import { Beam } from 'beam';
 import { Stem } from 'stem';
+import { Voice } from 'voice';
 
 const BeamTests = {
-  Start: function () {
+  Start(): void {
     QUnit.module('Beam');
+    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('Simple Beam', this.simple);
     run('Multi Beam', this.multi);
@@ -36,7 +39,12 @@ const BeamTests = {
     run('Complex Beams with Articulations', this.complexWithArticulation);
   },
 
-  simple: function (options) {
+  VF_Prefix(): void {
+    equal(Beam, VF.Beam);
+    equal(Voice, VF.Voice);
+  },
+
+  simple(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -59,7 +67,7 @@ const BeamTests = {
     ok(true, 'Simple Test');
   },
 
-  multi: function (options) {
+  multi(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -86,7 +94,7 @@ const BeamTests = {
     ok(true, 'Multi Test');
   },
 
-  sixteenth: function (options) {
+  sixteenth(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -119,7 +127,7 @@ const BeamTests = {
     ok(true, 'Sixteenth Test');
   },
 
-  breakSecondaryBeams: function (options) {
+  breakSecondaryBeams(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -154,7 +162,7 @@ const BeamTests = {
     ok(true, 'Breaking Secondary Beams Test');
   },
 
-  slopey: function (options) {
+  slopey(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 350, 140);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -175,7 +183,7 @@ const BeamTests = {
     ok(true, 'Slopey Test');
   },
 
-  autoStem: function (options) {
+  autoStem(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 350, 140);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -212,7 +220,7 @@ const BeamTests = {
     ok(true, 'AutoStem Beam Test');
   },
 
-  mixed: function (options) {
+  mixed(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 350, 140);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -248,7 +256,7 @@ const BeamTests = {
     ok(true, 'Multi Test');
   },
 
-  mixed2: function (options) {
+  mixed2(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 180);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -277,7 +285,7 @@ const BeamTests = {
     ok(true, 'Multi Test');
   },
 
-  dotted: function (options) {
+  dotted(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -299,7 +307,7 @@ const BeamTests = {
     ok(true, 'Dotted Test');
   },
 
-  partial: function (options) {
+  partial(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -324,7 +332,7 @@ const BeamTests = {
     ok(true, 'Partial Test');
   },
 
-  tradeoffs: function (options) {
+  tradeoffs(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -342,7 +350,7 @@ const BeamTests = {
     ok(true, 'Close Trade-offs Test');
   },
 
-  insane: function (options) {
+  insane(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 180);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -362,7 +370,7 @@ const BeamTests = {
     ok(true, 'Insane Test');
   },
 
-  lenghty: function (options) {
+  lenghty(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 180);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -376,7 +384,7 @@ const BeamTests = {
     ok(true, 'Lengthy Test');
   },
 
-  outlier: function (options) {
+  outlier(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 450, 180);
     const stave = f.Stave({ y: 20 });
     const score = f.EasyScore();
@@ -401,7 +409,7 @@ const BeamTests = {
     ok(true, 'Outlier Test');
   },
 
-  tabBeamsUp: function (options) {
+  tabBeamsUp(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave = f.TabStave({ y: 20 });
 
@@ -471,7 +479,7 @@ const BeamTests = {
     f.Beam({ notes: notes.slice(8, 11) });
     f.Tuplet({ notes: notes.slice(8, 11), options: { ratioed: true } });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -480,7 +488,7 @@ const BeamTests = {
     ok(true, 'All objects have been drawn');
   },
 
-  tabBeamsDown: function (options: TestOptions): void {
+  tabBeamsDown(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 250);
     const stave = f.TabStave({ options: { num_lines: 10 } });
 
@@ -566,7 +574,7 @@ const BeamTests = {
     f.Tuplet({ notes: notes.slice(8, 11), options: { location: -1 } });
     f.Tuplet({ notes: notes.slice(11, 14), options: { location: -1 } });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -575,7 +583,7 @@ const BeamTests = {
     ok(true, 'All objects have been drawn');
   },
 
-  autoTabBeams: function (options) {
+  autoTabBeams(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave = f.TabStave();
 
@@ -625,8 +633,8 @@ const BeamTests = {
       return tabNote;
     });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes);
-    const beams = VF.Beam.applyAndGetBeams(voice, -1);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
+    const beams = Beam.applyAndGetBeams(voice, -1);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -641,7 +649,7 @@ const BeamTests = {
 
   // This tests makes sure the auto_stem functionality is works.
   // TabNote stems within a beam group should end up normalized
-  tabBeamsAutoStem: function (options) {
+  tabBeamsAutoStem(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 300);
     const stave = f.TabStave();
 
@@ -700,7 +708,7 @@ const BeamTests = {
     // Stems should format up
     f.Beam({ notes: notes.slice(8, 12), options: { autoStem: true } });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -709,7 +717,7 @@ const BeamTests = {
     ok(true, 'All objects have been drawn');
   },
 
-  complexWithAnnotation: function (options) {
+  complexWithAnnotation(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const stave = f.Stave({ y: 40 });
 
@@ -744,7 +752,7 @@ const BeamTests = {
     f.Beam({ notes: notes });
     f.Beam({ notes: notes2 });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
 
@@ -753,7 +761,7 @@ const BeamTests = {
     ok(true, 'Complex beam annotations');
   },
 
-  complexWithArticulation: function (options) {
+  complexWithArticulation(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const stave = f.Stave({ y: 40 });
 
@@ -788,7 +796,7 @@ const BeamTests = {
     f.Beam({ notes: notes });
     f.Beam({ notes: notes2 });
 
-    const voice = f.Voice().setMode(VF.Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
 
