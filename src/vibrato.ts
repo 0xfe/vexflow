@@ -1,5 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// MIT Licnse
+// MIT License
 
 import { Modifier } from './modifier';
 import { Bend } from './bend';

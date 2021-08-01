@@ -7,11 +7,16 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit } from './declarations';
+import { QUnit, equal, ok, test } from './declarations';
+import { Flow } from 'flow';
+import { Crescendo } from 'crescendo';
+import { TextNote } from 'textnote';
+import { Note } from 'note';
 
 const TextNoteTests = {
   Start(): void {
     QUnit.module('TextNote');
+    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('TextNote Formatting', this.formatTextNotes);
     run('TextNote Formatting 2', this.formatTextNotes2);
@@ -20,6 +25,11 @@ const TextNoteTests = {
     run('TextNote Formatting With Glyphs 1', this.formatTextGlyphs1);
     run('Crescendo', this.crescendo);
     run('Text Dynamics', this.textDynamics);
+  },
+
+  VF_Prefix(): void {
+    equal(TextNote, VF.TextNote);
+    equal(Crescendo, VF.Crescendo);
   },
 
   formatTextNotes(options: TestOptions): void {
@@ -40,9 +50,9 @@ const TextNoteTests = {
     ]);
 
     const voice2 = score.voice([
-      f.TextNote({ text: 'Center Justification', duration: 'h' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'Center Justification', duration: 'h' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ text: 'Left Line 1', duration: 'q' }).setLine(1),
-      f.TextNote({ text: 'Right', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'Right', duration: 'q' }).setJustification(TextNote.Justification.RIGHT),
     ]);
 
     const formatter = f.Formatter();
@@ -78,28 +88,28 @@ const TextNoteTests = {
     ]);
 
     const voice2 = score.voice([
-      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ text: 'L', duration: '16' }),
-      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(TextNote.Justification.RIGHT),
 
-      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ text: 'L', duration: '16' }),
-      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(TextNote.Justification.RIGHT),
 
-      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ text: 'L', duration: '16' }),
-      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(TextNote.Justification.RIGHT),
 
-      f.TextNote({ text: 'C', duration: '16' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'C', duration: '16' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ text: 'L', duration: '16' }),
-      f.TextNote({ text: 'R', duration: '16' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: '16' }).setJustification(TextNote.Justification.RIGHT),
 
-      f.TextNote({ text: 'R', duration: 'q' }).setJustification(VF.TextNote.Justification.RIGHT),
+      f.TextNote({ text: 'R', duration: 'q' }).setJustification(TextNote.Justification.RIGHT),
     ]);
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
-    voice2.getTickables().forEach((note) => VF.Note.plotMetrics(f.getContext(), note, 170));
+    voice2.getTickables().forEach((note) => Note.plotMetrics(f.getContext(), note, 170));
 
     f.draw();
 
@@ -124,18 +134,18 @@ const TextNoteTests = {
     ]);
 
     const voice2 = score.voice([
-      f.TextNote({ text: VF.unicode.flat + 'I', superscript: '+5', duration: '8' }),
-      f.TextNote({ text: 'D' + VF.unicode.sharp + '/F', duration: '4d', superscript: 'sus2' }),
+      f.TextNote({ text: Flow.unicode.flat + 'I', superscript: '+5', duration: '8' }),
+      f.TextNote({ text: 'D' + Flow.unicode.sharp + '/F', duration: '4d', superscript: 'sus2' }),
       f.TextNote({ text: 'ii', superscript: '6', subscript: '4', duration: '8' }),
-      f.TextNote({ text: 'C', superscript: VF.unicode.triangle + '7', subscript: '', duration: '8' }),
-      f.TextNote({ text: 'vii', superscript: VF.unicode['o-with-slash'] + '7', duration: '8' }),
+      f.TextNote({ text: 'C', superscript: Flow.unicode.triangle + '7', subscript: '', duration: '8' }),
+      f.TextNote({ text: 'vii', superscript: Flow.unicode['o-with-slash'] + '7', duration: '8' }),
       f.TextNote({ text: 'V', superscript: '7', duration: '8' }),
     ]);
 
     voice2.getTickables().forEach(function (note) {
       note.font = { family: 'Serif', size: 15, weight: '' };
       note.setLine(13);
-      note.setJustification(VF.TextNote.Justification.LEFT);
+      note.setJustification(TextNote.Justification.LEFT);
     });
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
@@ -162,7 +172,7 @@ const TextNoteTests = {
     ]);
 
     const voice2 = score.voice([
-      f.TextNote({ text: 'Center', duration: '8' }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ text: 'Center', duration: '8' }).setJustification(TextNote.Justification.CENTER),
       f.TextNote({ glyph: 'f', duration: '8' }),
       f.TextNote({ glyph: 'p', duration: '8' }),
       f.TextNote({ glyph: 'm', duration: '8' }),
@@ -174,7 +184,7 @@ const TextNoteTests = {
       f.TextNote({ glyph: 'coda', duration: '8' }),
     ]);
 
-    voice2.getTickables().forEach((n) => n.setJustification(VF.TextNote.Justification.CENTER));
+    voice2.getTickables().forEach((n) => n.setJustification(TextNote.Justification.CENTER));
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
@@ -208,10 +218,10 @@ const TextNoteTests = {
       f.TextNote({ glyph: 'caesura_straight', duration: '8' }).setLine(3),
       f.TextNote({ glyph: 'breath', duration: '8' }).setLine(2),
       f.TextNote({ glyph: 'tick', duration: '8' }).setLine(3),
-      f.TextNote({ glyph: 'tr', duration: '8', smooth: true }).setJustification(VF.TextNote.Justification.CENTER),
+      f.TextNote({ glyph: 'tr', duration: '8', smooth: true }).setJustification(TextNote.Justification.CENTER),
     ]);
 
-    voice2.getTickables().forEach((n) => n.setJustification(VF.TextNote.Justification.CENTER));
+    voice2.getTickables().forEach((n) => n.setJustification(TextNote.Justification.CENTER));
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
@@ -227,10 +237,10 @@ const TextNoteTests = {
 
     const voice = score.voice([
       f.TextNote({ glyph: 'p', duration: '16' }),
-      new VF.Crescendo({ duration: '4d' }).setLine(0).setHeight(25).setStave(stave),
+      new Crescendo({ duration: '4d' }).setLine(0).setHeight(25).setStave(stave),
       f.TextNote({ glyph: 'f', duration: '16' }),
-      new VF.Crescendo({ duration: '4' }).setLine(5).setStave(stave),
-      new VF.Crescendo({ duration: '4' }).setLine(10).setDecrescendo(true).setHeight(5).setStave(stave),
+      new Crescendo({ duration: '4' }).setLine(5).setStave(stave),
+      new Crescendo({ duration: '4' }).setLine(10).setDecrescendo(true).setHeight(5).setStave(stave),
     ]);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -266,4 +276,5 @@ const TextNoteTests = {
     ok(true);
   },
 };
+
 export { TextNoteTests };

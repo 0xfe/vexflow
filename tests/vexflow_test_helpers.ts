@@ -221,14 +221,8 @@ class VexFlowTests {
   }
 
   static makeFactory(options: TestOptions, width: number = 450, height: number = 140): Factory {
-    return new Factory({
-      renderer: {
-        elementId: options.elementId,
-        backend: options.backend,
-        width: width || 450,
-        height: height || 140,
-      },
-    });
+    const { elementId, backend } = options;
+    return new Factory({ renderer: { elementId, backend, width, height } });
   }
 
   // eslint-disable-next-line

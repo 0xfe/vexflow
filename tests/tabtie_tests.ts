@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok, test, equal } from './declarations';
 import { ContextBuilder } from 'renderer';
 import { TabTie } from 'tabtie';
 import { Voice } from 'voice';
@@ -15,16 +15,23 @@ import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { TabStave } from 'tabstave';
 import { TabNote } from 'tabnote';
+import { Annotation } from 'annotation';
+import { TieNotes } from 'types/common';
 
 const TabTieTests = {
   Start(): void {
     QUnit.module('TabTie');
+    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('Simple TabTie', this.simple);
     run('Hammerons', this.simpleHammeron);
     run('Pulloffs', this.simplePulloff);
     run('Tapping', this.tap);
     run('Continuous', this.continuous);
+  },
+
+  VF_Prefix(): void {
+    equal(TabTie, VF.TabTie);
   },
 
   tieNotes(notes: any, indices: any, stave: any, ctx: any, text?: any): void {
@@ -90,7 +97,7 @@ const TabTieTests = {
 
     TabTieTests.drawTie(
       [
-        newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new VF.Annotation('T'), 0),
+        newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new Annotation('T'), 0),
         newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' }),
       ],
       [0],
@@ -101,10 +108,10 @@ const TabTieTests = {
     ok(true, 'Tapping Test');
   },
 
-  multiTest(options, factory) {
+  multiTest(options: TestOptions, factory: (notes: TieNotes) => TabTie): void {
     const c = TabTieTests.setupContext(options, 440, 140);
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
 
     const notes = [
@@ -142,8 +149,8 @@ const TabTieTests = {
       }),
     ];
 
-    const voice = new VF.Voice(Flow.TIME4_4).addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).format([voice], 300);
+    const voice = new Voice(Flow.TIME4_4).addTickables(notes);
+    new Formatter().joinVoices([voice]).format([voice], 300);
     voice.draw(c.context, c.stave);
 
     factory({
@@ -205,7 +212,7 @@ const TabTieTests = {
     options.contextBuilder = contextBuilder;
     const c = TabTieTests.setupContext(options, 440, 140);
     function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
+      return new TabNote(tab_struct);
     }
 
     const notes = [
