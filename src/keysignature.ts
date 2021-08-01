@@ -90,7 +90,7 @@ export class KeySignature extends StaveModifier {
   };
 
   // Create a new Key Signature based on a `key_spec`
-  constructor(keySpec: string, cancelKeySpec: string, alterKeySpec?: string) {
+  constructor(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string) {
     super();
     this.setAttribute('type', 'KeySignature');
 
@@ -248,7 +248,7 @@ export class KeySignature extends StaveModifier {
     return this.width;
   }
 
-  setKeySig(keySpec: string, cancelKeySpec: string, alterKeySpec?: string): this {
+  setKeySig(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string): this {
     this.formatted = false;
     this.keySpec = keySpec;
     this.cancelKeySpec = cancelKeySpec;

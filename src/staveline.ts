@@ -14,10 +14,10 @@ import { FontInfo, RenderContext } from './types/common';
 import { StaveNote } from './stavenote';
 
 export interface StaveLineNotes {
-  last_indices: number[];
+  first_note: StaveNote;
   first_indices: number[];
   last_note: StaveNote;
-  first_note: StaveNote;
+  last_indices: number[];
 }
 
 // Attribution: Arrow rendering implementations based off of
@@ -152,11 +152,13 @@ export class StaveLine extends Element {
 
   protected text: string;
   protected font: FontInfo;
-  protected first_indices!: number[];
-  protected last_indices!: number[];
-  protected notes: StaveLineNotes;
+
+  // These five instance variables are all initialized by the constructor via this.setNotes(notes).
+  protected notes!: StaveLineNotes;
   protected first_note!: StaveNote;
+  protected first_indices!: number[];
   protected last_note!: StaveNote;
+  protected last_indices!: number[];
 
   // Text Positioning
   static readonly TextVerticalPosition = {
@@ -186,7 +188,7 @@ export class StaveLine extends Element {
     super();
     this.setAttribute('type', 'StaveLine');
 
-    this.notes = notes;
+    this.setNotes(notes);
 
     this.text = '';
 
@@ -223,8 +225,6 @@ export class StaveLine extends Element {
       text_position_vertical: StaveLine.TextVerticalPosition.TOP,
       text_justification: StaveLine.TextJustification.CENTER,
     };
-
-    this.setNotes(notes);
   }
 
   // Set the font for the `StaveLine` text
@@ -248,10 +248,10 @@ export class StaveLine extends Element {
     if (!notes.last_indices) notes.last_indices = [0];
 
     if (notes.first_indices.length !== notes.last_indices.length) {
-      throw new RuntimeError('BadArguments', 'Connected notes must have similar index sizes');
+      throw new RuntimeError('BadArguments', 'Connected notes must have same number of indices.');
     }
 
-    // Success. Lets grab 'em notes.
+    this.notes = notes;
     this.first_note = notes.first_note;
     this.first_indices = notes.first_indices;
     this.last_note = notes.last_note;

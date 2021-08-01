@@ -86,11 +86,20 @@ export interface RenderContext {
 
   /** canvas returns TextMetrics and SVG returns SVGRect. */
   measureText(text: string): { width: number; height?: number };
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  font: string;
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  fillStyle: string | CanvasGradient | CanvasPattern;
+
+  /** Maintain compatibility with the CanvasRenderingContext2D API. */
+  strokeStyle: string | CanvasGradient | CanvasPattern;
 }
 
 export interface TieNotes {
   first_note: Note;
   last_note: Note;
-  first_indices: number[];
-  last_indices: number[];
+  first_indices?: number[];
+  last_indices?: number[];
 }

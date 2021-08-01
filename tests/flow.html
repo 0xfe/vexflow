@@ -23,13 +23,31 @@
       }
 
       $(function () {
-        // Support a query param ver=(build|reference|releases|etc...)
+        // Support a query param to choose which VexFlow version to load.
+        // ver=(build|reference|releases|etc...)
         // If omitted, ver defaults to 'build'.
         var params = new URLSearchParams(window.location.search);
         var param_ver = params.get('ver');
-        var path = param_ver || 'build';
-        var vexURL = '../' + path + '/vexflow-debug.js';
-        var testsURL = '../' + path + '/vexflow-tests.js';
+
+        var vexURL;
+        var testsURL;
+        var isCurrentBuild = false;
+
+        // ver can also specify a version hosted on unpkg.com:
+        //   ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
+        // https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
+        if (param_ver && param_ver.includes('unpkg')) {
+          var version = param_ver.split('@')[1];
+          vexURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-debug.js`;
+          testsURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-tests.js`;
+        } else {
+          var path = param_ver || 'build';
+          if (path === 'build') {
+            isCurrentBuild = true;
+          }
+          vexURL = '../' + path + '/vexflow-debug.js';
+          testsURL = '../' + path + '/vexflow-tests.js';
+        }
 
         // Display which VexFlow version we loaded, if the `ver` param was specified.
         var info = param_ver !== null ? ` [${param_ver}]` : '';
@@ -37,16 +55,22 @@
           .attr('href', vexURL)
           .text('VexFlow Source' + info);
 
-        loadScript(vexURL)
-          .then(function () {
-            return loadScript(testsURL);
-          })
-          .then(function () {
-            // Show only failed tests.
-            QUnit.config.hidepassed = true;
-            QUnit.config.noglobals = true;
-            VF.Test.run();
-          });
+        const runTests = () => {
+          // Show only failed tests.
+          QUnit.config.hidepassed = true;
+          QUnit.config.noglobals = true;
+          Vex.Flow.Test.run();
+        };
+
+        if (isCurrentBuild) {
+          // When loading the current version, only load vexflow-tests.js
+          loadScript(testsURL).then(runTests);
+        } else {
+          // When loading previous versions, load both vexflow-debug.js and vexflow-tests.js
+          loadScript(vexURL)
+            .then(() => loadScript(testsURL))
+            .then(runTests);
+        }
       });
     </script>
   </head>

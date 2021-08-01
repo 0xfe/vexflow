@@ -15,6 +15,7 @@ import { RenderContext } from './types/common';
 import { Accidental } from './accidental';
 import { Modifier } from './modifier';
 import { Voice } from './voice';
+import { Note } from 'note';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -230,7 +231,7 @@ interface BuilderElements {
   accidentals: (Accidental | undefined)[][];
 }
 
-interface BuilderOptions {
+export interface BuilderOptions {
   stem?: string;
   clef?: string;
   // eslint-disable-next-line
@@ -433,7 +434,7 @@ export class EasyScore {
     };
   }
 
-  set(defaults: EasyScoreDefaults): this {
+  set(defaults: Partial<EasyScoreDefaults>): this {
     Object.assign(this.defaults, defaults);
     return this;
   }
@@ -492,7 +493,7 @@ export class EasyScore {
 
   // TODO: Add stricter typing after migrating Factory
   // eslint-disable-next-line
-  voice(notes: StaveNote[], options?: any): Voice {
+  voice(notes: Note[], options?: any): Voice {
     options = { time: this.defaults.time, ...options };
     return this.factory.Voice(options).addTickables(notes);
   }

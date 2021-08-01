@@ -239,18 +239,27 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
   set font(value: string) {
     this.vexFlowCanvasContext.font = value;
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  set fillStyle(style: string) {
+  get font(): string {
+    return this.vexFlowCanvasContext.font;
+  }
+
+  set fillStyle(style: string | CanvasGradient | CanvasPattern) {
     this.vexFlowCanvasContext.fillStyle = style;
   }
 
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  set strokeStyle(style: string) {
+  get fillStyle(): string | CanvasGradient | CanvasPattern {
+    return this.vexFlowCanvasContext.fillStyle;
+  }
+
+  set strokeStyle(style: string | CanvasGradient | CanvasPattern) {
     this.vexFlowCanvasContext.strokeStyle = style;
+  }
+
+  get strokeStyle(): string | CanvasGradient | CanvasPattern {
+    return this.vexFlowCanvasContext.strokeStyle;
   }
 }

@@ -543,8 +543,8 @@ export class Factory {
   StaveTie(params: {
     from: Note;
     to: Note;
-    first_indices: [0];
-    last_indices: [0];
+    first_indices?: number[];
+    last_indices?: number[];
     text?: string;
     options?: { direction?: number };
   }): StaveTie {

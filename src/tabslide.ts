@@ -26,18 +26,19 @@ export class TabSlide extends TabTie {
     return new TabSlide(notes, TabSlide.SLIDE_DOWN);
   }
 
+  /**
+   * @param notes is a struct that has:
+   *
+   *  {
+   *    first_note: Note,
+   *    last_note: Note,
+   *    first_indices: [n1, n2, n3],
+   *    last_indices: [n1, n2, n3]
+   *  }
+   *
+   * @param direction
+   */
   constructor(notes: TieNotes, direction?: number) {
-    /**
-     * Notes is a struct that has:
-     *
-     *  {
-     *    first_note: Note,
-     *    last_note: Note,
-     *    first_indices: [n1, n2, n3],
-     *    last_indices: [n1, n2, n3]
-     *  }
-     *
-     **/
     super(notes, 'sl.');
     this.setAttribute('type', 'TabSlide');
 
@@ -54,7 +55,6 @@ export class TabSlide extends TabTie {
     this.render_options.y_shift = 0.5;
 
     this.setFont({ family: 'Times', size: 10, weight: 'bold italic' });
-    this.setNotes(notes);
   }
 
   renderTie(params: {
@@ -78,8 +78,10 @@ export class TabSlide extends TabTie {
       throw new RuntimeError('BadSlide', 'Invalid slide direction');
     }
 
-    for (let i = 0; i < this.notes.first_indices.length; ++i) {
-      const slide_y = first_ys[this.notes.first_indices[i]] + this.render_options.y_shift;
+    // eslint-disable-next-line
+    const first_indices = this.notes.first_indices!;
+    for (let i = 0; i < first_indices.length; ++i) {
+      const slide_y = first_ys[first_indices[i]] + this.render_options.y_shift;
 
       if (isNaN(slide_y)) {
         throw new RuntimeError('BadArguments', 'Bad indices for slide rendering.');

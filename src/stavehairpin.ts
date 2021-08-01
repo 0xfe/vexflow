@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
-// This class by Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
+// Author: Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
 //
 // This class implements hairpins between notes.
-// Hairpins can be either Crescendo or Descrescendo.
+// Hairpins can be either crescendo or decrescendo.
 
 import { RuntimeError } from './util';
 import { Element } from './element';
@@ -26,7 +26,10 @@ export class StaveHairpin extends Element {
 
   protected position: number;
   protected render_options: StaveHairpinRenderOptions;
-  protected notes: Record<string, Note>;
+
+  // notes is initialized by the constructor via this.setNotes(notes).
+  protected notes!: Record<string, Note>;
+
   protected first_note?: Note;
   protected last_note?: Note;
 
@@ -93,23 +96,19 @@ export class StaveHairpin extends Element {
   /**
    * Create a new hairpin from the specified notes.
    *
-   * @constructor
    * @param {!Object} notes The notes to tie up.
+   * Notes is a struct that has:
+   *
+   *  {
+   *    first_note: Note,
+   *    last_note: Note,
+   *  }
    * @param {!Object} type The type of hairpin
    */
   constructor(notes: Record<string, Note>, type: number) {
-    /**
-     * Notes is a struct that has:
-     *
-     *  {
-     *    first_note: Note,
-     *    last_note: Note,
-     *  }
-     *
-     **/
     super();
     this.setAttribute('type', 'StaveHairpin');
-    this.notes = notes;
+    this.setNotes(notes);
     this.hairpin = type;
     this.position = Modifier.Position.BELOW;
 
@@ -121,8 +120,6 @@ export class StaveHairpin extends Element {
       right_shift_ticks: 0,
       left_shift_ticks: 0,
     };
-
-    this.setNotes(notes);
   }
 
   setPosition(position: number): this {
@@ -154,7 +151,7 @@ export class StaveHairpin extends Element {
       throw new RuntimeError('BadArguments', 'Hairpin needs to have either first_note or last_note set.');
     }
 
-    // Success. Lets grab 'em notes.
+    this.notes = notes;
     this.first_note = notes.first_note;
     this.last_note = notes.last_note;
     return this;

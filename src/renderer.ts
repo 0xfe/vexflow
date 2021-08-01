@@ -40,7 +40,7 @@ export class Renderer {
    */
   static readonly USE_CANVAS_PROXY = false;
 
-  static lastContext: RenderContext | undefined = undefined;
+  static lastContext?: RenderContext = undefined;
 
   static buildContext(
     elementId: string | HTMLElement,
