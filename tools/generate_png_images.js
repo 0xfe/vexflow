@@ -28,19 +28,16 @@ if (process.argv.length >= 5) {
   }
 }
 
-if (scriptDir.includes('reference') || scriptDir.includes('releases')) {
+if (scriptDir.includes('releases')) {
   // THE OLD WAY loads two JS files.
-  // TODO: Remove line 32 "scriptDir.includes('reference') ||"
-  //       after PR #1074 has been merged, becoming the new 'reference/'.
-  // TODO: Remove this entire block lines 32-40, after the new version has been moved to 'releases/'
+  // TODO: Remove this block lines 31-37, after the new version has been moved to 'releases/'
   global.Vex = require(`${scriptDir}/vexflow-debug.js`);
   require(`${scriptDir}/vexflow-tests.js`);
   global.Vex.Flow.shims = { fs, process };
 } else {
   // THE NEW WAY loads a single JS file.
   // See: https://github.com/0xfe/vexflow/pull/1074
-  // Load from the build/ folder.
-  // TODO: Delete lines 32-40 above after PR #1074 has been merged and released!
+  // Load from the build/ or reference/ folder.
   global.Vex = require(`${scriptDir}/vexflow-tests.js`);
   global.Vex.Flow.Test.shims = { fs, process };
 }
