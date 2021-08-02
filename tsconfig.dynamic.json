@@ -16,7 +16,8 @@
       "@bravura": ["fonts/loadDynamic"],
       "@gonville": ["fonts/loadDynamic"],
       "@petaluma": ["fonts/loadDynamic"],
-      "@custom": ["fonts/loadDynamic"]
+      "@custom": ["fonts/loadDynamic"],
+      "@leland": ["fonts/loadDynamic"]
     },
   }
 }

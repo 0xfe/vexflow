@@ -15,7 +15,8 @@
       "@bravura": ["fonts/loadStatic"],
       "@gonville": ["fonts/loadStatic"],
       "@petaluma": ["fonts/loadStatic"],
-      "@custom": ["fonts/loadStatic"]
+      "@custom": ["fonts/loadStatic"],
+      "@leland": ["fonts/loadStatic"]
     }
   }
 }

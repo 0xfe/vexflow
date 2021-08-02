@@ -3,6 +3,7 @@ import { loadBravura } from '@bravura';
 import { loadGonville } from '@gonville';
 import { loadPetaluma } from '@petaluma';
 import { loadCustom } from '@custom';
+import { loadLeland } from '@leland';
 
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
@@ -49,6 +50,9 @@ class Font {
         break;
       case 'Petaluma':
         loadPetaluma(this.fontDataMetrics);
+        break;
+      case 'Leland':
+        loadLeland(this.fontDataMetrics);
         break;
       default:
         this.fontDataMetrics.metrics = metrics;

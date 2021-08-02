@@ -2,6 +2,7 @@ import Bravura from '../fonts/bravura';
 import Gonville from '../fonts/gonville';
 import Petaluma from '../fonts/petaluma';
 import Custom from '../fonts/custom';
+import Leland from '../fonts/leland';
 import { FontDataMetrics } from '../font';
 
 export function loadBravura(fontDataMetrics: FontDataMetrics) {
@@ -22,4 +23,9 @@ export function loadPetaluma(fontDataMetrics: FontDataMetrics) {
 export function loadCustom(fontDataMetrics: FontDataMetrics) {
   fontDataMetrics.fontData = Custom.fontData;
   fontDataMetrics.metrics = Custom.metrics;
+}
+
+export function loadLeland(fontDataMetrics: FontDataMetrics) {
+  fontDataMetrics.fontData = Leland.fontData;
+  fontDataMetrics.metrics = Leland.metrics;
 }

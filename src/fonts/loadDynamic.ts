@@ -22,3 +22,9 @@ export async function loadPetaluma(fontDataMetrics: FontDataMetrics) {
   fontDataMetrics.fontData = _.default.fontData;
   fontDataMetrics.metrics = _.default.metrics;
 }
+
+export async function loadLeland(fontDataMetrics: FontDataMetrics) {
+  const _ = await import(/* webpackChunkName: "leland" */ '../fonts/leland');
+  fontDataMetrics.fontData = _.default.fontData;
+  fontDataMetrics.metrics = _.default.metrics;
+}
