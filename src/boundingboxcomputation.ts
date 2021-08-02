@@ -11,21 +11,10 @@
  * based on: https://github.com/canvg/canvg/blob/master/src/BoundingBox.ts (MIT License)
  */
 export class BoundingBoxComputation {
-  protected x1: number;
-  protected y1: number;
-  protected x2: number;
-  protected y2: number;
-
-  constructor(x1?: number, y1?: number, x2?: number, y2?: number) {
-    // pass in initial points if you want
-    this.x1 = Number.NaN;
-    this.y1 = Number.NaN;
-    this.x2 = Number.NaN;
-    this.y2 = Number.NaN;
-
-    this.addPoint(x1, y1);
-    this.addPoint(x2, y2);
-  }
+  protected x1: number = Number.NaN;
+  protected y1: number = Number.NaN;
+  protected x2: number = Number.NaN;
+  protected y2: number = Number.NaN;
 
   /** Get calculated X1. */
   getX1(): number {
@@ -47,49 +36,50 @@ export class BoundingBoxComputation {
     return this.y2 - this.y1;
   }
 
-  /** Do nothing. */
-  noOp(): void {
-    // do nothing
-  }
-
   /** Add point to BoundingBox. */
-  addPoint(x: number | undefined, y: number | undefined): void {
-    if (x != undefined) {
-      if (isNaN(this.x1) || isNaN(this.x2)) {
-        this.x1 = x;
-        this.x2 = x;
-      }
-      if (x < this.x1) this.x1 = x;
-      if (x > this.x2) this.x2 = x;
-    }
-
-    if (y != undefined) {
-      if (isNaN(this.y1) || isNaN(this.y2)) {
-        this.y1 = y;
-        this.y2 = y;
-      }
-      if (y < this.y1) this.y1 = y;
-      if (y > this.y2) this.y2 = y;
-    }
+  addPoint(x: number, y: number): void {
+    if (isNaN(this.x1) || x < this.x1) this.x1 = x;
+    if (isNaN(this.x2) || x > this.x2) this.x2 = x;
+    if (isNaN(this.y1) || y < this.y1) this.y1 = y;
+    if (isNaN(this.y2) || y > this.y2) this.y2 = y;
   }
 
   /** Add X to BoundingBox. */
   addX(x: number): void {
-    this.addPoint(x, undefined);
+    this.addPoint(x, this.y1);
   }
 
   /** Add Y to BoundingBox. */
   addY(y: number): void {
-    this.addPoint(undefined, y);
+    this.addPoint(this.x1, y);
   }
 
   /** Add quadratic curve to BoundingBox. */
   addQuadraticCurve(p0x: number, p0y: number, p1x: number, p1y: number, p2x: number, p2y: number): void {
-    const cp1x = p0x + (2 / 3) * (p1x - p0x); // CP1 = QP0 + 2/3 *(QP1-QP0)
-    const cp1y = p0y + (2 / 3) * (p1y - p0y); // CP1 = QP0 + 2/3 *(QP1-QP0)
-    const cp2x = cp1x + (1 / 3) * (p2x - p0x); // CP2 = CP1 + 1/3 *(QP2-QP0)
-    const cp2y = cp1y + (1 / 3) * (p2y - p0y); // CP2 = CP1 + 1/3 *(QP2-QP0)
-    this.addBezierCurve(p0x, p0y, cp1x, cp1y, cp2x, cp2y, p2x, p2y);
+    this.addPoint(p0x, p0y);
+    this.addPoint(p2x, p2y);
+
+    const p01x = p1x - p0x;
+    const p12x = p2x - p1x;
+    let denom = p01x - p12x;
+    if (denom != 0) {
+      const t = p01x / denom;
+      if (t > 0 && t < 1) {
+        const it = 1 - t;
+        this.addX(it * it * p0x + 2 * it * t * p1x + t * t * p2x);
+      }
+    }
+
+    const p01y = p1y - p0y;
+    const p12y = p2y - p1y;
+    denom = p01y - p12y;
+    if (denom != 0) {
+      const t = p01y / denom;
+      if (t > 0 && t < 1) {
+        const it = 1 - t;
+        this.addY(it * it * p0y + 2 * it * t * p1y + t * t * p2y);
+      }
+    }
   }
 
   /** Add bezier curve to BoundingBox. */
