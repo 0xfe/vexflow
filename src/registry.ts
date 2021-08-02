@@ -88,8 +88,13 @@ export class Registry {
     }
   }
 
-  // Register element `elem` with this registry. This adds the element to its index and watches
-  // it for attribute changes.
+  /**
+   * Register element `elem` with this registry.
+   * This adds the element to its index and watches it for attribute changes.
+   * @param elem
+   * @param id
+   * @returns this
+   */
   register(elem: Element, id?: string): this {
     id = id || elem.getAttribute('id');
     if (!id) {

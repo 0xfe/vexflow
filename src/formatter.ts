@@ -105,14 +105,26 @@ function L(...args: any[]) {
   if (Formatter.DEBUG) log('Vex.Flow.Formatter', args);
 }
 
-/** Helper function to locate the next non-rest note(s). */
-function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean) {
+/**
+ * Get the rest line number of the next non-rest note(s).
+ * @param notes array of Notes
+ * @param currRestLine
+ * @param currNoteIndex current note index
+ * @param compare if true, return the midpoint between the current rest line and the next rest line
+ * @returns a line number, which determines the vertical position of a rest.
+ */
+function getRestLineForNextNoteGroup(
+  notes: Note[],
+  currRestLine: number,
+  currNoteIndex: number,
+  compare: boolean
+): number {
   // If no valid next note group, nextRestLine is same as current.
-  let nextRestLine = restLine;
+  let nextRestLine = currRestLine;
 
-  // Get the rest line for next valid non-rest note group.
-  for (i += 1; i < notes.length; i += 1) {
-    const note = notes[i];
+  // Start with the next note and keep going until we find a valid non-rest note group.
+  for (let noteIndex = currNoteIndex + 1; noteIndex < notes.length; noteIndex++) {
+    const note = notes[noteIndex];
     if (!note.isRest() && !note.shouldIgnoreTicks()) {
       nextRestLine = note.getLineForRest();
       break;
@@ -120,9 +132,9 @@ function lookAhead(notes: Note[], restLine: number, i: number, compare: boolean)
   }
 
   // Locate the mid point between two lines.
-  if (compare && restLine !== nextRestLine) {
-    const top = Math.max(restLine, nextRestLine);
-    const bot = Math.min(restLine, nextRestLine);
+  if (compare && currRestLine !== nextRestLine) {
+    const top = Math.max(currRestLine, nextRestLine);
+    const bot = Math.min(currRestLine, nextRestLine);
     nextRestLine = midLine(top, bot);
   }
   return nextRestLine;
@@ -332,10 +344,10 @@ export class Formatter {
   }
 
   /**
-   * Auto position rests based on previous/next note positions.
-   * @param notes an array of notes.
-   * @param alignAllNotes if set to false, only aligns non-beamed notes.
-   * @param alignTuplets if set to false, ignores tuplets.
+   * Automatically set the vertical position of rests based on previous/next note positions.
+   * @param notes an array of Notes.
+   * @param alignAllNotes If `false`, only align rests that are within a group of beamed notes.
+   * @param alignTuplets If `false`, ignores tuplets.
    */
   static AlignRestsToNotes(notes: Note[], alignAllNotes: boolean, alignTuplets?: boolean): void {
     notes.forEach((note, index) => {
@@ -350,22 +362,19 @@ export class Formatter {
           // Align rests with previous/next notes.
           const props = note.getKeyProps()[0];
           if (index === 0) {
-            props.line = lookAhead(notes, props.line, index, false);
-            note.setKeyLine(0, props.line);
+            props.line = getRestLineForNextNoteGroup(notes, props.line, index, false);
           } else if (index > 0 && index < notes.length) {
             // If previous note is a rest, use its line number.
-            let restLine;
             const prevNote = notes[index - 1];
             if (prevNote && prevNote.isRest()) {
-              restLine = prevNote.keyProps[0].line;
-              props.line = restLine;
+              props.line = prevNote.keyProps[0].line;
             } else {
-              restLine = prevNote.getLineForRest();
+              const restLine = prevNote.getLineForRest();
               // Get the rest line for next valid non-rest note group.
-              props.line = lookAhead(notes, restLine, index, true);
+              props.line = getRestLineForNextNoteGroup(notes, restLine, index, true);
             }
-            note.setKeyLine(0, props.line);
           }
+          note.setKeyLine(0, props.line);
         }
       }
     });
@@ -404,9 +413,10 @@ export class Formatter {
   }
 
   /**
-   * Find all the rests in each of the `voices` and align them
-   * to neighboring notes. If `alignAllNotes` is `false`, then only
-   * align non-beamed notes.
+   * Find all the rests in each of the `voices` and align them to neighboring notes.
+   *
+   * @param voices
+   * @param alignAllNotes If `false`, only align rests within beamed groups of notes. If `true`, align all rests.
    */
   alignRests(voices: Voice[], alignAllNotes: boolean): void {
     if (!voices || !voices.length) {

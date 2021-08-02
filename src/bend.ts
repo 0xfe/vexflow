@@ -95,13 +95,13 @@ export class Bend extends Modifier {
    * @param release if true, render a release. (DEPRECATED)
    * @param phrase if set, ignore "text" and "release", and use the more sophisticated phrase specified
    */
-  constructor(text: string, release: boolean, phrase: BendPhrase[]) {
+  constructor(text: string, release: boolean = false, phrase?: BendPhrase[]) {
     super();
     this.setAttribute('type', 'Bend');
 
     this.text = text;
     this.x_shift = 0;
-    this.release = release || false;
+    this.release = release;
     this.font = '10pt Arial';
     this.render_options = {
       line_width: 1.5,

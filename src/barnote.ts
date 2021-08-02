@@ -5,9 +5,8 @@ import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
 
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (BarNote.DEBUG) log('Vex.Flow.BarNote', args);
 }
 
@@ -22,6 +21,7 @@ export class BarNote extends Note {
   protected metrics: { widths: Record<string, number> };
   /** To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`. */
   static DEBUG: boolean;
+  // Initialized by the constructor via this.setType(type)
   protected type!: BarlineType;
 
   constructor(type = BarlineType.SINGLE) {

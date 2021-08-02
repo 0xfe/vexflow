@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// MIT Licnse
+// MIT License
 
-import { Tables } from './tables';
 import { RuntimeError } from './util';
 
 export interface NoteAccidental {
@@ -164,6 +163,54 @@ export class Music {
     return ['bb', 'b', 'n', '#', '##'];
   }
 
+  /** Note values. */
+  static get noteValues(): Record<string, Key> {
+    return {
+      c: { root_index: 0, int_val: 0 },
+      cn: { root_index: 0, int_val: 0 },
+      'c#': { root_index: 0, int_val: 1 },
+      'c##': { root_index: 0, int_val: 2 },
+      cb: { root_index: 0, int_val: 11 },
+      cbb: { root_index: 0, int_val: 10 },
+      d: { root_index: 1, int_val: 2 },
+      dn: { root_index: 1, int_val: 2 },
+      'd#': { root_index: 1, int_val: 3 },
+      'd##': { root_index: 1, int_val: 4 },
+      db: { root_index: 1, int_val: 1 },
+      dbb: { root_index: 1, int_val: 0 },
+      e: { root_index: 2, int_val: 4 },
+      en: { root_index: 2, int_val: 4 },
+      'e#': { root_index: 2, int_val: 5 },
+      'e##': { root_index: 2, int_val: 6 },
+      eb: { root_index: 2, int_val: 3 },
+      ebb: { root_index: 2, int_val: 2 },
+      f: { root_index: 3, int_val: 5 },
+      fn: { root_index: 3, int_val: 5 },
+      'f#': { root_index: 3, int_val: 6 },
+      'f##': { root_index: 3, int_val: 7 },
+      fb: { root_index: 3, int_val: 4 },
+      fbb: { root_index: 3, int_val: 3 },
+      g: { root_index: 4, int_val: 7 },
+      gn: { root_index: 4, int_val: 7 },
+      'g#': { root_index: 4, int_val: 8 },
+      'g##': { root_index: 4, int_val: 9 },
+      gb: { root_index: 4, int_val: 6 },
+      gbb: { root_index: 4, int_val: 5 },
+      a: { root_index: 5, int_val: 9 },
+      an: { root_index: 5, int_val: 9 },
+      'a#': { root_index: 5, int_val: 10 },
+      'a##': { root_index: 5, int_val: 11 },
+      ab: { root_index: 5, int_val: 8 },
+      abb: { root_index: 5, int_val: 7 },
+      b: { root_index: 6, int_val: 11 },
+      bn: { root_index: 6, int_val: 11 },
+      'b#': { root_index: 6, int_val: 0 },
+      'b##': { root_index: 6, int_val: 1 },
+      bb: { root_index: 6, int_val: 10 },
+      bbb: { root_index: 6, int_val: 9 },
+    };
+  }
+
   protected isValidNoteValue(note: number): boolean {
     return note >= 0 && note < Music.canonical_notes.length;
   }
@@ -232,11 +279,11 @@ export class Music {
 
   /** Note value associated to a note name. */
   getNoteValue(noteString: string): number {
-    const value = Tables.keyProperties(`${noteString.toUpperCase()}/0`);
-    if (value === undefined || value.int_value === undefined) {
+    const value = Music.noteValues[noteString];
+    if (value === undefined) {
       throw new RuntimeError('BadArguments', `Invalid note name: ${noteString}`);
     }
-    return value.int_value;
+    return value.int_val;
   }
 
   /** Interval value associated to an interval name. */
@@ -331,7 +378,7 @@ export class Music {
     const tones = [key];
 
     let nextNote = key;
-    for (let i = 0; i < intervals.length; i += 1) {
+    for (let i = 0; i < intervals.length; i++) {
       nextNote = this.getRelativeNoteValue(nextNote, intervals[i]);
       if (nextNote !== key) tones.push(nextNote);
     }

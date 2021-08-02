@@ -374,12 +374,9 @@ export const Tables = {
 
   The last argument, params, is a struct the currently can contain one option,
   octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
-*/
-  keyProperties(
-    key: string,
-    clef?: string,
-    // eslint-disable-next-line
-  params?: any): any {
+  */
+  // eslint-disable-next-line
+  keyProperties(key: string, clef?: string, params?: any): any {
     const noteValues: Record<
       string,
       {
@@ -1308,7 +1305,7 @@ export const Tables = {
             flag: false,
             rest: true,
             position: 'B/4',
-            dot_shiftY: 1.5,
+            dot_shiftY: -2.5,
             line_above: 3.0,
             line_below: 3.0,
             getWidth(scale = Tables.DEFAULT_NOTATION_FONT_SCALE): number | undefined {
@@ -1365,7 +1362,8 @@ export const Tables = {
     m: { name: 'muted' },
     s: { name: 'slash' },
   } as Record<string, Record<string, string>>,
-  // Some defaults
+
+  // Default time signature.
   TIME4_4: {
     num_beats: 4,
     beat_value: 4,

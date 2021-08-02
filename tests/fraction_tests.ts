@@ -1,10 +1,10 @@
-/**
- * VexFlow - Fraction Tests
- * Copyright Mohit Muthanna 2010 <mohit@muthanna.com>
- */
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+//
+// Fraction Tests
 
-import { Fraction } from '../src/fraction';
 import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
+import { Fraction } from 'fraction';
 
 const FractionTests = {
   Start(): void {
@@ -55,4 +55,5 @@ const FractionTests = {
     // TODO: Add more detailed tests.
   },
 };
+
 export { FractionTests };

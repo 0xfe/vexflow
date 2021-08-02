@@ -73,7 +73,10 @@ export class Tuplet extends Element {
   protected y_pos: number;
   protected x_pos: number;
   protected width: number;
-  protected location: number;
+
+  // location is initialized by the constructor via setTupletLocation(...).
+  protected location!: number;
+
   protected notes_occupied: number;
   protected ratioed: boolean;
   protected numerator_glyphs: Glyph[] = [];
@@ -118,7 +121,8 @@ export class Tuplet extends Element {
     this.y_pos = 16;
     this.x_pos = 100;
     this.width = 200;
-    this.location = this.options.location || Tuplet.LOCATION_TOP;
+
+    this.setTupletLocation(this.options.location || Tuplet.LOCATION_TOP);
 
     Formatter.AlignRestsToNotes(notes, true, true);
     this.resolveGlyphs();
@@ -156,13 +160,13 @@ export class Tuplet extends Element {
   }
 
   /**
-   * Set the tuplet to be displayed either on the top or bottom of the stave
+   * Set the tuplet indicator to be displayed either on the top or bottom of the stave.
    */
   setTupletLocation(location: number): this {
-    if (!location) {
+    if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
+      // eslint-disable-next-line
+      console.warn(`Invalid tuplet location [${location}]. Using Tuplet.LOCATION_TOP.`);
       location = Tuplet.LOCATION_TOP;
-    } else if (location !== Tuplet.LOCATION_TOP && location !== Tuplet.LOCATION_BOTTOM) {
-      throw new RuntimeError('BadArgument', 'Invalid tuplet location: ' + location);
     }
 
     this.location = location;
@@ -178,22 +182,11 @@ export class Tuplet extends Element {
   }
 
   beatsOccupiedDeprecationWarning(): void {
-    const msg = [
-      'beats_occupied has been deprecated as an ',
-      'option for tuplets. Please use notes_occupied ',
-      'instead. Calls to getBeatsOccupied and ',
-      'setBeatsOccupied should now be routed to ',
-      'getNotesOccupied and setNotesOccupied instead',
-    ].join('');
-
     // eslint-disable-next-line
-    if (console && console.warn) {
-      // eslint-disable-next-line
-      console.warn(msg);
-    } else if (console) {
-      // eslint-disable-next-line
-      console.log(msg);
-    }
+    console.warn(
+      'beats_occupied has been deprecated as an option for tuplets. Please use notes_occupied instead.',
+      'Calls to getBeatsOccupied / setBeatsOccupied should now be routed to getNotesOccupied / setNotesOccupied.'
+    );
   }
 
   getBeatsOccupied(): number {

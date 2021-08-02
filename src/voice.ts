@@ -50,7 +50,7 @@ export class Voice extends Element {
     return VoiceMode;
   }
 
-  constructor(time: VoiceTime | string, options?: { softmaxFactor: number }) {
+  constructor(time?: Partial<VoiceTime> | string, options?: { softmaxFactor: number }) {
     super();
     this.setAttribute('type', 'Voice');
 
