@@ -4,10 +4,10 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { RuntimeError } from './util';
-import { TabTie } from './tabtie';
 import { TabNote } from './tabnote';
+import { TabTie } from './tabtie';
 import { TieNotes } from './types/common';
+import { RuntimeError } from './util';
 
 export class TabSlide extends TabTie {
   static get SLIDE_UP(): number {
@@ -27,26 +27,42 @@ export class TabSlide extends TabTie {
   }
 
   /**
-   * @param notes is a struct that has:
-   *
+   * @param notes is a struct of the form:
    *  {
    *    first_note: Note,
    *    last_note: Note,
    *    first_indices: [n1, n2, n3],
    *    last_indices: [n1, n2, n3]
    *  }
+   * @param notes.first_note the starting note of the slide
+   * @param notes.last_note the ending note of the slide
+   * @param notes.first_indices specifies which string + fret positions of the TabNote are used in this slide. zero indexed.
+   * @param notes.last_indices currently unused. we assume it's the same as first_indices.
    *
-   * @param direction
+   * @param direction TabSlide.SLIDE_UP or TabSlide.SLIDE_DOWN
    */
   constructor(notes: TieNotes, direction?: number) {
     super(notes, 'sl.');
     this.setAttribute('type', 'TabSlide');
 
+    // Determine the direction automatically if it is not provided.
     if (!direction) {
-      const first_fret = (notes.first_note as TabNote).getPositions()[0].fret;
-      const last_fret = (notes.last_note as TabNote).getPositions()[0].fret;
+      let first_fret = (notes.first_note as TabNote).getPositions()[0].fret;
+      if (typeof first_fret === 'string') {
+        first_fret = parseInt(first_fret, 10);
+      }
+      let last_fret = (notes.last_note as TabNote).getPositions()[0].fret;
+      if (typeof last_fret === 'string') {
+        last_fret = parseInt(last_fret, 10);
+      }
 
-      direction = parseInt(first_fret, 10) > parseInt(last_fret, 10) ? TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP;
+      // If either of the frets are 'X', parseInt() above will return NaN.
+      // Choose TabSlide.SLIDE_UP by default.
+      if (isNaN(first_fret) || isNaN(last_fret)) {
+        direction = TabSlide.SLIDE_UP;
+      } else {
+        direction = first_fret > last_fret ? TabSlide.SLIDE_DOWN : TabSlide.SLIDE_UP;
+      }
     }
 
     this.direction = direction;

@@ -6,12 +6,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, equal, ok, test } from './declarations';
-import { Flow } from 'flow';
 import { Crescendo } from 'crescendo';
-import { TextNote } from 'textnote';
+import { Flow } from 'flow';
 import { Note } from 'note';
+import { TextNote } from 'textnote';
+
+import { equal, ok, QUnit, test } from './declarations';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextNoteTests = {
   Start(): void {

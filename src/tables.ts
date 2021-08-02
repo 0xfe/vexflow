@@ -2,12 +2,11 @@
 
 /* eslint-disable key-spacing */
 
-import { RuntimeError } from './util';
+import { ArticulationStruct } from './articulation';
+import { Fonts } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
-import { ArticulationStruct } from './articulation';
-
-import { Fonts } from './font';
+import { RuntimeError } from './util';
 
 // Custom note heads
 const customNoteHeads: Record<string, { code: string }> = {
@@ -539,7 +538,7 @@ export const Tables = {
     let width = 0;
     let shift_y = 0;
 
-    if (fret.toString().toUpperCase() === 'X') {
+    if (fret.toUpperCase() === 'X') {
       const glyphMetrics = new Glyph('accidentalDoubleSharp', Tables.DEFAULT_TABLATURE_FONT_SCALE).getMetrics();
       glyph = 'accidentalDoubleSharp';
       if (glyphMetrics.width == undefined || glyphMetrics.height == undefined)
@@ -547,7 +546,7 @@ export const Tables = {
       width = glyphMetrics.width;
       shift_y = -glyphMetrics.height / 2;
     } else {
-      width = Tables.textWidth(fret.toString());
+      width = Tables.textWidth(fret);
     }
 
     return {
@@ -730,17 +729,20 @@ export const Tables = {
   },
 
   unicode: {
-    // Unicode accidentals
-    sharp: String.fromCharCode(parseInt('266F', 16)),
-    flat: String.fromCharCode(parseInt('266D', 16)),
-    natural: String.fromCharCode(parseInt('266E', 16)),
-    // Major Chord
-    triangle: String.fromCharCode(parseInt('25B3', 16)),
-    // half-diminished
-    'o-with-slash': String.fromCharCode(parseInt('00F8', 16)),
-    // Diminished
-    degrees: String.fromCharCode(parseInt('00B0', 16)),
-    circle: String.fromCharCode(parseInt('25CB', 16)),
+    // ♯ accidental sharp
+    sharp: String.fromCharCode(0x266f),
+    // ♭ accidental flat
+    flat: String.fromCharCode(0x266d),
+    // ♮ accidental natural
+    natural: String.fromCharCode(0x266e),
+    // △ major seventh
+    triangle: String.fromCharCode(0x25b3),
+    // ø half-diminished
+    'o-with-slash': String.fromCharCode(0x00f8),
+    // ° diminished
+    degrees: String.fromCharCode(0x00b0),
+    // ○ diminished
+    circle: String.fromCharCode(0x25cb),
   },
 
   // Used to convert duration aliases to the number based duration.
