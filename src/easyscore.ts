@@ -1,7 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// This class implements a parser for a simple language to generate
-// VexFlow objects.
+// MIT License
 
 /* eslint max-classes-per-file: "off" */
 
@@ -15,7 +13,7 @@ import { RenderContext } from './types/common';
 import { Accidental } from './accidental';
 import { Modifier } from './modifier';
 import { Voice } from './voice';
-import { Note } from 'note';
+import { TupletOptions } from './tuplet';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -415,6 +413,10 @@ export interface EasyScoreDefaults {
   [x: string]: any; // allow arbitrary properties via set(defaults)
 }
 
+/**
+ * EasyScore implements a parser for a simple language to generate
+ * VexFlow objects.
+ */
 export class EasyScore {
   static DEBUG: boolean = false;
 
@@ -434,6 +436,12 @@ export class EasyScore {
     };
   }
 
+  /**
+   * Set the Score defaults (`Type` must be set appropriately to avoid Errors when adding Staves).
+   * @param defaults.clef default clef ( treble | bass ...) see {@link Clef.types}
+   * @param defaults.type default time signature ( 4/4 | 9/8 ...)
+   * @param defaults.stem default stem arrangement (auto | up | down)
+   */
   set(defaults: Partial<EasyScoreDefaults>): this {
     Object.assign(this.defaults, defaults);
     return this;
@@ -471,16 +479,12 @@ export class EasyScore {
     return result;
   }
 
-  // TODO: Add stricter typing after migrating Factory
-  // eslint-disable-next-line
-  beam(notes: StaveNote[], options: any = {}): StaveNote[] {
+  beam(notes: StaveNote[], options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] }): StaveNote[] {
     this.factory.Beam({ notes, options });
     return notes;
   }
 
-  // TODO: Add stricter typing after migrating Factory
-  // eslint-disable-next-line
-  tuplet(notes: StaveNote[], options: any = {}): StaveNote[] {
+  tuplet(notes: StaveNote[], options?: TupletOptions): StaveNote[] {
     this.factory.Tuplet({ notes, options });
     return notes;
   }
@@ -491,9 +495,7 @@ export class EasyScore {
     return this.builder.getElements().notes;
   }
 
-  // TODO: Add stricter typing after migrating Factory
-  // eslint-disable-next-line
-  voice(notes: Note[], options?: any): Voice {
+  voice(notes: StaveNote[], options: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
     options = { time: this.defaults.time, ...options };
     return this.factory.Voice(options).addTickables(notes);
   }

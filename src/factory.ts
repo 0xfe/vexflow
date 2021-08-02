@@ -1,12 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
-//
-// ## Description
-//
-// This file implements a high level API around VexFlow. It will eventually
-// become the canonical way to use VexFlow.
-//
-// *This API is currently DRAFT*
+// MIT License
 
 import { RuntimeError, log } from './util';
 import { Accidental } from './accidental';
@@ -74,13 +68,19 @@ export interface FactoryOptions {
   };
 }
 
-// To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (Factory.DEBUG) log('Vex.Flow.Factory', args);
 }
 
+/**
+ * Factory implements a high level API around VexFlow. It will eventually
+ * become the canonical way to use VexFlow.
+ *
+ * *This API is currently DRAFT*
+ */
 export class Factory {
+  /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
   static DEBUG: boolean;
 
   protected options: FactoryOptions;
@@ -92,6 +92,15 @@ export class Factory {
   protected renderQ!: Element[];
   protected systems!: System[];
 
+  /**
+   * Constructor.
+   *
+   * Example:
+   *
+   * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
+   *
+   * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
+   */
   constructor(options: Partial<FactoryOptions> = {}) {
     L('New factory: ', options);
     const defaults: FactoryOptions = {
@@ -116,6 +125,15 @@ export class Factory {
     this.setOptions(options);
   }
 
+  /**
+   * Static simplified function to access constructor without providing FactoryOptions
+   *
+   * Example:
+   *
+   * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
+   *
+   * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
+   */
   static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
     return new Factory({ renderer: { elementId, width, height, backend: Renderer.Backends.SVG } });
   }
@@ -176,7 +194,7 @@ export class Factory {
     return this.voices;
   }
 
-  // Returns pixels from current stave spacing.
+  /** Return pixels from current stave spacing. */
   space(spacing: number): number {
     if (!this.options.stave) throw new RuntimeError('NoStave');
     return this.options.stave.space * spacing;
@@ -642,6 +660,19 @@ export class Factory {
     return system;
   }
 
+  /**
+   * Creates EasyScore. Normally the first step after constructing a factory.
+   *
+   * Example:
+   *
+   * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
+   *
+   * `const score: EasyScore = vf.EasyScore();`
+   * @param params.factory not required
+   * @param params.builder instance of Builder
+   * @param params.commitHooks function to call after a note element is created
+   * @param params.throwOnError throw error in case of parsing error
+   */
   EasyScore(params: EasyScoreOptions = {}): EasyScore {
     params.factory = this;
     return new EasyScore(params);
@@ -684,6 +715,7 @@ export class Factory {
     return textFont;
   }
 
+  /** Render the score. */
   draw(): void {
     this.systems.forEach((i) => i.setContext(this.context).format());
     this.staves.forEach((i) => i.setContext(this.context).draw());
