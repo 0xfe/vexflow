@@ -427,6 +427,13 @@ export class Accidental extends Modifier {
           // modified the accidental state
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
+          // Remove accidentals
+          note.getModifiers().forEach(function (modifier, index) {
+            if (modifier instanceof Accidental && modifier.getIndex() == keyIndex) {
+              note.getModifiers().splice(index, 1);
+            }
+          });
+
           // Add the accidental to the StaveNote
           if (!sameAccidental || (sameAccidental && previouslyModified)) {
             // Modify the scale map so that the root pitch has an
