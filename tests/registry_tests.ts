@@ -3,10 +3,10 @@
 //
 // Registry Tests
 
-import { Factory } from 'factory';
 import { EasyScore } from 'easyscore';
-import { Registry } from 'registry';
 import { Element } from 'element';
+import { Factory } from 'factory';
+import { Registry } from 'registry';
 
 const RegistryTests = {
   Start(): void {

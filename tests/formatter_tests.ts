@@ -7,23 +7,24 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { Flow } from 'flow';
-import { MockTickable } from './mocks';
-import { Formatter } from 'formatter';
-import { Voice } from 'voice';
-import { Registry } from 'registry';
-import { StaveNote } from 'stavenote';
-import { Stave } from 'stave';
-import { Beam } from 'beam';
-import { StaveConnector } from 'staveconnector';
-import { Note } from 'note';
-import { Bend } from 'bend';
 import { Annotation } from 'annotation';
+import { Beam } from 'beam';
+import { Bend } from 'bend';
+import { Flow } from 'flow';
+import { FontGlyph } from 'font';
+import { Formatter } from 'formatter';
+import { Note } from 'note';
+import { Registry } from 'registry';
+import { Stave } from 'stave';
+import { StaveConnector } from 'staveconnector';
+import { StaveNote } from 'stavenote';
+import { Voice } from 'voice';
+import { MockTickable } from './mocks';
 
 // Should this be a static call in glyph? Or font?
 function glyphWidth(vexGlyph: string): number {
-  const vf = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
-  return (vf.x_max - vf.x_min) * glyphPixels();
+  const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+  return (glyph.x_max - glyph.x_min) * glyphPixels();
 }
 
 function glyphPixels(): number {
@@ -33,7 +34,6 @@ function glyphPixels(): number {
 const FormatterTests = {
   Start(): void {
     QUnit.module('Formatter');
-    test('VF.* API', this.VF_Prefix);
     test('TickContext Building', this.buildTickContexts);
 
     const runTests = VexFlowTests.runTests;
@@ -71,20 +71,6 @@ const FormatterTests = {
     });
   },
 
-  VF_Prefix(): void {
-    equal(Voice, VF.Voice);
-    equal(Registry, VF.Registry);
-    propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
-    equal(StaveNote, VF.StaveNote);
-    notEqual(Stave, VF.StaveNote);
-    equal(Stave, VF.Stave);
-    equal(Beam, VF.Beam);
-    equal(Note, VF.Note);
-    equal(Bend, VF.Bend);
-    equal(Annotation, VF.Annotation);
-    equal(StaveConnector, VF.StaveConnector);
-  },
-
   buildTickContexts(): void {
     function createTickable() {
       return new MockTickable();
@@ -120,12 +106,13 @@ const FormatterTests = {
 
     equal(tContexts.list.length, 4, 'Voices should have four tick contexts');
 
-    // TODO: add this after pull request #68 is merged to master
-    // throws(
-    //   function() { formatter.getMinTotalWidth(); },
-    //   RuntimeError,
-    //   "Expected to throw exception"
-    // );
+    throws(
+      function () {
+        formatter.getMinTotalWidth();
+      },
+      /NoMinTotalWidth/,
+      'Expected to throw exception'
+    );
 
     ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
     equal(formatter.getMinTotalWidth(), 88, 'Get minimum total width without passing voices');
@@ -140,44 +127,46 @@ const FormatterTests = {
       'Second note of voice 2 is to the right of the second note of voice 1'
     );
   },
-  noteHeadPadding(options): void {
-    var registry = new VF.Registry();
-    VF.Registry.enableDefaultRegistry(registry);
-    var vf = VF.Test.makeFactory(options, 600, 300);
-    var score = vf.EasyScore();
+
+  noteHeadPadding(options: TestOptions): void {
+    const registry = new Registry();
+    Registry.enableDefaultRegistry(registry);
+    const f = VexFlowTests.makeFactory(options, 600, 300);
+    const score = f.EasyScore();
     score.set({
       time: '9/8',
     });
     const notes1 = score.notes('(d5 f5)/8,(c5 e5)/8,(d5 f5)/8,(c5 e5)/2.');
     const beams = [];
-    beams.push(new VF.Beam(notes1.slice(0, 3), true));
-    const voice1 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+    beams.push(new Beam(notes1.slice(0, 3), true));
+    const voice1 = new Voice().setMode(Voice.Mode.SOFT);
     const notes2 = score.notes('(g4 an4)/2.,(g4 a4)/4.', {
       clef: 'treble',
     });
-    const voice2 = new VF.Voice().setMode(VF.Voice.Mode.Soft);
+    const voice2 = new Voice().setMode(Voice.Mode.SOFT);
     voice2.addTickables(notes2);
     voice1.addTickables(notes1);
-    var formatter = vf.Formatter().joinVoices([voice1]).joinVoices([voice2]);
+    const formatter = f.Formatter().joinVoices([voice1]).joinVoices([voice2]);
     const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
     formatter.format([voice1, voice2], width);
-    const stave1 = vf.Stave({
+    const stave1 = f.Stave({
       y: 50,
-      width: width + VF.Stave.defaultPadding,
+      width: width + Stave.defaultPadding,
     });
-    const stave2 = vf.Stave({
+    const stave2 = f.Stave({
       y: 150,
-      width: width + VF.Stave.defaultPadding,
+      width: width + Stave.defaultPadding,
     });
     stave1.draw();
     stave2.draw();
-    voice1.draw(vf.context, stave1);
-    voice2.draw(vf.context, stave2);
+    voice1.draw(f.getContext(), stave1);
+    voice2.draw(f.getContext(), stave2);
     beams.forEach((b) => {
-      b.setContext(vf.getContext()).draw();
+      b.setContext(f.getContext()).draw();
     });
     ok(true);
   },
+
   longMeasureProblems(options: TestOptions): void {
     const registry = new Registry();
     Registry.enableDefaultRegistry(registry);
@@ -212,8 +201,8 @@ const FormatterTests = {
     });
     stave1.draw();
     stave2.draw();
-    voice1.draw(f.context, stave1);
-    voice2.draw(f.context, stave2);
+    voice1.draw(f.getContext(), stave1);
+    voice2.draw(f.getContext(), stave2);
     ok(true);
   },
 
@@ -340,13 +329,13 @@ const FormatterTests = {
     ok(voice1.tickables[1].getX() > voice2.tickables[1].getX());
   },
 
-  justifyStaveNotes: (options) => {
+  justifyStaveNotes(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 520, 280);
     const ctx = f.getContext();
     const score = f.EasyScore();
 
     let y = 30;
-    function justifyToWidth(width) {
+    function justifyToWidth(width: number) {
       f.Stave({ y: y }).addTrebleGlyph();
 
       const voices = [
@@ -373,7 +362,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  notesWithTab: (options) => {
+  notesWithTab(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 420, 580);
     const score = f.EasyScore();
 
@@ -422,7 +411,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  multiStaves: (options) => {
+  multiStaves(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 400);
     const ctx = f.getContext();
     const score = f.EasyScore();
@@ -458,7 +447,7 @@ const FormatterTests = {
       bottom_stave: staves[2],
       type: 'brace',
     });
-    for (var i = 0; i < staves.length; ++i) {
+    for (let i = 0; i < staves.length; ++i) {
       staves[i].setContext(ctx).draw();
       voices[i].draw(ctx, staves[i]);
     }
@@ -504,7 +493,7 @@ const FormatterTests = {
     beams = [];
     beams.push(new Beam(notes32.slice(0, 3), true));
     beams.push(new Beam(notes32.slice(3, 6), true));
-    for (i = 0; i < staves.length; ++i) {
+    for (let i = 0; i < staves.length; ++i) {
       staves[i].setContext(ctx).draw();
       voices[i].draw(ctx, staves[i]);
       voices[i].getTickables().forEach((note) => Note.plotMetrics(ctx, note, ys[i] - 20));
@@ -513,7 +502,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  proportionalFormatting(options) {
+  proportionalFormatting(options: TestOptions): void {
     const debug = options.params.debug;
     Registry.enableDefaultRegistry(new Registry());
 
@@ -529,11 +518,11 @@ const FormatterTests = {
 
     const score = f.EasyScore();
 
-    const newVoice = function (notes) {
+    const newVoice = function (notes: StaveNote[]) {
       return score.voice(notes, { time: '1/4' });
     };
 
-    const newStave = function (voice) {
+    const newStave = function (voice: Voice) {
       return system
         .addStave({ voices: [voice], debugNoteMetrics: debug })
         .addClef('treble')
@@ -553,8 +542,8 @@ const FormatterTests = {
 
     f.draw();
 
-    // var typeMap = VF.Registry.getDefaultRegistry().index.type;
-    // var table = Object.keys(typeMap).map(function(typeName) {
+    // let typeMap = Registry.getDefaultRegistry().index.type;
+    // let table = Object.keys(typeMap).map(function(typeName) {
     //   return typeName + ': ' + Object.keys(typeMap[typeName]).length;
     // });
     // console.log(table);
@@ -563,11 +552,11 @@ const FormatterTests = {
     ok(true);
   },
 
-  softMax(options): void {
+  softMax(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 550, 500);
     f.getContext().scale(0.8, 0.8);
 
-    function draw(y, factor) {
+    function draw(y: number, factor: number): void {
       const score = f.EasyScore();
       const system = f.System({
         x: 100,
@@ -602,7 +591,7 @@ const FormatterTests = {
     draw(450, 200);
   },
 
-  mixTime(options) {
+  mixTime(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400 + Stave.defaultPadding, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -632,7 +621,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  tightNotes(options) {
+  tightNotes(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 440, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -664,7 +653,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  tightNotes2(options) {
+  tightNotes2(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 440, 250);
     f.getContext().scale(0.8, 0.8);
     const score = f.EasyScore();
@@ -693,7 +682,7 @@ const FormatterTests = {
     ok(true);
   },
 
-  annotations(options) {
+  annotations(options: TestOptions): void {
     const pageWidth = 916;
     const pageHeight = 600;
     const f = VexFlowTests.makeFactory(options, pageWidth, pageHeight);
@@ -735,56 +724,54 @@ const FormatterTests = {
     const beamGroup = 3;
 
     const durations = ['8d', '16', '8', '8d', '16', '8', '8d', '16', '8', '4', '8'];
-    const beams = [];
+    const beams: Beam[] = [];
     let y = 40;
 
     smar.forEach((sm) => {
       const stave = new Stave(10, y, sm.width);
-      const notes = [];
+      const notes: StaveNote[] = [];
       let iii = 0;
       context.fillText(sm.title, 100, y);
       y += rowSize;
 
       durations.forEach((dd) => {
-        const newNote = new StaveNote({ keys: ['b/4'], duration: dd });
+        const note = new StaveNote({ keys: ['b/4'], duration: dd });
         if (dd.indexOf('d') >= 0) {
-          newNote.addDotToAll();
+          note.addDotToAll();
         }
         if (sm.lyrics.length > iii) {
-          newNote.addAnnotation(
+          note.addAnnotation(
             0,
             new Annotation(sm.lyrics[iii])
               .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
               .setFont('Times', 12, 'normal')
           );
         }
-        notes.push(newNote);
+        notes.push(note);
         iii += 1;
       });
 
       notes.forEach((note) => {
-        if (note.duration.indexOf('d') >= 0) {
+        if (note.getDuration().indexOf('d') >= 0) {
           note.addDotToAll();
         }
       });
 
       // Don't beam the last group
-      let beam = [];
+      let notesToBeam: StaveNote[] = [];
       notes.forEach((note) => {
-        if (note.intrinsicTicks < 4096) {
-          beam.push(note);
-          if (beam.length >= beamGroup) {
-            beams.push(new Beam(beam));
-            beam = [];
+        if (note.getIntrinsicTicks() < 4096) {
+          notesToBeam.push(note);
+          if (notesToBeam.length >= beamGroup) {
+            beams.push(new Beam(notesToBeam));
+            notesToBeam = [];
           }
         } else {
-          beam = [];
+          notesToBeam = [];
         }
       });
 
-      const voice1 = new Voice({ num_beats: beats, beat_value: beatsPer })
-        .setMode(Vex.Flow.Voice.Mode.SOFT)
-        .addTickables(notes);
+      const voice1 = new Voice({ num_beats: beats, beat_value: beatsPer }).setMode(Voice.Mode.SOFT).addTickables(notes);
 
       const fmt = new Formatter({ softmaxFactor: sm.sm, maxIterations: 2 }).joinVoices([voice1]);
       fmt.format([voice1], sm.width - 11);

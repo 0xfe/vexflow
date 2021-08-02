@@ -8,29 +8,24 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
-import { TabTie } from 'tabtie';
-import { Voice } from 'voice';
+import { Annotation } from 'annotation';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
-import { TabStave } from 'tabstave';
 import { TabNote } from 'tabnote';
-import { Annotation } from 'annotation';
+import { TabStave } from 'tabstave';
+import { TabTie } from 'tabtie';
 import { TieNotes } from 'types/common';
+import { Voice } from 'voice';
 
 const TabTieTests = {
   Start(): void {
     QUnit.module('TabTie');
-    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('Simple TabTie', this.simple);
     run('Hammerons', this.simpleHammeron);
     run('Pulloffs', this.simplePulloff);
     run('Tapping', this.tap);
     run('Continuous', this.continuous);
-  },
-
-  VF_Prefix(): void {
-    equal(TabTie, VF.TabTie);
   },
 
   tieNotes(notes: any, indices: any, stave: any, ctx: any, text?: any): void {

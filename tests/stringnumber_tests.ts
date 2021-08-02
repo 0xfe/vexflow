@@ -7,27 +7,20 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { Stroke } from 'strokes';
-import { Barline } from 'stavebarline';
 import { Renderer } from 'renderer';
+import { Barline } from 'stavebarline';
+import { Stroke } from 'strokes';
 
 const StringNumberTests = (function () {
   const StringNumber = {
     Start() {
       QUnit.module('StringNumber');
-      test('VF.* API', this.VF_Prefix);
 
       const run = VexFlowTests.runTests;
       run('String Number In Notation', this.drawMultipleMeasures);
       run('Fret Hand Finger In Notation', this.drawFretHandFingers);
       run('Multi Voice With Strokes, String & Finger Numbers', this.multi);
       run('Complex Measure With String & Finger Numbers', this.drawAccidentals);
-    },
-
-    VF_Prefix(): void {
-      equal(Stroke, VF.Stroke);
-      equal(Renderer, VF.Renderer);
-      equal(Barline, VF.Barline);
     },
 
     drawMultipleMeasures(options: TestOptions): void {

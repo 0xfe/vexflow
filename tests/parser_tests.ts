@@ -118,15 +118,10 @@ function assertParseFail(result: Result, expectedPos: number, msg?: string): voi
 const ParserTests = {
   Start(): void {
     QUnit.module('Parser');
-    test('VF.* API', this.VF_Prefix);
     test('Basic', this.basic);
     test('Advanced', this.advanced);
     test('Mixed', this.mixed);
     test('Micro Score', this.microscore);
-  },
-
-  VF_Prefix(): void {
-    equal(Parser, VF.Parser);
   },
 
   basic(): void {

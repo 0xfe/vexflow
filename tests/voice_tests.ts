@@ -8,13 +8,13 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Flow } from 'flow';
-import { MockTickable } from './mocks';
-import { ContextBuilder } from 'renderer';
-import { StaveNote } from 'stavenote';
-import { Voice } from 'voice';
 import { Formatter } from 'formatter';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
+import { StaveNote } from 'stavenote';
+import { Voice } from 'voice';
+import { MockTickable } from './mocks';
 
 const VoiceTests = {
   Start(): void {
@@ -106,7 +106,7 @@ const VoiceTests = {
 
     stave.setContext(ctx).draw();
     voice.draw(ctx);
-    voice.getBoundingBox().draw(ctx);
+    voice.getBoundingBox()?.draw(ctx);
 
     throws(
       function () {

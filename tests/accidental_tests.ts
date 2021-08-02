@@ -8,16 +8,16 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
+import { Accidental } from 'accidental';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
+import { ModifierContext } from 'modifiercontext';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
-import { Voice } from 'voice';
 import { Stem } from 'stem';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
-import { ModifierContext } from 'modifiercontext';
-import { Accidental } from 'accidental';
+import { Voice } from 'voice';
 
 const AccidentalTests = {
   Start(): void {
@@ -852,9 +852,6 @@ const AccidentalTests = {
     ok(true);
   },
 
-  /**
-   *
-   */
   autoAccidentalWorking(): void {
     function makeNote(noteStruct: any) {
       return new StaveNote(noteStruct);

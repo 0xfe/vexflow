@@ -6,26 +6,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Vex } from 'vex';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { Accidental } from 'accidental';
+import { Annotation } from 'annotation';
+import { Articulation } from 'articulation';
+import { Beam } from 'beam';
 import { Flow } from 'flow';
+import { Formatter } from 'formatter';
+import { Fraction } from 'fraction';
+import { FretHandFinger } from 'frethandfinger';
+import { Modifier } from 'modifier';
+import { ModifierContext } from 'modifiercontext';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Stem } from 'stem';
-import { TickContext } from 'tickcontext';
-import { Formatter } from 'formatter';
-import { Beam } from 'beam';
-import { Accidental } from 'accidental';
-import { Fraction } from 'fraction';
-import { Annotation } from 'annotation';
-import { Modifier } from 'modifier';
-import { FretHandFinger } from 'frethandfinger';
 import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
-import { Articulation } from 'articulation';
-import { ModifierContext } from 'modifiercontext';
-import { TabNote } from 'tabnote';
+import { TickContext } from 'tickcontext';
 
 function note(note_struct: StaveNoteStruct) {
   return new StaveNote(note_struct);
@@ -34,8 +33,6 @@ function note(note_struct: StaveNoteStruct) {
 const StaveNoteTests = {
   Start(): void {
     QUnit.module('StaveNote');
-    const run = VexFlowTests.runTests;
-    test('VF.* API', this.VF_Prefix);
     test('Tick', this.ticks);
     test('Tick - New API', this.ticksNewApi);
     test('Stem', this.stem);
@@ -54,6 +51,7 @@ const StaveNoteTests = {
       ui: true,
     });
 
+    const run = VexFlowTests.runTests;
     run('StaveNote Draw - Treble', this.draw, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
     run('StaveNote BoundingBoxes - Treble', this.drawBoundingBoxes, {
       clef: 'treble',
@@ -82,11 +80,6 @@ const StaveNoteTests = {
     run('Center Aligned Note with Annotation', this.centerAlignedRestAnnotation);
     run('Center Aligned Note - Multi Voice', this.centerAlignedMultiVoice);
     run('Center Aligned Note with Multiple Modifiers', this.centerAlignedNoteMultiModifiers);
-  },
-
-  VF_Prefix(): void {
-    equal(Flow.RESOLUTION, VF.RESOLUTION);
-    equal(StaveNote, VF.StaveNote);
   },
 
   ticks(): void {
@@ -272,7 +265,7 @@ const StaveNoteTests = {
       equal(
         whole_note.getStemExtension(),
         -1 * Flow.STEM_HEIGHT,
-        'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * VF.STEM_HEIGHT'
+        'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * Flow.STEM_HEIGHT'
       );
     });
   },
@@ -331,7 +324,7 @@ const StaveNoteTests = {
     expect(0);
   },
 
-  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean): StaveNote {
+  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean = false): StaveNote {
     const note = new StaveNote(note_struct).setStave(stave);
 
     new TickContext().addTickable(note).preFormat().setX(x);

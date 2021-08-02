@@ -7,19 +7,20 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, ok } from './support/qunit_api';
 import { ContextBuilder } from 'renderer';
-import { Flow } from 'flow';
-import { Registry } from 'registry';
-import { StaveNote } from 'stavenote';
 import { Annotation } from 'annotation';
-import { Formatter } from 'formatter';
-import { TabNote } from 'tabnote';
-import { Voice } from 'voice';
-import { TabStave } from 'tabstave';
-import { Bend } from 'bend';
-import { Stave } from 'stave';
-import { Vibrato } from 'vibrato';
 import { Beam } from 'beam';
+import { Bend } from 'bend';
+import { Flow } from 'flow';
+import { Formatter } from 'formatter';
+import { Registry } from 'registry';
+import { Stave } from 'stave';
+import { StaveNote } from 'stavenote';
+import { TabNote } from 'tabnote';
+import { TabStave } from 'tabstave';
+import { Vibrato } from 'vibrato';
+import { Voice } from 'voice';
 
 const FONT_SIZE = VexFlowTests.Font.size;
 
@@ -40,9 +41,8 @@ const AnnotationTests = {
   },
 
   lyrics(options: TestOptions): void {
-    const id = (ii) => {
-      return registry.getElementById(ii);
-    };
+    const id = (ii: string) => registry.getElementById(ii);
+
     let fontSize = 10;
     let x = 10;
     let width = 170;
@@ -327,11 +327,11 @@ const AnnotationTests = {
     function newNote(note_struct) {
       return new StaveNote(note_struct);
     }
-    function newAnnotation(text, hJustifcation, vJustifcation) {
+    function newAnnotation(text, hJustification, vJustification) {
       return new Annotation(text)
         .setFont('Arial', FONT_SIZE)
-        .setJustification(hJustifcation)
-        .setVerticalJustification(vJustifcation);
+        .setJustification(hJustification)
+        .setVerticalJustification(vJustification);
     }
 
     for (let v = 1; v <= 4; ++v) {
@@ -396,7 +396,7 @@ const AnnotationTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
+    const notes1 = specs.map(function (noteSpec) {
       const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       return tabNote;
@@ -409,15 +409,12 @@ const AnnotationTests = {
       return tabNote;
     });
 
-    const notes3 = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
-      return tabNote;
-    });
+    const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-    notes[0].addModifier(new Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
-    notes[1].addModifier(new Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
-    notes[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-    notes[3].addModifier(new Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
+    notes1[0].addModifier(new Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
+    notes1[1].addModifier(new Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
+    notes1[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
+    notes1[3].addModifier(new Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
 
     notes2[0].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(1), 0); // U
     notes2[1].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(2), 0); // D
@@ -431,7 +428,7 @@ const AnnotationTests = {
 
     const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 
-    voice.addTickables(notes);
+    voice.addTickables(notes1);
     voice.addTickables(notes2);
     voice.addTickables(notes3);
 

@@ -21,21 +21,41 @@ const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 const TabSlideTests = {
   Start(): void {
     QUnit.module('TabSlide');
-    test('VF.* API', VF_Prefix);
 
     const run = VexFlowTests.runTests;
-    run('Simple TabSlide', simple);
-    run('Slide Up', slideUp);
-    run('Slide Down', slideDown);
+    run('Simple TabSlide', this.simple);
+    run('Slide Up', this.slideUp);
+    run('Slide Down', this.slideDown);
+  },
+
+  simple(options: TestOptions, contextBuilder: ContextBuilder): void {
+    options.contextBuilder = contextBuilder;
+    const c = setupContext(options);
+
+    tieNotes(
+      [
+        tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
+        tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
+      ],
+      [0],
+      c.stave,
+      c.context
+    );
+    ok(true, 'Simple Test');
+  },
+
+  slideUp(options: TestOptions, contextBuilder: ContextBuilder): void {
+    options.contextBuilder = contextBuilder;
+    multiTest(options, TabSlide.createSlideUp);
+  },
+
+  slideDown(options: TestOptions, contextBuilder: ContextBuilder): void {
+    options.contextBuilder = contextBuilder;
+    multiTest(options, TabSlide.createSlideDown);
   },
 };
 
-function VF_Prefix(): void {
-  equal(TabSlide, VF.TabSlide);
-  equal(TabNote, VF.TabNote);
-  equal(Voice, VF.Voice);
-  equal(TabStave, VF.TabStave);
-}
+// Helper Functions
 
 function tieNotes(notes: TabNote[], indices: number[], stave: TabStave, ctx: RenderContext): void {
   const voice = new Voice(Flow.TIME4_4);
@@ -68,22 +88,6 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
   const stave = new TabStave(10, 10, width || 350).addTabGlyph().setContext(context).draw();
 
   return { context, stave };
-}
-
-function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
-  options.contextBuilder = contextBuilder;
-  const c = setupContext(options);
-
-  tieNotes(
-    [
-      tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' }),
-      tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
-    ],
-    [0],
-    c.stave,
-    c.context
-  );
-  ok(true, 'Simple Test');
 }
 
 function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => TabSlide): void {
@@ -171,16 +175,6 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
     .draw();
 
   ok(true, 'Chord high-fret');
-}
-
-function slideUp(options: TestOptions, contextBuilder: ContextBuilder): void {
-  options.contextBuilder = contextBuilder;
-  multiTest(options, TabSlide.createSlideUp);
-}
-
-function slideDown(options: TestOptions, contextBuilder: ContextBuilder): void {
-  options.contextBuilder = contextBuilder;
-  multiTest(options, TabSlide.createSlideDown);
 }
 
 export { TabSlideTests };

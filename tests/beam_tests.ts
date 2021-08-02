@@ -14,7 +14,6 @@ import { Voice } from 'voice';
 const BeamTests = {
   Start(): void {
     QUnit.module('Beam');
-    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('Simple Beam', this.simple);
     run('Multi Beam', this.multi);
@@ -36,11 +35,6 @@ const BeamTests = {
     run('TabNote Beams Auto Stem', this.tabBeamsAutoStem);
     run('Complex Beams with Annotations', this.complexWithAnnotation);
     run('Complex Beams with Articulations', this.complexWithArticulation);
-  },
-
-  VF_Prefix(): void {
-    equal(Beam, VF.Beam);
-    equal(Voice, VF.Voice);
   },
 
   simple(options: TestOptions): void {

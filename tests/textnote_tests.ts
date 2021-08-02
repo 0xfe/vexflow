@@ -16,7 +16,6 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 const TextNoteTests = {
   Start(): void {
     QUnit.module('TextNote');
-    test('VF.* API', this.VF_Prefix);
     const run = VexFlowTests.runTests;
     run('TextNote Formatting', this.formatTextNotes);
     run('TextNote Formatting 2', this.formatTextNotes2);
@@ -25,11 +24,6 @@ const TextNoteTests = {
     run('TextNote Formatting With Glyphs 1', this.formatTextGlyphs1);
     run('Crescendo', this.crescendo);
     run('Text Dynamics', this.textDynamics);
-  },
-
-  VF_Prefix(): void {
-    equal(TextNote, VF.TextNote);
-    equal(Crescendo, VF.Crescendo);
   },
 
   formatTextNotes(options: TestOptions): void {

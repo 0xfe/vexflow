@@ -4,32 +4,34 @@
 // EasyScore Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { QUnit, expect, test, equal, ok } from './support/qunit_api';
+import { Articulation } from 'articulation';
 import { EasyScore } from 'easyscore';
+import { FretHandFinger } from 'frethandfinger';
+import { Modifier } from 'modifier';
+import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { System } from 'system';
-import { FretHandFinger } from 'frethandfinger';
-import { Articulation } from 'articulation';
-import { StaveConnector } from 'staveconnector';
 import { Tuplet } from 'tuplet';
-import { Modifier } from 'modifier';
 
 const EasyScoreTests = {
   Start(): void {
     QUnit.module('EasyScore');
-    test('Basic', EasyScoreTests.basic);
-    test('Accidentals', EasyScoreTests.accidentals);
-    test('Durations', EasyScoreTests.durations);
-    test('Chords', EasyScoreTests.chords);
-    test('Dots', EasyScoreTests.dots);
-    test('Options', EasyScoreTests.options);
-    VexFlowTests.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
-    VexFlowTests.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
-    VexFlowTests.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
-    VexFlowTests.runTests('Draw Tuplets', EasyScoreTests.drawTupletsTest);
-    VexFlowTests.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
-    VexFlowTests.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
-    VexFlowTests.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
-    VexFlowTests.runTests('Keys', EasyScoreTests.keys);
+    test('Basic', this.basic);
+    test('Accidentals', this.accidentals);
+    test('Durations', this.durations);
+    test('Chords', this.chords);
+    test('Dots', this.dots);
+    test('Options', this.options);
+    const run = VexFlowTests.runTests;
+    run('Draw Basic', this.drawBasicTest);
+    run('Draw Accidentals', this.drawAccidentalsTest);
+    run('Draw Beams', this.drawBeamsTest);
+    run('Draw Tuplets', this.drawTupletsTest);
+    run('Draw Dots', this.drawDotsTest);
+    run('Draw Options', this.drawOptionsTest);
+    run('Draw Fingerings', this.drawFingeringsTest);
+    run('Keys', this.keys);
   },
 
   basic(): void {

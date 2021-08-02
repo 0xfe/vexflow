@@ -3,9 +3,13 @@
 //
 // BoundingBoxComputation Tests
 
+/* eslint-disable */
+// @ts-nocheck
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { BoundingBoxComputation } from 'boundingboxcomputation';
+import { Glyph, OutlineCode } from 'glyph';
 import { RenderContext } from 'types/common';
-import { OutlineCode } from 'glyph';
 
 function createCanvas(options: TestOptions): RenderContext {
   const points = options.params.points;
@@ -18,8 +22,8 @@ function createCanvas(options: TestOptions): RenderContext {
     h = Math.max(h, points[i + 1]);
   }
 
-  const vf = VF.Test.makeFactory(options, w + 20, h + 20);
-  const ctx = vf.getContext();
+  const f = VexFlowTests.makeFactory(options, w + 20, h + 20);
+  const ctx = f.getContext();
   ctx.setLineCap('square');
   return ctx;
 }
@@ -119,7 +123,7 @@ const BoundingBoxComputationTests = {
   },
 
   point(): void {
-    const bboxComp = new VF.BoundingBoxComputation();
+    const bboxComp = new BoundingBoxComputation();
     bboxComp.addPoint(2, 3);
     equal(bboxComp.getX1(), 2, 'Bad X1');
     equal(bboxComp.getY1(), 3, 'Bad Y1');
@@ -145,7 +149,7 @@ const BoundingBoxComputationTests = {
     rect(ctx, '#0f0', 5, bx, by, bw, bh);
 
     // Compute the bounding box.
-    const bboxComp = new VF.BoundingBoxComputation();
+    const bboxComp = new BoundingBoxComputation();
     bboxComp.addQuadraticCurve(x0, y0, x1, y1, x2, y2);
 
     // Draw computed bounding box.
@@ -155,13 +159,13 @@ const BoundingBoxComputationTests = {
     // Regression test for a prior bug: compute the bounding box again,
     // this time using the Glyph.getOutlineBoundingBox code path.
     const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.QUADRATIC, x2, -y2, x1, -y1];
-    const bbox = VF.Glyph.getOutlineBoundingBox(o, 1, 0, 0);
+    const bbox = Glyph.getOutlineBoundingBox(o, 1, 0, 0);
     rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
 
     // Draw curve.
     ctx.setLineWidth(1);
     ctx.fillStyle = '#000';
-    VF.Glyph.renderOutline(ctx, o, 1, 0, 0);
+    Glyph.renderOutline(ctx, o, 1, 0, 0);
 
     // Draw control points.
     ctx.strokeStyle = '#f00';
@@ -195,7 +199,7 @@ const BoundingBoxComputationTests = {
     rect(ctx, '#0f0', 5, bx, by, bw, bh);
 
     // Compute the bounding box.
-    const bboxComp = new VF.BoundingBoxComputation();
+    const bboxComp = new BoundingBoxComputation();
     bboxComp.addBezierCurve(x0, y0, x1, y1, x2, y2, x3, y3);
 
     // Draw computed bounding box.
@@ -205,13 +209,13 @@ const BoundingBoxComputationTests = {
     // Regression test for a prior bug: compute the bounding box again,
     // this time using the Glyph.getOutlineBoundingBox code path.
     const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.BEZIER, x3, -y3, x1, -y1, x2, -y2];
-    const bbox = VF.Glyph.getOutlineBoundingBox(o, 1, 0, 0);
+    const bbox = Glyph.getOutlineBoundingBox(o, 1, 0, 0);
     rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
 
     // Draw curve.
     ctx.setLineWidth(1);
     ctx.fillStyle = '#000';
-    VF.Glyph.renderOutline(ctx, o, 1, 0, 0);
+    Glyph.renderOutline(ctx, o, 1, 0, 0);
 
     // Draw control points.
     ctx.strokeStyle = '#f00';

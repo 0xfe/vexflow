@@ -13,13 +13,8 @@ import { MockTickable } from './mocks';
 const TickContextTests = {
   Start(): void {
     QUnit.module('TickContext');
-    test('VF.* API', this.VF_Prefix);
     test('Current Tick Test', this.currentTick);
     test('Tracking Test', this.tracking);
-  },
-
-  VF_Prefix(): void {
-    equal(TickContext, VF.TickContext);
   },
 
   currentTick(): void {

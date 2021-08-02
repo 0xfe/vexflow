@@ -14,7 +14,6 @@ import { Note } from 'note';
 /* eslint-disable */
 declare var global: any;
 declare var $: any;
-declare var QUnit: any;
 /* eslint-enable */
 
 export interface TestOptions {
@@ -349,7 +348,10 @@ const concat = (a: any[], b: any[]): any[] => a.concat(b);
 const MAJOR_KEYS = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
 const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'];
 
-global.VF = Flow; // TODO: Remove global.VF. Everything is still available under Vex.Flow.* and Vex.Flow.Test
-global.VF.Test = VexFlowTests;
+// We no longer provide a global.VF in tests.
+// Everything can be accessed via Vex.Flow.* and Vex.Flow.Test.* or by importing the class directly.
+// eslint-disable-next-line
+// @ts-ignore
+Flow.Test = VexFlowTests;
 
 export { VexFlowTests, concat, MAJOR_KEYS, MINOR_KEYS };

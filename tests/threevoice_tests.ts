@@ -6,10 +6,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests, concat, TestOptions } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { Factory } from 'factory';
 import { Voice } from 'voice';
+import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 function createThreeVoicesTest(noteGroup1, noteGroup2, noteGroup3, setup: (f: Factory, v: Voice[]) => void) {
   return (options: TestOptions) => {
@@ -131,7 +131,7 @@ const ThreeVoicesTests = {
         [f.TextNote({ text: measureTitle, line: -1, duration: '1', smooth: true })],
       ].map(score.voice.bind(score));
 
-      beams = beams.concat(Beam.applyAndGetBeams(voices[0], 1)).concat(VF.Beam.applyAndGetBeams(voices[1], -1));
+      beams = beams.concat(Beam.applyAndGetBeams(voices[0], 1)).concat(Beam.applyAndGetBeams(voices[1], -1));
 
       f.Formatter().joinVoices(voices).formatToStave(voices, stave, { align_rests: alignRests });
     }

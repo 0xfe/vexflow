@@ -7,16 +7,16 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { ContextBuilder } from 'renderer';
-import { StaveConnector } from 'staveconnector';
-import { Stave } from 'stave';
 import { Modifier } from 'modifier';
+import { ContextBuilder } from 'renderer';
+import { Stave } from 'stave';
+import { BarlineType } from 'stavebarline';
+import { StaveConnector } from 'staveconnector';
 
 const StaveConnectorTests = {
   Start(): void {
     QUnit.module('StaveConnector');
     const run = VexFlowTests.runTests;
-    test('VF.* API', this.VF_Prefix);
     run('Single Draw Test', this.drawSingle);
     run('Single Draw Test, 4px Stave Line Thickness', this.drawSingle4pxStaveLines);
     run('Single Both Sides Test', this.drawSingleBoth);
@@ -33,10 +33,6 @@ const StaveConnectorTests = {
     run('Combined Draw Test', this.drawCombined);
   },
 
-  VF_Prefix(): void {
-    equal(StaveConnector, VF.StaveConnector);
-  },
-
   drawSingle(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 300);
     const stave = new Stave(25, 10, 300);
@@ -44,7 +40,7 @@ const StaveConnectorTests = {
     stave.setContext(ctx);
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.SINGLE);
+    connector.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     stave.draw();
     stave2.draw();
@@ -79,10 +75,10 @@ const StaveConnectorTests = {
     stave.setContext(ctx);
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.SINGLE_LEFT);
+    connector.setType(StaveConnector.type.SINGLE_LEFT);
     connector.setContext(ctx);
     const connector2 = new StaveConnector(stave, stave2);
-    connector2.setType(VF.StaveConnector.type.SINGLE_RIGHT);
+    connector2.setType(StaveConnector.type.SINGLE_RIGHT);
     connector2.setContext(ctx);
     stave.draw();
     stave2.draw();
@@ -100,9 +96,9 @@ const StaveConnectorTests = {
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
     const line = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.DOUBLE);
+    connector.setType(StaveConnector.type.DOUBLE);
     connector.setContext(ctx);
-    line.setType(VF.StaveConnector.type.SINGLE);
+    line.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     line.setContext(ctx);
     stave.draw();
@@ -121,10 +117,10 @@ const StaveConnectorTests = {
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
     const line = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.BRACE);
+    connector.setType(StaveConnector.type.BRACE);
     connector.setContext(ctx);
     connector.setText('Piano');
-    line.setType(VF.StaveConnector.type.SINGLE);
+    line.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     line.setContext(ctx);
     stave.draw();
@@ -143,9 +139,9 @@ const StaveConnectorTests = {
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
     const line = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.BRACE);
+    connector.setType(StaveConnector.type.BRACE);
     connector.setContext(ctx);
-    line.setType(VF.StaveConnector.type.SINGLE);
+    line.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     line.setContext(ctx);
     stave.draw();
@@ -164,9 +160,9 @@ const StaveConnectorTests = {
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
     const line = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.BRACKET);
+    connector.setType(StaveConnector.type.BRACKET);
     connector.setContext(ctx);
-    line.setType(VF.StaveConnector.type.SINGLE);
+    line.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     line.setContext(ctx);
     stave.draw();
@@ -183,11 +179,11 @@ const StaveConnectorTests = {
     const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    stave.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave2.setBegBarType(BarlineType.REPEAT_BEGIN);
 
     const line = new StaveConnector(stave, stave2);
-    line.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
+    line.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
     line.setContext(ctx);
     stave.draw();
     stave2.draw();
@@ -202,11 +198,11 @@ const StaveConnectorTests = {
     const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    stave.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave2.setEndBarType(VF.Barline.type.REPEAT_END);
+    stave.setEndBarType(BarlineType.REPEAT_END);
+    stave2.setEndBarType(BarlineType.REPEAT_END);
 
     const line = new StaveConnector(stave, stave2);
-    line.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    line.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
     line.setContext(ctx);
     stave.draw();
     stave2.draw();
@@ -221,11 +217,11 @@ const StaveConnectorTests = {
     const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
-    stave.setEndBarType(VF.Barline.type.DOUBLE);
-    stave2.setEndBarType(VF.Barline.type.DOUBLE);
+    stave.setEndBarType(BarlineType.DOUBLE);
+    stave2.setEndBarType(BarlineType.DOUBLE);
 
     const line = new StaveConnector(stave, stave2);
-    line.setType(VF.StaveConnector.type.THIN_DOUBLE);
+    line.setType(StaveConnector.type.THIN_DOUBLE);
     line.setContext(ctx);
     stave.draw();
     stave2.draw();
@@ -245,15 +241,15 @@ const StaveConnectorTests = {
     stave3.setContext(ctx);
     stave4.setContext(ctx);
 
-    stave.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave2.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave3.setEndBarType(VF.Barline.type.END);
-    stave4.setEndBarType(VF.Barline.type.END);
+    stave.setEndBarType(BarlineType.REPEAT_END);
+    stave2.setEndBarType(BarlineType.REPEAT_END);
+    stave3.setEndBarType(BarlineType.END);
+    stave4.setEndBarType(BarlineType.END);
 
-    stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    stave.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave2.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave3.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave4.setBegBarType(BarlineType.REPEAT_BEGIN);
     const connector = new StaveConnector(stave, stave2);
     const connector2 = new StaveConnector(stave, stave2);
     const connector3 = new StaveConnector(stave3, stave4);
@@ -262,9 +258,9 @@ const StaveConnectorTests = {
     connector2.setContext(ctx);
     connector3.setContext(ctx);
     connector4.setContext(ctx);
-    connector.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
-    connector2.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
-    connector3.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector2.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    connector3.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
     connector4.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
     stave.draw();
     stave2.draw();
@@ -301,15 +297,15 @@ const StaveConnectorTests = {
     stave3.addTimeSignature('6/8');
     stave4.addTimeSignature('6/8');
 
-    stave.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave2.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave3.setEndBarType(VF.Barline.type.END);
-    stave4.setEndBarType(VF.Barline.type.END);
+    stave.setEndBarType(BarlineType.REPEAT_END);
+    stave2.setEndBarType(BarlineType.REPEAT_END);
+    stave3.setEndBarType(BarlineType.END);
+    stave4.setEndBarType(BarlineType.END);
 
-    stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    stave.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave2.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave3.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave4.setBegBarType(BarlineType.REPEAT_BEGIN);
     const connector = new StaveConnector(stave, stave2);
     const connector2 = new StaveConnector(stave, stave2);
     const connector3 = new StaveConnector(stave3, stave4);
@@ -321,11 +317,11 @@ const StaveConnectorTests = {
     connector3.setContext(ctx);
     connector4.setContext(ctx);
     connector5.setContext(ctx);
-    connector.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
-    connector2.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
-    connector3.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
-    connector4.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
-    connector5.setType(VF.StaveConnector.type.SINGLE_LEFT);
+    connector.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector2.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    connector3.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector4.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    connector5.setType(StaveConnector.type.SINGLE_LEFT);
 
     connector.setXShift(stave.getModifierXShift());
     connector3.setXShift(stave3.getModifierXShift());
@@ -369,15 +365,15 @@ const StaveConnectorTests = {
     stave3.addTimeSignature('6/8');
     stave4.addTimeSignature('6/8');
 
-    stave.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave2.setEndBarType(VF.Barline.type.REPEAT_END);
-    stave3.setEndBarType(VF.Barline.type.END);
-    stave4.setEndBarType(VF.Barline.type.END);
+    stave.setEndBarType(BarlineType.REPEAT_END);
+    stave2.setEndBarType(BarlineType.REPEAT_END);
+    stave3.setEndBarType(BarlineType.END);
+    stave4.setEndBarType(BarlineType.END);
 
-    stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave2.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave3.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
-    stave4.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+    stave.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave2.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave3.setBegBarType(BarlineType.REPEAT_BEGIN);
+    stave4.setBegBarType(BarlineType.REPEAT_BEGIN);
 
     const connector = new StaveConnector(stave, stave2);
     const connector2 = new StaveConnector(stave, stave2);
@@ -389,11 +385,11 @@ const StaveConnectorTests = {
     connector3.setContext(ctx);
     connector4.setContext(ctx);
     connector5.setContext(ctx);
-    connector.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
-    connector2.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
-    connector3.setType(VF.StaveConnector.type.BOLD_DOUBLE_LEFT);
-    connector4.setType(VF.StaveConnector.type.BOLD_DOUBLE_RIGHT);
-    connector5.setType(VF.StaveConnector.type.SINGLE_LEFT);
+    connector.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector2.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    connector3.setType(StaveConnector.type.BOLD_DOUBLE_LEFT);
+    connector4.setType(StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    connector5.setType(StaveConnector.type.SINGLE_LEFT);
 
     connector.setXShift(stave.getModifierXShift());
     connector3.setXShift(stave3.getModifierXShift());
@@ -433,10 +429,10 @@ const StaveConnectorTests = {
     const conn_bracket = new StaveConnector(stave4, stave7);
     const conn_none = new StaveConnector(stave4, stave5);
     const conn_brace = new StaveConnector(stave6, stave7);
-    conn_single.setType(VF.StaveConnector.type.SINGLE);
-    conn_double.setType(VF.StaveConnector.type.DOUBLE);
-    conn_bracket.setType(VF.StaveConnector.type.BRACKET);
-    conn_brace.setType(VF.StaveConnector.type.BRACE);
+    conn_single.setType(StaveConnector.type.SINGLE);
+    conn_double.setType(StaveConnector.type.DOUBLE);
+    conn_bracket.setType(StaveConnector.type.BRACKET);
+    conn_brace.setType(StaveConnector.type.BRACE);
     conn_brace.setXShift(-5);
     conn_double.setText('Piano');
     conn_none.setText('Multiple', { shift_y: -15 });

@@ -8,13 +8,23 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
-import { Voice } from 'voice';
 import { Formatter } from 'formatter';
-import { TabNote } from 'tabnote';
-import { Stave } from 'stave';
-import { TickContext } from 'tickcontext';
 import { ContextBuilder } from 'renderer';
+import { Stave } from 'stave';
+import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
+import { TickContext } from 'tickcontext';
+import { RenderContext } from 'types/common';
+import { Voice } from 'voice';
+
+function showNote(tab_struct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
+  const note = new TabNote(tab_struct);
+  const tickContext = new TickContext();
+  tickContext.addTickable(note).preFormat().setX(x);
+  note.setContext(ctx).setStave(stave);
+  note.draw();
+  return note;
+}
 
 const TabNoteTests = {
   Start(): void {
@@ -85,7 +95,7 @@ const TabNoteTests = {
     }
   },
 
-  tickContext() {
+  tickContext(): void {
     const note = new TabNote({
       positions: [
         { str: 6, fret: 6 },
@@ -99,15 +109,6 @@ const TabNoteTests = {
     equal(tickContext.getWidth(), 7);
   },
 
-  showNote(tab_struct, stave, ctx, x): TabNote {
-    const note = new TabNote(tab_struct);
-    const tickContext = new TickContext();
-    tickContext.addTickable(note).preFormat().setX(x);
-    note.setContext(ctx).setStave(stave);
-    note.draw();
-    return note;
-  },
-
   draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 140);
 
@@ -116,7 +117,6 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const showNote = TabNoteTests.showNote;
     const notes = [
       { positions: [{ str: 6, fret: 6 }], duration: '4' },
       {
@@ -241,7 +241,7 @@ const TabNoteTests = {
       return tabNote;
     });
 
-    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -315,7 +315,7 @@ const TabNoteTests = {
       return tabNote;
     });
 
-    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -389,7 +389,7 @@ const TabNoteTests = {
     });
 
     ctx.setFont('sans-serif', 10, 'bold');
-    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -469,7 +469,7 @@ const TabNoteTests = {
 
     ctx.setFont('Arial', 10, 'bold');
 
-    const voice = new Voice(Flow.TIME4_4).setMode(VF.Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);

@@ -7,6 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { Flow } from 'flow';
 
 const MultiMeasureRestTests = {
   Start(): void {
@@ -15,7 +16,7 @@ const MultiMeasureRestTests = {
     VexFlowTests.runTests('Stave with modifiers Test', this.staveWithModifiers);
   },
 
-  simple0(options: TestOptions) {
+  simple0(options: TestOptions): void {
     const width = 910;
     const f = VexFlowTests.makeFactory(options, width, 300);
     const params = [
@@ -54,7 +55,7 @@ const MultiMeasureRestTests = {
           spacing_between_lines_px: 15,
           use_symbols: true,
           number_glyph_point: 40 * 1.5,
-          semibrave_rest_glyph_scale: VF.DEFAULT_NOTATION_FONT_SCALE * 1.5,
+          semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * 1.5,
         },
       ],
     ];
@@ -99,7 +100,6 @@ const MultiMeasureRestTests = {
   staveWithModifiers(options: TestOptions): void {
     const width = 910;
     const f = VexFlowTests.makeFactory(options, width, 200);
-    // const stave = vf.Stave({ y: 20, width: 270 });
     let x = 0;
     let y = 0;
 

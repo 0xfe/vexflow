@@ -3,22 +3,20 @@
 //
 // Factory Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-import { VexFlowTests } from './vexflow_test_helpers';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { QUnit, equal, expect, test, throws } from './support/qunit_api';
 import { Barline } from 'stavebarline';
 import { Factory } from 'factory';
 
 const FactoryTests = {
-  Start: function () {
+  Start(): void {
     QUnit.module('Factory');
     test('Defaults', this.defaults);
     VexFlowTests.runSVGTest('Draw', this.draw);
     VexFlowTests.runSVGTest('Draw Tab (repeat barlines must be aligned)', this.drawTab);
   },
 
-  defaults: function () {
+  defaults(): void {
     throws(function () {
       return new Factory({
         renderer: {
@@ -44,14 +42,14 @@ const FactoryTests = {
     equal(options.stave.space, 10);
   },
 
-  draw: function (options) {
+  draw(options: TestOptions): void {
     const f = Factory.newFromElementId(options.elementId);
     f.Stave().setClef('treble');
     f.draw();
     expect(0);
   },
 
-  drawTab: function (options) {
+  drawTab(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 400);
 
     const system = f.System({ width: 500 });
