@@ -187,6 +187,7 @@ export const GonvilleMetrics = {
       },
     },
     noteHead: {
+      minPadding: 2,
       custom: {
         noteheadDiamondWholeStemUp: {
           shiftX: -6,

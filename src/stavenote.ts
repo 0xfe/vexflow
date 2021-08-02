@@ -119,6 +119,10 @@ export class StaveNote extends StemmableNote {
   static get DEFAULT_LEDGER_LINE_OFFSET(): number {
     return 3;
   }
+  static get minNoteheadPadding(): number {
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+  }
 
   // ## Static Methods
   //
@@ -978,10 +982,18 @@ export class StaveNote extends StemmableNote {
 
   // Pre-render formatting
   preFormat(): void {
+    let noteHeadPadding = 0;
     if (this.preFormatted) return;
-    if (this.modifierContext) this.modifierContext.preFormat();
+    if (this.modifierContext) {
+      this.modifierContext.preFormat();
+      // If there are no modifiers on this note, make sure there is adequate padding
+      // between the notes.
+      if (this.modifierContext.getWidth() === 0) {
+        noteHeadPadding = StaveNote.minNoteheadPadding;
+      }
+    }
 
-    let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
+    let width = this.getGlyphWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx + noteHeadPadding;
 
     // For upward flagged notes, the width of the flag needs to be added
     if (this.shouldDrawFlag() && this.stem_direction === Stem.UP) {

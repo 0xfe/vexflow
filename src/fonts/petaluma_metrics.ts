@@ -299,6 +299,7 @@ export const PetalumaMetrics = {
       },
     },
     noteHead: {
+      minPadding: 2,
       standard: {
         noteheadBlackStemUp: {
           shiftX: 1.625,
