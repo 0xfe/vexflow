@@ -350,7 +350,9 @@ export class Builder {
 
     // Build StaveNotes.
     const { chord, duration, dots, type } = this.piece;
-    const keys: string[] = chord.map((notePiece) => notePiece.key + '/' + notePiece.octave);
+    const keys: string[] = chord.map(
+      (notePiece) => notePiece.key + (notePiece.accid ? notePiece.accid : '') + '/' + notePiece.octave
+    );
     const note = factory.StaveNote({
       keys,
       duration,
