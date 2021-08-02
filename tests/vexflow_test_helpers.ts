@@ -22,6 +22,9 @@ export interface TestOptions {
   params: any /* eslint-disable-line */;
   assert: Assert;
   backend: number;
+
+  // Some tests use this field to pass around the ContextBuilder function.
+  contextBuilder?: ContextBuilder;
 }
 
 // Each test case will switch through the available fonts, and then restore the original font when done.

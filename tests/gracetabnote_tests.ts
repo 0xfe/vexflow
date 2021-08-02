@@ -9,112 +9,125 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
+import { Formatter } from 'formatter';
 import { GraceNoteGroup } from 'gracenotegroup';
+import { GraceTabNote } from 'gracetabnote';
+import { ContextBuilder } from 'renderer';
+import { TabNote, TabNoteStruct } from 'tabnote';
+import { TabStave } from 'tabstave';
+import { RenderContext } from 'types/common';
+import { Voice } from 'voice';
 
 const GraceTabNoteTests = {
   Start(): void {
     QUnit.module('Grace Tab Notes');
-    VexFlowTests.runTests('Grace Tab Note Simple', this.simple);
-    VexFlowTests.runTests('Grace Tab Note Slurred', this.slurred);
-  },
-
-  setupContext(options, x): void {
-    const ctx = options.contextBuilder(options.elementId, 350, 140);
-    const stave = new VF.TabStave(10, 10, x || 350).addTabGlyph().setContext(ctx).draw();
-
-    return { context: ctx, stave: stave };
-  },
-
-  simple(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    const c = GraceTabNoteTests.setupContext(options);
-    function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
-    }
-
-    const note0 = newNote({ positions: [{ str: 4, fret: 6 }], duration: '4' });
-    const note1 = newNote({ positions: [{ str: 4, fret: 12 }], duration: '4' });
-    const note2 = newNote({ positions: [{ str: 4, fret: 10 }], duration: '4' });
-    const note3 = newNote({ positions: [{ str: 4, fret: 10 }], duration: '4' });
-
-    const gracenote_group0 = [{ positions: [{ str: 4, fret: 'x' }], duration: '8' }];
-
-    const gracenote_group1 = [
-      { positions: [{ str: 4, fret: 9 }], duration: '16' },
-      { positions: [{ str: 4, fret: 10 }], duration: '16' },
-    ];
-
-    const gracenote_group2 = [{ positions: [{ str: 4, fret: 9 }], duration: '8' }];
-    const gracenote_group3 = [
-      { positions: [{ str: 5, fret: 10 }], duration: '8' },
-      { positions: [{ str: 4, fret: 9 }], duration: '8' },
-    ];
-
-    function createNote(note_prop) {
-      return new VF.GraceTabNote(note_prop);
-    }
-
-    const gracenotes0 = gracenote_group0.map(createNote);
-    const gracenotes1 = gracenote_group1.map(createNote);
-    const gracenotes2 = gracenote_group2.map(createNote);
-    gracenotes2[0].setGhost(true);
-    const gracenotes3 = gracenote_group3.map(createNote);
-
-    note0.addModifier(new VF.GraceNoteGroup(gracenotes0));
-    note1.addModifier(new VF.GraceNoteGroup(gracenotes1));
-    note2.addModifier(new VF.GraceNoteGroup(gracenotes2));
-    note3.addModifier(new GraceNoteGroup(gracenotes3));
-
-    const voice = new VF.Voice(Flow.TIME4_4);
-    voice.addTickables([note0, note1, note2, note3]);
-
-    new VF.Formatter().joinVoices([voice]).format([voice], 250);
-
-    voice.draw(c.context, c.stave);
-
-    ok(true, 'Simple Test');
-  },
-
-  slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    const c = GraceTabNoteTests.setupContext(options);
-    function newNote(tab_struct) {
-      return new VF.TabNote(tab_struct);
-    }
-
-    const note0 = newNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' });
-    const note1 = newNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
-
-    const gracenote_group0 = [
-      { positions: [{ str: 4, fret: 9 }], duration: '8' },
-      { positions: [{ str: 4, fret: 10 }], duration: '8' },
-    ];
-
-    const gracenote_group1 = [
-      { positions: [{ str: 4, fret: 7 }], duration: '16' },
-      { positions: [{ str: 4, fret: 8 }], duration: '16' },
-      { positions: [{ str: 4, fret: 9 }], duration: '16' },
-    ];
-
-    function createNote(note_prop) {
-      return new VF.GraceTabNote(note_prop);
-    }
-
-    const gracenotes0 = gracenote_group0.map(createNote);
-    const gracenotes1 = gracenote_group1.map(createNote);
-
-    note0.addModifier(new VF.GraceNoteGroup(gracenotes0, true));
-    note1.addModifier(new VF.GraceNoteGroup(gracenotes1, true));
-
-    const voice = new VF.Voice(Flow.TIME4_4);
-    voice.addTickables([note0, note1]);
-
-    new VF.Formatter().joinVoices([voice]).format([voice], 200);
-
-    voice.draw(c.context, c.stave);
-
-    ok(true, 'Slurred Test');
+    test('VF.* API', VF_Prefix);
+    // TODO: Rename tests below. Remove "Grace Tab Note "
+    VexFlowTests.runTests('Grace Tab Note Simple', simple);
+    VexFlowTests.runTests('Grace Tab Note Slurred', slurred);
   },
 };
+
+function VF_Prefix(): void {
+  equal(GraceTabNote, VF.GraceTabNote);
+  equal(TabStave, VF.TabStave);
+  equal(TabNote, VF.TabNote);
+  equal(Voice, VF.Voice);
+  equal(Formatter, VF.Formatter);
+}
+
+function setupContext(
+  options: TestOptions,
+  contextBuilder: ContextBuilder
+): { context: RenderContext; stave: TabStave } {
+  const context = contextBuilder(options.elementId, 350, 140);
+  const stave = new TabStave(10, 10, 350).addTabGlyph().setContext(context).draw();
+  return { context, stave };
+}
+
+/** Helper Function */
+function tabNote(tab_struct: TabNoteStruct) {
+  return new TabNote(tab_struct);
+}
+
+/** Helper Function */
+function graceTabNote(note_prop: TabNoteStruct) {
+  return new GraceTabNote(note_prop);
+}
+
+function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const c = setupContext(options, contextBuilder);
+
+  const note0 = tabNote({ positions: [{ str: 4, fret: 6 }], duration: '4' });
+  const note1 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: '4' });
+  const note2 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: '4' });
+  const note3 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: '4' });
+
+  const gracenote_group0 = [{ positions: [{ str: 4, fret: 'x' }], duration: '8' }];
+
+  const gracenote_group1 = [
+    { positions: [{ str: 4, fret: 9 }], duration: '16' },
+    { positions: [{ str: 4, fret: 10 }], duration: '16' },
+  ];
+
+  const gracenote_group2 = [{ positions: [{ str: 4, fret: 9 }], duration: '8' }];
+  const gracenote_group3 = [
+    { positions: [{ str: 5, fret: 10 }], duration: '8' },
+    { positions: [{ str: 4, fret: 9 }], duration: '8' },
+  ];
+
+  const gracenotes0 = gracenote_group0.map(graceTabNote);
+  const gracenotes1 = gracenote_group1.map(graceTabNote);
+  const gracenotes2 = gracenote_group2.map(graceTabNote);
+  gracenotes2[0].setGhost(true);
+  const gracenotes3 = gracenote_group3.map(graceTabNote);
+
+  note0.addModifier(new GraceNoteGroup(gracenotes0));
+  note1.addModifier(new GraceNoteGroup(gracenotes1));
+  note2.addModifier(new GraceNoteGroup(gracenotes2));
+  note3.addModifier(new GraceNoteGroup(gracenotes3));
+
+  const voice = new Voice(Flow.TIME4_4);
+  voice.addTickables([note0, note1, note2, note3]);
+
+  new Formatter().joinVoices([voice]).format([voice], 250);
+
+  voice.draw(c.context, c.stave);
+
+  ok(true, 'Simple Test');
+}
+
+function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const c = setupContext(options, contextBuilder);
+
+  const note0 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' });
+  const note1 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
+
+  const gracenote_group0 = [
+    { positions: [{ str: 4, fret: 9 }], duration: '8' },
+    { positions: [{ str: 4, fret: 10 }], duration: '8' },
+  ];
+
+  const gracenote_group1 = [
+    { positions: [{ str: 4, fret: 7 }], duration: '16' },
+    { positions: [{ str: 4, fret: 8 }], duration: '16' },
+    { positions: [{ str: 4, fret: 9 }], duration: '16' },
+  ];
+
+  const gracenotes0 = gracenote_group0.map(graceTabNote);
+  const gracenotes1 = gracenote_group1.map(graceTabNote);
+
+  note0.addModifier(new GraceNoteGroup(gracenotes0, true));
+  note1.addModifier(new GraceNoteGroup(gracenotes1, true));
+
+  const voice = new Voice(Flow.TIME4_4);
+  voice.addTickables([note0, note1]);
+
+  new Formatter().joinVoices([voice]).format([voice], 200);
+
+  voice.draw(c.context, c.stave);
+
+  ok(true, 'Slurred Test');
+}
 
 export { GraceTabNoteTests };
