@@ -11,14 +11,12 @@ export class Fraction {
   numerator: number = 1;
   denominator: number = 1;
 
-  // Cached objects for comparisons
+  // Cached objects for comparisons.
   private static __staticFractionA = new Fraction();
   private static __staticFractionB = new Fraction();
   private static __staticFractionTmp = new Fraction();
 
-  /**
-   * GCD: Greatest common divisor using Euclidean algorithm.
-   */
+  /** GCD: Greatest common divisor using Euclidean algorithm. */
   static GCD(a: number, b: number): number {
     if (typeof a !== 'number' || Number.isNaN(a) || a === 0 || typeof b !== 'number' || Number.isNaN(b) || b === 0) {
       throw new RuntimeError('BadArgument', `Invalid numbers: ${a}, ${b}`);
@@ -228,9 +226,7 @@ export class Fraction {
   }
 }
 
-/**
- * Helper Function to extract the numerator and denominator from another fraction.
- */
+/** Helper function to extract the numerator and denominator from another fraction. */
 function getNumeratorAndDenominator(n: Fraction | number, d: number = 1): [number, number] {
   if (typeof n === 'number') {
     // Both params are numbers, so we return them as [numerator, denominator].
