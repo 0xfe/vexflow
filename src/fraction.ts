@@ -1,21 +1,19 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-// @author zz85
-// @author incompleteopus (modifications)
 // MIT License
+//
+// Author: Joshua Koo / @zz85
+// Author: @incompleteopus
 
 import { RuntimeError } from './util';
 
 /** Fraction represents a rational number. */
 export class Fraction {
   numerator: number = 1;
-
   denominator: number = 1;
 
   // Cached objects for comparisons
   private static __staticFractionA = new Fraction();
-
   private static __staticFractionB = new Fraction();
-
   private static __staticFractionTmp = new Fraction();
 
   /**
@@ -37,31 +35,24 @@ export class Fraction {
     return a;
   }
 
-  /**
-   * LCM: Lowest common multiple.
-   */
+  /** LCM: Lowest common multiple. */
   static LCM(a: number, b: number): number {
     return (a * b) / Fraction.GCD(a, b);
   }
 
-  /**
-   * LCMM: Lowest common multiple for more than two numbers.
-   */
-  static LCMM(
-    // eslint-disable-next-line
-    args: any): number {
+  /** Lowest common multiple for more than two numbers. */
+  static LCMM(args: number[]): number {
     if (args.length === 0) {
       return 0;
-    }
-    if (args.length === 1) {
+    } else if (args.length === 1) {
       return args[0];
-    }
-    if (args.length === 2) {
+    } else if (args.length === 2) {
       return Fraction.LCM(args[0], args[1]);
+    } else {
+      // args.shift() removes the first number.
+      // LCM the first number with the rest of the numbers.
+      return Fraction.LCM(args.shift() as number, Fraction.LCMM(args));
     }
-    const arg0 = args[0];
-    args.shift();
-    return Fraction.LCM(arg0, Fraction.LCMM(args));
   }
 
   /** Construct providing numerator and denominator. */
@@ -99,75 +90,33 @@ export class Fraction {
 
   /** Add value of another fraction. */
   add(param1: Fraction | number = 0, param2: number = 1): this {
-    let otherNumerator: number;
-    let otherDenominator: number;
-
-    if (param1 instanceof Fraction) {
-      otherNumerator = param1.numerator;
-      otherDenominator = param1.denominator;
-    } else {
-      otherNumerator = param1;
-      otherDenominator = param2;
-    }
-
+    const [otherNumerator, otherDenominator] = getNumeratorAndDenominator(param1, param2);
     const lcm = Fraction.LCM(this.denominator, otherDenominator);
     const a = lcm / this.denominator;
     const b = lcm / otherDenominator;
-
     const u = this.numerator * a + otherNumerator * b;
     return this.set(u, lcm);
   }
 
   /** Substract value of another fraction. */
   subtract(param1: Fraction | number = 0, param2: number = 1): this {
-    let otherNumerator: number;
-    let otherDenominator: number;
-
-    if (param1 instanceof Fraction) {
-      otherNumerator = param1.numerator;
-      otherDenominator = param1.denominator;
-    } else {
-      otherNumerator = param1;
-      otherDenominator = param2;
-    }
-
+    const [otherNumerator, otherDenominator] = getNumeratorAndDenominator(param1, param2);
     const lcm = Fraction.LCM(this.denominator, otherDenominator);
     const a = lcm / this.denominator;
     const b = lcm / otherDenominator;
-
     const u = this.numerator * a - otherNumerator * b;
     return this.set(u, lcm);
   }
 
   /** Multiply by value of another fraction. */
   multiply(param1: Fraction | number = 1, param2: number = 1): this {
-    let otherNumerator: number;
-    let otherDenominator: number;
-
-    if (param1 instanceof Fraction) {
-      otherNumerator = param1.numerator;
-      otherDenominator = param1.denominator;
-    } else {
-      otherNumerator = param1;
-      otherDenominator = param2;
-    }
-
+    const [otherNumerator, otherDenominator] = getNumeratorAndDenominator(param1, param2);
     return this.set(this.numerator * otherNumerator, this.denominator * otherDenominator);
   }
 
   /** Divide by value of another Fraction. */
   divide(param1: Fraction | number = 1, param2: number = 1): this {
-    let otherNumerator: number;
-    let otherDenominator: number;
-
-    if (param1 instanceof Fraction) {
-      otherNumerator = param1.numerator;
-      otherDenominator = param1.denominator;
-    } else {
-      otherNumerator = param1;
-      otherDenominator = param2;
-    }
-
+    const [otherNumerator, otherDenominator] = getNumeratorAndDenominator(param1, param2);
     return this.set(this.numerator * otherDenominator, this.denominator * otherNumerator);
   }
 
@@ -209,11 +158,12 @@ export class Fraction {
   }
 
   /** Copy value of another fraction. */
-  copy(copy: Fraction | number): this {
-    if (typeof copy === 'number') {
-      return this.set(copy || 0, 1);
+  copy(other: Fraction | number): this {
+    if (typeof other === 'number') {
+      return this.set(other, 1);
+    } else {
+      return this.set(other.numerator, other.denominator);
     }
-    return this.set(copy.numerator, copy.denominator);
   }
 
   /** Return the integer component (eg. 5/2 => 2). */
@@ -275,5 +225,18 @@ export class Fraction {
     const d = i[1] ? parseInt(i[1], 10) : 1;
 
     return this.set(n, d);
+  }
+}
+
+/**
+ * Helper Function to extract the numerator and denominator from another fraction.
+ */
+function getNumeratorAndDenominator(n: Fraction | number, d: number = 1): [number, number] {
+  if (typeof n === 'number') {
+    // Both params are numbers, so we return them as [numerator, denominator].
+    return [n, d];
+  } else {
+    // First param is a Fraction object. We ignore the second param.
+    return [n.numerator, n.denominator];
   }
 }
