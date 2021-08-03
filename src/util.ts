@@ -3,7 +3,7 @@
 
 import { RenderContext } from './types/common';
 
-/** `RuntimError` will be thrown by VexFlow classes in case of error. */
+/** `RuntimeError` will be thrown by VexFlow classes in case of error. */
 export class RuntimeError extends Error {
   code: string;
   constructor(code: string, message?: string) {
@@ -24,7 +24,8 @@ export function check<T>(x?: T): T {
 export function log(
   block: string,
   // eslint-disable-next-line
-  ...args: any[]): void {
+  ...args: any[]
+): void {
   if (!args) return;
   const line = Array.prototype.slice.call(args).join(' ');
   window.console.log(block + ': ' + line);
@@ -33,7 +34,8 @@ export function log(
 /** Dump warning to console. */
 export function warn(
   // eslint-disable-next-line
-  ...args: any[]): void {
+  ...args: any[]
+): void {
   const line = args.join(' ');
   const err = new Error();
   window.console.log('Warning: ', line, err.stack);

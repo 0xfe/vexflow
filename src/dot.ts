@@ -6,10 +6,10 @@
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Note } from './note';
-import { StaveNote } from './stavenote';
 import { TabNote } from './tabnote';
 import { ModifierContextState } from './modifiercontext';
 import { GraceNote } from './gracenote';
+import { isStaveNote, isTabNote } from './typeguard';
 
 export class Dot extends Modifier {
   protected radius: number;
@@ -35,16 +35,15 @@ export class Dot extends Modifier {
       let props;
       let shift;
 
-      // If it's a StaveNote
-      if (note instanceof StaveNote) {
+      if (isStaveNote(note)) {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
         shift = note.getRightDisplacedHeadPx();
-      } else if (note instanceof TabNote) {
-        // Else it's a TabNote
+      } else if (isTabNote(note)) {
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
       } else {
+        // note object is not StaveNote or TabNote.
         throw new RuntimeError('Internal', 'Unexpected instance.');
       }
 

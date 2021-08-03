@@ -26,6 +26,8 @@ import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { Articulation } from 'articulation';
 import { ModifierContext } from 'modifiercontext';
+import { TabNote } from 'tabnote';
+import { isCategory, isStaveNote } from 'typeguard';
 
 function note(note_struct: StaveNoteStruct) {
   return new StaveNote(note_struct);
@@ -36,6 +38,7 @@ const StaveNoteTests = {
     QUnit.module('StaveNote');
     const run = VexFlowTests.runTests;
     test('VF.* API', this.VF_Prefix);
+    test('Type Checking', this.typeChecking);
     test('Tick', this.ticks);
     test('Tick - New API', this.ticksNewApi);
     test('Stem', this.stem);
@@ -87,6 +90,15 @@ const StaveNoteTests = {
   VF_Prefix(): void {
     equal(Flow.RESOLUTION, VF.RESOLUTION);
     equal(StaveNote, VF.StaveNote);
+  },
+
+  typeChecking(): void {
+    const s = new StaveNote({ keys: ['c/4'], duration: 'w' });
+    ok(isCategory<StaveNote>(StaveNote, s));
+    const t = new TabNote({ positions: [{ str: 2, fret: 1 }], duration: '1' });
+    notOk(isCategory<StaveNote>(StaveNote, t));
+    const fakeStaveNote = { getCategory: () => 'stavenotes' };
+    ok(isStaveNote(fakeStaveNote));
   },
 
   ticks(): void {

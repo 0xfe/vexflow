@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok, equal } from './declarations';
+import { QUnit, ok, equal, test } from './declarations';
 import { Flow } from 'flow';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
@@ -20,40 +20,29 @@ import { TimeSigNote } from 'timesignote';
 import { ModifierContext } from 'modifiercontext';
 import { Accidental } from 'accidental';
 
-function hasAccidental(note: any) {
-  return note.modifiers.reduce(function (hasAcc: any, modifier: any) {
-    return hasAcc || modifier.getCategory() === 'accidentals';
-  }, false);
-}
-
-function makeNewAccid(factory: any) {
-  return function (accidType: any) {
-    return factory.Accidental({ type: accidType });
-  };
-}
-
 const AccidentalTests = {
   Start(): void {
     QUnit.module('Accidental');
-    VexFlowTests.runTests('Accidental Padding', this.formatAccidentalSpaces);
-    VexFlowTests.runTests('Basic', this.basic);
-    VexFlowTests.runTests('Stem Down', this.basicStemDown);
-    VexFlowTests.runTests('Cautionary Accidental', this.cautionary);
-    VexFlowTests.runTests('Accidental Arrangement Special Cases', this.specialCases);
-    VexFlowTests.runTests('Multi Voice', this.multiVoice);
-    VexFlowTests.runTests('Microtonal', this.microtonal);
-    VexFlowTests.runTests('Microtonal (Iranian)', this.microtonal_iranian);
-    VexFlowTests.runTests('Sagittal', this.sagittal);
-    QUnit.test('Automatic Accidentals - Simple Tests', this.autoAccidentalWorking);
-    VexFlowTests.runTests('Automatic Accidentals', this.automaticAccidentals0);
-    VexFlowTests.runTests('Automatic Accidentals - C major scale in Ab', this.automaticAccidentals1);
-    VexFlowTests.runTests('Automatic Accidentals - No Accidentals Necsesary', this.automaticAccidentals2);
-    VexFlowTests.runTests('Automatic Accidentals - Multi Voice Inline', this.automaticAccidentalsMultiVoiceInline);
-    VexFlowTests.runTests('Automatic Accidentals - Multi Voice Offset', this.automaticAccidentalsMultiVoiceOffset);
-    VexFlowTests.runTests('Factory API', this.factoryAPI);
+    test('Automatic Accidentals - Simple Tests', this.autoAccidentalWorking);
+    const run = VexFlowTests.runTests;
+    run('Accidental Padding', this.formatAccidentalSpaces);
+    run('Basic', this.basic);
+    run('Stem Down', this.basicStemDown);
+    run('Cautionary Accidental', this.cautionary);
+    run('Accidental Arrangement Special Cases', this.specialCases);
+    run('Multi Voice', this.multiVoice);
+    run('Microtonal', this.microtonal);
+    run('Microtonal (Iranian)', this.microtonal_iranian);
+    run('Sagittal', this.sagittal);
+    run('Automatic Accidentals', this.automaticAccidentals0);
+    run('Automatic Accidentals - C major scale in Ab', this.automaticAccidentals1);
+    run('Automatic Accidentals - No Accidentals Necsesary', this.automaticAccidentals2);
+    run('Automatic Accidentals - Multi Voice Inline', this.automaticAccidentalsMultiVoiceInline);
+    run('Automatic Accidentals - Multi Voice Offset', this.automaticAccidentalsMultiVoiceOffset);
+    run('Factory API', this.factoryAPI);
   },
 
-  formatAccidentalSpaces(options: TestOptions) {
+  formatAccidentalSpaces(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 750, 280);
     const context = f.getContext();
     const softmaxFactor = 100;
@@ -462,9 +451,9 @@ const AccidentalTests = {
 
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
-      assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+      ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach(function (accid: any, index: any): void {
-        assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+        ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
 
@@ -527,9 +516,9 @@ const AccidentalTests = {
 
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
-      assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+      ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach(function (accid: any, index: any) {
-        assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+        ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
 
@@ -629,9 +618,9 @@ const AccidentalTests = {
 
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
-      assert.ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
+      ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach(function (accid: any, index: any) {
-        assert.ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+        ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
 
@@ -985,15 +974,25 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes);
 
     notes.forEach(function (n, i) {
-      assert.ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
+      ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
       n.getAccidentals().forEach(function (accid: any, i: any) {
-        assert.ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
+        ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
       });
     });
 
     f.draw();
-    assert.ok(true, 'Factory API');
+    ok(true, 'Factory API');
   },
 };
+
+//#region Helper Functions
+const hasAccidental = (note: any) =>
+  note.modifiers.reduce(
+    (hasAcc: any, modifier: any) => hasAcc || modifier.getCategory() === Accidental.CATEGORY,
+    false
+  );
+
+const makeNewAccid = (factory: any) => (accidType: any) => factory.Accidental({ type: accidType });
+//#endregion
 
 export { AccidentalTests };
