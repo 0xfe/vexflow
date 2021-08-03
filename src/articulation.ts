@@ -13,6 +13,7 @@ import { ModifierContextState } from './modifiercontext';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
+import { isTabNote } from 'typeguard';
 
 export interface ArticulationStruct {
   code?: string;
@@ -77,7 +78,7 @@ function getTopY(note: Note, textLine: number): number {
     } else {
       return Math.min(...note.getYs());
     }
-  } else if (isTabNoteCategory(note)) {
+  } else if (isTabNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -106,7 +107,7 @@ function getBottomY(note: Note, textLine: number): number {
     } else {
       return Math.max(...note.getYs());
     }
-  } else if (isTabNoteCategory(note)) {
+  } else if (isTabNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return note.checkStave().getYForBottomText(textLine);
@@ -153,17 +154,11 @@ function getInitialOffset(note: Note, position: number): number {
   }
 }
 
-//#region Helper functions for checking the type of Note objects.
-// TODO: Should we replace these with isCategory from util.ts?
+// Helper function for checking if a Note object is either a StaveNote or a GraceNote.
 function isStaveOrGraceNoteCategory(note: Note): boolean {
-  const noteCategory = note.getCategory();
-  return noteCategory === StaveNote.CATEGORY || noteCategory === GraceNote.CATEGORY;
+  const category = note.getCategory();
+  return category === StaveNote.CATEGORY || category === GraceNote.CATEGORY;
 }
-
-function isTabNoteCategory(note: Note): boolean {
-  return note.getCategory() === TabNote.CATEGORY;
-}
-//#endregion
 
 /**
  * Articulations and Accents are modifiers that can be
@@ -306,7 +301,7 @@ export class Articulation extends Modifier {
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();
-    const isTab = isTabNoteCategory(note);
+    const isTab = isTabNote(note);
 
     // Articulations are centered over/under the note head.
     const { x } = note.getModifierStartXY(position, index);

@@ -39,9 +39,8 @@ export interface ModifierContextMetrics {
 export type ModifierContextMember = Modifier | StaveNote | TabNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (ModifierContext.DEBUG) log('Vex.Flow.ModifierContext', args);
 }
 
@@ -107,21 +106,23 @@ export class ModifierContext {
   }
 
   addMember(member: ModifierContextMember): this {
-    const type = member.getCategory();
-    if (!this.members[type]) this.members[type] = [];
-    this.members[type].push(member);
+    const category = member.getCategory();
+    if (!this.members[category]) {
+      this.members[category] = [];
+    }
+    this.members[category].push(member);
     member.setModifierContext(this);
     this.preFormatted = false;
     return this;
   }
 
-  getModifiers(type: string): ModifierContextMember[] {
+  getModifiers(category: string): ModifierContextMember[] {
     L('getModifiers is deprecated, use getMembers instead.');
-    return this.getMembers(type);
+    return this.getMembers(category);
   }
 
-  getMembers(type: string): ModifierContextMember[] {
-    return this.members[type];
+  getMembers(category: string): ModifierContextMember[] {
+    return this.members[category];
   }
 
   getWidth(): number {
