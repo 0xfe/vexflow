@@ -7,8 +7,8 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Stem } from 'stem';
 import { Formatter } from 'formatter';
+import { Stem } from 'stem';
 import { Tuplet } from 'tuplet';
 
 // Helper Functions

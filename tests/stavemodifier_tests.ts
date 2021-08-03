@@ -6,17 +6,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
 import { StaveModifier } from 'stavemodifier';
+import { ContextBuilder } from 'renderer';
 
 const StaveModifierTests = {
-  Start: function () {
+  Start: function (): void {
     QUnit.module('StaveModifier');
-    VexFlowTests.runTests('Stave Draw Test', StaveModifierTests.draw);
-    VexFlowTests.runTests('Vertical Bar Test', StaveModifierTests.drawVerticalBar);
-    VexFlowTests.runTests('Begin & End StaveModifier Test', StaveModifierTests.drawBeginAndEnd);
+    const run = VexFlowTests.runTests;
+    run('Stave Draw Test', StaveModifierTests.draw);
+    run('Vertical Bar Test', StaveModifierTests.drawVerticalBar);
+    run('Begin & End StaveModifier Test', StaveModifierTests.drawBeginAndEnd);
   },
 
   draw(options: TestOptions, contextBuilder: ContextBuilder): void {

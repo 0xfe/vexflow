@@ -7,9 +7,9 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Registry } from 'registry';
-import { Glyph } from 'glyph';
 import { ChordSymbol } from 'chordsymbol';
+import { Glyph } from 'glyph';
+import { Registry } from 'registry';
 import { StaveConnector } from 'staveconnector';
 
 const GlyphNoteTests = {

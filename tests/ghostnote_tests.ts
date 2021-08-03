@@ -25,7 +25,7 @@ function createTest(setup: any) {
 }
 
 const GhostNoteTests = {
-  Start() {
+  Start(): void {
     QUnit.module('GhostNote');
     const run = VexFlowTests.runTests;
 

@@ -8,19 +8,19 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
+import { Accidental } from 'accidental';
+import { Beam } from 'beam';
 import { Clef } from 'clef';
 import { Formatter } from 'formatter';
 import { KeySignature } from 'keysignature';
+import { Modifier } from 'modifier';
 import { Stave } from 'stave';
-import { Barline, BarlineType } from 'stavebarline';
+import { Barline } from 'stavebarline';
 import { StaveNote } from 'stavenote';
-import { TimeSignature } from 'timesignature';
-import { Beam } from 'beam';
-import { Accidental } from 'accidental';
 import { Repetition } from 'staverepetition';
 import { Volta } from 'stavevolta';
-import { Modifier } from 'modifier';
 import { TextNote } from 'textnote';
+import { TimeSignature } from 'timesignature';
 
 const StaveTests = {
   Start(): void {

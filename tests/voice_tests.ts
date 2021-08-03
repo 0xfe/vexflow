@@ -3,9 +3,6 @@
 //
 // Voice Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
@@ -15,6 +12,8 @@ import { Barline } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { Voice } from 'voice';
 import { MockTickable } from './mocks';
+
+const BEAT = (1 * Flow.RESOLUTION) / 4;
 
 const VoiceTests = {
   Start(): void {
@@ -26,35 +25,25 @@ const VoiceTests = {
 
   strict(): void {
     expect(8);
-    function createTickable() {
-      return new MockTickable(Flow.TIME4_4);
-    }
 
-    const R = Flow.RESOLUTION;
-    const BEAT = (1 * R) / 4;
-
-    const tickables = [
-      createTickable().setTicks(BEAT),
-      createTickable().setTicks(BEAT),
-      createTickable().setTicks(BEAT),
-    ];
+    const tickables = [createTickable(), createTickable(), createTickable()];
 
     const voice = new Voice(Flow.TIME4_4);
-    equal(voice.totalTicks.value(), BEAT * 4, '4/4 Voice has 4 beats');
-    equal(voice.ticksUsed.value(), BEAT * 0, 'No beats in voice');
+    equal(voice.getTotalTicks().value(), BEAT * 4, '4/4 Voice has 4 beats');
+    equal(voice.getTicksUsed().value(), BEAT * 0, 'No beats in voice');
     voice.addTickables(tickables);
-    equal(voice.ticksUsed.value(), BEAT * 3, 'Three beats in voice');
-    voice.addTickable(createTickable().setTicks(BEAT));
-    equal(voice.ticksUsed.value(), BEAT * 4, 'Four beats in voice');
+    equal(voice.getTicksUsed().value(), BEAT * 3, 'Three beats in voice');
+    voice.addTickable(createTickable());
+    equal(voice.getTicksUsed().value(), BEAT * 4, 'Four beats in voice');
     equal(voice.isComplete(), true, 'Voice is complete');
 
-    const beforeNumerator = voice.ticksUsed.numerator;
+    const beforeNumerator = voice.getTicksUsed().numerator;
     try {
-      voice.addTickable(createTickable().setTicks(BEAT));
+      voice.addTickable(createTickable());
     } catch (e) {
       equal(e.code, 'BadArgument', 'Too many ticks exception');
       equal(
-        voice.ticksUsed.numerator,
+        voice.getTicksUsed().numerator,
         beforeNumerator,
         'Revert "ticksUsed" when it occurred "Too many ticks" exception'
       );
@@ -64,20 +53,13 @@ const VoiceTests = {
   },
 
   ignore(): void {
-    function createTickable() {
-      return new MockTickable(Flow.TIME4_4);
-    }
-
-    const R = Flow.RESOLUTION;
-    const BEAT = (1 * R) / 4;
-
     const tickables = [
-      createTickable().setTicks(BEAT),
-      createTickable().setTicks(BEAT),
-      createTickable().setTicks(BEAT).setIgnoreTicks(true),
-      createTickable().setTicks(BEAT),
-      createTickable().setTicks(BEAT).setIgnoreTicks(true),
-      createTickable().setTicks(BEAT),
+      createTickable(),
+      createTickable(),
+      createTickable().setIgnoreTicks(true),
+      createTickable(),
+      createTickable().setIgnoreTicks(true),
+      createTickable(),
     ];
 
     const voice = new Voice(Flow.TIME4_4);
@@ -109,13 +91,19 @@ const VoiceTests = {
     voice.getBoundingBox()?.draw(ctx);
 
     throws(
-      function () {
-        voice.addTickable(new StaveNote({ keys: ['c/4'], duration: '2' }));
+      () => {
+        const note = new StaveNote({ keys: ['c/4'], duration: '2' });
+        voice.addTickable(note);
       },
       /BadArgument/,
       'Voice cannot exceed full amount of ticks'
     );
   },
 };
+
+// Helper Function
+function createTickable() {
+  return new MockTickable().setTicks(BEAT);
+}
 
 export { VoiceTests };

@@ -8,8 +8,8 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
-import { TabStave } from 'tabstave';
 import { Barline } from 'stavebarline';
+import { TabStave } from 'tabstave';
 
 const TabStaveTests = {
   Start(): void {

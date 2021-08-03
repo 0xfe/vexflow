@@ -9,13 +9,13 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
-import { Formatter } from 'formatter';
-import { StaveNote } from 'stavenote';
-import { Ornament } from 'ornament';
-import { Voice } from 'voice';
-import { Beam } from 'beam';
-import { Stave } from 'stave';
 import { Accidental } from 'accidental';
+import { Beam } from 'beam';
+import { Formatter } from 'formatter';
+import { Ornament } from 'ornament';
+import { Stave } from 'stave';
+import { StaveNote } from 'stavenote';
+import { Voice } from 'voice';
 
 const OrnamentTests = {
   Start(): void {

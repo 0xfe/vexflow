@@ -8,8 +8,8 @@
 
 import { VexFlowTests, concat, TestOptions } from './vexflow_test_helpers';
 import { Curve } from 'curve';
-import { StaveNote } from 'stavenote';
 import { Factory } from 'factory';
+import { StaveNote } from 'stavenote';
 
 function createTest(beamGroup1, beamGroup2, setupCurves: (f: Factory, n: StaveNote[]) => void) {
   return (options: TestOptions) => {

@@ -10,9 +10,9 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Factory } from 'factory';
+import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { TickContext } from 'tickcontext';
-import { Stave } from 'stave';
 import { Tremolo } from 'tremolo';
 
 const createSingleMeasureTest =

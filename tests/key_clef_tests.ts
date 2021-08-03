@@ -8,8 +8,8 @@
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
-import { Stave } from 'stave';
 import { KeySignature } from 'keysignature';
+import { Stave } from 'stave';
 
 const ClefKeySignatureTests = {
   Start(): void {

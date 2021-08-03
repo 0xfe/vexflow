@@ -3,8 +3,8 @@
 //
 // Music Tests
 
-import { Music } from 'music';
 import { KeyManager } from 'keymanager';
+import { Music } from 'music';
 
 const MusicTests = {
   Start(): void {
@@ -285,4 +285,5 @@ const MusicTests = {
     equal(m.getCanonicalIntervalName(m.getIntervalBetween(m.getNoteValue('d'), m.getNoteValue('c'), -1)), 'M2');
   },
 };
+
 export { MusicTests };

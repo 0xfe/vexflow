@@ -7,9 +7,9 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { Stem } from 'stem';
-import { Fraction } from 'fraction';
 import { Beam } from 'beam';
+import { Fraction } from 'fraction';
+import { Stem } from 'stem';
 
 const AutoBeamFormattingTests = {
   Start(): void {

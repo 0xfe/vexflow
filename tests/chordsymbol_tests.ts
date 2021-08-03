@@ -7,14 +7,14 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { Accidental } from 'accidental';
 import { ChordSymbol } from 'chordsymbol';
-import { StaveNote } from 'stavenote';
 import { Formatter } from 'formatter';
 import { Stave } from 'stave';
-import { Accidental } from 'accidental';
+import { StaveNote } from 'stavenote';
 
 const ChordSymbolTests = {
-  Start() {
+  Start(): void {
     const runSVG = VexFlowTests.runSVGTest;
     QUnit.module('ChordSymbol');
     runSVG('Chord Symbol Font Size Tests', this.fontSize);

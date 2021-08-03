@@ -3,25 +3,22 @@
 //
 // Style Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
-import { Bend } from 'bend';
-import { TabNote } from 'tabnote';
-import { KeySignature } from 'keysignature';
-import { StaveModifier } from 'stavemodifier';
-import { TimeSignature } from 'timesignature';
-import { ContextBuilder } from 'renderer';
-import { ElementStyle } from 'element';
-import { StaveNote } from 'stavenote';
 import { Articulation } from 'articulation';
-import { Ornament } from 'ornament';
-import { NoteSubGroup } from 'notesubgroup';
+import { Bend } from 'bend';
+import { ElementStyle } from 'element';
 import { Formatter } from 'formatter';
+import { KeySignature } from 'keysignature';
+import { NoteSubGroup } from 'notesubgroup';
+import { Ornament } from 'ornament';
+import { ContextBuilder } from 'renderer';
+import { StaveModifier } from 'stavemodifier';
+import { StaveNote } from 'stavenote';
 import { Stroke } from 'strokes';
+import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
+import { TimeSignature } from 'timesignature';
 
 function FS(fill: string, stroke?: string): ElementStyle {
   const ret: ElementStyle = { fillStyle: fill };
@@ -102,14 +99,8 @@ const StyleTests = {
     stave.getModifiers()[2].setStyle(FS('blue'));
     stave.setContext(ctx).draw();
 
-    function newNote(tab_struct) {
+    function newNote(tab_struct: TabNoteStruct) {
       return new TabNote(tab_struct);
-    }
-    function newBend(text) {
-      return new Bend(text);
-    }
-    function newAnnotation(text) {
-      return new Annotation(text);
     }
 
     // TabNote modifiers test.
@@ -120,7 +111,7 @@ const StyleTests = {
           { str: 4, fret: 9 },
         ],
         duration: 'h',
-      }).addModifier(newAnnotation('green text').setStyle(FS('green')), 0),
+      }).addModifier(new Annotation('green text').setStyle(FS('green')), 0),
       newNote({
         positions: [
           { str: 2, fret: 10 },
@@ -128,11 +119,11 @@ const StyleTests = {
         ],
         duration: 'h',
       })
-        .addModifier(newBend('Full').setStyle(FS('brown')), 0)
+        .addModifier(new Bend('Full').setStyle(FS('brown')), 0)
         .addStroke(0, new Stroke(1, { all_voices: false }).setStyle(FS('blue'))),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes /*, 200 (incorrect type) */);
     ok(true, 'TabNote modifiers Style');
   },
 };

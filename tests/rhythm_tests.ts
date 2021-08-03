@@ -3,9 +3,6 @@
 //
 // Rhythm Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { StaveNoteTests } from './stavenote_tests';
 import { ContextBuilder } from 'renderer';

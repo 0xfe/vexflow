@@ -3,35 +3,32 @@
 //
 // TickContext Mocks
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { Fraction } from 'fraction';
+import { NoteMetrics } from 'note';
+import { Stave } from 'stave';
+import { Tickable } from 'tickable';
 import { TickContext } from 'tickcontext';
 import { Voice } from 'voice';
 
-class MockTickable {
-  tickContext: TickContext;
-  ticks: Fraction;
-  voice: Voice;
+class MockTickable extends Tickable {
+  tickContext?: TickContext;
+  ticks: Fraction = new Fraction(1, 1);
+  voice?: Voice;
+  stave?: Stave;
   width: number = 0;
   ignore_ticks: boolean = false;
 
-  // TODO: this constructor takes 0 arguments, but other tests pass in a Flow.TIME4_4.
-  constructor() {
-    // DO NOTHING
-  }
-
   init(): void {
-    // DO NOTHING
+    // DO NOTHING.
   }
 
   getX(): number {
-    return this.tickContext.getX();
+    // eslint-disable-next-line
+    return this.tickContext!.getX();
   }
 
-  getIntrinsicTicks(): Fraction {
-    return this.ticks;
+  getIntrinsicTicks(): number {
+    return this.ticks.value();
   }
 
   getTicks(): Fraction {
@@ -43,12 +40,12 @@ class MockTickable {
     return this;
   }
 
-  getMetrics(): any {
+  // Called by TickContext.preFormat().
+  getMetrics(): NoteMetrics {
     return {
       width: 0,
       glyphWidth: 0,
       notePx: this.width,
-      left_shift: 0,
       modLeftPx: 0,
       modRightPx: 0,
       leftDisplacedHeadPx: 0,
@@ -71,9 +68,13 @@ class MockTickable {
     return this;
   }
 
-  setStave(stave: any): this {
+  setStave(stave: Stave): this {
     this.stave = stave;
     return this;
+  }
+
+  getStave(): Stave | undefined {
+    return this.stave;
   }
 
   setTickContext(tc: TickContext): this {
@@ -91,7 +92,12 @@ class MockTickable {
   }
 
   preFormat(): void {
-    // DO NOTHING
+    // DO NOTHING.
+  }
+
+  // eslint-disable-next-line
+  draw(...args: any[]): void {
+    // DO NOTHING.
   }
 }
 

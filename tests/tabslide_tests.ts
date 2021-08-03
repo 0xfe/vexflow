@@ -3,9 +3,6 @@
 //
 // TabSlide Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
@@ -21,7 +18,6 @@ const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 const TabSlideTests = {
   Start(): void {
     QUnit.module('TabSlide');
-
     const run = VexFlowTests.runTests;
     run('Simple TabSlide', this.simple);
     run('Slide Up', this.slideUp);

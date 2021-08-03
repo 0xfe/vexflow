@@ -15,7 +15,6 @@
 // However, we stick with the global methods for readability.
 declare const global: any;
 export const QUnit = global.QUnit;
-export const module = global.module;
 export const test = global.test;
 export const expect = global.expect;
 export const ok = global.ok;

@@ -198,14 +198,10 @@ const AccidentalTests = {
 
     const voice = score.voice(notes, { time: accids.length + '/4' });
 
-    voice.getTickables().forEach(function (tickable: any): void {
+    voice.getTickables().forEach((tickable: any) => {
       tickable.modifiers
-        .filter(function (modifier: any) {
-          return modifier.getAttribute('type') === 'Accidental';
-        })
-        .forEach(function (accid: any): void {
-          accid.setAsCautionary();
-        });
+        .filter((modifier: any) => modifier.getAttribute('type') === 'Accidental')
+        .forEach((accid: any) => accid.setAsCautionary());
     });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);

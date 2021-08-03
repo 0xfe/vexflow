@@ -287,7 +287,7 @@ export class Voice extends Element {
    * This method also calculates the voice's boundingBox while drawing
    * the notes. Note the similarities with this.getBoundingBox().
    */
-  draw(context: RenderContext = this.checkContext(), stave?: Stave): void {
+   draw(context: RenderContext = this.checkContext(), stave?: Stave): void {
     stave = stave ?? this.stave;
     this.setRendered();
     let boundingBox = undefined;

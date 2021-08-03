@@ -10,8 +10,8 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Barline, BarlineType } from 'stavebarline';
 import { BarNote } from 'barnote';
-import { StaveNote } from 'stavenote';
 import { Note } from 'note';
+import { StaveNote } from 'stavenote';
 
 const NoteSubGroupTests = {
   Start(): void {

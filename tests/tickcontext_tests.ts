@@ -24,7 +24,7 @@ const TickContextTests = {
 
   tracking(): void {
     function createTickable() {
-      return new MockTickable(Flow.TIME4_4);
+      return new MockTickable();
     }
 
     const R = Flow.RESOLUTION;

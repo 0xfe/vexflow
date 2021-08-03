@@ -8,21 +8,22 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
+import { Formatter } from 'formatter';
+import { NoteHead } from 'notehead';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
-import { NoteHead } from 'notehead';
-import { Formatter } from 'formatter';
-import { Voice } from 'voice';
-import { ContextBuilder } from 'renderer';
 import { TickContext } from 'tickcontext';
+import { Voice } from 'voice';
 
 const NoteHeadTests = {
   Start(): void {
     QUnit.module('NoteHead');
-    VexFlowTests.runTests('Basic', NoteHeadTests.basic);
-    VexFlowTests.runTests('Various Heads', NoteHeadTests.variousHeads);
-    VexFlowTests.runTests('Drum Chord Heads', NoteHeadTests.drumChordHeads);
-    VexFlowTests.runTests('Bounding Boxes', NoteHeadTests.basicBoundingBoxes);
+    const run = VexFlowTests.runTests;
+    run('Basic', NoteHeadTests.basic);
+    run('Various Heads', NoteHeadTests.variousHeads);
+    run('Drum Chord Heads', NoteHeadTests.drumChordHeads);
+    run('Bounding Boxes', NoteHeadTests.basicBoundingBoxes);
   },
 
   /**

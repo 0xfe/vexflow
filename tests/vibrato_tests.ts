@@ -8,11 +8,11 @@
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
+import { Bend } from 'bend';
 import { Formatter } from 'formatter';
+import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Vibrato } from 'vibrato';
-import { Bend } from 'bend';
-import { TabNote } from 'tabnote';
 
 const VibratoTests = {
   Start(): void {

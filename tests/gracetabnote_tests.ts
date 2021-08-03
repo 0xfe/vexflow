@@ -3,16 +3,12 @@
 //
 // GraceTabNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { GraceNoteGroup } from 'gracenotegroup';
 import { GraceTabNote } from 'gracetabnote';
-import { ContextBuilder } from 'renderer';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { RenderContext } from 'types/common';

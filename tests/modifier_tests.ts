@@ -1,9 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 
@@ -11,18 +8,18 @@ import { ModifierContext } from 'modifiercontext';
  * ModifierContext Tests
  */
 const ModifierContextTests = {
-  Start() {
+  Start(): void {
     QUnit.module('ModifierContext');
     test('Modifier Width Test', this.width);
     test('Modifier Management', this.management);
   },
 
-  width() {
+  width(): void {
     const mc = new ModifierContext();
     equal(mc.getWidth(), 0, 'New modifier context has no width');
   },
 
-  management() {
+  management(): void {
     const mc = new ModifierContext();
     const modifier1 = new Modifier();
     const modifier2 = new Modifier();

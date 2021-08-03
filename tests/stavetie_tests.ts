@@ -7,11 +7,11 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Stem } from 'stem';
 import { BuilderOptions } from 'easyscore';
 import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
 import { Stave } from 'stave';
+import { StaveNote } from 'stavenote';
+import { Stem } from 'stem';
 
 const createTest =
   (notesData: [string, BuilderOptions], setupTies: (f: Factory, n: StaveNote[], s: Stave) => void) =>

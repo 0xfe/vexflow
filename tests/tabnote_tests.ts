@@ -3,9 +3,6 @@
 //
 // TabNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';

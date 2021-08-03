@@ -10,10 +10,10 @@ import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
 import { Formatter } from 'formatter';
-import { TickContext } from 'tickcontext';
 import { ModifierContext } from 'modifiercontext';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
+import { TickContext } from 'tickcontext';
 
 // Helper Functions
 function note(tab_struct) {
@@ -29,11 +29,12 @@ function bendWithPhrase(phrase: BendPhrase[]) {
 const BendTests = {
   Start(): void {
     QUnit.module('Bend');
-    VexFlowTests.runTests('Double Bends', this.doubleBends);
-    VexFlowTests.runTests('Reverse Bends', this.reverseBends);
-    VexFlowTests.runTests('Bend Phrase', this.bendPhrase);
-    VexFlowTests.runTests('Double Bends With Release', this.doubleBendsWithRelease);
-    VexFlowTests.runTests('Whako Bend', this.whackoBends);
+    const run = VexFlowTests.runTests;
+    run('Double Bends', this.doubleBends);
+    run('Reverse Bends', this.reverseBends);
+    run('Bend Phrase', this.bendPhrase);
+    run('Double Bends With Release', this.doubleBendsWithRelease);
+    run('Whako Bend', this.whackoBends);
   },
 
   doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void {

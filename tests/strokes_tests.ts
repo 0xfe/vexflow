@@ -5,16 +5,16 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
+import { Beam } from 'beam';
+import { Bend } from 'bend';
 import { Barline } from 'stavebarline';
 import { Stroke } from 'strokes';
-import { Bend } from 'bend';
-import { Beam } from 'beam';
 
 /**
  * Stroke Tests
  */
 const StrokesTests = {
-  Start: function () {
+  Start: function (): void {
     QUnit.module('Strokes');
     const run = VexFlowTests.runTests;
     // TODO: Rename tests by removing 'Strokes - '

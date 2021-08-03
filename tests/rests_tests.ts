@@ -3,17 +3,14 @@
 //
 // Rests Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { RenderContext } from 'types/common';
-import { Flow } from 'flow';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { Stave } from 'stave';
-import { ContextBuilder } from 'renderer';
-import { Formatter } from 'formatter';
 import { Beam } from 'beam';
+import { Flow } from 'flow';
+import { Formatter } from 'formatter';
+import { ContextBuilder } from 'renderer';
+import { Stave } from 'stave';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Tuplet } from 'tuplet';
 import { Voice } from 'voice';
 
