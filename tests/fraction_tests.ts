@@ -3,13 +3,25 @@
 //
 // Fraction Tests
 
-import { QUnit, ok, test, notOk, notEqual, strictEqual, deepEqual, notDeepEqual, notStrictEqual } from './declarations';
+import {
+  QUnit,
+  deepEqual,
+  notDeepEqual,
+  notEqual,
+  notOk,
+  notStrictEqual,
+  ok,
+  strictEqual,
+  test,
+  equal,
+} from './declarations';
 import { Fraction } from 'fraction';
 
 const FractionTests = {
   Start(): void {
     QUnit.module('Fraction');
-    test('Basic', FractionTests.basic);
+    test('Basic', this.basic);
+    test('With Other Fractions', this.withOtherFractions);
   },
 
   basic(): void {
@@ -52,7 +64,37 @@ const FractionTests = {
     tF_n.divide(2);
     ok(tF_n.equals(2), 'Fraction: 4 / 2 equals 2');
 
-    // TODO: Add more detailed tests.
+    equal(Fraction.LCMM([]), 0);
+    equal(Fraction.LCMM([17]), 17);
+    equal(Fraction.LCMM([2, 5]), 10);
+    equal(Fraction.LCMM([15, 3, 5]), 15);
+    equal(Fraction.LCMM([2, 4, 6]), 12);
+    equal(Fraction.LCMM([2, 3, 4, 5]), 60);
+    equal(Fraction.LCMM([12, 15, 10, 75]), 300);
+  },
+
+  withOtherFractions(): void {
+    const f_1_2 = new Fraction(1, 2);
+    const f_1_4 = new Fraction(1, 4);
+    const f_1_8 = new Fraction(1, 8);
+    const f_2 = new Fraction(2, 1);
+
+    // IMPORTANT NOTE: Fraction methods modify the existing Fraction object.
+    // They do not return new objects.
+    // Use clone() if you don't want to modify the original object.
+    const a = f_1_2.clone().multiply(f_1_2);
+    ok(a.equals(f_1_4), '1/2 x 1/2 == 1/4');
+
+    const b = f_1_2.clone().divide(f_1_4);
+    ok(b.equals(f_2), '1/2 / 1/4 == 2');
+
+    const c = f_2.clone().subtract(f_1_2).subtract(f_1_2).subtract(f_1_4); // 3/4
+    const d = f_1_8.clone().add(f_1_8).add(f_1_8).multiply(f_2);
+    ok(c.equals(d), '2-1/2-1/2-1/4 == (1/8+1/8+1/8)*(2/1)');
+    equal(c.value(), 0.75, '3/4 == 0.75');
+
+    const e = f_1_8.clone().add(f_1_4).add(f_1_8);
+    ok(e.equals(f_1_2), '1/8 + 1/4 + 1/8 == 1/2');
   },
 };
 
