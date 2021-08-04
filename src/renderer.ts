@@ -182,7 +182,6 @@ export class Renderer {
 
   resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
-      // TODO: Move this block into canvascontext.ts? Then this method can be: return this.ctx.resize(width, height);
       const canvasElement = this.element as HTMLCanvasElement;
       [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
@@ -193,8 +192,6 @@ export class Renderer {
       canvasElement.style.width = width + 'px';
       canvasElement.style.height = height + 'px';
 
-      // TODO: this.ctx should already be a bolstered canvas context (see constructor). Remove this line in the future?
-      this.ctx = Renderer.bolsterCanvasContext(canvasElement.getContext('2d'));
       this.ctx.scale(devicePixelRatio, devicePixelRatio);
     } else {
       this.ctx.resize(width, height);
