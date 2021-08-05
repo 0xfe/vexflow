@@ -72,27 +72,22 @@ const FormatterTests = {
   },
 
   buildTickContexts(): void {
-    function createTickable() {
-      return new MockTickable();
+    function createTickable(beat: number) {
+      return new MockTickable().setTicks(beat);
     }
 
-    const R = Flow.RESOLUTION;
-    const BEAT = (1 * R) / 4;
+    const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     const tickables1 = [
-      createTickable().setTicks(BEAT).setWidth(10),
-      createTickable()
-        .setTicks(BEAT * 2)
-        .setWidth(20),
-      createTickable().setTicks(BEAT).setWidth(30),
+      createTickable(BEAT).setWidth(10),
+      createTickable(BEAT * 2).setWidth(20),
+      createTickable(BEAT).setWidth(30),
     ];
 
     const tickables2 = [
-      createTickable()
-        .setTicks(BEAT * 2)
-        .setWidth(10),
-      createTickable().setTicks(BEAT).setWidth(20),
-      createTickable().setTicks(BEAT).setWidth(30),
+      createTickable(BEAT * 2).setWidth(10),
+      createTickable(BEAT).setWidth(20),
+      createTickable(BEAT).setWidth(30),
     ];
 
     const voice1 = new Voice(Flow.TIME4_4);
@@ -276,7 +271,7 @@ const FormatterTests = {
       b.setContext(ctx).draw();
     });
 
-    ok(voice11.tickables[1].getX() > voice21.tickables[1].getX());
+    ok(voice11.getTickables()[1].getX() > voice21.getTickables()[1].getX());
   },
 
   unalignedNoteDurations2(options: TestOptions): void {
@@ -326,7 +321,7 @@ const FormatterTests = {
     voice1.draw(context, stave1);
     voice2.draw(context, stave2);
 
-    ok(voice1.tickables[1].getX() > voice2.tickables[1].getX());
+    ok(voice1.getTickables()[1].getX() > voice2.getTickables()[1].getX());
   },
 
   justifyStaveNotes(options: TestOptions): void {
@@ -367,7 +362,7 @@ const FormatterTests = {
     const score = f.EasyScore();
 
     let y = 10;
-    function justifyToWidth(width) {
+    function justifyToWidth(width: number) {
       const stave = f.Stave({ y: y }).addTrebleGlyph();
 
       const voice = score.voice(score.notes('d#4/2, (c4 d4)/8, d4/8, (c#4 e4 a4)/4', { stem: 'up' }));
@@ -453,8 +448,8 @@ const FormatterTests = {
     }
     beams.forEach((beam) => beam.setContext(ctx).draw());
 
-    const x = staves[0].x + staves[0].width;
-    const ys = staves.map((ss) => ss.y);
+    const x = staves[0].getX() + staves[0].getWidth();
+    const ys = staves.map((ss) => ss.getY());
     voices = [];
     staves = [];
     const notes12 = score.notes('ab4/4, bb4/8, (cb5 eb5)/4[stem="down"], d5/8[stem="down"]');
