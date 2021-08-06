@@ -11,10 +11,12 @@ import { Flow } from 'flow';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
+import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { Stem } from 'stem';
+import { Tickable } from 'tickable';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
 import { Voice } from 'voice';
@@ -169,7 +171,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any) {
+      note.getAccidentals().forEach((accid: Modifier, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -198,10 +200,11 @@ const AccidentalTests = {
 
     const voice = score.voice(notes, { time: accids.length + '/4' });
 
-    voice.getTickables().forEach((tickable: any) => {
-      tickable.modifiers
-        .filter((modifier: any) => modifier.getAttribute('type') === 'Accidental')
-        .forEach((accid: any) => accid.setAsCautionary());
+    voice.getTickables().forEach((tickable: Tickable) => {
+      tickable
+        .getModifiers()
+        .filter((modifier: Modifier) => modifier.getAttribute('type') === 'Accidental')
+        .forEach((accid: Modifier) => (accid as Accidental).setAsCautionary());
     });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -260,7 +263,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any): void {
+      note.getAccidentals().forEach((accid: Accidental, index: number): void => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -309,7 +312,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any) {
+      note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -319,20 +322,6 @@ const AccidentalTests = {
     VexFlowTests.plotLegendForNoteWidth(f.getContext(), 480, 140);
 
     ok(true, 'Full Accidental');
-  },
-
-  showNotes(note1: any, note2: any, stave: any, ctx: any, x: any): void {
-    const modifierContext = new ModifierContext();
-    note1.addToModifierContext(modifierContext);
-    note2.addToModifierContext(modifierContext);
-
-    new TickContext().addTickable(note1).addTickable(note2).preFormat().setX(x);
-
-    note1.setContext(ctx).draw();
-    note2.setContext(ctx).draw();
-
-    VexFlowTests.plotNoteWidth(ctx, note1, 180);
-    VexFlowTests.plotNoteWidth(ctx, note2, 15);
   },
 
   multiVoice(options: TestOptions): void {
@@ -357,7 +346,7 @@ const AccidentalTests = {
       .addAccidental(2, newAccid('##'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 60);
+    showNotes(note1, note2, stave, ctx, 60);
 
     note1 = f
       .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
@@ -371,7 +360,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 150);
+    showNotes(note1, note2, stave, ctx, 150);
 
     note1 = f
       .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
@@ -385,7 +374,7 @@ const AccidentalTests = {
       .addAccidental(0, newAccid('b'))
       .setStave(stave);
 
-    AccidentalTests.showNotes(note1, note2, stave, ctx, 250);
+    showNotes(note1, note2, stave, ctx, 250);
     VexFlowTests.plotLegendForNoteWidth(ctx, 350, 150);
 
     ok(true, 'Full Accidental');
@@ -994,13 +983,25 @@ const AccidentalTests = {
 };
 
 //#region Helper Functions
-const hasAccidental = (note: any) =>
-  note.modifiers.reduce(
-    (hasAcc: any, modifier: any) => hasAcc || modifier.getCategory() === Accidental.CATEGORY,
-    false
-  );
+function hasAccidental(note: StaveNote) {
+  return note.getModifiers().some((modifier) => modifier.getCategory() === Accidental.CATEGORY);
+}
 
 const makeNewAccid = (factory: any) => (accidType: any) => factory.Accidental({ type: accidType });
+
+function showNotes(note1: any, note2: any, stave: any, ctx: any, x: any): void {
+  const modifierContext = new ModifierContext();
+  note1.addToModifierContext(modifierContext);
+  note2.addToModifierContext(modifierContext);
+
+  new TickContext().addTickable(note1).addTickable(note2).preFormat().setX(x);
+
+  note1.setContext(ctx).draw();
+  note2.setContext(ctx).draw();
+
+  VexFlowTests.plotNoteWidth(ctx, note1, 180);
+  VexFlowTests.plotNoteWidth(ctx, note2, 15);
+}
 //#endregion
 
 export { AccidentalTests };
