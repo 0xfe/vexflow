@@ -12,7 +12,7 @@ import { Font, Fonts } from 'font';
 import { Note } from 'note';
 
 /* eslint-disable */
-declare var global: any;
+declare const global: any;
 declare var $: any;
 /* eslint-enable */
 
@@ -79,49 +79,6 @@ if (!global.$) {
     };
     return $element;
   };
-}
-
-// When generating PNG images for the visual regression tests,
-// we mock out the QUnit methods (since we don't care about assertions).
-if (!global.QUnit) {
-  // eslint-disable-next-line
-  const QUMock: any = {
-    assertions: {
-      ok: () => true,
-      equal: () => true,
-      deepEqual: () => true,
-      expect: () => true,
-      throws: () => true,
-      notOk: () => true,
-      notEqual: () => true,
-      notDeepEqual: () => true,
-      strictEqual: () => true,
-      notStrictEqual: () => true,
-      propEqual: () => true,
-    },
-
-    module(name: string): void {
-      QUMock.current_module = name;
-    },
-
-    // See: https://api.qunitjs.com/QUnit/test/
-    test(name: number, callback: (assert: Assert) => void): void {
-      QUMock.current_test = name;
-      QUMock.assertions.test.module.name = name;
-      VexFlowTests.shims.process.stdout.write(' \u001B[0G' + QUMock.current_module + ' :: ' + name + '\u001B[0K');
-      callback(QUMock.assertions);
-    },
-  };
-
-  global.QUnit = QUMock;
-  for (const k in QUMock.assertions) {
-    // Make all methods & properties of QUMock.assertions global.
-    global[k] = QUMock.assertions[k];
-  }
-  global.test = QUMock.test;
-  // Enable us to pass the name of the module around.
-  // See: QUMock.test(...) and VexFlowTests.runWithParams(...)
-  QUMock.assertions.test = { module: { name: '' } };
 }
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;

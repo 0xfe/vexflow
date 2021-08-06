@@ -3,22 +3,21 @@
 //
 // Accidental Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
+import { Factory } from 'factory';
 import { Formatter } from 'formatter';
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Stem } from 'stem';
 import { Tickable } from 'tickable';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
+import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
 
 const AccidentalTests = {
@@ -436,7 +435,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any): void {
+      note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -447,7 +446,7 @@ const AccidentalTests = {
     ok(true, 'Microtonal Accidental');
   },
 
-  microtonal_iranian(options: TestOptions) {
+  microtonal_iranian(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     const ctx = f.getContext();
@@ -500,7 +499,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any) {
+      note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -601,7 +600,7 @@ const AccidentalTests = {
     notes.forEach(function (note, index) {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach(function (accid: any, index: any) {
+      note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -616,7 +615,7 @@ const AccidentalTests = {
     const f = VexFlowTests.makeFactory(options, 700, 200);
     const stave = f.Stave();
 
-    const notes: any[] = [
+    const notes: StaveNote[] = [
       { keys: ['c/4', 'c/5'], duration: '4' },
       { keys: ['c#/4', 'c#/5'], duration: '4' },
       { keys: ['c#/4', 'c#/5'], duration: '4' },
@@ -838,7 +837,7 @@ const AccidentalTests = {
   },
 
   autoAccidentalWorking(): void {
-    function makeNote(noteStruct: any) {
+    function makeNote(noteStruct: StaveNoteStruct) {
       return new StaveNote(noteStruct);
     }
 
@@ -928,7 +927,7 @@ const AccidentalTests = {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     f.Stave({ x: 10, y: 10, width: 550 });
 
-    function newAcc(type: any) {
+    function newAcc(type: string) {
       return f.Accidental({ type: type });
     }
 
@@ -972,7 +971,7 @@ const AccidentalTests = {
 
     notes.forEach(function (n, i) {
       ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
-      n.getAccidentals().forEach(function (accid: any, i: any) {
+      n.getAccidentals().forEach((accid: Accidental, i: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
       });
     });
@@ -989,7 +988,7 @@ function hasAccidental(note: StaveNote) {
 
 const makeNewAccid = (factory: any) => (accidType: any) => factory.Accidental({ type: accidType });
 
-function showNotes(note1: any, note2: any, stave: any, ctx: any, x: any): void {
+function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
   const modifierContext = new ModifierContext();
   note1.addToModifierContext(modifierContext);
   note2.addToModifierContext(modifierContext);

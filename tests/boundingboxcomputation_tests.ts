@@ -3,9 +3,6 @@
 //
 // BoundingBoxComputation Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BoundingBoxComputation } from 'boundingboxcomputation';
 import { Glyph, OutlineCode } from 'glyph';
@@ -160,7 +157,7 @@ const BoundingBoxComputationTests = {
     // this time using the Glyph.getOutlineBoundingBox code path.
     const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.QUADRATIC, x2, -y2, x1, -y1];
     const bbox = Glyph.getOutlineBoundingBox(o, 1, 0, 0);
-    rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
+    rect(ctx, '#fa0', 1, bbox.getX(), bbox.getY(), bbox.getW(), bbox.getH());
 
     // Draw curve.
     ctx.setLineWidth(1);
@@ -210,7 +207,7 @@ const BoundingBoxComputationTests = {
     // this time using the Glyph.getOutlineBoundingBox code path.
     const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.BEZIER, x3, -y3, x1, -y1, x2, -y2];
     const bbox = Glyph.getOutlineBoundingBox(o, 1, 0, 0);
-    rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
+    rect(ctx, '#fa0', 1, bbox.getX(), bbox.getY(), bbox.getW(), bbox.getH());
 
     // Draw curve.
     ctx.setLineWidth(1);
