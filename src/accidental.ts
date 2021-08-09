@@ -429,7 +429,11 @@ export class Accidental extends Modifier {
 
           // Remove accidentals
           note.getModifiers().forEach(function (modifier, index) {
-            if (modifier instanceof Accidental && modifier.getIndex() == keyIndex) {
+            if (
+              modifier instanceof Accidental &&
+              modifier.type == accidentalString &&
+              modifier.getIndex() == keyIndex
+            ) {
               note.getModifiers().splice(index, 1);
             }
           });
