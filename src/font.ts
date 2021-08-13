@@ -26,7 +26,7 @@ export interface FontGlyph {
   o: string;
   leftSideBearing?: number;
   advanceWidth?: number;
-  cached_outline?: string[];
+  cached_outline?: number[];
 }
 
 class Font {
