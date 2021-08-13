@@ -205,18 +205,7 @@ const BoundingBoxComputationTests = {
 
     // Regression test for a prior bug: compute the bounding box again,
     // this time using the Glyph.getOutlineBoundingBox code path.
-    const o = [
-      OutlineCode.MOVE,
-      x0,
-      -y0,
-      OutlineCode.BEZIER,
-      x3,
-      -y3,
-      x1,
-      -y1,
-      x2,
-      -y2,
-    ];
+    const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.BEZIER, x3, -y3, x1, -y1, x2, -y2];
     const bbox = VF.Glyph.getOutlineBoundingBox(o, 1, 0, 0);
     rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
 
