@@ -146,23 +146,23 @@ export class Renderer {
   }
 
   /**
-   * @param id_canvas_div the first parameter can be:
+   * @param canvasId can be:
    *   - a string element ID (of a canvas or div element)
    *   - a canvas element
    *   - a div element, which will contain the SVG output
    * @param backend Renderer.Backends.CANVAS or Renderer.Backends.SVG
    */
-  constructor(id_canvas_div: string | HTMLCanvasElement | HTMLDivElement, backend: number) {
-    if (!id_canvas_div) {
+  constructor(canvasId: string | HTMLCanvasElement | HTMLDivElement, backend: number) {
+    if (!canvasId) {
       throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
-    } else if (typeof id_canvas_div === 'string') {
-      this.elementId = id_canvas_div;
-      this.element = document.getElementById(id_canvas_div as string) as HTMLCanvasElement | HTMLDivElement;
-    } else if ('getContext' in id_canvas_div /* HTMLCanvasElement */) {
-      this.element = id_canvas_div as HTMLCanvasElement;
+    } else if (typeof canvasId === 'string') {
+      this.elementId = canvasId;
+      this.element = document.getElementById(canvasId as string) as HTMLCanvasElement | HTMLDivElement;
+    } else if ('getContext' in canvasId /* HTMLCanvasElement */) {
+      this.element = canvasId as HTMLCanvasElement;
     } else {
       // Assume it's a HTMLDivElement.
-      this.element = id_canvas_div as HTMLDivElement;
+      this.element = canvasId as HTMLDivElement;
     }
 
     // Verify backend and create context
@@ -170,7 +170,7 @@ export class Renderer {
     if (this.backend === Renderer.Backends.CANVAS) {
       const canvasElement = this.element as HTMLCanvasElement;
       if (!canvasElement.getContext) {
-        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${id_canvas_div}`);
+        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
       }
       this.ctx = Renderer.bolsterCanvasContext(canvasElement.getContext('2d'));
     } else if (this.backend === Renderer.Backends.SVG) {

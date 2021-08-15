@@ -37,6 +37,13 @@ module.exports = (grunt) => {
         library: libraryName,
         libraryTarget: 'umd',
         libraryExport: 'default',
+        // Support different ways of loading VexFlow.
+        // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
+        // VexFlow is exported as root["Vex"], and can be accessed via:
+        //   - `window.Vex` in browsers
+        //   - `globalThis.Vex` in node JS >= 12
+        //   - `this.Vex` in all other environments
+        // See: https://webpack.js.org/configuration/output/#outputglobalobject
         globalObject: `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`,
         publicPath: 'auto',
       },
