@@ -6,6 +6,7 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { QUnit, ok, test, equal } from './declarations';
 import { RenderContext } from 'types/common';
+import { OutlineCode } from 'glyph';
 
 function createCanvas(options: TestOptions): RenderContext {
   const points = options.params.points;
@@ -154,7 +155,7 @@ const BoundingBoxComputationTests = {
 
     // Regression test for a prior bug: compute the bounding box again,
     // this time using the Glyph.getOutlineBoundingBox code path.
-    const o = ['m', x0.toString(), -y0.toString(), 'q', x2.toString(), -y2.toString(), x1.toString(), -y1.toString()];
+    const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.QUADRATIC, x2, -y2, x1, -y1];
     const bbox = VF.Glyph.getOutlineBoundingBox(o, 1, 0, 0);
     rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
 
@@ -204,18 +205,7 @@ const BoundingBoxComputationTests = {
 
     // Regression test for a prior bug: compute the bounding box again,
     // this time using the Glyph.getOutlineBoundingBox code path.
-    const o = [
-      'm',
-      x0.toString(),
-      -y0.toString(),
-      'b',
-      x3.toString(),
-      -y3.toString(),
-      x1.toString(),
-      -y1.toString(),
-      x2.toString(),
-      -y2.toString(),
-    ];
+    const o = [OutlineCode.MOVE, x0, -y0, OutlineCode.BEZIER, x3, -y3, x1, -y1, x2, -y2];
     const bbox = VF.Glyph.getOutlineBoundingBox(o, 1, 0, 0);
     rect(ctx, '#fa0', 1, bbox.x, bbox.y, bbox.w, bbox.h);
 
