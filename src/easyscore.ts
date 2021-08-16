@@ -357,9 +357,7 @@ export class Builder {
     const keys: string[] = chord.map(
       (notePiece) =>
         notePiece.key +
-        (notePiece.accid && ['bb', 'b', '##', '#', 'n'].includes(notePiece.accid.toLowerCase())
-          ? notePiece.accid
-          : '') +
+        (['bb', 'b', '##', '#', 'n'].includes(notePiece.accid ?? '') ? notePiece.accid : '') +
         '/' +
         notePiece.octave
     );
@@ -379,9 +377,7 @@ export class Builder {
       const accid = notePiece.accid;
       if (typeof accid === 'string') {
         const accidental: Accidental = factory.Accidental({ type: accid });
-        // TODO: Remove "as unknown as Modifier".
-        // This compilation warning will be fixed after factory & accidental are migrated to typescript.
-        note.addAccidental(index, accidental as unknown as Modifier);
+        note.addAccidental(index, accidental);
         accidentals.push(accidental);
       } else {
         accidentals.push(undefined);
