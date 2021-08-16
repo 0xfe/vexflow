@@ -10,6 +10,7 @@ export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, S
 export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNote);
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
 
 /**
@@ -21,7 +22,7 @@ export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNo
  *        If `false`, we do not check the superclass or other ancestors.
  * @returns true if `obj` is an instance of `ClassName`, or has a `.getCategory()` that matches `ClassName.CATEGORY`.
  */
-function isCategory<T>(
+export function isCategory<T>(
   obj: any,
   cls: Function & { prototype: T; CATEGORY?: string },
   checkAncestors: boolean = true
