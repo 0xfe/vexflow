@@ -12,8 +12,7 @@ import { StaveNote } from './stavenote';
 import { FontInfo } from './types/common';
 import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
-import { isCategory, isStaveNote } from './typeguard';
+import { isStaveNote, isStemmableNote } from './typeguard';
 
 export class StringNumber extends Modifier {
   protected radius: number;
@@ -228,7 +227,7 @@ export class StringNumber extends Modifier {
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
     const lastNote = this.last_note;
-    if (isCategory<StemmableNote>(StemmableNote, lastNote)) {
+    if (isStemmableNote(lastNote)) {
       // Only StemmableNote objects have getStemX().
       const end = lastNote.getStemX() - note.getX() + 5;
       ctx.setStrokeStyle('#000000');

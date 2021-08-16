@@ -11,7 +11,7 @@ import { Glyph } from './glyph';
 import { Note } from './note';
 import { FontInfo } from './types/common';
 import { ModifierContextState } from './modifiercontext';
-import { isCategory, isStaveNote, isTabNote } from './typeguard';
+import { isNote, isStaveNote, isTabNote } from './typeguard';
 
 export class Stroke extends Modifier {
   protected options: {
@@ -136,7 +136,7 @@ export class Stroke extends Modifier {
     const notes = this.checkModifierContext().getMembers(note.getCategory());
     for (let i = 0; i < notes.length; i++) {
       const note = notes[i];
-      if (isCategory<Note>(Note, note)) {
+      if (isNote(note)) {
         // Only Note objects have getYs().
         // note is an instance of either StaveNote or TabNote.
         // note.getCategory() returns 'stavenotes' or 'tabnotes'
