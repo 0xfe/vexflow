@@ -1,3 +1,7 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Ron B. Yeh
+// MIT License
+
 import { Note } from 'note';
 import { StaveNote } from 'stavenote';
 import { StemmableNote } from 'stemmablenote';
@@ -27,8 +31,7 @@ export function isCategory<T>(
   cls: Function & { prototype: T; CATEGORY?: string },
   checkAncestors: boolean = true
 ): obj is T {
-  // obj is NOT an instance of cls if it is:
-  // undefined, a number, a primitive string, or null.
+  // obj is NOT an instance of cls if it is: undefined, a number, a primitive string, or null.
   if (typeof obj !== 'object' || obj === null) {
     return false;
   }
@@ -39,7 +42,7 @@ export function isCategory<T>(
     return true;
   }
 
-  // If instanceof fails, fall back to checking if the object's getCategory() matches the class's .CATEGORY property.
+  // If instanceof fails, fall back to checking if the object's .getCategory() matches the class's .CATEGORY property.
   const categoryToMatch = cls.CATEGORY;
   if (categoryToMatch === undefined) {
     return false;
@@ -59,3 +62,11 @@ export function isCategory<T>(
     return 'getCategory' in obj && obj.getCategory() === categoryToMatch;
   }
 }
+
+// EDGE CASE
+// isCategory<T>(...) does not work when the following are true:
+//   - the tsconfig.json target is es5
+//   - class A extends Object { ... }
+// The result is that isCategory(new A(), A) returns false!
+// This issue can be avoided by removing "extends Object"
+// See: https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
