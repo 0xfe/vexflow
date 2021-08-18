@@ -7,10 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
-
-import { VexFlowTests } from './vexflow_test_helpers';
-import { ok, QUnit } from './declarations';
+import { QUnit, ok } from './support/qunit_api';
 import { ChordSymbol } from 'chordsymbol';
 import { StaveNote } from 'stavenote';
 import { Formatter } from 'formatter';

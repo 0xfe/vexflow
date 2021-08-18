@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { QUnit, equal, ok } from './declarations';
+import { QUnit, equal, ok } from './support/qunit_api';
 import { Stem } from 'stem';
 import { Fraction } from 'fraction';
 import { Beam } from 'beam';

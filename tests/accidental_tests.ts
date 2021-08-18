@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok, equal, test } from './declarations';
+import { QUnit, ok, equal, test } from './support/qunit_api';
 import { Flow } from 'flow';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';

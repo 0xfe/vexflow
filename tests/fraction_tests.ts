@@ -14,7 +14,7 @@ import {
   strictEqual,
   test,
   equal,
-} from './declarations';
+} from './support/qunit_api';
 import { Fraction } from 'fraction';
 
 const FractionTests = {

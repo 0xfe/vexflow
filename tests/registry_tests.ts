@@ -3,7 +3,7 @@
 //
 // Registry Tests
 
-import { Assert, QUnit, test } from './declarations';
+import { Assert, QUnit, test } from './support/qunit_api';
 import { Factory } from 'factory';
 import { EasyScore } from 'easyscore';
 import { Registry } from 'registry';

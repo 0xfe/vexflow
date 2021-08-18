@@ -5,12 +5,21 @@
 /* eslint-disable */
 
 // global.VF == Vex.Flow and is available in all of the tests.
+// TODO: Remove this after we have cleaned up the VF.* prefixes in the tests.
 declare global {
   var VF: any;
 }
-declare const global: any;
 
-// Declarations to interface with ./support/qunit.js
+// Declarations to interface with ./qunit.js
+//
+// We are currently using QUnit 1.19.0.
+//
+// According to https://qunitjs.com/upgrade-guide-2.x/
+// QUnit 2 no longer uses global functions. The assertion methods
+// are exposed through an assert object that is bound to each test.
+//
+// However, we stick with the global methods for readability.
+declare const global: any;
 export const QUnit = global.QUnit;
 export const test = global.test;
 export const expect = global.expect;
@@ -26,7 +35,6 @@ export const propEqual = global.propEqual;
 export const throws = global.throws;
 
 // See: https://api.qunitjs.com/assert/
-// TODO: npm install @types/qunit
 export interface Assert {
   test: any;
   expect(amount: number): void;

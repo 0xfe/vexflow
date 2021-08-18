@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { expect, QUnit } from './declarations';
+import { expect, QUnit } from './support/qunit_api';
 import { ContextBuilder } from 'renderer';
 import { Formatter } from 'formatter';
 import { StaveNote } from 'stavenote';

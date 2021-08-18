@@ -17,7 +17,7 @@ import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Voice } from 'voice';
-import { expect, ok, QUnit } from './declarations';
+import { expect, ok, QUnit } from './support/qunit_api';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ArticulationTests = {

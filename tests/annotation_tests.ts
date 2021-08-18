@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok } from './support/qunit_api';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { Registry } from 'registry';

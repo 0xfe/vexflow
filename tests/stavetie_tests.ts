@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { QUnit, ok } from './support/qunit_api';
 import { Stem } from 'stem';
 import { BuilderOptions } from 'easyscore';
 import { Factory } from 'factory';
