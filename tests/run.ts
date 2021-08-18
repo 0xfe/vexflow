@@ -71,7 +71,6 @@ VexFlowTests.run = function () {
   ArticulationTests.Start();
   AutoBeamFormattingTests.Start();
   BachDemoTests.Start();
-  BachDemoTests.Start();
   BarlineTests.Start();
   BeamTests.Start();
   BendTests.Start();
@@ -83,13 +82,10 @@ VexFlowTests.run = function () {
   CurveTests.Start();
   DotTests.Start();
   EasyScoreTests.Start();
-  EasyScoreTests.Start();
-  FactoryTests.Start();
   FactoryTests.Start();
   FormatterTests.Start();
   FractionTests.Start();
   GhostNoteTests.Start();
-  GlyphNoteTests.Start();
   GlyphNoteTests.Start();
   GraceNoteTests.Start();
   GraceTabNoteTests.Start();
@@ -102,10 +98,8 @@ VexFlowTests.run = function () {
   NoteSubGroupTests.Start();
   OrnamentTests.Start();
   ParserTests.Start();
-  ParserTests.Start();
   PedalMarkingTests.Start();
   PercussionTests.Start();
-  RegistryTests.Start();
   RegistryTests.Start();
   RestsTests.Start();
   RhythmTests.Start();
