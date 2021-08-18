@@ -18,7 +18,7 @@ export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNo
 /* eslint-disable @typescript-eslint/ban-types */
 
 /**
- * Use this instead of `instanceof` as a more flexible type guard.
+ * Use instead of `instanceof` as a more flexible type guard.
  * @param obj check if this object is an instance of the provided `cls`.
  * @param cls a JavaScript class, such as `StaveNote`. `cls` is a constructor function, and it has a `prototype` property, and
  *            optionally a `CATEGORY` property (used in VexFlow for flexible type checking).
@@ -62,11 +62,3 @@ export function isCategory<T>(
     return 'getCategory' in obj && obj.getCategory() === categoryToMatch;
   }
 }
-
-// EDGE CASE
-// isCategory<T>(...) does not work when the following are true:
-//   - the tsconfig.json target is es5
-//   - class A extends Object { ... }
-// The result is that isCategory(new A(), A) returns false!
-// This issue can be avoided by removing "extends Object"
-// See: https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work

@@ -1,4 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// Author: Ron B. Yeh
 // MIT License
 //
 // TypeGuard Tests
@@ -15,7 +16,7 @@ const TypeGuardTests = {
     test('Real VexFlow Types', this.real);
     test('Fake VexFlow Types', this.fake);
     test('instanceof', this.instanceof);
-    test('Edge Case', this.edgeCase);
+    test('Edge Case ES5/ES6', this.edgeCaseES5vsES6);
   },
 
   real(): void {
@@ -74,12 +75,10 @@ const TypeGuardTests = {
     notOk(isCategory(yInstance, B));
   },
 
-  // The tsconfig.json target is currently es5, so isCategory() does not work properly
-  // when the root class "extends Object".
-  // We verify this with the notOk() assertion.
-  // If we change the target to es6, then isCategory() will work fine.
-  // This test will need to be changed to use the ok() assertion.
-  edgeCase(): void {
+  /**
+   * The tsconfig.json target is ES6 (as of August 18, 2021), so isCategory() works even when the root class "extends Object".
+   */
+  edgeCaseES5vsES6(): void {
     class Z extends Object {}
     class Y extends Z {}
     class X extends Y {}
@@ -88,18 +87,11 @@ const TypeGuardTests = {
 
     ok(xInstance instanceof Object, 'es5 & es6: x IS an instanceof Object');
 
-    // Use these four assertions while we are still targeting es5.
-    notOk(isCategory(zInstance, Z), 'es5: z is not the same category as Z');
-    notOk(zInstance instanceof Z, 'es5: z is not an instanceof Z');
-    notOk(xInstance instanceof Z, 'es5: x is not an instanceof Z');
-    notOk(xInstance instanceof Z, 'es5: x is not an instanceof Z');
-
-    // Use these four assertions when we change the tsconfig.json target to es6.
-    // These four assertions also pass if we remove "extends Object" from the class Z definition.
-    // ok(isCategory(zInstance, Z), 'es6: z IS the same category as Z');
-    // ok(zInstance instanceof Z, 'es6: z IS an instanceof Z');
-    // ok(xInstance instanceof Y, 'es6: x IS an instanceof Y');
-    // ok(xInstance instanceof Z, 'es6: x IS an instanceof Z');
+    // If targeting es5, these four assertions only pass if we remove "extends Object" from the class Z definition.
+    ok(isCategory(zInstance, Z), 'es6: z IS the same category as Z');
+    ok(zInstance instanceof Z, 'es6: z IS an instanceof Z');
+    ok(xInstance instanceof Y, 'es6: x IS an instanceof Y');
+    ok(xInstance instanceof Z, 'es6: x IS an instanceof Z');
   },
 };
 
