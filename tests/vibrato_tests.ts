@@ -3,14 +3,11 @@
 //
 // Vibrato Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Bend } from 'bend';
 import { Formatter } from 'formatter';
-import { TabNote } from 'tabnote';
+import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Vibrato } from 'vibrato';
 
@@ -32,25 +29,18 @@ const VibratoTests = {
     ctx.font = '10pt Arial';
     const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-    function newNote(tab_struct) {
-      return new TabNote(tab_struct);
-    }
-    function newVibrato() {
-      return new Vibrato();
-    }
-
     const notes = [
-      newNote({
+      tabNote({
         positions: [
           { str: 2, fret: 10 },
           { str: 4, fret: 9 },
         ],
         duration: 'h',
-      }).addModifier(newVibrato(), 0),
-      newNote({
+      }).addModifier(new Vibrato(), 0),
+      tabNote({
         positions: [{ str: 2, fret: 10 }],
         duration: 'h',
-      }).addModifier(newVibrato(), 0),
+      }).addModifier(new Vibrato(), 0),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
@@ -66,25 +56,18 @@ const VibratoTests = {
     ctx.font = '10pt Arial';
     const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-    function newNote(tab_struct) {
-      return new TabNote(tab_struct);
-    }
-    function newVibrato() {
-      return new Vibrato();
-    }
-
     const notes = [
-      newNote({
+      tabNote({
         positions: [
           { str: 2, fret: 10 },
           { str: 4, fret: 9 },
         ],
         duration: 'h',
-      }).addModifier(newVibrato().setHarsh(true), 0),
-      newNote({
+      }).addModifier(new Vibrato().setHarsh(true), 0),
+      tabNote({
         positions: [{ str: 2, fret: 10 }],
         duration: 'h',
-      }).addModifier(newVibrato().setHarsh(true), 0),
+      }).addModifier(new Vibrato().setHarsh(true), 0),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
@@ -99,42 +82,34 @@ const VibratoTests = {
     ctx.setFont('Arial', VexFlowTests.Font.size, '');
     const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-    function newNote(tab_struct) {
-      return new TabNote(tab_struct);
-    }
-    function newBend(text, release) {
-      return new Bend(text, release);
-    }
-    function newVibrato() {
-      return new Vibrato();
-    }
-
     const notes = [
-      newNote({
+      tabNote({
         positions: [
           { str: 2, fret: 9 },
           { str: 3, fret: 9 },
         ],
         duration: 'q',
       })
-        .addModifier(newBend('1/2', true), 0)
-        .addModifier(newBend('1/2', true), 1)
-        .addModifier(newVibrato(), 0),
-      newNote({
+        .addModifier(new Bend('1/2', true), 0)
+        .addModifier(new Bend('1/2', true), 1)
+        .addModifier(new Vibrato(), 0),
+      tabNote({
         positions: [{ str: 2, fret: 10 }],
         duration: 'q',
       })
-        .addModifier(newBend('Full', false), 0)
-        .addModifier(newVibrato().setVibratoWidth(60), 0),
-      newNote({
+        .addModifier(new Bend('Full', false), 0)
+        .addModifier(new Vibrato().setVibratoWidth(60), 0),
+      tabNote({
         positions: [{ str: 2, fret: 10 }],
         duration: 'h',
-      }).addModifier(newVibrato().setVibratoWidth(120).setHarsh(true), 0),
+      }).addModifier(new Vibrato().setVibratoWidth(120).setHarsh(true), 0),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Vibrato with Bend');
   },
 };
+
+const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
 export { VibratoTests };

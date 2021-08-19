@@ -3,7 +3,6 @@
 
 /* eslint max-classes-per-file: "off" */
 
-import { Note } from 'note';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Factory } from './factory';
@@ -503,7 +502,7 @@ export class EasyScore {
     return this.builder.getElements().notes;
   }
 
-  voice(notes: Note[], options: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
+  voice(notes: StaveNote[], options: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
     options = { time: this.defaults.time, ...options };
     return this.factory.Voice(options).addTickables(notes);
   }

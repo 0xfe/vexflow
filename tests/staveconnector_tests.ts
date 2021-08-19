@@ -12,6 +12,7 @@ import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
 import { StaveConnector } from 'staveconnector';
+import { Flow } from 'flow';
 
 const StaveConnectorTests = {
   Start(): void {
@@ -50,20 +51,20 @@ const StaveConnectorTests = {
   },
 
   drawSingle4pxStaveLines(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const oldThickness = VF.STAVE_LINE_THICKNESS;
-    VF.STAVE_LINE_THICKNESS = 4;
+    const oldThickness = Flow.STAVE_LINE_THICKNESS;
+    Flow.STAVE_LINE_THICKNESS = 4;
     const ctx = contextBuilder(options.elementId, 400, 300);
     const stave = new Stave(25, 10, 300);
     const stave2 = new Stave(25, 120, 300);
     stave.setContext(ctx);
     stave2.setContext(ctx);
     const connector = new StaveConnector(stave, stave2);
-    connector.setType(VF.StaveConnector.type.SINGLE);
+    connector.setType(StaveConnector.type.SINGLE);
     connector.setContext(ctx);
     stave.draw();
     stave2.draw();
     connector.draw();
-    VF.STAVE_LINE_THICKNESS = oldThickness;
+    Flow.STAVE_LINE_THICKNESS = oldThickness;
 
     ok(true, 'all pass');
   },
