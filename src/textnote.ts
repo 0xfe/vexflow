@@ -151,10 +151,8 @@ export class TextNote extends Note {
 
   /** Pre-render formatting. */
   preFormat(): void {
-    const ctx = this.checkContext();
-    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't preformat without a TickContext.");
-
     if (this.preFormatted) return;
+    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't preformat without a TickContext.");
 
     if (this.smooth) {
       this.setWidth(0);
@@ -162,6 +160,7 @@ export class TextNote extends Note {
       if (this.glyph) {
         // Width already set.
       } else {
+        const ctx = this.checkContext();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         this.setWidth(ctx.measureText(this.text).width);
       }

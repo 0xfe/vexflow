@@ -935,8 +935,9 @@ export class StaveNote extends StemmableNote {
 
   // Pre-render formatting
   preFormat(): void {
-    let noteHeadPadding = 0;
     if (this.preFormatted) return;
+
+    let noteHeadPadding = 0;
     if (this.modifierContext) {
       this.modifierContext.preFormat();
       // If there are no modifiers on this note, make sure there is adequate padding

@@ -343,7 +343,7 @@ export class ChordSymbol extends Modifier {
       }
     }
 
-    width = reportedWidths.reduce((a, b) => a + b);
+    width = reportedWidths.reduce((a, b) => a + b, 0);
 
     state.left_shift += width / 2;
     state.right_shift += width / 2;

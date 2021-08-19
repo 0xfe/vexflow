@@ -494,11 +494,11 @@ export class Formatter {
     this.hasMinTotalWidth = true;
     // normalized (0-1) STDDEV of widths/durations gives us padding hints.
     const wavg = wsum > 0 ? wsum / widths.length : 1 / widths.length;
-    const wvar = widths.map((ll) => Math.pow(ll - wavg, 2)).reduce((a, b) => a + b);
+    const wvar = sumArray(widths.map((ll) => Math.pow(ll - wavg, 2)));
     const wpads = Math.pow(wvar / widths.length, 0.5) / wavg;
 
     const davg = dsum / durations.length;
-    const dvar = durations.map((ll) => Math.pow(ll - davg, 2)).reduce((a, b) => a + b);
+    const dvar = sumArray(durations.map((ll) => Math.pow(ll - davg, 2)));
     const dpads = Math.pow(dvar / durations.length, 0.5) / davg;
 
     // Find max of 3 methods pad the width with that
@@ -627,7 +627,7 @@ export class Formatter {
     const formatterOptions = this.formatterOptions;
     const softmaxFactor = formatterOptions.softmaxFactor || 100;
     const exp = (tick: number) => softmaxFactor ** (contextMap[tick].getMaxTicks().value() / totalTicks);
-    const expTicksUsed = contextList.map(exp).reduce((a: number, b: number) => a + b);
+    const expTicksUsed = sumArray(contextList.map(exp));
 
     this.minTotalWidth = x + shift;
     this.hasMinTotalWidth = true;
@@ -703,7 +703,7 @@ export class Formatter {
               if (formatterOptions.globalSoftmax) {
                 const t = totalTicks;
                 expectedDistance = (softmaxFactor ** (maxTicks / t) / expTicksUsed) * adjustedJustifyWidth;
-              } else if (backTickable) {
+              } else if (typeof backTickable !== 'undefined') {
                 expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
               }
 
@@ -890,8 +890,6 @@ export class Formatter {
       ...options,
     };
 
-    const sum = (arr: number[]) => arr.reduce((a, b) => a + b);
-
     // Move `current` tickcontext by `shift` pixels, and adjust the freedom
     // on adjacent tickcontexts.
     function move(current: TickContext, shift: number, prev?: TickContext, next?: TickContext) {
@@ -912,7 +910,7 @@ export class Formatter {
 
       move(context, shift, prevContext, nextContext);
 
-      const cost = -sum(context.getTickables().map((t) => t.getFormatterMetrics().space.deviation));
+      const cost = -sumArray(context.getTickables().map((t) => t.getFormatterMetrics().space.deviation));
 
       if (cost > 0) {
         shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
@@ -999,3 +997,7 @@ export class Formatter {
     return this.format(voices, justifyWidth, options);
   }
 }
+
+// Helper functions.
+const sum = (a: number, b: number) => a + b;
+const sumArray = (arr: number[]) => arr.reduce(sum, 0);

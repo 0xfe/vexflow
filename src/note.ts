@@ -618,11 +618,6 @@ export abstract class Note extends Tickable {
     return x;
   }
 
-  /** Set preformatted status. */
-  setPreFormatted(value: boolean): void {
-    this.preFormatted = value;
-  }
-
   /** Get the direction of the stem. */
   getStemDirection(): number {
     throw new RuntimeError('NoStem', 'No stem attached to this note.');
