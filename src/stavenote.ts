@@ -20,11 +20,11 @@ import { Modifier } from './modifier';
 import { Dot } from './dot';
 import { KeyProps } from './types/common';
 import { Beam } from './beam';
-import { ModifierContext } from './modifiercontext';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
 import { Note, NoteStruct } from './note';
 import { ModifierContextState } from './modifiercontext';
+import { Accidental } from 'accidental';
 
 export interface StaveNoteHeadBounds {
   y_top: number;
@@ -306,19 +306,14 @@ export class StaveNote extends StemmableNote {
   }
 
   static formatByY(notes: StaveNote[], state: ModifierContextState): void {
-    // NOTE: this function does not support more than two voices per stave
-    // use with care.
-    let hasStave = true;
+    // NOTE: this function does not support more than two voices per stave. Use with care.
 
+    let hasStave = true;
     for (let i = 0; i < notes.length; i++) {
       hasStave = hasStave && notes[i].getStave() != undefined;
     }
-
     if (!hasStave) {
-      throw new RuntimeError(
-        'Stave Missing',
-        'All notes must have a stave - Vex.Flow.ModifierContext.formatMultiVoice!'
-      );
+      throw new RuntimeError('NoStave', 'All notes must have a stave.');
     }
 
     let xShift = 0;
@@ -874,48 +869,6 @@ export class StaveNote extends StemmableNote {
     return this.keyProps[index].line;
   }
 
-  // Add self to modifier context. `mContext` is the `ModifierContext`
-  // to be added to.
-  addToModifierContext(mContext: ModifierContext): this {
-    this.modifierContext = mContext;
-    for (let i = 0; i < this.modifiers.length; ++i) {
-      this.modifierContext.addMember(this.modifiers[i]);
-    }
-    this.modifierContext.addMember(this);
-    this.setPreFormatted(false);
-    return this;
-  }
-
-  // Generic function to add modifiers to a note
-  //
-  // Parameters:
-  // * `index`: The index of the key that we're modifying
-  // * `modifier`: The modifier to add
-  addModifier(a: number | Modifier, b: number | Modifier): this {
-    let index: number;
-    let modifier: Modifier;
-
-    if (typeof a === 'object' && typeof b === 'number') {
-      index = b;
-      modifier = a;
-    } else if (typeof a === 'number' && typeof b === 'object') {
-      // eslint-disable-next-line
-      console.warn('deprecated call signature to addModifier, use addModifier(modifier, index) instead');
-      index = a;
-      modifier = b;
-    } else {
-      throw new RuntimeError(
-        'WrongParams',
-        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
-      );
-    }
-    modifier.setNote(this);
-    modifier.setIndex(index);
-    this.modifiers.push(modifier);
-    this.setPreFormatted(false);
-    return this;
-  }
-
   // Helper function to add an accidental to a key
   addAccidental(index: number, accidental: Modifier): this {
     return this.addModifier(accidental, index);
@@ -948,17 +901,17 @@ export class StaveNote extends StemmableNote {
   }
 
   // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Modifier[] {
+  getAccidentals(): Accidental[] {
     if (!this.modifierContext)
       throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('accidentals') as Modifier[];
+    return this.modifierContext.getMembers('accidentals') as Accidental[];
   }
 
   // Get all dots in the `ModifierContext`
-  getDots(): Modifier[] {
+  getDots(): Dot[] {
     if (!this.modifierContext)
       throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('dots') as Modifier[];
+    return this.modifierContext.getMembers('dots') as Dot[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`

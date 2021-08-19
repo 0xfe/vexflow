@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { Stave } from './stave';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
-import { TickContext } from './tickcontext';
-import { ModifierContext } from './modifiercontext';
-import { Tuplet } from './tuplet';
-import { Voice } from './voice';
 import { Modifier } from './modifier';
+import { ModifierContext } from './modifiercontext';
+import { TickContext } from './tickcontext';
+import { Tuplet } from './tuplet';
+import { RuntimeError } from './util';
+import { Voice } from './voice';
 
 /** Formatter metrics interface */
 export interface FormatterMetrics {
@@ -253,17 +254,26 @@ export abstract class Tickable extends Element {
     return this;
   }
 
-  /** Optional, if tickable has modifiers, set modifierContext. */
-  addToModifierContext(mc: ModifierContext): void {
+  /**
+   * Add self to the provided ModifierContext `mc`.
+   * If this tickable has modifiers, set modifierContext.
+   * @returns this
+   */
+  addToModifierContext(mc: ModifierContext): this {
     this.modifierContext = mc;
-    // Add modifiers to modifier context (if any)
-    this.preFormatted = false;
+    for (let i = 0; i < this.modifiers.length; ++i) {
+      this.modifierContext.addMember(this.modifiers[i]);
+    }
+    this.modifierContext.addMember(this);
+    this.setPreFormatted(false);
+    return this;
   }
 
   /** Optional, if tickable has modifiers, associate a Modifier. */
-  addModifier(mod: Modifier): this {
+  // eslint-disable-next-line
+  addModifier(mod: Modifier, ...optionalArgs: any[]): this {
     this.modifiers.push(mod);
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
@@ -287,6 +297,11 @@ export abstract class Tickable extends Element {
       this.modifierContext.preFormat();
       this.width += this.modifierContext.getWidth();
     }
+  }
+
+  /** Set preformatted status. */
+  setPreFormatted(value: boolean): void {
+    this.preFormatted = value;
   }
 
   /** Postformat the Tickable. */

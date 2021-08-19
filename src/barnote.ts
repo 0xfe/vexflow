@@ -4,6 +4,7 @@
 import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
+import { ModifierContext } from 'modifiercontext';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -62,12 +63,14 @@ export class BarNote extends Note {
     return this;
   }
 
-  /** overridden to ignore. */
-  addToModifierContext(): this {
+  /* Overridden to ignore */
+  // eslint-disable-next-line
+  addToModifierContext(mc: ModifierContext): this {
+    // DO NOTHING.
     return this;
   }
 
-  /** overridden to ignore. */
+  /** Overridden to ignore. */
   preFormat(): this {
     this.setPreFormatted(true);
     return this;

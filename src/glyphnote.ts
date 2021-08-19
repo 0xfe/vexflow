@@ -3,7 +3,6 @@
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
-import { ModifierContext } from './modifiercontext';
 
 export interface GlyphNoteOptions {
   ignoreTicks?: boolean;
@@ -37,17 +36,6 @@ export class GlyphNote extends Note {
 
   getBoundingBox(): BoundingBox {
     return this.glyph.getBoundingBox();
-  }
-
-  // Add self to modifier context. `mContext` is the `ModifierContext`
-  // to be added to.
-  addToModifierContext(mContext: ModifierContext): this {
-    this.modifierContext = mContext;
-    for (let i = 0; i < this.modifiers.length; ++i) {
-      this.modifierContext.addMember(this.modifiers[i]);
-    }
-    this.setPreFormatted(false);
-    return this;
   }
 
   preFormat(): this {
