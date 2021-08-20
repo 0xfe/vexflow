@@ -7,12 +7,11 @@
 
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
-import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 import { Note } from './note';
 import { FontInfo } from './types/common';
-import { TabNote } from './tabnote';
 import { ModifierContextState } from './modifiercontext';
+import { isNote, isStaveNote, isTabNote } from './typeguard';
 
 export class Stroke extends Modifier {
   protected options: {
@@ -53,15 +52,17 @@ export class Stroke extends Modifier {
     const strokeList = strokes.map((stroke) => {
       const note = stroke.getNote();
       const index = stroke.checkIndex();
-      if (note instanceof StaveNote) {
+      if (isStaveNote(note)) {
+        // Only StaveNote objects have getKeyProps().
         const { line } = note.getKeyProps()[index];
         const shift = note.getLeftDisplacedHeadPx();
         return { line, shift, stroke };
-      } else if (note instanceof TabNote) {
+      } else if (isTabNote(note)) {
+        // Only TabNote objects have getPositions().
         const { str: string } = note.getPositions()[index];
         return { line: string, shift: 0, stroke };
       } else {
-        throw new RuntimeError('Internal', 'Unexpexted');
+        throw new RuntimeError('Internal', 'Unexpected instance.');
       }
     });
 
@@ -135,7 +136,10 @@ export class Stroke extends Modifier {
     const notes = this.checkModifierContext().getMembers(note.getCategory());
     for (let i = 0; i < notes.length; i++) {
       const note = notes[i];
-      if (note instanceof Note) {
+      if (isNote(note)) {
+        // Only Note objects have getYs().
+        // note is an instance of either StaveNote or TabNote.
+        // note.getCategory() returns 'stavenotes' or 'tabnotes'
         ys = note.getYs();
         for (let n = 0; n < ys.length; n++) {
           if (this.note === notes[i] || this.all_voices) {
@@ -170,7 +174,7 @@ export class Stroke extends Modifier {
         arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
         text_shift_x = this.x_shift + arrow_shift_x - 2;
-        if (note instanceof StaveNote) {
+        if (isStaveNote(note)) {
           topY += 1.5 * line_space;
           if ((botY - topY) % 2 !== 0) {
             botY += 0.5 * line_space;
@@ -191,7 +195,7 @@ export class Stroke extends Modifier {
         arrow = 'arrowheadBlackDown';
         arrow_shift_x = -4;
         text_shift_x = this.x_shift + arrow_shift_x - 1;
-        if (note instanceof StaveNote) {
+        if (isStaveNote(note)) {
           arrow_y = line_space / 2;
           topY += 0.5 * line_space;
           if ((botY - topY) % 2 === 0) {
@@ -220,7 +224,7 @@ export class Stroke extends Modifier {
       ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
       strokeLine = 'wiggly';
-      if (note instanceof StaveNote) {
+      if (isStaveNote(note)) {
         for (let i = topY; i <= botY; i += line_space) {
           Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
         }

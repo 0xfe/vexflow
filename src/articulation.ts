@@ -13,6 +13,7 @@ import { ModifierContextState } from './modifiercontext';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
+import { isTabNote } from 'typeguard';
 
 export interface ArticulationStruct {
   code?: string;
@@ -21,9 +22,8 @@ export interface ArticulationStruct {
   between_lines: boolean;
 }
 
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Articulation.DEBUG) log('Vex.Flow.Articulation', args);
 }
 
@@ -64,16 +64,11 @@ function snapLineToStaff(canSitBetweenLines: boolean, line: number, position: nu
   }
 }
 
-function isStaveNote(note: Note): boolean {
-  const noteCategory = note.getCategory();
-  return noteCategory === StaveNote.CATEGORY || noteCategory === GraceNote.CATEGORY;
-}
-
 function getTopY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (isStaveNote(note)) {
+  if (isStaveOrGraceNoteCategory(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -83,7 +78,7 @@ function getTopY(note: Note, textLine: number): number {
     } else {
       return Math.min(...note.getYs());
     }
-  } else if (note.getCategory() === TabNote.CATEGORY) {
+  } else if (isTabNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -102,7 +97,7 @@ function getBottomY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (isStaveNote(note)) {
+  if (isStaveOrGraceNoteCategory(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemBaseY;
@@ -112,7 +107,7 @@ function getBottomY(note: Note, textLine: number): number {
     } else {
       return Math.max(...note.getYs());
     }
-  } else if (note.getCategory() === TabNote.CATEGORY) {
+  } else if (isTabNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return note.checkStave().getYForBottomText(textLine);
@@ -127,17 +122,22 @@ function getBottomY(note: Note, textLine: number): number {
   }
 }
 
-// Gets the initial offset of the articulation from the y value of the starting position.
-// This is required because the top/bottom text positions already have spacing applied to
-// provide a "visually pleasent" default position. However the y values provided from
-// the stavenote's top/bottom do *not* have any pre-applied spacing. This function
-// normalizes this asymmetry.
+/**
+ * Get the initial offset of the articulation from the y value of the starting position.
+ * This is required because the top/bottom text positions already have spacing applied to
+ * provide a "visually pleasant" default position. However the y values provided from
+ * the stavenote's top/bottom do *not* have any pre-applied spacing. This function
+ * normalizes this asymmetry.
+ * @param note
+ * @param position
+ * @returns
+ */
 function getInitialOffset(note: Note, position: number): number {
   const isOnStemTip =
     (position === ABOVE && note.getStemDirection() === Stem.UP) ||
     (position === BELOW && note.getStemDirection() === Stem.DOWN);
 
-  if (isStaveNote(note)) {
+  if (isStaveOrGraceNoteCategory(note)) {
     if (note.hasStem() && isOnStemTip) {
       return 0.5;
     } else {
@@ -152,6 +152,12 @@ function getInitialOffset(note: Note, position: number): number {
       return 0;
     }
   }
+}
+
+// Helper function for checking if a Note object is either a StaveNote or a GraceNote.
+function isStaveOrGraceNoteCategory(note: Note): boolean {
+  const category = note.getCategory();
+  return category === StaveNote.CATEGORY || category === GraceNote.CATEGORY;
 }
 
 /**
@@ -295,7 +301,7 @@ export class Articulation extends Modifier {
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();
-    const isTab = note.getCategory() === TabNote.CATEGORY;
+    const isTab = isTabNote(note);
 
     // Articulations are centered over/under the note head.
     const { x } = note.getModifierStartXY(position, index);

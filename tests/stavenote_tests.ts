@@ -26,6 +26,7 @@ import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { Articulation } from 'articulation';
 import { ModifierContext } from 'modifiercontext';
+import { TabNote } from 'tabnote';
 
 function note(note_struct: StaveNoteStruct) {
   return new StaveNote(note_struct);

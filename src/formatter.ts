@@ -17,7 +17,7 @@ import { Tickable } from './tickable';
 import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
-import { StaveNote } from './stavenote';
+import { isStaveNote } from './typeguard';
 
 interface Distance {
   maxNegativeShiftPx: number;
@@ -351,7 +351,7 @@ export class Formatter {
    */
   static AlignRestsToNotes(notes: Note[], alignAllNotes: boolean, alignTuplets?: boolean): void {
     notes.forEach((note, index) => {
-      if (note instanceof StaveNote && note.isRest()) {
+      if (isStaveNote(note) && note.isRest()) {
         if (note.getTuplet() && !alignTuplets) return;
 
         // If activated rests not on default can be rendered as specified.

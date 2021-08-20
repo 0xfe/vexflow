@@ -8,6 +8,10 @@ import { RuntimeError } from './util';
 
 /** Fraction represents a rational number. */
 export class Fraction {
+  static get CATEGORY(): string {
+    return 'fractions';
+  }
+
   numerator: number = 1;
   denominator: number = 1;
 
@@ -56,6 +60,10 @@ export class Fraction {
   /** Construct providing numerator and denominator. */
   constructor(numerator?: number, denominator?: number) {
     this.set(numerator, denominator);
+  }
+
+  getCategory(): string {
+    return Fraction.CATEGORY;
   }
 
   /** Set numerator and denominator. */

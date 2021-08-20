@@ -260,8 +260,7 @@ export class Ornament extends Modifier {
     const stemExtents = note.checkStem().getExtents();
     let y = stemDir === StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
 
-    // TabNotes don't have stems attached to them. Tab stems are rendered
-    // outside the stave.
+    // TabNotes don't have stems attached to them. Tab stems are rendered outside the stave.
     if (note.getCategory() === TabNote.CATEGORY) {
       if (note.hasStem()) {
         if (stemDir === StaveNote.STEM_DOWN) {

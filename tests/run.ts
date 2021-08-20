@@ -1,5 +1,6 @@
 import { Vex } from 'vex';
 import { VexFlowTests } from './vexflow_test_helpers';
+
 import { AccidentalTests } from './accidental_tests';
 import { StaveNoteTests } from './stavenote_tests';
 import { VoiceTests } from './voice_tests';
@@ -61,6 +62,7 @@ import { EasyScoreTests } from './easyscore_tests';
 import { RegistryTests } from './registry_tests';
 import { BachDemoTests } from './bach_tests';
 import { GlyphNoteTests } from './glyphnote_tests';
+import { TypeGuardTests } from './typeguard_tests';
 
 VexFlowTests.run = function () {
   AccidentalTests.Start();
@@ -124,6 +126,7 @@ VexFlowTests.run = function () {
   RegistryTests.Start();
   BachDemoTests.Start();
   GlyphNoteTests.Start();
+  TypeGuardTests.Start();
 };
 
 export default Vex;
