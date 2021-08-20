@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Stave } from './stave';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
@@ -32,6 +31,10 @@ export interface FormatterMetrics {
  * has a duration, i.e., Tickables occupy space in the musical rendering dimension.
  */
 export abstract class Tickable extends Element {
+  static get CATEGORY(): string {
+    return this.name; // => 'Tickable'
+  }
+
   protected ignore_ticks: boolean;
   protected tupletStack: Tuplet[];
   protected tuplet?: Tuplet;
@@ -40,8 +43,8 @@ export abstract class Tickable extends Element {
   protected voice?: Voice;
   protected width: number;
   protected x_shift: number;
-  protected preFormatted: boolean;
-  protected postFormatted: boolean;
+  protected preFormatted: boolean = false;
+  protected postFormatted: boolean = false;
   protected modifierContext?: ModifierContext;
   protected tickContext?: TickContext;
   protected modifiers: Modifier[];
@@ -66,8 +69,6 @@ export abstract class Tickable extends Element {
     this.x_shift = 0; // Shift from tick context
 
     this.modifiers = [];
-    this.preFormatted = false;
-    this.postFormatted = false;
     this.tupletStack = [];
 
     this.align_center = false;
@@ -100,6 +101,10 @@ export abstract class Tickable extends Element {
         deviation: 0,
       },
     };
+  }
+
+  getCategory(): string {
+    return Tickable.CATEGORY;
   }
 
   /** Reset the Tickable, this function will be overloaded. */
@@ -212,7 +217,7 @@ export abstract class Tickable extends Element {
     return this.tupletStack;
   }
 
-  /*
+  /**
    * Reset the specific Tuplet if this is not provided, all tuplets are reset.
    * Remove any prior tuplets from the tick calculation and
    * reset the intrinsic tick value.
@@ -291,7 +296,7 @@ export abstract class Tickable extends Element {
   /** Set the Tick Contxt. */
   setTickContext(tc: TickContext): void {
     this.tickContext = tc;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
   }
 
   /** Preformat the Tickable. */

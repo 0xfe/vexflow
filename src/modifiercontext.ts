@@ -50,11 +50,11 @@ export class ModifierContext {
 
   state: ModifierContextState;
 
-  protected postFormatted: boolean;
   protected spacing: number;
   protected members: Record<string, ModifierContextMember[]>;
 
-  protected preFormatted: boolean;
+  protected preFormatted: boolean = false;
+  protected postFormatted: boolean = false;
   protected width: number;
   protected formatted?: boolean;
   // eslint-disable-next-line
@@ -67,8 +67,6 @@ export class ModifierContext {
     this.members = {};
 
     // Formatting data.
-    this.preFormatted = false;
-    this.postFormatted = false;
     this.width = 0;
     this.spacing = 0;
     this.state = {

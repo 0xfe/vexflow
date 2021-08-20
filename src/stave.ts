@@ -1,22 +1,21 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { BoundingBox } from './boundingbox';
+import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { Flow } from './flow';
+import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier } from './stavemodifier';
 import { Repetition } from './staverepetition';
 import { StaveSection } from './stavesection';
-import { StaveTempo } from './stavetempo';
+import { StaveTempo, StaveTempoOptions } from './stavetempo';
 import { StaveText } from './stavetext';
-import { BoundingBox } from './boundingbox';
-import { Clef } from './clef';
-import { KeySignature } from './keysignature';
-import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
+import { TimeSignature } from './timesignature';
 import { Bounds, FontInfo } from './types/common';
-import { StaveTempoOptions } from './stavetempo';
+import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
   visible: boolean;

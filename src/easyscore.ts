@@ -3,17 +3,18 @@
 
 /* eslint max-classes-per-file: "off" */
 
+import { Accidental } from './accidental';
+import { Articulation } from './articulation';
+import { Factory } from './factory';
+import { FretHandFinger } from './frethandfinger';
+import { Modifier } from './modifier';
+import { Note } from './note';
+import { Parser, Match, Result, Rule, RuleFunction } from './parser';
+import { RenderContext } from './types/common';
 import { RuntimeError, log } from './util';
 import { StaveNote } from './stavenote';
-import { Match, Parser, Result, Rule, RuleFunction } from './parser';
-import { Articulation } from './articulation';
-import { FretHandFinger } from './frethandfinger';
-import { Factory } from './factory';
-import { RenderContext } from './types/common';
-import { Accidental } from './accidental';
-import { Modifier } from './modifier';
-import { Voice } from './voice';
 import { TupletOptions } from './tuplet';
+import { Voice } from './voice';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line

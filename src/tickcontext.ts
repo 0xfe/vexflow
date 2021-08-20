@@ -45,7 +45,9 @@ export class TickContext extends Tickable {
   tContexts: TickContext[];
 
   // eslint-disable-next-line
-  draw(...args: any[]): void {}
+  draw(...args: any[]): void {
+    // DO NOTHING.
+  }
 
   static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;
@@ -190,7 +192,7 @@ export class TickContext extends Tickable {
 
   setCurrentTick(tick: Fraction): void {
     this.currentTick = tick;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
   }
 
   addTickable(tickable: Note, voiceIndex?: number): this {
@@ -220,7 +222,7 @@ export class TickContext extends Tickable {
     tickable.setTickContext(this);
     this.tickables.push(tickable);
     this.tickablesByVoice[voiceIndex || 0] = tickable;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 

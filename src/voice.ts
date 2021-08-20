@@ -1,14 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { RuntimeError, check } from './util';
+
+import { BoundingBox } from './boundingbox';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
-import { Stave } from './stave';
-import { Note } from './note';
-import { BoundingBox } from './boundingbox';
-import { Tickable } from './tickable';
 import { RenderContext } from './types/common';
+import { RuntimeError, check } from './util';
+import { Stave } from './stave';
+import { Tickable } from './tickable';
 
 export interface VoiceTime {
   num_beats: number;
@@ -147,7 +147,8 @@ export class Voice extends Element {
   /** Set the voice's stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
-    this.boundingBox = undefined; // Reset bounding box so we can reformat
+    // Reset bounding box so we can reformat.
+    this.boundingBox = undefined;
     return this;
   }
 
@@ -291,8 +292,7 @@ export class Voice extends Element {
     let boundingBox = undefined;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
-
-      // Set the stave if provided
+      // Set the stave if provided.
       if (stave) tickable.setStave(stave);
 
       if (!tickable.getStave()) {

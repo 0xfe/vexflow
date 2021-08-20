@@ -1,19 +1,19 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, drawDot } from './util';
-import { Flow } from './flow';
-import { Tickable } from './tickable';
-import { Stroke } from './strokes';
-import { Stave } from './stave';
-import { Voice } from './voice';
-import { TickContext } from './tickcontext';
-import { ModifierContext } from './modifiercontext';
-import { Modifier } from './modifier';
-import { KeyProps, RenderContext } from './types/common';
-import { GlyphProps } from './glyph';
-import { Fraction } from './fraction';
+import { ModifierContext } from 'modifiercontext';
 import { Beam } from './beam';
+import { Flow } from './flow';
+import { Fraction } from './fraction';
+import { GlyphProps } from './glyph';
+import { Modifier } from './modifier';
+import { Stave } from './stave';
+import { Stroke } from './strokes';
+import { Tickable } from './tickable';
+import { TickContext } from './tickcontext';
+import { KeyProps, RenderContext } from './types/common';
+import { drawDot, RuntimeError } from './util';
+import { Voice } from './voice';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -455,10 +455,10 @@ export abstract class Note extends Tickable {
     return this.voice;
   }
 
-  /** Attache this note to `voice`. */
+  /** Attach this note to `voice`. */
   setVoice(voice: Voice): this {
     this.voice = voice;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
@@ -471,7 +471,7 @@ export abstract class Note extends Tickable {
   /** Set the `TickContext` for this note. */
   setTickContext(tc: TickContext): this {
     this.tickContext = tc;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
@@ -602,7 +602,7 @@ export abstract class Note extends Tickable {
    */
   getAbsoluteX(): number {
     if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
+      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an x-value');
     }
 
     // Position note to left edge of tick context.
@@ -610,11 +610,9 @@ export abstract class Note extends Tickable {
     if (this.stave) {
       x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
     }
-
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();
     }
-
     return x;
   }
 

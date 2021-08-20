@@ -33,7 +33,7 @@ export class GraceNoteGroup extends Modifier {
   protected readonly grace_notes: StemmableNote[];
   protected readonly show_slur?: boolean;
 
-  protected preFormatted: boolean;
+  protected preFormatted: boolean = false;
   protected formatter: Formatter;
   protected render_options: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
@@ -99,8 +99,6 @@ export class GraceNoteGroup extends Modifier {
     this.position = Modifier.Position.LEFT;
     this.grace_notes = grace_notes;
     this.width = 0;
-
-    this.preFormatted = false;
 
     this.show_slur = show_slur;
     this.slur = undefined;
