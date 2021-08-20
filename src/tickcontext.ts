@@ -19,8 +19,7 @@ export interface TickContextOptions {
 }
 
 /**
- * Tickcontext formats abstract tickable objects, such as notes, chords,
- * tabs, etc.
+ * TickContext formats abstract tickable objects, such as notes, chords, tabs, etc.
  */
 export class TickContext extends Tickable {
   protected readonly tickID: number;
@@ -46,7 +45,7 @@ export class TickContext extends Tickable {
   tContexts: TickContext[];
 
   // eslint-disable-next-line
-  draw() {}
+  draw(...args: any[]): void {}
 
   static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;

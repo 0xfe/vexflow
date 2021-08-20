@@ -12,10 +12,13 @@ export class RuntimeError extends Error {
   }
 }
 
-/** Check that `x` is of type `T` and not `undefined`. */
-export function check<T>(x?: T): T {
+/**
+ * Check that `x` is of type `T` and not `undefined`.
+ * If `x` is `undefined`, throw a RuntimeError with the optionally provided error code and message.
+ */
+export function check<T>(x?: T, code: string = 'undefined', message: string = ''): T {
   if (x === undefined) {
-    throw new RuntimeError('undefined');
+    throw new RuntimeError(code, message);
   }
   return x;
 }

@@ -33,7 +33,7 @@ export interface FormatterMetrics {
  */
 export abstract class Tickable extends Element {
   protected ignore_ticks: boolean;
-  tupletStack: Tuplet[];
+  protected tupletStack: Tuplet[];
   protected tuplet?: Tuplet;
   protected ticks: Fraction;
   protected center_x_shift: number;
@@ -118,8 +118,9 @@ export abstract class Tickable extends Element {
   }
 
   /** Ignore the ticks. */
-  setIgnoreTicks(flag: boolean): void {
+  setIgnoreTicks(flag: boolean): this {
     this.ignore_ticks = flag;
+    return this;
   }
 
   /** Set width of note. Used by the formatter for positioning. */
@@ -204,6 +205,11 @@ export abstract class Tickable extends Element {
   /** Get the tuplet. */
   getTuplet(): Tuplet | undefined {
     return this.tuplet;
+  }
+
+  /** Return the intrinsic ticks. */
+  getTupletStack(): Tuplet[] {
+    return this.tupletStack;
   }
 
   /*
