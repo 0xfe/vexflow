@@ -17,7 +17,7 @@ import { Tickable } from './tickable';
 import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
-import { isStaveNote } from './typeguard';
+import { isNote, isStaveNote } from './typeguard';
 
 interface Distance {
   maxNegativeShiftPx: number;
@@ -48,7 +48,7 @@ export interface AlignmentContexts<T> {
   resolutionMultiplier: number;
 }
 
-type addToContextFn<T> = (tickable: Note, context: T, voiceIndex: number) => void;
+type addToContextFn<T> = (tickable: Tickable, context: T, voiceIndex: number) => void;
 type makeContextFn<T> = (tick?: { tickID: number }) => T;
 
 /**
@@ -114,7 +114,7 @@ function L(...args: any[]) {
  * @returns a line number, which determines the vertical position of a rest.
  */
 function getRestLineForNextNoteGroup(
-  notes: Note[],
+  notes: Tickable[],
   currRestLine: number,
   currNoteIndex: number,
   compare: boolean
@@ -125,7 +125,7 @@ function getRestLineForNextNoteGroup(
   // Start with the next note and keep going until we find a valid non-rest note group.
   for (let noteIndex = currNoteIndex + 1; noteIndex < notes.length; noteIndex++) {
     const note = notes[noteIndex];
-    if (!note.isRest() && !note.shouldIgnoreTicks()) {
+    if (isNote(note) && !note.isRest() && !note.shouldIgnoreTicks()) {
       nextRestLine = note.getLineForRest();
       break;
     }
@@ -179,7 +179,7 @@ export class Formatter {
    * Helper function to layout "notes" one after the other without
    * regard for proportions. Useful for tests and debugging.
    */
-  static SimpleFormat(notes: Note[], x = 0, { paddingBetween = 10 } = {}): void {
+  static SimpleFormat(notes: Tickable[], x = 0, { paddingBetween = 10 } = {}): void {
     notes.reduce((accumulator, note) => {
       note.addToModifierContext(new ModifierContext());
       const tick = new TickContext().addTickable(note).preFormat();
@@ -304,7 +304,7 @@ export class Formatter {
     tabstave: TabStave,
     stave: Stave,
     tabnotes: TabNote[],
-    notes: Note[],
+    notes: Tickable[],
     autobeam: boolean,
     params: FormatOptions
   ): void {
@@ -345,38 +345,43 @@ export class Formatter {
 
   /**
    * Automatically set the vertical position of rests based on previous/next note positions.
-   * @param notes an array of Notes.
+   * @param tickables an array of Tickables.
    * @param alignAllNotes If `false`, only align rests that are within a group of beamed notes.
    * @param alignTuplets If `false`, ignores tuplets.
    */
-  static AlignRestsToNotes(notes: Note[], alignAllNotes: boolean, alignTuplets?: boolean): void {
-    notes.forEach((note, index) => {
-      if (isStaveNote(note) && note.isRest()) {
-        if (note.getTuplet() && !alignTuplets) return;
+  static AlignRestsToNotes(tickables: Tickable[], alignAllNotes: boolean, alignTuplets?: boolean): void {
+    let prevTickable: Note;
+    tickables.forEach((currTickable: Tickable, index: number) => {
+      if (isStaveNote(currTickable) && currTickable.isRest()) {
+        if (currTickable.getTuplet() && !alignTuplets) {
+          return;
+        }
 
         // If activated rests not on default can be rendered as specified.
-        const position = note.getGlyph().position.toUpperCase();
-        if (position !== 'R/4' && position !== 'B/4') return;
+        const position = currTickable.getGlyph().position.toUpperCase();
+        if (position !== 'R/4' && position !== 'B/4') {
+          return;
+        }
 
-        if (alignAllNotes || note.getBeam()) {
+        if (alignAllNotes || currTickable.getBeam()) {
           // Align rests with previous/next notes.
-          const props = note.getKeyProps()[0];
+          const props = currTickable.getKeyProps()[0];
           if (index === 0) {
-            props.line = getRestLineForNextNoteGroup(notes, props.line, index, false);
-          } else if (index > 0 && index < notes.length) {
+            props.line = getRestLineForNextNoteGroup(tickables, props.line, index, false);
+          } else if (index > 0 && index < tickables.length) {
             // If previous note is a rest, use its line number.
-            const prevNote = notes[index - 1];
-            if (prevNote && prevNote.isRest()) {
-              props.line = prevNote.keyProps[0].line;
+            if (prevTickable && prevTickable.isRest()) {
+              props.line = prevTickable.keyProps[0].line;
             } else {
-              const restLine = prevNote.getLineForRest();
+              const restLine = prevTickable.getLineForRest();
               // Get the rest line for next valid non-rest note group.
-              props.line = getRestLineForNextNoteGroup(notes, restLine, index, true);
+              props.line = getRestLineForNextNoteGroup(tickables, restLine, index, true);
             }
           }
-          note.setKeyLine(0, props.line);
+          currTickable.setKeyLine(0, props.line);
         }
       }
+      prevTickable = currTickable as Note;
     });
   }
 
@@ -480,12 +485,12 @@ export class Formatter {
       if (context.getTickables().length < voices.length) {
         unalignedCtxCount += 1;
       }
-      // calculate the 'width entropy' over all the tickables
-      context.getTickables().forEach((tt) => {
-        wsum += tt.getMetrics().width;
-        dsum += tt.getTicks().value();
-        widths.push(tt.getMetrics().width);
-        durations.push(tt.getTicks().value());
+      // Calculate the 'width entropy' over all the Tickables.
+      context.getTickables().forEach((t: Tickable) => {
+        wsum += t.getMetrics().width;
+        dsum += t.getTicks().value();
+        widths.push(t.getMetrics().width);
+        durations.push(t.getTicks().value());
       });
       const width = context.getWidth();
       this.minTotalWidth += width;
@@ -543,9 +548,9 @@ export class Formatter {
     return resolutionMultiplier;
   }
 
-  /** Create `ModifierContext`s for each tick in `voices`. */
+  /** Create a `ModifierContext` for each tick in `voices`. */
   createModifierContexts(voices: Voice[]): AlignmentContexts<ModifierContext> {
-    const fn: addToContextFn<ModifierContext> = (tickable: Note, context: ModifierContext) =>
+    const fn: addToContextFn<ModifierContext> = (tickable: Tickable, context: ModifierContext) =>
       tickable.addToModifierContext(context);
     const contexts = createContexts(voices, () => new ModifierContext(), fn);
     this.modifierContexts = contexts;
@@ -553,11 +558,11 @@ export class Formatter {
   }
 
   /**
-   * Create `TickContext`s for each tick in `voices`. Also calculate the
+   * Create a `TickContext` for each tick in `voices`. Also calculate the
    * total number of ticks in voices.
    */
   createTickContexts(voices: Voice[]): AlignmentContexts<TickContext> {
-    const fn: addToContextFn<TickContext> = (tickable: Note, context: TickContext, voiceIndex: number) =>
+    const fn: addToContextFn<TickContext> = (tickable: Tickable, context: TickContext, voiceIndex: number) =>
       context.addTickable(tickable, voiceIndex);
     const contexts = createContexts(voices, (tick?: { tickID: number }) => new TickContext(tick), fn);
     this.tickContexts = contexts;
@@ -646,7 +651,7 @@ export class Formatter {
       const distances: Distance[] = contextList.map((tick: number, i: number) => {
         const context: TickContext = contextMap[tick];
         const voices = context.getTickablesByVoice();
-        let backTickable: Note | undefined;
+        let backTickable: Tickable | undefined;
         if (i > 0) {
           const prevContext: TickContext = contextMap[contextList[i - 1]];
           // Go through each tickable and search backwards for another tickable
@@ -745,7 +750,7 @@ export class Formatter {
         }
 
         // Move center aligned tickables to middle
-        context.getCenterAlignedTickables().forEach((tickable: Note) => {
+        context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
           tickable.setCenterXShift(centerX - context.getX());
         });
       });

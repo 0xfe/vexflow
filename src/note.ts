@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { ModifierContext } from 'modifiercontext';
 import { Beam } from './beam';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
@@ -107,7 +106,7 @@ export abstract class Note extends Tickable {
   }
 
   /** Debug helper. Displays various note metrics for the given note. */
-  static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
+  static plotMetrics(ctx: RenderContext, note: Tickable, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
     const xPre1 = note.getAbsoluteX() - metrics.leftDisplacedHeadPx;
@@ -519,24 +518,19 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  /** Attach this note to a modifier context. */
-  setModifierContext(mc?: ModifierContext): this {
-    this.modifierContext = mc;
-    return this;
-  }
-
-  /** Attach a modifier to this note. */
-  addModifier(a: number | Modifier, b: number | Modifier = 0): this {
-    let index: number;
-    let modifier: Modifier;
-
-    if (typeof a === 'object' && typeof b === 'number') {
-      index = b;
-      modifier = a;
-    } else {
+  /**
+   * Attach a modifier to this note.
+   * @param modifier the Modifier to add.
+   * @param index of the key to modify.
+   * @returns this
+   */
+  addModifier(modifier: Modifier, index: number = 0): this {
+    // Legacy versions of VexFlow had the two parameters swapped.
+    // We check here and throw an error if the argument types are not correct.
+    if (typeof modifier !== 'object' || typeof index !== 'number') {
       throw new RuntimeError(
         'WrongParams',
-        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
+        'Call signature to addModifier not supported, use addModifier(modifier: Modifier, index) instead.'
       );
     }
     modifier.setNote(this);
@@ -602,7 +596,7 @@ export abstract class Note extends Tickable {
    */
   getAbsoluteX(): number {
     if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an x-value');
+      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an x-value.');
     }
 
     // Position note to left edge of tick context.

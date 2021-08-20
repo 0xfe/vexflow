@@ -8,7 +8,6 @@ import { Articulation } from './articulation';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
 import { Modifier } from './modifier';
-import { Note } from './note';
 import { Parser, Match, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './types/common';
 import { RuntimeError, log } from './util';

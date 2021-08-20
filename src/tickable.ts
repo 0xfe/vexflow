@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Stave } from './stave';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
@@ -32,7 +33,7 @@ export interface FormatterMetrics {
  */
 export abstract class Tickable extends Element {
   static get CATEGORY(): string {
-    return this.name; // => 'Tickable'
+    return 'Tickable';
   }
 
   protected ignore_ticks: boolean;
@@ -350,4 +351,31 @@ export abstract class Tickable extends Element {
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }
+
+  getAbsoluteX(): number {
+    if (!this.tickContext) {
+      throw new RuntimeError('NoTickContext', 'Tickable needs a TickContext assigned for an x-value.');
+    }
+    return this.tickContext.getX();
+  }
+
+  /** Attach this note to a modifier context. */
+  setModifierContext(mc?: ModifierContext): this {
+    this.modifierContext = mc;
+    return this;
+  }
+
+  /** Get `ModifierContext`. */
+  getModifierContext(): ModifierContext | undefined {
+    return this.modifierContext;
+  }
+
+  /** Get the target stave. */
+  abstract getStave(): Stave | undefined;
+
+  /** Set the target stave. */
+  abstract setStave(stave: Stave): this;
+
+  // eslint-disable-next-line
+  abstract getMetrics(): any;
 }

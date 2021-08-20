@@ -3,7 +3,7 @@
 
 import { Note } from './note';
 import { KeySignature } from './keysignature';
-import { ModifierContext } from 'modifiercontext';
+import { ModifierContext } from './modifiercontext';
 
 export class KeySigNote extends Note {
   protected keySignature: KeySignature;

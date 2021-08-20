@@ -4,7 +4,7 @@
 import { log } from './util';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
-import { ModifierContext } from 'modifiercontext';
+import { ModifierContext } from './modifiercontext';
 
 // eslint-disable-next-line
 function L(...args: any[]) {

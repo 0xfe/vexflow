@@ -15,7 +15,8 @@ import { ModifierContextState } from './modifiercontext';
 import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
-import { Tickable } from 'tickable';
+import { Tickable } from './tickable';
+import { isStaveNote } from './typeguard';
 
 type Line = {
   column: number;
@@ -409,9 +410,8 @@ export class Accidental extends Modifier {
       const modifiedPitches: string[] = [];
 
       const processNote = (t: Tickable) => {
-        // TODO: replace instanceof with .isCategory()
         // Only StaveNote implements .addAccidental(), which is used below.
-        if (!(t instanceof StaveNote) || t.isRest() || t.shouldIgnoreTicks()) {
+        if (!isStaveNote(t) || t.isRest() || t.shouldIgnoreTicks()) {
           return;
         }
 

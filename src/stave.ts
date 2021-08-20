@@ -567,7 +567,7 @@ export class Stave extends Element {
     return this;
   }
 
-  addEndTimeSignature(timeSpec: string, customPadding: number): this {
+  addEndTimeSignature(timeSpec: string, customPadding?: number): this {
     this.addTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
     return this;
   }

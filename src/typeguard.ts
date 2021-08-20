@@ -2,10 +2,10 @@
 // Author: Ron B. Yeh
 // MIT License
 
-import { Note } from 'note';
-import { StaveNote } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
-import { TabNote } from 'tabnote';
+import { Note } from './note';
+import { StaveNote } from './stavenote';
+import { StemmableNote } from './stemmablenote';
+import { TabNote } from './tabnote';
 
 // Helper functions for checking an object's type, via `instanceof` and `obj.getCategory()`.
 export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);

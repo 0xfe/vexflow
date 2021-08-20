@@ -6,7 +6,7 @@ import { RuntimeError } from './util';
 import { StemmableNote } from './stemmablenote';
 import { Stave } from './stave';
 import { NoteStruct } from './note';
-import { ModifierContext } from 'modifiercontext';
+import { ModifierContext } from './modifiercontext';
 
 export class GhostNote extends StemmableNote {
   /** @constructor */

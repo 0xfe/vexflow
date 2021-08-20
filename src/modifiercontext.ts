@@ -23,7 +23,7 @@ import { Vibrato } from './vibrato';
 import { Modifier } from './modifier';
 import { TabNote } from './tabnote';
 import { Note } from './note';
-import { Tickable } from 'tickable';
+import { Tickable } from './tickable';
 
 export interface ModifierContextState {
   right_shift: number;

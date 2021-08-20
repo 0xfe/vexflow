@@ -7,7 +7,8 @@
 import { RuntimeError } from './util';
 import { Tickable } from './tickable';
 import { Fraction } from './fraction';
-import { NoteMetrics, Note } from './note';
+import { NoteMetrics } from './note';
+import { Stave } from './stave';
 
 export interface TickContextMetrics extends NoteMetrics {
   totalLeftPx: number;
@@ -23,8 +24,8 @@ export interface TickContextOptions {
  */
 export class TickContext extends Tickable {
   protected readonly tickID: number;
-  protected readonly tickables: Note[];
-  protected readonly tickablesByVoice: Record<string, Note>;
+  protected readonly tickables: Tickable[];
+  protected readonly tickablesByVoice: Record<string, Tickable>;
   protected currentTick: Fraction;
   protected maxTicks: Fraction;
   protected padding: number;
@@ -39,9 +40,9 @@ export class TickContext extends Tickable {
   protected modRightPx: number;
   protected totalLeftPx: number;
   protected totalRightPx: number;
-  protected maxTickable?: Note;
+  protected maxTickable?: Tickable;
   protected minTicks?: Fraction;
-  protected minTickable?: Note;
+  protected minTickable?: Tickable;
   tContexts: TickContext[];
 
   // eslint-disable-next-line
@@ -72,7 +73,7 @@ export class TickContext extends Tickable {
     this.xBase = 0; // base x position without xOffset
     this.xOffset = 0; // xBase and xOffset are an alternative way to describe x (x = xB + xO)
     this.tickables = []; // Notes, tabs, chords, lyrics.
-    this.tickablesByVoice = {}; // Tickables indeced by voice number
+    this.tickablesByVoice = {}; // Tickables indexed by voice number
 
     // Formatting metrics
     this.notePx = 0; // width of widest note in this context
@@ -136,27 +137,32 @@ export class TickContext extends Tickable {
     return this.minTicks;
   }
 
-  getMaxTickable(): Note | undefined {
+  getMaxTickable(): Tickable | undefined {
     return this.maxTickable;
   }
 
-  getMinTickable(): Note | undefined {
+  getMinTickable(): Tickable | undefined {
     return this.minTickable;
   }
 
-  getTickables(): Note[] {
+  getTickables(): Tickable[] {
     return this.tickables;
   }
 
-  getTickablesForVoice(voiceIndex: number): Note {
+  /**
+   * Introduced on 2020-04-17 as getTickablesForVoice(voiceIndex).
+   *   https://github.com/0xfe/vexflow/blame/dc97b0cc5bb93171c0038638c34362dc958222ca/src/tickcontext.js#L63
+   * Renamed on 2021-08-05 to getTickableForVoice(voiceIndex). Method renamed to singular, since it returns one Tickable.
+   */
+  getTickableForVoice(voiceIndex: number): Tickable {
     return this.tickablesByVoice[voiceIndex];
   }
 
-  getTickablesByVoice(): Record<string, Note> {
+  getTickablesByVoice(): Record<string, Tickable> {
     return this.tickablesByVoice;
   }
 
-  getCenterAlignedTickables(): Note[] {
+  getCenterAlignedTickables(): Tickable[] {
     return this.tickables.filter((tickable) => tickable.isCenterAligned());
   }
 
@@ -195,7 +201,7 @@ export class TickContext extends Tickable {
     this.setPreFormatted(false);
   }
 
-  addTickable(tickable: Note, voiceIndex?: number): this {
+  addTickable(tickable: Tickable, voiceIndex?: number): this {
     if (!tickable) {
       throw new RuntimeError('BadArgument', 'Invalid tickable added.');
     }
@@ -263,5 +269,14 @@ export class TickContext extends Tickable {
     if (this.postFormatted) return this;
     this.postFormatted = true;
     return this;
+  }
+
+  getStave(): Stave | undefined {
+    throw new RuntimeError('NotImplemented', 'getStave() not implemented.');
+  }
+
+  // eslint-disable-next-line
+  setStave(stave: Stave): this {
+    throw new RuntimeError('NotImplemented', 'setStave() not implemented.');
   }
 }

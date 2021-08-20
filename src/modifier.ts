@@ -45,7 +45,7 @@ export class Modifier extends Element {
 
   /** Modifiers category string. */
   static get CATEGORY(): string {
-    return 'none';
+    return 'Modifier';
   }
 
   /** Modifiers can be positioned almost anywhere, relative to a note. */

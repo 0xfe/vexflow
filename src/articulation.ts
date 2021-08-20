@@ -13,7 +13,7 @@ import { ModifierContextState } from './modifiercontext';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
 import { GraceNote } from './gracenote';
-import { isTabNote } from 'typeguard';
+import { isTabNote } from './typeguard';
 
 export interface ArticulationStruct {
   code?: string;

@@ -6,7 +6,7 @@ import { RenderContext } from './types/common';
 /** `RuntimeError` will be thrown by VexFlow classes in case of error. */
 export class RuntimeError extends Error {
   code: string;
-  constructor(code: string, message?: string) {
+  constructor(code: string, message: string = '') {
     super('[RuntimeError] ' + code + ':' + message);
     this.code = code;
   }
