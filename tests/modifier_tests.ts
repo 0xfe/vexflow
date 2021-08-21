@@ -4,6 +4,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
+import { Accidental } from 'accidental';
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 import { QUnit, test, equal } from './support/qunit_api';
@@ -31,9 +32,8 @@ const ModifierContextTests = {
     mc.addMember(modifier1);
     mc.addMember(modifier2);
 
-    const accidentals = mc.getMembers('none');
-
-    equal(accidentals.length, 2, 'Added two modifiers');
+    const modifiers = mc.getMembers(Modifier.CATEGORY);
+    equal(modifiers.length, 2, 'Added two modifiers');
   },
 };
 
