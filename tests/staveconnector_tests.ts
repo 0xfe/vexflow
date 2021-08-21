@@ -19,7 +19,7 @@ const StaveConnectorTests = {
     const run = VexFlowTests.runTests;
     test('VF.* API', this.VF_Prefix);
     run('Single Draw Test', this.drawSingle);
-    run('Single Draw Test, 1px Stave Line Thickness', this.drawSingle1pxBarlines);
+    run('Single Draw Test, 4px Stave Line Thickness', this.drawSingle4pxStaveLines);
     run('Single Both Sides Test', this.drawSingleBoth);
     run('Double Draw Test', this.drawDouble);
     run('Bold Double Line Left Draw Test', this.drawRepeatBegin);
@@ -54,8 +54,9 @@ const StaveConnectorTests = {
     ok(true, 'all pass');
   },
 
-  drawSingle1pxBarlines(options: TestOptions, contextBuilder: ContextBuilder): void {
-    VF.STAVE_LINE_THICKNESS = 1;
+  drawSingle4pxStaveLines(options: TestOptions, contextBuilder: ContextBuilder): void {
+    const oldThickness = VF.STAVE_LINE_THICKNESS;
+    VF.STAVE_LINE_THICKNESS = 4;
     const ctx = contextBuilder(options.elementId, 400, 300);
     const stave = new Stave(25, 10, 300);
     const stave2 = new Stave(25, 120, 300);
@@ -67,7 +68,7 @@ const StaveConnectorTests = {
     stave.draw();
     stave2.draw();
     connector.draw();
-    VF.STAVE_LINE_THICKNESS = 2;
+    VF.STAVE_LINE_THICKNESS = oldThickness;
 
     ok(true, 'all pass');
   },
