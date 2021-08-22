@@ -315,14 +315,6 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  /**
-   * Don't play notes by default, call them rests. This is also used by things like
-   * beams and dots for positioning.
-   */
-  isRest(): boolean {
-    return false;
-  }
-
   /** Add stroke. */
   addStroke(index: number, stroke: Stroke): this {
     stroke.setNote(this);
@@ -638,5 +630,15 @@ export abstract class Note extends Tickable {
     tieEndX -= this.width / 2 + 2;
 
     return tieEndX;
+  }
+
+  // Get the pitches in the note
+  getKeys(): string[] {
+    return this.keys;
+  }
+
+  // Get the properties for all the keys in the note
+  getKeyProps(): KeyProps[] {
+    return this.keyProps;
   }
 }

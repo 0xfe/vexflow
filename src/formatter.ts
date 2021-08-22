@@ -7,7 +7,6 @@ import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';
-import { Note } from './note';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 import { RenderContext } from './types/common';
@@ -350,7 +349,6 @@ export class Formatter {
    * @param alignTuplets If `false`, ignores tuplets.
    */
   static AlignRestsToNotes(tickables: Tickable[], alignAllNotes: boolean, alignTuplets?: boolean): void {
-    let prevTickable: Note;
     tickables.forEach((currTickable: Tickable, index: number) => {
       if (isStaveNote(currTickable) && currTickable.isRest()) {
         if (currTickable.getTuplet() && !alignTuplets) {
@@ -369,19 +367,21 @@ export class Formatter {
           if (index === 0) {
             props.line = getRestLineForNextNoteGroup(tickables, props.line, index, false);
           } else if (index > 0 && index < tickables.length) {
-            // If previous note is a rest, use its line number.
-            if (prevTickable && prevTickable.isRest()) {
-              props.line = prevTickable.keyProps[0].line;
-            } else {
-              const restLine = prevTickable.getLineForRest();
-              // Get the rest line for next valid non-rest note group.
-              props.line = getRestLineForNextNoteGroup(tickables, restLine, index, true);
+            // If previous tickable is a rest, use its line number.
+            const prevTickable = tickables[index - 1];
+            if (isStaveNote(prevTickable)) {
+              if (prevTickable.isRest()) {
+                props.line = prevTickable.getKeyProps()[0].line;
+              } else {
+                const restLine = prevTickable.getLineForRest();
+                // Get the rest line for next valid non-rest note group.
+                props.line = getRestLineForNextNoteGroup(tickables, restLine, index, true);
+              }
             }
           }
           currTickable.setKeyLine(0, props.line);
         }
       }
-      prevTickable = currTickable as Note;
     });
   }
 

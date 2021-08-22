@@ -727,16 +727,6 @@ export class StaveNote extends StemmableNote {
     return this;
   }
 
-  // Get the pitches in the note
-  getKeys(): string[] {
-    return this.keys;
-  }
-
-  // Get the properties for all the keys in the note
-  getKeyProps(): KeyProps[] {
-    return this.keyProps;
-  }
-
   // Check if note is shifted to the right
   isDisplaced(): boolean {
     return this.displaced;
