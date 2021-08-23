@@ -1,13 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-/* eslint max-classes-per-file: "off" */
-
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
-import { Parser, Match, Result, Rule, RuleFunction } from './parser';
+import { Grammar, Parser, Match, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './types/common';
 import { RuntimeError, log, defined } from './util';
 import { StaveNote } from './stavenote';
@@ -21,12 +19,10 @@ function L(...args: any[]): void {
   if (EasyScore.DEBUG) log('Vex.Flow.EasyScore', args);
 }
 
-type IDUpdate = { id: string };
-type ClassUpdate = { class: string };
 // eslint-disable-next-line
 type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
 
-export class Grammar {
+class EasyScoreGrammar implements Grammar {
   builder: Builder;
 
   constructor(builder: Builder) {
@@ -237,15 +233,18 @@ export interface BuilderOptions {
   stem?: string;
   clef?: string;
   // eslint-disable-next-line
-  [x: string]: any; // allow arbitrary options via reset(...)
+  [x: string]: any; // allow arbitrary properties via Builder.reset() & EasyScore.parse().
 }
 
 export class Builder {
   factory: Factory;
+  // Initialized by the constructor via this.reset().
   elements!: BuilderElements;
+  // Initialized by the constructor via this.reset().
   options!: BuilderOptions;
-  commitHooks: CommitHook[] = [];
+  // Initialized by the constructor via this.resetPiece().
   piece!: Piece;
+  commitHooks: CommitHook[] = [];
   rollingDuration!: string;
 
   constructor(factory: Factory) {
@@ -257,14 +256,11 @@ export class Builder {
     this.options = {
       stem: 'auto',
       clef: 'treble',
+      ...options,
     };
-    this.elements = {
-      notes: [],
-      accidentals: [],
-    };
+    this.elements = { notes: [], accidentals: [] };
     this.rollingDuration = '8';
     this.resetPiece();
-    Object.assign(this.options, options);
   }
 
   getFactory(): Factory {
@@ -308,8 +304,8 @@ export class Builder {
     L('addNote:', key, accid, octave);
     this.piece.chord.push({
       key: key as string,
-      accid: accid,
-      octave: octave,
+      accid,
+      octave,
     });
   }
 
@@ -324,7 +320,7 @@ export class Builder {
     if (typeof notes[0] !== 'object') {
       this.addSingleNote(notes[0]);
     } else {
-      notes.forEach((n: Match) => {
+      notes.forEach((n) => {
         if (n) this.addNote(...(n as string[])); // n => [string, string | null, string]
       });
     }
@@ -388,22 +384,11 @@ export class Builder {
   }
 }
 
-function setId(options: IDUpdate, note: StaveNote) {
-  if (options.id === undefined) return;
-  note.setAttribute('id', options.id);
-}
-
-function setClass(options: ClassUpdate, note: StaveNote) {
-  if (!options.class) return;
-  const commaSeparatedRegex = /\s*,\s*/;
-  options.class.split(commaSeparatedRegex).forEach((className: string) => note.addClass(className));
-}
-
 export interface EasyScoreOptions {
-  factory?: Factory;
-  builder?: Builder;
-  commitHooks?: CommitHook[];
-  throwOnError?: boolean;
+  factory: Factory;
+  builder: Builder;
+  commitHooks: CommitHook[];
+  throwOnError: boolean;
 }
 
 export interface EasyScoreDefaults {
@@ -415,58 +400,69 @@ export interface EasyScoreDefaults {
 }
 
 /**
- * EasyScore implements a parser for a simple language to generate
- * VexFlow objects.
+ * EasyScore implements a parser for a simple language to generate VexFlow objects.
  */
 export class EasyScore {
   static DEBUG: boolean = false;
 
-  defaults: EasyScoreDefaults;
+  defaults: EasyScoreDefaults = {
+    clef: 'treble',
+    time: '4/4',
+    stem: 'auto',
+  };
+
+  // options, factory, builder, grammar, and parser are all
+  // initialized by the constructor via this.setOptions().
   options!: EasyScoreOptions;
   factory!: Factory;
   builder!: Builder;
-  grammar!: Grammar;
+  grammar!: EasyScoreGrammar;
   parser!: Parser;
 
-  constructor(options: EasyScoreOptions = {}) {
+  constructor(options: Partial<EasyScoreOptions> = {}) {
     this.setOptions(options);
-    this.defaults = {
-      clef: 'treble',
-      time: '4/4',
-      stem: 'auto',
-    };
   }
 
   /**
-   * Set the Score defaults (`Type` must be set appropriately to avoid Errors when adding Staves).
+   * Set the score defaults.
+   * clef must be set appropriately to avoid errors when adding Staves.
    * @param defaults.clef default clef ( treble | bass ...) see {@link Clef.types}
-   * @param defaults.type default time signature ( 4/4 | 9/8 ...)
+   * @param defaults.time default time signature ( 4/4 | 9/8 ...)
    * @param defaults.stem default stem arrangement (auto | up | down)
+   * @returns this
    */
   set(defaults: Partial<EasyScoreDefaults>): this {
-    Object.assign(this.defaults, defaults);
+    this.defaults = { ...this.defaults, ...defaults };
     return this;
   }
 
-  setOptions(options: EasyScoreOptions): this {
+  /**
+   * @param options.factory is required.
+   * @returns this
+   */
+  setOptions(options: Partial<EasyScoreOptions>): this {
+    // eslint-disable-next-line
+    const factory = options.factory!; // ! operator, because options.factory was set in Factory.EasyScore().
+    const builder = options.builder ?? new Builder(factory);
+
     this.options = {
       commitHooks: [setId, setClass, Articulation.easyScoreHook, FretHandFinger.easyScoreHook],
       throwOnError: false,
       ...options,
+      factory,
+      builder,
     };
 
-    // eslint-disable-next-line
-    this.factory = this.options.factory!; // ! operator, because we know it is set in Factory.EasyScore()
-    this.builder = this.options.builder || new Builder(this.factory);
-    this.grammar = new Grammar(this.builder);
+    this.factory = factory;
+    this.builder = builder;
+    this.grammar = new EasyScoreGrammar(this.builder);
     this.parser = new Parser(this.grammar);
-    // eslint-disable-next-line
-    this.options.commitHooks!.forEach((commitHook: CommitHook) => this.addCommitHook(commitHook)); // ! operator, because this.options.commitHooks is set in the first line of this method.
+    this.options.commitHooks.forEach((commitHook) => this.addCommitHook(commitHook));
     return this;
   }
 
   setContext(context: RenderContext): this {
-    if (this.factory) this.factory.setContext(context);
+    this.factory.setContext(context);
     return this;
   }
 
@@ -505,3 +501,16 @@ export class EasyScore {
     this.builder.addCommitHook(commitHook);
   }
 }
+
+//#region Commit Hooks
+function setId(options: { id?: string }, note: StaveNote) {
+  if (options.id === undefined) return;
+  note.setAttribute('id', options.id);
+}
+
+const commaSeparatedRegex = /\s*,\s*/;
+function setClass(options: { class?: string }, note: StaveNote) {
+  if (options.class === undefined) return;
+  options.class.split(commaSeparatedRegex).forEach((className: string) => note.addClass(className));
+}
+//#endregion
