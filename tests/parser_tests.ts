@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { Parser, Result } from 'parser';
-import { Assert, equal, QUnit, test } from './declarations';
+import { Assert, equal, QUnit, test } from './support/qunit_api';
 
 const TestGrammar = function () {
   return {

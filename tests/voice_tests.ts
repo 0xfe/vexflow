@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok, expect, test, equal, throws } from './declarations';
+import { QUnit, ok, expect, test, equal, throws } from './support/qunit_api';
 import { Flow } from 'flow';
 import { MockTickable } from './mocks';
 import { ContextBuilder } from 'renderer';

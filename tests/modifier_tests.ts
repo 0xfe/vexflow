@@ -6,7 +6,7 @@
 
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
-import { QUnit, test, equal } from './declarations';
+import { QUnit, test, equal } from './support/qunit_api';
 
 /**
  * ModifierContext Tests
