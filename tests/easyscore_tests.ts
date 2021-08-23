@@ -11,7 +11,6 @@ import { FretHandFinger } from 'frethandfinger';
 import { Modifier } from 'modifier';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
-import { System } from 'system';
 import { Tuplet } from 'tuplet';
 
 const EasyScoreTests = {
@@ -35,7 +34,7 @@ const EasyScoreTests = {
   },
 
   basic(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
     const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
@@ -48,7 +47,7 @@ const EasyScoreTests = {
   },
 
   accidentals(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = [
       'c3',
       'c##3, cb3',
@@ -108,7 +107,7 @@ const EasyScoreTests = {
   },
 
   durations(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
     const mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
@@ -121,7 +120,7 @@ const EasyScoreTests = {
   },
 
   chords(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = [
       '(c5)',
       '(c3 e0 g9)',
@@ -141,7 +140,7 @@ const EasyScoreTests = {
   },
 
   dots(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = [
       'c3/4.',
       'c##3/w.., cb3',
@@ -162,7 +161,7 @@ const EasyScoreTests = {
   },
 
   types(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = [
       'c3/4/x.',
       'c##3//r.., cb3',
@@ -185,7 +184,7 @@ const EasyScoreTests = {
   },
 
   options(): void {
-    const score: EasyScore = new EasyScore();
+    const score = new EasyScore();
     const mustPass = [
       'c3/4.[foo="bar"]',
       'c##3/w.., cb3[id="blah"]',
@@ -206,8 +205,8 @@ const EasyScoreTests = {
 
   drawBasicTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 350);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
@@ -234,8 +233,8 @@ const EasyScoreTests = {
 
   drawAccidentalsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 350);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
@@ -262,8 +261,8 @@ const EasyScoreTests = {
 
   drawBeamsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 250);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
@@ -284,8 +283,8 @@ const EasyScoreTests = {
 
   drawTupletsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 250);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
@@ -311,8 +310,8 @@ const EasyScoreTests = {
 
   drawDotsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 250);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
@@ -329,8 +328,8 @@ const EasyScoreTests = {
 
   drawOptionsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const notes = score.notes(
       'B4/h[id="foobar", class="red,bold", stem="up", articulations="staccato.below,tenuto"], B4/q[articulations="accent.above"], B4/q[stem="down"]'
@@ -366,8 +365,8 @@ const EasyScoreTests = {
 
   drawFingeringsTest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
-    const score: EasyScore = f.EasyScore();
-    const system: System = f.System();
+    const score = f.EasyScore();
+    const system = f.System();
 
     const notes: StaveNote[] = score.notes(
       'C4/q[fingerings="1"], E4[fingerings="3.above"], G4[fingerings="5.below"], (C4 E4 G4)[fingerings="1,3,5"]'
@@ -379,25 +378,25 @@ const EasyScoreTests = {
 
     f.draw();
 
-    const note0_modifier0: FretHandFinger = notes[0].getModifiers()[0] as FretHandFinger;
+    const note0_modifier0 = notes[0].getModifiers()[0] as FretHandFinger;
     equal(note0_modifier0.getCategory(), FretHandFinger.CATEGORY);
     equal(note0_modifier0.getFretHandFinger(), '1');
     equal(note0_modifier0.getPosition(), Modifier.Position.LEFT);
 
-    const note1_modifier0: FretHandFinger = notes[1].getModifiers()[0] as FretHandFinger;
+    const note1_modifier0 = notes[1].getModifiers()[0] as FretHandFinger;
     equal(note1_modifier0.getCategory(), FretHandFinger.CATEGORY);
     equal(note1_modifier0.getFretHandFinger(), '3');
     equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
 
-    const note2_modifier0: FretHandFinger = notes[2].getModifiers()[0] as FretHandFinger;
+    const note2_modifier0 = notes[2].getModifiers()[0] as FretHandFinger;
     equal(note2_modifier0.getCategory(), FretHandFinger.CATEGORY);
     equal(note2_modifier0.getFretHandFinger(), '5');
     equal(note2_modifier0.getPosition(), Modifier.Position.BELOW);
 
     const note3_modifiers: FretHandFinger[] = notes[3].getModifiers() as FretHandFinger[];
-    const note3_modifier0: FretHandFinger = note3_modifiers[0];
-    const note3_modifier1: FretHandFinger = note3_modifiers[1];
-    const note3_modifier2: FretHandFinger = note3_modifiers[2];
+    const note3_modifier0 = note3_modifiers[0];
+    const note3_modifier1 = note3_modifiers[1];
+    const note3_modifier2 = note3_modifiers[2];
     equal(note3_modifier0.getCategory(), FretHandFinger.CATEGORY);
     equal(note3_modifier0.getFretHandFinger(), '1');
     equal(note3_modifier0.getPosition(), Modifier.Position.LEFT);
