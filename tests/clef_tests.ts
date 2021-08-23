@@ -3,11 +3,7 @@
 //
 // Clef Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 
 const ClefTests = {
   Start(): void {

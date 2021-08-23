@@ -3,18 +3,6 @@
 //
 // Fraction Tests
 
-import {
-  QUnit,
-  deepEqual,
-  notDeepEqual,
-  notEqual,
-  notOk,
-  notStrictEqual,
-  ok,
-  strictEqual,
-  test,
-  equal,
-} from './types/qunit';
 import { Fraction } from 'fraction';
 
 const FractionTests = {

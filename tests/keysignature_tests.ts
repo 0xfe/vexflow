@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
-import { QUnit, ok, equal, test, expect } from './types/qunit';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { Stave } from 'stave';

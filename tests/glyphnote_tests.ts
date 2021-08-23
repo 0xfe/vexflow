@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { ok, QUnit } from './types/qunit';
 import { Registry } from 'registry';
 import { Glyph } from 'glyph';
 import { ChordSymbol } from 'chordsymbol';

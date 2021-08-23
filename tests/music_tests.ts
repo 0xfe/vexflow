@@ -5,7 +5,6 @@
 
 import { Music } from 'music';
 import { KeyManager } from 'keymanager';
-import { QUnit, ok, test, expect, equal } from './types/qunit';
 
 const MusicTests = {
   Start(): void {

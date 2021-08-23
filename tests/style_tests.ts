@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 import { Annotation } from 'annotation';
 import { Bend } from 'bend';
 import { TabNote } from 'tabnote';

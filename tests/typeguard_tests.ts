@@ -4,7 +4,6 @@
 //
 // TypeGuard Tests
 
-import { QUnit, ok, notOk, test } from './types/qunit';
 import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
 import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';

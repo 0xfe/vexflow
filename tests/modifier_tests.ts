@@ -4,10 +4,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Accidental } from 'accidental';
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
-import { QUnit, test, equal } from './types/qunit';
 
 /**
  * ModifierContext Tests

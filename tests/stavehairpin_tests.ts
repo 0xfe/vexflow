@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 import { StaveHairpin } from 'stavehairpin';
 
 function drawHairpin(from, to, stave, ctx, type, position, options?) {

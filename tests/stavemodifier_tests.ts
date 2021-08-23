@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { equal, ok, QUnit } from './types/qunit';
 import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
 import { StaveModifier } from 'stavemodifier';

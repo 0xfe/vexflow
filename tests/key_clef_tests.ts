@@ -6,7 +6,6 @@
 // TODO: How is this different from keysignature_tests.ts?
 
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
-import { QUnit, ok, expect, equal, test } from './types/qunit';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { Stave } from 'stave';

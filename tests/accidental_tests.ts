@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok, equal, test } from './types/qunit';
 import { Flow } from 'flow';
 import { Beam } from 'beam';
 import { Formatter } from 'formatter';
@@ -397,7 +396,6 @@ const AccidentalTests = {
   },
 
   microtonal(options: TestOptions): void {
-    const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     const ctx = f.getContext();
@@ -465,7 +463,6 @@ const AccidentalTests = {
   },
 
   microtonal_iranian(options: TestOptions) {
-    const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     const ctx = f.getContext();
@@ -530,7 +527,6 @@ const AccidentalTests = {
   },
 
   sagittal(options: TestOptions): void {
-    const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     const newAccid = makeNewAccid(f);
     const ctx = f.getContext();
@@ -947,7 +943,6 @@ const AccidentalTests = {
   },
 
   factoryAPI(options: TestOptions): void {
-    const assert = options.assert;
     const f = VexFlowTests.makeFactory(options, 700, 240);
     f.Stave({ x: 10, y: 10, width: 550 });
 

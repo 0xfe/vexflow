@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 
 function createTest(noteGroup1, setupVibratoBracket) {
   return function (options: TestOptions) {

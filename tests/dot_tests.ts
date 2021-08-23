@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 import { ModifierContext } from 'modifiercontext';
 import { TickContext } from 'tickcontext';
 import { ContextBuilder } from 'renderer';

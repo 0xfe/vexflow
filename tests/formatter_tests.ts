@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok, equal, test, propEqual, notEqual } from './types/qunit';
 import { Flow } from 'flow';
 import { MockTickable } from './mocks';
 import { Formatter } from 'formatter';

@@ -5,7 +5,6 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './types/qunit';
 import { Barline } from 'stavebarline';
 import { Stroke } from 'strokes';
 import { Bend } from 'bend';
