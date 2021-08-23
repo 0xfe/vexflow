@@ -37,7 +37,7 @@ function L(...args: any[]) {
  * `ModifierContext`. Accidentals are modifiers that can be attached to
  * notes. Support is included for both western and microtonal accidentals.
  *
- * See `tests/accidental_tests.js` for usage examples.
+ * See `tests/accidental_tests.ts` for usage examples.
  */
 
 export class Accidental extends Modifier {

@@ -16,7 +16,7 @@ function L(...args: any[]) {
  * be added to a voice and rendered in the middle of a stave. Since it has no
  * duration, it consumes no `tick`s, and is dealt with appropriately by the formatter.
  *
- * See `tests/barnote_tests.js` for usage examples.
+ * See `tests/barnote_tests.ts` for usage examples.
  */
 export class BarNote extends Note {
   protected metrics: { widths: Record<string, number> };

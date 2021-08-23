@@ -81,7 +81,7 @@ import { Vibrato } from 'vibrato';
 import { VibratoBracket } from 'vibratobracket';
 import { Voice } from 'voice';
 
-import { equal, notEqual, propEqual, QUnit, test } from './support/qunit_api';
+import { equal, notEqual, propEqual, QUnit, test } from './types/qunit';
 
 const VFPrefixTests = {
   Start(): void {

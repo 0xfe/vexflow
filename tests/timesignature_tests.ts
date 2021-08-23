@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok, test, throws } from './support/qunit_api';
+import { QUnit, ok, test, throws } from './types/qunit';
 import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { TimeSignature } from 'timesignature';

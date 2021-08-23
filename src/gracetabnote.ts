@@ -6,7 +6,7 @@
 // A basic implementation of grace notes
 // to be rendered on a tab stave.
 //
-// See `tests/gracetabnote_tests.js` for usage examples.
+// See `tests/gracetabnote_tests.ts` for usage examples.
 
 import { TabNote, TabNoteStruct } from './tabnote';
 

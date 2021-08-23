@@ -3,7 +3,7 @@
 //
 // EasyScore Tests
 
-import { QUnit, expect, Assert } from './support/qunit_api';
+import { QUnit, expect, Assert } from './types/qunit';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { EasyScore } from 'easyscore';
 import { StaveNote } from 'stavenote';

@@ -4,7 +4,7 @@
 // VexFlow Test Support Library
 
 import { Flow } from 'flow';
-import { Assert } from './support/qunit_api';
+import { Assert } from './types/qunit';
 import { RenderContext } from 'types/common';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';

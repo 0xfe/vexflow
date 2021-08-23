@@ -165,7 +165,7 @@ function isStaveOrGraceNoteCategory(note: Note): boolean {
  * attached to notes. The complete list of articulations is available in
  * `tables.ts` under `Vex.Flow.articulationCodes`.
  *
- * See `tests/articulation_tests.js` for usage examples.
+ * See `tests/articulation_tests.ts` for usage examples.
  */
 export class Articulation extends Modifier {
   /** Articulation code provided to the constructor. */

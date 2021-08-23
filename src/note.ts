@@ -315,6 +315,14 @@ export abstract class Note extends Tickable {
     return this;
   }
 
+  /**
+   * Don't play notes by default, call them rests. This is also used by things like
+   * beams and dots for positioning.
+   */
+  isRest(): boolean {
+    return false;
+  }
+
   /** Add stroke. */
   addStroke(index: number, stroke: Stroke): this {
     stroke.setNote(this);

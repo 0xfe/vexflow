@@ -5,7 +5,7 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit } from './support/qunit_api';
+import { QUnit } from './types/qunit';
 
 /**
  * TextBracket Tests

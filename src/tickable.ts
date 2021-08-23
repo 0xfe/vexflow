@@ -370,13 +370,6 @@ export abstract class Tickable extends Element {
     return this.modifierContext;
   }
 
-  /**
-   * This is also used by things like beams and dots for positioning.
-   */
-  isRest(): boolean {
-    return false;
-  }
-
   /** Get the target stave. */
   abstract getStave(): Stave | undefined;
 

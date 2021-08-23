@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok, test, equal } from './support/qunit_api';
+import { QUnit, ok, test, equal } from './types/qunit';
 import { ContextBuilder } from 'renderer';
 import { StaveConnector } from 'staveconnector';
 import { Stave } from 'stave';

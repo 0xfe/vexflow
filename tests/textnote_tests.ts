@@ -11,7 +11,7 @@ import { Flow } from 'flow';
 import { Note } from 'note';
 import { TextNote } from 'textnote';
 
-import { equal, ok, QUnit, test } from './support/qunit_api';
+import { equal, ok, QUnit, test } from './types/qunit';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextNoteTests = {

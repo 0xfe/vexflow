@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
+import { QUnit, ok } from './types/qunit';
 
 function createTest(setup: any) {
   return function (options: any) {

@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { QUnit, test, equal } from './support/qunit_api';
+import { QUnit, test, equal } from './types/qunit';
 import { BoundingBox } from 'boundingbox';
 
 /**

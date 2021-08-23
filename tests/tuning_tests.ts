@@ -4,7 +4,7 @@
 // Tuning Tests
 
 import { Tuning } from 'tuning';
-import { QUnit, test, equal, expect } from './support/qunit_api';
+import { QUnit, test, equal, expect } from './types/qunit';
 
 const TuningTests = {
   Start(): void {

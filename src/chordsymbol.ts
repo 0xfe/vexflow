@@ -6,7 +6,7 @@
 // notes.  Chord symbols can contain multiple 'blocks' which can contain
 // text or glyphs with various positioning options.
 //
-// See `tests/chordsymbol_tests.js` for usage examples.
+// See `tests/chordsymbol_tests.ts` for usage examples.
 
 import { log } from './util';
 import { Flow } from './flow';

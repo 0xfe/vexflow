@@ -9,7 +9,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Vex } from 'vex';
 import { Flow } from 'flow';
-import { QUnit, ok, test, throws, equal, expect, deepEqual } from './support/qunit_api';
+import { QUnit, ok, test, throws, equal, expect, deepEqual } from './types/qunit';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';

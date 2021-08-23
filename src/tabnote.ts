@@ -5,7 +5,7 @@
 // The file implements notes for Tablature notation. This consists of one or
 // more fret positions, and can either be drawn with or without stems.
 //
-// See `tests/tabnote_tests.js` for usage examples
+// See `tests/tabnote_tests.ts` for usage examples.
 
 import { Dot } from './dot';
 import { Flow } from './flow';

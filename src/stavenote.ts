@@ -7,7 +7,7 @@
 // *Throughout these comments, a "note" refers to the entire `StaveNote`,
 // and a "key" refers to a specific pitch/notehead within a note.*
 //
-// See `tests/stavenote_tests.js` for usage examples.
+// See `tests/stavenote_tests.ts` for usage examples.
 
 import { RuntimeError, log, midLine, warn } from './util';
 import { Flow } from './flow';
@@ -18,7 +18,6 @@ import { StemmableNote } from './stemmablenote';
 import { StemOptions } from './stem';
 import { Modifier } from './modifier';
 import { Dot } from './dot';
-import { KeyProps } from './types/common';
 import { Beam } from './beam';
 import { ElementStyle } from './element';
 import { Stave } from './stave';
@@ -661,7 +660,7 @@ export class StaveNote extends StemmableNote {
     return resultLine;
   }
 
-  // Determine if current note is a rest
+  // Determine if current note is a rest.
   isRest(): boolean {
     return this.glyph.rest;
   }
