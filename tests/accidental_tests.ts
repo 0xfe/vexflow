@@ -7,7 +7,6 @@ import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
-import { Factory } from 'factory';
 import { Formatter } from 'formatter';
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
@@ -19,6 +18,7 @@ import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
 import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
+import { Factory } from 'factory';
 
 const AccidentalTests = {
   Start(): void {
@@ -986,7 +986,7 @@ function hasAccidental(note: StaveNote) {
   return note.getModifiers().some((modifier) => modifier.getCategory() === Accidental.CATEGORY);
 }
 
-const makeNewAccid = (factory: any) => (accidType: any) => factory.Accidental({ type: accidType });
+const makeNewAccid = (factory: Factory) => (accidType: string) => factory.Accidental({ type: accidType });
 
 function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
   const modifierContext = new ModifierContext();

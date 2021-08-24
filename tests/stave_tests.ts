@@ -431,7 +431,7 @@ const StaveTests = {
       x += staveWidth;
     }
 
-    var ctx = contextBuilder(options.elementId, 800, 700);
+    const ctx = contextBuilder(options.elementId, 800, 700);
 
     y = 0;
     x = 10;
@@ -760,7 +760,7 @@ const StaveTests = {
     ok(true, 'all pass');
   },
 
-  factoryAPI: function (options) {
+  factoryAPI(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 900, 200);
     const stave = f.Stave({ x: 300, y: 40, width: 300 });
     stave.setText('Violin', Modifier.Position.LEFT, { shift_y: -10 });

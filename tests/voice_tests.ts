@@ -14,6 +14,7 @@ import { Voice } from 'voice';
 import { MockTickable } from './mocks';
 
 const BEAT = (1 * Flow.RESOLUTION) / 4;
+const createTickable = () => new MockTickable().setTicks(BEAT);
 
 const VoiceTests = {
   Start(): void {
@@ -78,9 +79,7 @@ const VoiceTests = {
       new StaveNote({ keys: ['r/4'], duration: '4r' }),
     ];
 
-    notes.forEach(function (note) {
-      note.setStave(stave);
-    });
+    notes.forEach((note) => note.setStave(stave));
 
     const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.FULL).addTickables(notes);
 
@@ -100,10 +99,5 @@ const VoiceTests = {
     );
   },
 };
-
-// Helper Function
-function createTickable() {
-  return new MockTickable().setTicks(BEAT);
-}
 
 export { VoiceTests };

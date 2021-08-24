@@ -13,7 +13,7 @@ import { Note } from 'note';
 
 /* eslint-disable */
 declare const global: any;
-declare var $: any;
+declare const $: any;
 /* eslint-enable */
 
 export interface TestOptions {

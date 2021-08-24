@@ -1,28 +1,24 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// TextBracket Tests
 
-/* eslint-disable */
-// @ts-nocheck
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { VexFlowTests } from './vexflow_test_helpers';
-
-/**
- * TextBracket Tests
- */
 const TextBracketTests = {
-  Start: function () {
+  Start(): void {
     QUnit.module('TextBracket');
     VexFlowTests.runTests('Simple TextBracket', TextBracketTests.simple0);
     VexFlowTests.runTests('TextBracket Styles', TextBracketTests.simple1);
   },
 
-  simple0: function (options) {
-    var f = VexFlowTests.makeFactory(options, 550);
-    var stave = f.Stave();
-    var score = f.EasyScore();
+  simple0(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 550);
+    const stave = f.Stave();
+    const score = f.EasyScore();
 
-    var notes = score.notes('c4/4, c4, c4, c4, c4', { stem: 'up' });
-    var voice = score.voice(notes, { time: '5/4' });
+    const notes = score.notes('c4/4, c4, c4, c4, c4', { stem: 'up' });
+    const voice = score.voice(notes, { time: '5/4' });
 
     f.TextBracket({
       from: notes[0],
@@ -52,13 +48,13 @@ const TextBracketTests = {
     ok(true);
   },
 
-  simple1: function (options) {
-    var f = VexFlowTests.makeFactory(options, 550);
-    var stave = f.Stave();
-    var score = f.EasyScore();
+  simple1(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 550);
+    const stave = f.Stave();
+    const score = f.EasyScore();
 
-    var notes = score.notes('c4/4, c4, c4, c4, c4', { stem: 'up' });
-    var voice = score.voice(notes, { time: '5/4' });
+    const notes = score.notes('c4/4, c4, c4, c4, c4', { stem: 'up' });
+    const voice = score.voice(notes, { time: '5/4' });
 
     const topOctaves = [
       f.TextBracket({
@@ -122,4 +118,5 @@ const TextBracketTests = {
     ok(true);
   },
 };
+
 export { TextBracketTests };
