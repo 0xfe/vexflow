@@ -1,18 +1,17 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Strokes Tests
 
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests } from './vexflow_test_helpers';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Barline } from 'stavebarline';
 import { Stroke } from 'strokes';
 
-/**
- * Stroke Tests
- */
 const StrokesTests = {
   Start: function (): void {
     QUnit.module('Strokes');
@@ -25,7 +24,7 @@ const StrokesTests = {
     run('Strokes - Multi-Voice Notation and Tab', this.multiNotationAndTab);
   },
 
-  brushRollRasquedo: function (options) {
+  brushRollRasquedo(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const score = f.EasyScore();
 
@@ -70,7 +69,7 @@ const StrokesTests = {
     ok(true, 'Brush/Roll/Rasquedo');
   },
 
-  arpeggioDirectionless: function (options) {
+  arpeggioDirectionless(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 200);
     const score = f.EasyScore();
 
@@ -115,7 +114,7 @@ const StrokesTests = {
     ok(true, 'Arpeggio directionless (without arrows)');
   },
 
-  multiVoice: function (options) {
+  multiVoice(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const score = f.EasyScore();
     const stave = f.Stave();
@@ -144,7 +143,7 @@ const StrokesTests = {
     ok(true, 'Strokes Test Multi Voice');
   },
 
-  multiNotationAndTab: function (options) {
+  multiNotationAndTab(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 275);
     const score = f.EasyScore();
     const stave = f.Stave().addClef('treble');
@@ -218,7 +217,7 @@ const StrokesTests = {
     ok(true, 'Strokes Test Notation & Tab Multi Voice');
   },
 
-  drawTabStrokes: function (options) {
+  drawTabStrokes(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave1 = f.TabStave({ width: 250 }).setEndBarType(Barline.type.DOUBLE);
 
@@ -306,7 +305,7 @@ const StrokesTests = {
     ok(true, 'Strokes Tab test');
   },
 
-  notesWithTab: function (options) {
+  notesWithTab(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 300);
 
     const stave = f.Stave({ x: 15, y: 40, width: 450 }).addClef('treble');

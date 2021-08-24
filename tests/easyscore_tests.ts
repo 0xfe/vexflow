@@ -4,7 +4,6 @@
 // EasyScore Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, expect, test, equal, ok } from './support/qunit_api';
 import { Articulation } from 'articulation';
 import { EasyScore } from 'easyscore';
 import { FretHandFinger } from 'frethandfinger';

@@ -14,15 +14,6 @@ import { TickContext } from 'tickcontext';
 import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
 
-function showNote(tab_struct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
-  const note = new TabNote(tab_struct);
-  const tickContext = new TickContext();
-  tickContext.addTickable(note).preFormat().setX(x);
-  note.setContext(ctx).setStave(stave);
-  note.draw();
-  return note;
-}
-
 const TabNoteTests = {
   Start(): void {
     QUnit.module('TabNote');
@@ -529,5 +520,14 @@ const TabNoteTests = {
     ok(true, 'TabNotes successfully drawn');
   },
 };
+
+function showNote(tab_struct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
+  const note = new TabNote(tab_struct);
+  const tickContext = new TickContext();
+  tickContext.addTickable(note).preFormat().setX(x);
+  note.setContext(ctx).setStave(stave);
+  note.draw();
+  return note;
+}
 
 export { TabNoteTests };

@@ -3,9 +3,6 @@
 //
 // TabStave Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Barline } from 'stavebarline';
@@ -14,8 +11,9 @@ import { TabStave } from 'tabstave';
 const TabStaveTests = {
   Start(): void {
     QUnit.module('TabStave');
-    VexFlowTests.runTests('TabStave Draw Test', this.draw);
-    VexFlowTests.runTests('Vertical Bar Test', this.drawVerticalBar);
+    const run = VexFlowTests.runTests;
+    run('TabStave Draw Test', this.draw);
+    run('Vertical Bar Test', this.drawVerticalBar);
   },
 
   draw(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -38,9 +36,9 @@ const TabStaveTests = {
     const stave = new TabStave(10, 10, 300);
     stave.setNumLines(6);
     stave.setContext(ctx);
-    stave.drawVerticalBar(50, true);
-    stave.drawVerticalBar(100, true);
-    stave.drawVerticalBar(150, false);
+    stave.drawVerticalBar(50);
+    stave.drawVerticalBar(100);
+    stave.drawVerticalBar(150);
     stave.setEndBarType(Barline.type.END);
     stave.draw();
 

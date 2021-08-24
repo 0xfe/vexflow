@@ -119,7 +119,7 @@ const ChordSymbolTests = {
     ok(true, 'Chord Symbol Kerning Tests');
   },
 
-  top(options) {
+  top(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 650, 650);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);
@@ -174,7 +174,7 @@ const ChordSymbolTests = {
     ok(true, 'Top Chord Symbol');
   },
 
-  fontSize(options) {
+  fontSize(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 750, 580);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);
@@ -301,7 +301,7 @@ const ChordSymbolTests = {
     ok(true, 'Font Size Chord Symbol');
   },
 
-  topJustify(options) {
+  topJustify(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 680);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);
@@ -359,7 +359,7 @@ const ChordSymbolTests = {
     ok(true, 'Top Chord Justified');
   },
 
-  dblbottom(options) {
+  dblbottom(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 260);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);
@@ -398,7 +398,7 @@ const ChordSymbolTests = {
     ok(true, '2 Bottom Chord Symbol');
   },
 
-  bottom(options) {
+  bottom(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 230);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);
@@ -431,7 +431,7 @@ const ChordSymbolTests = {
     ok(true, 'Bottom Chord Symbol');
   },
 
-  bottomStemDown(options) {
+  bottomStemDown(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 330);
     const ctx = f.getContext();
     ctx.scale(1.5, 1.5);

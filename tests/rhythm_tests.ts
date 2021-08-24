@@ -4,7 +4,7 @@
 // Rhythm Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { StaveNoteTests } from './stavenote_tests';
+import { showNote } from './stavenote_tests';
 import { ContextBuilder } from 'renderer';
 import { Formatter } from 'formatter';
 import { Beam } from 'beam';
@@ -43,7 +43,7 @@ const RhythmTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 25);
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');

@@ -90,10 +90,7 @@ const VoiceTests = {
     voice.getBoundingBox()?.draw(ctx);
 
     throws(
-      () => {
-        const note = new StaveNote({ keys: ['c/4'], duration: '2' });
-        voice.addTickable(note);
-      },
+      () => voice.addTickable(new StaveNote({ keys: ['c/4'], duration: '2' })),
       /BadArgument/,
       'Voice cannot exceed full amount of ticks'
     );

@@ -13,7 +13,6 @@ import { ModifierContext } from 'modifiercontext';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Stem } from 'stem';
-import { Tickable } from 'tickable';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
 import { RenderContext } from 'types/common';
@@ -112,13 +111,9 @@ const AccidentalTests = {
     stave.setContext(context).draw();
     formatter.format([voice], width);
     voice.draw(context, stave);
-    beams.forEach(function (b) {
-      b.setContext(context).draw();
-    });
+    beams.forEach((b) => b.setContext(context).draw());
 
-    notes.forEach(function (note) {
-      VexFlowTests.plotNoteWidth(context, note, 30);
-    });
+    notes.forEach((note) => VexFlowTests.plotNoteWidth(context, note, 30));
 
     VexFlowTests.plotLegendForNoteWidth(context, 300, 150);
     ok(true);
@@ -167,7 +162,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Modifier, index: number) => {
@@ -187,23 +182,21 @@ const AccidentalTests = {
     const stave = f.Stave({ x: 0, y: 10, width: 780 });
     const score = f.EasyScore();
 
-    const accids = Object.keys(Flow.accidentalMap).filter(function (accid) {
-      return accid !== '{' && accid !== '}';
-    });
+    const accids = Object.keys(Flow.accidentalMap).filter((accid) => accid !== '{' && accid !== '}');
 
-    const notes = accids.map(function (accid) {
-      return f
+    const notes = accids.map((accid) =>
+      f
         .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
-        .addAccidental(0, f.Accidental({ type: accid }));
-    });
+        .addAccidental(0, f.Accidental({ type: accid }))
+    );
 
     const voice = score.voice(notes, { time: accids.length + '/4' });
 
-    voice.getTickables().forEach((tickable: Tickable) => {
+    voice.getTickables().forEach((tickable) => {
       tickable
         .getModifiers()
-        .filter((modifier: Modifier) => modifier.getAttribute('type') === 'Accidental')
-        .forEach((accid: Modifier) => (accid as Accidental).setAsCautionary());
+        .filter((modifier) => modifier.getAttribute('type') === 'Accidental')
+        .forEach((accid) => (accid as Accidental).setAsCautionary());
     });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -259,7 +252,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number): void => {
@@ -308,7 +301,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
@@ -432,7 +425,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
@@ -496,7 +489,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
@@ -597,7 +590,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes);
 
-    notes.forEach(function (note, index) {
+    notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
@@ -837,7 +830,7 @@ const AccidentalTests = {
   },
 
   autoAccidentalWorking(): void {
-    function makeNote(noteStruct: StaveNoteStruct) {
+    function createStaveNote(noteStruct: StaveNoteStruct) {
       return new StaveNote(noteStruct);
     }
 
@@ -850,7 +843,7 @@ const AccidentalTests = {
       { keys: ['b/4'], duration: '4' },
       { keys: ['a#/4'], duration: '4' },
       { keys: ['g#/4'], duration: '4' },
-    ].map(makeNote);
+    ].map(createStaveNote);
 
     let voice = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
@@ -875,7 +868,7 @@ const AccidentalTests = {
       { keys: ['cb/5'], duration: '4' },
       { keys: ['fb/5'], duration: '4' },
       { keys: ['e#/4'], duration: '4' },
-    ].map(makeNote);
+    ].map(createStaveNote);
 
     voice = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
@@ -903,7 +896,7 @@ const AccidentalTests = {
       { keys: ['c##/4'], duration: '4' },
       { keys: ['c/4'], duration: '4' },
       { keys: ['c/4'], duration: '4' },
-    ].map(makeNote);
+    ].map(createStaveNote);
 
     voice = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 

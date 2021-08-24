@@ -15,40 +15,12 @@ import { StaveNote } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { RenderContext } from 'types/common';
 
-/**
- * Helper function.
- */
-function showOneNote(note1: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
-  const modifierContext = new ModifierContext();
-  note1.setStave(stave).addToModifierContext(modifierContext);
-  new TickContext().addTickable(note1).preFormat().setX(x);
-  note1.setContext(ctx).draw();
-  VexFlowTests.plotNoteWidth(ctx, note1, 140);
-}
-
-/**
- * Helper function.
- */
-function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
-  const modifierContext = new ModifierContext();
-  note1.setStave(stave).addToModifierContext(modifierContext);
-  note2.setStave(stave).addToModifierContext(modifierContext);
-
-  // Note: The order in which we call preformat() and setX(x) are different from showNote()
-  new TickContext().addTickable(note1).addTickable(note2).setX(x).preFormat();
-
-  note1.setContext(ctx).draw();
-  note2.setContext(ctx).draw();
-
-  VexFlowTests.plotNoteWidth(ctx, note1, 180);
-  VexFlowTests.plotNoteWidth(ctx, note2, 20);
-}
-
 const DotTests = {
   Start(): void {
     QUnit.module('Dot');
-    VexFlowTests.runTests('Basic', this.basic);
-    VexFlowTests.runTests('Multi Voice', this.multiVoice);
+    const run = VexFlowTests.runTests;
+    run('Basic', this.basic);
+    run('Multi Voice', this.multiVoice);
   },
 
   basic(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -182,5 +154,30 @@ const DotTests = {
     ok(true, 'Full Dot');
   },
 };
+
+//#region Helper Functions
+function showOneNote(note1: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
+  const modifierContext = new ModifierContext();
+  note1.setStave(stave).addToModifierContext(modifierContext);
+  new TickContext().addTickable(note1).preFormat().setX(x);
+  note1.setContext(ctx).draw();
+  VexFlowTests.plotNoteWidth(ctx, note1, 140);
+}
+
+function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
+  const modifierContext = new ModifierContext();
+  note1.setStave(stave).addToModifierContext(modifierContext);
+  note2.setStave(stave).addToModifierContext(modifierContext);
+
+  // Note: The order in which we call preformat() and setX(x) are different from showNote()
+  new TickContext().addTickable(note1).addTickable(note2).setX(x).preFormat();
+
+  note1.setContext(ctx).draw();
+  note2.setContext(ctx).draw();
+
+  VexFlowTests.plotNoteWidth(ctx, note1, 180);
+  VexFlowTests.plotNoteWidth(ctx, note2, 20);
+}
+//#endregion Helper Functions
 
 export { DotTests };

@@ -41,6 +41,7 @@ const BoundingBoxComputationTests = {
   Start(): void {
     QUnit.module('BoundingBoxComputation');
     test('Point Test', this.point);
+    const run = VexFlowTests.runTests;
 
     // Each test consists of the control point for a single curve and
     // its expected bounding box.
@@ -63,7 +64,7 @@ const BoundingBoxComputationTests = {
       },
     ];
     for (const params of quadraticParams) {
-      VexFlowTests.runTests('Quadratic Test', this.quadratic, params);
+      run('Quadratic Test', this.quadratic, params);
     }
 
     // Each test consists of the control point for a single curve and
@@ -115,7 +116,7 @@ const BoundingBoxComputationTests = {
       },
     ];
     for (const params of cubicParams) {
-      VexFlowTests.runTests('Cubic Test', this.cubic, params);
+      run('Cubic Test', this.cubic, params);
     }
   },
 

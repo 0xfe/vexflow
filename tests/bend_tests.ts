@@ -11,20 +11,9 @@ import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
 import { Formatter } from 'formatter';
 import { ModifierContext } from 'modifiercontext';
-import { TabNote } from 'tabnote';
+import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
-
-// Helper Functions
-function note(tab_struct) {
-  return new TabNote(tab_struct);
-}
-function bendWithText(text: string) {
-  return new Bend(text);
-}
-function bendWithPhrase(phrase: BendPhrase[]) {
-  return new Bend(null, null, phrase);
-}
 
 const BendTests = {
   Start(): void {
@@ -266,4 +255,17 @@ const BendTests = {
     ok(true, 'Whako Release');
   },
 };
+
+//#region Helper Functions
+function note(tab_struct: TabNoteStruct) {
+  return new TabNote(tab_struct);
+}
+function bendWithText(text: string) {
+  return new Bend(text);
+}
+function bendWithPhrase(phrase: BendPhrase[]) {
+  return new Bend(null, null, phrase);
+}
+//#endregion
+
 export { BendTests };

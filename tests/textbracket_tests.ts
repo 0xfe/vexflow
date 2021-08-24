@@ -8,8 +8,9 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 const TextBracketTests = {
   Start(): void {
     QUnit.module('TextBracket');
-    VexFlowTests.runTests('Simple TextBracket', TextBracketTests.simple0);
-    VexFlowTests.runTests('TextBracket Styles', TextBracketTests.simple1);
+    const run = VexFlowTests.runTests;
+    run('Simple TextBracket', this.simple0);
+    run('TextBracket Styles', this.simple1);
   },
 
   simple0(options: TestOptions): void {

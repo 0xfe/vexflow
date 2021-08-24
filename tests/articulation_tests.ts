@@ -60,7 +60,7 @@ const ArticulationTests = {
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 125);
+    const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 125);
     staveBar2.setEndBarType(Barline.type.DOUBLE);
     staveBar2.setContext(ctx).draw();
 

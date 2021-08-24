@@ -11,16 +11,6 @@ import { Formatter } from 'formatter';
 import { Stem } from 'stem';
 import { Tuplet } from 'tuplet';
 
-// Helper Functions
-const set = (key: string) => (value: number | string) => (object: any) => {
-  object[key] = value;
-  return object;
-};
-const setStemDirection = set('stem_direction');
-const setStemUp = setStemDirection(Stem.UP);
-const setStemDown = setStemDirection(Stem.DOWN);
-const setDurationToQuarterNote = set('duration')('4');
-
 const TupletTests = {
   Start(): void {
     QUnit.module('Tuplet');
@@ -69,7 +59,7 @@ const TupletTests = {
     ok(true, 'Simple Test');
   },
 
-  beamed(options) {
+  beamed(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('3/8');
 
@@ -106,7 +96,7 @@ const TupletTests = {
     ok(true, 'Beamed Test');
   },
 
-  ratio(options): void {
+  ratio(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addTimeSignature('4/4');
 
@@ -149,7 +139,7 @@ const TupletTests = {
     ok(true, 'Ratioed Test');
   },
 
-  bottom(options): void {
+  bottom(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 350, 160);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('3/4');
 
@@ -566,5 +556,16 @@ const TupletTests = {
     ok(true, 'Nested Tuplets');
   },
 };
+
+//#region Helper Functions
+const set = (key: string) => (value: number | string) => (object: any) => {
+  object[key] = value;
+  return object;
+};
+const setStemDirection = set('stem_direction');
+const setStemUp = setStemDirection(Stem.UP);
+const setStemDown = setStemDirection(Stem.DOWN);
+const setDurationToQuarterNote = set('duration')('4');
+//#endregion
 
 export { TupletTests };

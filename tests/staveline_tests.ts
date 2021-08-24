@@ -8,8 +8,9 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 const StaveLineTests = {
   Start(): void {
     QUnit.module('StaveLine');
-    VexFlowTests.runTests('Simple StaveLine', StaveLineTests.simple0);
-    VexFlowTests.runTests('StaveLine Arrow Options', StaveLineTests.simple1);
+    const run = VexFlowTests.runTests;
+    run('Simple StaveLine', this.simple0);
+    run('StaveLine Arrow Options', this.simple1);
   },
 
   simple0(options: TestOptions): void {

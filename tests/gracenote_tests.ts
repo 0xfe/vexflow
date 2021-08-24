@@ -27,14 +27,14 @@ const GraceNoteTests = {
   Start(): void {
     QUnit.module('Grace Notes');
     const run = VexFlowTests.runTests;
-    run('Grace Note Basic', GraceNoteTests.basic);
-    run('Grace Note Basic with Slurs', GraceNoteTests.basicSlurred);
-    run('Grace Note Stem', GraceNoteTests.stem);
-    run('Grace Note Stem with Beams', GraceNoteTests.stemWithBeamed);
-    run('Grace Note Slash', GraceNoteTests.slash);
-    run('Grace Note Slash with Beams', GraceNoteTests.slashWithBeams);
-    run('Grace Notes Multiple Voices', GraceNoteTests.multipleVoices);
-    run('Grace Notes Multiple Voices Multiple Draws', GraceNoteTests.multipleVoicesMultipleDraws);
+    run('Grace Note Basic', this.basic);
+    run('Grace Note Basic with Slurs', this.basicSlurred);
+    run('Grace Note Stem', this.stem);
+    run('Grace Note Stem with Beams', this.stemWithBeamed);
+    run('Grace Note Slash', this.slash);
+    run('Grace Note Slash with Beams', this.slashWithBeams);
+    run('Grace Notes Multiple Voices', this.multipleVoices);
+    run('Grace Notes Multiple Voices Multiple Draws', this.multipleVoicesMultipleDraws);
   },
 
   basic(options: TestOptions): void {

@@ -12,8 +12,9 @@ import { Flow } from 'flow';
 const MultiMeasureRestTests = {
   Start(): void {
     QUnit.module('MultiMeasureRest');
-    VexFlowTests.runTests('Simple Test', this.simple0);
-    VexFlowTests.runTests('Stave with modifiers Test', this.staveWithModifiers);
+    const run = VexFlowTests.runTests;
+    run('Simple Test', this.simple0);
+    run('Stave with modifiers Test', this.staveWithModifiers);
   },
 
   simple0(options: TestOptions): void {

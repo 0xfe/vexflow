@@ -6,29 +6,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: "to: null" and "from: null" do not match the declared types in the factory.StaveTie(params) method.
+// Should they be changed to "undefined"?
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BuilderOptions } from 'easyscore';
 import { Factory } from 'factory';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { Stem } from 'stem';
-
-const createTest =
-  (notesData: [string, BuilderOptions], setupTies: (f: Factory, n: StaveNote[], s: Stave) => void) =>
-  (options: TestOptions) => {
-    const f = VexFlowTests.makeFactory(options, 300);
-    const stave = f.Stave();
-    const score = f.EasyScore();
-    const notes = score.notes(notesData[0], notesData[1]);
-    const voice = score.voice(notes);
-    // const tickables = voice.getTickables(); // same as the notes that we passed in.
-
-    setupTies(f, notes, stave);
-
-    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-    f.draw();
-    ok(true);
-  };
 
 const StaveTieTests = {
   Start(): void {
@@ -126,5 +112,22 @@ const StaveTieTests = {
     );
   },
 };
+
+const createTest =
+  (notesData: [string, BuilderOptions], setupTies: (f: Factory, n: StaveNote[], s: Stave) => void) =>
+  (options: TestOptions) => {
+    const f = VexFlowTests.makeFactory(options, 300);
+    const stave = f.Stave();
+    const score = f.EasyScore();
+    const notes = score.notes(notesData[0], notesData[1]);
+    const voice = score.voice(notes);
+    // const tickables = voice.getTickables(); // same as the notes that we passed in.
+
+    setupTies(f, notes, stave);
+
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
+    ok(true);
+  };
 
 export { StaveTieTests };

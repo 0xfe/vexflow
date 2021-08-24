@@ -3,9 +3,6 @@
 //
 // GhostNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { VexFlowTests } from './vexflow_test_helpers';
 
 function createTest(setup: any) {

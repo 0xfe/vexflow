@@ -1,11 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Bounding Box Tests
 
 import { BoundingBox } from 'boundingbox';
 
-/**
- * Bounding Box Tests
- */
 const BoundingBoxTests = {
   Start(): void {
     QUnit.module('BoundingBox');

@@ -18,8 +18,9 @@ const GraceTabNoteTests = {
   Start(): void {
     QUnit.module('Grace Tab Notes');
     // TODO: Rename tests below. Remove "Grace Tab Note "
-    VexFlowTests.runTests('Grace Tab Note Simple', this.simple);
-    VexFlowTests.runTests('Grace Tab Note Slurred', this.slurred);
+    const run = VexFlowTests.runTests;
+    run('Grace Tab Note Simple', this.simple);
+    run('Grace Tab Note Slurred', this.slurred);
   },
 
   simple(options: TestOptions, contextBuilder: ContextBuilder): void {

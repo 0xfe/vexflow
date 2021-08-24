@@ -3,9 +3,6 @@
 //
 // TickContext Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { Flow } from 'flow';
 import { TickContext } from 'tickcontext';
 import { MockTickable } from './mocks';

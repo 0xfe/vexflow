@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
 import { ContextBuilder } from 'renderer';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
@@ -113,7 +112,7 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
     const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
-    function annotation(text) {
+    function annotation(text: string) {
       return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
     }
 
@@ -162,7 +161,7 @@ const AnnotationTests = {
     ctx.setFont('Arial', FONT_SIZE, '');
     const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-    function newAnnotation(text: string) {
+    function annotation(text: string) {
       return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
     }
 
@@ -180,19 +179,19 @@ const AnnotationTests = {
       tabNote({
         positions: [{ str: 6, fret: 9 }],
         duration: '8',
-      }).addModifier(newAnnotation('p'), 0),
+      }).addModifier(annotation('p'), 0),
       tabNote({
         positions: [{ str: 3, fret: 9 }],
         duration: '8',
-      }).addModifier(newAnnotation('i'), 0),
+      }).addModifier(annotation('i'), 0),
       tabNote({
         positions: [{ str: 2, fret: 9 }],
         duration: '8',
-      }).addModifier(newAnnotation('m'), 0),
+      }).addModifier(annotation('m'), 0),
       tabNote({
         positions: [{ str: 1, fret: 9 }],
         duration: '8',
-      }).addModifier(newAnnotation('a'), 0),
+      }).addModifier(annotation('a'), 0),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes, 200);
@@ -206,17 +205,17 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
     const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
-    function newAnnotation(text: string) {
+    function annotation(text: string) {
       return new Annotation(text)
         .setFont('Times', FONT_SIZE)
         .setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
     }
 
     const notes = [
-      staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, newAnnotation('F')),
-      staveNote({ keys: ['a/4'], duration: 'w' }).addAnnotation(0, newAnnotation('A')),
-      staveNote({ keys: ['c/5'], duration: 'w' }).addAnnotation(0, newAnnotation('C')),
-      staveNote({ keys: ['e/5'], duration: 'w' }).addAnnotation(0, newAnnotation('E')),
+      staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
+      staveNote({ keys: ['a/4'], duration: 'w' }).addAnnotation(0, annotation('A')),
+      staveNote({ keys: ['c/5'], duration: 'w' }).addAnnotation(0, annotation('C')),
+      staveNote({ keys: ['e/5'], duration: 'w' }).addAnnotation(0, annotation('E')),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes, 100);
@@ -262,7 +261,7 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function newAnnotation(text: string, hJustification, vJustification) {
+    function annotation(text: string, hJustification, vJustification) {
       return new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
@@ -274,10 +273,10 @@ const AnnotationTests = {
 
       const notes = [];
 
-      notes.push(staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 1, v)));
-      notes.push(staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 2, v)));
-      notes.push(staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 3, v)));
-      notes.push(staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, newAnnotation('Text', 4, v)));
+      notes.push(staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, annotation('Text', 1, v)));
+      notes.push(staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, annotation('Text', 2, v)));
+      notes.push(staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)));
+      notes.push(staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)));
 
       Formatter.FormatAndDraw(ctx, stave, notes, 100);
     }
@@ -291,7 +290,7 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function newAnnotation(text: string, hJustification, vJustification) {
+    function annotation(text: string, hJustification, vJustification) {
       return new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
@@ -304,16 +303,16 @@ const AnnotationTests = {
       const notes = [];
 
       notes.push(
-        staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, newAnnotation('Text', 1, v))
+        staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 1, v))
       );
       notes.push(
-        staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, newAnnotation('Text', 2, v))
+        staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 2, v))
       );
       notes.push(
-        staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, newAnnotation('Text', 3, v))
+        staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 3, v))
       );
       notes.push(
-        staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, newAnnotation('Text', 4, v))
+        staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v))
       );
 
       Formatter.FormatAndDraw(ctx, stave, notes, 100);
@@ -360,13 +359,13 @@ const AnnotationTests = {
       },
     ];
 
-    const notes1 = specs.map(function (noteSpec) {
+    const notes1 = specs.map((noteSpec) => {
       const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
 
-    const notes2 = specs.map(function (noteSpec) {
+    const notes2 = specs.map((noteSpec) => {
       const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.setStemDirection(-1);

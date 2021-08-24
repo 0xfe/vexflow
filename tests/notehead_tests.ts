@@ -6,56 +6,33 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: NoteHead constructor should take a Partial<NoteHeadStruct>.
+// In the basicBoundingBoxes() test case, we omit the note_type option.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { NoteHead } from 'notehead';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { Voice } from 'voice';
+import { RenderContext } from 'types/common';
 
 const NoteHeadTests = {
   Start(): void {
     QUnit.module('NoteHead');
     const run = VexFlowTests.runTests;
-    run('Basic', NoteHeadTests.basic);
-    run('Various Heads', NoteHeadTests.variousHeads);
-    run('Drum Chord Heads', NoteHeadTests.drumChordHeads);
-    run('Bounding Boxes', NoteHeadTests.basicBoundingBoxes);
+    run('Basic', this.basic);
+    run('Various Heads', this.variousHeads);
+    run('Drum Chord Heads', this.drumChordHeads);
+    run('Bounding Boxes', this.basicBoundingBoxes);
   },
 
-  /**
-   * @param options
-   * @param x
-   * @param y
-   * @returns
-   */
-  setupContext(options, x, y) {
-    const ctx = options.contextBuilder(options.elementId, x || 450, y || 140);
-    ctx.scale(0.9, 0.9);
-    ctx.fillStyle = '#221';
-    ctx.strokeStyle = '#221';
-    ctx.font = ' 10pt Arial';
-    const stave = new Stave(10, 10, x || 450).addTrebleGlyph();
-
-    return { context: ctx, stave: stave };
-  },
-
-  showNote(note_struct, stave, ctx, x) {
-    const note = new StaveNote(note_struct).setStave(stave);
-
-    new TickContext().addTickable(note).preFormat().setX(x);
-
-    note.setContext(ctx).draw();
-
-    return note;
-  },
-
-  basic(options: TestOptions, contextBuilder: ContextBuilder) {
+  basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    const c = NoteHeadTests.setupContext(options, 450, 250);
+    const c = setupContext(options, 450, 250);
 
     c.stave = new Stave(10, 0, 250).addTrebleGlyph();
 
@@ -89,7 +66,7 @@ const NoteHeadTests = {
   },
 
   variousHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const notes = [
+    const notes: StaveNoteStruct[] = [
       { keys: ['g/5/d0'], duration: '4' },
       { keys: ['g/5/d1'], duration: '4' },
       { keys: ['g/5/d2'], duration: '4' },
@@ -119,13 +96,16 @@ const NoteHeadTests = {
     const ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
 
     // Draw two staves, one with up-stems and one with down-stems.
-    for (let h = 0; h < 2; ++h) {
-      const stave = new Stave(10, 10 + h * 120, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
+    for (let staveNum = 0; staveNum < 2; ++staveNum) {
+      const stave = new Stave(10, 10 + staveNum * 120, notes.length * 25 + 75)
+        .addClef('percussion')
+        .setContext(ctx)
+        .draw();
 
       for (let i = 0; i < notes.length; ++i) {
         const note = notes[i];
-        note.stem_direction = h === 0 ? -1 : 1;
-        const staveNote = NoteHeadTests.showNote(note, stave, ctx, (i + 1) * 25);
+        note.stem_direction = staveNum === 0 ? -1 : 1;
+        const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -134,7 +114,7 @@ const NoteHeadTests = {
   },
 
   drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const notes = [
+    const notes: StaveNoteStruct[] = [
       { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
       { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
       { keys: ['a/4/d1', 'g/5/x2'], duration: '4' },
@@ -166,7 +146,7 @@ const NoteHeadTests = {
       for (let i = 0; i < notes.length; ++i) {
         const note = notes[i];
         note.stem_direction = h === 0 ? -1 : 1;
-        const staveNote = NoteHeadTests.showNote(note, stave, ctx, (i + 1) * 25);
+        const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
         ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
         ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -176,7 +156,7 @@ const NoteHeadTests = {
 
   basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    const c = NoteHeadTests.setupContext(options, 350, 250);
+    const c = setupContext(options, 350, 250);
 
     c.stave = new Stave(10, 0, 250).addTrebleGlyph();
 
@@ -213,5 +193,25 @@ const NoteHeadTests = {
     ok('NoteHead Bounding Boxes');
   },
 };
+
+function setupContext(options: TestOptions, x: number, y: number): { context: RenderContext; stave: Stave } {
+  // use ! operator because we know the options.contextBuilder is set.
+  // eslint-disable-next-line
+  const context = options.contextBuilder!(options.elementId, x || 450, y || 140);
+  context.scale(0.9, 0.9);
+  context.fillStyle = '#221';
+  context.strokeStyle = '#221';
+  context.font = ' 10pt Arial';
+  const stave = new Stave(10, 10, x || 450).addTrebleGlyph();
+
+  return { context, stave };
+}
+
+function showNote(note_struct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number) {
+  const note = new StaveNote(note_struct).setStave(stave);
+  new TickContext().addTickable(note).preFormat().setX(x);
+  note.setContext(ctx).draw();
+  return note;
+}
 
 export { NoteHeadTests };

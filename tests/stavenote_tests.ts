@@ -16,7 +16,7 @@ import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { Fraction } from 'fraction';
 import { FretHandFinger } from 'frethandfinger';
-import { Modifier } from 'modifier';
+import { Modifier, ModifierPosition } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
@@ -25,16 +25,13 @@ import { Stem } from 'stem';
 import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { TickContext } from 'tickcontext';
-
-function note(note_struct: StaveNoteStruct) {
-  return new StaveNote(note_struct);
-}
+import { RenderContext } from 'types/common';
 
 const StaveNoteTests = {
   Start(): void {
     QUnit.module('StaveNote');
     test('Tick', this.ticks);
-    test('Tick - New API', this.ticksNewApi);
+    test('Tick - New API', this.ticksNewAPI);
     test('Stem', this.stem);
     test('Automatic Stem Direction', this.autoStem);
     test('Stem Extension Pitch', this.stemExtensionPitch);
@@ -53,11 +50,7 @@ const StaveNoteTests = {
 
     const run = VexFlowTests.runTests;
     run('StaveNote Draw - Treble', this.draw, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
-    run('StaveNote BoundingBoxes - Treble', this.drawBoundingBoxes, {
-      clef: 'treble',
-      octaveShift: 0,
-      restKey: 'r/4',
-    });
+    run('StaveNote BoundingBoxes - Treble', this.drawBoundingBoxes, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
     run('StaveNote Draw - Alto', this.draw, { clef: 'alto', octaveShift: -1, restKey: 'r/4' });
     run('StaveNote Draw - Tenor', this.draw, { clef: 'tenor', octaveShift: -1, restKey: 'r/3' });
     run('StaveNote Draw - Bass', this.draw, { clef: 'bass', octaveShift: -2, restKey: 'r/3' });
@@ -85,8 +78,8 @@ const StaveNoteTests = {
   ticks(): void {
     const BEAT = (1 * Flow.RESOLUTION) / 4;
 
-    const tickTests = {
-      // Key value pairs of `testName: [durationString, expectedBeats, expectedNoteType]`
+    // Key value pairs of `testName: [durationString, expectedBeats, expectedNoteType]`
+    const tickTests: Record<string, [string, number, string]> = {
       'Breve note': ['1/2', 8.0, 'n'],
       'Whole note': ['w', 4.0, 'n'],
       'Quarter note': ['q', 1.0, 'n'],
@@ -104,7 +97,7 @@ const StaveNoteTests = {
       'Triple-dotted muted 8th note': ['8dddm', 0.9375, 'm'],
     };
 
-    Object.keys(tickTests).forEach(function (testName) {
+    Object.keys(tickTests).forEach((testName: string) => {
       const testData = tickTests[testName];
       const durationString = testData[0];
       const expectedBeats = testData[1];
@@ -139,11 +132,11 @@ const StaveNoteTests = {
     );
   },
 
-  ticksNewApi() {
+  ticksNewAPI(): void {
     const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
-    const tickTests = {
+    const tickTests: Record<string, [StaveNoteStruct, number, string]> = {
       'Breve note': [{ duration: '1/2' }, 8.0, 'n'],
       'Whole note': [{ duration: 'w' }, 4.0, 'n'],
       'Quarter note': [{ duration: 'q' }, 1.0, 'n'],
@@ -175,36 +168,30 @@ const StaveNoteTests = {
     });
 
     throws(
-      function () {
-        return new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' });
-      },
+      () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' }),
       /BadArguments/,
       "Invalid note duration '8.7' throws BadArguments exception"
     );
 
     throws(
-      function () {
-        return new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' });
-      },
+      () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' }),
       /BadArguments/,
       "Invalid note type 'Z' throws BadArguments exception"
     );
 
     throws(
-      function () {
-        return new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' });
-      },
+      () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' }),
       /BadArguments/,
       "Invalid note type 'Z' throws BadArguments exception"
     );
   },
 
-  stem() {
+  stem(): void {
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
     equal(note.getStemDirection(), StaveNote.STEM_UP, 'Default note has UP stem');
   },
 
-  autoStem() {
+  autoStem(): void {
     [
       // [keys, expectedStemDirection]
       [['c/5', 'e/5', 'g/5'], StaveNote.STEM_DOWN],
@@ -224,7 +211,7 @@ const StaveNoteTests = {
     });
   },
 
-  stemExtensionPitch() {
+  stemExtensionPitch(): void {
     [
       // [keys, expectedStemExtension, override stem direction]
       [['c/5', 'e/5', 'g/5'], 0, 0],
@@ -324,20 +311,6 @@ const StaveNoteTests = {
     expect(0);
   },
 
-  showNote(note_struct, stave, ctx, x, drawBoundingBox: boolean = false): StaveNote {
-    const note = new StaveNote(note_struct).setStave(stave);
-
-    new TickContext().addTickable(note).preFormat().setX(x);
-
-    note.setContext(ctx).draw();
-
-    if (drawBoundingBox) {
-      note.getBoundingBox().draw(ctx);
-    }
-
-    return note;
-  },
-
   draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const clef = options.params.clef;
     const octaveShift = options.params.octaveShift;
@@ -402,7 +375,7 @@ const StaveNoteTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 25);
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
       // If this is an interactivity test, then attempt to attach mouseover
       // and mouseout handlers to the notes.
@@ -471,7 +444,7 @@ const StaveNoteTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 25, true);
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 25, true);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -512,7 +485,7 @@ const StaveNoteTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 25);
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -553,7 +526,7 @@ const StaveNoteTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, (i + 1) * 45);
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 45);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -609,7 +582,7 @@ const StaveNoteTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const staveNote = StaveNoteTests.showNote(note, stave, ctx, i * 25 + 5);
+      const staveNote = showNote(note, stave, ctx, i * 25 + 5);
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -876,20 +849,6 @@ const StaveNoteTests = {
     ok('draw beam styles');
   },
 
-  renderNote(note, stave, ctx, x) {
-    note.setStave(stave);
-
-    const mc = new ModifierContext();
-    note.addToModifierContext(mc);
-
-    new TickContext().addTickable(note).preFormat().setX(x);
-
-    note.setContext(ctx).draw();
-    ctx.save();
-
-    return note;
-  },
-
   dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 800, 150);
     ctx.scale(1.0, 1.0);
@@ -920,7 +879,7 @@ const StaveNoteTests = {
     stave.setContext(ctx).draw();
 
     for (let i = 0; i < notes.length; ++i) {
-      StaveNoteTests.renderNote(notes[i], stave, ctx, i * 65);
+      renderNote(notes[i], stave, ctx, i * 65);
     }
 
     ok(true, 'Full Dot');
@@ -952,7 +911,7 @@ const StaveNoteTests = {
     stave.setContext(ctx).draw();
 
     for (let i = 0; i < notes.length; ++i) {
-      StaveNoteTests.renderNote(notes[i], stave, ctx, i * 65);
+      renderNote(notes[i], stave, ctx, i * 65);
     }
 
     ok(true, 'Full Dot');
@@ -988,7 +947,7 @@ const StaveNoteTests = {
     stave.setContext(ctx).draw();
 
     for (let i = 0; i < notes.length; ++i) {
-      StaveNoteTests.renderNote(notes[i], stave, ctx, i * 65);
+      renderNote(notes[i], stave, ctx, i * 65);
     }
 
     beam.setContext(ctx).draw();
@@ -1022,7 +981,7 @@ const StaveNoteTests = {
     stave.setContext(ctx).draw();
 
     for (let i = 0; i < notes.length; ++i) {
-      StaveNoteTests.renderNote(notes[i], stave, ctx, i * 65);
+      renderNote(notes[i], stave, ctx, i * 65);
     }
 
     beam.setContext(ctx).draw();
@@ -1030,7 +989,7 @@ const StaveNoteTests = {
     ok(true, 'Full Dot');
   },
 
-  centerAlignedRest(options) {
+  centerAlignedRest(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 160);
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
     const note = f.StaveNote({ keys: ['b/4'], duration: '1r', align_center: true });
@@ -1040,7 +999,7 @@ const StaveNoteTests = {
     ok(true);
   },
 
-  centerAlignedRestFermata(options) {
+  centerAlignedRestFermata(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 160);
 
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
@@ -1058,7 +1017,7 @@ const StaveNoteTests = {
     ok(true);
   },
 
-  centerAlignedRestAnnotation(options) {
+  centerAlignedRestAnnotation(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 160);
 
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
@@ -1076,16 +1035,13 @@ const StaveNoteTests = {
     ok(true);
   },
 
-  centerAlignedNoteMultiModifiers(options) {
+  centerAlignedNoteMultiModifiers(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 400, 160);
 
     const stave = f.Stave({ x: 10, y: 10, width: 350 }).addClef('treble').addTimeSignature('4/4');
 
-    function newFinger(num, pos) {
+    function newFinger(num: string, pos: ModifierPosition) {
       return new FretHandFinger(num).setPosition(pos);
-    }
-    function newStringNumber(num, pos) {
-      return new StringNumber(num).setPosition(pos);
     }
 
     const note = f
@@ -1096,7 +1052,7 @@ const StaveNoteTests = {
       .addModifier(newFinger('3', Modifier.Position.LEFT), 0)
       .addModifier(newFinger('2', Modifier.Position.LEFT), 2)
       .addModifier(newFinger('1', Modifier.Position.RIGHT), 1)
-      .addModifier(newStringNumber('4', Modifier.Position.BELOW), 2)
+      .addModifier(new StringNumber('4').setPosition(Modifier.Position.BELOW), 2)
       .addDotToAll();
 
     const voice = f.Voice().setStrict(false).addTickables([note]);
@@ -1142,4 +1098,44 @@ const StaveNoteTests = {
   },
 };
 
-export { StaveNoteTests };
+//#region Helper Functions
+
+const note = (note_struct: StaveNoteStruct) => new StaveNote(note_struct);
+
+function renderNote(note: StaveNote, stave: Stave, ctx: RenderContext, x: number) {
+  note.setStave(stave);
+
+  const mc = new ModifierContext();
+  note.addToModifierContext(mc);
+
+  new TickContext().addTickable(note).preFormat().setX(x);
+
+  note.setContext(ctx).draw();
+  ctx.save();
+
+  return note;
+}
+
+function showNote(
+  note_struct: StaveNoteStruct,
+  stave: Stave,
+  ctx: RenderContext,
+  x: number,
+  drawBoundingBox: boolean = false
+): StaveNote {
+  const note = new StaveNote(note_struct).setStave(stave);
+
+  new TickContext().addTickable(note).preFormat().setX(x);
+
+  note.setContext(ctx).draw();
+
+  if (drawBoundingBox) {
+    note.getBoundingBox().draw(ctx);
+  }
+
+  return note;
+}
+
+//#endregion
+
+export { StaveNoteTests, showNote };

@@ -16,9 +16,9 @@ const StaveModifierTests = {
   Start: function (): void {
     QUnit.module('StaveModifier');
     const run = VexFlowTests.runTests;
-    run('Stave Draw Test', StaveModifierTests.draw);
-    run('Vertical Bar Test', StaveModifierTests.drawVerticalBar);
-    run('Begin & End StaveModifier Test', StaveModifierTests.drawBeginAndEnd);
+    run('Stave Draw Test', this.draw);
+    run('Vertical Bar Test', this.drawVerticalBar);
+    run('Begin & End StaveModifier Test', this.drawBeginAndEnd);
   },
 
   draw(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -60,6 +60,7 @@ const StaveModifierTests = {
     stave.setClef('treble');
     stave.setBegBarType(Barline.type.REPEAT_BEGIN);
     stave.setEndClef('alto');
+    // TODO: Make second argument to setEndTimeSignature(...) optional.
     stave.setEndTimeSignature('9/8');
     stave.setEndKeySignature('G', 'C#');
     stave.setEndBarType(Barline.type.DOUBLE);

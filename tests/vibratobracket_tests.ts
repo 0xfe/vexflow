@@ -7,17 +7,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+// TODO: "to: null" and "from: null" do not match the declared types in the factory.VibratoBracket(params) method.
+// Should we omit the to / from fields? Set them to undefined? Update the declared types to accept null?
 
-function createTest(noteGroup1, setupVibratoBracket) {
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { Factory } from 'factory';
+import { StaveNote } from 'stavenote';
+
+function createTest(noteGroup: string, setupVibratoBracket: (f: Factory, notes: StaveNote[]) => void) {
   return function (options: TestOptions) {
     const f = VexFlowTests.makeFactory(options, 650, 200);
     const stave = f.Stave();
     const score = f.EasyScore();
 
-    const voice = score.voice(score.notes.apply(score, noteGroup1));
+    const voice = score.voice(score.notes(noteGroup));
 
-    setupVibratoBracket(f, voice.getTickables());
+    setupVibratoBracket(f, voice.getTickables() as StaveNote[]);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -29,13 +34,11 @@ function createTest(noteGroup1, setupVibratoBracket) {
 
 const VibratoBracketTests = {
   Start(): void {
-    const run = VexFlowTests.runTests;
-
     QUnit.module('VibratoBracket');
-
+    const run = VexFlowTests.runTests;
     run(
       'Simple VibratoBracket',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
+      createTest('c4/4, c4, c4, c4', (f, notes) => {
         f.VibratoBracket({
           from: notes[0],
           to: notes[3],
@@ -48,7 +51,7 @@ const VibratoBracketTests = {
 
     run(
       'Harsh VibratoBracket Without End Note',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
+      createTest('c4/4, c4, c4, c4', (f, notes) => {
         f.VibratoBracket({
           from: notes[2],
           to: null,
@@ -62,7 +65,7 @@ const VibratoBracketTests = {
 
     run(
       'Harsh VibratoBracket Without Start Note',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
+      createTest('c4/4, c4, c4, c4', function (f, notes) {
         f.VibratoBracket({
           from: null,
           to: notes[2],

@@ -20,20 +20,12 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TimeSignature } from 'timesignature';
 
-function FS(fill: string, stroke?: string): ElementStyle {
-  const ret: ElementStyle = { fillStyle: fill };
-  if (stroke) {
-    ret.strokeStyle = stroke;
-  }
-  return ret;
-}
-
 const StyleTests = {
   Start(): void {
     QUnit.module('Style');
     const run = VexFlowTests.runTests;
-    run('Basic Style', StyleTests.stave);
-    run('TabNote modifiers Style', StyleTests.tab);
+    run('Basic Style', this.stave);
+    run('TabNote modifiers Style', this.tab);
   },
 
   stave(options: TestOptions): void {
@@ -127,5 +119,11 @@ const StyleTests = {
     ok(true, 'TabNote modifiers Style');
   },
 };
+
+/**
+ * Helper function to create a ElementStyle options object.
+ * Used for updating the fillStyle and optionally the strokeStyle.
+ */
+const FS = (fillStyle: string, strokeStyle?: string): ElementStyle => ({ fillStyle, strokeStyle });
 
 export { StyleTests };

@@ -11,29 +11,6 @@ import { Curve } from 'curve';
 import { Factory } from 'factory';
 import { StaveNote } from 'stavenote';
 
-function createTest(beamGroup1, beamGroup2, setupCurves: (f: Factory, n: StaveNote[]) => void) {
-  return (options: TestOptions) => {
-    const f = VexFlowTests.makeFactory(options, 350, 200);
-    const stave = f.Stave({ y: 50 });
-    const score = f.EasyScore();
-
-    const notes: StaveNote[] = [
-      score.beam(score.notes.apply(score, beamGroup1)),
-      score.beam(score.notes.apply(score, beamGroup2)),
-    ].reduce(concat);
-
-    setupCurves(f, notes);
-
-    const voice = score.voice(notes, { time: '4/4' });
-
-    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-    f.draw();
-
-    ok('Simple Curve');
-  };
-}
-
 const CurveTests = {
   Start(): void {
     QUnit.module('Curve');
@@ -147,5 +124,28 @@ const CurveTests = {
     );
   },
 };
+
+function createTest(beamGroup1, beamGroup2, setupCurves: (f: Factory, n: StaveNote[]) => void) {
+  return (options: TestOptions) => {
+    const f = VexFlowTests.makeFactory(options, 350, 200);
+    const stave = f.Stave({ y: 50 });
+    const score = f.EasyScore();
+
+    const notes: StaveNote[] = [
+      score.beam(score.notes.apply(score, beamGroup1)),
+      score.beam(score.notes.apply(score, beamGroup2)),
+    ].reduce(concat);
+
+    setupCurves(f, notes);
+
+    const voice = score.voice(notes, { time: '4/4' });
+
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+    f.draw();
+
+    ok('Simple Curve');
+  };
+}
 
 export { CurveTests };

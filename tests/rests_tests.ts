@@ -14,9 +14,6 @@ import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Tuplet } from 'tuplet';
 import { Voice } from 'voice';
 
-// Optional: arrow function to make your code more concise.
-const note = (s: StaveNoteStruct) => new StaveNote(s);
-
 const RestsTests = {
   Start(): void {
     QUnit.module('Rests');
@@ -34,37 +31,12 @@ const RestsTests = {
   },
 
   /**
-   * @param options
-   * @param contextBuilder static function in renderer.ts (Renderer.getSVGContext or Renderer.getCanvasContext).
-   * @param width
-   * @param height
-   * @returns object with .context and .stave properties
-   */
-  setupContext(
-    options: TestOptions,
-    contextBuilder: ContextBuilder,
-    width: number = 350,
-    height: number = 150
-  ): { context: RenderContext; stave: Stave } {
-    // context is SVGContext or CanvasRenderingContext2D (native) or CanvasContext (only if Renderer.USE_CANVAS_PROXY is true).
-    const context = contextBuilder(options.elementId, width, height);
-    context.scale(0.9, 0.9);
-    context.fillStyle = '#221';
-    context.strokeStyle = '#221';
-    context.font = ' 10pt Arial';
-
-    const stave = new Stave(10, 30, width).addTrebleGlyph().addTimeSignature('4/4').setContext(context).draw();
-
-    return { context, stave };
-  },
-
-  /**
    * Eight dotted rests, from whole to 128th.
    * @param options
    * @param contextBuilder
    */
   basic(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const { context, stave } = RestsTests.setupContext(options, contextBuilder, 700);
+    const { context, stave } = setupContext(options, contextBuilder, 700);
 
     const notes = [
       new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }).addDotToAll(),
@@ -88,7 +60,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   beamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['e/5'], stem_direction: 1, duration: '8' }),
@@ -111,11 +83,11 @@ const RestsTests = {
     const beam2 = new Beam(notes.slice(4, 8));
     const beam3 = new Beam(notes.slice(8, 12));
 
-    Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(context, stave, notes);
 
-    beam1.setContext(c.context).draw();
-    beam2.setContext(c.context).draw();
-    beam3.setContext(c.context).draw();
+    beam1.setContext(context).draw();
+    beam2.setContext(context).draw();
+    beam3.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Beams Up Test');
   },
@@ -127,7 +99,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   beamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['a/5'], stem_direction: -1, duration: '8' }),
@@ -150,11 +122,11 @@ const RestsTests = {
     const beam2 = new Beam(notes.slice(4, 8));
     const beam3 = new Beam(notes.slice(8, 12));
 
-    Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(context, stave, notes);
 
-    beam1.setContext(c.context).draw();
-    beam2.setContext(c.context).draw();
-    beam3.setContext(c.context).draw();
+    beam1.setContext(context).draw();
+    beam2.setContext(context).draw();
+    beam3.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Beams Down Test');
   },
@@ -167,7 +139,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   tupletsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['b/4'], stem_direction: 1, duration: '4' }),
@@ -192,12 +164,12 @@ const RestsTests = {
     const tuplet3 = new Tuplet(notes.slice(6, 9)).setTupletLocation(Tuplet.LOCATION_TOP);
     const tuplet4 = new Tuplet(notes.slice(9, 12)).setTupletLocation(Tuplet.LOCATION_TOP);
 
-    Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(context, stave, notes);
 
-    tuplet1.setContext(c.context).draw();
-    tuplet2.setContext(c.context).draw();
-    tuplet3.setContext(c.context).draw();
-    tuplet4.setContext(c.context).draw();
+    tuplet1.setContext(context).draw();
+    tuplet2.setContext(context).draw();
+    tuplet3.setContext(context).draw();
+    tuplet4.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Tuplets Stem Up Test');
   },
@@ -210,7 +182,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   tupletsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['a/5'], stem_direction: -1, duration: '8r' }),
@@ -240,17 +212,17 @@ const RestsTests = {
     const tuplet3 = new Tuplet(notes.slice(6, 9)).setTupletLocation(Tuplet.LOCATION_BOTTOM);
     const tuplet4 = new Tuplet(notes.slice(9, 12)).setTupletLocation(Tuplet.LOCATION_BOTTOM);
 
-    Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(context, stave, notes);
 
-    tuplet1.setContext(c.context).draw();
-    tuplet2.setContext(c.context).draw();
-    tuplet3.setContext(c.context).draw();
-    tuplet4.setContext(c.context).draw();
+    tuplet1.setContext(context).draw();
+    tuplet2.setContext(context).draw();
+    tuplet3.setContext(context).draw();
+    tuplet4.setContext(context).draw();
 
-    beam1.setContext(c.context).draw();
-    beam2.setContext(c.context).draw();
-    beam3.setContext(c.context).draw();
-    beam4.setContext(c.context).draw();
+    beam1.setContext(context).draw();
+    beam2.setContext(context).draw();
+    beam3.setContext(context).draw();
+    beam4.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Tuplets Stem Down Test');
   },
@@ -264,7 +236,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   singleVoiceDefaultAlignment(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['b/4'], stem_direction: -1, duration: '4r' }),
@@ -291,10 +263,10 @@ const RestsTests = {
     const beam = new Beam(notes.slice(5, 9));
     const tuplet = new Tuplet(notes.slice(9, 12)).setTupletLocation(Tuplet.LOCATION_TOP);
 
-    Formatter.FormatAndDraw(c.context, c.stave, notes);
+    Formatter.FormatAndDraw(context, stave, notes);
 
-    tuplet.setContext(c.context).draw();
-    beam.setContext(c.context).draw();
+    tuplet.setContext(context).draw();
+    beam.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Default Test');
   },
@@ -307,7 +279,7 @@ const RestsTests = {
    * @param contextBuilder
    */
   singleVoiceAlignAll(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const c = RestsTests.setupContext(options, contextBuilder, 600, 160);
+    const { context, stave } = setupContext(options, contextBuilder, 600, 160);
 
     const notes = [
       note({ keys: ['b/4'], stem_direction: -1, duration: '4r' }),
@@ -335,10 +307,10 @@ const RestsTests = {
     const tuplet = new Tuplet(notes.slice(9, 12)).setTupletLocation(Tuplet.LOCATION_TOP);
 
     // Set { align_rests: true } to align rests (vertically) with nearby notes in each voice.
-    Formatter.FormatAndDraw(c.context, c.stave, notes, { align_rests: true });
+    Formatter.FormatAndDraw(context, stave, notes, { align_rests: true });
 
-    tuplet.setContext(c.context).draw();
-    beam.setContext(c.context).draw();
+    tuplet.setContext(context).draw();
+    beam.setContext(context).draw();
 
     ok(true, 'Auto Align Rests - Align All Test');
   },
@@ -394,5 +366,33 @@ const RestsTests = {
     ok(true, 'Strokes Test Multi Voice');
   },
 };
+
+// Optional: arrow function to make your code more concise.
+const note = (s: StaveNoteStruct) => new StaveNote(s);
+
+/**
+ * @param options
+ * @param contextBuilder static function in renderer.ts (Renderer.getSVGContext or Renderer.getCanvasContext).
+ * @param width
+ * @param height
+ * @returns object with .context and .stave properties
+ */
+function setupContext(
+  options: TestOptions,
+  contextBuilder: ContextBuilder,
+  width: number = 350,
+  height: number = 150
+): { context: RenderContext; stave: Stave } {
+  // context is SVGContext or CanvasRenderingContext2D (native) or CanvasContext (only if Renderer.USE_CANVAS_PROXY is true).
+  const context = contextBuilder(options.elementId, width, height);
+  context.scale(0.9, 0.9);
+  context.fillStyle = '#221';
+  context.strokeStyle = '#221';
+  context.font = ' 10pt Arial';
+
+  const stave = new Stave(10, 30, width).addTrebleGlyph().addTimeSignature('4/4').setContext(context).draw();
+
+  return { context, stave };
+}
 
 export { RestsTests };
