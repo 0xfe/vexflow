@@ -36,7 +36,8 @@ const AccidentalTests = {
     run('Sagittal', this.sagittal);
     run('Automatic Accidentals', this.automaticAccidentals0);
     run('Automatic Accidentals - C major scale in Ab', this.automaticAccidentals1);
-    run('Automatic Accidentals - No Accidentals Necsesary', this.automaticAccidentals2);
+    run('Automatic Accidentals - No Accidentals Necessary', this.automaticAccidentals2);
+    run('Automatic Accidentals - No Accidentals Necessary (EasyScore)', this.automaticAccidentals3);
     run('Automatic Accidentals - Multi Voice Inline', this.automaticAccidentalsMultiVoiceInline);
     run('Automatic Accidentals - Multi Voice Offset', this.automaticAccidentalsMultiVoiceOffset);
     run('Factory API', this.factoryAPI);
@@ -708,6 +709,25 @@ const AccidentalTests = {
       { keys: ['a/5'], duration: '4' },
     ].map(f.StaveNote.bind(f));
 
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
+
+    Accidental.applyAccidentals([voice], 'A');
+
+    new Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+    f.draw();
+
+    ok(true);
+  },
+
+  automaticAccidentals3(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 700, 150);
+    const stave = f.Stave().addKeySignature('A');
+
+    const score: EasyScore = f.EasyScore();
+    score.set({ time: "8/4" });
+    const notes = score.notes('A4/q, B4/q, C#5/q, D5/q, E5/q,F#5/q, G#5/q, A5/q', {stem: 'UP'});
+    
     const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
     Accidental.applyAccidentals([voice], 'A');
