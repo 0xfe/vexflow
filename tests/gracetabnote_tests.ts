@@ -17,7 +17,8 @@ import { Voice } from 'voice';
 const GraceTabNoteTests = {
   Start(): void {
     QUnit.module('Grace Tab Notes');
-    // TODO: Rename tests below. Remove "Grace Tab Note "
+    // TODO: Rename tests below since it is redundant with the module name.
+    // Remove "Grace Tab Note "
     const run = VexFlowTests.runTests;
     run('Grace Tab Note Simple', this.simple);
     run('Grace Tab Note Slurred', this.slurred);
@@ -100,18 +101,14 @@ const GraceTabNoteTests = {
 };
 
 //#region Helper Functions
+const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
+
+const graceTabNote = (note_prop: TabNoteStruct) => new GraceTabNote(note_prop);
+
 function setupContext(opts: TestOptions, ctxBuilder: ContextBuilder): { context: RenderContext; stave: TabStave } {
   const context = ctxBuilder(opts.elementId, 350, 140);
   const stave = new TabStave(10, 10, 350).addTabGlyph().setContext(context).draw();
   return { context, stave };
-}
-
-function tabNote(tab_struct: TabNoteStruct) {
-  return new TabNote(tab_struct);
-}
-
-function graceTabNote(note_prop: TabNoteStruct) {
-  return new GraceTabNote(note_prop);
 }
 //#endregion
 

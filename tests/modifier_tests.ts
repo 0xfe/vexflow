@@ -1,12 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// ModifierContext Tests
 
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
 
-/**
- * ModifierContext Tests
- */
 const ModifierContextTests = {
   Start(): void {
     QUnit.module('ModifierContext');

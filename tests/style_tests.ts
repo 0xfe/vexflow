@@ -91,20 +91,17 @@ const StyleTests = {
     stave.getModifiers()[2].setStyle(FS('blue'));
     stave.setContext(ctx).draw();
 
-    function newNote(tab_struct: TabNoteStruct) {
-      return new TabNote(tab_struct);
-    }
+    const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
-    // TabNote modifiers test.
     const notes = [
-      newNote({
+      tabNote({
         positions: [
           { str: 2, fret: 10 },
           { str: 4, fret: 9 },
         ],
         duration: 'h',
       }).addModifier(new Annotation('green text').setStyle(FS('green')), 0),
-      newNote({
+      tabNote({
         positions: [
           { str: 2, fret: 10 },
           { str: 4, fret: 9 },
@@ -115,8 +112,8 @@ const StyleTests = {
         .addStroke(0, new Stroke(1, { all_voices: false }).setStyle(FS('blue'))),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes /*, 200 (incorrect type) */);
-    ok(true, 'TabNote modifiers Style');
+    Formatter.FormatAndDraw(ctx, stave, notes);
+    ok(true, 'TabNote Modifiers Style');
   },
 };
 

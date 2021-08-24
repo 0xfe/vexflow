@@ -5,11 +5,12 @@
 
 /* eslint-disable */
 // @ts-nocheck
-// TODO: Second argument of Stroke constructor should be optional.
+
+// TODO: Stroke constructor's second argument should be optional.
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Renderer } from 'renderer';
-import { Barline } from 'stavebarline';
+import { BarlineType } from 'stavebarline';
 import { Stroke } from 'strokes';
 
 const StringNumberTests = {
@@ -28,7 +29,7 @@ const StringNumberTests = {
     const score = f.EasyScore();
 
     // bar 1
-    const stave1 = f.Stave({ width: 300 }).setEndBarType(Barline.type.DOUBLE).addClef('treble');
+    const stave1 = f.Stave({ width: 300 }).setEndBarType(BarlineType.DOUBLE).addClef('treble');
 
     const notes1 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4', { stem: 'down' });
 
@@ -64,7 +65,9 @@ const StringNumberTests = {
     f.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const stave2 = f.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 }).setEndBarType(Barline.type.DOUBLE);
+    const stave2 = f
+      .Stave({ x: stave1.getWidth() + stave1.getX(), y: stave1.getY(), width: 300 })
+      .setEndBarType(BarlineType.DOUBLE);
 
     const notes2 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'up' });
 
@@ -93,7 +96,9 @@ const StringNumberTests = {
     f.Formatter().joinVoices([voice2]).formatToStave([voice2], stave2);
 
     // bar 3 - juxtaposing third bar next to second bar
-    const stave3 = f.Stave({ x: stave2.width + stave2.x, y: stave2.y, width: 150 }).setEndBarType(Barline.type.END);
+    const stave3 = f
+      .Stave({ x: stave2.getWidth() + stave2.getX(), y: stave2.getY(), width: 150 })
+      .setEndBarType(BarlineType.END);
 
     const notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
 
@@ -117,7 +122,7 @@ const StringNumberTests = {
     const score = f.EasyScore();
 
     // bar 1
-    const stave1 = f.Stave({ width: 350 }).setEndBarType(Barline.type.DOUBLE).addClef('treble');
+    const stave1 = f.Stave({ width: 350 }).setEndBarType(BarlineType.DOUBLE).addClef('treble');
 
     const notes1 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'down' });
 
@@ -153,7 +158,9 @@ const StringNumberTests = {
     f.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const stave2 = f.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 350 }).setEndBarType(Barline.type.END);
+    const stave2 = f
+      .Stave({ x: stave1.getWidth() + stave1.getX(), y: stave1.getY(), width: 350 })
+      .setEndBarType(BarlineType.END);
 
     const notes2 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/8, (c4 f4 g4)/4.[stem="down"]', {
       stem: 'up',
@@ -247,7 +254,7 @@ const StringNumberTests = {
 
     // Important Note: notes2 must come first, otherwise ledger lines from notes2 will be drawn on top of notes from notes1!
     // BUG: VexFlow draws TWO ledger lines for middle C, because both notes1 and notes2 require the middle C ledger line.
-    const voices = [notes2, notes1].map(score.voice.bind(score));
+    const voices = [score.voice(notes2), score.voice(notes1)];
 
     f.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -262,7 +269,7 @@ const StringNumberTests = {
   drawAccidentals(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500);
 
-    const stave = f.Stave().setEndBarType(Barline.type.DOUBLE).addClef('treble');
+    const stave = f.Stave().setEndBarType(BarlineType.DOUBLE).addClef('treble');
 
     const notes = [
       f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),

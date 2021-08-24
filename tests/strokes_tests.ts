@@ -6,17 +6,23 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Stroke constructor's second argument should be optional.
+// TODO: Factory.GraceNote() should probably take a Partial<GraceNoteStruct>
+// TODO: EasyScore.voice()'s first param should be Tickable[] instead of StaveNote[].
+
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Barline } from 'stavebarline';
 import { Stroke } from 'strokes';
+import { GraceNote, GraceNoteStruct } from 'gracenote';
 
 const StrokesTests = {
   Start: function (): void {
     QUnit.module('Strokes');
     const run = VexFlowTests.runTests;
-    // TODO: Rename tests by removing 'Strokes - '
+    // TODO: Rename tests by removing 'Strokes - ' since it is redundant with the module name.
+    // This will make flow.html easier to read.
     run('Strokes - Brush/Roll/Rasquedo', this.brushRollRasquedo);
     run('Strokes - Arpeggio directionless (without arrows)', this.arpeggioDirectionless);
     run('Strokes - Multi Voice', this.multiVoice);
@@ -47,7 +53,9 @@ const StrokesTests = {
     f.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
     // bar 2
-    const stave2 = f.Stave({ x: stave1.width + stave1.x, y: stave1.y, width: 300 }).setEndBarType(Barline.type.DOUBLE);
+    const stave2 = f
+      .Stave({ x: stave1.getWidth() + stave1.getX(), y: stave1.getY(), width: 300 })
+      .setEndBarType(Barline.type.DOUBLE);
 
     const notes2 = score.notes('(c4 d4 g4)/4, (c4 d4 g4), (c4 d4 g4), (c4 d4 a4)', { stem: 'up' });
 
@@ -78,11 +86,12 @@ const StrokesTests = {
 
     const notes1 = score.notes('(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)', { stem: 'up' });
 
-    const graceNotes = [
+    const graceNoteStructs: Partial<GraceNoteStruct>[] = [
       { keys: ['e/4'], duration: '32' },
       { keys: ['f/4'], duration: '32' },
       { keys: ['g/4'], duration: '32' },
-    ].map(f.GraceNote.bind(f));
+    ];
+    const graceNotes: GraceNote[] = graceNoteStructs.map((graceNoteStruct) => f.GraceNote(graceNoteStruct));
 
     const graceNoteGroup = f.GraceNoteGroup({ notes: graceNotes, slur: false });
     graceNoteGroup.beamNotes();
@@ -134,7 +143,7 @@ const StrokesTests = {
     f.Beam({ notes: notes2.slice(0, 4) });
     f.Beam({ notes: notes2.slice(4, 8) });
 
-    const voices = [notes1, notes2].map(score.voice.bind(score));
+    const voices = [notes1, notes2].map((notes) => score.voice(notes));
 
     f.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -208,7 +217,7 @@ const StrokesTests = {
       f.TabNote({ positions: [{ str: 6, fret: 3 }], duration: '4' }),
     ];
 
-    const voices = [notes1, notes2, tabNotes1, tabNotes2].map(score.voice.bind(score));
+    const voices = [notes1, notes2, tabNotes1, tabNotes2].map((notes) => score.voice(notes));
 
     f.Formatter().joinVoices(voices).formatToStave(voices, stave);
 
@@ -269,7 +278,7 @@ const StrokesTests = {
     f.Formatter().joinVoices([tabVoice1]).formatToStave([tabVoice1], stave1);
 
     // bar 2
-    const stave2 = f.TabStave({ x: stave1.width + stave1.x, width: 300 }).setEndBarType(Barline.type.DOUBLE);
+    const stave2 = f.TabStave({ x: stave1.getWidth() + stave1.getX(), width: 300 }).setEndBarType(Barline.type.DOUBLE);
 
     const tabNotes2 = [
       f.TabNote({
@@ -327,7 +336,10 @@ const StrokesTests = {
         .addAccidental(4, f.Accidental({ type: '#' })),
     ];
 
-    const tabstave = f.TabStave({ x: stave.x, y: 140, width: 450 }).addClef('tab').setNoteStartX(stave.getNoteStartX());
+    const tabstave = f
+      .TabStave({ x: stave.getX(), y: 140, width: 450 })
+      .addClef('tab')
+      .setNoteStartX(stave.getNoteStartX());
 
     const tabNotes = [
       f

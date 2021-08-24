@@ -118,8 +118,8 @@ function setupContext(options: TestOptions, w: number = 0, h: number = 0): { con
 }
 
 function drawTie(notes: TabNote[], indices: number[], options: TestOptions, text?: string): void {
-  const c = setupContext(options);
-  tieNotes(notes, indices, c.stave, c.context, text);
+  const { context, stave } = setupContext(options);
+  tieNotes(notes, indices, stave, context, text);
 }
 
 function tieNotes(notes: Note[], indices: number[], stave: Stave, ctx: RenderContext, text?: string): void {
@@ -143,9 +143,7 @@ function tieNotes(notes: Note[], indices: number[], stave: Stave, ctx: RenderCon
   tie.draw();
 }
 
-function tabNote(tab_struct: TabNoteStruct) {
-  return new TabNote(tab_struct);
-}
+const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
 function multiTest(options: TestOptions, createTabTie: (notes: TieNotes) => TabTie): void {
   const c = setupContext(options, 440, 140);
@@ -234,6 +232,6 @@ function multiTest(options: TestOptions, createTabTie: (notes: TieNotes) => TabT
   ok(true, 'Chord high-fret');
 }
 
-//#endregion
+//#endregion Helper Functions
 
 export { TabTieTests };

@@ -3,16 +3,13 @@
 //
 // Articulation Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { Articulation } from 'articulation';
 import { Beam } from 'beam';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
+import { Barline, BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
@@ -79,7 +76,7 @@ const ArticulationTests = {
     Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
     // bar 3 - juxtaposing second bar next to first bar
-    const staveBar3 = new Stave(staveBar2.width + staveBar2.x, staveBar2.y, 125);
+    const staveBar3 = new Stave(staveBar2.getWidth() + staveBar2.getX(), staveBar2.getY(), 125);
     staveBar3.setContext(ctx).draw();
 
     const notesBar3 = [
@@ -96,8 +93,8 @@ const ArticulationTests = {
     // Helper function to justify and draw a 4/4 voice
     Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
     // bar 4 - juxtaposing second bar next to first bar
-    const staveBar4 = new Stave(staveBar3.width + staveBar3.x, staveBar3.y, 125);
-    staveBar4.setEndBarType(Barline.type.END);
+    const staveBar4 = new Stave(staveBar3.getWidth() + staveBar3.getX(), staveBar3.getY(), 125);
+    staveBar4.setEndBarType(BarlineType.END);
     staveBar4.setContext(ctx).draw();
 
     const notesBar4 = [
@@ -142,7 +139,7 @@ const ArticulationTests = {
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 150);
+    const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 150);
     staveBar2.setEndBarType(Barline.type.DOUBLE);
     staveBar2.setContext(ctx).draw();
 
@@ -207,7 +204,7 @@ const ArticulationTests = {
     beam2.setContext(ctx).draw();
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 350);
+    const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 350);
     staveBar2.setContext(ctx).draw();
     const notesBar2 = [
       new StaveNote({ keys: ['f/3'], duration: '16', stem_direction: 1 }),
@@ -245,7 +242,7 @@ const ArticulationTests = {
     beam4.setContext(ctx).draw();
 
     // bar 3 - juxtaposing second bar next to first bar
-    const staveBar3 = new Stave(staveBar2.width + staveBar2.x, staveBar2.y, 75);
+    const staveBar3 = new Stave(staveBar2.getWidth() + staveBar2.getX(), staveBar2.getY(), 75);
     staveBar3.setContext(ctx).draw();
 
     const notesBar3 = [new StaveNote({ keys: ['c/4'], duration: 'w', stem_direction: 1 })];
@@ -256,7 +253,7 @@ const ArticulationTests = {
     // Helper function to justify and draw a 4/4 voice
     Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
     // bar 4 - juxtaposing second bar next to first bar
-    const staveBar4 = new Stave(staveBar3.width + staveBar3.x, staveBar3.y, 150);
+    const staveBar4 = new Stave(staveBar3.getWidth() + staveBar3.getX(), staveBar3.getY(), 150);
     staveBar4.setEndBarType(Barline.type.END);
     staveBar4.setContext(ctx).draw();
 

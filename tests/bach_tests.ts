@@ -4,11 +4,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: EasyScore.voice() should take Note[] for the first argument, since TextDynamics is not a StaveNote.
+
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { Element } from 'element';
 import { Factory } from 'factory';
 import { Registry } from 'registry';
 import { BarlineType } from 'stavebarline';
+import { StaveNote } from 'stavenote';
 
 const BachDemoTests = {
   Start(): void {
@@ -19,8 +21,9 @@ const BachDemoTests = {
   minuet1(options: TestOptions): void {
     const registry = new Registry();
     Registry.enableDefaultRegistry(registry);
-    function id(id: string): Element {
-      return registry.getElementById(id) as Element;
+
+    function id(id: string): StaveNote {
+      return registry.getElementById(id) as StaveNote;
     }
 
     const f: Factory = VexFlowTests.makeFactory(options, 1100, 900);

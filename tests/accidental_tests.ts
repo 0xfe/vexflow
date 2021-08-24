@@ -18,6 +18,7 @@ import { TimeSigNote } from 'timesignote';
 import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
 import { Factory } from 'factory';
+import { isCategory } from 'typeguard';
 
 const AccidentalTests = {
   Start(): void {
@@ -121,43 +122,43 @@ const AccidentalTests = {
 
   basic(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
 
     const notes = [
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-        .addAccidental(0, newAccid('b'))
-        .addAccidental(1, newAccid('#')),
+        .addAccidental(0, accid('b'))
+        .addAccidental(1, accid('#')),
 
       f
         .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-        .addAccidental(0, newAccid('##'))
-        .addAccidental(1, newAccid('n'))
-        .addAccidental(2, newAccid('bb'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('#'))
-        .addAccidental(5, newAccid('n'))
-        .addAccidental(6, newAccid('bb')),
+        .addAccidental(0, accid('##'))
+        .addAccidental(1, accid('n'))
+        .addAccidental(2, accid('bb'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('#'))
+        .addAccidental(5, accid('n'))
+        .addAccidental(6, accid('bb')),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-        .addAccidental(0, newAccid('n'))
-        .addAccidental(1, newAccid('#'))
-        .addAccidental(2, newAccid('#'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('bb'))
-        .addAccidental(5, newAccid('##'))
-        .addAccidental(6, newAccid('#')),
+        .addAccidental(0, accid('n'))
+        .addAccidental(1, accid('#'))
+        .addAccidental(2, accid('#'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb'))
+        .addAccidental(5, accid('##'))
+        .addAccidental(6, accid('#')),
 
       f
         .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-        .addAccidental(0, newAccid('#'))
-        .addAccidental(1, newAccid('##').setAsCautionary())
-        .addAccidental(2, newAccid('#').setAsCautionary())
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('bb').setAsCautionary())
-        .addAccidental(5, newAccid('b').setAsCautionary()),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('##').setAsCautionary())
+        .addAccidental(2, accid('#').setAsCautionary())
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb').setAsCautionary())
+        .addAccidental(5, accid('b').setAsCautionary()),
     ];
 
     Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
@@ -184,10 +185,10 @@ const AccidentalTests = {
 
     const accids = Object.keys(Flow.accidentalMap).filter((accid) => accid !== '{' && accid !== '}');
 
-    const notes = accids.map((accid) =>
+    const notes = accids.map((accidType: string) =>
       f
         .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
-        .addAccidental(0, f.Accidental({ type: accid }))
+        .addAccidental(0, f.Accidental({ type: accidType }))
     );
 
     const voice = score.voice(notes, { time: accids.length + '/4' });
@@ -208,46 +209,46 @@ const AccidentalTests = {
 
   specialCases(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
 
     const notes = [
       f
         .StaveNote({ keys: ['f/4', 'd/5'], duration: '1' })
-        .addAccidental(0, newAccid('#'))
-        .addAccidental(1, newAccid('b')),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('b')),
 
       f
         .StaveNote({ keys: ['c/4', 'g/4'], duration: '2' })
-        .addAccidental(0, newAccid('##'))
-        .addAccidental(1, newAccid('##')),
+        .addAccidental(0, accid('##'))
+        .addAccidental(1, accid('##')),
 
       f
         .StaveNote({ keys: ['b/3', 'd/4', 'f/4'], duration: '16' })
-        .addAccidental(0, newAccid('#'))
-        .addAccidental(1, newAccid('#'))
-        .addAccidental(2, newAccid('##')),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('#'))
+        .addAccidental(2, accid('##')),
 
       f
         .StaveNote({ keys: ['g/4', 'a/4', 'c/5', 'e/5'], duration: '16' })
-        .addAccidental(0, newAccid('b'))
-        .addAccidental(1, newAccid('b'))
-        .addAccidental(3, newAccid('n')),
+        .addAccidental(0, accid('b'))
+        .addAccidental(1, accid('b'))
+        .addAccidental(3, accid('n')),
 
       f
         .StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4' })
-        .addAccidental(0, newAccid('b').setAsCautionary())
-        .addAccidental(1, newAccid('b').setAsCautionary())
-        .addAccidental(2, newAccid('bb'))
-        .addAccidental(3, newAccid('b')),
+        .addAccidental(0, accid('b').setAsCautionary())
+        .addAccidental(1, accid('b').setAsCautionary())
+        .addAccidental(2, accid('bb'))
+        .addAccidental(3, accid('b')),
 
       f
         .StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5', 'g/5'], duration: '8' })
-        .addAccidental(0, newAccid('bb'))
-        .addAccidental(1, newAccid('b').setAsCautionary())
-        .addAccidental(2, newAccid('n').setAsCautionary())
-        .addAccidental(3, newAccid('#'))
-        .addAccidental(4, newAccid('n').setAsCautionary()),
+        .addAccidental(0, accid('bb'))
+        .addAccidental(1, accid('b').setAsCautionary())
+        .addAccidental(2, accid('n').setAsCautionary())
+        .addAccidental(3, accid('#'))
+        .addAccidental(4, accid('n').setAsCautionary()),
     ];
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
@@ -255,7 +256,7 @@ const AccidentalTests = {
     notes.forEach((note, index) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach((accid: Accidental, index: number): void => {
+      note.getAccidentals().forEach((accid, index) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
       });
     });
@@ -269,43 +270,43 @@ const AccidentalTests = {
 
   basicStemDown(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     f.Stave({ x: 10, y: 10, width: 550 });
 
     const notes = [
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w', stem_direction: -1 })
-        .addAccidental(0, newAccid('b'))
-        .addAccidental(1, newAccid('#')),
+        .addAccidental(0, accid('b'))
+        .addAccidental(1, accid('#')),
 
       f
         .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2', stem_direction: -1 })
-        .addAccidental(0, newAccid('##'))
-        .addAccidental(1, newAccid('n'))
-        .addAccidental(2, newAccid('bb'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('#'))
-        .addAccidental(5, newAccid('n'))
-        .addAccidental(6, newAccid('bb')),
+        .addAccidental(0, accid('##'))
+        .addAccidental(1, accid('n'))
+        .addAccidental(2, accid('bb'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('#'))
+        .addAccidental(5, accid('n'))
+        .addAccidental(6, accid('bb')),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: -1 })
-        .addAccidental(0, newAccid('n'))
-        .addAccidental(1, newAccid('#'))
-        .addAccidental(2, newAccid('#'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('bb'))
-        .addAccidental(5, newAccid('##'))
-        .addAccidental(6, newAccid('#')),
+        .addAccidental(0, accid('n'))
+        .addAccidental(1, accid('#'))
+        .addAccidental(2, accid('#'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb'))
+        .addAccidental(5, accid('##'))
+        .addAccidental(6, accid('#')),
     ];
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
 
-    notes.forEach((note, index) => {
+    notes.forEach((note, noteIndex) => {
       VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
-      ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-      note.getAccidentals().forEach((accid: Accidental, index: number) => {
-        ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
+      ok(note.getAccidentals().length > 0, 'Note ' + noteIndex + ' has accidentals');
+      note.getAccidentals().forEach((accid, accidIndex) => {
+        ok(accid.getWidth() > 0, 'Accidental ' + accidIndex + ' has set width');
       });
     });
 
@@ -318,7 +319,7 @@ const AccidentalTests = {
 
   multiVoice(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 460, 250);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     const stave = f.Stave({ x: 10, y: 45, width: 420 });
     const ctx = f.getContext();
 
@@ -326,44 +327,44 @@ const AccidentalTests = {
 
     let note1 = f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
-      .addAccidental(0, newAccid('b'))
-      .addAccidental(1, newAccid('n'))
-      .addAccidental(2, newAccid('#'))
+      .addAccidental(0, accid('b'))
+      .addAccidental(1, accid('n'))
+      .addAccidental(2, accid('#'))
       .setStave(stave);
 
     let note2 = f
       .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 })
-      .addAccidental(0, newAccid('b'))
-      .addAccidental(1, newAccid('bb'))
-      .addAccidental(2, newAccid('##'))
+      .addAccidental(0, accid('b'))
+      .addAccidental(1, accid('bb'))
+      .addAccidental(2, accid('##'))
       .setStave(stave);
 
     showNotes(note1, note2, stave, ctx, 60);
 
     note1 = f
       .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
-      .addAccidental(0, newAccid('b'))
-      .addAccidental(1, newAccid('n'))
-      .addAccidental(2, newAccid('#'))
+      .addAccidental(0, accid('b'))
+      .addAccidental(1, accid('n'))
+      .addAccidental(2, accid('#'))
       .setStave(stave);
 
     note2 = f
       .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-      .addAccidental(0, newAccid('b'))
+      .addAccidental(0, accid('b'))
       .setStave(stave);
 
     showNotes(note1, note2, stave, ctx, 150);
 
     note1 = f
       .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
-      .addAccidental(0, newAccid('b'))
-      .addAccidental(1, newAccid('n'))
-      .addAccidental(2, newAccid('#'))
+      .addAccidental(0, accid('b'))
+      .addAccidental(1, accid('n'))
+      .addAccidental(2, accid('#'))
       .setStave(stave);
 
     note2 = f
       .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-      .addAccidental(0, newAccid('b'))
+      .addAccidental(0, accid('b'))
       .setStave(stave);
 
     showNotes(note1, note2, stave, ctx, 250);
@@ -374,53 +375,53 @@ const AccidentalTests = {
 
   microtonal(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     const ctx = f.getContext();
     f.Stave({ x: 10, y: 10, width: 650 });
 
     const notes = [
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-        .addAccidental(0, newAccid('db'))
-        .addAccidental(1, newAccid('d')),
+        .addAccidental(0, accid('db'))
+        .addAccidental(1, accid('d')),
 
       f
         .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-        .addAccidental(0, newAccid('bbs'))
-        .addAccidental(1, newAccid('++'))
-        .addAccidental(2, newAccid('+'))
-        .addAccidental(3, newAccid('d'))
-        .addAccidental(4, newAccid('db'))
-        .addAccidental(5, newAccid('+'))
-        .addAccidental(6, newAccid('##')),
+        .addAccidental(0, accid('bbs'))
+        .addAccidental(1, accid('++'))
+        .addAccidental(2, accid('+'))
+        .addAccidental(3, accid('d'))
+        .addAccidental(4, accid('db'))
+        .addAccidental(5, accid('+'))
+        .addAccidental(6, accid('##')),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-        .addAccidental(0, newAccid('++'))
-        .addAccidental(1, newAccid('bbs'))
-        .addAccidental(2, newAccid('+'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('db'))
-        .addAccidental(5, newAccid('##'))
-        .addAccidental(6, newAccid('#')),
+        .addAccidental(0, accid('++'))
+        .addAccidental(1, accid('bbs'))
+        .addAccidental(2, accid('+'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('db'))
+        .addAccidental(5, accid('##'))
+        .addAccidental(6, accid('#')),
 
       f
         .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-        .addAccidental(0, newAccid('#'))
-        .addAccidental(1, newAccid('db').setAsCautionary())
-        .addAccidental(2, newAccid('bbs').setAsCautionary())
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('++').setAsCautionary())
-        .addAccidental(5, newAccid('d').setAsCautionary()),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('db').setAsCautionary())
+        .addAccidental(2, accid('bbs').setAsCautionary())
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('++').setAsCautionary())
+        .addAccidental(5, accid('d').setAsCautionary()),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
-        .addAccidental(0, newAccid('++-'))
-        .addAccidental(1, newAccid('+-'))
-        .addAccidental(2, newAccid('bs'))
-        .addAccidental(3, newAccid('bss'))
-        .addAccidental(4, newAccid('afhf'))
-        .addAccidental(5, newAccid('ashs')),
+        .addAccidental(0, accid('++-'))
+        .addAccidental(1, accid('+-'))
+        .addAccidental(2, accid('bs'))
+        .addAccidental(3, accid('bss'))
+        .addAccidental(4, accid('afhf'))
+        .addAccidental(5, accid('ashs')),
     ];
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -441,50 +442,50 @@ const AccidentalTests = {
 
   microtonal_iranian(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     const ctx = f.getContext();
     f.Stave({ x: 10, y: 10, width: 650 });
 
     const notes = [
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-        .addAccidental(0, newAccid('k'))
-        .addAccidental(1, newAccid('o')),
+        .addAccidental(0, accid('k'))
+        .addAccidental(1, accid('o')),
 
       f
         .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-        .addAccidental(0, newAccid('b'))
-        .addAccidental(1, newAccid('k'))
-        .addAccidental(2, newAccid('n'))
-        .addAccidental(3, newAccid('o'))
-        .addAccidental(4, newAccid('#'))
-        .addAccidental(5, newAccid('bb'))
-        .addAccidental(6, newAccid('##')),
+        .addAccidental(0, accid('b'))
+        .addAccidental(1, accid('k'))
+        .addAccidental(2, accid('n'))
+        .addAccidental(3, accid('o'))
+        .addAccidental(4, accid('#'))
+        .addAccidental(5, accid('bb'))
+        .addAccidental(6, accid('##')),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-        .addAccidental(0, newAccid('o'))
-        .addAccidental(1, newAccid('k'))
-        .addAccidental(2, newAccid('n'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('bb'))
-        .addAccidental(5, newAccid('##'))
-        .addAccidental(6, newAccid('#')),
+        .addAccidental(0, accid('o'))
+        .addAccidental(1, accid('k'))
+        .addAccidental(2, accid('n'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb'))
+        .addAccidental(5, accid('##'))
+        .addAccidental(6, accid('#')),
 
       f
         .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-        .addAccidental(0, newAccid('#'))
-        .addAccidental(1, newAccid('o').setAsCautionary())
-        .addAccidental(2, newAccid('n').setAsCautionary())
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(4, newAccid('k').setAsCautionary()),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('o').setAsCautionary())
+        .addAccidental(2, accid('n').setAsCautionary())
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('k').setAsCautionary()),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
-        .addAccidental(0, newAccid('k'))
-        .addAccidental(1, newAccid('k'))
-        .addAccidental(2, newAccid('k'))
-        .addAccidental(3, newAccid('k')),
+        .addAccidental(0, accid('k'))
+        .addAccidental(1, accid('k'))
+        .addAccidental(2, accid('k'))
+        .addAccidental(3, accid('k')),
     ];
 
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -505,50 +506,50 @@ const AccidentalTests = {
 
   sagittal(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 700, 240);
-    const newAccid = makeNewAccid(f);
+    const accid = makeNewAccid(f);
     const ctx = f.getContext();
     f.Stave({ x: 10, y: 10, width: 650 });
 
     const notes = [
       f
         .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-        .addAccidental(1, newAccid('accSagittal11MediumDiesisUp'))
-        .addAccidental(2, newAccid('accSagittal5CommaDown'))
-        .addAccidental(3, newAccid('b'))
-        .addAccidental(3, newAccid('accSagittal7CommaDown')),
+        .addAccidental(1, accid('accSagittal11MediumDiesisUp'))
+        .addAccidental(2, accid('accSagittal5CommaDown'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(3, accid('accSagittal7CommaDown')),
 
       f
         .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-        .addAccidental(2, newAccid('accSagittal35LargeDiesisDown')),
+        .addAccidental(2, accid('accSagittal35LargeDiesisDown')),
 
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' })
-        .addAccidental(1, newAccid('accSagittal5CommaDown')),
+        .addAccidental(1, accid('accSagittal5CommaDown')),
 
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-        .addAccidental(1, newAccid('b'))
-        .addAccidental(1, newAccid('accSagittal7CommaDown'))
-        .addAccidental(3, newAccid('accSagittal11LargeDiesisDown')),
+        .addAccidental(1, accid('b'))
+        .addAccidental(1, accid('accSagittal7CommaDown'))
+        .addAccidental(3, accid('accSagittal11LargeDiesisDown')),
 
       f
         .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-        .addAccidental(1, newAccid('accSagittal11MediumDiesisUp'))
-        .addAccidental(2, newAccid('accSagittal5CommaDown'))
-        .addAccidental(3, newAccid('accSagittalFlat7CDown')),
+        .addAccidental(1, accid('accSagittal11MediumDiesisUp'))
+        .addAccidental(2, accid('accSagittal5CommaDown'))
+        .addAccidental(3, accid('accSagittalFlat7CDown')),
 
       f
         .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-        .addAccidental(2, newAccid('accSagittal35LargeDiesisDown')),
+        .addAccidental(2, accid('accSagittal35LargeDiesisDown')),
 
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' })
-        .addAccidental(1, newAccid('accSagittal5CommaDown')),
+        .addAccidental(1, accid('accSagittal5CommaDown')),
 
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-        .addAccidental(1, newAccid('accSagittalFlat7CDown'))
-        .addAccidental(3, newAccid('accSagittal11LargeDiesisDown')),
+        .addAccidental(1, accid('accSagittalFlat7CDown'))
+        .addAccidental(3, accid('accSagittal11LargeDiesisDown')),
     ];
 
     f.StaveTie({
@@ -830,9 +831,7 @@ const AccidentalTests = {
   },
 
   autoAccidentalWorking(): void {
-    function createStaveNote(noteStruct: StaveNoteStruct) {
-      return new StaveNote(noteStruct);
-    }
+    const createStaveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
 
     let notes = [
       { keys: ['bb/4'], duration: '4' },
@@ -920,44 +919,42 @@ const AccidentalTests = {
     const f = VexFlowTests.makeFactory(options, 700, 240);
     f.Stave({ x: 10, y: 10, width: 550 });
 
-    function newAcc(type: string) {
-      return f.Accidental({ type: type });
-    }
+    const accid = makeNewAccid(f);
 
     const notes = [
       f
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' })
-        .addAccidental(0, newAcc('b'))
-        .addAccidental(1, newAcc('#')),
+        .addAccidental(0, accid('b'))
+        .addAccidental(1, accid('#')),
 
       f
         .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: 'h' })
-        .addAccidental(0, newAcc('##'))
-        .addAccidental(1, newAcc('n'))
-        .addAccidental(2, newAcc('bb'))
-        .addAccidental(3, newAcc('b'))
-        .addAccidental(4, newAcc('#'))
-        .addAccidental(5, newAcc('n'))
-        .addAccidental(6, newAcc('bb')),
+        .addAccidental(0, accid('##'))
+        .addAccidental(1, accid('n'))
+        .addAccidental(2, accid('bb'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('#'))
+        .addAccidental(5, accid('n'))
+        .addAccidental(6, accid('bb')),
 
       f
         .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-        .addAccidental(0, newAcc('n'))
-        .addAccidental(1, newAcc('#'))
-        .addAccidental(2, newAcc('#'))
-        .addAccidental(3, newAcc('b'))
-        .addAccidental(4, newAcc('bb'))
-        .addAccidental(5, newAcc('##'))
-        .addAccidental(6, newAcc('#')),
+        .addAccidental(0, accid('n'))
+        .addAccidental(1, accid('#'))
+        .addAccidental(2, accid('#'))
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb'))
+        .addAccidental(5, accid('##'))
+        .addAccidental(6, accid('#')),
 
       f
         .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: 'w' })
-        .addAccidental(0, newAcc('#'))
-        .addAccidental(1, newAcc('##').setAsCautionary())
-        .addAccidental(2, newAcc('#').setAsCautionary())
-        .addAccidental(3, newAcc('b'))
-        .addAccidental(4, newAcc('bb').setAsCautionary())
-        .addAccidental(5, newAcc('b').setAsCautionary()),
+        .addAccidental(0, accid('#'))
+        .addAccidental(1, accid('##').setAsCautionary())
+        .addAccidental(2, accid('#').setAsCautionary())
+        .addAccidental(3, accid('b'))
+        .addAccidental(4, accid('bb').setAsCautionary())
+        .addAccidental(5, accid('b').setAsCautionary()),
     ];
 
     Formatter.SimpleFormat(notes);
@@ -975,10 +972,7 @@ const AccidentalTests = {
 };
 
 //#region Helper Functions
-function hasAccidental(note: StaveNote) {
-  return note.getModifiers().some((modifier) => modifier.getCategory() === Accidental.CATEGORY);
-}
-
+const hasAccidental = (note: StaveNote) => note.getModifiers().some((modifier) => isCategory(modifier, Accidental));
 const makeNewAccid = (factory: Factory) => (accidType: string) => factory.Accidental({ type: accidType });
 
 function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {

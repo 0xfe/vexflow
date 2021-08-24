@@ -37,10 +37,10 @@ const EasyScoreTests = {
     const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
     const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -97,10 +97,10 @@ const EasyScoreTests = {
       'c#s7',
     ];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -110,12 +110,8 @@ const EasyScoreTests = {
     const mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
     const mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
-    mustPass.forEach(function (line) {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach(function (line) {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   chords(): void {
@@ -130,10 +126,10 @@ const EasyScoreTests = {
     ];
     const mustFail = ['(c)'];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -151,10 +147,10 @@ const EasyScoreTests = {
     ];
     const mustFail = ['.', 'c.#', 'c#4./4'];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -174,10 +170,10 @@ const EasyScoreTests = {
     ];
     const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -194,10 +190,10 @@ const EasyScoreTests = {
     ];
     const mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
-    mustPass.forEach(function (line) {
+    mustPass.forEach((line) => {
       equal(score.parse(line).success, true, line);
     });
-    mustFail.forEach(function (line) {
+    mustFail.forEach((line) => {
       equal(score.parse(line).success, false, line);
     });
   },
@@ -367,7 +363,7 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const notes: StaveNote[] = score.notes(
+    const notes = score.notes(
       'C4/q[fingerings="1"], E4[fingerings="3.above"], G4[fingerings="5.below"], (C4 E4 G4)[fingerings="1,3,5"]'
     );
 

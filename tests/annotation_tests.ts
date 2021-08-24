@@ -3,8 +3,9 @@
 //
 // Annotation Tests
 
-/* eslint-disable */
-// @ts-nocheck
+// TODO: Formatter.FormatAndDraw(ctx, stave, notes, ???number???);
+// Did a previous version of the API accept a number as the fourth parameter?
+// We removed the fourth parameter from all of our test cases.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
@@ -20,6 +21,7 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Vibrato } from 'vibrato';
 import { Voice } from 'voice';
+import { Tickable } from 'tickable';
 
 const FONT_SIZE = VexFlowTests.Font.size;
 
@@ -66,7 +68,7 @@ const AnnotationTests = {
       ['hand,', 'and', 'me', 'pears', 'lead', 'the'].forEach((text, ix) => {
         const verse = Math.floor(ix / 3);
         const nid = 'n' + (ix % 3);
-        id(nid).addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
+        (id(nid) as Tickable).addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
       });
       f.draw();
       ratio = (fontSize + 2) / fontSize;
@@ -101,7 +103,7 @@ const AnnotationTests = {
         .addModifier(new Bend('Full'), 0),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Simple Annotation');
   },
 
@@ -121,7 +123,7 @@ const AnnotationTests = {
       staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addAnnotation(2, annotation('Allegro')),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Standard Notation Annotation');
   },
 
@@ -149,7 +151,7 @@ const AnnotationTests = {
         .addModifier(new Annotation('A.H.'), 0),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Simple Annotation');
   },
 
@@ -194,7 +196,7 @@ const AnnotationTests = {
       }).addModifier(annotation('a'), 0),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 200);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Fingerpicking');
   },
 
@@ -218,7 +220,7 @@ const AnnotationTests = {
       staveNote({ keys: ['e/5'], duration: 'w' }).addAnnotation(0, annotation('E')),
     ];
 
-    Formatter.FormatAndDraw(ctx, stave, notes, 100);
+    Formatter.FormatAndDraw(ctx, stave, notes);
     ok(true, 'Bottom Annotation');
   },
 
@@ -261,7 +263,7 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function annotation(text: string, hJustification, vJustification) {
+    function annotation(text: string, hJustification: number, vJustification: number) {
       return new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
@@ -278,7 +280,7 @@ const AnnotationTests = {
       notes.push(staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)));
       notes.push(staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)));
 
-      Formatter.FormatAndDraw(ctx, stave, notes, 100);
+      Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
     ok(true, 'Test Justification Annotation');
@@ -290,7 +292,7 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function annotation(text: string, hJustification, vJustification) {
+    function annotation(text: string, hJustification: number, vJustification: number) {
       return new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
@@ -315,7 +317,7 @@ const AnnotationTests = {
         staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v))
       );
 
-      Formatter.FormatAndDraw(ctx, stave, notes, 100);
+      Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
     ok(true, 'Test Justification Annotation');

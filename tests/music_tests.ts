@@ -30,6 +30,7 @@ const MusicTests = {
     equal(parts.root, 'c');
     equal(parts.accidental, null);
 
+    // getNoteParts() converts its argument to lowercase.
     parts = music.getNoteParts('C');
     equal(parts.root, 'c');
     equal(parts.accidental, null);
@@ -243,8 +244,8 @@ const MusicTests = {
 
     equal(c_major.length, 7);
 
-    for (let cm = 0; cm < c_major.length; ++cm) {
-      equal(music.getCanonicalNoteName(c_major[cm]), values[cm]);
+    for (let i = 0; i < c_major.length; ++i) {
+      equal(music.getCanonicalNoteName(c_major[i]), values[i]);
     }
 
     // Dorian
@@ -253,9 +254,9 @@ const MusicTests = {
 
     let note = null;
     equal(c_dorian.length, 7);
-    for (let cd = 0; cd < c_dorian.length; ++cd) {
-      note = music.getCanonicalNoteName(c_dorian[cd]);
-      equal(manager.selectNote(note).note, values[cd]);
+    for (let i = 0; i < c_dorian.length; ++i) {
+      note = music.getCanonicalNoteName(c_dorian[i]);
+      equal(manager.selectNote(note).note, values[i]);
     }
 
     // Mixolydian

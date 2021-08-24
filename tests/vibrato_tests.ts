@@ -110,6 +110,7 @@ const VibratoTests = {
   },
 };
 
+// Helper Function.
 const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
 export { VibratoTests };

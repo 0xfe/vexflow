@@ -6,6 +6,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: EasyScore.voice() should take Note[] for the first argument, since TabNote is not a StaveNote.
+// TODO: SystemOptions.details might need to be typed as Partial<SystemFormatterOptions>
+
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
@@ -20,16 +23,6 @@ import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { Voice } from 'voice';
 import { MockTickable } from './mocks';
-
-// Should this be a static call in glyph? Or font?
-function glyphWidth(vexGlyph: string): number {
-  const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
-  return (glyph.x_max - glyph.x_min) * glyphPixels();
-}
-
-function glyphPixels(): number {
-  return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
-}
 
 const FormatterTests = {
   Start(): void {
@@ -460,7 +453,7 @@ const FormatterTests = {
     voices.push(score.voice(notes32, { time: '6/8' }));
 
     formatter = f.Formatter();
-    voices.forEach((vv) => formatter.joinVoices([vv]));
+    voices.forEach((v) => formatter.joinVoices([v]));
     width = formatter.preCalculateMinTotalWidth(voices);
     staveWidth = width + Stave.defaultPadding;
     staves.push(
@@ -782,5 +775,17 @@ const FormatterTests = {
     ok(true);
   },
 };
+
+//#region Helper Functions
+// Should this be a static call in glyph? Or font?
+function glyphWidth(vexGlyph: string): number {
+  const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+  return (glyph.x_max - glyph.x_min) * glyphPixels();
+}
+
+function glyphPixels(): number {
+  return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
+}
+//#endregion Helper Functions
 
 export { FormatterTests };

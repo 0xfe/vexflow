@@ -3,23 +3,16 @@
 //
 // GhostNote Tests
 
-import { VexFlowTests } from './vexflow_test_helpers';
+/* eslint-disable */
+// @ts-nocheck
 
-function createTest(setup: any) {
-  return function (options: any) {
-    const f = VexFlowTests.makeFactory(options, 550);
-    const stave = f.Stave();
-    const score = f.EasyScore();
+// TODO: EasyScore.voice() should take Note[] for the first argument, since GhostNote is not a StaveNote.
 
-    setup(f, score);
-
-    f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
-
-    f.draw();
-
-    ok(true, 'all pass');
-  };
-}
+import { EasyScore } from 'easyscore';
+import { Factory } from 'factory';
+import { StaveNote } from 'stavenote';
+import { StemmableNote } from 'stemmablenote';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GhostNoteTests = {
   Start(): void {
@@ -28,7 +21,7 @@ const GhostNoteTests = {
 
     run(
       'GhostNote Basic',
-      createTest(function (f: any, score: any) {
+      createTest((f: Factory, score: EasyScore) => {
         const voice1 = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
           time: '7/4',
         });
@@ -49,14 +42,15 @@ const GhostNoteTests = {
           { time: '7/4' }
         );
 
-        f.Beam({ notes: voice1.getTickables().slice(4, 8) });
-        f.Beam({ notes: voice1.getTickables().slice(8, 10) });
+        const notes = voice1.getTickables() as StemmableNote[];
+        f.Beam({ notes: notes.slice(4, 8) });
+        f.Beam({ notes: notes.slice(8, 10) });
       })
     );
 
     run(
       'GhostNote Dotted',
-      createTest(function (f: any, score: any) {
+      createTest((f: Factory, score: EasyScore) => {
         const voice1 = score.voice(
           [
             f.GhostNote({ duration: '4d' }),
@@ -86,12 +80,10 @@ const GhostNoteTests = {
           { time: '8/4' }
         );
 
-        const notes1 = voice1.getTickables();
-        const notes2 = voice2.getTickables();
+        const notes1 = voice1.getTickables() as StaveNote[];
+        const notes2 = voice2.getTickables() as StaveNote[];
 
-        const addAccidental = (note: any, type: any) => {
-          note.addAccidental(0, f.Accidental({ type: type }));
-        };
+        const addAccidental = (note: StaveNote, type: string) => note.addAccidental(0, f.Accidental({ type }));
 
         addAccidental(notes1[1], 'bb');
         addAccidental(notes1[4], '#');
@@ -108,6 +100,21 @@ const GhostNoteTests = {
       })
     );
   },
+};
+
+// Helper Function
+const createTest = (setup: (f: Factory, es: EasyScore) => void) => (options: TestOptions) => {
+  const factory = VexFlowTests.makeFactory(options, 550);
+  const stave = factory.Stave();
+  const score = factory.EasyScore();
+
+  setup(factory, score);
+
+  const voices = factory.getVoices();
+  factory.Formatter().joinVoices(voices).formatToStave(voices, stave);
+  factory.draw();
+
+  ok(true, 'all pass');
 };
 
 export { GhostNoteTests };

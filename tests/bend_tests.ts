@@ -6,6 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: ctx.setFont()'s 3rd argument "weight" should be optional, and default to ''.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
@@ -42,8 +44,8 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bendWithText('Full'), 0)
-        .addModifier(bendWithText('1/2'), 1),
+        .addModifier(bend('Full'), 0)
+        .addModifier(bend('1/2'), 1),
 
       note({
         positions: [
@@ -52,8 +54,8 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bendWithText('1/4'), 0)
-        .addModifier(bendWithText('1/4'), 1),
+        .addModifier(bend('1/4'), 0)
+        .addModifier(bend('1/4'), 1),
 
       note({
         positions: [{ str: 4, fret: 7 }],
@@ -75,10 +77,6 @@ const BendTests = {
     ctx.setBackgroundFillStyle('#FFF');
     ctx.setFont('Arial', VexFlowTests.Font.size);
     const stave = new TabStave(10, 10, 550).addTabGlyph().setContext(ctx).draw();
-
-    function bend(text, release) {
-      return new Bend(text, release);
-    }
 
     const notes = [
       note({
@@ -137,8 +135,8 @@ const BendTests = {
         ],
         duration: 'w',
       })
-        .addModifier(bendWithText('Full'), 1)
-        .addModifier(bendWithText('1/2'), 0),
+        .addModifier(bend('Full'), 1)
+        .addModifier(bend('1/2'), 0),
 
       note({
         positions: [
@@ -147,8 +145,8 @@ const BendTests = {
         ],
         duration: 'w',
       })
-        .addModifier(bendWithText('1/4'), 1)
-        .addModifier(bendWithText('1/4'), 0),
+        .addModifier(bend('1/4'), 1)
+        .addModifier(bend('1/4'), 0),
 
       note({
         positions: [{ str: 4, fret: 7 }],
@@ -260,11 +258,11 @@ const BendTests = {
 function note(tab_struct: TabNoteStruct) {
   return new TabNote(tab_struct);
 }
-function bendWithText(text: string) {
-  return new Bend(text);
+function bend(text: string, release = false) {
+  return new Bend(text, release);
 }
 function bendWithPhrase(phrase: BendPhrase[]) {
-  return new Bend(null, null, phrase);
+  return new Bend('', false, phrase);
 }
 //#endregion
 

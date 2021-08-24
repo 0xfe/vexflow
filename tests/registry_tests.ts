@@ -28,9 +28,9 @@ const RegistryTests = {
 
     registry.clear();
     notOk(registry.getElementById('foobar'));
-    throws(function () {
+    throws(() => {
       // eslint-disable-next-line
-      // @ts-ignore: intentional type mismatch.
+      // @ts-ignore: intentional type mismatch to trigger an error.
       registry.register(score.notes('C4'));
     });
 

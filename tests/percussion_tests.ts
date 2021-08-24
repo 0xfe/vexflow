@@ -7,33 +7,17 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
+// TODO: Factory.GraceNote() should take a Partial<GraceNoteStruct>
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Factory } from 'factory';
 import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { Tremolo } from 'tremolo';
-
-const createSingleMeasureTest =
-  (setup: (f: Factory) => void) =>
-  (options: TestOptions): void => {
-    const f = VexFlowTests.makeFactory(options, 500);
-    const stave = f.Stave().addClef('percussion');
-
-    setup(f);
-
-    f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
-    f.draw();
-    ok(true);
-  };
-
-function showNote(note_struct: any, stave: any, ctx: any, x: any): StaveNote {
-  const note = new StaveNote(note_struct).setStave(stave);
-  new TickContext().addTickable(note).preFormat().setX(x);
-  note.setContext(ctx).draw();
-  return note;
-}
+import { RenderContext } from 'types/common';
 
 const PercussionTests = {
   Start(): void {
@@ -47,7 +31,7 @@ const PercussionTests = {
 
     run(
       'Percussion Basic0',
-      createSingleMeasureTest(function (f: Factory) {
+      createSingleMeasureTest((f) => {
         const voice0 = f
           .Voice()
           .addTickables([
@@ -80,7 +64,7 @@ const PercussionTests = {
 
     run(
       'Percussion Basic1',
-      createSingleMeasureTest(function (f: Factory) {
+      createSingleMeasureTest((f) => {
         f.Voice().addTickables([
           f.StaveNote({ keys: ['f/5/x2'], duration: '4' }),
           f.StaveNote({ keys: ['f/5/x2'], duration: '4' }),
@@ -99,7 +83,7 @@ const PercussionTests = {
 
     run(
       'Percussion Basic2',
-      createSingleMeasureTest(function (f: Factory) {
+      createSingleMeasureTest((f) => {
         const voice0 = f
           .Voice()
           .addTickables([
@@ -132,7 +116,7 @@ const PercussionTests = {
 
     run(
       'Percussion Snare0',
-      createSingleMeasureTest(function (f: Factory) {
+      createSingleMeasureTest((f) => {
         f.Voice().addTickables([
           f
             .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
@@ -147,7 +131,7 @@ const PercussionTests = {
 
     run(
       'Percussion Snare1',
-      createSingleMeasureTest(function (f: Factory) {
+      createSingleMeasureTest((f) => {
         f.Voice().addTickables([
           f
             .StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 })
@@ -179,7 +163,7 @@ const PercussionTests = {
 
     run(
       'Percussion Snare3',
-      createSingleMeasureTest(function (factory: Factory) {
+      createSingleMeasureTest((factory) => {
         factory
           .Voice()
           .addTickables([
@@ -201,7 +185,7 @@ const PercussionTests = {
   },
 
   drawNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const notes = [
+    const notes: StaveNoteStruct[] = [
       { keys: ['g/5/d0'], duration: '4' },
       { keys: ['g/5/d1'], duration: '4' },
       { keys: ['g/5/d2'], duration: '4' },
@@ -237,5 +221,25 @@ const PercussionTests = {
     }
   },
 };
+
+const createSingleMeasureTest =
+  (setup: (f: Factory) => void) =>
+  (options: TestOptions): void => {
+    const f = VexFlowTests.makeFactory(options, 500);
+    const stave = f.Stave().addClef('percussion');
+
+    setup(f);
+
+    f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
+    f.draw();
+    ok(true);
+  };
+
+function showNote(note_struct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number): StaveNote {
+  const staveNote = new StaveNote(note_struct).setStave(stave);
+  new TickContext().addTickable(staveNote).preFormat().setX(x);
+  staveNote.setContext(ctx).draw();
+  return staveNote;
+}
 
 export { PercussionTests };

@@ -6,8 +6,12 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Line 157: Expected 2 arguments, but got 1.
+// stave.setEndTimeSignature()'s second param should be optional.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
+import { MultimeasureRestRenderOptions } from 'multimeasurerest';
 
 const MultiMeasureRestTests = {
   Start(): void {
@@ -20,37 +24,40 @@ const MultiMeasureRestTests = {
   simple0(options: TestOptions): void {
     const width = 910;
     const f = VexFlowTests.makeFactory(options, width, 300);
-    const params = [
-      { number_of_measures: 2, show_number: false },
-      { number_of_measures: 2 },
-      { number_of_measures: 2, line_thickness: 8, serif_thickness: 3 },
-      { number_of_measures: 1, use_symbols: true },
-      { number_of_measures: 2, use_symbols: true },
-      { number_of_measures: 3, use_symbols: true },
-      { number_of_measures: 4, use_symbols: true },
-      { number_of_measures: 5, use_symbols: true },
-      { number_of_measures: 6, use_symbols: true },
-      { number_of_measures: 7, use_symbols: true },
-      { number_of_measures: 8, use_symbols: true },
-      { number_of_measures: 9, use_symbols: true },
-      { number_of_measures: 10, use_symbols: true },
-      { number_of_measures: 11, use_symbols: true },
-      { number_of_measures: 11, use_symbols: false, padding_left: 20, padding_right: 20 },
-      { number_of_measures: 11, use_symbols: true, symbol_spacing: 5 },
-      { number_of_measures: 11, use_symbols: false, line: 3, number_line: 2 },
-      { number_of_measures: 11, use_symbols: true, line: 3, number_line: 2 },
-      [{ options: { spacing_between_lines_px: 15 } }, { number_of_measures: 12 }],
-      [{ options: { spacing_between_lines_px: 15 } }, { number_of_measures: 9, use_symbols: true }],
+    const line_spacing_15px = { options: { spacing_between_lines_px: 15 } };
+
+    // Each item below is an array that contains:
+    //   item[0] => staveParams to adjust vertical spacing between lines
+    //   item[1] => multiMeasureRestParams
+    // eslint-disable-next-line
+    const params: [any, Partial<MultimeasureRestRenderOptions>][] = [
+      [{}, { number_of_measures: 2, show_number: false }],
+      [{}, { number_of_measures: 2 }],
+      [{}, { number_of_measures: 2, line_thickness: 8, serif_thickness: 3 }],
+      [{}, { number_of_measures: 1, use_symbols: true }],
+      [{}, { number_of_measures: 2, use_symbols: true }],
+      [{}, { number_of_measures: 3, use_symbols: true }],
+      [{}, { number_of_measures: 4, use_symbols: true }],
+      [{}, { number_of_measures: 5, use_symbols: true }],
+      [{}, { number_of_measures: 6, use_symbols: true }],
+      [{}, { number_of_measures: 7, use_symbols: true }],
+      [{}, { number_of_measures: 8, use_symbols: true }],
+      [{}, { number_of_measures: 9, use_symbols: true }],
+      [{}, { number_of_measures: 10, use_symbols: true }],
+      [{}, { number_of_measures: 11, use_symbols: true }],
+      [{}, { number_of_measures: 11, use_symbols: false, padding_left: 20, padding_right: 20 }],
+      [{}, { number_of_measures: 11, use_symbols: true, symbol_spacing: 5 }],
+      [{}, { number_of_measures: 11, use_symbols: false, line: 3, number_line: 2 }],
+      [{}, { number_of_measures: 11, use_symbols: true, line: 3, number_line: 2 }],
+      [line_spacing_15px, { number_of_measures: 12 }],
+      [line_spacing_15px, { number_of_measures: 9, use_symbols: true }],
+      [line_spacing_15px, { number_of_measures: 12, spacing_between_lines_px: 15, number_glyph_point: 40 * 1.5 }],
       [
-        { options: { spacing_between_lines_px: 15 } },
-        { number_of_measures: 12, spacing_between_lines_px: 15, number_glyph_point: 40 * 1.5 },
-      ],
-      [
-        { options: { spacing_between_lines_px: 15 } },
+        line_spacing_15px,
         { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true, number_glyph_point: 40 * 1.5 },
       ],
       [
-        { options: { spacing_between_lines_px: 15 } },
+        line_spacing_15px,
         {
           number_of_measures: 9,
           spacing_between_lines_px: 15,
@@ -64,29 +71,26 @@ const MultiMeasureRestTests = {
     const staveWidth = 100;
     let x = 0;
     let y = 0;
-    const mmrests = params.map(function (param) {
+    const mmRests = params.map((param) => {
       if (x + staveWidth * 2 > width) {
         x = 0;
         y += 80;
       }
-      let staveParams = {};
-      let mmrestParams = param;
-      if (param.length) {
-        staveParams = param[0];
-        mmrestParams = param[1];
-      }
+      const staveParams = param[0];
+      const mmRestParams = param[1];
       staveParams.x = x;
-      x += staveWidth;
       staveParams.y = y;
       staveParams.width = staveWidth;
+      x += staveWidth;
       const stave = f.Stave(staveParams);
-      return f.MultiMeasureRest(mmrestParams).setStave(stave);
+      return f.MultiMeasureRest(mmRestParams).setStave(stave);
     });
 
     f.draw();
 
-    const xs = mmrests[0].getXs();
-    const strY = mmrests[0].getStave().getYForLine(-0.5);
+    const xs = mmRests[0].getXs();
+    // eslint-disable-next-line
+    const strY = mmRests[0].getStave()!.getYForLine(-0.5);
     const str = 'TACET';
     const context = f.getContext();
     context.save();
@@ -104,7 +108,8 @@ const MultiMeasureRestTests = {
     let x = 0;
     let y = 0;
 
-    const params = [
+    // eslint-disable-next-line
+    const params: [any, Partial<MultimeasureRestRenderOptions>][] = [
       [{ clef: 'treble', params: { width: 150 } }, { number_of_measures: 5 }],
       [{ clef: 'treble', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],
       [{ clef: 'treble', timeSig: '4/4', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],
@@ -118,9 +123,10 @@ const MultiMeasureRestTests = {
       ],
     ];
 
-    params.map(function (param) {
+    params.forEach((param) => {
       const staveOptions = param[0];
-      const staveParams = staveOptions.params;
+      // eslint-disable-next-line
+      const staveParams = staveOptions.params!;
       const mmrestParams = param[1];
 
       if (x + staveParams.width > width) {

@@ -2,6 +2,8 @@
 // MIT License
 //
 // VF.* Prefix Tests
+//
+// VexFlow classes are available under the global Vex.Flow.* namespace.
 
 import { Accidental } from 'accidental';
 import { Annotation } from 'annotation';
@@ -88,8 +90,7 @@ const VFPrefixTests = {
   },
 
   VF_Prefix(): void {
-    // eslint-disable-next-line
-    const VF: any = Vex.Flow;
+    const VF = Vex.Flow as unknown as typeof Flow;
     equal(Accidental, VF.Accidental);
     equal(Annotation, VF.Annotation);
     equal(Articulation, VF.Articulation);
