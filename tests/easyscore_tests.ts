@@ -18,6 +18,7 @@ const EasyScoreTests = {
   Start(): void {
     QUnit.module('EasyScore');
     QUnit.test('Basic', EasyScoreTests.basic);
+    VexFlowTests.runTests('Keys', EasyScoreTests.keys);
     QUnit.test('Accidentals', EasyScoreTests.accidentals);
     QUnit.test('Durations', EasyScoreTests.durations);
     QUnit.test('Chords', EasyScoreTests.chords);
@@ -407,6 +408,23 @@ const EasyScoreTests = {
     assert.equal(note3_modifier2.getCategory(), FretHandFinger.CATEGORY);
     assert.equal(note3_modifier2.getFretHandFinger(), '5');
     assert.equal(note3_modifier2.getPosition(), Modifier.Position.LEFT);
+  },
+  keys(options: TestOptions): void {
+    const f = VexFlowTests.makeFactory(options, 500, 200);
+    const score: EasyScore = f.EasyScore();
+    const notes = score.notes(
+      'c#3/q, c##3, cb3, cbb3, cn3, c3, cbbs3, cbss3, cbs3, cdb3, cd3, c++-3, c++3, c+-3, c+3, co3, ck3'
+    );
+
+    const assert = options.assert;
+    assert.equal(notes[0].keys, 'c#/3');
+    assert.equal(notes[1].keys, 'c##/3');
+    assert.equal(notes[2].keys, 'cb/3');
+    assert.equal(notes[3].keys, 'cbb/3');
+    assert.equal(notes[4].keys, 'cn/3');
+    for (let i = 5; i < notes.length; i++) {
+      assert.equal(notes[i].keys, 'c/3');
+    }
   },
 };
 
