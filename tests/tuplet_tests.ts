@@ -6,6 +6,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Factory.Voice() requires its 'time' parameter to be a string.
+// However, we pass { num_beats: 4, beat_value: 4 }.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Formatter } from 'formatter';
 import { Stem } from 'stem';
@@ -227,7 +230,7 @@ const TupletTests = {
     ok(true, 'Bottom Ratioed Test');
   },
 
-  awkward(options) {
+  awkward(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 370, 160);
     const stave = f.Stave({ x: 10, y: 10 });
 
@@ -276,7 +279,7 @@ const TupletTests = {
     ok(true, 'Awkward Test');
   },
 
-  complex(options) {
+  complex(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
@@ -343,7 +346,7 @@ const TupletTests = {
     ok(true, 'Complex Test');
   },
 
-  mixedTop(options) {
+  mixedTop(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10 });
 
@@ -388,7 +391,7 @@ const TupletTests = {
     ok(true, 'Mixed Stem Direction Tuplet');
   },
 
-  mixedBottom(options) {
+  mixedBottom(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10 });
 
@@ -433,7 +436,7 @@ const TupletTests = {
     ok(true, 'Mixed Stem Direction Bottom Tuplet');
   },
 
-  nested(options) {
+  nested(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
@@ -481,7 +484,7 @@ const TupletTests = {
     ok(true, 'Nested Tuplets');
   },
 
-  single(options): void {
+  single(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave({ x: 10, y: 10 }).addTimeSignature('4/4');
 
@@ -558,6 +561,7 @@ const TupletTests = {
 };
 
 //#region Helper Functions
+// eslint-disable-next-line
 const set = (key: string) => (value: number | string) => (object: any) => {
   object[key] = value;
   return object;
@@ -566,6 +570,6 @@ const setStemDirection = set('stem_direction');
 const setStemUp = setStemDirection(Stem.UP);
 const setStemDown = setStemDirection(Stem.DOWN);
 const setDurationToQuarterNote = set('duration')('4');
-//#endregion
+//#endregion Helper Functions
 
 export { TupletTests };

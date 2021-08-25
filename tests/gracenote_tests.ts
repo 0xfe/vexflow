@@ -6,22 +6,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Factory.GraceNote() should take a Partial<GraceNoteStruct>
+//       Or .slash should be optional.
+//       The GraceNote constructor should also make sure that slash is set to false (instead of undefined).
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Formatter } from 'formatter';
-
-const stem_test_util = {
-  durations: ['8', '16', '32', '64', '128'],
-
-  createNote(d, noteT, keys, stem_direction, slash?) {
-    const note_prop: any = {
-      duration: d,
-    };
-    note_prop.stem_direction = stem_direction;
-    note_prop.slash = slash;
-    note_prop.keys = keys;
-    return noteT(note_prop);
-  },
-};
+import { Factory } from 'factory';
+import { StaveNote } from 'stavenote';
+import { GraceNote, GraceNoteStruct } from 'gracenote';
+import { Beam } from 'beam';
 
 const GraceNoteTests = {
   Start(): void {
@@ -165,17 +159,15 @@ const GraceNoteTests = {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
-    function createNotes(noteT, keys, stem_direction) {
-      return stem_test_util.durations.map(function (d) {
-        return stem_test_util.createNote(d, noteT, keys, stem_direction);
-      });
+    function createNotes(noteT: NoteBuilderFunction, keys: string[], stem_direction: number) {
+      return durationsForStemTest.map((duration) => createNoteForStemTest(duration, noteT, keys, stem_direction));
     }
 
-    function createNoteBlock(keys, stem_direction) {
-      const notes = createNotes(f.StaveNote.bind(f), keys, stem_direction);
+    function createNoteBlock(keys: string[], stem_direction: number) {
+      const staveNotes = createNotes(f.StaveNote.bind(f), keys, stem_direction);
       const gracenotes = createNotes(f.GraceNote.bind(f), keys, stem_direction);
-      notes[0].addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0);
-      return notes;
+      staveNotes[0].addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0);
+      return staveNotes;
     }
 
     const voice = f.Voice().setStrict(false);
@@ -193,28 +185,33 @@ const GraceNoteTests = {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
-    function createBeamedNotes(noteT, keys, stem_direction, beams, isGrace = false, notesToBeam?: any[]) {
-      const ret = [];
-      stem_test_util.durations.map(function (d) {
-        const n0 = stem_test_util.createNote(d, noteT, keys, stem_direction);
-        const n1 = stem_test_util.createNote(d, noteT, keys, stem_direction);
+    function createBeamedNotes(
+      noteBuilder: NoteBuilderFunction,
+      keys: string[],
+      stem_direction: number,
+      beams: Beam[],
+      isGrace = false,
+      notesToBeam?: StaveNote[][]
+    ) {
+      const ret: StaveNote[] = [];
+      durationsForStemTest.map((duration) => {
+        const n0 = createNoteForStemTest(duration, noteBuilder, keys, stem_direction);
+        const n1 = createNoteForStemTest(duration, noteBuilder, keys, stem_direction);
         ret.push(n0);
         ret.push(n1);
         if (notesToBeam) {
           notesToBeam.push([n0, n1]);
         }
         if (!isGrace) {
-          const tbeam = f.Beam({ notes: [n0, n1] });
-          beams.push(tbeam);
+          beams.push(f.Beam({ notes: [n0, n1] }));
         }
-        return ret;
       });
       return ret;
     }
 
-    function createBeamedNoteBlock(keys, stem_direction, beams) {
+    function createBeamedNoteBlock(keys: string[], stem_direction: number, beams: Beam[]) {
       const bnotes = createBeamedNotes(f.StaveNote.bind(f), keys, stem_direction, beams);
-      const notesToBeam = [];
+      const notesToBeam: StaveNote[][] = [];
       const gracenotes = createBeamedNotes(f.GraceNote.bind(f), keys, stem_direction, beams, true, notesToBeam);
       const graceNoteGroup = f.GraceNoteGroup({ notes: gracenotes });
       notesToBeam.map(graceNoteGroup.beamNotes.bind(graceNoteGroup));
@@ -222,7 +219,7 @@ const GraceNoteTests = {
       return bnotes;
     }
 
-    const beams = [];
+    const beams: Beam[] = [];
     const voice = f.Voice().setStrict(false);
     voice.addTickables(createBeamedNoteBlock(['g/4'], 1, beams));
     voice.addTickables(createBeamedNoteBlock(['d/5'], -1, beams));
@@ -238,43 +235,40 @@ const GraceNoteTests = {
     const f = VexFlowTests.makeFactory(options, 700, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 650 });
 
-    function createNotes(noteT, keys, stem_direction, slash) {
-      return stem_test_util.durations.map(function (d) {
-        return stem_test_util.createNote(d, noteT, keys, stem_direction, slash);
-      });
+    function createNotes(noteT: typeof f.GraceNote, keys: string[], stem_direction: number, slash: boolean) {
+      return durationsForStemTest.map((d) => createNoteForStemTest(d, noteT, keys, stem_direction, slash));
     }
 
-    function createNoteBlock(keys, stem_direction) {
-      const notes = [f.StaveNote({ keys: ['f/4'], stem_direction: stem_direction, duration: '16' })];
-      let gracenotes = createNotes(f.GraceNote.bind(f), keys, stem_direction, true);
+    function createNoteBlock(keys: string[], stem_direction: number) {
+      const notes = [f.StaveNote({ keys: ['f/4'], stem_direction, duration: '16' })];
+      let graceNotes = createNotes(f.GraceNote.bind(f), keys, stem_direction, true) as GraceNote[];
 
-      const gnotesToBeam = [];
       const duration = '8';
       const gns = [
-        { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+        { keys: ['d/4', 'a/4'], stem_direction, duration, slash: true },
+        { keys: ['d/4', 'a/4'], stem_direction, duration, slash: true },
+        { keys: ['d/4', 'a/4'], stem_direction, duration, slash: true },
 
-        { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
+        { keys: ['e/4', 'a/4'], stem_direction, duration, slash: true },
+        { keys: ['e/4', 'a/4'], stem_direction, duration, slash: true },
+        { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
 
-        { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
-        { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
+        { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
+        { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
+        { keys: ['e/4', 'a/4'], stem_direction, duration, slash: true },
       ].map(f.GraceNote.bind(f));
 
-      gnotesToBeam.push([gns[0], gns[1], gns[2]]);
-      gnotesToBeam.push([gns[3], gns[4], gns[5]]);
-      gnotesToBeam.push([gns[6], gns[7], gns[8]]);
+      const notesToBeam = [];
+      notesToBeam.push([gns[0], gns[1], gns[2]]);
+      notesToBeam.push([gns[3], gns[4], gns[5]]);
+      notesToBeam.push([gns[6], gns[7], gns[8]]);
 
-      gracenotes = gracenotes.concat(gns);
-      const gracenoteGroup = f.GraceNoteGroup({ notes: gracenotes });
-      gnotesToBeam.forEach(function (gnotes) {
-        gracenoteGroup.beamNotes(gnotes);
-      });
+      // Merge the two GraceNote[].
+      graceNotes = graceNotes.concat(gns);
+      const graceNoteGroup = f.GraceNoteGroup({ notes: graceNotes });
+      notesToBeam.forEach((notes) => graceNoteGroup.beamNotes(notes));
 
-      notes[0].addModifier(gracenoteGroup, 0);
+      notes[0].addModifier(graceNoteGroup, 0);
       return notes;
     }
 
@@ -293,36 +287,34 @@ const GraceNoteTests = {
     const f = VexFlowTests.makeFactory(options, 800, 130);
     const stave = f.Stave({ x: 10, y: 10, width: 750 });
 
-    function createNoteBlock(keys, stem_direction) {
-      const notes = [f.StaveNote({ keys: ['f/4'], stem_direction: stem_direction, duration: '16' })];
-      let gracenotes = [];
+    function createNoteBlock(keys: string[], stem_direction: number) {
+      const notes = [f.StaveNote({ keys: ['f/4'], stem_direction, duration: '16' })];
+      let allGraceNotes: GraceNote[] = [];
 
-      const gnotesToBeam = [];
+      const graceNotesToBeam: GraceNote[][] = [];
 
       ['8', '16', '32', '64'].forEach(function (duration) {
-        const gns = [
-          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['d/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+        const graceNotes = [
+          { keys: ['d/4', 'a/4'], stem_direction, duration, slash: true },
+          { keys: ['d/4', 'a/4'], stem_direction, duration, slash: false },
 
-          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: false },
+          { keys: ['e/4', 'a/4'], stem_direction, duration, slash: true },
+          { keys: ['b/4', 'f/5'], stem_direction, duration, slash: false },
 
-          { keys: ['b/4', 'f/5'], stem_direction: stem_direction, duration: duration, slash: true },
-          { keys: ['e/4', 'a/4'], stem_direction: stem_direction, duration: duration, slash: false },
+          { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
+          { keys: ['e/4', 'a/4'], stem_direction, duration, slash: false },
         ].map(f.GraceNote.bind(f));
 
-        gnotesToBeam.push([gns[0], gns[1]]);
-        gnotesToBeam.push([gns[2], gns[3]]);
-        gnotesToBeam.push([gns[4], gns[5]]);
-        gracenotes = gracenotes.concat(gns);
+        graceNotesToBeam.push([graceNotes[0], graceNotes[1]]);
+        graceNotesToBeam.push([graceNotes[2], graceNotes[3]]);
+        graceNotesToBeam.push([graceNotes[4], graceNotes[5]]);
+        allGraceNotes = allGraceNotes.concat(graceNotes);
       });
-      const gracenoteGroup = f.GraceNoteGroup({ notes: gracenotes });
+      const graceNoteGroup = f.GraceNoteGroup({ notes: allGraceNotes });
 
-      gnotesToBeam.forEach(function (gnotes) {
-        gracenoteGroup.beamNotes(gnotes);
-      });
+      graceNotesToBeam.forEach((g) => graceNoteGroup.beamNotes(g));
 
-      notes[0].addModifier(gracenoteGroup, 0);
+      notes[0].addModifier(graceNoteGroup, 0);
       return notes;
     }
 
@@ -468,5 +460,29 @@ const GraceNoteTests = {
     ok(true, 'Seventeenth Test');
   },
 };
+
+//#region Helper Functions / Constants / Types
+
+type NoteBuilderFunction = InstanceType<typeof Factory>['GraceNote'] | InstanceType<typeof Factory>['StaveNote'];
+
+const durationsForStemTest = ['8', '16', '32', '64', '128'];
+
+const createNoteForStemTest = (
+  d: string,
+  buildNote: NoteBuilderFunction,
+  keys: string[],
+  stem_direction: number,
+  slash: boolean = false
+): StaveNote => {
+  const note_prop: GraceNoteStruct = {
+    duration: d,
+    slash,
+  };
+  note_prop.stem_direction = stem_direction;
+  note_prop.keys = keys;
+  return buildNote(note_prop);
+};
+
+//#endregion Helper Functions
 
 export { GraceNoteTests };

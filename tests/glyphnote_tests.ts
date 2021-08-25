@@ -6,11 +6,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Factory.GlyphNote()'s third param should be optional.
+// TODO: Factory.RepeatNote()'s second and third params should both be optional.
+// TODO: Line 42 - Object literal may only specify known properties, and 'options' does not exist in type 'Partial<SystemOptions>'
+// TODO: ChordSymbol.addGlyphOrText(text: string[], ...) should instead take a string (not an array)!
+//       The implementation looks like text is an array, but we are actually just pulling out individual characters from the string.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ChordSymbol } from 'chordsymbol';
 import { Glyph } from 'glyph';
 import { Registry } from 'registry';
 import { StaveConnector } from 'staveconnector';
+import { Note } from 'note';
+import { Voice } from 'voice';
 
 const GlyphNoteTests = {
   Start(): void {
@@ -78,15 +86,11 @@ const GlyphNoteTests = {
 
     const score = f.EasyScore();
 
-    const newVoice = function (notes) {
-      return score.voice(notes, { time: '1/4' });
-    };
+    const newVoice = (notes: Note[]) => score.voice(notes, { time: '1/4' });
 
-    const newStave = function (voice) {
-      return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
-    };
+    const newStave = (voice: Voice) => system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
 
-    const voices = [
+    const voices: Note[][] = [
       [f.GlyphNote(new Glyph('repeat1Bar', 40), { duration: 'q' }, { line: 4 })],
       [f.GlyphNote(new Glyph('repeat2Bars', 40), { duration: 'q', align_center: true })],
       [
@@ -120,15 +124,11 @@ const GlyphNoteTests = {
 
     const score = f.EasyScore();
 
-    const newVoice = function (notes: any) {
-      return score.voice(notes, { time: '1/4' });
-    };
+    const newVoice = (notes: Note[]) => score.voice(notes, { time: '1/4' });
 
-    const newStave = function (voice: any) {
-      return system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
-    };
+    const newStave = (voice: Voice) => system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
 
-    const voices = [
+    const voices: Note[][] = [
       [f.RepeatNote('1')],
       [f.RepeatNote('2')],
       [f.RepeatNote('4')],

@@ -20,19 +20,12 @@ const TickContextTests = {
   },
 
   tracking(): void {
-    function createTickable() {
-      return new MockTickable();
-    }
-
-    const R = Flow.RESOLUTION;
-    const BEAT = (1 * R) / 4;
+    const BEAT = (1 * Flow.RESOLUTION) / 4;
 
     const tickables = [
-      createTickable().setTicks(BEAT).setWidth(10),
-      createTickable()
-        .setTicks(BEAT * 2)
-        .setWidth(20),
-      createTickable().setTicks(BEAT).setWidth(30),
+      new MockTickable().setTicks(BEAT).setWidth(10),
+      new MockTickable().setTicks(BEAT * 2).setWidth(20),
+      new MockTickable().setTicks(BEAT).setWidth(30),
     ];
 
     const tc = new TickContext();

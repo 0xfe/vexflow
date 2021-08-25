@@ -6,10 +6,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Beam has a "private readonly stem_direction" without an accessor.
+// TODO: Factory.Beam()'s 'notes' param is a StemmableNote[], but we only have access to Tickable[].
+
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { Stem } from 'stem';
 import { Voice } from 'voice';
+import { StemmableNote } from 'stemmablenote';
+import { StaveNoteStruct } from 'stavenote';
+import { TabNoteStruct } from 'tabnote';
 
 const BeamTests = {
   Start(): void {
@@ -185,7 +191,7 @@ const BeamTests = {
       time: '6/4',
     });
 
-    const notes = voice.getTickables();
+    const notes = voice.getTickables() as StemmableNote[];
 
     const beams = [
       f.Beam({ notes: notes.slice(0, 2), options: { autoStem: true } }),
@@ -230,17 +236,13 @@ const BeamTests = {
       [0, 4],
       [4, 8],
       [8, 12],
-    ].forEach(function (range) {
-      f.Beam({ notes: voice1.getTickables().slice(range[0], range[1]) });
-    });
+    ].forEach((range) => f.Beam({ notes: voice1.getTickables().slice(range[0], range[1]) }));
 
     [
       [0, 4],
       [4, 8],
       [8, 12],
-    ].forEach(function (range) {
-      f.Beam({ notes: voice2.getTickables().slice(range[0], range[1]) });
-    });
+    ].forEach((range) => f.Beam({ notes: voice2.getTickables().slice(range[0], range[1]) }));
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
@@ -288,7 +290,7 @@ const BeamTests = {
       { time: '6/4' }
     );
 
-    const notes = voice.getTickables();
+    const notes = voice.getTickables() as StemmableNote[];
     f.Beam({ notes: notes.slice(0, 4) });
     f.Beam({ notes: notes.slice(4, 8) });
     f.Beam({ notes: notes.slice(8, 12) });
@@ -406,7 +408,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave = f.TabStave({ y: 20 });
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -462,8 +464,8 @@ const BeamTests = {
       { positions: [{ str: 3, fret: 6 }], duration: '8' },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = f.TabNote(noteSpec);
+    const notes = specs.map((struct) => {
+      const tabNote = f.TabNote(struct);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
@@ -485,7 +487,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 600, 250);
     const stave = f.TabStave({ options: { num_lines: 10 } });
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         stem_direction: -1,
         positions: [
@@ -551,8 +553,8 @@ const BeamTests = {
       { stem_direction: -1, positions: [{ str: 10, fret: 6 }], duration: '8' },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = f.TabNote(noteSpec);
+    const notes = specs.map((struct) => {
+      const tabNote = f.TabNote(struct);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_dots = true;
       return tabNote;
@@ -580,7 +582,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 600, 200);
     const stave = f.TabStave();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 1, fret: 6 },
@@ -619,8 +621,8 @@ const BeamTests = {
       { positions: [{ str: 6, fret: 6 }], duration: '16' },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = f.TabNote(noteSpec);
+    const notes = specs.map((struct) => {
+      const tabNote = f.TabNote(struct);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_dots = true;
       return tabNote;
@@ -633,9 +635,7 @@ const BeamTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'All objects have been drawn');
   },
@@ -646,7 +646,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 600, 300);
     const stave = f.TabStave();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 1, fret: 6 },
@@ -689,8 +689,8 @@ const BeamTests = {
       { positions: [{ str: 6, fret: 6 }], duration: '16', stem_direction: -1 },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = f.TabNote(noteSpec);
+    const notes = specs.map((struct) => {
+      const tabNote = f.TabNote(struct);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_dots = true;
       return tabNote;
@@ -714,7 +714,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const stave = f.Stave({ y: 40 });
 
-    let notes = [
+    const s1: StaveNoteStruct[] = [
       { keys: ['e/4'], duration: '128', stem_direction: 1 },
       { keys: ['d/4'], duration: '16', stem_direction: 1 },
       { keys: ['e/4'], duration: '8', stem_direction: 1 },
@@ -724,7 +724,7 @@ const BeamTests = {
       { keys: ['c/4'], duration: '32', stem_direction: 1 },
     ];
 
-    let notes2 = [
+    const s2: StaveNoteStruct[] = [
       { keys: ['e/5'], duration: '128', stem_direction: -1 },
       { keys: ['d/5'], duration: '16', stem_direction: -1 },
       { keys: ['e/5'], duration: '8', stem_direction: -1 },
@@ -734,18 +734,18 @@ const BeamTests = {
       { keys: ['c/5'], duration: '32', stem_direction: -1 },
     ];
 
-    notes = notes.map(function (note) {
-      return f.StaveNote(note).addModifier(f.Annotation({ text: '1', vJustify: 'above' }), 0);
-    });
+    const notes1 = s1.map((struct) =>
+      f.StaveNote(struct).addModifier(f.Annotation({ text: '1', vJustify: 'above' }), 0)
+    );
 
-    notes2 = notes2.map(function (note) {
-      return f.StaveNote(note).addModifier(f.Annotation({ text: '3', vJustify: 'below' }), 0);
-    });
+    const notes2 = s2.map((struct) =>
+      f.StaveNote(struct).addModifier(f.Annotation({ text: '3', vJustify: 'below' }), 0)
+    );
 
-    f.Beam({ notes: notes });
+    f.Beam({ notes: notes1 });
     f.Beam({ notes: notes2 });
 
-    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes1).addTickables(notes2);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
 
@@ -758,7 +758,7 @@ const BeamTests = {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const stave = f.Stave({ y: 40 });
 
-    let notes = [
+    const s1: StaveNoteStruct[] = [
       { keys: ['e/4'], duration: '128', stem_direction: 1 },
       { keys: ['d/4'], duration: '16', stem_direction: 1 },
       { keys: ['e/4'], duration: '8', stem_direction: 1 },
@@ -768,7 +768,7 @@ const BeamTests = {
       { keys: ['c/4'], duration: '32', stem_direction: 1 },
     ];
 
-    let notes2 = [
+    const s2: StaveNoteStruct[] = [
       { keys: ['e/5'], duration: '128', stem_direction: -1 },
       { keys: ['d/5'], duration: '16', stem_direction: -1 },
       { keys: ['e/5'], duration: '8', stem_direction: -1 },
@@ -778,18 +778,17 @@ const BeamTests = {
       { keys: ['c/5'], duration: '32', stem_direction: -1 },
     ];
 
-    notes = notes.map(function (note) {
-      return f.StaveNote(note).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0);
-    });
+    const notes1 = s1.map((struct) =>
+      f.StaveNote(struct).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0)
+    );
+    const notes2 = s2.map((struct) =>
+      f.StaveNote(struct).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0)
+    );
 
-    notes2 = notes2.map(function (note) {
-      return f.StaveNote(note).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0);
-    });
-
-    f.Beam({ notes: notes });
+    f.Beam({ notes: notes1 });
     f.Beam({ notes: notes2 });
 
-    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes).addTickables(notes2);
+    const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes1).addTickables(notes2);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
 

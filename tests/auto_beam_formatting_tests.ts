@@ -6,10 +6,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Beam has a "private readonly stem_direction" without an accessor.
+// TODO: Beam.generateBeams(voice.getTickables() as StemmableNote[], ...) requires a cast to StemmableNote[].
+//       Is there a cleaner way to handle this?
+
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { Fraction } from 'fraction';
 import { Stem } from 'stem';
+import { StemmableNote } from 'stemmablenote';
 
 const AutoBeamFormattingTests = {
   Start(): void {
@@ -59,16 +64,14 @@ const AutoBeamFormattingTests = {
       time: '4/4',
     });
 
-    // Takes a voice and returns it's auto beamsj
+    // Takes a voice and returns its auto beams.
     const beams = Beam.applyAndGetBeams(voice);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beaming Applicator Test');
   },
@@ -82,16 +85,14 @@ const AutoBeamFormattingTests = {
       time: '4/4',
     });
 
-    // Takes a voice and returns it's auto beamsj
+    // Takes a voice and returns its auto beams.
     const beams = Beam.applyAndGetBeams(voice);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beaming Applicator Test');
   },
@@ -103,30 +104,26 @@ const AutoBeamFormattingTests = {
 
     const voice = score.voice(score.notes('a4/8, b4, g4, c5, f4, d5, e4, e5, b4, b4, g4, d5'), { time: '6/4' });
 
-    // Takes a voice and returns it's auto beams
+    // Takes a voice and returns its auto beams.
     const beams = Beam.applyAndGetBeams(voice);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-    const UP = Stem.UP;
-    const DOWN = Stem.DOWN;
-    equal(beams[0].stem_direction, UP);
-    equal(beams[1].stem_direction, UP);
-    equal(beams[2].stem_direction, UP);
-    equal(beams[3].stem_direction, UP);
-    equal(beams[4].stem_direction, DOWN);
-    equal(beams[5].stem_direction, DOWN);
+    equal(beams[0].stem_direction, Stem.UP);
+    equal(beams[1].stem_direction, Stem.UP);
+    equal(beams[2].stem_direction, Stem.UP);
+    equal(beams[3].stem_direction, Stem.UP);
+    equal(beams[4].stem_direction, Stem.DOWN);
+    equal(beams[5].stem_direction, Stem.DOWN);
 
     ok(true, 'Auto Beaming Applicator Test');
   },
 
-  oddGroupStemDirections(options: TestOptions) {
+  oddGroupStemDirections(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options);
     const stave = f.Stave();
     const score = f.EasyScore();
@@ -136,7 +133,7 @@ const AutoBeamFormattingTests = {
     });
 
     const groups = [new Fraction(3, 8)];
-    const beams = Beam.applyAndGetBeams(voice, null, groups);
+    const beams = Beam.applyAndGetBeams(voice, undefined, groups);
 
     equal(beams[0].stem_direction, Stem.DOWN, 'Notes are equidistant from middle line');
     equal(beams[1].stem_direction, Stem.DOWN);
@@ -147,9 +144,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beaming Applicator Test');
   },
@@ -163,16 +158,14 @@ const AutoBeamFormattingTests = {
 
     const groups = [new Fraction(2, 8), new Fraction(3, 8), new Fraction(1, 8)];
 
-    // Takes a voice and returns it's auto beamsj
+    // Takes a voice and returns its auto beams.
     const beams = Beam.applyAndGetBeams(voice, undefined, groups);
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -190,9 +183,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -213,9 +204,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -230,7 +219,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: false,
     });
 
@@ -238,9 +227,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -255,7 +242,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: true,
       show_stemlets: true,
     });
@@ -264,9 +251,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -281,7 +266,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: true,
     });
 
@@ -289,9 +274,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -306,7 +289,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: true,
       beam_middle_only: true,
     });
@@ -315,9 +298,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -340,7 +321,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: false,
       maintain_stem_directions: true,
     });
@@ -349,9 +330,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -374,7 +353,7 @@ const AutoBeamFormattingTests = {
       { time: '4/4' }
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       beam_rests: true,
       maintain_stem_directions: true,
     });
@@ -383,9 +362,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -397,7 +374,7 @@ const AutoBeamFormattingTests = {
 
     const voice = score.voice(score.notes('b4/16, b4, b4/4, b4/16, b4'), { time: '2/4' });
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       groups: [new Fraction(2, 2)],
       beam_rests: false,
       maintain_stem_directions: true,
@@ -407,9 +384,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -421,7 +396,7 @@ const AutoBeamFormattingTests = {
 
     const voice = score.voice(score.notes('b4/4, b4/4, b4/8, b4/8'), { time: '6/8' });
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       groups: [new Fraction(3, 8)],
       beam_rests: false,
       maintain_stem_directions: true,
@@ -431,9 +406,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -463,9 +436,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -486,9 +457,7 @@ const AutoBeamFormattingTests = {
     });
 
     const group1 = [new Fraction(5, 8)];
-
     const group2 = [new Fraction(3, 8), new Fraction(2, 8)];
-
     const group3 = [new Fraction(7, 16), new Fraction(2, 16), new Fraction(4, 16)];
 
     const beams = [
@@ -501,9 +470,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -534,9 +501,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -559,9 +524,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -581,9 +544,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -601,9 +562,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -621,9 +580,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -644,9 +601,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -664,9 +619,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Auto Beam Applicator Test');
   },
@@ -687,17 +640,13 @@ const AutoBeamFormattingTests = {
       )
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
-      secondary_breaks: '8',
-    });
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], { secondary_breaks: '8' });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Duration-Based Secondary Breaks Test');
   },
@@ -722,17 +671,13 @@ const AutoBeamFormattingTests = {
       ].reduce(concat)
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
-      secondary_breaks: '8',
-    });
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], { secondary_breaks: '8' });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Duration-Based Secondary Breaks Test');
   },
@@ -754,7 +699,7 @@ const AutoBeamFormattingTests = {
       ].reduce(concat)
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       stem_direction: 1,
     });
@@ -763,9 +708,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Up Test');
   },
@@ -781,7 +724,7 @@ const AutoBeamFormattingTests = {
       )
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       stem_direction: -1,
     });
@@ -790,9 +733,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Down Test');
   },
@@ -808,17 +749,13 @@ const AutoBeamFormattingTests = {
       )
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
-      flat_beams: true,
-    });
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], { flat_beams: true });
 
     f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Mixed Direction Test');
   },
@@ -835,7 +772,7 @@ const AutoBeamFormattingTests = {
       [tuplet(notes('c4/8, g4, g5')), notes('d5/8, c5/16, (c4 e4 g4), d5/8, e5, c4, f5/32, f5, f5, f5')].reduce(concat)
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       flat_beam_offset: 50,
       stem_direction: 1,
@@ -845,9 +782,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Up (uniform) Test');
   },
@@ -863,7 +798,7 @@ const AutoBeamFormattingTests = {
       )
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       flat_beam_offset: 155,
       stem_direction: -1,
@@ -873,9 +808,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Down (uniform) Test');
   },
@@ -894,7 +827,7 @@ const AutoBeamFormattingTests = {
       ].reduce(concat)
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       flat_beam_offset: 60,
       stem_direction: 1,
@@ -904,9 +837,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Up (uniform) Test');
   },
@@ -928,7 +859,7 @@ const AutoBeamFormattingTests = {
       )
     );
 
-    const beams = Beam.generateBeams(voice.getTickables(), {
+    const beams = Beam.generateBeams(voice.getTickables() as StemmableNote[], {
       flat_beams: true,
       flat_beam_offset: 145,
       stem_direction: -1,
@@ -938,9 +869,7 @@ const AutoBeamFormattingTests = {
 
     f.draw();
 
-    beams.forEach(function (beam) {
-      return beam.setContext(f.getContext()).draw();
-    });
+    beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
     ok(true, 'Flat Beams Down (uniform) Test');
   },

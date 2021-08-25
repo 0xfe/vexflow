@@ -8,8 +8,8 @@ import { BoundingBox } from 'boundingbox';
 const BoundingBoxTests = {
   Start(): void {
     QUnit.module('BoundingBox');
-    test('Initialization Test', BoundingBoxTests.initialization);
-    test('Merging Text', BoundingBoxTests.merging);
+    test('Initialization Test', this.initialization);
+    test('Merging Text', this.merging);
   },
 
   initialization(): void {

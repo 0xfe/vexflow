@@ -6,6 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Add a getter for Modifier.width.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { ModifierContext } from 'modifiercontext';
@@ -80,7 +82,6 @@ const DotTests = {
       ok(dots.length > 0, 'Note ' + i + ' has dots');
 
       for (let j = 0; j < dots.length; ++j) {
-        // TODO: Add a getter for .width?
         ok(dots[j].width > 0, 'Dot ' + j + ' has width set');
       }
     }
@@ -169,7 +170,7 @@ function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: Ren
   note1.setStave(stave).addToModifierContext(modifierContext);
   note2.setStave(stave).addToModifierContext(modifierContext);
 
-  // Note: The order in which we call preformat() and setX(x) are different from showNote()
+  // Note: The order in which we call preformat() and setX(x) are different from showOneNote().
   new TickContext().addTickable(note1).addTickable(note2).setX(x).preFormat();
 
   note1.setContext(ctx).draw();

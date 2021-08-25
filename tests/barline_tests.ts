@@ -6,6 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Factory.BarNote()'s type parameter expects BarlineType, but we pass in string. Did the previous API allow string?
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Barline, BarlineType } from 'stavebarline';
 
@@ -18,7 +20,7 @@ const BarlineTests = {
     });
 
     const run = VexFlowTests.runTests;
-    run('Simple BarNotes', function (options: TestOptions) {
+    run('Simple BarNotes', (options: TestOptions) => {
       const f = VexFlowTests.makeFactory(options, 380, 160);
       const stave = f.Stave();
 
@@ -40,7 +42,7 @@ const BarlineTests = {
       ok(true, 'Simple Test');
     });
 
-    run('Style BarNotes', function (options: TestOptions) {
+    run('Style BarNotes', (options: TestOptions) => {
       const f = VexFlowTests.makeFactory(options, 380, 160);
       const stave = f.Stave();
 

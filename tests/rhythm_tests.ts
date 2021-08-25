@@ -4,19 +4,20 @@
 // Rhythm Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { showNote } from './stavenote_tests';
 import { ContextBuilder } from 'renderer';
 import { Formatter } from 'formatter';
 import { Beam } from 'beam';
 import { Annotation } from 'annotation';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
+import { TickContext } from 'tickcontext';
 
 const RhythmTests = {
   Start(): void {
     QUnit.module('Rhythm');
     const run = VexFlowTests.runTests;
+    // TODO: Simplify test names by removing 'Rhythm Draw - '.
     run('Rhythm Draw - slash notes', this.drawBasic);
     run('Rhythm Draw - beamed slash notes', this.drawBeamedSlashNotes);
     run('Rhythm Draw - beamed slash notes, some rests', this.drawSlashAndBeamAndRests);
@@ -30,7 +31,7 @@ const RhythmTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const notes = [
+    const notes: StaveNoteStruct[] = [
       { keys: ['b/4'], duration: 'ws', stem_direction: -1 },
       { keys: ['b/4'], duration: 'hs', stem_direction: -1 },
       { keys: ['b/4'], duration: 'qs', stem_direction: -1 },
@@ -42,8 +43,12 @@ const RhythmTests = {
     expect(notes.length * 2);
 
     for (let i = 0; i < notes.length; ++i) {
-      const note = notes[i];
-      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+      const staveNote = new StaveNote(notes[i]).setStave(stave);
+      new TickContext()
+        .addTickable(staveNote)
+        .preFormat()
+        .setX((i + 1) * 25);
+      staveNote.setContext(ctx).draw();
 
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -458,10 +463,10 @@ const RhythmTests = {
 
     notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
 
-    // create the beams for 8th notes in 2nd measure
+    // Create the beams for 8th notes in 2nd measure.
     const beam1 = new Beam(notesBar1_part1);
 
-    // Helper function to justify and draw a 4/4 voice
+    // Helper function to justify and draw a 4/4 voice.
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1_part1);
 
     // Render beams

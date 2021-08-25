@@ -6,6 +6,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: EasyScore.voice() needs to accept Note[] (because we pass in arrays of TextDynamics, TextNote, Crescendo).
+// TODO: TextNote needs a setFont() accessor.
+// TODO: Line 176 => Property 'text' is missing but required in type 'TextNoteStruct'.
+//       Maybe Factory.TextNote() should accept a Partial<TextNoteStruct>?
+
 import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 import { Note } from 'note';
@@ -136,10 +141,11 @@ const TextNoteTests = {
       f.TextNote({ text: 'V', superscript: '7', duration: '8' }),
     ]);
 
-    voice2.getTickables().forEach(function (note) {
-      note.font = { family: 'Serif', size: 15, weight: '' };
-      note.setLine(13);
-      note.setJustification(TextNote.Justification.LEFT);
+    voice2.getTickables().forEach((note) => {
+      const textNote = note as TextNote;
+      textNote.font = { family: 'Serif', size: 15, weight: '' };
+      textNote.setLine(13);
+      textNote.setJustification(TextNote.Justification.LEFT);
     });
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
@@ -178,7 +184,7 @@ const TextNoteTests = {
       f.TextNote({ glyph: 'coda', duration: '8' }),
     ]);
 
-    voice2.getTickables().forEach((n) => n.setJustification(TextNote.Justification.CENTER));
+    (voice2.getTickables() as TextNote[]).forEach((n) => n.setJustification(TextNote.Justification.CENTER));
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
@@ -215,7 +221,7 @@ const TextNoteTests = {
       f.TextNote({ glyph: 'tr', duration: '8', smooth: true }).setJustification(TextNote.Justification.CENTER),
     ]);
 
-    voice2.getTickables().forEach((n) => n.setJustification(TextNote.Justification.CENTER));
+    (voice2.getTickables() as TextNote[]).forEach((n) => n.setJustification(TextNote.Justification.CENTER));
 
     f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 

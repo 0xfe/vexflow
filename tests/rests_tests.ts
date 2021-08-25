@@ -19,7 +19,7 @@ const RestsTests = {
     QUnit.module('Rests');
     const run = VexFlowTests.runTests;
 
-    // TODO: Rename tests by removing 'Rests - ' or 'Rests '
+    // TODO: Simplify test names by removing 'Rests - ' or 'Rests '.
     run('Rests - Dotted', this.basic);
     run('Auto Align Rests - Beamed Notes Stems Up', this.beamsUp);
     run('Auto Align Rests - Beamed Notes Stems Down', this.beamsDown);

@@ -4,6 +4,7 @@
 // Clef Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { Note } from 'note';
 
 const ClefTests = {
   Start(): void {
@@ -107,7 +108,7 @@ const ClefTests = {
   drawClefChange(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 800, 180);
     const stave = f.Stave().addClef('treble');
-    const notes = [
+    const notes: Note[] = [
       f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }),
       f.ClefNote({ type: 'alto', options: { size: 'small' } }),
       f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'alto' }),

@@ -13,45 +13,14 @@ const TuningTests = {
     test('Return note for fret', this.noteForFret);
   },
 
-  checkStandard(tuning: Tuning): void {
-    try {
-      tuning.getValueForString(0);
-    } catch (e) {
-      equal(e.code, 'BadArguments', 'String 0');
-    }
+  standard(): void {
+    expect(16);
 
-    try {
-      tuning.getValueForString(9);
-    } catch (e) {
-      equal(e.code, 'BadArguments', 'String 7');
-    }
-
-    equal(tuning.getValueForString(6), 40, 'Low E string');
-    equal(tuning.getValueForString(5), 45, 'A string');
-    equal(tuning.getValueForString(4), 50, 'D string');
-    equal(tuning.getValueForString(3), 55, 'G string');
-    equal(tuning.getValueForString(2), 59, 'B string');
-    equal(tuning.getValueForString(1), 64, 'High E string');
-  },
-
-  checkStandardBanjo(tuning: Tuning): void {
-    try {
-      tuning.getValueForString(0);
-    } catch (e) {
-      equal(e.code, 'BadArguments', 'String 0');
-    }
-
-    try {
-      tuning.getValueForString(6);
-    } catch (e) {
-      equal(e.code, 'BadArguments', 'String 6');
-    }
-
-    equal(tuning.getValueForString(5), 67, 'High G string');
-    equal(tuning.getValueForString(4), 50, 'D string');
-    equal(tuning.getValueForString(3), 55, 'G string');
-    equal(tuning.getValueForString(2), 59, 'B string');
-    equal(tuning.getValueForString(1), 62, 'High D string');
+    const tuning = new Tuning();
+    checkStandard(tuning);
+    // Set the tuning by specifying a name: 'standard'.
+    tuning.setTuning('standard');
+    checkStandard(tuning);
   },
 
   banjo(): void {
@@ -59,18 +28,7 @@ const TuningTests = {
 
     const tuning = new Tuning();
     tuning.setTuning('standardBanjo');
-    TuningTests.checkStandardBanjo(tuning);
-  },
-
-  standard(): void {
-    expect(16);
-
-    const tuning = new Tuning();
-    TuningTests.checkStandard(tuning);
-
-    // Test named tuning
-    tuning.setTuning('standard');
-    TuningTests.checkStandard(tuning);
+    checkStandardBanjo(tuning);
   },
 
   noteForFret(): void {
@@ -96,5 +54,50 @@ const TuningTests = {
     equal(tuning.getNoteForFret(0, 6), 'E/3', 'Low E string');
   },
 };
+
+//#region Helper Functions
+
+function checkStandard(tuning: Tuning): void {
+  try {
+    tuning.getValueForString(0);
+  } catch (e) {
+    equal(e.code, 'BadArguments', 'String 0');
+  }
+
+  try {
+    tuning.getValueForString(9);
+  } catch (e) {
+    equal(e.code, 'BadArguments', 'String 7');
+  }
+
+  equal(tuning.getValueForString(6), 40, 'Low E string');
+  equal(tuning.getValueForString(5), 45, 'A string');
+  equal(tuning.getValueForString(4), 50, 'D string');
+  equal(tuning.getValueForString(3), 55, 'G string');
+  equal(tuning.getValueForString(2), 59, 'B string');
+  equal(tuning.getValueForString(1), 64, 'High E string');
+}
+
+function checkStandardBanjo(tuning: Tuning): void {
+  try {
+    tuning.getValueForString(0);
+  } catch (e) {
+    equal(e.code, 'BadArguments', 'String 0');
+  }
+
+  try {
+    tuning.getValueForString(6);
+  } catch (e) {
+    equal(e.code, 'BadArguments', 'String 6');
+  }
+
+  equal(tuning.getValueForString(5), 67, 'High G string');
+  equal(tuning.getValueForString(4), 50, 'D string');
+  equal(tuning.getValueForString(3), 55, 'G string');
+  equal(tuning.getValueForString(2), 59, 'B string');
+  equal(tuning.getValueForString(1), 62, 'High D string');
+}
+
+//#endregion Helper Functions
 
 export { TuningTests };

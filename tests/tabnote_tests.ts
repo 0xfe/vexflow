@@ -12,7 +12,7 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { RenderContext } from 'types/common';
-import { Voice } from 'voice';
+import { Voice, VoiceMode } from 'voice';
 
 const TabNoteTests = {
   Start(): void {
@@ -171,7 +171,7 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -223,13 +223,13 @@ const TabNoteTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
+    const notes = specs.map((tab_struct) => {
+      const tabNote = new TabNote(tab_struct);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
 
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -244,7 +244,7 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -296,14 +296,14 @@ const TabNoteTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
+    const notes = specs.map((tab_struct) => {
+      const tabNote = new TabNote(tab_struct);
       tabNote.render_options.draw_stem = true;
       tabNote.setStemDirection(-1);
       return tabNote;
     });
 
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -317,7 +317,7 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -369,15 +369,15 @@ const TabNoteTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
+    const notes = specs.map((tab_struct) => {
+      const tabNote = new TabNote(tab_struct);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_stem_through_stave = true;
       return tabNote;
     });
 
     ctx.setFont('sans-serif', 10, 'bold');
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -392,7 +392,7 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -447,8 +447,8 @@ const TabNoteTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
+    const notes = specs.map((tab_struct) => {
+      const tabNote = new TabNote(tab_struct);
       tabNote.render_options.draw_stem = true;
       tabNote.render_options.draw_stem_through_stave = true;
       tabNote.setStemDirection(-1);
@@ -457,7 +457,7 @@ const TabNoteTests = {
 
     ctx.setFont('Arial', 10, 'bold');
 
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);
@@ -471,7 +471,7 @@ const TabNoteTests = {
     stave.setContext(ctx);
     stave.draw();
 
-    const specs = [
+    const specs: TabNoteStruct[] = [
       {
         positions: [
           { str: 3, fret: 6 },
@@ -504,16 +504,13 @@ const TabNoteTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec, true);
-      return tabNote;
-    });
+    const notes = specs.map((tab_struct) => new TabNote(tab_struct, true));
 
     notes[0].addDot();
     notes[2].addDot();
     notes[2].addDot();
 
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
+    const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
     voice.draw(ctx, stave);

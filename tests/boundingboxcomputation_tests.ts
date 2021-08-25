@@ -3,39 +3,13 @@
 //
 // BoundingBoxComputation Tests
 
+// TODO: Provide a unique names for each test, so we can render separate PNGs.
+// See line 41 'Quadratic Test' and line 93 'Cubic Test'. We can append an incrementing counter.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BoundingBoxComputation } from 'boundingboxcomputation';
 import { Glyph, OutlineCode } from 'glyph';
 import { RenderContext } from 'types/common';
-
-function createCanvas(options: TestOptions): RenderContext {
-  const points = options.params.points;
-
-  // Size the canvas to fit all the points and a small margin.
-  let w = points[0];
-  let h = points[1];
-  for (let i = 2; i < points.length; i += 2) {
-    w = Math.max(w, points[i]);
-    h = Math.max(h, points[i + 1]);
-  }
-
-  const f = VexFlowTests.makeFactory(options, w + 20, h + 20);
-  const ctx = f.getContext();
-  ctx.setLineCap('square');
-  return ctx;
-}
-
-function rect(ctx: RenderContext, style: string, lineWidth: number, x: number, y: number, w: number, h: number): void {
-  ctx.strokeStyle = style;
-  ctx.setLineWidth(lineWidth);
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x + w, y);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.lineTo(x, y);
-  ctx.stroke();
-}
 
 const BoundingBoxComputationTests = {
   Start(): void {
@@ -236,5 +210,36 @@ const BoundingBoxComputationTests = {
     ok(Math.abs(bbox.getH() - box[3]) < 0.01, `Bad H: ${bbox.getH()}`);
   },
 };
+
+//#region  Helper Functions
+function createCanvas(options: TestOptions): RenderContext {
+  const points = options.params.points;
+
+  // Size the canvas to fit all the points and a small margin.
+  let w = points[0];
+  let h = points[1];
+  for (let i = 2; i < points.length; i += 2) {
+    w = Math.max(w, points[i]);
+    h = Math.max(h, points[i + 1]);
+  }
+
+  const f = VexFlowTests.makeFactory(options, w + 20, h + 20);
+  const ctx = f.getContext();
+  ctx.setLineCap('square');
+  return ctx;
+}
+
+function rect(ctx: RenderContext, style: string, lineWidth: number, x: number, y: number, w: number, h: number): void {
+  ctx.strokeStyle = style;
+  ctx.setLineWidth(lineWidth);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + w, y);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+}
+//#endregion Helper Functions
 
 export { BoundingBoxComputationTests };
