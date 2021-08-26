@@ -3,56 +3,20 @@
 //
 // Clef Key Signature Tests
 //
-// TODO: How is this different from keysignature_tests.ts?
 
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
-import { Flow } from 'flow';
 import { KeySignature } from 'keysignature';
 import { Stave } from 'stave';
 
 const ClefKeySignatureTests = {
   Start(): void {
     QUnit.module('Clef Keys');
-    test('Key Parser Test', this.parser);
+    // Removed an identical 'Key Parser Test'. See keysignature_tests.ts.
     const run = VexFlowTests.runTests;
     run('Major Key Clef Test', this.keys, { majorKeys: true });
     run('Minor Key Clef Test', this.keys, { majorKeys: false });
     run('Stave Helper', this.staveHelper);
-  },
-
-  parser(): void {
-    expect(11);
-
-    function catchError(spec: string): void {
-      try {
-        Flow.keySignature(spec);
-      } catch (e) {
-        equal(e.code, 'BadKeySignature', e.message);
-      }
-    }
-
-    catchError('asdf');
-    catchError('D!');
-    catchError('E#');
-    catchError('D#');
-    catchError('#');
-    catchError('b');
-    catchError('Kb');
-    catchError('Fb');
-    catchError('Ab');
-    catchError('Dbm');
-    catchError('B#m');
-
-    Flow.keySignature('B');
-    Flow.keySignature('C');
-    Flow.keySignature('Fm');
-    Flow.keySignature('Ab');
-    Flow.keySignature('Abm');
-    Flow.keySignature('F#');
-    Flow.keySignature('G#m');
-
-    ok(true, 'all pass');
   },
 
   keys(options: TestOptions, contextBuilder: ContextBuilder): void {

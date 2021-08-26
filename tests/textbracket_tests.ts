@@ -3,7 +3,7 @@
 //
 // TextBracket Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 
 const TextBracketTests = {
   Start(): void {

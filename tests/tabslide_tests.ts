@@ -13,8 +13,6 @@ import { TabStave } from 'tabstave';
 import { RenderContext, TieNotes } from 'types/common';
 import { Voice } from 'voice';
 
-const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
-
 const TabSlideTests = {
   Start(): void {
     QUnit.module('TabSlide');
@@ -26,7 +24,7 @@ const TabSlideTests = {
 
   simple(options: TestOptions, contextBuilder: ContextBuilder): void {
     options.contextBuilder = contextBuilder;
-    const c = setupContext(options);
+    const { stave, context } = setupContext(options);
 
     tieNotes(
       [
@@ -34,8 +32,8 @@ const TabSlideTests = {
         tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
       ],
       [0],
-      c.stave,
-      c.context
+      stave,
+      context
     );
     ok(true, 'Simple Test');
   },
@@ -51,7 +49,8 @@ const TabSlideTests = {
   },
 };
 
-// Helper Functions
+//#region Helper Functions
+const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
 function tieNotes(notes: TabNote[], indices: number[], stave: TabStave, ctx: RenderContext): void {
   const voice = new Voice(Flow.TIME4_4);
@@ -86,7 +85,7 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
   return { context, stave };
 }
 
-function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => TabSlide): void {
+function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide): void {
   const c = setupContext(options, 440);
 
   const notes = [
@@ -128,7 +127,7 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
   new Formatter().joinVoices([voice]).format([voice], 300);
   voice.draw(c.context, c.stave);
 
-  tabSlideFactory({
+  tabSlide({
     first_note: notes[0],
     last_note: notes[1],
     first_indices: [0],
@@ -139,7 +138,7 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
 
   ok(true, 'Single note');
 
-  tabSlideFactory({
+  tabSlide({
     first_note: notes[2],
     last_note: notes[3],
     first_indices: [0, 1],
@@ -150,7 +149,7 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
 
   ok(true, 'Chord');
 
-  tabSlideFactory({
+  tabSlide({
     first_note: notes[4],
     last_note: notes[5],
     first_indices: [0],
@@ -161,7 +160,7 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
 
   ok(true, 'Single note high-fret');
 
-  tabSlideFactory({
+  tabSlide({
     first_note: notes[6],
     last_note: notes[7],
     first_indices: [0, 1],
@@ -172,5 +171,6 @@ function multiTest(options: TestOptions, tabSlideFactory: (notes: TieNotes) => T
 
   ok(true, 'Chord high-fret');
 }
+//#endregion Helper Functions
 
 export { TabSlideTests };

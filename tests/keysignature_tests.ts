@@ -3,10 +3,12 @@
 //
 // Key Signature Tests
 //
-// TODO: How is this different from key_clef_tests.ts?
 
 /* eslint-disable */
 // @ts-nocheck
+
+// TODO: KeySignature.alterKey(alterKeySpec: string) should accept a string[] instead.
+// TODO: Factory.KeySigNote() should take a Partial<T>, or allow cancelKey and alterKey to be optional.
 
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
@@ -104,30 +106,28 @@ const KeySignatureTests = {
     for (i = 0; i < 8; ++i) {
       keySig = new KeySignature(keys[i]);
       keySig.cancelKey('Cb');
-
-      keySig.padding = 18;
+      keySig.setPadding(18);
       keySig.addToStave(stave1);
     }
 
     for (n = 8; n < keys.length; ++n) {
       keySig = new KeySignature(keys[n]);
       keySig.cancelKey('C#');
-      keySig.padding = 20;
+      keySig.setPadding(20);
       keySig.addToStave(stave2);
     }
 
     for (i = 0; i < 8; ++i) {
       keySig = new KeySignature(keys[i]);
       keySig.cancelKey('E');
-
-      keySig.padding = 18;
+      keySig.setPadding(18);
       keySig.addToStave(stave3);
     }
 
     for (n = 8; n < keys.length; ++n) {
       keySig = new KeySignature(keys[n]);
       keySig.cancelKey('Ab');
-      keySig.padding = 20;
+      keySig.setPadding(20);
       keySig.addToStave(stave4);
     }
 
@@ -152,7 +152,7 @@ const KeySignatureTests = {
     let y = 20;
     let tx = x;
     ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function (clef) {
-      keys.forEach(function (key) {
+      keys.forEach((key) => {
         const cancelKey = key === keys[0] ? keys[1] : keys[0];
         const stave = new Stave(tx, y, 350);
         stave.setClef(clef);
@@ -184,28 +184,28 @@ const KeySignatureTests = {
     for (i = 0; i < 8; ++i) {
       keySig = new KeySignature(keys[i]);
       keySig.alterKey(['bs', 'bs']);
-      keySig.padding = 18;
+      keySig.setPadding(18);
       keySig.addToStave(stave1);
     }
 
     for (n = 8; n < keys.length; ++n) {
       keySig = new KeySignature(keys[n]);
       keySig.alterKey(['+', '+', '+']);
-      keySig.padding = 20;
+      keySig.setPadding(20);
       keySig.addToStave(stave2);
     }
 
     for (i = 0; i < 8; ++i) {
       keySig = new KeySignature(keys[i]);
       keySig.alterKey(['n', 'bs', 'bb']);
-      keySig.padding = 18;
+      keySig.setPadding(18);
       keySig.addToStave(stave3);
     }
 
     for (n = 8; n < keys.length; ++n) {
       keySig = new KeySignature(keys[n]);
       keySig.alterKey(['++', '+', 'n', '+']);
-      keySig.padding = 20;
+      keySig.setPadding(20);
       keySig.addToStave(stave4);
     }
 
