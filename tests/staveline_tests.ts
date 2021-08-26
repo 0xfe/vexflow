@@ -77,9 +77,7 @@ const StaveLineTests = {
       to: notes[1],
       first_indices: [0],
       last_indices: [0],
-      options: {
-        text: 'Left',
-      },
+      options: { text: 'Left' },
     });
 
     const staveLine4 = f.StaveLine({
@@ -87,9 +85,7 @@ const StaveLineTests = {
       to: notes[3],
       first_indices: [1],
       last_indices: [1],
-      options: {
-        text: 'Right',
-      },
+      options: { text: 'Right' },
     });
 
     const staveLine1 = f.StaveLine({
@@ -97,9 +93,7 @@ const StaveLineTests = {
       to: notes[5],
       first_indices: [0],
       last_indices: [0],
-      options: {
-        text: 'Center',
-      },
+      options: { text: 'Center' },
     });
 
     const staveLine2 = f.StaveLine({
@@ -114,9 +108,7 @@ const StaveLineTests = {
       to: notes[7],
       first_indices: [2],
       last_indices: [2],
-      options: {
-        text: 'Top',
-      },
+      options: { text: 'Top' },
     });
 
     staveLine0.render_options.draw_end_arrow = true;

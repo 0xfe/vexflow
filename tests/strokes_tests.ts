@@ -18,7 +18,7 @@ import { Stroke } from 'strokes';
 import { GraceNote, GraceNoteStruct } from 'gracenote';
 
 const StrokesTests = {
-  Start: function (): void {
+  Start(): void {
     QUnit.module('Strokes');
     const run = VexFlowTests.runTests;
     // TODO: Rename tests by removing 'Strokes - ' since it is redundant with the module name.

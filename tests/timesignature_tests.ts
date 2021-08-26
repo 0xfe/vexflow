@@ -4,7 +4,7 @@
 // TimeSignature Tests
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { Stave } from 'stave';
+import { Stave, StaveLineConfig } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { TimeSignature } from 'timesignature';
 import { ContextBuilder } from 'renderer';
@@ -72,12 +72,10 @@ const TimeSignatureTests = {
   multiple(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 350);
 
+    // Each StaveLineConfig object is of the form { visible: boolean }.
+    const stave1LineConfig: StaveLineConfig[] = [false, false, true, false, false].map((visible) => ({ visible }));
     const stave1 = new Stave(15, 0, 300)
-      .setConfigForLines(
-        [false, false, true, false, false].map(function (visible) {
-          return { visible: visible };
-        })
-      )
+      .setConfigForLines(stave1LineConfig)
       .addClef('percussion')
       .addTimeSignature('4/4', 25) // passing the custom padding in pixels
       .setContext(ctx)

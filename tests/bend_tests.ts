@@ -44,8 +44,8 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bend('Full'), 0)
-        .addModifier(bend('1/2'), 1),
+        .addModifier(bendWithText('Full'), 0)
+        .addModifier(bendWithText('1/2'), 1),
 
       note({
         positions: [
@@ -54,8 +54,8 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bend('1/4'), 0)
-        .addModifier(bend('1/4'), 1),
+        .addModifier(bendWithText('1/4'), 0)
+        .addModifier(bendWithText('1/4'), 1),
 
       note({
         positions: [{ str: 4, fret: 7 }],
@@ -64,9 +64,7 @@ const BendTests = {
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
-    notes.forEach(function (note) {
-      VexFlowTests.plotNoteWidth(ctx, note, 140);
-    });
+    notes.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 140));
 
     ok(true, 'Double Bends');
   },
@@ -86,8 +84,8 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bend('1/2', true), 0)
-        .addModifier(bend('Full', true), 1),
+        .addModifier(bendWithText('1/2', true), 0)
+        .addModifier(bendWithText('Full', true), 1),
 
       note({
         positions: [
@@ -97,9 +95,9 @@ const BendTests = {
         ],
         duration: 'q',
       })
-        .addModifier(bend('1/4', true), 0)
-        .addModifier(bend('Monstrous', true), 1)
-        .addModifier(bend('1/4', true), 2),
+        .addModifier(bendWithText('1/4', true), 0)
+        .addModifier(bendWithText('Monstrous', true), 1)
+        .addModifier(bendWithText('1/4', true), 2),
 
       note({
         positions: [{ str: 4, fret: 7 }],
@@ -112,9 +110,7 @@ const BendTests = {
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
-    notes.forEach(function (note) {
-      VexFlowTests.plotNoteWidth(ctx, note, 140);
-    });
+    notes.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 140));
     ok(true, 'Bend Release');
   },
 
@@ -135,8 +131,8 @@ const BendTests = {
         ],
         duration: 'w',
       })
-        .addModifier(bend('Full'), 1)
-        .addModifier(bend('1/2'), 0),
+        .addModifier(bendWithText('Full'), 1)
+        .addModifier(bendWithText('1/2'), 0),
 
       note({
         positions: [
@@ -145,8 +141,8 @@ const BendTests = {
         ],
         duration: 'w',
       })
-        .addModifier(bend('1/4'), 1)
-        .addModifier(bend('1/4'), 0),
+        .addModifier(bendWithText('1/4'), 1)
+        .addModifier(bendWithText('1/4'), 0),
 
       note({
         positions: [{ str: 4, fret: 7 }],
@@ -196,8 +192,7 @@ const BendTests = {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
-      const mc = new ModifierContext();
-      note.addToModifierContext(mc);
+      note.addToModifierContext(new ModifierContext());
 
       const tickContext = new TickContext();
       tickContext
@@ -255,15 +250,9 @@ const BendTests = {
 };
 
 //#region Helper Functions
-function note(tab_struct: TabNoteStruct) {
-  return new TabNote(tab_struct);
-}
-function bend(text: string, release = false) {
-  return new Bend(text, release);
-}
-function bendWithPhrase(phrase: BendPhrase[]) {
-  return new Bend('', false, phrase);
-}
-//#endregion
+const note = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
+const bendWithText = (text: string, release = false) => new Bend(text, release);
+const bendWithPhrase = (phrase: BendPhrase[]) => new Bend('', false, phrase);
+//#endregion Helper Functions
 
 export { BendTests };

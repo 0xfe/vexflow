@@ -6,8 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// TODO: Factory.GlyphNote()'s third param should be optional.
-// TODO: Factory.RepeatNote()'s second and third params should both be optional.
+// TODO: Factory.GlyphNote()'s third argument should be optional.
+// TODO: Factory.RepeatNote()'s second and third arguments should both be optional.
 // TODO: Line 42 - Object literal may only specify known properties, and 'options' does not exist in type 'Partial<SystemOptions>'
 // TODO: ChordSymbol.addGlyphOrText(text: string[], ...) should instead take a string (not an array)!
 //       The implementation looks like text is an array, but we are actually just pulling out individual characters from the string.

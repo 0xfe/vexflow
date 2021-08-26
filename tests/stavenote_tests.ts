@@ -8,6 +8,8 @@
 
 // TODO: Stroke constructor's second argument should be optional.
 // TODO: ElementStyle's lineWidth is declared as a number, but we pass in a string '3'. Should we also allow string?
+// TODO: In StaveNote.preFormat() line 929, should noteHeadPadding default to StaveNote.minNoteheadPadding?
+//       The bounding box of a note changes slightly when we add a ModifierContext (even if we add zero modifiers).
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
@@ -27,6 +29,7 @@ import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { TickContext } from 'tickcontext';
 import { RenderContext } from 'types/common';
+import { ModifierContext } from 'modifiercontext';
 
 const StaveNoteTests = {
   Start(): void {
@@ -429,7 +432,14 @@ const StaveNoteTests = {
     expect(note_structs.length * 2);
 
     for (let i = 0; i < note_structs.length; ++i) {
-      const note = draw(staveNote(note_structs[i]), stave, ctx, (i + 1) * 25, true);
+      const note = draw(
+        staveNote(note_structs[i]),
+        stave,
+        ctx,
+        (i + 1) * 25,
+        true /* drawBoundingBox */,
+        false /* addModifierContext */
+      );
 
       ok(note.getX() > 0, 'Note ' + i + ' has X value');
       ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -605,7 +615,7 @@ const StaveNoteTests = {
       { keys: ['b/4'], duration: '8s', stem_direction: Stem.UP },
     ];
 
-    const stave_notes = notes.map((note_struct) => new StaveNote(note_struct));
+    const stave_notes = notes.map((struct) => new StaveNote(struct));
     const beam1 = new Beam([stave_notes[16], stave_notes[17]]);
     const beam2 = new Beam([stave_notes[18], stave_notes[19]]);
 
@@ -703,7 +713,7 @@ const StaveNoteTests = {
       'g/6',
       'a/6',
     ];
-    const stave_notes = [];
+    const notes: StaveNote[] = [];
     let note;
     let i;
 
@@ -713,23 +723,19 @@ const StaveNoteTests = {
         duration = '8';
       }
       note = new StaveNote({ keys: [keys[i]], duration, auto_stem: true }).setStave(stave);
-
       new TickContext().addTickable(note);
-
       note.setContext(ctx);
-      stave_notes.push(note);
+      notes.push(note);
     }
 
     const whole_keys = ['e/3', 'a/3', 'f/5', 'a/5', 'd/6', 'a/6'];
     for (i = 0; i < whole_keys.length; i++) {
       note = new StaveNote({ keys: [whole_keys[i]], duration: 'w' }).setStave(stave);
-
       new TickContext().addTickable(note);
-
       note.setContext(ctx);
-      stave_notes.push(note);
+      notes.push(note);
     }
-    Formatter.FormatAndDraw(ctx, stave, stave_notes);
+    Formatter.FormatAndDraw(ctx, stave, notes);
 
     ok('Note Stem Length');
   },
@@ -757,10 +763,7 @@ const StaveNoteTests = {
   drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 400, 160);
     const stave = new Stave(10, 10, 380);
-    stave.setStyle({
-      strokeStyle: '#EEAAEE',
-      lineWidth: '3',
-    });
+    stave.setStyle({ strokeStyle: '#EEAAEE', lineWidth: '3' });
     stave.setContext(ctx);
     stave.draw();
 
@@ -791,9 +794,7 @@ const StaveNoteTests = {
       { keys: ['e/6', 'f/6'], duration: '8', stem_direction: Stem.DOWN },
     ];
 
-    const staveNotes = notes.map(function (note) {
-      return new StaveNote(note);
-    });
+    const staveNotes = notes.map((note) => new StaveNote(note));
 
     const beam1 = new Beam(staveNotes.slice(0, 2));
     const beam2 = new Beam(staveNotes.slice(3, 5));
@@ -802,10 +803,7 @@ const StaveNoteTests = {
 
     // stem, key, ledger, flag; beam.setStyle
 
-    beam1.setStyle({
-      fillStyle: 'blue',
-      strokeStyle: 'blue',
-    });
+    beam1.setStyle({ fillStyle: 'blue', strokeStyle: 'blue' });
 
     staveNotes[0].setKeyStyle(0, { fillStyle: 'purple' });
     staveNotes[0].setStemStyle({ strokeStyle: 'green' });
@@ -813,10 +811,7 @@ const StaveNoteTests = {
     staveNotes[1].setKeyStyle(0, { fillStyle: 'darkturquoise' });
 
     staveNotes[5].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
-    beam3.setStyle({
-      shadowBlur: 20,
-      shadowColor: 'blue',
-    });
+    beam3.setStyle({ shadowBlur: 20, shadowColor: 'blue' });
 
     staveNotes[9].setLedgerLineStyle({ fillStyle: 'lawngreen', strokeStyle: 'lawngreen', lineWidth: 1 });
     staveNotes[9].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
@@ -839,7 +834,7 @@ const StaveNoteTests = {
 
     const stave = new Stave(10, 10, 975);
 
-    const staveNotes = [
+    const notes = [
       staveNote({ keys: ['f/4'], duration: '4', stem_direction: Stem.UP }).addDotToAll(),
       staveNote({ keys: ['f/4'], duration: '8', stem_direction: Stem.UP }).addDotToAll(),
       staveNote({ keys: ['f/4'], duration: '16', stem_direction: Stem.UP }).addDotToAll(),
@@ -860,8 +855,8 @@ const StaveNoteTests = {
 
     stave.setContext(ctx).draw();
 
-    for (let i = 0; i < staveNotes.length; ++i) {
-      draw(staveNotes[i], stave, ctx, i * 65);
+    for (let i = 0; i < notes.length; ++i) {
+      draw(notes[i], stave, ctx, i * 65);
     }
 
     ok(true, 'Full Dot');
@@ -1087,20 +1082,34 @@ const StaveNoteTests = {
 
 //#region Helper Functions
 
-const staveNote = (note_struct: StaveNoteStruct) => new StaveNote(note_struct);
-function draw(note: StaveNote, stave: Stave, ctx: RenderContext, x: number, drawBBox: boolean = false) {
+const staveNote = (struct: StaveNoteStruct) => new StaveNote(struct);
+
+function draw(
+  note: StaveNote,
+  stave: Stave,
+  context: RenderContext,
+  x: number,
+  drawBoundingBox: boolean = false,
+  addModifierContext: boolean = true
+) {
   note.setStave(stave);
-  // const mc = new ModifierContext();
-  // note.addToModifierContext(mc);
+
+  // A ModifierContext is required for dots and other modifiers to be drawn properly.
+  // If added, it changes the bounding box of a note, even if there are no modifiers to draw.
+  // See StaveNote.minNoteheadPadding in stavenote.ts.
+  if (addModifierContext) {
+    note.addToModifierContext(new ModifierContext());
+  }
+
   new TickContext().addTickable(note).preFormat().setX(x);
-  note.setContext(ctx).draw();
-  // ctx.save();
-  if (drawBBox) {
-    note.getBoundingBox().draw(ctx);
+  note.setContext(context).draw();
+
+  if (drawBoundingBox) {
+    note.getBoundingBox().draw(context);
   }
   return note;
 }
 
-//#endregion
+//#endregion Helper Functions
 
 export { StaveNoteTests };

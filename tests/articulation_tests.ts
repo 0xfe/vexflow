@@ -3,6 +3,7 @@
 //
 // Articulation Tests
 
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Articulation } from 'articulation';
 import { Beam } from 'beam';
 import { Flow } from 'flow';
@@ -14,7 +15,6 @@ import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Voice } from 'voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ArticulationTests = {
   Start(): void {
@@ -313,28 +313,25 @@ const ArticulationTests = {
       },
     ];
 
-    const notes = specs.map(function (noteSpec) {
+    const notes1 = specs.map((noteSpec) => {
       const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       return tabNote;
     });
 
-    const notes2 = specs.map(function (noteSpec) {
+    const notes2 = specs.map((noteSpec) => {
       const tabNote = new TabNote(noteSpec);
       tabNote.render_options.draw_stem = true;
       tabNote.setStemDirection(-1);
       return tabNote;
     });
 
-    const notes3 = specs.map(function (noteSpec) {
-      const tabNote = new TabNote(noteSpec);
-      return tabNote;
-    });
+    const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-    notes[0].addModifier(new Articulation('a>').setPosition(3), 0); // U
-    notes[1].addModifier(new Articulation('a>').setPosition(4), 0); // D
-    notes[2].addModifier(new Articulation('a.').setPosition(3), 0); // U
-    notes[3].addModifier(new Articulation('a.').setPosition(4), 0); // D
+    notes1[0].addModifier(new Articulation('a>').setPosition(3), 0); // U
+    notes1[1].addModifier(new Articulation('a>').setPosition(4), 0); // D
+    notes1[2].addModifier(new Articulation('a.').setPosition(3), 0); // U
+    notes1[3].addModifier(new Articulation('a.').setPosition(4), 0); // D
 
     notes2[0].addModifier(new Articulation('a>').setPosition(3), 0);
     notes2[1].addModifier(new Articulation('a>').setPosition(4), 0);
@@ -348,7 +345,7 @@ const ArticulationTests = {
 
     const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 
-    voice.addTickables(notes);
+    voice.addTickables(notes1);
     voice.addTickables(notes2);
     voice.addTickables(notes3);
 

@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 // TODO: NoteHead constructor should take a Partial<NoteHeadStruct>.
-// In the basicBoundingBoxes() test case, we omit the note_type option.
+//       In the basicBoundingBoxes() test case, we omit the note_type option.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';

@@ -4,8 +4,8 @@
 // Annotation Tests
 
 // TODO: Formatter.FormatAndDraw(ctx, stave, notes, ???number???);
-// Did a previous version of the API accept a number as the fourth parameter?
-// We removed the fourth parameter from all of our test cases.
+//       Did a previous version of the API accept a number as the fourth argument?
+//       We removed the fourth argument from all of our test cases.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
@@ -29,15 +29,15 @@ const AnnotationTests = {
   Start(): void {
     QUnit.module('Annotation');
     const run = VexFlowTests.runTests;
-    run('Lyrics', this.lyrics);
-    run('Simple Annotation', this.simple);
-    run('Standard Notation Annotation', this.standard);
-    run('Harmonics', this.harmonic);
-    run('Fingerpicking', this.picking);
-    run('Bottom Annotation', this.bottom);
-    run('Bottom Annotations with Beams', this.bottomWithBeam);
-    run('Test Justification Annotation Stem Up', this.justificationStemUp);
-    run('Test Justification Annotation Stem Down', this.justificationStemDown);
+    // run('Lyrics', this.lyrics);
+    // run('Simple Annotation', this.simple);
+    // run('Standard Notation Annotation', this.standard);
+    // run('Harmonics', this.harmonic);
+    // run('Fingerpicking', this.picking);
+    // run('Bottom Annotation', this.bottom);
+    // run('Bottom Annotations with Beams', this.bottomWithBeam);
+    // run('Test Justification Annotation Stem Up', this.justificationStemUp);
+    // run('Test Justification Annotation Stem Down', this.justificationStemDown);
     run('TabNote Annotations', this.tabNotes);
   },
 
@@ -114,9 +114,7 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
     const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
-    function annotation(text: string) {
-      return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
-    }
+    const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
 
     const notes = [
       staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
@@ -163,9 +161,7 @@ const AnnotationTests = {
     ctx.setFont('Arial', FONT_SIZE, '');
     const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-    function annotation(text: string) {
-      return new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
-    }
+    const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
 
     const notes = [
       tabNote({
@@ -207,11 +203,8 @@ const AnnotationTests = {
     ctx.strokeStyle = '#221';
     const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
-    function annotation(text: string) {
-      return new Annotation(text)
-        .setFont('Times', FONT_SIZE)
-        .setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
-    }
+    const annotation = (text: string) =>
+      new Annotation(text).setFont('Times', FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
 
     const notes = [
       staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
@@ -263,22 +256,21 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function annotation(text: string, hJustification: number, vJustification: number) {
-      return new Annotation(text)
+    const annotation = (text: string, hJustification: number, vJustification: number) =>
+      new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
         .setVerticalJustification(vJustification);
-    }
 
     for (let v = 1; v <= 4; ++v) {
       const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
-      const notes = [];
-
-      notes.push(staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, annotation('Text', 1, v)));
-      notes.push(staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, annotation('Text', 2, v)));
-      notes.push(staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)));
-      notes.push(staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)));
+      const notes = [
+        staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, annotation('Text', 1, v)),
+        staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, annotation('Text', 2, v)),
+        staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)),
+        staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)),
+      ];
 
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
@@ -292,31 +284,20 @@ const AnnotationTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function annotation(text: string, hJustification: number, vJustification: number) {
-      return new Annotation(text)
+    const annotation = (text: string, hJustification: number, vJustification: number) =>
+      new Annotation(text)
         .setFont('Arial', FONT_SIZE)
         .setJustification(hJustification)
         .setVerticalJustification(vJustification);
-    }
 
     for (let v = 1; v <= 4; ++v) {
       const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
-
-      const notes = [];
-
-      notes.push(
-        staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 1, v))
-      );
-      notes.push(
-        staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 2, v))
-      );
-      notes.push(
-        staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 3, v))
-      );
-      notes.push(
-        staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v))
-      );
-
+      const notes = [
+        staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 1, v)),
+        staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 2, v)),
+        staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 3, v)),
+        staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v)),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
@@ -396,6 +377,8 @@ const AnnotationTests = {
     voice.addTickables(notes1);
     voice.addTickables(notes2);
     voice.addTickables(notes3);
+    // Alternatively, you could add all the notes in one big array with spread syntax.
+    // voice.addTickables([...notes1, ...notes2, ...notes3]);
 
     new Formatter().joinVoices([voice]).formatToStave([voice], stave);
 

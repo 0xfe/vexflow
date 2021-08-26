@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 // TODO: Beam has a "private readonly stem_direction" without an accessor.
-// TODO: Factory.Beam()'s 'notes' param is a StemmableNote[], but we only have access to Tickable[].
+// TODO: Factory.Beam()'s 'notes' argument is a StemmableNote[], but we only have access to Tickable[].
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';

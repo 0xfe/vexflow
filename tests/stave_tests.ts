@@ -6,6 +6,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Stave.setText()'s third arg needs to be Partial<T> or have more optional fields.
+// TODO: Like Stave.setTempo(t: StaveTempoOptions, ...), Stave.setText(...) could declare an interface called StaveTextOptions.
+//       This helps developers because they can use the named type in their code for type checking.
+// TODO: Stave.drawVerticalBar() only accepts one arg, but we pass in a second (boolean).
+//       Stave.drawVertical() requires two args, but we only pass in one. The second is a boolean. Did we mix up something?
+// TODO: Stave.setEndTimeSignature()'s second arg should be optional.
+// TODO: VoltaType.BEGIN_MID is used, but doesn't exist. Did it exist in the past?
+// TODO: Stave.setConfigForLines(lines_configuration: StaveLineConfig[])'s comment (and our test case) shows that null is a valid option in the array.
+//       Should we change it to undefined? Or should the type be (StaveLineConfig | null)[] instead?
+// TODO: In the this.drawTempo test case, Stave.setTempo(...) receives incomplete options, so it should probably take a Partial<T>.
+//       Additionally, it receives an unexpected option note: '8'.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Accidental } from 'accidental';
@@ -15,18 +27,20 @@ import { Formatter } from 'formatter';
 import { KeySignature } from 'keysignature';
 import { Modifier } from 'modifier';
 import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
+import { Barline, BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { Repetition } from 'staverepetition';
-import { Volta } from 'stavevolta';
-import { TextNote } from 'textnote';
+import { Volta, VoltaType } from 'stavevolta';
+import { Justification } from 'textnote';
 import { TimeSignature } from 'timesignature';
+import { StaveModifier } from 'stavemodifier';
+import { StaveTempoOptions } from 'stavetempo';
 
 const StaveTests = {
   Start(): void {
     QUnit.module('Stave');
-    const run = VexFlowTests.runTests;
     test('StaveModifiers SortByCategory', this.sortByCategory);
+    const run = VexFlowTests.runTests;
     run('Stave Draw Test', this.draw);
     run('Open Stave Draw Test', this.drawOpenStave);
     run('Vertical Bar Test', this.drawVerticalBar);
@@ -54,25 +68,26 @@ const StaveTests = {
     const key0 = new KeySignature('G');
     const key1 = new KeySignature('F');
     const key2 = new KeySignature('D');
-    const bar0 = new Barline(Barline.type.SINGLE);
-    const bar1 = new Barline(Barline.type.DOUBLE);
-    const bar2 = new Barline(Barline.type.NONE);
+    const bar0 = new Barline(BarlineType.SINGLE);
+    const bar1 = new Barline(BarlineType.DOUBLE);
+    const bar2 = new Barline(BarlineType.NONE);
     const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
     const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
 
-    const sortAndCompare = function (title, arr, arr2, order) {
-      stave.sortByCategory(arr, order);
+    const sortAndCompare = (title: string, a: StaveModifier[], b: StaveModifier[], order: Record<string, number>) => {
+      stave.sortByCategory(a, order);
 
+      // Verify that the two arrays are identical.
       let isSame = true;
-      arr2.forEach(function (modifier, i) {
-        if (modifier !== arr[i]) isSame = false;
-      });
-
+      if (a.length !== b.length) isSame = false;
+      for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) isSame = false;
+      }
       ok(isSame, title);
     };
 
     sortAndCompare(
-      'Keep the original order',
+      'Keep the original order 1',
       [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
       [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
       order0
@@ -84,7 +99,7 @@ const StaveTests = {
       order1
     );
     sortAndCompare(
-      'Sort and keep',
+      'Sort and keep 1',
       [bar0, bar1, clef0, clef1, key0, key1, time0, time1],
       [time0, time1, key0, key1, bar0, bar1, clef0, clef1],
       order1
@@ -151,8 +166,8 @@ const StaveTests = {
 
     // bar 1
     const staveBar1 = new Stave(10, 50, 200);
-    staveBar1.setBegBarType(Barline.type.REPEAT_BEGIN);
-    staveBar1.setEndBarType(Barline.type.DOUBLE);
+    staveBar1.setBegBarType(BarlineType.REPEAT_BEGIN);
+    staveBar1.setEndBarType(BarlineType.DOUBLE);
     staveBar1.setSection('A', 0);
     staveBar1.addClef('treble').setContext(ctx).draw();
     const notesBar1 = [
@@ -166,9 +181,9 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 300);
+    const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 300);
     staveBar2.setSection('B', 0);
-    staveBar2.setEndBarType(Barline.type.END);
+    staveBar2.setEndBarType(BarlineType.END);
     staveBar2.setContext(ctx).draw();
 
     const notesBar2_part1 = [
@@ -206,8 +221,8 @@ const StaveTests = {
 
     // bar 1
     const staveBar1 = new Stave(10, 0, 250);
-    staveBar1.setBegBarType(Barline.type.REPEAT_BEGIN);
-    staveBar1.setEndBarType(Barline.type.REPEAT_END);
+    staveBar1.setBegBarType(BarlineType.REPEAT_BEGIN);
+    staveBar1.setEndBarType(BarlineType.REPEAT_END);
     staveBar1.addClef('treble');
     staveBar1.addKeySignature('A');
     staveBar1.setContext(ctx).draw();
@@ -222,9 +237,9 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
 
     // bar 2 - juxtaposing second bar next to first bar
-    const staveBar2 = new Stave(staveBar1.width + staveBar1.x, staveBar1.y, 250);
-    staveBar2.setBegBarType(Barline.type.REPEAT_BEGIN);
-    staveBar2.setEndBarType(Barline.type.REPEAT_END);
+    const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 250);
+    staveBar2.setBegBarType(BarlineType.REPEAT_BEGIN);
+    staveBar2.setEndBarType(BarlineType.REPEAT_END);
     staveBar2.setContext(ctx).draw();
 
     const notesBar2_part1 = [
@@ -256,7 +271,7 @@ const StaveTests = {
     beam2.setContext(ctx).draw();
 
     // bar 3 - juxtaposing third bar next to second bar
-    const staveBar3 = new Stave(staveBar2.width + staveBar2.x, staveBar2.y, 50);
+    const staveBar3 = new Stave(staveBar2.getWidth() + staveBar2.getX(), staveBar2.getY(), 50);
     staveBar3.setContext(ctx).draw();
     const notesBar3 = [new StaveNote({ keys: ['d/5'], duration: 'wr' })];
 
@@ -264,9 +279,13 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
 
     // bar 4 - juxtaposing third bar next to third bar
-    const staveBar4 = new Stave(staveBar3.width + staveBar3.x, staveBar3.y, 250 - staveBar1.getModifierXShift());
-    staveBar4.setBegBarType(Barline.type.REPEAT_BEGIN);
-    staveBar4.setEndBarType(Barline.type.REPEAT_END);
+    const staveBar4 = new Stave(
+      staveBar3.getWidth() + staveBar3.getX(),
+      staveBar3.getY(),
+      250 - staveBar1.getModifierXShift()
+    );
+    staveBar4.setBegBarType(BarlineType.REPEAT_BEGIN);
+    staveBar4.setEndBarType(BarlineType.REPEAT_END);
     staveBar4.setContext(ctx).draw();
     const notesBar4 = [
       new StaveNote({ keys: ['c/4'], duration: 'q' }),
@@ -287,8 +306,12 @@ const StaveTests = {
     let x = 10;
     let y = 0;
 
-    function drawAStaves(endBarLine) {
-      function drawAStave(ctx, x, y, width, begMods, endMods) {
+    const ctx = contextBuilder(options.elementId, 800, 700);
+
+    function drawStavesInTwoLines(endBarLine: BarlineType) {
+      // Draw a stave with one measure. Change the ending modifiers.
+      // eslint-disable-next-line
+      function drawStave(x: number, y: number, width: number, begMods: any, endMods: any) {
         const staveBar = new Stave(x, y, width - 10);
         if (begMods) {
           if (begMods.barLine !== undefined) {
@@ -331,123 +354,71 @@ const StaveTests = {
         Formatter.FormatAndDraw(ctx, staveBar, notesBar);
       }
 
-      drawAStave(
-        ctx,
+      drawStave(
         x,
         y,
         staveWidth + 50,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-          clef: 'treble',
-          keySig: 'A',
-        },
-        {
-          barLine: endBarLine,
-          clef: 'bass',
-        }
+        { barLine: BarlineType.REPEAT_BEGIN, clef: 'treble', keySig: 'A' },
+        { barLine: endBarLine, clef: 'bass' }
       );
       x += staveWidth + 50;
 
-      drawAStave(
-        ctx,
-        x,
-        y,
-        staveWidth,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-        },
-        {
-          barLine: endBarLine,
-          keySig: 'E',
-        }
-      );
+      drawStave(x, y, staveWidth, { barLine: BarlineType.REPEAT_BEGIN }, { barLine: endBarLine, keySig: 'E' });
       x += staveWidth;
 
-      drawAStave(
-        ctx,
-        x,
-        y,
-        staveWidth,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-        },
-        {
-          barLine: endBarLine,
-          timeSig: '2/4',
-        }
-      );
+      drawStave(x, y, staveWidth, { barLine: BarlineType.REPEAT_BEGIN }, { barLine: endBarLine, timeSig: '2/4' });
       x += staveWidth;
 
       x = 10;
       y += blockHeight;
 
-      drawAStave(
-        ctx,
+      drawStave(
         x,
         y,
         staveWidth,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-        },
-        {
-          barLine: endBarLine,
-          clef: 'bass',
-          timeSig: '2/4',
-        }
+        { barLine: BarlineType.REPEAT_BEGIN },
+        { barLine: endBarLine, clef: 'bass', timeSig: '2/4' }
       );
       x += staveWidth;
 
-      drawAStave(
-        ctx,
+      drawStave(
         x,
         y,
         staveWidth,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-        },
-        {
-          barLine: endBarLine,
-          clef: 'treble',
-          keySig: 'Ab',
-        }
+        { barLine: BarlineType.REPEAT_BEGIN },
+        { barLine: endBarLine, clef: 'treble', keySig: 'Ab' }
       );
       x += staveWidth;
 
-      drawAStave(
-        ctx,
+      drawStave(
         x,
         y,
         staveWidth,
-        {
-          barLine: Barline.type.REPEAT_BEGIN,
-        },
-        {
-          barLine: endBarLine,
-          clef: 'bass',
-          keySig: 'Ab',
-          timeSig: '2/4',
-        }
+        { barLine: BarlineType.REPEAT_BEGIN },
+        { barLine: endBarLine, clef: 'bass', keySig: 'Ab', timeSig: '2/4' }
       );
       x += staveWidth;
     }
 
-    const ctx = contextBuilder(options.elementId, 800, 700);
-
     y = 0;
     x = 10;
-    drawAStaves(Barline.type.SINGLE);
+    // First pair of staves.
+    drawStavesInTwoLines(BarlineType.SINGLE);
 
     y += blockHeight + 10;
     x = 10;
-    drawAStaves(Barline.type.DOUBLE);
+    // Second pair of staves, with double barlines.
+    drawStavesInTwoLines(BarlineType.DOUBLE);
 
     y += blockHeight + 10;
     x = 10;
-    drawAStaves(Barline.type.REPEAT_END);
+    // Third pair of staves, with "two dot" repeat barlines.
+    drawStavesInTwoLines(BarlineType.REPEAT_END);
 
     y += blockHeight + 10;
     x = 10;
-    drawAStaves(Barline.type.REPEAT_BOTH);
+    // Fourth pair of staves, with "two dots" on each side of the barlines.
+    drawStavesInTwoLines(BarlineType.REPEAT_BOTH);
   },
 
   drawVoltaTest(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -458,7 +429,7 @@ const StaveTests = {
 
     // bar 1
     const mm1 = new Stave(10, 50, 125);
-    mm1.setBegBarType(Barline.type.REPEAT_BEGIN);
+    mm1.setBegBarType(BarlineType.REPEAT_BEGIN);
     mm1.setRepetitionTypeLeft(Repetition.type.SEGNO_LEFT, -18);
     mm1.addClef('treble');
     mm1.addKeySignature('A');
@@ -470,7 +441,7 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm1, notesmm1);
 
     // bar 2 - juxtapose second measure
-    const mm2 = new Stave(mm1.width + mm1.x, mm1.y, 60);
+    const mm2 = new Stave(mm1.getWidth() + mm1.getX(), mm1.getY(), 60);
     mm2.setRepetitionTypeRight(Repetition.type.CODA_RIGHT, 0);
     mm2.setMeasure(2);
     mm2.setContext(ctx).draw();
@@ -479,8 +450,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm2, notesmm2);
 
     // bar 3 - juxtapose third measure
-    const mm3 = new Stave(mm2.width + mm2.x, mm1.y, 60);
-    mm3.setVoltaType(Volta.type.BEGIN, '1.', -5);
+    const mm3 = new Stave(mm2.getWidth() + mm2.getX(), mm1.getY(), 60);
+    mm3.setVoltaType(VoltaType.BEGIN, '1.', -5);
     mm3.setMeasure(3);
     mm3.setContext(ctx).draw();
     const notesmm3 = [new StaveNote({ keys: ['e/4'], duration: 'w' })];
@@ -488,8 +459,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm3, notesmm3);
 
     // bar 4 - juxtapose fourth measure
-    const mm4 = new Stave(mm3.width + mm3.x, mm1.y, 60);
-    mm4.setVoltaType(Volta.type.MID, '', -5);
+    const mm4 = new Stave(mm3.getWidth() + mm3.getX(), mm1.getY(), 60);
+    mm4.setVoltaType(VoltaType.MID, '', -5);
     mm4.setMeasure(4);
     mm4.setContext(ctx).draw();
     const notesmm4 = [new StaveNote({ keys: ['f/4'], duration: 'w' })];
@@ -497,9 +468,9 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm4, notesmm4);
 
     // bar 5 - juxtapose fifth measure
-    const mm5 = new Stave(mm4.width + mm4.x, mm1.y, 60);
-    mm5.setEndBarType(Barline.type.REPEAT_END);
-    mm5.setVoltaType(Volta.type.END, '', -5);
+    const mm5 = new Stave(mm4.getWidth() + mm4.getX(), mm1.getY(), 60);
+    mm5.setEndBarType(BarlineType.REPEAT_END);
+    mm5.setVoltaType(VoltaType.END, '', -5);
     mm5.setMeasure(5);
     mm5.setContext(ctx).draw();
     const notesmm5 = [new StaveNote({ keys: ['g/4'], duration: 'w' })];
@@ -507,9 +478,9 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm5, notesmm5);
 
     // bar 6 - juxtapose sixth measure
-    const mm6 = new Stave(mm5.width + mm5.x, mm1.y, 60);
-    mm6.setVoltaType(Volta.type.BEGIN_END, '2.', -5);
-    mm6.setEndBarType(Barline.type.DOUBLE);
+    const mm6 = new Stave(mm5.getWidth() + mm5.getX(), mm1.getY(), 60);
+    mm6.setVoltaType(VoltaType.BEGIN_END, '2.', -5);
+    mm6.setEndBarType(BarlineType.DOUBLE);
     mm6.setMeasure(6);
     mm6.setContext(ctx).draw();
     const notesmm6 = [new StaveNote({ keys: ['a/4'], duration: 'w' })];
@@ -517,7 +488,7 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm6, notesmm6);
 
     // bar 7 - juxtapose seventh measure
-    const mm7 = new Stave(mm6.width + mm6.x, mm1.y, 60);
+    const mm7 = new Stave(mm6.getWidth() + mm6.getX(), mm1.getY(), 60);
     mm7.setMeasure(7);
     mm7.setSection('B', 0);
     mm7.setContext(ctx).draw();
@@ -526,8 +497,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm7, notesmm7);
 
     // bar 8 - juxtapose eighth measure
-    const mm8 = new Stave(mm7.width + mm7.x, mm1.y, 60);
-    mm8.setEndBarType(Barline.type.DOUBLE);
+    const mm8 = new Stave(mm7.getWidth() + mm7.getX(), mm1.getY(), 60);
+    mm8.setEndBarType(BarlineType.DOUBLE);
     mm8.setRepetitionTypeRight(Repetition.type.DS_AL_CODA, 25);
     mm8.setMeasure(8);
     mm8.setContext(ctx).draw();
@@ -536,8 +507,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm8, notesmm8);
 
     // bar 9 - juxtapose ninth measure
-    const mm9 = new Stave(mm8.width + mm8.x + 20, mm1.y, 125);
-    mm9.setEndBarType(Barline.type.END);
+    const mm9 = new Stave(mm8.getWidth() + mm8.getX() + 20, mm1.getY(), 125);
+    mm9.setEndBarType(BarlineType.END);
     mm9.setRepetitionTypeLeft(Repetition.type.CODA_LEFT, 25);
     mm9.addClef('treble');
     mm9.addKeySignature('A');
@@ -557,8 +528,8 @@ const StaveTests = {
 
     // bar 1: volta begin, with modifiers (clef, keysignature)
     const mm1 = new Stave(10, 50, 175);
-    mm1.setBegBarType(Barline.type.REPEAT_BEGIN);
-    mm1.setVoltaType(Volta.type.BEGIN_END, '1.', -5);
+    mm1.setBegBarType(BarlineType.REPEAT_BEGIN);
+    mm1.setVoltaType(VoltaType.BEGIN_END, '1.', -5);
     mm1.addClef('treble');
     mm1.addKeySignature('A');
     mm1.setMeasure(1);
@@ -569,8 +540,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm1, notesmm1);
 
     // bar 2: volta begin_mid, with modifiers (clef, keysignature)
-    const mm2 = new Stave(mm1.x + mm1.width, mm1.y, 175);
-    mm2.setBegBarType(Barline.type.REPEAT_BEGIN);
+    const mm2 = new Stave(mm1.getX() + mm1.getWidth(), mm1.getY(), 175);
+    mm2.setBegBarType(BarlineType.REPEAT_BEGIN);
     mm2.setRepetitionTypeRight(Repetition.type.DS, 25);
     mm2.setVoltaType(Volta.type.BEGIN_MID, '2.', -5);
     mm2.addClef('treble');
@@ -581,8 +552,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm2, notesmm2);
 
     // bar 3: volta mid, with modifiers (clef, keysignature)
-    const mm3 = new Stave(mm2.x + mm2.width, mm2.y, 175);
-    mm3.setVoltaType(Volta.type.MID, '', -5);
+    const mm3 = new Stave(mm2.getX() + mm2.getWidth(), mm2.getY(), 175);
+    mm3.setVoltaType(VoltaType.MID, '', -5);
     mm3.setRepetitionTypeRight(Repetition.type.DS, 25);
     mm3.addClef('treble');
     mm3.addKeySignature('B');
@@ -593,8 +564,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm3, notesmm3);
 
     // bar 4: volta end, with modifiers (clef, keysignature)
-    const mm4 = new Stave(mm3.x + mm3.width, mm3.y, 175);
-    mm4.setVoltaType(Volta.type.END, '1.', -5);
+    const mm4 = new Stave(mm3.getX() + mm3.getWidth(), mm3.getY(), 175);
+    mm4.setVoltaType(VoltaType.END, '1.', -5);
     mm4.setRepetitionTypeRight(Repetition.type.DS, 25);
     mm4.addClef('treble');
     mm4.addKeySignature('A');
@@ -605,9 +576,9 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm4, notesmm4);
 
     // bar 5: d.s. shift (similar potential x-shift concern)
-    const mm5 = new Stave(mm4.x + mm4.width, mm4.y, 175);
-    // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.x + mm4.width, 50), StaveModifier.Position.RIGHT);
-    mm5.setEndBarType(Barline.type.DOUBLE);
+    const mm5 = new Stave(mm4.getX() + mm4.getWidth(), mm4.getY(), 175);
+    // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
+    mm5.setEndBarType(BarlineType.DOUBLE);
     mm5.setRepetitionTypeRight(Repetition.type.DS, 25);
     mm5.addClef('treble');
     mm5.addKeySignature('A');
@@ -618,8 +589,8 @@ const StaveTests = {
     Formatter.FormatAndDraw(ctx, mm5, notesmm5);
 
     // bar 6: d.s. without modifiers
-    const mm6 = new Stave(mm5.x + mm5.width, mm5.y, 175);
-    // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.x + mm4.width, 50), StaveModifier.Position.RIGHT);
+    const mm6 = new Stave(mm5.getX() + mm5.getWidth(), mm5.getY(), 175);
+    // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
     mm6.setRepetitionTypeRight(Repetition.type.DS, 25);
     mm6.setMeasure(6);
     mm6.setSection('E', 0);
@@ -636,7 +607,12 @@ const StaveTests = {
     let x = 0;
     let y = 50;
 
-    function drawTempoStaveBar(width, tempo, tempo_y, notes) {
+    function drawTempoStaveBar(
+      width: number,
+      tempo: /* Partial<StaveTempoOptions> */ StaveTempoOptions,
+      tempo_y: number,
+      notes?: StaveNote[]
+    ) {
       const staveBar = new Stave(padding + x, y, width);
       if (x === 0) staveBar.addClef('treble');
       staveBar.setTempo(tempo, tempo_y);
@@ -747,14 +723,8 @@ const StaveTests = {
     stave.setText('2nd line', Modifier.Position.RIGHT, { shift_y: 10 });
     stave.setText('Above Text', Modifier.Position.ABOVE, { shift_y: -10 });
     stave.setText('2nd line', Modifier.Position.ABOVE, { shift_y: 10 });
-    stave.setText('Left Below Text', Modifier.Position.BELOW, {
-      shift_y: -10,
-      justification: TextNote.Justification.LEFT,
-    });
-    stave.setText('Right Below Text', Modifier.Position.BELOW, {
-      shift_y: 10,
-      justification: TextNote.Justification.RIGHT,
-    });
+    stave.setText('Left Below Text', Modifier.Position.BELOW, { shift_y: -10, justification: Justification.LEFT });
+    stave.setText('Right Below Text', Modifier.Position.BELOW, { shift_y: 10, justification: Justification.RIGHT });
     stave.setContext(ctx).draw();
 
     ok(true, 'all pass');
@@ -770,4 +740,5 @@ const StaveTests = {
     ok(true, 'all pass');
   },
 };
+
 export { StaveTests };

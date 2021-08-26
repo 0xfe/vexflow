@@ -96,7 +96,7 @@ const ThreeVoicesTests = {
         [f.TextNote({ text: measureTitle, line: -1, duration: '1', smooth: true })],
       ];
 
-      const voices = noteArrays.map((notes: Note[]) => score.voice(notes));
+      const voices = noteArrays.map((notes) => score.voice(notes));
 
       beams = beams.concat(Beam.applyAndGetBeams(voices[0], 1)).concat(Beam.applyAndGetBeams(voices[1], -1));
 

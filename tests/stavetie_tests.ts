@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 // TODO: "to: null" and "from: null" do not match the declared types in the factory.StaveTie(params) method.
-// Change null => undefined?
+//       Change null => undefined?
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BuilderOptions } from 'easyscore';

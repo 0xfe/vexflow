@@ -45,7 +45,7 @@ const BoundingBoxTests = {
       },
     ];
 
-    tests.forEach(function (test) {
+    tests.forEach((test) => {
       const type = test.type;
       const bb1 = test.bb1;
       const bb2 = test.bb2;

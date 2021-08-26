@@ -959,7 +959,7 @@ const AccidentalTests = {
 
     Formatter.SimpleFormat(notes);
 
-    notes.forEach(function (n, i) {
+    notes.forEach((n, i) => {
       ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
       n.getAccidentals().forEach((accid: Accidental, i: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
@@ -988,6 +988,6 @@ function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: Render
   VexFlowTests.plotNoteWidth(ctx, note1, 180);
   VexFlowTests.plotNoteWidth(ctx, note2, 15);
 }
-//#endregion
+//#endregion Helper Functions
 
 export { AccidentalTests };

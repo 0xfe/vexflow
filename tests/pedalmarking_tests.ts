@@ -71,22 +71,17 @@ function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => v
   };
 }
 
-function withSimplePedal(style: string) {
-  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
-    factory.PedalMarking({
-      notes: [notes0[0], notes0[2], notes0[3], notes1[3]],
-      options: { style },
-    });
-}
+const withSimplePedal = (style: string) => (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+  factory.PedalMarking({
+    notes: [notes0[0], notes0[2], notes0[3], notes1[3]],
+    options: { style },
+  });
 
-function withReleaseAndDepressedPedal(style: string) {
-  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
-    factory.PedalMarking({
-      notes: [notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]],
-      options: { style },
-    });
-}
-
+const withReleaseAndDepressedPedal = (style: string) => (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+  factory.PedalMarking({
+    notes: [notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]],
+    options: { style },
+  });
 //#endregion Helper Functions
 
 export { PedalMarkingTests };

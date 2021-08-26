@@ -30,8 +30,9 @@ const FormatterTests = {
     test('TickContext Building', this.buildTickContexts);
 
     const runTests = VexFlowTests.runTests;
+    // TODO: Why do we just do VexFlowTests.runSVGTest here?
+    // Why not use VexFlowTests.runTests like in all other tests? It would be more consistent.
     const runSVG = VexFlowTests.runSVGTest;
-    // TODO: Why do we just do VexFlowTests.runSVGTest? Why not use VexFlowTests.runTests like in all other tests? It would be more consistent.
     runSVG('Notehead padding', this.noteHeadPadding);
     runSVG('Justification and alignment with accidentals', this.accidentalJustification);
     runSVG('Long measure taking full space', this.longMeasureProblems);

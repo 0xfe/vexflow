@@ -50,7 +50,7 @@ const TabSlideTests = {
 };
 
 //#region Helper Functions
-const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
+const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
 
 function tieNotes(notes: TabNote[], indices: number[], stave: TabStave, ctx: RenderContext): void {
   const voice = new Voice(Flow.TIME4_4);
@@ -86,7 +86,7 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
 }
 
 function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide): void {
-  const c = setupContext(options, 440);
+  const { context, stave } = setupContext(options, 440);
 
   const notes = [
     tabNote({ positions: [{ str: 4, fret: 4 }], duration: '8' }),
@@ -125,7 +125,7 @@ function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide
 
   const voice = new Voice(Flow.TIME4_4).addTickables(notes);
   new Formatter().joinVoices([voice]).format([voice], 300);
-  voice.draw(c.context, c.stave);
+  voice.draw(context, stave);
 
   tabSlide({
     first_note: notes[0],
@@ -133,7 +133,7 @@ function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide
     first_indices: [0],
     last_indices: [0],
   })
-    .setContext(c.context)
+    .setContext(context)
     .draw();
 
   ok(true, 'Single note');
@@ -144,7 +144,7 @@ function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide
     first_indices: [0, 1],
     last_indices: [0, 1],
   })
-    .setContext(c.context)
+    .setContext(context)
     .draw();
 
   ok(true, 'Chord');
@@ -155,7 +155,7 @@ function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide
     first_indices: [0],
     last_indices: [0],
   })
-    .setContext(c.context)
+    .setContext(context)
     .draw();
 
   ok(true, 'Single note high-fret');
@@ -166,7 +166,7 @@ function multiTest(options: TestOptions, tabSlide: (notes: TieNotes) => TabSlide
     first_indices: [0, 1],
     last_indices: [0, 1],
   })
-    .setContext(c.context)
+    .setContext(context)
     .draw();
 
   ok(true, 'Chord high-fret');

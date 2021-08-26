@@ -6,7 +6,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// ChordSymbol methods addGlyphOrText(), addLine(), addText()) need their second params to be optional.
+// ChordSymbol methods addGlyphOrText(), addLine(), addText()) need their second arguments to be optional.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
@@ -36,61 +36,47 @@ const ChordSymbolTests = {
     ctx.strokeStyle = '#221';
 
     function draw(chords: ChordSymbol[], y: number) {
-      const notes = [];
-
       const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
 
-      notes.push(note(['C/4'], 'q', chords[0]));
-      notes.push(note(['C/4'], 'q', chords[1]));
-      notes.push(note(['C/4'], 'q', chords[2]));
-      notes.push(note(['C/4'], 'q', chords[3]));
+      const notes = [
+        note(['C/4'], 'q', chords[0]),
+        note(['C/4'], 'q', chords[1]),
+        note(['C/4'], 'q', chords[2]),
+        note(['C/4'], 'q', chords[3]),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
-    let chords = [];
-    chords.push(f.ChordSymbol().addText('A').addGlyphSuperscript('dim').setReportWidth(false));
-
-    chords.push(f.ChordSymbol({ kerning: false, reportWidth: false }).addText('A').addGlyphSuperscript('dim'));
-
-    chords.push(
-      f.ChordSymbol({ hJustify: 'left', reportWidth: false }).addText('C').addGlyph('halfDiminished', superscript)
-    );
-
-    chords.push(f.ChordSymbol({ reportWidth: false }).addText('D').addGlyph('halfDiminished', superscript));
-
+    let chords = [
+      f.ChordSymbol().addText('A').addGlyphSuperscript('dim').setReportWidth(false),
+      f.ChordSymbol({ kerning: false, reportWidth: false }).addText('A').addGlyphSuperscript('dim'),
+      f.ChordSymbol({ hJustify: 'left', reportWidth: false }).addText('C').addGlyph('halfDiminished', superscript),
+      f.ChordSymbol({ reportWidth: false }).addText('D').addGlyph('halfDiminished', superscript),
+    ];
     draw(chords, 10);
 
-    chords = [];
-    chords.push(f.ChordSymbol().addText('A').addGlyphSuperscript('dim'));
-
-    chords.push(f.ChordSymbol({ kerning: false }).addText('A').addGlyphSuperscript('dim'));
-
-    chords.push(f.ChordSymbol().addText('A').addGlyphSuperscript('+').addTextSuperscript('5'));
-
-    chords.push(f.ChordSymbol().addText('G').addGlyphSuperscript('+').addTextSuperscript('5'));
-
+    chords = [
+      f.ChordSymbol().addText('A').addGlyphSuperscript('dim'),
+      f.ChordSymbol({ kerning: false }).addText('A').addGlyphSuperscript('dim'),
+      f.ChordSymbol().addText('A').addGlyphSuperscript('+').addTextSuperscript('5'),
+      f.ChordSymbol().addText('G').addGlyphSuperscript('+').addTextSuperscript('5'),
+    ];
     draw(chords, 110);
 
-    chords = [];
-    chords.push(f.ChordSymbol().addText('A').addGlyph('-'));
-
-    chords.push(f.ChordSymbol().addText('E').addGlyph('-'));
-
-    chords.push(f.ChordSymbol().addText('A').addGlyphOrText('(#11)', superscript));
-
-    chords.push(f.ChordSymbol().addText('E').addGlyphOrText('(#9)', superscript));
-
+    chords = [
+      f.ChordSymbol().addText('A').addGlyph('-'),
+      f.ChordSymbol().addText('E').addGlyph('-'),
+      f.ChordSymbol().addText('A').addGlyphOrText('(#11)', superscript),
+      f.ChordSymbol().addText('E').addGlyphOrText('(#9)', superscript),
+    ];
     draw(chords, 210);
 
-    chords = [];
-    chords.push(f.ChordSymbol().addGlyphOrText('F/B').addGlyphOrText('b', superscript));
-
-    chords.push(f.ChordSymbol().addText('E').addGlyphOrText('V/V'));
-
-    chords.push(f.ChordSymbol().addText('A').addGlyphOrText('(#11)', superscript));
-
-    chords.push(f.ChordSymbol().addText('E').addGlyphOrText('(#9)', superscript));
-
+    chords = [
+      f.ChordSymbol().addGlyphOrText('F/B').addGlyphOrText('b', superscript),
+      f.ChordSymbol().addText('E').addGlyphOrText('V/V'),
+      f.ChordSymbol().addText('A').addGlyphOrText('(#11)', superscript),
+      f.ChordSymbol().addText('E').addGlyphOrText('(#9)', superscript),
+    ];
     draw(chords, 310);
 
     ok(true, 'Chord Symbol Kerning Tests');
@@ -103,13 +89,12 @@ const ChordSymbolTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function draw(c1, c2, y) {
-      const notes = [];
-
+    function draw(c1: ChordSymbol, c2: ChordSymbol, y: number) {
       const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
-
-      notes.push(note(['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new Accidental('b')));
-      notes.push(note(['c/4', 'e/4', 'b/4'], 'h', c2));
+      const notes = [
+        note(['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new Accidental('b')),
+        note(['c/4', 'e/4', 'b/4'], 'h', c2),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
@@ -154,15 +139,14 @@ const ChordSymbolTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function draw(chords, y) {
-      const notes = [];
-
+    function draw(chords: ChordSymbol[], y: number) {
       const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
-
-      notes.push(note(['c/4'], 'q', chords[0]));
-      notes.push(note(['c/4'], 'q', chords[1]));
-      notes.push(note(['c/4'], 'q', chords[2]));
-      notes.push(note(['c/4'], 'q', chords[3]));
+      const notes = [
+        note(['c/4'], 'q', chords[0]),
+        note(['c/4'], 'q', chords[1]),
+        note(['c/4'], 'q', chords[2]),
+        note(['c/4'], 'q', chords[3]),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
@@ -232,11 +216,12 @@ const ChordSymbolTests = {
     );
     draw(chords, 140);
 
-    chords = [];
-    chords.push(f.ChordSymbol({ fontSize: 10 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript));
-    chords.push(f.ChordSymbol({ fontSize: 14 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript));
-    chords.push(f.ChordSymbol({ fontSize: 16 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript));
-    chords.push(f.ChordSymbol({ fontSize: 18 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript));
+    chords = [
+      f.ChordSymbol({ fontSize: 10 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript),
+      f.ChordSymbol({ fontSize: 14 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript),
+      f.ChordSymbol({ fontSize: 16 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript),
+      f.ChordSymbol({ fontSize: 18 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript),
+    ];
     draw(chords, 240);
 
     ok(true, 'Font Size Chord Symbol');
@@ -250,12 +235,12 @@ const ChordSymbolTests = {
     ctx.strokeStyle = '#221';
 
     function draw(chord1: ChordSymbol, chord2: ChordSymbol, y) {
-      const notes = [];
-
       const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
 
-      notes.push(note(['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new Accidental('b')));
-      notes.push(note(['c/4', 'e/4', 'B/4'], 'h', chord2));
+      const notes = [
+        note(['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new Accidental('b')),
+        note(['c/4', 'e/4', 'B/4'], 'h', chord2),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
@@ -299,33 +284,33 @@ const ChordSymbolTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function note(keys: string[], duration: string, chordSymbol1: ChordSymbol, chordSymbol2: ChordSymbol) {
-      return new StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
-    }
-
-    function draw(chords: ChordSymbol[], chords2: ChordSymbol[], y) {
-      const notes = [];
+    function draw(chords: ChordSymbol[], chords2: ChordSymbol[], y: number) {
+      // Helper function to create a StaveNote with two ChordSymbols attached.
+      const note = (keys: string[], duration: string, chordSymbol1: ChordSymbol, chordSymbol2: ChordSymbol) =>
+        new StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
 
       const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
-
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[0], chords2[0]));
-      notes.push(note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addAccidental(2, new Accidental('b')));
-      notes.push(note(['c/4', 'e/4', 'g/4'], 'q', chords[2], chords2[2]));
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addAccidental(1, new Accidental('#')));
+      const notes = [
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[0], chords2[0]),
+        note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addAccidental(2, new Accidental('b')),
+        note(['c/4', 'e/4', 'g/4'], 'q', chords[2], chords2[2]),
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addAccidental(1, new Accidental('#')),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
-    const chords1: ChordSymbol[] = [];
-    const chords2: ChordSymbol[] = [];
+    const chords1: ChordSymbol[] = [
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('I').addTextSuperscript('6').addTextSubscript('4'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('V'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addLine(12),
+      f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('V/V'),
+    ];
 
-    chords1.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('I').addTextSuperscript('6').addTextSubscript('4'));
-    chords1.push(f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('V'));
-    chords1.push(f.ChordSymbol({ vJustify: 'bottom' }).addLine(12));
-    chords1.push(f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('V/V'));
-
-    chords2.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('T'));
-    chords2.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('D'));
-    chords2.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('D'));
-    chords2.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('SD'));
+    const chords2: ChordSymbol[] = [
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('T'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('D'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('D'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('SD'),
+    ];
 
     draw(chords1, chords2, 10);
     ok(true, '2 Bottom Chord Symbol');
@@ -341,11 +326,12 @@ const ChordSymbolTests = {
     function draw(chords: ChordSymbol[], y: number) {
       const stave = new Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
 
-      const notes = [];
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[0]));
-      notes.push(note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')));
-      notes.push(note(['c/4', 'e/4', 'g/4'], 'q', chords[2]));
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')));
+      const notes = [
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[0]),
+        note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
+        note(['c/4', 'e/4', 'g/4'], 'q', chords[2]),
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
@@ -367,25 +353,27 @@ const ChordSymbolTests = {
     ctx.fillStyle = '#221';
     ctx.strokeStyle = '#221';
 
-    function note(keys: string[], duration: string, chordSymbol: ChordSymbol) {
-      return new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(chordSymbol, 0);
-    }
-
     function draw(chords: ChordSymbol[], y: number) {
+      // Helper function to create a StaveNote with a ChordSymbol and the stem pointing down.
+      const note = (keys: string[], duration: string, chordSymbol: ChordSymbol) =>
+        new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(chordSymbol, 0);
+
       const stave = new Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
-      const notes = [];
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[0]));
-      notes.push(note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')));
-      notes.push(note(['c/4', 'e/4', 'g/4'], 'q', chords[2]));
-      notes.push(note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')));
+      const notes = [
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[0]),
+        note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
+        note(['c/4', 'e/4', 'g/4'], 'q', chords[2]),
+        note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
+      ];
       Formatter.FormatAndDraw(ctx, stave, notes);
     }
 
-    const chords = [];
-    chords.push(f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('F'));
-    chords.push(f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('C7'));
-    chords.push(f.ChordSymbol({ vJustify: 'bottom' }).addLine(12));
-    chords.push(f.ChordSymbol({ vJustify: 'bottom' }).addText('A').addGlyphSuperscript('dim'));
+    const chords = [
+      f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('F'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addGlyphOrText('C7'),
+      f.ChordSymbol({ vJustify: 'bottom' }).addLine(12),
+      f.ChordSymbol({ vJustify: 'bottom' }).addText('A').addGlyphSuperscript('dim'),
+    ];
 
     draw(chords, 10);
     ok(true, 'Bottom Stem Down Chord Symbol');

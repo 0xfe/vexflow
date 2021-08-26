@@ -32,8 +32,6 @@ const RestsTests = {
 
   /**
    * Eight dotted rests, from whole to 128th.
-   * @param options
-   * @param contextBuilder
    */
   basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 700);
@@ -56,8 +54,6 @@ const RestsTests = {
 
   /**
    * Rests are intermixed within beamed notes (with the stems and beams at the top).
-   * @param options
-   * @param contextBuilder
    */
   beamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -94,9 +90,6 @@ const RestsTests = {
 
   /**
    * Rests are intermixed within beamed notes (with the stems and beams at the bottom).
-   *
-   * @param options
-   * @param contextBuilder
    */
   beamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -134,9 +127,6 @@ const RestsTests = {
   /**
    * Call setTupletLocation(Tuplet.LOCATION_TOP) to place the tuplet indicator (bracket and number) at the
    * top of the group of notes. Tuplet.LOCATION_TOP is the default, so this is optional.
-   *
-   * @param options
-   * @param contextBuilder
    */
   tupletsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -177,9 +167,6 @@ const RestsTests = {
   /**
    * Call setTupletLocation(Tuplet.LOCATION_BOTTOM) to place the tuplet indicator (bracket and number) at the
    * bottom of the group of notes.
-   *
-   * @param options
-   * @param contextBuilder
    */
   tupletsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -231,9 +218,6 @@ const RestsTests = {
    * By default rests are centered vertically within the stave, except
    * when they are inside a group of beamed notes (in which case they are
    * centered vertically within that group).
-   *
-   * @param options
-   * @param contextBuilder
    */
   singleVoiceDefaultAlignment(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -274,9 +258,6 @@ const RestsTests = {
   /**
    * The only difference between staveRestsAll() and staveRests() is that this test case
    * passes { align_rests: true } to Formatter.FormatAndDraw(...).
-   *
-   * @param options
-   * @param contextBuilder
    */
   singleVoiceAlignAll(options: TestOptions, contextBuilder: ContextBuilder): void {
     const { context, stave } = setupContext(options, contextBuilder, 600, 160);
@@ -319,9 +300,6 @@ const RestsTests = {
    * Multi Voice
    * The top voice shows quarter-note chords alternating with quarter rests.
    * The bottom voice shows two groups of beamed eighth notes, with eighth rests.
-   *
-   * @param options
-   * @param contextBuilder
    */
   multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void {
     const ctx = contextBuilder(options.elementId, 600, 200);

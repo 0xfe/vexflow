@@ -1,5 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+//
+// Bach Demo
 
 /* eslint-disable */
 // @ts-nocheck
@@ -22,13 +24,14 @@ const BachDemoTests = {
     const registry = new Registry();
     Registry.enableDefaultRegistry(registry);
 
-    function id(id: string): StaveNote {
-      return registry.getElementById(id) as StaveNote;
-    }
+    // Retrieve the element from the registry and cast to StaveNote, so we can call .addModifier() later.
+    const id = (id: string) => registry.getElementById(id) as StaveNote;
 
     const f: Factory = VexFlowTests.makeFactory(options, 1100, 900);
     const score = f.EasyScore({ throwOnError: true });
 
+    // Bind these three functions so the code looks cleaner.
+    // Instead of score.voice(...), just call voice(...).
     const voice = score.voice.bind(score);
     const notes = score.notes.bind(score);
     const beam = score.beam.bind(score);
@@ -36,7 +39,7 @@ const BachDemoTests = {
     let x = 120;
     let y = 80;
 
-    function makeSystem(width: number) {
+    function makeSystemAndAdvanceX(width: number) {
       const system = f.System({ x, y, width, spaceBetweenStaves: 10 });
       x += width;
       return system;
@@ -45,7 +48,7 @@ const BachDemoTests = {
     score.set({ time: '3/4' });
 
     /*  Measure 1 */
-    let system = makeSystem(220);
+    let system = makeSystemAndAdvanceX(220);
     system
       .addStave({
         voices: [
@@ -70,7 +73,7 @@ const BachDemoTests = {
     id('m1a').addModifier(f.Fingering({ number: '5' }), 0);
 
     /*  Measure 2 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({ voices: [voice(notes('D5/q[id="m2a"], G4[id="m2b"], G4[id="m2c"]'))] });
     system.addStave({ voices: [voice(notes('B3/h.', { clef: 'bass' }))] });
     system.addConnector('singleRight');
@@ -91,7 +94,7 @@ const BachDemoTests = {
     });
 
     /*  Measure 3 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({
       voices: [voice([notes('E5/q[id="m3a"]'), beam(notes('C5/8, D5, E5, F5', { stem: 'down' }))].reduce(concat))],
     });
@@ -101,7 +104,7 @@ const BachDemoTests = {
     system.addConnector('singleRight');
 
     /*  Measure 4 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({ voices: [voice(notes('G5/q[id="m4a"], G4[id="m4b"], G4[id="m4c"]'))] });
 
     system.addStave({ voices: [voice(notes('B3/h.', { clef: 'bass' }))] });
@@ -123,7 +126,7 @@ const BachDemoTests = {
     });
 
     /*  Measure 5 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({
       voices: [voice([notes('C5/q[id="m5a"]'), beam(notes('D5/8, C5, B4, A4', { stem: 'down' }))].reduce(concat))],
     });
@@ -133,7 +136,7 @@ const BachDemoTests = {
     system.addConnector('singleRight');
 
     /*  Measure 6 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({
       voices: [voice([notes('B4/q'), beam(notes('C5/8, B4, A4, G4[id="m6a"]', { stem: 'up' }))].reduce(concat))],
     });
@@ -159,7 +162,7 @@ const BachDemoTests = {
     x = 20;
     y += 230;
 
-    system = makeSystem(220);
+    system = makeSystemAndAdvanceX(220);
     system
       .addStave({
         voices: [
@@ -182,7 +185,7 @@ const BachDemoTests = {
     id('m7c').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
     /*  Measure 8 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     const grace = f.GraceNote({ keys: ['d/3'], clef: 'bass', duration: '8', slash: true });
 
     system.addStave({ voices: [voice(notes('A4/h.[id="m8c"]'))] });
@@ -215,7 +218,7 @@ const BachDemoTests = {
     f.StaveTie({ from: grace, to: id('m8c') });
 
     /*  Measure 9 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     system.addStave({
       voices: [
         score
@@ -230,7 +233,7 @@ const BachDemoTests = {
     id('m9a').addModifier(f.Fingering({ number: '5' }), 0);
 
     /*  Measure 10 */
-    system = makeSystem(170);
+    system = makeSystemAndAdvanceX(170);
     system.addStave({ voices: [voice(notes('D5/q[id="m10a"], G4[id="m10b"], G4[id="m10c"]'))] });
     system.addStave({ voices: [voice(notes('G3/q[id="m10d"], B3, G3', { clef: 'bass' }))] });
     system.addConnector('singleRight');
@@ -252,7 +255,7 @@ const BachDemoTests = {
     });
 
     /*  Measure 11 */
-    system = makeSystem(150);
+    system = makeSystemAndAdvanceX(150);
     system.addStave({
       voices: [voice([notes('E5/q[id="m11a"]'), beam(notes('C5/8, D5, E5, F5', { stem: 'down' }))].reduce(concat))],
     });
@@ -262,7 +265,7 @@ const BachDemoTests = {
     system.addConnector('singleRight');
 
     /*  Measure 12 */
-    system = makeSystem(170);
+    system = makeSystemAndAdvanceX(170);
     system.addStave({ voices: [voice(notes('G5/q[id="m12a"], G4[id="m12b"], G4[id="m12c"]'))] });
 
     system.addStave({
@@ -298,7 +301,7 @@ const BachDemoTests = {
     x = 20;
     y += 230;
 
-    system = makeSystem(220);
+    system = makeSystemAndAdvanceX(220);
     system
       .addStave({
         voices: [
@@ -324,7 +327,7 @@ const BachDemoTests = {
     id('m13c').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
     /*  Measure 14 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     system.addStave({
       voices: [
         score
@@ -340,7 +343,7 @@ const BachDemoTests = {
     id('m14b').addModifier(f.Fingering({ number: '1' }), 0);
 
     /*  Measure 15 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     system.addStave({
       voices: [
         score
@@ -356,7 +359,7 @@ const BachDemoTests = {
     id('m15b').addModifier(f.Fingering({ number: '2' }), 0);
 
     /*  Measure 16 */
-    system = makeSystem(130);
+    system = makeSystemAndAdvanceX(130);
     system
       .addStave({
         voices: [score.set({ clef: 'treble' }).voice([notes('g4/h.[id="m16a"]')].reduce(concat))],
@@ -385,7 +388,7 @@ const BachDemoTests = {
     });
 
     /* Measure 17 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     system
       .addStave({
         voices: [
@@ -405,7 +408,7 @@ const BachDemoTests = {
     id('m17a').addModifier(f.Fingering({ number: '5', position: 'above' }), 0);
 
     /* Measure 18 */
-    system = makeSystem(180);
+    system = makeSystemAndAdvanceX(180);
     system.addStave({
       voices: [
         score

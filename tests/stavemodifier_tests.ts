@@ -6,6 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: Make second argument to setEndTimeSignature(...) optional.
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
@@ -13,7 +15,7 @@ import { StaveModifier } from 'stavemodifier';
 import { ContextBuilder } from 'renderer';
 
 const StaveModifierTests = {
-  Start: function (): void {
+  Start(): void {
     QUnit.module('StaveModifier');
     const run = VexFlowTests.runTests;
     run('Stave Draw Test', this.draw);
@@ -60,7 +62,6 @@ const StaveModifierTests = {
     stave.setClef('treble');
     stave.setBegBarType(Barline.type.REPEAT_BEGIN);
     stave.setEndClef('alto');
-    // TODO: Make second argument to setEndTimeSignature(...) optional.
     stave.setEndTimeSignature('9/8');
     stave.setEndKeySignature('G', 'C#');
     stave.setEndBarType(Barline.type.DOUBLE);

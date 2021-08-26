@@ -6,7 +6,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// TODO: Factory.BarNote()'s type parameter expects BarlineType, but we pass in string. Did the previous API allow string?
+// TODO: Factory.BarNote()'s type argument expects BarlineType, but we pass in string. Did the previous API allow string?
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Barline, BarlineType } from 'stavebarline';

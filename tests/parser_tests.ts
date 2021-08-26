@@ -6,6 +6,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: https://github.com/0xfe/vexflow/pull/1117
+
 import { Parser, Result } from 'parser';
 
 const TestGrammar = function () {
