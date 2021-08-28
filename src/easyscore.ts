@@ -95,8 +95,9 @@ export class Grammar {
   }
   ACCIDENTAL(): Rule {
     return {
-      expect: [this.ACCIDENTALS],
+      expect: [this.MICROTONES, this.ACCIDENTALS],
       maybe: true,
+      or: true,
     };
   }
   DOTS(): Rule {
@@ -167,7 +168,10 @@ export class Grammar {
     return { token: '[0-9]+' };
   }
   ACCIDENTALS(): Rule {
-    return { token: 'bbs|bb|bss|bs|b|db|d|##|#|n|\\+\\+-|\\+-|\\+\\+|\\+|k|o' };
+    return { token: 'bb|b|##|#|n' };
+  }
+  MICROTONES(): Rule {
+    return { token: 'bbs|bss|bs|db|d|\\+\\+-|\\+-|\\+\\+|\\+|k|o' };
   }
   DURATIONS(): Rule {
     return { token: '[0-9whq]+' };
@@ -350,7 +354,13 @@ export class Builder {
 
     // Build StaveNotes.
     const { chord, duration, dots, type } = this.piece;
-    const keys: string[] = chord.map((notePiece) => notePiece.key + '/' + notePiece.octave);
+    const keys: string[] = chord.map(
+      (notePiece) =>
+        notePiece.key +
+        (['bb', 'b', '##', '#', 'n'].includes(notePiece.accid ?? '') ? notePiece.accid : '') +
+        '/' +
+        notePiece.octave
+    );
     const note = factory.StaveNote({
       keys,
       duration,
@@ -367,9 +377,7 @@ export class Builder {
       const accid = notePiece.accid;
       if (typeof accid === 'string') {
         const accidental: Accidental = factory.Accidental({ type: accid });
-        // TODO: Remove "as unknown as Modifier".
-        // This compilation warning will be fixed after factory & accidental are migrated to typescript.
-        note.addAccidental(index, accidental as unknown as Modifier);
+        note.addAccidental(index, accidental);
         accidentals.push(accidental);
       } else {
         accidentals.push(undefined);
