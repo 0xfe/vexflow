@@ -37,12 +37,8 @@ const EasyScoreTests = {
     const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
     const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   accidentals(): void {
@@ -97,12 +93,8 @@ const EasyScoreTests = {
       'c#s7',
     ];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   durations(): void {
@@ -126,12 +118,8 @@ const EasyScoreTests = {
     ];
     const mustFail = ['(c)'];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   dots(): void {
@@ -147,12 +135,8 @@ const EasyScoreTests = {
     ];
     const mustFail = ['.', 'c.#', 'c#4./4'];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   types(): void {
@@ -170,12 +154,8 @@ const EasyScoreTests = {
     ];
     const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   options(): void {
@@ -190,12 +170,8 @@ const EasyScoreTests = {
     ];
     const mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
-    mustPass.forEach((line) => {
-      equal(score.parse(line).success, true, line);
-    });
-    mustFail.forEach((line) => {
-      equal(score.parse(line).success, false, line);
-    });
+    mustPass.forEach((line) => equal(score.parse(line).success, true, line));
+    mustFail.forEach((line) => equal(score.parse(line).success, false, line));
   },
 
   drawBasicTest(options: TestOptions): void {
@@ -203,8 +179,7 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const voice = score.voice.bind(score);
-    const notes = score.notes.bind(score);
+    const { voice, notes } = createShortcuts(score);
 
     system
       .addStave({
@@ -231,8 +206,7 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const voice = score.voice.bind(score);
-    const notes = score.notes.bind(score);
+    const { voice, notes } = createShortcuts(score);
 
     system
       .addStave({
@@ -259,15 +233,13 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const voice = score.voice.bind(score);
-    const notes = score.notes.bind(score);
-    const beam = score.beam.bind(score);
+    const { voice, notes, beam } = createShortcuts(score);
 
     system
       .addStave({
         voices: [
           voice(notes('(c4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' })),
-          voice(notes('c#5/h.', { stem: 'up' }).concat(beam(notes('c5/8, c5/8', { stem: 'up' })))),
+          voice([...notes('c#5/h.', { stem: 'up' }), ...beam(notes('c5/8, c5/8', { stem: 'up' }))]),
         ],
       })
       .addClef('treble');
@@ -281,23 +253,21 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const voice = score.voice.bind(score);
-    const notes = score.notes.bind(score);
-    const tuplet = score.tuplet.bind(score);
-    const beam = score.beam.bind(score);
+    const { voice, notes, tuplet, beam } = createShortcuts(score);
 
-    system
-      .addStave({
-        voices: [
-          voice(
-            tuplet(notes('(c4 e4 g4)/q, cbb4/q, c4/q', { stem: 'down' }), {
-              location: Tuplet.LOCATION_BOTTOM,
-            }).concat(notes('c4/h', { stem: 'down' }))
-          ),
-          voice(notes('c#5/h.', { stem: 'up' }).concat(tuplet(beam(notes('cb5/8, cn5/8, c5/8', { stem: 'up' }))))),
-        ],
-      })
-      .addClef('treble');
+    // Voice 1, with stems pointed down.
+    const v1_tuplet = tuplet(notes('(c4 e4 g4)/q, cbb4/q, c4/q', { stem: 'down' }), {
+      location: Tuplet.LOCATION_BOTTOM,
+    });
+    const v1_halfNote = notes('c4/h', { stem: 'down' });
+    const v1 = voice([...v1_tuplet, ...v1_halfNote]);
+
+    // Voice 2, with stems pointed up.
+    const v2_halfNote = notes('c#5/h.', { stem: 'up' });
+    const v2_tuplet = tuplet(beam(notes('cb5/8, cn5/8, c5/8', { stem: 'up' })));
+    const v2 = voice([...v2_halfNote, ...v2_tuplet]);
+
+    system.addStave({ voices: [v1, v2] }).addClef('treble');
 
     f.draw();
     expect(0);
@@ -308,8 +278,7 @@ const EasyScoreTests = {
     const score = f.EasyScore();
     const system = f.System();
 
-    const voice = score.voice.bind(score);
-    const notes = score.notes.bind(score);
+    const { voice, notes } = createShortcuts(score);
 
     system
       .addStave({
@@ -330,9 +299,7 @@ const EasyScoreTests = {
       'B4/h[id="foobar", class="red,bold", stem="up", articulations="staccato.below,tenuto"], B4/q[articulations="accent.above"], B4/q[stem="down"]'
     );
 
-    system.addStave({
-      voices: [score.voice(notes)],
-    });
+    system.addStave({ voices: [score.voice(notes)] });
 
     f.draw();
 
@@ -367,9 +334,7 @@ const EasyScoreTests = {
       'C4/q[fingerings="1"], E4[fingerings="3.above"], G4[fingerings="5.below"], (C4 E4 G4)[fingerings="1,3,5"]'
     );
 
-    system.addStave({
-      voices: [score.voice(notes)],
-    });
+    system.addStave({ voices: [score.voice(notes)] });
 
     f.draw();
 
@@ -405,21 +370,35 @@ const EasyScoreTests = {
 
   keys(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
-    const score: EasyScore = f.EasyScore();
+    const score = f.EasyScore();
     const notes = score.notes(
       'c#3/q, c##3, cb3, cbb3, cn3, c3, cbbs3, cbss3, cbs3, cdb3, cd3, c++-3, c++3, c+-3, c+3, co3, ck3'
     );
 
-    const assert = options.assert;
-    assert.equal(notes[0].keys, 'c#/3');
-    assert.equal(notes[1].keys, 'c##/3');
-    assert.equal(notes[2].keys, 'cb/3');
-    assert.equal(notes[3].keys, 'cbb/3');
-    assert.equal(notes[4].keys, 'cn/3');
+    equal(notes[0].keys, 'c#/3');
+    equal(notes[1].keys, 'c##/3');
+    equal(notes[2].keys, 'cb/3');
+    equal(notes[3].keys, 'cbb/3');
+    equal(notes[4].keys, 'cn/3');
     for (let i = 5; i < notes.length; i++) {
-      assert.equal(notes[i].keys, 'c/3');
+      equal(notes[i].keys, 'c/3');
     }
   },
 };
+
+//#region Helper Functions
+
+// Optional: Use Function.prototype.bind() to create shortcut methods.
+// This can improve the readability of your EasyScore code.
+function createShortcuts(score: EasyScore) {
+  return {
+    voice: score.voice.bind(score),
+    notes: score.notes.bind(score),
+    beam: score.beam.bind(score),
+    tuplet: score.tuplet.bind(score),
+  };
+}
+
+//#endregion Helper Functions
 
 export { EasyScoreTests };

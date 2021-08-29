@@ -698,10 +698,10 @@ const AccidentalTests = {
     const f = VexFlowTests.makeFactory(options, 700, 150);
     const stave = f.Stave().addKeySignature('A');
 
-    const score: EasyScore = f.EasyScore();
-    score.set({ time: "8/4" });
-    const notes = score.notes('A4/q, B4/q, C#5/q, D5/q, E5/q,F#5/q, G#5/q, A5/q', {stem: 'UP'});
-    
+    const score = f.EasyScore();
+    score.set({ time: '8/4' });
+    const notes = score.notes('A4/q, B4/q, C#5/q, D5/q, E5/q,F#5/q, G#5/q, A5/q', { stem: 'UP' });
+
     const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
     Accidental.applyAccidentals([voice], 'A');
