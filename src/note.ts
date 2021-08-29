@@ -316,8 +316,10 @@ export abstract class Note extends Tickable {
   }
 
   /**
-   * Don't play notes by default, call them rests. This is also used by things like
-   * beams and dots for positioning.
+   * @returns true if this note is a type of rest.
+   *
+   * Rests don't have pitches, but take up space in the score.
+   * Subclasses should override this default implementation.
    */
   isRest(): boolean {
     return false;

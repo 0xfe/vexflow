@@ -660,7 +660,9 @@ export class StaveNote extends StemmableNote {
     return resultLine;
   }
 
-  // Determine if current note is a rest.
+  /**
+   * @returns true if this note is a type of rest. Rests don't have pitches, but take up space in the score.
+   */
   isRest(): boolean {
     return this.glyph.rest;
   }
