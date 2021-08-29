@@ -16,7 +16,7 @@ import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { Tickable } from './tickable';
-import { isStaveNote } from './typeguard';
+import { isCategory, isStaveNote } from './typeguard';
 
 type Line = {
   column: number;
@@ -433,13 +433,13 @@ export class Accidental extends Modifier {
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
           // Remove accidentals
-          note.getModifiers().forEach(function (modifier, index) {
+          staveNote.getModifiers().forEach((modifier, index) => {
             if (
-              modifier instanceof Accidental &&
+              isCategory(modifier, Accidental) &&
               modifier.type == accidentalString &&
               modifier.getIndex() == keyIndex
             ) {
-              note.getModifiers().splice(index, 1);
+              staveNote.getModifiers().splice(index, 1);
             }
           });
 
