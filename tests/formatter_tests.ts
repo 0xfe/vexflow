@@ -778,6 +778,7 @@ const FormatterTests = {
 };
 
 //#region Helper Functions
+
 // Should this be a static call in glyph? Or font?
 function glyphWidth(vexGlyph: string): number {
   const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
@@ -787,6 +788,7 @@ function glyphWidth(vexGlyph: string): number {
 function glyphPixels(): number {
   return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
 }
+
 //#endregion Helper Functions
 
 export { FormatterTests };

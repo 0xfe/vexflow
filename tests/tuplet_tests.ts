@@ -561,6 +561,7 @@ const TupletTests = {
 };
 
 //#region Helper Functions
+
 // eslint-disable-next-line
 const set = (key: string) => (value: number | string) => (object: any) => {
   object[key] = value;
@@ -570,6 +571,7 @@ const setStemDirection = set('stem_direction');
 const setStemUp = setStemDirection(Stem.UP);
 const setStemDown = setStemDirection(Stem.DOWN);
 const setDurationToQuarterNote = set('duration')('4');
+
 //#endregion Helper Functions
 
 export { TupletTests };

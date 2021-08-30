@@ -157,6 +157,7 @@ const DotTests = {
 };
 
 //#region Helper Functions
+
 function showOneNote(note1: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
   const modifierContext = new ModifierContext();
   note1.setStave(stave).addToModifierContext(modifierContext);
@@ -179,6 +180,7 @@ function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: Ren
   VexFlowTests.plotNoteWidth(ctx, note1, 180);
   VexFlowTests.plotNoteWidth(ctx, note2, 20);
 }
+
 //#endregion Helper Functions
 
 export { DotTests };

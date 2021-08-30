@@ -131,6 +131,8 @@ const CurveTests = {
   ),
 };
 
+//#region Helper Functions
+
 function createTest(
   beamGroup1: [string, BuilderOptions],
   beamGroup2: [string, BuilderOptions],
@@ -156,5 +158,7 @@ function createTest(
     ok('Simple Curve');
   };
 }
+
+//#endregion Helper Functions
 
 export { CurveTests };

@@ -110,6 +110,6 @@ function setupContext(opts: TestOptions, ctxBuilder: ContextBuilder): { context:
   const stave = new TabStave(10, 10, 350).addTabGlyph().setContext(context).draw();
   return { context, stave };
 }
-//#endregion
+//#endregion Helper Functions
 
 export { GraceTabNoteTests };
