@@ -29,15 +29,15 @@ const AnnotationTests = {
   Start(): void {
     QUnit.module('Annotation');
     const run = VexFlowTests.runTests;
-    // run('Lyrics', this.lyrics);
-    // run('Simple Annotation', this.simple);
-    // run('Standard Notation Annotation', this.standard);
-    // run('Harmonics', this.harmonic);
-    // run('Fingerpicking', this.picking);
-    // run('Bottom Annotation', this.bottom);
-    // run('Bottom Annotations with Beams', this.bottomWithBeam);
-    // run('Test Justification Annotation Stem Up', this.justificationStemUp);
-    // run('Test Justification Annotation Stem Down', this.justificationStemDown);
+    run('Lyrics', this.lyrics);
+    run('Simple Annotation', this.simple);
+    run('Standard Notation Annotation', this.standard);
+    run('Harmonics', this.harmonic);
+    run('Fingerpicking', this.picking);
+    run('Bottom Annotation', this.bottom);
+    run('Bottom Annotations with Beams', this.bottomWithBeam);
+    run('Test Justification Annotation Stem Up', this.justificationStemUp);
+    run('Test Justification Annotation Stem Down', this.justificationStemDown);
     run('TabNote Annotations', this.tabNotes);
   },
 
