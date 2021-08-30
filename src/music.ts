@@ -158,7 +158,7 @@ export class Music {
     };
   }
 
-  /** Accidentals abreviations. */
+  /** Accidentals abbreviations. */
   static get accidentals(): string[] {
     return ['bb', 'b', 'n', '#', '##'];
   }

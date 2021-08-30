@@ -400,6 +400,25 @@ export interface EasyScoreDefaults {
 }
 
 /**
+ * Commit hook used by EasyScore.setOptions().
+ */
+function setId(options: { id?: string }, note: StaveNote) {
+  if (options.id === undefined) return;
+  note.setAttribute('id', options.id);
+}
+
+// Used by setClass() below.
+const commaSeparatedRegex = /\s*,\s*/;
+
+/**
+ * Commit hook used by EasyScore.setOptions().
+ */
+function setClass(options: { class?: string }, note: StaveNote) {
+  if (options.class === undefined) return;
+  options.class.split(commaSeparatedRegex).forEach((className: string) => note.addClass(className));
+}
+
+/**
  * EasyScore implements a parser for a simple language to generate VexFlow objects.
  */
 export class EasyScore {
@@ -501,16 +520,3 @@ export class EasyScore {
     this.builder.addCommitHook(commitHook);
   }
 }
-
-//#region Commit Hooks
-function setId(options: { id?: string }, note: StaveNote) {
-  if (options.id === undefined) return;
-  note.setAttribute('id', options.id);
-}
-
-const commaSeparatedRegex = /\s*,\s*/;
-function setClass(options: { class?: string }, note: StaveNote) {
-  if (options.class === undefined) return;
-  options.class.split(commaSeparatedRegex).forEach((className: string) => note.addClass(className));
-}
-//#endregion
