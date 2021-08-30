@@ -584,7 +584,7 @@ export class Formatter {
     // Initialize context maps.
     const contexts = this.tickContexts;
     if (!contexts) {
-      throw new RuntimeError('NoTickContexts', 'preFormat requires TickContexs');
+      throw new RuntimeError('NoTickContexts', 'preFormat requires TickContexts');
     }
 
     const { list: contextList, map: contextMap } = contexts;
