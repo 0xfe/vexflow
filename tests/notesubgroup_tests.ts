@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
 import { Barline, BarlineType } from 'stavebarline';
 import { BarNote } from 'barnote';
 import { StaveNote } from 'stavenote';

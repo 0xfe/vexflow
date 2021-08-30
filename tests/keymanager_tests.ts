@@ -3,7 +3,6 @@
 //
 // Music Key Management Tests
 
-import { QUnit, test, equal } from './support/qunit_api';
 import { KeyManager } from 'keymanager';
 
 const KeyManagerTests = {

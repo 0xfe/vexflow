@@ -1,13 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { log } from './util';
 import { Flow } from './flow';
 import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
+import { StemmableNote } from './stemmablenote';
 import { TextFont } from './textfont';
 import { FontInfo } from './types/common';
-import { StemmableNote } from './stemmablenote';
-import { ModifierContextState } from './modifiercontext';
+import { log } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -41,9 +41,10 @@ export class Annotation extends Modifier {
   protected justification: Justify;
   protected vert_justification: VerticalJustify;
   protected text: string;
-  protected font: FontInfo;
+  // Initialized by the constructor via this.setFont('Arial', 10)
+  protected font!: FontInfo;
 
-  /** Articulations category string. */
+  /** Annotations category string. */
   static get CATEGORY(): string {
     return 'annotations';
   }
@@ -112,11 +113,7 @@ export class Annotation extends Modifier {
     this.text = text;
     this.justification = Annotation.Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
-    this.font = {
-      family: 'Arial',
-      size: 10,
-      weight: '',
-    };
+    this.setFont('Arial', 10);
 
     // The default width is calculated from the text.
     this.setWidth(Flow.textWidth(text));
@@ -128,7 +125,7 @@ export class Annotation extends Modifier {
   }
 
   /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */
-  setFont(family: string, size: number, weight: string): this {
+  setFont(family: string, size: number, weight: string = ''): this {
     this.font = { family, size, weight };
     return this;
   }

@@ -5,7 +5,6 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit } from './support/qunit_api';
 
 /**
  * StaveLine Tests

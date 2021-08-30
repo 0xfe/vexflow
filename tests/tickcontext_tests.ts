@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { Flow } from 'flow';
-import { QUnit, test, equal } from './support/qunit_api';
 import { TickContext } from 'tickcontext';
 import { MockTickable } from './mocks';
 

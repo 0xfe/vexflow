@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { Parser, Result } from 'parser';
-import { Assert, equal, QUnit, test } from './support/qunit_api';
 
 const TestGrammar = function () {
   return {
@@ -111,9 +110,9 @@ class MicroScoreGrammar {
   }
 }
 
-function assertParseFail(assert: Assert, result: Result, expectedPos: number, msg?: string): void {
-  assert.notOk(result.success, msg);
-  assert.equal(result.errorPos, expectedPos, msg);
+function assertParseFail(result: Result, expectedPos: number, msg?: string): void {
+  notOk(result.success, msg);
+  equal(result.errorPos, expectedPos, msg);
 }
 
 const ParserTests = {
@@ -130,7 +129,7 @@ const ParserTests = {
     equal(Parser, VF.Parser);
   },
 
-  basic(assert: Assert): void {
+  basic(): void {
     const grammar = new TestGrammar();
     const parser = new Parser(grammar);
 
@@ -140,16 +139,16 @@ const ParserTests = {
 
     const mustPass = ['first, second', 'first,second', 'first', 'first,second, third'];
     mustPass.forEach(function (line) {
-      assert.equal(parser.parse(line).success, true, line);
+      equal(parser.parse(line).success, true, line);
     });
-    assertParseFail(assert, parser.parse(''), 0);
-    assertParseFail(assert, parser.parse('first second'), 6);
-    assertParseFail(assert, parser.parse('first,,'), 5);
-    assertParseFail(assert, parser.parse('first,'), 5);
-    assertParseFail(assert, parser.parse(',,'), 0);
+    assertParseFail(parser.parse(''), 0);
+    assertParseFail(parser.parse('first second'), 6);
+    assertParseFail(parser.parse('first,,'), 5);
+    assertParseFail(parser.parse('first,'), 5);
+    assertParseFail(parser.parse(',,'), 0);
   },
 
-  advanced(assert: Assert): void {
+  advanced(): void {
     const grammar = new TestGrammar();
     const parser = new Parser(grammar);
 
@@ -159,26 +158,26 @@ const ParserTests = {
     const mustPass = ['{first}', '{first!}', '{first,second}', '{first,second!}', '{first,second,third!}'];
 
     mustPass.forEach(function (line) {
-      assert.equal(parser.parse(line).success, true, line);
+      equal(parser.parse(line).success, true, line);
     });
-    assertParseFail(assert, parser.parse('{first,second,third,}'), 19);
-    assertParseFail(assert, parser.parse('first,second,third'), 0);
-    assertParseFail(assert, parser.parse('{first,second,third'), 19);
-    assertParseFail(assert, parser.parse('{!}'), 1);
+    assertParseFail(parser.parse('{first,second,third,}'), 19);
+    assertParseFail(parser.parse('first,second,third'), 0);
+    assertParseFail(parser.parse('{first,second,third'), 19);
+    assertParseFail(parser.parse('{!}'), 1);
   },
 
-  mixed(assert: Assert): void {
+  mixed(): void {
     const grammar = new TestGrammar();
     const parser = new Parser(grammar);
 
     const mustPass = ['{first,second,third!}', 'first, second'];
     mustPass.forEach(function (line) {
-      assert.equal(parser.parse(line).success, true, line);
+      equal(parser.parse(line).success, true, line);
     });
-    assertParseFail(assert, parser.parse('first second'), 6);
+    assertParseFail(parser.parse('first second'), 6);
   },
 
-  microscore(assert: Assert): void {
+  microscore(): void {
     const grammar = new MicroScoreGrammar();
     // TODO: the Parser constructor should take a more generic class for the grammar param.
     // Right now it specifies EasyScore's Grammar class. This prevents us from passing in a different grammar.
@@ -192,13 +191,13 @@ const ParserTests = {
 
     mustPass.forEach(function (line) {
       const result = parser.parse(line);
-      assert.equal(result.success, true, line);
-      assert.equal(result.matches.length, 3, line);
+      equal(result.success, true, line);
+      equal(result.matches?.length, 3, line);
     });
 
-    assertParseFail(assert, parser.parse('40 42 44 45 47 49 5A 52'), 19);
-    assertParseFail(assert, parser.parse('40.44.47] [45.49.52] [47.51.54] [49.52.56]'), 2);
-    assertParseFail(assert, parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
+    assertParseFail(parser.parse('40 42 44 45 47 49 5A 52'), 19);
+    assertParseFail(parser.parse('40.44.47] [45.49.52] [47.51.54] [49.52.56]'), 2);
+    assertParseFail(parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
   },
 };
 

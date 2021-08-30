@@ -15,6 +15,8 @@ import { ModifierContextState } from './modifiercontext';
 import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
+import { Tickable } from './tickable';
+import { isCategory, isStaveNote } from './typeguard';
 
 type Line = {
   column: number;
@@ -35,7 +37,7 @@ function L(...args: any[]) {
  * `ModifierContext`. Accidentals are modifiers that can be attached to
  * notes. Support is included for both western and microtonal accidentals.
  *
- * See `tests/accidental_tests.js` for usage examples.
+ * See `tests/accidental_tests.ts` for usage examples.
  */
 
 export class Accidental extends Modifier {
@@ -370,49 +372,52 @@ export class Accidental extends Modifier {
    */
   static applyAccidentals(voices: Voice[], keySignature: string): void {
     const tickPositions: number[] = [];
-    const tickNoteMap: Record<number, Note[]> = {};
+    const tickNoteMap: Record<number, Tickable[]> = {};
 
-    // Sort the tickables in each voice by their tick position in the voice
+    // Sort the tickables in each voice by their tick position in the voice.
     voices.forEach((voice) => {
       const tickPosition = new Fraction(0, 1);
-      const notes = voice.getTickables();
-      notes.forEach((note) => {
-        if (note.shouldIgnoreTicks()) return;
+      const tickable = voice.getTickables();
+      tickable.forEach((t) => {
+        if (t.shouldIgnoreTicks()) return;
 
         const notesAtPosition = tickNoteMap[tickPosition.value()];
 
         if (!notesAtPosition) {
           tickPositions.push(tickPosition.value());
-          tickNoteMap[tickPosition.value()] = [note];
+          tickNoteMap[tickPosition.value()] = [t];
         } else {
-          notesAtPosition.push(note);
+          notesAtPosition.push(t);
         }
 
-        tickPosition.add(note.getTicks());
+        tickPosition.add(t.getTicks());
       });
     });
 
     const music = new Music();
 
-    // Default key signature is C major
+    // Default key signature is C major.
     if (!keySignature) keySignature = 'C';
 
-    // Get the scale map, which represents the current state of each pitch
+    // Get the scale map, which represents the current state of each pitch.
     const scaleMap = music.createScaleMap(keySignature);
 
-    tickPositions.forEach((tick) => {
-      const notes = tickNoteMap[tick];
+    tickPositions.forEach((tickPos: number) => {
+      const tickables = tickNoteMap[tickPos];
 
       // Array to store all pitches that modified accidental states
       // at this tick position
       const modifiedPitches: string[] = [];
 
-      const processNote = (note: Note) => {
-        if (note.isRest() || note.shouldIgnoreTicks()) return;
+      const processNote = (t: Tickable) => {
+        // Only StaveNote implements .addAccidental(), which is used below.
+        if (!isStaveNote(t) || t.isRest() || t.shouldIgnoreTicks()) {
+          return;
+        }
 
-        // Go through each key and determine if an accidental should be
-        // applied
-        note.keys.forEach((keyString: string, keyIndex: number) => {
+        // Go through each key and determine if an accidental should be applied.
+        const staveNote = t;
+        staveNote.keys.forEach((keyString: string, keyIndex: number) => {
           const key = music.getNoteParts(keyString.split('/')[0]);
 
           // Force a natural for every key without an accidental
@@ -428,13 +433,13 @@ export class Accidental extends Modifier {
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
           // Remove accidentals
-          note.getModifiers().forEach(function (modifier, index) {
+          staveNote.getModifiers().forEach((modifier, index) => {
             if (
-              modifier instanceof Accidental &&
+              isCategory(modifier, Accidental) &&
               modifier.type == accidentalString &&
               modifier.getIndex() == keyIndex
             ) {
-              note.getModifiers().splice(index, 1);
+              staveNote.getModifiers().splice(index, 1);
             }
           });
 
@@ -448,7 +453,7 @@ export class Accidental extends Modifier {
             const accidental = new Accidental(accidentalString);
 
             // Attach the accidental to the StaveNote
-            (note as StaveNote).addAccidental(keyIndex, accidental);
+            staveNote.addAccidental(keyIndex, accidental);
 
             // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(pitch);
@@ -456,14 +461,15 @@ export class Accidental extends Modifier {
         });
 
         // process grace notes
-        note.getModifiers().forEach((modifier) => {
+        staveNote.getModifiers().forEach((modifier: Modifier) => {
+          // TODO: Replace with isCategory()?
           if (modifier.getCategory() === GraceNoteGroup.CATEGORY) {
             (modifier as GraceNoteGroup).getGraceNotes().forEach(processNote);
           }
         });
       };
 
-      notes.forEach(processNote);
+      tickables.forEach(processNote);
     });
   }
 

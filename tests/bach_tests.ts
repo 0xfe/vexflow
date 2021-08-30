@@ -5,7 +5,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
 import { Factory } from 'factory';
 import { Registry } from 'registry';
 import { BarlineType } from 'stavebarline';

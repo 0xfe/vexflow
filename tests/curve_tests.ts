@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests, concat, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
 import { Curve } from 'curve';
 import { StaveNote } from 'stavenote';
 import { Factory } from 'factory';

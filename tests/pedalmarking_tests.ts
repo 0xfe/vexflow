@@ -7,7 +7,6 @@
 // @ts-nocheck
 
 import { VexFlowTests } from './vexflow_test_helpers';
-import { QUnit, ok } from './support/qunit_api';
 
 function createTest(makePedal) {
   return function (options) {

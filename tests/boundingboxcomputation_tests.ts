@@ -4,7 +4,6 @@
 // BoundingBoxComputation Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok, test, equal } from './support/qunit_api';
 import { RenderContext } from 'types/common';
 import { OutlineCode } from 'glyph';
 

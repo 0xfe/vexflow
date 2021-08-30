@@ -3,7 +3,6 @@
 //
 // EasyScore Tests
 
-import { QUnit, expect, Assert } from './support/qunit_api';
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { EasyScore } from 'easyscore';
 import { StaveNote } from 'stavenote';
@@ -17,13 +16,12 @@ import { Modifier } from 'modifier';
 const EasyScoreTests = {
   Start(): void {
     QUnit.module('EasyScore');
-    QUnit.test('Basic', EasyScoreTests.basic);
-    VexFlowTests.runTests('Keys', EasyScoreTests.keys);
-    QUnit.test('Accidentals', EasyScoreTests.accidentals);
-    QUnit.test('Durations', EasyScoreTests.durations);
-    QUnit.test('Chords', EasyScoreTests.chords);
-    QUnit.test('Dots', EasyScoreTests.dots);
-    QUnit.test('Options', EasyScoreTests.options);
+    test('Basic', EasyScoreTests.basic);
+    test('Accidentals', EasyScoreTests.accidentals);
+    test('Durations', EasyScoreTests.durations);
+    test('Chords', EasyScoreTests.chords);
+    test('Dots', EasyScoreTests.dots);
+    test('Options', EasyScoreTests.options);
     VexFlowTests.runTests('Draw Basic', EasyScoreTests.drawBasicTest);
     VexFlowTests.runTests('Draw Accidentals', EasyScoreTests.drawAccidentalsTest);
     VexFlowTests.runTests('Draw Beams', EasyScoreTests.drawBeamsTest);
@@ -31,22 +29,23 @@ const EasyScoreTests = {
     VexFlowTests.runTests('Draw Dots', EasyScoreTests.drawDotsTest);
     VexFlowTests.runTests('Draw Options', EasyScoreTests.drawOptionsTest);
     VexFlowTests.runTests('Draw Fingerings', EasyScoreTests.drawFingeringsTest);
+    VexFlowTests.runTests('Keys', EasyScoreTests.keys);
   },
 
-  basic(assert: Assert): void {
+  basic(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/x', 'c3//x'];
     const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  accidentals(assert: Assert): void {
+  accidentals(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = [
       'c3',
@@ -99,27 +98,27 @@ const EasyScoreTests = {
     ];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  durations(assert: Assert): void {
+  durations(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
     const mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  chords(assert: Assert): void {
+  chords(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = [
       '(c5)',
@@ -132,14 +131,14 @@ const EasyScoreTests = {
     const mustFail = ['(c)'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  dots(assert: Assert): void {
+  dots(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = [
       'c3/4.',
@@ -153,14 +152,14 @@ const EasyScoreTests = {
     const mustFail = ['.', 'c.#', 'c#4./4'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  types(assert: Assert): void {
+  types(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = [
       'c3/4/x.',
@@ -176,14 +175,14 @@ const EasyScoreTests = {
     const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
-  options(assert: Assert): void {
+  options(): void {
     const score: EasyScore = new EasyScore();
     const mustPass = [
       'c3/4.[foo="bar"]',
@@ -196,10 +195,10 @@ const EasyScoreTests = {
     const mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
     mustPass.forEach(function (line) {
-      assert.equal(score.parse(line).success, true, line);
+      equal(score.parse(line).success, true, line);
     });
     mustFail.forEach(function (line) {
-      assert.equal(score.parse(line).success, false, line);
+      equal(score.parse(line).success, false, line);
     });
   },
 
@@ -341,27 +340,26 @@ const EasyScoreTests = {
 
     f.draw();
 
-    const assert = options.assert;
     const note0 = notes[0];
     const note1 = notes[1];
     const note0_modifier0 = note0.getModifiers()[0] as Articulation;
     const note0_modifier1 = note0.getModifiers()[1] as Articulation;
     const note1_modifier0 = note1.getModifiers()[0] as Articulation;
 
-    assert.equal(note0.getAttribute('id'), 'foobar');
-    assert.ok(note0.hasClass('red'));
-    assert.ok(note0.hasClass('bold'));
-    assert.equal(note0_modifier0.getCategory(), 'articulations');
-    assert.equal(note0_modifier0.type, 'a.');
-    assert.equal(note0_modifier0.getPosition(), Modifier.Position.BELOW);
-    assert.equal(note0_modifier1.getCategory(), 'articulations');
-    assert.equal(note0_modifier1.type, 'a-');
-    assert.equal(note0_modifier1.getPosition(), Modifier.Position.ABOVE);
-    assert.equal(note0.getStemDirection(), StaveNote.STEM_UP);
-    assert.equal(note1_modifier0.getCategory(), 'articulations');
-    assert.equal(note1_modifier0.type, 'a>');
-    assert.equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
-    assert.equal(notes[2].getStemDirection(), StaveNote.STEM_DOWN);
+    equal(note0.getAttribute('id'), 'foobar');
+    ok(note0.hasClass('red'));
+    ok(note0.hasClass('bold'));
+    equal(note0_modifier0.getCategory(), 'articulations');
+    equal(note0_modifier0.type, 'a.');
+    equal(note0_modifier0.getPosition(), Modifier.Position.BELOW);
+    equal(note0_modifier1.getCategory(), 'articulations');
+    equal(note0_modifier1.type, 'a-');
+    equal(note0_modifier1.getPosition(), Modifier.Position.ABOVE);
+    equal(note0.getStemDirection(), StaveNote.STEM_UP);
+    equal(note1_modifier0.getCategory(), 'articulations');
+    equal(note1_modifier0.type, 'a>');
+    equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
+    equal(notes[2].getStemDirection(), StaveNote.STEM_DOWN);
   },
 
   drawFingeringsTest(options: TestOptions): void {
@@ -379,36 +377,36 @@ const EasyScoreTests = {
 
     f.draw();
 
-    const assert = options.assert;
     const note0_modifier0: FretHandFinger = notes[0].getModifiers()[0] as FretHandFinger;
-    assert.equal(note0_modifier0.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note0_modifier0.getFretHandFinger(), '1');
-    assert.equal(note0_modifier0.getPosition(), Modifier.Position.LEFT);
+    equal(note0_modifier0.getCategory(), FretHandFinger.CATEGORY);
+    equal(note0_modifier0.getFretHandFinger(), '1');
+    equal(note0_modifier0.getPosition(), Modifier.Position.LEFT);
 
     const note1_modifier0: FretHandFinger = notes[1].getModifiers()[0] as FretHandFinger;
-    assert.equal(note1_modifier0.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note1_modifier0.getFretHandFinger(), '3');
-    assert.equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
+    equal(note1_modifier0.getCategory(), FretHandFinger.CATEGORY);
+    equal(note1_modifier0.getFretHandFinger(), '3');
+    equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
 
     const note2_modifier0: FretHandFinger = notes[2].getModifiers()[0] as FretHandFinger;
-    assert.equal(note2_modifier0.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note2_modifier0.getFretHandFinger(), '5');
-    assert.equal(note2_modifier0.getPosition(), Modifier.Position.BELOW);
+    equal(note2_modifier0.getCategory(), FretHandFinger.CATEGORY);
+    equal(note2_modifier0.getFretHandFinger(), '5');
+    equal(note2_modifier0.getPosition(), Modifier.Position.BELOW);
 
     const note3_modifiers: FretHandFinger[] = notes[3].getModifiers() as FretHandFinger[];
     const note3_modifier0: FretHandFinger = note3_modifiers[0];
     const note3_modifier1: FretHandFinger = note3_modifiers[1];
     const note3_modifier2: FretHandFinger = note3_modifiers[2];
-    assert.equal(note3_modifier0.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note3_modifier0.getFretHandFinger(), '1');
-    assert.equal(note3_modifier0.getPosition(), Modifier.Position.LEFT);
-    assert.equal(note3_modifier1.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note3_modifier1.getFretHandFinger(), '3');
-    assert.equal(note3_modifier1.getPosition(), Modifier.Position.LEFT);
-    assert.equal(note3_modifier2.getCategory(), FretHandFinger.CATEGORY);
-    assert.equal(note3_modifier2.getFretHandFinger(), '5');
-    assert.equal(note3_modifier2.getPosition(), Modifier.Position.LEFT);
+    equal(note3_modifier0.getCategory(), FretHandFinger.CATEGORY);
+    equal(note3_modifier0.getFretHandFinger(), '1');
+    equal(note3_modifier0.getPosition(), Modifier.Position.LEFT);
+    equal(note3_modifier1.getCategory(), FretHandFinger.CATEGORY);
+    equal(note3_modifier1.getFretHandFinger(), '3');
+    equal(note3_modifier1.getPosition(), Modifier.Position.LEFT);
+    equal(note3_modifier2.getCategory(), FretHandFinger.CATEGORY);
+    equal(note3_modifier2.getFretHandFinger(), '5');
+    equal(note3_modifier2.getPosition(), Modifier.Position.LEFT);
   },
+
   keys(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 500, 200);
     const score: EasyScore = f.EasyScore();

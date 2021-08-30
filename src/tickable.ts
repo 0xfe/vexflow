@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { Stave } from './stave';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
-import { TickContext } from './tickcontext';
-import { ModifierContext } from './modifiercontext';
-import { Tuplet } from './tuplet';
-import { Voice } from './voice';
 import { Modifier } from './modifier';
+import { ModifierContext } from './modifiercontext';
+import { TickContext } from './tickcontext';
+import { Tuplet } from './tuplet';
+import { RuntimeError } from './util';
+import { Voice } from './voice';
 
 /** Formatter metrics interface */
 export interface FormatterMetrics {
@@ -31,16 +32,20 @@ export interface FormatterMetrics {
  * has a duration, i.e., Tickables occupy space in the musical rendering dimension.
  */
 export abstract class Tickable extends Element {
+  static get CATEGORY(): string {
+    return 'Tickable';
+  }
+
   protected ignore_ticks: boolean;
-  tupletStack: Tuplet[];
+  protected tupletStack: Tuplet[];
   protected tuplet?: Tuplet;
   protected ticks: Fraction;
   protected center_x_shift: number;
   protected voice?: Voice;
   protected width: number;
   protected x_shift: number;
-  protected preFormatted: boolean;
-  protected postFormatted: boolean;
+  protected preFormatted: boolean = false;
+  protected postFormatted: boolean = false;
   protected modifierContext?: ModifierContext;
   protected tickContext?: TickContext;
   protected modifiers: Modifier[];
@@ -65,8 +70,6 @@ export abstract class Tickable extends Element {
     this.x_shift = 0; // Shift from tick context
 
     this.modifiers = [];
-    this.preFormatted = false;
-    this.postFormatted = false;
     this.tupletStack = [];
 
     this.align_center = false;
@@ -101,6 +104,10 @@ export abstract class Tickable extends Element {
     };
   }
 
+  getCategory(): string {
+    return Tickable.CATEGORY;
+  }
+
   /** Reset the Tickable, this function will be overloaded. */
   reset(): this {
     return this;
@@ -117,8 +124,9 @@ export abstract class Tickable extends Element {
   }
 
   /** Ignore the ticks. */
-  setIgnoreTicks(flag: boolean): void {
+  setIgnoreTicks(flag: boolean): this {
     this.ignore_ticks = flag;
+    return this;
   }
 
   /** Set width of note. Used by the formatter for positioning. */
@@ -205,7 +213,12 @@ export abstract class Tickable extends Element {
     return this.tuplet;
   }
 
-  /*
+  /** Return the intrinsic ticks. */
+  getTupletStack(): Tuplet[] {
+    return this.tupletStack;
+  }
+
+  /**
    * Reset the specific Tuplet if this is not provided, all tuplets are reset.
    * Remove any prior tuplets from the tick calculation and
    * reset the intrinsic tick value.
@@ -253,17 +266,26 @@ export abstract class Tickable extends Element {
     return this;
   }
 
-  /** Optional, if tickable has modifiers, set modifierContext. */
-  addToModifierContext(mc: ModifierContext): void {
+  /**
+   * Add self to the provided ModifierContext `mc`.
+   * If this tickable has modifiers, set modifierContext.
+   * @returns this
+   */
+  addToModifierContext(mc: ModifierContext): this {
     this.modifierContext = mc;
-    // Add modifiers to modifier context (if any)
-    this.preFormatted = false;
+    for (let i = 0; i < this.modifiers.length; ++i) {
+      this.modifierContext.addMember(this.modifiers[i]);
+    }
+    this.modifierContext.addMember(this);
+    this.setPreFormatted(false);
+    return this;
   }
 
   /** Optional, if tickable has modifiers, associate a Modifier. */
-  addModifier(mod: Modifier): this {
+  // eslint-disable-next-line
+  addModifier(mod: Modifier, ...optionalArgs: any[]): this {
     this.modifiers.push(mod);
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
@@ -275,7 +297,7 @@ export abstract class Tickable extends Element {
   /** Set the Tick Contxt. */
   setTickContext(tc: TickContext): void {
     this.tickContext = tc;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
   }
 
   /** Preformat the Tickable. */
@@ -287,6 +309,11 @@ export abstract class Tickable extends Element {
       this.modifierContext.preFormat();
       this.width += this.modifierContext.getWidth();
     }
+  }
+
+  /** Set preformatted status. */
+  setPreFormatted(value: boolean): void {
+    this.preFormatted = value;
   }
 
   /** Postformat the Tickable. */
@@ -324,4 +351,31 @@ export abstract class Tickable extends Element {
     this.ticks = this.tickMultiplier.clone().multiply(ticks);
     this.intrinsicTicks = this.ticks.value();
   }
+
+  getAbsoluteX(): number {
+    if (!this.tickContext) {
+      throw new RuntimeError('NoTickContext', 'Tickable needs a TickContext assigned for an x-value.');
+    }
+    return this.tickContext.getX();
+  }
+
+  /** Attach this note to a modifier context. */
+  setModifierContext(mc?: ModifierContext): this {
+    this.modifierContext = mc;
+    return this;
+  }
+
+  /** Get `ModifierContext`. */
+  getModifierContext(): ModifierContext | undefined {
+    return this.modifierContext;
+  }
+
+  /** Get the target stave. */
+  abstract getStave(): Stave | undefined;
+
+  /** Set the target stave. */
+  abstract setStave(stave: Stave): this;
+
+  // eslint-disable-next-line
+  abstract getMetrics(): any;
 }

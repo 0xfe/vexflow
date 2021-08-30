@@ -4,7 +4,6 @@
 //
 // TypeGuard Tests
 
-import { QUnit, ok, notOk, test } from './support/qunit_api';
 import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
 import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';

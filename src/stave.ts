@@ -1,22 +1,21 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { BoundingBox } from './boundingbox';
+import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { Flow } from './flow';
+import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier } from './stavemodifier';
 import { Repetition } from './staverepetition';
 import { StaveSection } from './stavesection';
-import { StaveTempo } from './stavetempo';
+import { StaveTempo, StaveTempoOptions } from './stavetempo';
 import { StaveText } from './stavetext';
-import { BoundingBox } from './boundingbox';
-import { Clef } from './clef';
-import { KeySignature } from './keysignature';
-import { TimeSignature } from './timesignature';
 import { Volta } from './stavevolta';
+import { TimeSignature } from './timesignature';
 import { Bounds, FontInfo } from './types/common';
-import { StaveTempoOptions } from './stavetempo';
+import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
   visible: boolean;
@@ -46,15 +45,16 @@ export interface StaveOptions {
 }
 
 export class Stave extends Element {
-  protected x: number;
   protected start_x: number;
   protected clef: string;
   protected options: StaveOptions;
   protected endClef?: string;
-  protected width: number;
-  // Initialised in resetLines called in constructor
-  protected height: number = 0;
+
+  protected x: number;
   protected y: number;
+  protected width: number;
+  // Initialized by the constructor via this.resetLines().
+  protected height: number = 0;
 
   protected formatted: boolean;
   protected end_x: number;
@@ -66,7 +66,7 @@ export class Stave extends Element {
   protected defaultLedgerLineStyle: ElementStyle;
 
   // This is the sum of the padding that normally goes on left + right of a stave during
-  // drawing.  Used to size staves correctly with content width
+  // drawing. Used to size staves correctly with content width.
   static get defaultPadding(): number {
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
@@ -189,8 +189,8 @@ export class Stave extends Element {
     return this.options.num_lines;
   }
 
-  setNumLines(lines: number): this {
-    this.options.num_lines = lines;
+  setNumLines(n: number): this {
+    this.options.num_lines = n;
     this.resetLines();
     return this;
   }
@@ -567,7 +567,7 @@ export class Stave extends Element {
     return this;
   }
 
-  addEndTimeSignature(timeSpec: string, customPadding: number): this {
+  addEndTimeSignature(timeSpec: string, customPadding?: number): this {
     this.addTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
     return this;
   }

@@ -238,7 +238,7 @@ export class Tuplet extends Element {
     // Count the tuplets that are on the same side (above/below)
     // as this tuplet:
     function countTuplets(note: Note, location: number) {
-      return note.tupletStack.filter((tuplet) => tuplet.location === location).length;
+      return note.getTupletStack().filter((tuplet) => tuplet.location === location).length;
     }
 
     this.notes.forEach((note) => {

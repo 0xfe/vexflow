@@ -247,7 +247,7 @@ export class System extends Element {
     }
 
     this.debugNoteMetricsYs.forEach((d) => {
-      d.voice.getTickables().forEach((note) => Note.plotMetrics(ctx, note, d.y));
+      d.voice.getTickables().forEach((tickable) => Note.plotMetrics(ctx, tickable, d.y));
     });
   }
 }

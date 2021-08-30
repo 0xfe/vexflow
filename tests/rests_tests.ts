@@ -6,7 +6,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { QUnit, ok } from './support/qunit_api';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { RenderContext } from 'types/common';
 import { Flow } from 'flow';

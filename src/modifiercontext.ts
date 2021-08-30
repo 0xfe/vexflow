@@ -23,6 +23,7 @@ import { Vibrato } from './vibrato';
 import { Modifier } from './modifier';
 import { TabNote } from './tabnote';
 import { Note } from './note';
+import { Tickable } from './tickable';
 
 export interface ModifierContextState {
   right_shift: number;
@@ -36,7 +37,7 @@ export interface ModifierContextMetrics {
   spacing: number;
 }
 
-export type ModifierContextMember = Modifier | StaveNote | TabNote;
+export type ModifierContextMember = Tickable | Modifier | StaveNote | TabNote;
 
 // To enable logging for this class. Set `Vex.Flow.ModifierContext.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -49,11 +50,11 @@ export class ModifierContext {
 
   state: ModifierContextState;
 
-  protected postFormatted: boolean;
   protected spacing: number;
   protected members: Record<string, ModifierContextMember[]>;
 
-  protected preFormatted: boolean;
+  protected preFormatted: boolean = false;
+  protected postFormatted: boolean = false;
   protected width: number;
   protected formatted?: boolean;
   // eslint-disable-next-line
@@ -66,8 +67,6 @@ export class ModifierContext {
     this.members = {};
 
     // Formatting data.
-    this.preFormatted = false;
-    this.postFormatted = false;
     this.width = 0;
     this.spacing = 0;
     this.state = {

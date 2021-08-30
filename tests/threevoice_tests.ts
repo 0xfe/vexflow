@@ -8,7 +8,6 @@
 
 import { VexFlowTests, concat, TestOptions } from './vexflow_test_helpers';
 import { Beam } from 'beam';
-import { ok, QUnit } from './support/qunit_api';
 import { Factory } from 'factory';
 import { Voice } from 'voice';
 
