@@ -2,11 +2,11 @@
 // MIT License
 
 import { BoundingBox } from './boundingbox';
+import { RuntimeError, defined } from './util';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { RenderContext } from './types/common';
-import { RuntimeError, check } from './util';
 import { Stave } from './stave';
 import { Tickable } from './tickable';
 
@@ -159,7 +159,7 @@ export class Voice extends Element {
   /** Get the bounding box for the voice. */
   getBoundingBox(): BoundingBox | undefined {
     if (!this.boundingBox) {
-      const stave = check<Stave>(this.stave);
+      const stave = defined<Stave>(this.stave);
       let boundingBox = undefined;
       for (let i = 0; i < this.tickables.length; ++i) {
         const tickable = this.tickables[i];
@@ -269,7 +269,7 @@ export class Voice extends Element {
   /** Preformat the voice by applying the voice's stave to each note. */
   preFormat(): this {
     if (this.preFormatted) return this;
-    const stave = check<Stave>(this.stave);
+    const stave = defined<Stave>(this.stave);
     this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
         tickable.setStave(stave);

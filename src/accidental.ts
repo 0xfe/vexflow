@@ -3,7 +3,7 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { RuntimeError, log, check } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';
@@ -531,8 +531,8 @@ export class Accidental extends Modifier {
   /** Get width in pixels. */
   getWidth(): number {
     const parenWidth = this.cautionary
-      ? check<Glyph>(this.parenLeft).getMetrics().width +
-        check<Glyph>(this.parenRight).getMetrics().width +
+      ? defined<Glyph>(this.parenLeft).getMetrics().width +
+        defined<Glyph>(this.parenRight).getMetrics().width +
         this.render_options.parenLeftPadding +
         this.render_options.parenRightPadding
       : 0;
@@ -593,14 +593,14 @@ export class Accidental extends Modifier {
       glyph.render(ctx, accX, accY);
     } else {
       // Render the accidental in parentheses.
-      check<Glyph>(parenRight).render(ctx, accX, accY);
-      accX -= check<Glyph>(parenRight).getMetrics().width;
+      defined<Glyph>(parenRight).render(ctx, accX, accY);
+      accX -= defined<Glyph>(parenRight).getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
       accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
-      check<Glyph>(parenLeft).render(ctx, accX, accY);
+      defined<Glyph>(parenLeft).render(ctx, accX, accY);
     }
   }
 }

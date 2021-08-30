@@ -2,7 +2,7 @@
 // Author: Larry Kuhns.
 // MIT License
 
-import { RuntimeError, log, check } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -212,7 +212,7 @@ export class Articulation extends Modifier {
     const getIncrement = (articulation: Articulation, line: number, position: number) =>
       roundToNearestHalf(
         getRoundingFunction(line, position),
-        check<number>(articulation.glyph.getMetrics().height) / 10 + margin
+        defined<number>(articulation.glyph.getMetrics().height) / 10 + margin
       );
 
     articulations.filter(isAbove).forEach((articulation) => {
@@ -281,7 +281,7 @@ export class Articulation extends Modifier {
       (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
-    this.setWidth(check<number>(this.glyph.getMetrics().width));
+    this.setWidth(defined<number>(this.glyph.getMetrics().width));
   }
 
   /** Get element category string. */

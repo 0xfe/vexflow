@@ -5,7 +5,7 @@
 // See tables.js for the internal time signatures
 // representation
 
-import { RuntimeError, check } from './util';
+import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
@@ -73,7 +73,7 @@ export class TimeSignature extends StaveModifier {
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
     this.info = this.parseTimeSpec(timeSpec);
-    this.setWidth(check<number>(this.info.glyph.getMetrics().width));
+    this.setWidth(defined<number>(this.info.glyph.getMetrics().width));
     this.setPadding(padding);
   }
 

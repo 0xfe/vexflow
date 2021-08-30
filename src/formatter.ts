@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, midLine, log, check } from './util';
+import { RuntimeError, midLine, log, defined } from './util';
 import { Beam } from './beam';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
@@ -736,7 +736,8 @@ export class Formatter {
         if (index > 0) {
           const contextX = context.getX();
           const ideal = idealDistances[index];
-          const errorPx = check<Tickable>(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
+          const errorPx =
+            defined<Tickable>(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
 
           let negativeShiftPx = 0;
           if (errorPx > 0) {
@@ -927,7 +928,7 @@ export class Formatter {
         }
       }
 
-      shift *= check<{ alpha: number }>(options).alpha;
+      shift *= defined<{ alpha: number }>(options).alpha;
       this.totalShift += shift;
     });
 
