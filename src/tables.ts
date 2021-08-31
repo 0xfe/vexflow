@@ -800,11 +800,8 @@ export const Tables = {
   },
 
   // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
-  getGlyphProps(
-    duration: string,
-    type?: string
-  ): // eslint-disable-next-line
-  any {
+  // eslint-disable-next-line
+  getGlyphProps(duration: string, type?: string): any {
     duration_codes = duration_codes || {
       '1/2': {
         common: {

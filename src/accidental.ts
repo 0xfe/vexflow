@@ -3,7 +3,7 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { RuntimeError, log, defined } from './util';
+import { log, defined } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';

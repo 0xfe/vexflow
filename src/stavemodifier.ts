@@ -3,7 +3,7 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
-import { defined, RuntimeError } from './util';
+import { defined } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';

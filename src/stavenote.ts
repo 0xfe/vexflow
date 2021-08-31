@@ -9,7 +9,7 @@
 //
 // See `tests/stavenote_tests.ts` for usage examples.
 
-import { RuntimeError, log, midLine, warn } from './util';
+import { RuntimeError, log, midLine, warn, defined } from './util';
 import { Flow } from './flow';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
@@ -373,15 +373,9 @@ export class StaveNote extends StemmableNote {
     this.clef = noteStruct.clef ?? 'treble';
     this.octave_shift = noteStruct.octave_shift ?? 0;
 
-    // Pull note rendering properties
+    // Pull note rendering properties.
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-
-    if (!this.glyph) {
-      throw new RuntimeError(
-        'BadArguments',
-        `Invalid note initialization data (No glyph found): ${JSON.stringify(noteStruct)}`
-      );
-    }
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     // if true, displace note to right
     this.displaced = false;
