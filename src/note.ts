@@ -499,10 +499,7 @@ export abstract class Note extends Tickable {
 
   /** Check and get the beam. */
   checkBeam(): Beam {
-    if (!this.beam) {
-      throw new RuntimeError('NoBeam', 'No beam attached to instance');
-    }
-    return this.beam;
+    return defined(this.beam, 'NoBeam', 'No beam attached to instance');
   }
 
   /** Check it has a beam. */

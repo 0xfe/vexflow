@@ -200,9 +200,7 @@ export class Glyph extends Element {
   }
 
   static lookupGlyph(fontStack: Font[], code: string): { font: Font; glyph: FontGlyph } {
-    if (!fontStack) {
-      throw new RuntimeError('BAD_FONTSTACK', 'Font stack is misconfigured');
-    }
+    defined(fontStack, 'BadFontStack', 'Font stack is misconfigured');
 
     let glyph: FontGlyph;
     let font: Font;
