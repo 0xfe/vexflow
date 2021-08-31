@@ -282,7 +282,7 @@ export class KeySignature extends StaveModifier {
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(defined<string>(this.keySpec));
+    this.accList = Flow.keySignature(defined(this.keySpec));
     const accList = this.accList;
     const firstAccidentalType = accList.length > 0 ? accList[0].type : undefined;
     let cancelAccList;

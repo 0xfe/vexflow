@@ -530,14 +530,18 @@ export class Accidental extends Modifier {
 
   /** Get width in pixels. */
   getWidth(): number {
-    const parenWidth = this.cautionary
-      ? defined<Glyph>(this.parenLeft).getMetrics().width +
-        defined<Glyph>(this.parenRight).getMetrics().width +
+    if (this.cautionary) {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+      const parenWidth =
+        parenLeft.getMetrics().width +
+        parenRight.getMetrics().width +
         this.render_options.parenLeftPadding +
-        this.render_options.parenRightPadding
-      : 0;
-
-    return this.glyph.getMetrics().width + parenWidth;
+        this.render_options.parenRightPadding;
+      return this.glyph.getMetrics().width + parenWidth;
+    } else {
+      return this.glyph.getMetrics().width;
+    }
   }
 
   /** Attach this accidental to `note`, which must be a `StaveNote`. */
@@ -574,8 +578,6 @@ export class Accidental extends Modifier {
       x_shift,
       y_shift,
       glyph,
-      parenLeft,
-      parenRight,
       render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
@@ -592,15 +594,18 @@ export class Accidental extends Modifier {
     if (!cautionary) {
       glyph.render(ctx, accX, accY);
     } else {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+
       // Render the accidental in parentheses.
-      defined<Glyph>(parenRight).render(ctx, accX, accY);
-      accX -= defined<Glyph>(parenRight).getMetrics().width;
+      parenRight.render(ctx, accX, accY);
+      accX -= parenRight.getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
       accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
-      defined<Glyph>(parenLeft).render(ctx, accX, accY);
+      parenLeft.render(ctx, accX, accY);
     }
   }
 }

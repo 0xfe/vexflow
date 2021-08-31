@@ -736,8 +736,7 @@ export class Formatter {
         if (index > 0) {
           const contextX = context.getX();
           const ideal = idealDistances[index];
-          const errorPx =
-            defined<Tickable>(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
+          const errorPx = defined(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
 
           let negativeShiftPx = 0;
           if (errorPx > 0) {
@@ -928,7 +927,7 @@ export class Formatter {
         }
       }
 
-      shift *= defined<{ alpha: number }>(options).alpha;
+      shift *= defined(options).alpha;
       this.totalShift += shift;
     });
 
