@@ -73,7 +73,7 @@ export class TimeSignature extends StaveModifier {
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
     this.info = this.parseTimeSpec(timeSpec);
-    this.setWidth(defined<number>(this.info.glyph.getMetrics().width));
+    this.setWidth(defined(this.info.glyph.getMetrics().width));
     this.setPadding(padding);
   }
 

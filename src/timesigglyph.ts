@@ -38,7 +38,7 @@ export class TimeSignatureGlyph extends Glyph {
       const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
-      botWidth += defined<number>(botGlyph.getMetrics().width);
+      botWidth += defined(botGlyph.getMetrics().width);
     }
 
     this.width = Math.max(topWidth, botWidth);
@@ -68,7 +68,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + this.x_shift,
         stave.getYForLine(this.timeSignature.topLine)
       );
-      start_x += defined<number>(glyph.getMetrics().width);
+      start_x += defined(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
@@ -82,7 +82,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + glyph.getMetrics().x_shift,
         stave.getYForLine(this.timeSignature.bottomLine)
       );
-      start_x += defined<number>(glyph.getMetrics().width);
+      start_x += defined(glyph.getMetrics().width);
     }
   }
 }

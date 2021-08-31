@@ -97,7 +97,7 @@ export class TextDynamics extends Note {
       const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new RuntimeError('Invalid dynamics character: ' + letter);
 
-      const size = defined<number>(this.render_options.glyph_font_size);
+      const size = defined(this.render_options.glyph_font_size);
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph
