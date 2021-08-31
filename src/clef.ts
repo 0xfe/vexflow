@@ -172,7 +172,6 @@ export class Clef extends StaveModifier {
     if (this.type === 'tab' && !this.stave) {
       throw new RuntimeError('ClefError', "Can't get width without stave.");
     }
-
     return this.width;
   }
 
@@ -194,22 +193,22 @@ export class Clef extends StaveModifier {
   /** Render clef. */
   draw(): void {
     if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
-    if (!this.stave) throw new RuntimeError('ClefError', "Can't draw clef without stave.");
     if (!this.glyph) throw new RuntimeError('ClefError', "Can't draw clef without glyph.");
+    const stave = this.checkStave();
     this.setRendered();
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setContext(this.stave.getContext());
+    this.glyph.setStave(stave);
+    this.glyph.setContext(stave.getContext());
     if (this.clef.line !== undefined) {
-      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      this.placeGlyphOnLine(this.glyph, stave, this.clef.line);
     }
 
     this.glyph.renderToStave(this.x);
 
     if (this.annotation !== undefined && this.attachment !== undefined) {
-      this.placeGlyphOnLine(this.attachment, this.stave, this.annotation.line);
-      this.attachment.setStave(this.stave);
-      this.attachment.setContext(this.stave.getContext());
+      this.placeGlyphOnLine(this.attachment, stave, this.annotation.line);
+      this.attachment.setStave(stave);
+      this.attachment.setContext(stave.getContext());
       this.attachment.renderToStave(this.x);
     }
   }

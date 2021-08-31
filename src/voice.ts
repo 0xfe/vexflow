@@ -159,7 +159,7 @@ export class Voice extends Element {
   /** Get the bounding box for the voice. */
   getBoundingBox(): BoundingBox | undefined {
     if (!this.boundingBox) {
-      const stave = defined<Stave>(this.stave);
+      const stave = this.checkStave();
       let boundingBox = undefined;
       for (let i = 0; i < this.tickables.length; ++i) {
         const tickable = this.tickables[i];
@@ -269,7 +269,7 @@ export class Voice extends Element {
   /** Preformat the voice by applying the voice's stave to each note. */
   preFormat(): this {
     if (this.preFormatted) return this;
-    const stave = defined<Stave>(this.stave);
+    const stave = this.checkStave();
     this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
         tickable.setStave(stave);
@@ -277,6 +277,10 @@ export class Voice extends Element {
     });
     this.preFormatted = true;
     return this;
+  }
+
+  checkStave(): Stave {
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   /**

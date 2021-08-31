@@ -104,8 +104,7 @@ export class TimeSignature extends StaveModifier {
   }
 
   makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
-    const glyph = new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
-    return glyph;
+    return new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
   }
 
   getInfo(): TimeSignatureInfo {
@@ -122,14 +121,12 @@ export class TimeSignature extends StaveModifier {
       throw new RuntimeError('TimeSignatureError', "Can't draw time signature without x.");
     }
 
-    if (!this.stave) {
-      throw new RuntimeError('TimeSignatureError', "Can't draw time signature without stave.");
-    }
+    const stave = this.checkStave();
 
     this.setRendered();
-    this.info.glyph.setStave(this.stave);
-    this.info.glyph.setContext(this.stave.getContext());
-    this.placeGlyphOnLine(this.info.glyph, this.stave, this.info.line);
+    this.info.glyph.setStave(stave);
+    this.info.glyph.setContext(stave.getContext());
+    this.placeGlyphOnLine(this.info.glyph, stave, this.info.line);
     this.info.glyph.renderToStave(this.x);
   }
 }

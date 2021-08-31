@@ -1,6 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
@@ -494,6 +494,10 @@ export class Glyph extends Element {
     this.restoreStyle(ctx);
   }
 
+  checkStave(): Stave {
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
+  }
+
   renderToStave(x: number): void {
     const context = this.checkContext();
 
@@ -501,9 +505,7 @@ export class Glyph extends Element {
       throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
     }
 
-    if (!this.stave) {
-      throw new RuntimeError('GlyphError', 'No valid stave');
-    }
+    const stave = this.checkStave();
 
     const outline = this.metrics.outline;
     const scale = this.scale * this.metrics.scale;
@@ -515,7 +517,7 @@ export class Glyph extends Element {
       outline,
       scale,
       x + this.x_shift + this.metrics.x_shift,
-      this.stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift
+      stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift
     );
     this.restoreStyle();
   }

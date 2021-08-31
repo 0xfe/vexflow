@@ -1,7 +1,6 @@
 import { defined } from './util';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
-import { Stave } from './stave';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;
@@ -57,7 +56,8 @@ export class TimeSignatureGlyph extends Glyph {
   }
 
   renderToStave(x: number): void {
-    const stave = defined<Stave>(this.stave);
+    const stave = this.checkStave();
+
     let start_x = x + this.topStartX;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
