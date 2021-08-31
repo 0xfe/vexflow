@@ -20,6 +20,15 @@ import { Voice } from 'voice';
 import { Factory } from 'factory';
 import { isCategory } from 'typeguard';
 
+// Check that at least one of the note's modifiers is an Accidental.
+function hasAccidental(note: StaveNote) {
+  return note.getModifiers().some((modifier) => isCategory(modifier, Accidental));
+}
+
+// Bind a factory (via currying) and return a convenience function for building accidentals from a string.
+// accid(type: string) => Accidental
+const makeNewAccid = (factory: Factory) => (accidType: string) => factory.Accidental({ type: accidType });
+
 const AccidentalTests = {
   Start(): void {
     QUnit.module('Accidental');
@@ -318,6 +327,21 @@ const AccidentalTests = {
   },
 
   multiVoice(options: TestOptions): void {
+    // Helper function for visualizing
+    function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
+      const modifierContext = new ModifierContext();
+      note1.addToModifierContext(modifierContext);
+      note2.addToModifierContext(modifierContext);
+
+      new TickContext().addTickable(note1).addTickable(note2).preFormat().setX(x);
+
+      note1.setContext(ctx).draw();
+      note2.setContext(ctx).draw();
+
+      VexFlowTests.plotNoteWidth(ctx, note1, 180);
+      VexFlowTests.plotNoteWidth(ctx, note2, 15);
+    }
+
     const f = VexFlowTests.makeFactory(options, 460, 250);
     const accid = makeNewAccid(f);
     const stave = f.Stave({ x: 10, y: 45, width: 420 });
@@ -970,27 +994,5 @@ const AccidentalTests = {
     ok(true, 'Factory API');
   },
 };
-
-//#region Helper Functions
-
-const hasAccidental = (note: StaveNote) => note.getModifiers().some((modifier) => isCategory(modifier, Accidental));
-
-const makeNewAccid = (factory: Factory) => (accidType: string) => factory.Accidental({ type: accidType });
-
-function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
-  const modifierContext = new ModifierContext();
-  note1.addToModifierContext(modifierContext);
-  note2.addToModifierContext(modifierContext);
-
-  new TickContext().addTickable(note1).addTickable(note2).preFormat().setX(x);
-
-  note1.setContext(ctx).draw();
-  note2.setContext(ctx).draw();
-
-  VexFlowTests.plotNoteWidth(ctx, note1, 180);
-  VexFlowTests.plotNoteWidth(ctx, note2, 15);
-}
-
-//#endregion Helper Functions
 
 export { AccidentalTests };
