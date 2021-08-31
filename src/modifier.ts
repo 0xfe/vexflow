@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
@@ -150,8 +150,7 @@ export class Modifier extends Element {
 
   /** Check and get `ModifierContext`. */
   checkModifierContext(): ModifierContext {
-    if (!this.modifierContext) throw new RuntimeError('NoModifierContext', 'Modifier Context Required');
-    return this.modifierContext;
+    return defined(this.modifierContext, 'NoModifierContext', 'Modifier Context Required');
   }
 
   /** Every modifier must be part of a `ModifierContext`. */

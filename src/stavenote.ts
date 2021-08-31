@@ -893,16 +893,12 @@ export class StaveNote extends StemmableNote {
 
   // Get all accidentals in the `ModifierContext`
   getAccidentals(): Accidental[] {
-    if (!this.modifierContext)
-      throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('accidentals') as Accidental[];
+    return this.checkModifierContext().getMembers('accidentals') as Accidental[];
   }
 
   // Get all dots in the `ModifierContext`
   getDots(): Dot[] {
-    if (!this.modifierContext)
-      throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('dots') as Dot[];
+    return this.checkModifierContext().getMembers('dots') as Dot[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`

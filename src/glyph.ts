@@ -183,12 +183,14 @@ export class Glyph extends Element {
   // eslint-disable-next-line
   draw() {}
 
-  /*
-    Static methods used to implement loading and rendering glyphs.
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //#region Static Methods
+  //
+  // Static methods used to implement loading and rendering glyphs.
+  //
+  // Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
+  // to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
 
-    Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
-    to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
-  */
   static lookupFontMetric(font: Font, category: string, code: string, key: string, defaultValue: number): number {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, undefined);
     if (value === undefined) {
@@ -361,6 +363,9 @@ export class Glyph extends Element {
     return data.bbox.getW() * scale;
   }
 
+  //#endregion Static Methods
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
   /**
    * @constructor
    */
@@ -436,22 +441,24 @@ export class Glyph extends Element {
     );
   }
 
-  getMetrics(): GlyphMetrics {
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
+  checkMetrics(): GlyphMetrics {
+    return defined(this.metrics, 'BadGlyph', `Glyph ${this.code} is not initialized.`);
+  }
 
+  getMetrics(): GlyphMetrics {
+    const metrics = this.checkMetrics();
+    const metricsScale = metrics.scale;
     return {
-      x_min: this.metrics.x_min * this.scale * this.metrics.scale,
-      x_max: this.metrics.x_max * this.scale * this.metrics.scale,
+      x_min: metrics.x_min * this.scale * metricsScale,
+      x_max: metrics.x_max * this.scale * metricsScale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
-      scale: this.scale * this.metrics.scale,
-      x_shift: this.metrics.x_shift,
-      y_shift: this.metrics.y_shift,
-      outline: this.metrics.outline,
-      font: this.metrics.font,
-      ha: this.metrics.ha,
+      scale: this.scale * metricsScale,
+      x_shift: metrics.x_shift,
+      y_shift: metrics.y_shift,
+      outline: metrics.outline,
+      font: metrics.font,
+      ha: metrics.ha,
     };
   }
 
@@ -475,22 +482,16 @@ export class Glyph extends Element {
   }
 
   render(ctx: RenderContext, x: number, y: number): void {
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
+    const metrics = this.checkMetrics();
 
-    const outline = this.metrics.outline;
-    const scale = this.scale * this.metrics.scale;
+    const outline = metrics.outline;
+    const scale = this.scale * metrics.scale;
 
     this.setRendered();
     this.applyStyle(ctx);
-    Glyph.renderOutline(
-      ctx,
-      outline,
-      scale,
-      x + this.originShift.x + this.metrics.x_shift,
-      y + this.originShift.y + this.metrics.y_shift
-    );
+    const xPos = x + this.originShift.x + metrics.x_shift;
+    const yPos = y + this.originShift.y + metrics.y_shift;
+    Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
     this.restoreStyle(ctx);
   }
 
@@ -500,25 +501,18 @@ export class Glyph extends Element {
 
   renderToStave(x: number): void {
     const context = this.checkContext();
-
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
-
+    const metrics = this.checkMetrics();
     const stave = this.checkStave();
 
-    const outline = this.metrics.outline;
-    const scale = this.scale * this.metrics.scale;
+    const outline = metrics.outline;
+    const scale = this.scale * metrics.scale;
 
     this.setRendered();
     this.applyStyle();
-    Glyph.renderOutline(
-      context,
-      outline,
-      scale,
-      x + this.x_shift + this.metrics.x_shift,
-      stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift
-    );
+
+    const xPos = x + this.x_shift + metrics.x_shift;
+    const yPos = stave.getYForGlyphs() + this.y_shift + metrics.y_shift;
+    Glyph.renderOutline(context, outline, scale, xPos, yPos);
     this.restoreStyle();
   }
 }

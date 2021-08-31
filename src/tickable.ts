@@ -9,7 +9,7 @@ import { Modifier } from './modifier';
 import { ModifierContext } from './modifiercontext';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
 /** Formatter metrics interface */
@@ -199,8 +199,7 @@ export abstract class Tickable extends Element {
    * This allows formatters and preFormatter to associate them with the right modifierContexts.
    */
   getVoice(): Voice {
-    if (!this.voice) throw new RuntimeError('NoVoice', 'Tickable has no voice.');
-    return this.voice;
+    return defined(this.voice, 'NoVoice', 'Tickable has no voice.');
   }
 
   /** Set the associated voice. */
@@ -368,6 +367,11 @@ export abstract class Tickable extends Element {
   /** Get `ModifierContext`. */
   getModifierContext(): ModifierContext | undefined {
     return this.modifierContext;
+  }
+
+  /** Check and get `ModifierContext`. */
+  checkModifierContext(): ModifierContext {
+    return defined(this.modifierContext, 'NoModifierContext', 'No modifier context attached to this tickable.');
   }
 
   /** Get the target stave. */
