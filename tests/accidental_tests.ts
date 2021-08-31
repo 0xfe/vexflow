@@ -19,6 +19,7 @@ import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
 import { Factory } from 'factory';
 import { isCategory } from 'typeguard';
+import { Note } from 'note';
 
 // Check that at least one of the note's modifiers is an Accidental.
 function hasAccidental(note: StaveNote) {
@@ -123,7 +124,7 @@ const AccidentalTests = {
     voice.draw(context, stave);
     beams.forEach((b) => b.setContext(context).draw());
 
-    notes.forEach((note) => VexFlowTests.plotNoteWidth(context, note, 30));
+    notes.forEach((note) => Note.plotMetrics(context, note, 30));
 
     VexFlowTests.plotLegendForNoteWidth(context, 300, 150);
     ok(true);
@@ -173,7 +174,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
 
     notes.forEach((note, index) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Modifier, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -263,7 +264,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
 
     notes.forEach((note, index) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid, index) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -312,7 +313,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
 
     notes.forEach((note, noteIndex) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + noteIndex + ' has accidentals');
       note.getAccidentals().forEach((accid, accidIndex) => {
         ok(accid.getWidth() > 0, 'Accidental ' + accidIndex + ' has set width');
@@ -338,8 +339,8 @@ const AccidentalTests = {
       note1.setContext(ctx).draw();
       note2.setContext(ctx).draw();
 
-      VexFlowTests.plotNoteWidth(ctx, note1, 180);
-      VexFlowTests.plotNoteWidth(ctx, note2, 15);
+      Note.plotMetrics(ctx, note1, 180);
+      Note.plotMetrics(ctx, note2, 15);
     }
 
     const f = VexFlowTests.makeFactory(options, 460, 250);
@@ -451,7 +452,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
     notes.forEach((note, index) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -515,7 +516,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
 
     notes.forEach((note, index) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
@@ -616,7 +617,7 @@ const AccidentalTests = {
     Formatter.SimpleFormat(notes);
 
     notes.forEach((note, index) => {
-      VexFlowTests.plotNoteWidth(f.getContext(), note, 140);
+      Note.plotMetrics(f.getContext(), note, 140);
       ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
       note.getAccidentals().forEach((accid: Accidental, index: number) => {
         ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');

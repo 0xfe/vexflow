@@ -163,7 +163,7 @@ function showOneNote(note1: StaveNote, stave: Stave, ctx: RenderContext, x: numb
   note1.setStave(stave).addToModifierContext(modifierContext);
   new TickContext().addTickable(note1).preFormat().setX(x);
   note1.setContext(ctx).draw();
-  VexFlowTests.plotNoteWidth(ctx, note1, 140);
+  Note.plotMetrics(ctx, note1, 140);
 }
 
 function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
@@ -177,8 +177,8 @@ function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: Ren
   note1.setContext(ctx).draw();
   note2.setContext(ctx).draw();
 
-  VexFlowTests.plotNoteWidth(ctx, note1, 180);
-  VexFlowTests.plotNoteWidth(ctx, note2, 20);
+  Note.plotMetrics(ctx, note1, 180);
+  Note.plotMetrics(ctx, note2, 20);
 }
 
 //#endregion Helper Functions

@@ -335,11 +335,11 @@ const FormatterTests = {
       f.Formatter().joinVoices(voices).format(voices, width);
 
       voices[0].getTickables().forEach((note) => {
-        VexFlowTests.plotNoteWidth(ctx, note, y + 140);
+        Note.plotMetrics(ctx, note, y + 140);
       });
 
       voices[1].getTickables().forEach((note) => {
-        VexFlowTests.plotNoteWidth(ctx, note, y - 20);
+        Note.plotMetrics(ctx, note, y - 20);
       });
       y += 210;
     }

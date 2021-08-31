@@ -58,7 +58,7 @@ const NoteSubGroupTests = {
 
     f.draw();
 
-    notes.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 150));
+    notes.forEach((note) => Note.plotMetrics(ctx, note, 150));
 
     VexFlowTests.plotLegendForNoteWidth(ctx, 620, 120);
 
@@ -111,7 +111,7 @@ const NoteSubGroupTests = {
 
     f.draw();
 
-    notes1.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 150));
+    notes1.forEach((note) => Note.plotMetrics(ctx, note, 150));
 
     ok(true, 'all pass');
   },
@@ -164,7 +164,7 @@ const NoteSubGroupTests = {
     f.draw();
     f.draw();
 
-    notes1.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 150));
+    notes1.forEach((note) => Note.plotMetrics(ctx, note, 150));
 
     ok(true, 'all pass');
   },

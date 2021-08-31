@@ -251,8 +251,6 @@ class VexFlowTests {
     });
   }
 
-  static plotNoteWidth = Note.plotMetrics;
-
   /**
    * @param ctx
    * @param x

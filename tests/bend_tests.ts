@@ -64,7 +64,7 @@ const BendTests = {
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
-    notes.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 140));
+    notes.forEach((note) => Note.plotMetrics(ctx, note, 140));
 
     ok(true, 'Double Bends');
   },
@@ -110,7 +110,7 @@ const BendTests = {
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
-    notes.forEach((note) => VexFlowTests.plotNoteWidth(ctx, note, 140));
+    notes.forEach((note) => Note.plotMetrics(ctx, note, 140));
     ok(true, 'Bend Release');
   },
 
@@ -162,7 +162,7 @@ const BendTests = {
         .setX(75 * i);
 
       note.setStave(stave).setContext(ctx).draw();
-      VexFlowTests.plotNoteWidth(ctx, note, 140);
+      Note.plotMetrics(ctx, note, 140);
       ok(true, 'Bend ' + i);
     }
   },
@@ -201,7 +201,7 @@ const BendTests = {
         .setX(75 * i);
 
       note.setStave(stave).setContext(ctx).draw();
-      VexFlowTests.plotNoteWidth(ctx, note, 140);
+      Note.plotMetrics(ctx, note, 140);
       ok(true, 'Bend ' + i);
     }
   },
@@ -244,7 +244,7 @@ const BendTests = {
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
-    VexFlowTests.plotNoteWidth(ctx, notes[0], 140);
+    Note.plotMetrics(ctx, notes[0], 140);
     ok(true, 'Whako Release');
   },
 };
