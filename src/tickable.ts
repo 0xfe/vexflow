@@ -156,11 +156,8 @@ export abstract class Tickable extends Element {
 
   /** Get `x` position of this tick context. */
   getX(): number {
-    if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
-    }
-
-    return this.tickContext.getX() + this.x_shift;
+    const tickContext = this.checkTickContext(`Can't getX() without a TickContext.`);
+    return tickContext.getX() + this.x_shift;
   }
 
   /** Return the formatterMetrics. */
@@ -293,10 +290,14 @@ export abstract class Tickable extends Element {
     return this.modifiers;
   }
 
-  /** Set the Tick Contxt. */
+  /** Set the Tick Context. */
   setTickContext(tc: TickContext): void {
     this.tickContext = tc;
     this.setPreFormatted(false);
+  }
+
+  checkTickContext(message = 'Tickable has no tick context.'): TickContext {
+    return defined(this.tickContext, 'NoTickContext', message);
   }
 
   /** Preformat the Tickable. */
@@ -352,10 +353,8 @@ export abstract class Tickable extends Element {
   }
 
   getAbsoluteX(): number {
-    if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Tickable needs a TickContext assigned for an x-value.');
-    }
-    return this.tickContext.getX();
+    const tickContext = this.checkTickContext(`Can't getAbsoluteX() without a TickContext.`);
+    return tickContext.getX();
   }
 
   /** Attach this note to a modifier context. */

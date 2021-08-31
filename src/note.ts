@@ -462,8 +462,7 @@ export abstract class Note extends Tickable {
 
   /** Get the `TickContext` for this note. */
   getTickContext(): TickContext {
-    if (!this.tickContext) throw new RuntimeError('NoTickContext', 'Note has no tick context.');
-    return this.tickContext;
+    return this.checkTickContext();
   }
 
   /** Set the `TickContext` for this note. */
@@ -594,12 +593,9 @@ export abstract class Note extends Tickable {
    * looking for the post-formatted x-position.
    */
   getAbsoluteX(): number {
-    if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an x-value.');
-    }
-
+    const tickContext = this.checkTickContext(`Can't getAbsoluteX() without a TickContext.`);
     // Position note to left edge of tick context.
-    let x = this.tickContext.getX();
+    let x = tickContext.getX();
     if (this.stave) {
       x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
     }
