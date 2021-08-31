@@ -972,7 +972,9 @@ const AccidentalTests = {
 };
 
 //#region Helper Functions
+
 const hasAccidental = (note: StaveNote) => note.getModifiers().some((modifier) => isCategory(modifier, Accidental));
+
 const makeNewAccid = (factory: Factory) => (accidType: string) => factory.Accidental({ type: accidType });
 
 function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
@@ -988,6 +990,7 @@ function showNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: Render
   VexFlowTests.plotNoteWidth(ctx, note1, 180);
   VexFlowTests.plotNoteWidth(ctx, note2, 15);
 }
+
 //#endregion Helper Functions
 
 export { AccidentalTests };

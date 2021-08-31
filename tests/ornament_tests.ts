@@ -20,8 +20,8 @@ const OrnamentTests = {
   Start(): void {
     QUnit.module('Ornament');
     const run = VexFlowTests.runTests;
-    // run('Ornaments', this.drawOrnaments);
-    // run('Ornaments Vertically Shifted', this.drawOrnamentsDisplaced);
+    run('Ornaments', this.drawOrnaments);
+    run('Ornaments Vertically Shifted', this.drawOrnamentsDisplaced);
     run('Ornaments - Delayed turns', this.drawOrnamentsDelayed);
     run('Ornaments - Delayed turns, Multiple Draws', this.drawOrnamentsDelayedMultipleDraws);
     run('Stacked', this.drawOrnamentsStacked);

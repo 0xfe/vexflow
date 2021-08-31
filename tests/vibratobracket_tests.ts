@@ -20,39 +20,34 @@ const VibratoBracketTests = {
   Start(): void {
     QUnit.module('VibratoBracket');
     const run = VexFlowTests.runTests;
-    run(
-      'Simple VibratoBracket',
-      createTest('c4/4, c4, c4, c4', (factory, notes) => {
-        factory.VibratoBracket({
-          from: notes[0] as Note,
-          to: notes[3] as Note,
-          options: { line: 2 },
-        });
-      })
-    );
-
-    run(
-      'Harsh VibratoBracket Without End Note',
-      createTest('c4/4, c4, c4, c4', (factory, notes) => {
-        factory.VibratoBracket({
-          from: notes[2] as Note,
-          to: null,
-          options: { line: 2, harsh: true },
-        });
-      })
-    );
-
-    run(
-      'Harsh VibratoBracket Without Start Note',
-      createTest('c4/4, c4, c4, c4', (factory, notes) => {
-        factory.VibratoBracket({
-          from: null,
-          to: notes[2] as Note,
-          options: { line: 2, harsh: true },
-        });
-      })
-    );
+    run('Simple VibratoBracket', this.simple);
+    run('Harsh VibratoBracket Without End Note', this.withoutEndNote);
+    run('Harsh VibratoBracket Without Start Note', this.withoutStartNote);
   },
+
+  simple: createTest('c4/4, c4, c4, c4', (factory, notes) => {
+    factory.VibratoBracket({
+      from: notes[0] as Note,
+      to: notes[3] as Note,
+      options: { line: 2 },
+    });
+  }),
+
+  withoutEndNote: createTest('c4/4, c4, c4, c4', (factory, notes) => {
+    factory.VibratoBracket({
+      from: notes[2] as Note,
+      to: null,
+      options: { line: 2, harsh: true },
+    });
+  }),
+
+  withoutStartNote: createTest('c4/4, c4, c4, c4', (factory, notes) => {
+    factory.VibratoBracket({
+      from: null,
+      to: notes[2] as Note,
+      options: { line: 2, harsh: true },
+    });
+  }),
 };
 
 // Helper function to set up the stave, easyscore, voice, and to format & draw.

@@ -101,6 +101,7 @@ const GraceTabNoteTests = {
 };
 
 //#region Helper Functions
+
 const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 
 const graceTabNote = (note_prop: TabNoteStruct) => new GraceTabNote(note_prop);
@@ -110,6 +111,7 @@ function setupContext(opts: TestOptions, ctxBuilder: ContextBuilder): { context:
   const stave = new TabStave(10, 10, 350).addTabGlyph().setContext(context).draw();
   return { context, stave };
 }
+
 //#endregion Helper Functions
 
 export { GraceTabNoteTests };

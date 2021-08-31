@@ -17,39 +17,46 @@ const PedalMarkingTests = {
     QUnit.module('PedalMarking');
 
     const run = VexFlowTests.runTests;
-    run('Simple Pedal 1', createTest(withSimplePedal('text')));
-    run('Simple Pedal 2', createTest(withSimplePedal('bracket')));
-    run('Simple Pedal 3', createTest(withSimplePedal('mixed')));
-    run('Release and Depress on Same Note 1', createTest(withReleaseAndDepressedPedal('bracket')));
-    run('Release and Depress on Same Note 2', createTest(withReleaseAndDepressedPedal('mixed')));
-
-    run(
-      'Custom Text 1',
-      createTest((factory, notes0, notes1) => {
-        const pedal = factory.PedalMarking({
-          notes: [notes0[0], notes1[3]],
-          options: { style: 'text' },
-        });
-        pedal.setCustomText('una corda', 'tre corda');
-        return pedal;
-      })
-    );
-
-    run(
-      'Custom Text 2',
-      createTest((factory, notes0, notes1) => {
-        const pedal = factory.PedalMarking({
-          notes: [notes0[0], notes1[3]],
-          options: { style: 'mixed' },
-        });
-        pedal.setCustomText('Sost. Ped.');
-        return pedal;
-      })
-    );
+    run('Simple Pedal 1', this.simple1);
+    run('Simple Pedal 2', this.simple2);
+    run('Simple Pedal 3', this.simple3);
+    run('Release and Depress on Same Note 1', this.releaseDepress1);
+    run('Release and Depress on Same Note 2', this.releaseDepress2);
+    run('Custom Text 1', this.customTest1);
+    run('Custom Text 2', this.customTest2);
   },
+
+  simple1: createTest(withSimplePedal('text')),
+
+  simple2: createTest(withSimplePedal('bracket')),
+
+  simple3: createTest(withSimplePedal('mixed')),
+
+  releaseDepress1: createTest(withReleaseAndDepressedPedal('bracket')),
+
+  releaseDepress2: createTest(withReleaseAndDepressedPedal('mixed')),
+
+  customTest1: createTest((factory, notes0, notes1) => {
+    const pedal = factory.PedalMarking({
+      notes: [notes0[0], notes1[3]],
+      options: { style: 'text' },
+    });
+    pedal.setCustomText('una corda', 'tre corda');
+    return pedal;
+  }),
+
+  customTest2: createTest((factory, notes0, notes1) => {
+    const pedal = factory.PedalMarking({
+      notes: [notes0[0], notes1[3]],
+      options: { style: 'mixed' },
+    });
+    pedal.setCustomText('Sost. Ped.');
+    return pedal;
+  }),
 };
 
 //#region Helper Functions
+
 function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => void) {
   return (options: TestOptions) => {
     const f = VexFlowTests.makeFactory(options, 550, 200);
@@ -71,17 +78,22 @@ function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => v
   };
 }
 
-const withSimplePedal = (style: string) => (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
-  factory.PedalMarking({
-    notes: [notes0[0], notes0[2], notes0[3], notes1[3]],
-    options: { style },
-  });
+function withSimplePedal(style: string) {
+  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+    factory.PedalMarking({
+      notes: [notes0[0], notes0[2], notes0[3], notes1[3]],
+      options: { style },
+    });
+}
 
-const withReleaseAndDepressedPedal = (style: string) => (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
-  factory.PedalMarking({
-    notes: [notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]],
-    options: { style },
-  });
+function withReleaseAndDepressedPedal(style: string) {
+  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+    factory.PedalMarking({
+      notes: [notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]],
+      options: { style },
+    });
+}
+
 //#endregion Helper Functions
 
 export { PedalMarkingTests };

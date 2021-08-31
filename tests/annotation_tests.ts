@@ -23,8 +23,6 @@ import { Vibrato } from 'vibrato';
 import { Voice } from 'voice';
 import { Tickable } from 'tickable';
 
-const FONT_SIZE = VexFlowTests.Font.size;
-
 const AnnotationTests = {
   Start(): void {
     QUnit.module('Annotation');
@@ -388,6 +386,7 @@ const AnnotationTests = {
   },
 };
 
+const FONT_SIZE = VexFlowTests.Font.size;
 const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
 const staveNote = (note_struct: StaveNoteStruct) => new StaveNote(note_struct);
 
