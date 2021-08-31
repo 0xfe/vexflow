@@ -301,9 +301,7 @@ export class Voice extends Element {
       if (stave) {
         tickable.setStave(stave);
       }
-      if (!tickable.getStave()) {
-        throw new RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
-      }
+      defined(tickable.getStave(), 'MissingStave', 'The voice cannot draw tickables without staves.');
       const bb = tickable.getBoundingBox();
       if (bb) {
         boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;

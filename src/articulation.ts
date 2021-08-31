@@ -273,12 +273,8 @@ export class Articulation extends Modifier {
 
   protected reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
-    if (!this.articulation) {
-      throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
-    }
-
-    const code =
-      (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
+    const articulation = defined(this.articulation, 'ArgumentError', `Articulation not found: ${this.type}`);
+    const code = (this.position === ABOVE ? articulation.aboveCode : articulation.belowCode) || articulation.code;
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
     this.setWidth(defined(this.glyph.getMetrics().width));

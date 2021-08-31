@@ -500,9 +500,7 @@ export class Accidental extends Modifier {
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) {
-      throw new RuntimeError('ArgumentError', `Unknown accidental type: ${type}`);
-    }
+    defined(this.accidental, 'ArgumentError', `Unknown accidental type: ${type}`);
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
@@ -546,9 +544,7 @@ export class Accidental extends Modifier {
 
   /** Attach this accidental to `note`, which must be a `StaveNote`. */
   setNote(note: Note): this {
-    if (!note) {
-      throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
-    }
+    defined(note, 'ArgumentError', `Bad note value: ${note}`);
 
     this.note = note;
 

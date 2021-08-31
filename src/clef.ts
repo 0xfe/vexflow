@@ -192,7 +192,6 @@ export class Clef extends StaveModifier {
 
   /** Render clef. */
   draw(): void {
-    // TODO: Is this line buggy? this.x is a number, so !this.x returns true when x is 0.
     if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
     const glyph = defined(this.glyph, 'ClefError', "Can't draw clef without glyph.");
     const stave = this.checkStave();
