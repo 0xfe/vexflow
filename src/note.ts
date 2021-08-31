@@ -340,15 +340,8 @@ export abstract class Note extends Tickable {
   }
 
   /** Check and get the target stave. */
-  // checkStave(): Stave {
-  //   if (!this.stave) {
-  //     throw new RuntimeError('NoStave', 'No stave attached to instance');
-  //   }
-  //   return this.stave;
-  // }
-
   checkStave(): Stave {
-    return defined(this.stave);
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   /** Set the target stave. */

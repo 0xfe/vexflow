@@ -33,6 +33,7 @@ export class StaveModifier extends Element {
   protected position: StaveModifierPosition;
   protected stave?: Stave;
   protected layoutMetrics?: LayoutMetrics;
+
   static get Position(): typeof StaveModifierPosition {
     return StaveModifierPosition;
   }
@@ -58,15 +59,8 @@ export class StaveModifier extends Element {
     return this.stave;
   }
 
-  // checkStave(): Stave {
-  //   if (!this.stave) {
-  //     throw new RuntimeError('NoStave', 'No stave attached to instance');
-  //   }
-  //   return this.stave;
-  // }
-
   checkStave(): Stave {
-    return defined(this.stave);
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   setStave(stave: Stave): this {
