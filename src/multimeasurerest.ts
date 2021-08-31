@@ -3,7 +3,7 @@
 //
 // This class implements multiple measure rests
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
@@ -117,11 +117,15 @@ export class MultiMeasureRest extends Element {
     return this.stave;
   }
 
+  // checkStave(): Stave {
+  //   if (!this.stave) {
+  //     throw new RuntimeError('NoStave', 'No stave attached to instance');
+  //   }
+  //   return this.stave;
+  // }
+
   checkStave(): Stave {
-    if (!this.stave) {
-      throw new RuntimeError('NoStave', 'No stave attached to instance');
-    }
-    return this.stave;
+    return defined(this.stave);
   }
 
   drawLine(ctx: RenderContext, left: number, right: number, sbl: number): void {

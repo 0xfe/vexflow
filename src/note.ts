@@ -2,6 +2,7 @@
 // MIT License
 
 import { Beam } from './beam';
+import { RuntimeError, drawDot, defined } from './util';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
@@ -11,7 +12,6 @@ import { Stroke } from './strokes';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { KeyProps, RenderContext } from './types/common';
-import { drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
 
 export interface NoteMetrics {
@@ -340,11 +340,15 @@ export abstract class Note extends Tickable {
   }
 
   /** Check and get the target stave. */
+  // checkStave(): Stave {
+  //   if (!this.stave) {
+  //     throw new RuntimeError('NoStave', 'No stave attached to instance');
+  //   }
+  //   return this.stave;
+  // }
+
   checkStave(): Stave {
-    if (!this.stave) {
-      throw new RuntimeError('NoStave', 'No stave attached to instance');
-    }
-    return this.stave;
+    return defined(this.stave);
   }
 
   /** Set the target stave. */

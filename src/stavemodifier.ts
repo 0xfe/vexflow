@@ -3,7 +3,7 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -58,11 +58,15 @@ export class StaveModifier extends Element {
     return this.stave;
   }
 
+  // checkStave(): Stave {
+  //   if (!this.stave) {
+  //     throw new RuntimeError('NoStave', 'No stave attached to instance');
+  //   }
+  //   return this.stave;
+  // }
+
   checkStave(): Stave {
-    if (!this.stave) {
-      throw new RuntimeError('NoStave', 'No stave attached to instance');
-    }
-    return this.stave;
+    return defined(this.stave);
   }
 
   setStave(stave: Stave): this {
@@ -114,9 +118,8 @@ export class StaveModifier extends Element {
     return this.layoutMetrics;
   }
 
-  draw(
-    // eslint-disable-next-line
-    element?: Element, x_shift?: number): void {
+  // eslint-disable-next-line
+  draw(element?: Element, x_shift?: number): void {
     // do nothing
   }
 }
