@@ -3,7 +3,7 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { RuntimeError, log, check } from './util';
+import { log, defined } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';
@@ -500,9 +500,7 @@ export class Accidental extends Modifier {
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) {
-      throw new RuntimeError('ArgumentError', `Unknown accidental type: ${type}`);
-    }
+    defined(this.accidental, 'ArgumentError', `Unknown accidental type: ${type}`);
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
@@ -530,21 +528,23 @@ export class Accidental extends Modifier {
 
   /** Get width in pixels. */
   getWidth(): number {
-    const parenWidth = this.cautionary
-      ? check<Glyph>(this.parenLeft).getMetrics().width +
-        check<Glyph>(this.parenRight).getMetrics().width +
+    if (this.cautionary) {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+      const parenWidth =
+        parenLeft.getMetrics().width +
+        parenRight.getMetrics().width +
         this.render_options.parenLeftPadding +
-        this.render_options.parenRightPadding
-      : 0;
-
-    return this.glyph.getMetrics().width + parenWidth;
+        this.render_options.parenRightPadding;
+      return this.glyph.getMetrics().width + parenWidth;
+    } else {
+      return this.glyph.getMetrics().width;
+    }
   }
 
   /** Attach this accidental to `note`, which must be a `StaveNote`. */
   setNote(note: Note): this {
-    if (!note) {
-      throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
-    }
+    defined(note, 'ArgumentError', `Bad note value: ${note}`);
 
     this.note = note;
 
@@ -574,8 +574,6 @@ export class Accidental extends Modifier {
       x_shift,
       y_shift,
       glyph,
-      parenLeft,
-      parenRight,
       render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
@@ -592,15 +590,18 @@ export class Accidental extends Modifier {
     if (!cautionary) {
       glyph.render(ctx, accX, accY);
     } else {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+
       // Render the accidental in parentheses.
-      check<Glyph>(parenRight).render(ctx, accX, accY);
-      accX -= check<Glyph>(parenRight).getMetrics().width;
+      parenRight.render(ctx, accX, accY);
+      accX -= parenRight.getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
       accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
-      check<Glyph>(parenLeft).render(ctx, accX, accY);
+      parenLeft.render(ctx, accX, accY);
     }
   }
 }

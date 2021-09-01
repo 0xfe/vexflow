@@ -1,7 +1,6 @@
-import { check } from './util';
+import { defined } from './util';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
-import { Stave } from './stave';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;
@@ -38,7 +37,7 @@ export class TimeSignatureGlyph extends Glyph {
       const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
-      botWidth += check<number>(botGlyph.getMetrics().width);
+      botWidth += defined(botGlyph.getMetrics().width);
     }
 
     this.width = Math.max(topWidth, botWidth);
@@ -57,7 +56,8 @@ export class TimeSignatureGlyph extends Glyph {
   }
 
   renderToStave(x: number): void {
-    const stave = check<Stave>(this.stave);
+    const stave = this.checkStave();
+
     let start_x = x + this.topStartX;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
@@ -68,7 +68,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + this.x_shift,
         stave.getYForLine(this.timeSignature.topLine)
       );
-      start_x += check<number>(glyph.getMetrics().width);
+      start_x += defined(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
@@ -82,7 +82,7 @@ export class TimeSignatureGlyph extends Glyph {
         start_x + glyph.getMetrics().x_shift,
         stave.getYForLine(this.timeSignature.bottomLine)
       );
-      start_x += check<number>(glyph.getMetrics().width);
+      start_x += defined(glyph.getMetrics().width);
     }
   }
 }
