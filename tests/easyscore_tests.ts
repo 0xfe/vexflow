@@ -20,6 +20,7 @@ const EasyScoreTests = {
     test('Durations', durations);
     test('Chords', chords);
     test('Dots', dots);
+    test('Types', types);
     test('Options', options);
     const run = VexFlowTests.runTests;
     run('Draw Basic', drawBasicTest);
@@ -160,18 +161,8 @@ function dots(): void {
 
 function types(): void {
   const score = new EasyScore();
-  const mustPass = [
-    'c3/4/x.',
-    'c##3//r.., cb3',
-    'c##3/x.., cb3',
-    'c##3/r.., cb3',
-    'd##3/w/s, cb3/q...',
-    'c##3/q, cb3/32',
-    '(c##3 cbb3 cn3)., cb3',
-    '(c5).',
-    '(c##4 cbb4 cn4)/w.., (c#5 cb2 a3)/32',
-  ];
-  const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32'];
+  const mustPass = ['c3/4/x.', 'c##3//r.., cb3', 'c##3/x.., cb3', 'c##3/r.., cb3', 'd##3/w/s, cb3/q...', 'Fb4'];
+  const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32', 'z#3'];
 
   mustPass.forEach((line) => equal(score.parse(line).success, true, line));
   mustFail.forEach((line) => equal(score.parse(line).success, false, line));

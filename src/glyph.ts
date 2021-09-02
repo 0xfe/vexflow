@@ -180,20 +180,23 @@ export class Glyph extends Element {
   protected point: number;
   protected stave?: Stave;
 
-  // eslint-disable-next-line
-  draw() {}
-
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  //#region Static Methods
-  //
-  // Static methods used to implement loading and rendering glyphs.
-  //
-  // Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
-  // to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
+  // Static methods for loading and rendering glyphs.
 
+  /**
+   * Pass a key of the form `glyphs.{category}.{code}.{key}` to Font.lookupMetric(). If the initial lookup fails,
+   * try again with the path `glyphs.{category}.{key}`. If the second lookup fails, return the defaultValue.
+   *
+   * @param font
+   * @param category any metric path under 'glyphs', so 'stem.up' could resolve to glyphs.stem.up.shiftX, glyphs.stem.up.shiftY, etc.
+   * @param code
+   * @param key
+   * @param defaultValue
+   */
   static lookupFontMetric(font: Font, category: string, code: string, key: string, defaultValue: number): number {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, undefined);
     if (value === undefined) {
+      // The first lookup failed, so we omit .${code} and try again (with a defaultValue this time).
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
     }
     return value;
@@ -250,27 +253,29 @@ export class Glyph extends Element {
   }
 
   /**
-   * A quick and dirty static glyph renderer. Renders glyphs from the default
-   * font defined in Vex.Flow.Font.
+   * Renders glyphs from the default font stack.
+   *
+   * @param ctx Canvas or SVG context
+   * @param x_pos x coordinate
+   * @param y_pos y coordinate
+   * @param point the point size of the font
+   * @param code the glyph code in font.getGlyphs()
+   * @param options
+   * @returns
    */
   static renderGlyph(
-    /** The canvas context. */
     ctx: RenderContext,
-    /** X coordinate. */
     x_pos: number,
-    /** Y coordinate. */
     y_pos: number,
-    /** The point size to use. */
     point: number,
-    /** The glyph code in font.getGlyphs() */
-    val: string,
+    code: string,
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,
       ...options,
     };
-    const data = Glyph.cache.lookup(params.fontStack, val, params.category);
+    const data = Glyph.cache.lookup(params.fontStack, code, params.category);
     const metrics = data.metrics;
     if (data.point != -1) {
       point = data.point;
@@ -361,11 +366,10 @@ export class Glyph extends Element {
     return data.bbox.getW() * scale;
   }
 
-  //#endregion Static Methods
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-
   /**
-   * @constructor
+   * @param code
+   * @param point
+   * @param options
    */
   constructor(code: string, point: number, options?: { category: string }) {
     super();
@@ -390,6 +394,11 @@ export class Glyph extends Element {
     } else {
       this.reset();
     }
+  }
+
+  // eslint-disable-next-line
+  draw(...args: any[]): void {
+    // DO NOTHING.
   }
 
   getCode(): string {

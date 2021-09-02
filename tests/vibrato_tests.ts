@@ -55,6 +55,8 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
 
 /**
  * The harsh vibrato symbol is a zig zag line with sharp points.
+ * This test is nearly identical to the 'simple' test above.
+ * The only difference is that we call .setHarsh(true) on each Vibrato object.
  */
 function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
