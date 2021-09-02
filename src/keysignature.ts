@@ -6,7 +6,7 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { check, RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Flow } from './flow';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
@@ -282,7 +282,7 @@ export class KeySignature extends StaveModifier {
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(check<string>(this.keySpec));
+    this.accList = Flow.keySignature(defined(this.keySpec));
     const accList = this.accList;
     const firstAccidentalType = accList.length > 0 ? accList[0].type : undefined;
     let cancelAccList;
@@ -313,9 +313,7 @@ export class KeySignature extends StaveModifier {
       throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
     }
 
-    if (!this.stave) {
-      throw new RuntimeError('KeySignatureError', "Can't draw key signature without stave.");
-    }
+    const stave = this.checkStave();
 
     if (!this.formatted) this.format();
     this.setRendered();
@@ -323,8 +321,8 @@ export class KeySignature extends StaveModifier {
     for (let i = 0; i < this.glyphs.length; i++) {
       const glyph = this.glyphs[i];
       const x = this.x + this.xPositions[i];
-      glyph.setStave(this.stave);
-      glyph.setContext(this.stave.checkContext());
+      glyph.setStave(stave);
+      glyph.setContext(stave.checkContext());
       glyph.renderToStave(x);
     }
   }

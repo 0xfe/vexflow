@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
@@ -103,16 +103,16 @@ export class Modifier extends Element {
 
   /** Get attached note (`StaveNote`, `TabNote`, etc.) */
   getNote(): Note {
-    if (!this.note) throw new RuntimeError('NoNote', 'Modifier has no note.');
-    return this.note;
+    return defined(this.note, 'NoNote', 'Modifier has no note.');
   }
 
-  /** Check and get attached note (`StaveNote`, `TabNote`, etc.) */
+  /**
+   * Used in draw() to check and get the attached note (`StaveNote`, `TabNote`, etc.).
+   * Also verifies that the index is valid.
+   */
   checkAttachedNote(): Note {
-    if (!this.note || this.index === undefined) {
-      throw new RuntimeError('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
-    }
-    return this.note;
+    defined(this.index, 'NoIndex', `Can't draw ${this.getCategory()} without an index.`);
+    return defined(this.note, 'NoNote', `Can't draw ${this.getCategory()} without a note.`);
   }
 
   /**
@@ -131,10 +131,7 @@ export class Modifier extends Element {
 
   /** Check and get note index, which is a specific note in a chord. */
   checkIndex(): number {
-    if (this.index === undefined) {
-      throw new RuntimeError('NoIndex', 'Modifier has an invalid index.');
-    }
-    return this.index;
+    return defined(this.index, 'NoIndex', 'Modifier has an invalid index.');
   }
 
   /** Set note index, which is a specific note in a chord. */
@@ -150,8 +147,7 @@ export class Modifier extends Element {
 
   /** Check and get `ModifierContext`. */
   checkModifierContext(): ModifierContext {
-    if (!this.modifierContext) throw new RuntimeError('NoModifierContext', 'Modifier Context Required');
-    return this.modifierContext;
+    return defined(this.modifierContext, 'NoModifierContext', 'Modifier Context Required');
   }
 
   /** Every modifier must be part of a `ModifierContext`. */

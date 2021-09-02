@@ -2,7 +2,7 @@
 // Author: Larry Kuhns.
 // MIT License
 
-import { RuntimeError, log, check } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -212,7 +212,7 @@ export class Articulation extends Modifier {
     const getIncrement = (articulation: Articulation, line: number, position: number) =>
       roundToNearestHalf(
         getRoundingFunction(line, position),
-        check<number>(articulation.glyph.getMetrics().height) / 10 + margin
+        defined(articulation.glyph.getMetrics().height) / 10 + margin
       );
 
     articulations.filter(isAbove).forEach((articulation) => {
@@ -273,15 +273,11 @@ export class Articulation extends Modifier {
 
   protected reset(): void {
     this.articulation = Flow.articulationCodes(this.type);
-    if (!this.articulation) {
-      throw new RuntimeError('ArgumentError', `Articulation not found: ${this.type}`);
-    }
-
-    const code =
-      (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
+    const articulation = defined(this.articulation, 'ArgumentError', `Articulation not found: ${this.type}`);
+    const code = (this.position === ABOVE ? articulation.aboveCode : articulation.belowCode) || articulation.code;
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
-    this.setWidth(check<number>(this.glyph.getMetrics().width));
+    this.setWidth(defined(this.glyph.getMetrics().width));
   }
 
   /** Get element category string. */

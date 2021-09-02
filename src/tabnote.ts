@@ -15,7 +15,7 @@ import { Stave } from './stave';
 import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 
 export interface TabNotePosition {
   // For example, on a six stringed instrument, `str` ranges from 1 to 6.
@@ -164,13 +164,7 @@ export class TabNote extends StemmableNote {
     };
 
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-
-    if (!this.glyph) {
-      throw new RuntimeError(
-        'BadArguments',
-        `Invalid note initialization data (No glyph found): ${JSON.stringify(tab_struct)}`
-      );
-    }
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     this.buildStem();
 

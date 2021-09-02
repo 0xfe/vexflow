@@ -9,7 +9,7 @@
 //
 // See `tests/stavenote_tests.ts` for usage examples.
 
-import { RuntimeError, log, midLine, warn } from './util';
+import { RuntimeError, log, midLine, warn, defined } from './util';
 import { Flow } from './flow';
 import { BoundingBox } from './boundingbox';
 import { Stem } from './stem';
@@ -373,15 +373,9 @@ export class StaveNote extends StemmableNote {
     this.clef = noteStruct.clef ?? 'treble';
     this.octave_shift = noteStruct.octave_shift ?? 0;
 
-    // Pull note rendering properties
+    // Pull note rendering properties.
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-
-    if (!this.glyph) {
-      throw new RuntimeError(
-        'BadArguments',
-        `Invalid note initialization data (No glyph found): ${JSON.stringify(noteStruct)}`
-      );
-    }
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     // if true, displace note to right
     this.displaced = false;
@@ -893,16 +887,12 @@ export class StaveNote extends StemmableNote {
 
   // Get all accidentals in the `ModifierContext`
   getAccidentals(): Accidental[] {
-    if (!this.modifierContext)
-      throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('accidentals') as Accidental[];
+    return this.checkModifierContext().getMembers('accidentals') as Accidental[];
   }
 
   // Get all dots in the `ModifierContext`
   getDots(): Dot[] {
-    if (!this.modifierContext)
-      throw new RuntimeError('NoModifierContext', 'No modifier context attached to this note.');
-    return this.modifierContext.getMembers('dots') as Dot[];
+    return this.checkModifierContext().getMembers('dots') as Dot[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`

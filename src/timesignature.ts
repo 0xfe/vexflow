@@ -5,7 +5,7 @@
 // See tables.js for the internal time signatures
 // representation
 
-import { RuntimeError, check } from './util';
+import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
 import { StaveModifier } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
@@ -73,7 +73,7 @@ export class TimeSignature extends StaveModifier {
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifier.Position.BEGIN);
     this.info = this.parseTimeSpec(timeSpec);
-    this.setWidth(check<number>(this.info.glyph.getMetrics().width));
+    this.setWidth(defined(this.info.glyph.getMetrics().width));
     this.setPadding(padding);
   }
 
@@ -104,8 +104,7 @@ export class TimeSignature extends StaveModifier {
   }
 
   makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
-    const glyph = new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
-    return glyph;
+    return new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
   }
 
   getInfo(): TimeSignatureInfo {
@@ -122,14 +121,12 @@ export class TimeSignature extends StaveModifier {
       throw new RuntimeError('TimeSignatureError', "Can't draw time signature without x.");
     }
 
-    if (!this.stave) {
-      throw new RuntimeError('TimeSignatureError', "Can't draw time signature without stave.");
-    }
+    const stave = this.checkStave();
 
     this.setRendered();
-    this.info.glyph.setStave(this.stave);
-    this.info.glyph.setContext(this.stave.getContext());
-    this.placeGlyphOnLine(this.info.glyph, this.stave, this.info.line);
+    this.info.glyph.setStave(stave);
+    this.info.glyph.setContext(stave.getContext());
+    this.placeGlyphOnLine(this.info.glyph, stave, this.info.line);
     this.info.glyph.renderToStave(this.x);
   }
 }

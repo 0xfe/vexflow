@@ -9,10 +9,11 @@ import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
 import { Parser, Match, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './types/common';
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, defined } from './util';
 import { StaveNote } from './stavenote';
 import { TupletOptions } from './tuplet';
 import { Voice } from './voice';
+import { Music } from 'music';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -339,43 +340,36 @@ export class Builder {
     const options = { ...this.options, ...this.piece.options };
 
     // reset() sets this.options.stem & this.options.clef but we check to make sure nothing has changed.
-    if (options.stem === undefined) {
-      throw new RuntimeError('options.stem is not defined');
-    }
-    if (options.clef === undefined) {
-      throw new RuntimeError('options.clef is not defined');
-    }
-    const stem: string = options.stem.toLowerCase(); // e.g., auto | up | down
-    const clef: string = options.clef; // e.g., treble | bass
+    // e.g., auto | up | down
+    const stem = defined(options.stem, 'BadArguments', 'options.stem is not defined').toLowerCase();
+    // e.g., treble | bass
+    const clef = defined(options.clef, 'BadArguments', 'options.clef is not defined').toLowerCase();
 
-    const autoStem = stem === 'auto';
-    const stemDirection = !autoStem && stem === 'up' ? StaveNote.STEM_UP : StaveNote.STEM_DOWN;
-
-    // Build StaveNotes.
     const { chord, duration, dots, type } = this.piece;
-    const keys: string[] = chord.map(
+
+    // Create a string[] that will be assigned to the .keys property of the StaveNote.
+    // Each string in the array represents a note pitch and is of the form: {NoteName}{Accidental}/{Octave}
+    // Only standard accidentals are included in the .keys property. Microtonal accidentals are not included.
+    const standardAccidentals = Music.accidentals;
+    const keys = chord.map(
       (notePiece) =>
         notePiece.key +
-        (['bb', 'b', '##', '#', 'n'].includes(notePiece.accid ?? '') ? notePiece.accid : '') +
+        (standardAccidentals.includes(notePiece.accid ?? '') ? notePiece.accid : '') +
         '/' +
         notePiece.octave
     );
-    const note = factory.StaveNote({
-      keys,
-      duration,
-      dots,
-      type,
-      clef,
-      auto_stem: autoStem,
-    });
-    if (!autoStem) note.setStemDirection(stemDirection);
+    const auto_stem = stem === 'auto'; // StaveNoteStruct expects the underscore & lowercase.
+
+    // Build a StaveNote using the information we gathered.
+    const note = factory.StaveNote({ keys, duration, dots, type, clef, auto_stem });
+    if (!auto_stem) note.setStemDirection(stem === 'up' ? StaveNote.STEM_UP : StaveNote.STEM_DOWN);
 
     // Attach accidentals.
     const accidentals: (Accidental | undefined)[] = [];
     chord.forEach((notePiece: NotePiece, index: number) => {
       const accid = notePiece.accid;
       if (typeof accid === 'string') {
-        const accidental: Accidental = factory.Accidental({ type: accid });
+        const accidental = factory.Accidental({ type: accid });
         note.addAccidental(index, accidental);
         accidentals.push(accidental);
       } else {
@@ -386,7 +380,7 @@ export class Builder {
     // Attach dots.
     for (let i = 0; i < dots; i++) note.addDotToAll();
 
-    this.commitHooks.forEach((fn) => fn(options, note, this));
+    this.commitHooks.forEach((commitHook) => commitHook(options, note, this));
 
     this.elements.notes.push(note);
     this.elements.accidentals.push(accidentals);

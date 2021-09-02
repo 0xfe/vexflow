@@ -2,7 +2,7 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { RuntimeError } from './util';
+import { defined } from './util';
 import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
@@ -203,6 +203,11 @@ export abstract class Element {
     return this;
   }
 
+  /** Get the boundingBox. */
+  getBoundingBox(): BoundingBox | undefined {
+    return this.boundingBox;
+  }
+
   /** Return the context. */
   getContext(): RenderContext | undefined {
     return this.context;
@@ -214,16 +219,8 @@ export abstract class Element {
     return this;
   }
 
-  /** Get the boundingBox. */
-  getBoundingBox(): BoundingBox | undefined {
-    return this.boundingBox;
-  }
-
   /** Validate and return the context. */
   checkContext(): RenderContext {
-    if (!this.context) {
-      throw new RuntimeError('NoContext', 'No rendering context attached to instance.');
-    }
-    return this.context;
+    return defined(this.context, 'NoContext', 'No rendering context attached to instance.');
   }
 }
