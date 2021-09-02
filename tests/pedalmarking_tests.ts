@@ -17,52 +17,25 @@ const PedalMarkingTests = {
     QUnit.module('PedalMarking');
 
     const run = VexFlowTests.runTests;
-    run('Simple Pedal 1', this.simple1);
-    run('Simple Pedal 2', this.simple2);
-    run('Simple Pedal 3', this.simple3);
-    run('Release and Depress on Same Note 1', this.releaseDepress1);
-    run('Release and Depress on Same Note 2', this.releaseDepress2);
-    run('Custom Text 1', this.customTest1);
-    run('Custom Text 2', this.customTest2);
+    run('Simple Pedal 1', simple1);
+    run('Simple Pedal 2', simple2);
+    run('Simple Pedal 3', simple3);
+    run('Release and Depress on Same Note 1', releaseDepress1);
+    run('Release and Depress on Same Note 2', releaseDepress2);
+    run('Custom Text 1', customTest1);
+    run('Custom Text 2', customTest2);
   },
-
-  simple1: createTest(withSimplePedal('text')),
-
-  simple2: createTest(withSimplePedal('bracket')),
-
-  simple3: createTest(withSimplePedal('mixed')),
-
-  releaseDepress1: createTest(withReleaseAndDepressedPedal('bracket')),
-
-  releaseDepress2: createTest(withReleaseAndDepressedPedal('mixed')),
-
-  customTest1: createTest((factory, notes0, notes1) => {
-    const pedal = factory.PedalMarking({
-      notes: [notes0[0], notes1[3]],
-      options: { style: 'text' },
-    });
-    pedal.setCustomText('una corda', 'tre corda');
-    return pedal;
-  }),
-
-  customTest2: createTest((factory, notes0, notes1) => {
-    const pedal = factory.PedalMarking({
-      notes: [notes0[0], notes1[3]],
-      options: { style: 'mixed' },
-    });
-    pedal.setCustomText('Sost. Ped.');
-    return pedal;
-  }),
 };
 
-//#region Helper Functions
-
+/**
+ * Every test below uses this to set up the score and two staves/voices.
+ */
 function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => void) {
   return (options: TestOptions) => {
     const f = VexFlowTests.makeFactory(options, 550, 200);
     const score = f.EasyScore();
 
-    const stave0 = f.Stave({ width: 250 }).addTrebleGlyph();
+    const stave0 = f.Stave({ width: 250 }).addClef('treble');
     const voice0 = score.voice(score.notes('b4/4, b4, b4, b4[stem="down"]', { stem: 'up' }));
     f.Formatter().joinVoices([voice0]).formatToStave([voice0], stave0);
 
@@ -94,6 +67,28 @@ function withReleaseAndDepressedPedal(style: string) {
     });
 }
 
-//#endregion Helper Functions
+const simple1 = createTest(withSimplePedal('text'));
+const simple2 = createTest(withSimplePedal('bracket'));
+const simple3 = createTest(withSimplePedal('mixed'));
+const releaseDepress1 = createTest(withReleaseAndDepressedPedal('bracket'));
+const releaseDepress2 = createTest(withReleaseAndDepressedPedal('mixed'));
+
+const customTest1 = createTest((factory, notes0, notes1) => {
+  const pedal = factory.PedalMarking({
+    notes: [notes0[0], notes1[3]],
+    options: { style: 'text' },
+  });
+  pedal.setCustomText('una corda', 'tre corda');
+  return pedal;
+});
+
+const customTest2 = createTest((factory, notes0, notes1) => {
+  const pedal = factory.PedalMarking({
+    notes: [notes0[0], notes1[3]],
+    options: { style: 'mixed' },
+  });
+  pedal.setCustomText('Sost. Ped.');
+  return pedal;
+});
 
 export { PedalMarkingTests };

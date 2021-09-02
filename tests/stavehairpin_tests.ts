@@ -19,76 +19,27 @@ const StaveHairpinTests = {
   Start(): void {
     QUnit.module('StaveHairpin');
     const run = VexFlowTests.runTests;
-    run('Simple StaveHairpin', this.simple);
-    run('Horizontal Offset StaveHairpin', this.horizontal);
-    run('Vertical Offset StaveHairpin', this.vertical);
-    run('Height StaveHairpin', this.height);
+    run('Simple StaveHairpin', simple);
+    run('Horizontal Offset StaveHairpin', horizontal);
+    run('Vertical Offset StaveHairpin', vertical);
+    run('Height StaveHairpin', height);
   },
-
-  simple: createTest((ctx, notes) => {
-    drawHairpin(notes[0], notes[2], ctx, 1, 4);
-    drawHairpin(notes[1], notes[3], ctx, 2, 3);
-  }),
-
-  horizontal: createTest((ctx, notes) => {
-    drawHairpin(notes[0], notes[2], ctx, 1, 3, {
-      height: 10,
-      // TODO: these three property names seem to be incorrect.
-      // vo => should it be 'y_shift'?
-      // left_ho => should it be 'left_shift_px'?
-      // right_ho => should it be 'right_shift_px'?
-      vo: 20, // vertical offset
-      left_ho: 20, // left horizontal offset
-      right_ho: -20, // right horizontal offset
-    });
-    drawHairpin(notes[3], notes[3], ctx, 2, 4, {
-      height: 10,
-      y_shift: 0, // vertical offset
-      left_shift_px: 0, // left horizontal offset
-      right_shift_px: 120, // right horizontal offset
-    });
-  }),
-
-  vertical: createTest((ctx, notes) => {
-    drawHairpin(notes[0], notes[2], ctx, 1, 4, {
-      height: 10,
-      y_shift: 0, // vertical offset
-      left_shift_px: 0, // left horizontal offset
-      right_shift_px: 0, // right horizontal offset
-    });
-    drawHairpin(notes[2], notes[3], ctx, 2, 4, {
-      height: 10,
-      y_shift: -15, // vertical offset
-      left_shift_px: 2, // left horizontal offset
-      right_shift_px: 0, // right horizontal offset
-    });
-  }),
-
-  height: createTest((ctx, notes) => {
-    drawHairpin(notes[0], notes[2], ctx, 1, 4, {
-      height: 10,
-      y_shift: 0, // vertical offset
-      left_shift_px: 0, // left horizontal offset
-      right_shift_px: 0, // right horizontal offset
-    });
-    drawHairpin(notes[2], notes[3], ctx, 2, 4, {
-      height: 15,
-      y_shift: 0, // vertical offset
-      left_shift_px: 2, // left horizontal offset
-      right_shift_px: 0, // right horizontal offset
-    });
-  }),
 };
 
+/**
+ * Helper function to draw a single hairpin (either crescendo or decrescendo).
+ * @param type is StaveHairpin.type.CRESC or StaveHairpin.type.DECRESC.
+ * @param position is Modifier.Position.ABOVE or Modifier.Position.BELOW.
+ */
 function drawHairpin(
-  from: StaveNote,
-  to: StaveNote,
+  first_note: StaveNote,
+  last_note: StaveNote,
   ctx: RenderContext,
   type: number,
   position: number,
   options?: Partial<StaveHairpinRenderOptions>
 ) {
-  const hairpin = new StaveHairpin({ first_note: from, last_note: to }, type);
+  const hairpin = new StaveHairpin({ first_note, last_note }, type);
   hairpin.setContext(ctx);
   hairpin.setPosition(position);
   if (options) {
@@ -97,7 +48,10 @@ function drawHairpin(
   hairpin.draw();
 }
 
-function createTest(drawHairpins: (ctx: RenderContext, notes: StaveNote[]) => void) {
+/**
+ * Helper function
+ */
+function createTest(drawTwoHairpins: (ctx: RenderContext, notes: StaveNote[]) => void) {
   return (options: TestOptions) => {
     const factory = VexFlowTests.makeFactory(options);
     const ctx = factory.getContext();
@@ -118,10 +72,64 @@ function createTest(drawHairpins: (ctx: RenderContext, notes: StaveNote[]) => vo
     factory.Formatter().joinVoices([voice]).formatToStave([voice], stave);
     factory.draw();
 
-    drawHairpins(ctx, notes);
+    drawTwoHairpins(ctx, notes);
 
     ok(true, 'Simple Test');
   };
 }
+
+const simple = createTest((ctx, notes) => {
+  drawHairpin(notes[0], notes[2], ctx, 1, 4);
+  drawHairpin(notes[1], notes[3], ctx, 2, 3);
+});
+
+const horizontal = createTest((ctx, notes) => {
+  drawHairpin(notes[0], notes[2], ctx, 1, 3, {
+    height: 10,
+    // TODO: these three property names seem to be incorrect.
+    // vo => should it be 'y_shift'?
+    // left_ho => should it be 'left_shift_px'?
+    // right_ho => should it be 'right_shift_px'?
+    vo: 20, // vertical offset
+    left_ho: 20, // left horizontal offset
+    right_ho: -20, // right horizontal offset
+  });
+  drawHairpin(notes[3], notes[3], ctx, 2, 4, {
+    height: 10,
+    y_shift: 0, // vertical offset
+    left_shift_px: 0, // left horizontal offset
+    right_shift_px: 120, // right horizontal offset
+  });
+});
+
+const vertical = createTest((ctx, notes) => {
+  drawHairpin(notes[0], notes[2], ctx, 1, 4, {
+    height: 10,
+    y_shift: 0, // vertical offset
+    left_shift_px: 0, // left horizontal offset
+    right_shift_px: 0, // right horizontal offset
+  });
+  drawHairpin(notes[2], notes[3], ctx, 2, 4, {
+    height: 10,
+    y_shift: -15, // vertical offset
+    left_shift_px: 2, // left horizontal offset
+    right_shift_px: 0, // right horizontal offset
+  });
+});
+
+const height = createTest((ctx, notes) => {
+  drawHairpin(notes[0], notes[2], ctx, 1, 4, {
+    height: 10,
+    y_shift: 0, // vertical offset
+    left_shift_px: 0, // left horizontal offset
+    right_shift_px: 0, // right horizontal offset
+  });
+  drawHairpin(notes[2], notes[3], ctx, 2, 4, {
+    height: 15,
+    y_shift: 0, // vertical offset
+    left_shift_px: 2, // left horizontal offset
+    right_shift_px: 0, // right horizontal offset
+  });
+});
 
 export { StaveHairpinTests };

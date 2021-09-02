@@ -9,7 +9,6 @@ import { RenderContext } from 'types/common';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';
 import { Font, Fonts } from 'font';
-import { Note } from 'note';
 
 /* eslint-disable */
 declare const global: any;

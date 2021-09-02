@@ -20,84 +20,24 @@ const TabTieTests = {
   Start(): void {
     QUnit.module('TabTie');
     const run = VexFlowTests.runTests;
-    run('Simple TabTie', this.simple);
-    run('Hammerons', this.simpleHammerOn);
-    run('Pulloffs', this.simplePullOff);
-    run('Tapping', this.tap);
-    run('Continuous', this.continuous);
-  },
-
-  simple(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    const { context, stave } = setupContext(options);
-
-    const note1 = tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' });
-    const note2 = tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' });
-    tieNotes([note1, note2], [0], stave, context);
-
-    ok(true, 'Simple Test');
-  },
-
-  simpleHammerOn(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    multiTest(options, TabTie.createHammeron);
-  },
-
-  simplePullOff(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    multiTest(options, TabTie.createPulloff);
-  },
-
-  tap(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    const { context, stave } = setupContext(options);
-
-    const note1 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new Annotation('T'), 0);
-    const note2 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
-    tieNotes([note1, note2], [0], stave, context, 'P');
-
-    ok(true, 'Tapping Test');
-  },
-
-  continuous(options: TestOptions, contextBuilder: ContextBuilder): void {
-    options.contextBuilder = contextBuilder;
-    const { context, stave } = setupContext(options, 440, 140);
-
-    const notes = [
-      tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'q' }),
-      tabNote({ positions: [{ str: 4, fret: 5 }], duration: 'q' }),
-      tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
-    ];
-
-    const voice = new Voice(Flow.TIME4_4).addTickables(notes);
-    new Formatter().joinVoices([voice]).format([voice], 300);
-    voice.draw(context, stave);
-
-    TabTie.createHammeron({
-      first_note: notes[0],
-      last_note: notes[1],
-      first_indices: [0],
-      last_indices: [0],
-    })
-      .setContext(context)
-      .draw();
-
-    TabTie.createPulloff({
-      first_note: notes[1],
-      last_note: notes[2],
-      first_indices: [0],
-      last_indices: [0],
-    })
-      .setContext(context)
-      .draw();
-    ok(true, 'Continuous Hammeron');
+    run('Simple TabTie', simple);
+    run('Hammerons', simpleHammerOn);
+    run('Pulloffs', simplePullOff);
+    run('Tapping', tap);
+    run('Continuous', continuous);
   },
 };
 
-//#region Helper Functions
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Helper function to create TabNote objects.
+ */
 const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
 
+/**
+ * Helper function to create a RenderContext and TabStave.
+ */
 function setupContext(options: TestOptions, w: number = 0, h: number = 0): { context: RenderContext; stave: TabStave } {
   // eslint-disable-next-line
   const context = options.contextBuilder!(options.elementId, w || 350, h || 160);
@@ -110,6 +50,9 @@ function setupContext(options: TestOptions, w: number = 0, h: number = 0): { con
   return { context, stave };
 }
 
+/**
+ * Helper function to create the TabTie between two Note objects.
+ */
 function tieNotes(notes: Note[], indices: number[], stave: Stave, ctx: RenderContext, text?: string): void {
   const voice = new Voice(Flow.TIME4_4);
   voice.addTickables(notes);
@@ -124,13 +67,40 @@ function tieNotes(notes: Note[], indices: number[], stave: Stave, ctx: RenderCon
       first_indices: indices,
       last_indices: indices,
     },
-    text || 'Annotation'
+    text ?? 'Annotation'
   );
 
   tie.setContext(ctx);
   tie.draw();
 }
 
+/**
+ * Two notes on string 4 with a tie drawn between them.
+ */
+function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.contextBuilder = contextBuilder;
+  const { context, stave } = setupContext(options);
+
+  const note1 = tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'h' });
+  const note2 = tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' });
+  tieNotes([note1, note2], [0], stave, context);
+
+  ok(true, 'Simple Test');
+}
+
+function simpleHammerOn(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.contextBuilder = contextBuilder;
+  multiTest(options, TabTie.createHammeron);
+}
+
+function simplePullOff(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.contextBuilder = contextBuilder;
+  multiTest(options, TabTie.createPulloff);
+}
+
+/**
+ * Helper function for the two test cases above (simpleHammerOn and simplePullOff).
+ */
 function multiTest(options: TestOptions, createTabTie: (notes: TieNotes) => TabTie): void {
   const { context, stave } = setupContext(options, 440, 140);
 
@@ -218,6 +188,49 @@ function multiTest(options: TestOptions, createTabTie: (notes: TieNotes) => TabT
   ok(true, 'Chord high-fret');
 }
 
-//#endregion Helper Functions
+function tap(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.contextBuilder = contextBuilder;
+  const { context, stave } = setupContext(options);
+
+  const note1 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new Annotation('T'), 0);
+  const note2 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
+  tieNotes([note1, note2], [0], stave, context, 'P');
+
+  ok(true, 'Tapping Test');
+}
+
+function continuous(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.contextBuilder = contextBuilder;
+  const { context, stave } = setupContext(options, 440, 140);
+
+  const notes = [
+    tabNote({ positions: [{ str: 4, fret: 4 }], duration: 'q' }),
+    tabNote({ positions: [{ str: 4, fret: 5 }], duration: 'q' }),
+    tabNote({ positions: [{ str: 4, fret: 6 }], duration: 'h' }),
+  ];
+
+  const voice = new Voice(Flow.TIME4_4).addTickables(notes);
+  new Formatter().joinVoices([voice]).format([voice], 300);
+  voice.draw(context, stave);
+
+  TabTie.createHammeron({
+    first_note: notes[0],
+    last_note: notes[1],
+    first_indices: [0],
+    last_indices: [0],
+  })
+    .setContext(context)
+    .draw();
+
+  TabTie.createPulloff({
+    first_note: notes[1],
+    last_note: notes[2],
+    first_indices: [0],
+    last_indices: [0],
+  })
+    .setContext(context)
+    .draw();
+  ok(true, 'Continuous Hammeron');
+}
 
 export { TabTieTests };

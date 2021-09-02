@@ -15,102 +15,106 @@ const VibratoTests = {
   Start(): void {
     QUnit.module('Vibrato');
     const run = VexFlowTests.runTests;
-    run('Simple Vibrato', this.simple);
-    run('Harsh Vibrato', this.harsh);
-    run('Vibrato with Bend', this.withBend);
-  },
-
-  simple(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const ctx = contextBuilder(options.elementId, 500, 140);
-
-    ctx.scale(1.5, 1.5);
-    ctx.fillStyle = '#221';
-    ctx.strokeStyle = '#221';
-    ctx.font = '10pt Arial';
-    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
-
-    const notes = [
-      tabNote({
-        positions: [
-          { str: 2, fret: 10 },
-          { str: 4, fret: 9 },
-        ],
-        duration: 'h',
-      }).addModifier(new Vibrato(), 0),
-      tabNote({
-        positions: [{ str: 2, fret: 10 }],
-        duration: 'h',
-      }).addModifier(new Vibrato(), 0),
-    ];
-
-    Formatter.FormatAndDraw(ctx, stave, notes);
-    ok(true, 'Simple Vibrato');
-  },
-
-  harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const ctx = contextBuilder(options.elementId, 500, 240);
-
-    ctx.scale(1.5, 1.5);
-    ctx.fillStyle = '#221';
-    ctx.strokeStyle = '#221';
-    ctx.font = '10pt Arial';
-    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
-
-    const notes = [
-      tabNote({
-        positions: [
-          { str: 2, fret: 10 },
-          { str: 4, fret: 9 },
-        ],
-        duration: 'h',
-      }).addModifier(new Vibrato().setHarsh(true), 0),
-      tabNote({
-        positions: [{ str: 2, fret: 10 }],
-        duration: 'h',
-      }).addModifier(new Vibrato().setHarsh(true), 0),
-    ];
-
-    Formatter.FormatAndDraw(ctx, stave, notes);
-    ok(true, 'Harsh Vibrato');
-  },
-
-  withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
-    const ctx = contextBuilder(options.elementId, 500, 240);
-    ctx.scale(1.3, 1.3);
-    ctx.setFillStyle('#221');
-    ctx.setStrokeStyle('#221');
-    ctx.setFont('Arial', VexFlowTests.Font.size, '');
-    const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
-
-    const notes = [
-      tabNote({
-        positions: [
-          { str: 2, fret: 9 },
-          { str: 3, fret: 9 },
-        ],
-        duration: 'q',
-      })
-        .addModifier(new Bend('1/2', true), 0)
-        .addModifier(new Bend('1/2', true), 1)
-        .addModifier(new Vibrato(), 0),
-      tabNote({
-        positions: [{ str: 2, fret: 10 }],
-        duration: 'q',
-      })
-        .addModifier(new Bend('Full', false), 0)
-        .addModifier(new Vibrato().setVibratoWidth(60), 0),
-      tabNote({
-        positions: [{ str: 2, fret: 10 }],
-        duration: 'h',
-      }).addModifier(new Vibrato().setVibratoWidth(120).setHarsh(true), 0),
-    ];
-
-    Formatter.FormatAndDraw(ctx, stave, notes);
-    ok(true, 'Vibrato with Bend');
+    run('Simple Vibrato', simple);
+    run('Harsh Vibrato', harsh);
+    run('Vibrato with Bend', withBend);
   },
 };
 
-// Helper Function.
-const tabNote = (tab_struct: TabNoteStruct) => new TabNote(tab_struct);
+// Helper function to create TabNote objects.
+const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
+
+/**
+ * Default vibrato symbol (wavy line) on top of a tab with two notes fretted.
+ */
+function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 500, 240);
+  ctx.scale(1.5, 1.5);
+  ctx.fillStyle = '#221';
+  ctx.strokeStyle = '#221';
+  ctx.font = '10pt Arial';
+  const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+
+  const notes = [
+    tabNote({
+      positions: [
+        { str: 2, fret: 10 },
+        { str: 4, fret: 9 },
+      ],
+      duration: 'h',
+    }).addModifier(new Vibrato(), 0),
+    tabNote({
+      positions: [{ str: 2, fret: 10 }],
+      duration: 'h',
+    }).addModifier(new Vibrato(), 0),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, 'Simple Vibrato');
+}
+
+/**
+ * The harsh vibrato symbol is a zig zag line with sharp points.
+ */
+function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 500, 240);
+  ctx.scale(1.5, 1.5);
+  ctx.fillStyle = '#221';
+  ctx.strokeStyle = '#221';
+  ctx.font = '10pt Arial';
+  const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+
+  const notes = [
+    tabNote({
+      positions: [
+        { str: 2, fret: 10 },
+        { str: 4, fret: 9 },
+      ],
+      duration: 'h',
+    }).addModifier(new Vibrato().setHarsh(true), 0),
+    tabNote({
+      positions: [{ str: 2, fret: 10 }],
+      duration: 'h',
+    }).addModifier(new Vibrato().setHarsh(true), 0),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, 'Harsh Vibrato');
+}
+
+function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 500, 240);
+  ctx.scale(1.3, 1.3);
+  ctx.setFillStyle('#221');
+  ctx.setStrokeStyle('#221');
+  ctx.setFont('Arial', VexFlowTests.Font.size, '');
+  const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
+
+  const notes = [
+    tabNote({
+      positions: [
+        { str: 2, fret: 9 },
+        { str: 3, fret: 9 },
+      ],
+      duration: 'q',
+    })
+      .addModifier(new Bend('1/2', true), 0)
+      .addModifier(new Bend('1/2', true), 1)
+      .addModifier(new Vibrato(), 0),
+    tabNote({
+      positions: [{ str: 2, fret: 10 }],
+      duration: 'q',
+    })
+      .addModifier(new Bend('Full', false), 0)
+      .addModifier(new Vibrato().setVibratoWidth(60), 0),
+    tabNote({
+      positions: [{ str: 2, fret: 10 }],
+      duration: 'h',
+    }).addModifier(new Vibrato().setVibratoWidth(120).setHarsh(true), 0),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, 'Vibrato with Bend');
+}
 
 export { VibratoTests };
