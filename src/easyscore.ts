@@ -13,7 +13,7 @@ import { RuntimeError, log, defined } from './util';
 import { StaveNote } from './stavenote';
 import { TupletOptions } from './tuplet';
 import { Voice } from './voice';
-import { Music } from 'music';
+import { Music } from './music';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
