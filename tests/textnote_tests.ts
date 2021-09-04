@@ -253,13 +253,12 @@ const TextNoteTests = {
 
   textDynamics(options: TestOptions): void {
     const f = VexFlowTests.makeFactory(options, 600, 230);
-    const stave = f.Stave({ y: 40 });
     const score = f.EasyScore();
 
     const voice = score.voice(
       [
         f.TextDynamics({ text: 'sfz', duration: '4' }),
-        f.TextDynamics({ text: 'rfz', duration: '4' }),
+        f.TextDynamics({ text: 'sfz', duration: '4' }),
         f.TextDynamics({ text: 'mp', duration: '4' }),
         f.TextDynamics({ text: 'ppp', duration: '4' }),
 
@@ -270,10 +269,16 @@ const TextNoteTests = {
       { time: '7/4' }
     );
 
-    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-    f.draw();
-
+    // This is refactored to use preCalculateMinWidth... to excersize 
+    // a bug fix when textDynamic got formatted more than once.
+    var formatter = f.Formatter();
+    formatter.joinVoices([voice]);
+    // const width = 250; //formatter.preCalculateMinTotalWidth([voice]);
+    const width = formatter.preCalculateMinTotalWidth([voice]);
+    formatter.format([voice]);
+    const stave = f.Stave({ y: 40, width: width + VF.Stave.defaultPadding });
+    stave.draw();
+    voice.draw(f.getContext(), stave);
     ok(true);
   },
 };
