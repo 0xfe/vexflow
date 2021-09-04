@@ -22,6 +22,11 @@ declare global {
   const QUnit: {
     module: (name: string) => void;
     test: typeof test;
+
+    // generate_png_images.js and vexflow_test_helpers.ts
+    // use these two fields to pass the name of the current module and test.
+    current_module: string;
+    current_test: string;
   };
 
   const test: (name: string, callback: (assert: Assert) => void) => void;
