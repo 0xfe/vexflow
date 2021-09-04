@@ -2,7 +2,7 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, defined } from './util';
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -169,47 +169,45 @@ export class Clef extends StaveModifier {
 
   /** Get clef width. */
   getWidth(): number {
-    if (this.type === 'tab' && !this.stave) {
-      throw new RuntimeError('ClefError', "Can't get width without stave.");
+    if (this.type === 'tab') {
+      defined(this.stave, 'ClefError', "Can't get width without stave.");
     }
-
     return this.width;
   }
 
   /** Set associated stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
-    if (this.type !== 'tab') return this;
-    if (!this.glyph) throw new RuntimeError('ClefError', "Can't set stave without glyph.");
+    if (this.type === 'tab') {
+      const glyph = defined(this.glyph, 'ClefError', "Can't set stave without glyph.");
 
-    const numLines = this.stave.getOptions().num_lines;
-    const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
-    const shiftY = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
-    this.glyph.setPoint(point);
-    this.glyph.setYShift(shiftY);
-
+      const numLines = this.stave.getOptions().num_lines;
+      const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
+      const shiftY = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
+      glyph.setPoint(point);
+      glyph.setYShift(shiftY);
+    }
     return this;
   }
 
   /** Render clef. */
   draw(): void {
     if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
-    if (!this.stave) throw new RuntimeError('ClefError', "Can't draw clef without stave.");
-    if (!this.glyph) throw new RuntimeError('ClefError', "Can't draw clef without glyph.");
+    const glyph = defined(this.glyph, 'ClefError', "Can't draw clef without glyph.");
+    const stave = this.checkStave();
     this.setRendered();
 
-    this.glyph.setStave(this.stave);
-    this.glyph.setContext(this.stave.getContext());
+    glyph.setStave(stave);
+    glyph.setContext(stave.getContext());
     if (this.clef.line !== undefined) {
-      this.placeGlyphOnLine(this.glyph, this.stave, this.clef.line);
+      this.placeGlyphOnLine(glyph, stave, this.clef.line);
     }
-
-    this.glyph.renderToStave(this.x);
+    glyph.renderToStave(this.x);
 
     if (this.annotation !== undefined && this.attachment !== undefined) {
-      this.placeGlyphOnLine(this.attachment, this.stave, this.annotation.line);
-      this.attachment.setStave(this.stave);
-      this.attachment.setContext(this.stave.getContext());
+      this.placeGlyphOnLine(this.attachment, stave, this.annotation.line);
+      this.attachment.setStave(stave);
+      this.attachment.setContext(stave.getContext());
       this.attachment.renderToStave(this.x);
     }
   }

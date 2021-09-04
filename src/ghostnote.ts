@@ -6,6 +6,7 @@ import { RuntimeError } from './util';
 import { StemmableNote } from './stemmablenote';
 import { Stave } from './stave';
 import { NoteStruct } from './note';
+import { ModifierContext } from './modifiercontext';
 
 export class GhostNote extends StemmableNote {
   /** @constructor */
@@ -36,6 +37,9 @@ export class GhostNote extends StemmableNote {
     this.setWidth(0);
   }
 
+  /**
+   * @returns true if this note is a type of rest. Rests don't have pitches, but take up space in the score.
+   */
   isRest(): boolean {
     return true;
   }
@@ -45,8 +49,11 @@ export class GhostNote extends StemmableNote {
     return this;
   }
 
-  addToModifierContext(): this {
-    /* intentionally overridden */ return this;
+  /* Overridden to ignore */
+  // eslint-disable-next-line
+  addToModifierContext(mc: ModifierContext): this {
+    // DO NOTHING.
+    return this;
   }
 
   preFormat(): this {

@@ -1,6 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
@@ -55,30 +55,115 @@ export interface GlyphMetrics {
   y_shift: number;
   scale: number;
   ha: number;
-  outline: string[];
+  outline: number[];
   font: Font;
+}
+
+export const enum OutlineCode {
+  MOVE = 0,
+  LINE = 1,
+  QUADRATIC = 2,
+  BEZIER = 3,
+}
+
+class GlyphCacheEntry {
+  metrics: GlyphMetrics;
+  bbox: BoundingBox;
+  point: number = -1;
+
+  constructor(fontStack: Font[], code: string, category?: string) {
+    this.metrics = Glyph.loadMetrics(fontStack, code, category);
+    this.bbox = Glyph.getOutlineBoundingBox(
+      this.metrics.outline,
+      this.metrics.scale,
+      this.metrics.x_shift,
+      this.metrics.y_shift
+    );
+
+    if (category) {
+      this.point = Glyph.lookupFontMetric(this.metrics.font, category, code, 'point', -1);
+    }
+  }
+}
+
+class GlyphCache {
+  protected cache: Map<Font[], Record<string, GlyphCacheEntry>> = new Map();
+
+  lookup(fontStack: Font[], code: string, category?: string): GlyphCacheEntry {
+    let entries = this.cache.get(fontStack);
+    if (entries === undefined) {
+      entries = {};
+      this.cache.set(fontStack, entries);
+    }
+    const key = category ? `${code}%${category}` : code;
+    let entry = entries[key];
+    if (entry === undefined) {
+      entry = new GlyphCacheEntry(fontStack, code, category);
+      entries[key] = entry;
+    }
+    return entry;
+  }
 }
 
 class GlyphOutline {
   private i: number = 0;
 
-  constructor(private outline: string[], private originX: number, private originY: number, private scale: number) {}
+  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {}
 
   done(): boolean {
     return this.i >= this.outline.length;
   }
-  next(): string {
+  next(): number {
     return this.outline[this.i++];
   }
   nextX(): number {
-    return this.originX + parseInt(this.outline[this.i++]) * this.scale;
+    return this.originX + this.outline[this.i++] * this.scale;
   }
   nextY(): number {
-    return this.originY - parseInt(this.outline[this.i++]) * this.scale;
+    return this.originY - this.outline[this.i++] * this.scale;
+  }
+
+  static parse(str: string): number[] {
+    const result: number[] = [];
+    const parts = str.split(' ');
+    let i = 0;
+    while (i < parts.length) {
+      switch (parts[i++]) {
+        case 'm':
+          result.push(OutlineCode.MOVE, parseInt(parts[i++]), parseInt(parts[i++]));
+          break;
+        case 'l':
+          result.push(OutlineCode.LINE, parseInt(parts[i++]), parseInt(parts[i++]));
+          break;
+        case 'q':
+          result.push(
+            OutlineCode.QUADRATIC,
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++])
+          );
+          break;
+        case 'b':
+          result.push(
+            OutlineCode.BEZIER,
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++]),
+            parseInt(parts[i++])
+          );
+          break;
+      }
+    }
+    return result;
   }
 }
 
 export class Glyph extends Element {
+  protected static cache = new GlyphCache();
+
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;
   // metrics is initialised in the constructor by either setOptions or reset
@@ -95,39 +180,30 @@ export class Glyph extends Element {
   protected point: number;
   protected stave?: Stave;
 
-  // eslint-disable-next-line
-  draw() {}
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Static methods for loading and rendering glyphs.
 
-  /*
-    Static methods used to implement loading and rendering glyphs.
-
-    Below categoryPath can be any metric path under 'glyphs', so stem.up would respolve
-    to glyphs.stem.up.shifX, glyphs.stem.up.shiftY, etc.
-  */
-  static lookupFontMetric({
-    font,
-    category,
-    code,
-    key,
-    defaultValue,
-  }: {
-    font: Font;
-    category: string;
-    code: string;
-    key: string;
-    defaultValue: number;
-  }): number {
+  /**
+   * Pass a key of the form `glyphs.{category}.{code}.{key}` to Font.lookupMetric(). If the initial lookup fails,
+   * try again with the path `glyphs.{category}.{key}`. If the second lookup fails, return the defaultValue.
+   *
+   * @param font
+   * @param category any metric path under 'glyphs', so 'stem.up' could resolve to glyphs.stem.up.shiftX, glyphs.stem.up.shiftY, etc.
+   * @param code
+   * @param key
+   * @param defaultValue
+   */
+  static lookupFontMetric(font: Font, category: string, code: string, key: string, defaultValue: number): number {
     let value = font.lookupMetric(`glyphs.${category}.${code}.${key}`, undefined);
     if (value === undefined) {
+      // The first lookup failed, so we omit .${code} and try again (with a defaultValue this time).
       value = font.lookupMetric(`glyphs.${category}.${key}`, defaultValue);
     }
     return value;
   }
 
   static lookupGlyph(fontStack: Font[], code: string): { font: Font; glyph: FontGlyph } {
-    if (!fontStack) {
-      throw new RuntimeError('BAD_FONTSTACK', 'Font stack is misconfigured');
-    }
+    defined(fontStack, 'BadFontStack', 'Font stack is misconfigured');
 
     let glyph: FontGlyph;
     let font: Font;
@@ -143,82 +219,66 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
+    if (!glyph.o) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
+
     let x_shift = 0;
     let y_shift = 0;
     let scale = 1;
     if (category && font) {
-      x_shift = Glyph.lookupFontMetric({ font, category, code, key: 'shiftX', defaultValue: 0 });
-      y_shift = Glyph.lookupFontMetric({ font, category, code, key: 'shiftY', defaultValue: 0 });
-      scale = Glyph.lookupFontMetric({ font, category, code, key: 'scale', defaultValue: 1 });
+      x_shift = Glyph.lookupFontMetric(font, category, code, 'shiftX', 0);
+      y_shift = Glyph.lookupFontMetric(font, category, code, 'shiftY', 0);
+      scale = Glyph.lookupFontMetric(font, category, code, 'scale', 1);
     }
 
     const x_min = glyph.x_min;
     const x_max = glyph.x_max;
     const ha = glyph.ha;
 
-    let outline: string[];
-
-    const CACHE = true;
-    if (glyph.o) {
-      if (CACHE) {
-        if (glyph.cached_outline) {
-          outline = glyph.cached_outline;
-        } else {
-          outline = glyph.o.split(' ');
-          glyph.cached_outline = outline;
-        }
-      } else {
-        if (glyph.cached_outline) delete glyph.cached_outline;
-        outline = glyph.o.split(' ');
-      }
-
-      return {
-        x_min,
-        x_max,
-        x_shift,
-        y_shift,
-        scale,
-        ha,
-        outline,
-        font,
-        width: x_max - x_min,
-        height: ha,
-      };
-    } else {
-      throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
+    if (!glyph.cached_outline) {
+      glyph.cached_outline = GlyphOutline.parse(glyph.o);
     }
+
+    return {
+      x_min,
+      x_max,
+      x_shift,
+      y_shift,
+      scale,
+      ha,
+      outline: glyph.cached_outline,
+      font,
+      width: x_max - x_min,
+      height: ha,
+    };
   }
 
   /**
-   * A quick and dirty static glyph renderer. Renders glyphs from the default
-   * font defined in Vex.Flow.Font.
+   * Renders glyphs from the default font stack.
+   *
+   * @param ctx Canvas or SVG context
+   * @param x_pos x coordinate
+   * @param y_pos y coordinate
+   * @param point the point size of the font
+   * @param code the glyph code in font.getGlyphs()
+   * @param options
+   * @returns
    */
   static renderGlyph(
-    /** The canvas context. */
     ctx: RenderContext,
-    /** X coordinate. */
     x_pos: number,
-    /** Y coordinate. */
     y_pos: number,
-    /** The point size to use. */
     point: number,
-    /** The glyph code in font.getGlyphs() */
-    val: string,
+    code: string,
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
       fontStack: Flow.DEFAULT_FONT_STACK,
       ...options,
     };
-    const metrics = Glyph.loadMetrics(params.fontStack, val, params.category);
-    if (params.category && metrics.font) {
-      point = Glyph.lookupFontMetric({
-        font: metrics.font,
-        category: params.category,
-        code: val,
-        key: 'point',
-        defaultValue: point,
-      });
+    const data = Glyph.cache.lookup(params.fontStack, code, params.category);
+    const metrics = data.metrics;
+    if (data.point != -1) {
+      point = data.point;
     }
 
     const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
@@ -227,7 +287,7 @@ export class Glyph extends Element {
     return metrics;
   }
 
-  static renderOutline(ctx: RenderContext, outline: string[], scale: number, x_pos: number, y_pos: number): void {
+  static renderOutline(ctx: RenderContext, outline: number[], scale: number, x_pos: number, y_pos: number): void {
     const go = new GlyphOutline(outline, x_pos, y_pos, scale);
 
     ctx.beginPath();
@@ -235,18 +295,18 @@ export class Glyph extends Element {
     let x, y: number;
     while (!go.done()) {
       switch (go.next()) {
-        case 'm':
+        case OutlineCode.MOVE:
           ctx.moveTo(go.nextX(), go.nextY());
           break;
-        case 'l':
+        case OutlineCode.LINE:
           ctx.lineTo(go.nextX(), go.nextY());
           break;
-        case 'q':
+        case OutlineCode.QUADRATIC:
           x = go.nextX();
           y = go.nextY();
           ctx.quadraticCurveTo(go.nextX(), go.nextY(), x, y);
           break;
-        case 'b':
+        case OutlineCode.BEZIER:
           x = go.nextX();
           y = go.nextY();
           ctx.bezierCurveTo(go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
@@ -256,7 +316,7 @@ export class Glyph extends Element {
     ctx.fill();
   }
 
-  static getOutlineBoundingBox(outline: string[], scale: number, x_pos: number, y_pos: number): BoundingBox {
+  static getOutlineBoundingBox(outline: number[], scale: number, x_pos: number, y_pos: number): BoundingBox {
     const go = new GlyphOutline(outline, x_pos, y_pos, scale);
     const bboxComp = new BoundingBoxComputation();
 
@@ -266,25 +326,25 @@ export class Glyph extends Element {
     let x, y: number;
     while (!go.done()) {
       switch (go.next()) {
-        case 'm':
+        case OutlineCode.MOVE:
           // Note that we don't add any points to the bounding box until a srroke is actually drawn.
           penX = go.nextX();
           penY = go.nextY();
           break;
-        case 'l':
+        case OutlineCode.LINE:
           bboxComp.addPoint(penX, penY);
           penX = go.nextX();
           penY = go.nextY();
           bboxComp.addPoint(penX, penY);
           break;
-        case 'q':
+        case OutlineCode.QUADRATIC:
           x = go.nextX();
           y = go.nextY();
           bboxComp.addQuadraticCurve(penX, penY, go.nextX(), go.nextY(), x, y);
           penX = x;
           penY = y;
           break;
-        case 'b':
+        case OutlineCode.BEZIER:
           x = go.nextX();
           y = go.nextY();
           bboxComp.addBezierCurve(penX, penY, go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
@@ -297,8 +357,19 @@ export class Glyph extends Element {
     return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
 
+  static getWidth(fontStack: Font[], code: string, point: number, category?: string): number {
+    const data = Glyph.cache.lookup(fontStack, code, category);
+    if (data.point != -1) {
+      point = data.point;
+    }
+    const scale = (point * 72) / (data.metrics.font.getResolution() * 100);
+    return data.bbox.getW() * scale;
+  }
+
   /**
-   * @constructor
+   * @param code
+   * @param point
+   * @param options
    */
   constructor(code: string, point: number, options?: { category: string }) {
     super();
@@ -323,6 +394,11 @@ export class Glyph extends Element {
     } else {
       this.reset();
     }
+  }
+
+  // eslint-disable-next-line
+  draw(...args: any[]): void {
+    // DO NOTHING.
   }
 
   getCode(): string {
@@ -356,43 +432,40 @@ export class Glyph extends Element {
   }
 
   reset(): void {
-    this.metrics = Glyph.loadMetrics(this.options.fontStack, this.code, this.options.category);
+    const data = Glyph.cache.lookup(this.options.fontStack, this.code, this.options.category);
+    this.metrics = data.metrics;
     // Override point from metrics file
-    if (this.options.category) {
-      this.point = Glyph.lookupFontMetric({
-        category: this.options.category,
-        font: this.metrics.font,
-        code: this.code,
-        key: 'point',
-        defaultValue: this.point,
-      });
+    if (data.point != -1) {
+      this.point = data.point;
     }
 
     this.scale = (this.point * 72) / (this.metrics.font.getResolution() * 100);
-    this.bbox = Glyph.getOutlineBoundingBox(
-      this.metrics.outline,
-      this.scale * this.metrics.scale,
-      this.metrics.x_shift,
-      this.metrics.y_shift
+    this.bbox = new BoundingBox(
+      data.bbox.getX() * this.scale,
+      data.bbox.getY() * this.scale,
+      data.bbox.getW() * this.scale,
+      data.bbox.getH() * this.scale
     );
   }
 
-  getMetrics(): GlyphMetrics {
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
+  checkMetrics(): GlyphMetrics {
+    return defined(this.metrics, 'BadGlyph', `Glyph ${this.code} is not initialized.`);
+  }
 
+  getMetrics(): GlyphMetrics {
+    const metrics = this.checkMetrics();
+    const metricsScale = metrics.scale;
     return {
-      x_min: this.metrics.x_min * this.scale * this.metrics.scale,
-      x_max: this.metrics.x_max * this.scale * this.metrics.scale,
+      x_min: metrics.x_min * this.scale * metricsScale,
+      x_max: metrics.x_max * this.scale * metricsScale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
-      scale: this.scale * this.metrics.scale,
-      x_shift: this.metrics.x_shift,
-      y_shift: this.metrics.y_shift,
-      outline: this.metrics.outline,
-      font: this.metrics.font,
-      ha: this.metrics.ha,
+      scale: this.scale * metricsScale,
+      x_shift: metrics.x_shift,
+      y_shift: metrics.y_shift,
+      outline: metrics.outline,
+      font: metrics.font,
+      ha: metrics.ha,
     };
   }
 
@@ -416,48 +489,37 @@ export class Glyph extends Element {
   }
 
   render(ctx: RenderContext, x: number, y: number): void {
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
+    const metrics = this.checkMetrics();
 
-    const outline = this.metrics.outline;
-    const scale = this.scale * this.metrics.scale;
+    const outline = metrics.outline;
+    const scale = this.scale * metrics.scale;
 
     this.setRendered();
     this.applyStyle(ctx);
-    Glyph.renderOutline(
-      ctx,
-      outline,
-      scale,
-      x + this.originShift.x + this.metrics.x_shift,
-      y + this.originShift.y + this.metrics.y_shift
-    );
+    const xPos = x + this.originShift.x + metrics.x_shift;
+    const yPos = y + this.originShift.y + metrics.y_shift;
+    Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
     this.restoreStyle(ctx);
+  }
+
+  checkStave(): Stave {
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   renderToStave(x: number): void {
     const context = this.checkContext();
+    const metrics = this.checkMetrics();
+    const stave = this.checkStave();
 
-    if (!this.metrics) {
-      throw new RuntimeError('BadGlyph', `Glyph ${this.code} is not initialized.`);
-    }
-
-    if (!this.stave) {
-      throw new RuntimeError('GlyphError', 'No valid stave');
-    }
-
-    const outline = this.metrics.outline;
-    const scale = this.scale * this.metrics.scale;
+    const outline = metrics.outline;
+    const scale = this.scale * metrics.scale;
 
     this.setRendered();
     this.applyStyle();
-    Glyph.renderOutline(
-      context,
-      outline,
-      scale,
-      x + this.x_shift + this.metrics.x_shift,
-      this.stave.getYForGlyphs() + this.y_shift + this.metrics.y_shift
-    );
+
+    const xPos = x + this.x_shift + metrics.x_shift;
+    const yPos = stave.getYForGlyphs() + this.y_shift + metrics.y_shift;
+    Glyph.renderOutline(context, outline, scale, xPos, yPos);
     this.restoreStyle();
   }
 }

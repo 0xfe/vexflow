@@ -36,7 +36,7 @@ export class NoteSubGroup extends Modifier {
   }
 
   protected subNotes: Note[];
-  protected preFormatted: boolean;
+  protected preFormatted: boolean = false;
   protected formatter: Formatter;
   protected voice: Voice;
 
@@ -50,7 +50,6 @@ export class NoteSubGroup extends Modifier {
       subNote.setIgnoreTicks(false);
     });
     this.width = 0;
-    this.preFormatted = false;
 
     this.formatter = new Formatter();
     this.voice = new Voice({

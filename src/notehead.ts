@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
@@ -135,12 +135,7 @@ export class NoteHead extends Note {
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
     this.glyph = Flow.getGlyphProps(this.duration, this.note_type);
-    if (!this.glyph) {
-      throw new RuntimeError(
-        'BadArguments',
-        `No glyph found for duration '${this.duration}' and type '${this.note_type}'`
-      );
-    }
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
 
     this.glyph_code = this.glyph.code_head;
     this.x_shift = head_options.x_shift || 0;

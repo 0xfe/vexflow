@@ -4,17 +4,15 @@
 // VexFlow Test Support Library
 
 import { Flow } from 'flow';
-import { Assert } from './declarations';
+import { Assert } from './types/qunit';
 import { RenderContext } from 'types/common';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';
 import { Font, Fonts } from 'font';
-import { Note } from 'note';
 
 /* eslint-disable */
-declare var global: any;
-declare var $: any;
-declare var QUnit: any;
+declare const global: any;
+declare const $: any;
 /* eslint-enable */
 
 export interface TestOptions {
@@ -22,6 +20,9 @@ export interface TestOptions {
   params: any /* eslint-disable-line */;
   assert: Assert;
   backend: number;
+
+  // Some tests use this field to pass around the ContextBuilder function.
+  contextBuilder?: ContextBuilder;
 }
 
 // Each test case will switch through the available fonts, and then restore the original font when done.
@@ -77,49 +78,6 @@ if (!global.$) {
     };
     return $element;
   };
-}
-
-// When generating PNG images for the visual regression tests,
-// we mock out the QUnit methods (since we don't care about assertions).
-if (!global.QUnit) {
-  // eslint-disable-next-line
-  const QUMock: any = {
-    assertions: {
-      ok: () => true,
-      equal: () => true,
-      deepEqual: () => true,
-      expect: () => true,
-      throws: () => true,
-      notOk: () => true,
-      notEqual: () => true,
-      notDeepEqual: () => true,
-      strictEqual: () => true,
-      notStrictEqual: () => true,
-      propEqual: () => true,
-    },
-
-    module(name: string): void {
-      QUMock.current_module = name;
-    },
-
-    // See: https://api.qunitjs.com/QUnit/test/
-    test(name: number, callback: (assert: Assert) => void): void {
-      QUMock.current_test = name;
-      QUMock.assertions.test.module.name = name;
-      VexFlowTests.shims.process.stdout.write(' \u001B[0G' + QUMock.current_module + ' :: ' + name + '\u001B[0K');
-      callback(QUMock.assertions);
-    },
-  };
-
-  global.QUnit = QUMock;
-  for (const k in QUMock.assertions) {
-    // Make all methods & properties of QUMock.assertions global.
-    global[k] = QUMock.assertions[k];
-  }
-  global.test = QUMock.test;
-  // Enable us to pass the name of the module around.
-  // See: QUMock.test(...) and VexFlowTests.runWithParams(...)
-  QUMock.assertions.test = { module: { name: '' } };
 }
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
@@ -292,8 +250,6 @@ class VexFlowTests {
     });
   }
 
-  static plotNoteWidth = Note.plotMetrics;
-
   /**
    * @param ctx
    * @param x
@@ -346,7 +302,10 @@ const concat = (a: any[], b: any[]): any[] => a.concat(b);
 const MAJOR_KEYS = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
 const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'];
 
-global.VF = Flow; // TODO: Remove global.VF. Everything is still available under Vex.Flow.* and Vex.Flow.Test
-global.VF.Test = VexFlowTests;
+// We no longer provide a global.VF in tests.
+// Everything can be accessed via Vex.Flow.* and Vex.Flow.Test.* or by importing the class directly.
+// eslint-disable-next-line
+// @ts-ignore
+Flow.Test = VexFlowTests;
 
 export { VexFlowTests, concat, MAJOR_KEYS, MINOR_KEYS };

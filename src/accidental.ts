@@ -3,7 +3,7 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { RuntimeError, log, check } from './util';
+import { log, defined } from './util';
 import { Fraction } from './fraction';
 import { Flow } from './flow';
 import { Music } from './music';
@@ -15,6 +15,8 @@ import { ModifierContextState } from './modifiercontext';
 import { Voice } from './voice';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
+import { Tickable } from './tickable';
+import { isCategory, isStaveNote } from './typeguard';
 
 type Line = {
   column: number;
@@ -35,7 +37,7 @@ function L(...args: any[]) {
  * `ModifierContext`. Accidentals are modifiers that can be attached to
  * notes. Support is included for both western and microtonal accidentals.
  *
- * See `tests/accidental_tests.js` for usage examples.
+ * See `tests/accidental_tests.ts` for usage examples.
  */
 
 export class Accidental extends Modifier {
@@ -370,49 +372,52 @@ export class Accidental extends Modifier {
    */
   static applyAccidentals(voices: Voice[], keySignature: string): void {
     const tickPositions: number[] = [];
-    const tickNoteMap: Record<number, Note[]> = {};
+    const tickNoteMap: Record<number, Tickable[]> = {};
 
-    // Sort the tickables in each voice by their tick position in the voice
+    // Sort the tickables in each voice by their tick position in the voice.
     voices.forEach((voice) => {
       const tickPosition = new Fraction(0, 1);
-      const notes = voice.getTickables();
-      notes.forEach((note) => {
-        if (note.shouldIgnoreTicks()) return;
+      const tickable = voice.getTickables();
+      tickable.forEach((t) => {
+        if (t.shouldIgnoreTicks()) return;
 
         const notesAtPosition = tickNoteMap[tickPosition.value()];
 
         if (!notesAtPosition) {
           tickPositions.push(tickPosition.value());
-          tickNoteMap[tickPosition.value()] = [note];
+          tickNoteMap[tickPosition.value()] = [t];
         } else {
-          notesAtPosition.push(note);
+          notesAtPosition.push(t);
         }
 
-        tickPosition.add(note.getTicks());
+        tickPosition.add(t.getTicks());
       });
     });
 
     const music = new Music();
 
-    // Default key signature is C major
+    // Default key signature is C major.
     if (!keySignature) keySignature = 'C';
 
-    // Get the scale map, which represents the current state of each pitch
+    // Get the scale map, which represents the current state of each pitch.
     const scaleMap = music.createScaleMap(keySignature);
 
-    tickPositions.forEach((tick) => {
-      const notes = tickNoteMap[tick];
+    tickPositions.forEach((tickPos: number) => {
+      const tickables = tickNoteMap[tickPos];
 
       // Array to store all pitches that modified accidental states
       // at this tick position
       const modifiedPitches: string[] = [];
 
-      const processNote = (note: Note) => {
-        if (note.isRest() || note.shouldIgnoreTicks()) return;
+      const processNote = (t: Tickable) => {
+        // Only StaveNote implements .addAccidental(), which is used below.
+        if (!isStaveNote(t) || t.isRest() || t.shouldIgnoreTicks()) {
+          return;
+        }
 
-        // Go through each key and determine if an accidental should be
-        // applied
-        note.keys.forEach((keyString: string, keyIndex: number) => {
+        // Go through each key and determine if an accidental should be applied.
+        const staveNote = t;
+        staveNote.keys.forEach((keyString: string, keyIndex: number) => {
           const key = music.getNoteParts(keyString.split('/')[0]);
 
           // Force a natural for every key without an accidental
@@ -427,6 +432,17 @@ export class Accidental extends Modifier {
           // modified the accidental state
           const previouslyModified = modifiedPitches.indexOf(pitch) > -1;
 
+          // Remove accidentals
+          staveNote.getModifiers().forEach((modifier, index) => {
+            if (
+              isCategory(modifier, Accidental) &&
+              modifier.type == accidentalString &&
+              modifier.getIndex() == keyIndex
+            ) {
+              staveNote.getModifiers().splice(index, 1);
+            }
+          });
+
           // Add the accidental to the StaveNote
           if (!sameAccidental || (sameAccidental && previouslyModified)) {
             // Modify the scale map so that the root pitch has an
@@ -437,7 +453,7 @@ export class Accidental extends Modifier {
             const accidental = new Accidental(accidentalString);
 
             // Attach the accidental to the StaveNote
-            (note as StaveNote).addAccidental(keyIndex, accidental);
+            staveNote.addAccidental(keyIndex, accidental);
 
             // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(pitch);
@@ -445,14 +461,15 @@ export class Accidental extends Modifier {
         });
 
         // process grace notes
-        note.getModifiers().forEach((modifier) => {
+        staveNote.getModifiers().forEach((modifier: Modifier) => {
+          // TODO: Replace with isCategory()?
           if (modifier.getCategory() === GraceNoteGroup.CATEGORY) {
             (modifier as GraceNoteGroup).getGraceNotes().forEach(processNote);
           }
         });
       };
 
-      notes.forEach(processNote);
+      tickables.forEach(processNote);
     });
   }
 
@@ -483,9 +500,7 @@ export class Accidental extends Modifier {
     };
 
     this.accidental = Flow.accidentalCodes(this.type);
-    if (!this.accidental) {
-      throw new RuntimeError('ArgumentError', `Unknown accidental type: ${type}`);
-    }
+    defined(this.accidental, 'ArgumentError', `Unknown accidental type: ${type}`);
 
     // Cautionary accidentals have parentheses around them
     this.cautionary = false;
@@ -513,21 +528,23 @@ export class Accidental extends Modifier {
 
   /** Get width in pixels. */
   getWidth(): number {
-    const parenWidth = this.cautionary
-      ? check<Glyph>(this.parenLeft).getMetrics().width +
-        check<Glyph>(this.parenRight).getMetrics().width +
+    if (this.cautionary) {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+      const parenWidth =
+        parenLeft.getMetrics().width +
+        parenRight.getMetrics().width +
         this.render_options.parenLeftPadding +
-        this.render_options.parenRightPadding
-      : 0;
-
-    return this.glyph.getMetrics().width + parenWidth;
+        this.render_options.parenRightPadding;
+      return this.glyph.getMetrics().width + parenWidth;
+    } else {
+      return this.glyph.getMetrics().width;
+    }
   }
 
   /** Attach this accidental to `note`, which must be a `StaveNote`. */
   setNote(note: Note): this {
-    if (!note) {
-      throw new RuntimeError('ArgumentError', `Bad note value: ${note}`);
-    }
+    defined(note, 'ArgumentError', `Bad note value: ${note}`);
 
     this.note = note;
 
@@ -557,8 +574,6 @@ export class Accidental extends Modifier {
       x_shift,
       y_shift,
       glyph,
-      parenLeft,
-      parenRight,
       render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
@@ -575,15 +590,18 @@ export class Accidental extends Modifier {
     if (!cautionary) {
       glyph.render(ctx, accX, accY);
     } else {
+      const parenLeft = defined(this.parenLeft);
+      const parenRight = defined(this.parenRight);
+
       // Render the accidental in parentheses.
-      check<Glyph>(parenRight).render(ctx, accX, accY);
-      accX -= check<Glyph>(parenRight).getMetrics().width;
+      parenRight.render(ctx, accX, accY);
+      accX -= parenRight.getMetrics().width;
       accX -= parenRightPadding;
       accX -= this.accidental.parenRightPaddingAdjustment;
       glyph.render(ctx, accX, accY);
       accX -= glyph.getMetrics().width;
       accX -= parenLeftPadding;
-      check<Glyph>(parenLeft).render(ctx, accX, accY);
+      parenLeft.render(ctx, accX, accY);
     }
   }
 }

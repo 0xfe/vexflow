@@ -44,7 +44,7 @@
  * }
  */
 
-import { RuntimeError, check } from './util';
+import { RuntimeError, defined } from './util';
 import { Element } from './element';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
@@ -238,7 +238,7 @@ export class Tuplet extends Element {
     // Count the tuplets that are on the same side (above/below)
     // as this tuplet:
     function countTuplets(note: Note, location: number) {
-      return note.tupletStack.filter((tuplet) => tuplet.location === location).length;
+      return note.getTupletStack().filter((tuplet) => tuplet.location === location).length;
     }
 
     this.notes.forEach((note) => {
@@ -313,7 +313,7 @@ export class Tuplet extends Element {
     // determine y value for tuplet
     this.y_pos = this.getYPosition();
 
-    const addGlyphWidth = (width: number, glyph: Glyph) => width + check<number>(glyph.getMetrics().width);
+    const addGlyphWidth = (width: number, glyph: Glyph) => width + defined(glyph.getMetrics().width);
 
     // calculate total width of tuplet notation
     let width = this.numerator_glyphs.reduce(addGlyphWidth, 0);
@@ -354,7 +354,7 @@ export class Tuplet extends Element {
     let x_offset = 0;
     this.numerator_glyphs.forEach((glyph) => {
       glyph.render(ctx, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2 + shiftY);
-      x_offset += check<number>(glyph.getMetrics().width);
+      x_offset += defined(glyph.getMetrics().width);
     });
 
     // display colon and denominator if the ratio is to be shown
@@ -372,7 +372,7 @@ export class Tuplet extends Element {
       x_offset += this.point * 0.32;
       this.denom_glyphs.forEach((glyph) => {
         glyph.render(ctx, notation_start_x + x_offset, this.y_pos + this.point / 3 - 2 + shiftY);
-        x_offset += check<number>(glyph.getMetrics().width);
+        x_offset += defined(glyph.getMetrics().width);
       });
     }
   }

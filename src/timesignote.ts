@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
+import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
@@ -19,8 +20,10 @@ export class TimeSigNote extends Note {
     this.ignore_ticks = true;
   }
 
-  addToModifierContext(): this {
-    /* overridden to ignore */
+  /* Overridden to ignore */
+  // eslint-disable-next-line
+  addToModifierContext(mc: ModifierContext): this {
+    // DO NOTHING.
     return this;
   }
 

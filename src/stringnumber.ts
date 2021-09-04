@@ -12,7 +12,7 @@ import { StaveNote } from './stavenote';
 import { FontInfo } from './types/common';
 import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
+import { isStaveNote, isStemmableNote } from './typeguard';
 
 export class StringNumber extends Modifier {
   protected radius: number;
@@ -48,7 +48,7 @@ export class StringNumber extends Modifier {
       const note = num.getNote();
       const pos = num.getPosition();
 
-      if (!(note instanceof StaveNote)) {
+      if (!isStaveNote(note)) {
         throw new RuntimeError('NoStaveNote');
       }
 
@@ -226,8 +226,10 @@ export class StringNumber extends Modifier {
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
-    if (this.last_note instanceof StemmableNote) {
-      const end = this.last_note.getStemX() - note.getX() + 5;
+    const lastNote = this.last_note;
+    if (isStemmableNote(lastNote)) {
+      // Only StemmableNote objects have getStemX().
+      const end = lastNote.getStemX() - note.getX() + 5;
       ctx.setStrokeStyle('#000000');
       ctx.setLineCap('round');
       ctx.setLineWidth(0.6);

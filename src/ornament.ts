@@ -2,7 +2,7 @@
 // Author: Cyril Silverman
 // MIT License
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
@@ -83,10 +83,8 @@ export class Ornament extends Modifier {
       if (Ornament.ornamentArticulation.indexOf(ornament.type) >= 0) {
         // Unfortunately we don't know the stem direction.  So we base it
         // on the line number, but also allow it to be overridden.
-        if (!ornament.note) {
-          throw new RuntimeError('NoAttachedNote');
-        }
-        if (ornament.note.getLineNumber() >= 3 || ornament.getPosition() === Modifier.Position.ABOVE) {
+        const ornamentNote = defined(ornament.note, 'NoAttachedNote');
+        if (ornamentNote.getLineNumber() >= 3 || ornament.getPosition() === Modifier.Position.ABOVE) {
           state.top_text_line += increment;
           ornament.y_shift += yOffset;
           yOffset -= ornament.glyph.bbox.getH();
@@ -260,8 +258,7 @@ export class Ornament extends Modifier {
     const stemExtents = note.checkStem().getExtents();
     let y = stemDir === StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
 
-    // TabNotes don't have stems attached to them. Tab stems are rendered
-    // outside the stave.
+    // TabNotes don't have stems attached to them. Tab stems are rendered outside the stave.
     if (note.getCategory() === TabNote.CATEGORY) {
       if (note.hasStem()) {
         if (stemDir === StaveNote.STEM_DOWN) {

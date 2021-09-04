@@ -151,10 +151,8 @@ export class TextNote extends Note {
 
   /** Pre-render formatting. */
   preFormat(): void {
-    const ctx = this.checkContext();
-    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't preformat without a TickContext.");
-
     if (this.preFormatted) return;
+    const tickContext = this.checkTickContext(`Can't preformat without a TickContext.`);
 
     if (this.smooth) {
       this.setWidth(0);
@@ -162,6 +160,7 @@ export class TextNote extends Note {
       if (this.glyph) {
         // Width already set.
       } else {
+        const ctx = this.checkContext();
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         this.setWidth(ctx.measureText(this.text).width);
       }
@@ -174,7 +173,7 @@ export class TextNote extends Note {
     }
 
     // We reposition to the center of the note head
-    this.rightDisplacedHeadPx = this.tickContext.getMetrics().glyphPx / 2;
+    this.rightDisplacedHeadPx = tickContext.getMetrics().glyphPx / 2;
     this.setPreFormatted(true);
   }
 
@@ -182,12 +181,12 @@ export class TextNote extends Note {
   draw(): void {
     const ctx = this.checkContext();
     const stave = this.checkStave();
-    if (!this.tickContext) throw new RuntimeError('NoTickContext', "Can't draw without a TickContext.");
+    const tickContext = this.checkTickContext(`Can't draw without a TickContext.`);
 
     this.setRendered();
 
     // Reposition to center of note head
-    let x = this.getAbsoluteX() + this.tickContext.getMetrics().glyphPx / 2;
+    let x = this.getAbsoluteX() + tickContext.getMetrics().glyphPx / 2;
 
     // Align based on tick-context width.
     const width = this.getWidth();

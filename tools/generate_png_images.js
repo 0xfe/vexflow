@@ -6,7 +6,6 @@
 
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
-const { RuntimeError } = require('util');
 
 const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
 global.window = dom.window;
@@ -28,18 +27,61 @@ if (process.argv.length >= 5) {
   }
 }
 
+// When generating PNG images for the visual regression tests,
+// we mock out the QUnit methods (since we don't care about assertions).
+if (!global.QUnit) {
+  const QUMock = {
+    assertions: {
+      ok: () => true,
+      equal: () => true,
+      deepEqual: () => true,
+      expect: () => true,
+      throws: () => true,
+      notOk: () => true,
+      notEqual: () => true,
+      notDeepEqual: () => true,
+      strictEqual: () => true,
+      notStrictEqual: () => true,
+      propEqual: () => true,
+    },
+
+    module(name) {
+      QUMock.current_module = name;
+    },
+
+    // See: https://api.qunitjs.com/QUnit/test/
+    test(name, callback) {
+      QUMock.current_test = name;
+      QUMock.assertions.test.module.name = name;
+      // Print out the progress and keep it on a single line.
+      process.stdout.write(`\u001B[0G${QUMock.current_module} :: ${name}\u001B[0K`);
+      callback(QUMock.assertions);
+    },
+  };
+
+  global.QUnit = QUMock;
+  for (const k in QUMock.assertions) {
+    // Make all methods & properties of QUMock.assertions global.
+    global[k] = QUMock.assertions[k];
+  }
+  global.test = QUMock.test;
+  // Enable us to pass the name of the module around.
+  // See: QUMock.test(...) and VexFlowTests.runWithParams(...)
+  QUMock.assertions.test = { module: { name: '' } };
+}
+
 if (scriptDir.includes('releases')) {
   // THE OLD WAY loads two JS files.
   // TODO: Remove this block lines 31-37, after the new version has been moved to 'releases/'
   global.Vex = require(`${scriptDir}/vexflow-debug.js`);
   require(`${scriptDir}/vexflow-tests.js`);
-  global.Vex.Flow.shims = { fs, process };
+  global.Vex.Flow.shims = { fs };
 } else {
   // THE NEW WAY loads a single JS file.
   // See: https://github.com/0xfe/vexflow/pull/1074
   // Load from the build/ or reference/ folder.
   global.Vex = require(`${scriptDir}/vexflow-tests.js`);
-  global.Vex.Flow.Test.shims = { fs, process };
+  global.Vex.Flow.Test.shims = { fs };
 }
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.

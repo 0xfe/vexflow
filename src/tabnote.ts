@@ -5,18 +5,17 @@
 // The file implements notes for Tablature notation. This consists of one or
 // more fret positions, and can either be drawn with or without stems.
 //
-// See `tests/tabnote_tests.js` for usage examples
+// See `tests/tabnote_tests.ts` for usage examples.
 
 import { Dot } from './dot';
 import { Flow } from './flow';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
-import { ModifierContext } from './modifiercontext';
 import { Stave } from './stave';
 import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 
 export interface TabNotePosition {
   // For example, on a six stringed instrument, `str` ranges from 1 to 6.
@@ -165,13 +164,7 @@ export class TabNote extends StemmableNote {
     };
 
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-
-    if (!this.glyph) {
-      throw new RuntimeError(
-        'BadArguments',
-        `Invalid note initialization data (No glyph found): ${JSON.stringify(tab_struct)}`
-      );
-    }
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     this.buildStem();
 
@@ -291,17 +284,6 @@ export class TabNote extends StemmableNote {
   // Get the fret positions for the note
   getPositions(): TabNotePosition[] {
     return this.positions;
-  }
-
-  // Add self to the provided modifier context `mc`
-  addToModifierContext(mc: ModifierContext): this {
-    this.modifierContext = mc;
-    for (let i = 0; i < this.modifiers.length; ++i) {
-      this.modifierContext.addMember(this.modifiers[i]);
-    }
-    this.modifierContext.addMember(this);
-    this.preFormatted = false;
-    return this;
   }
 
   // Get the default `x` and `y` coordinates for a modifier at a specific

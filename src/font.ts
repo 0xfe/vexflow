@@ -1,4 +1,4 @@
-import { RuntimeError } from './util';
+import { defined } from './util';
 import { loadBravura } from '@bravura';
 import { loadGonville } from '@gonville';
 import { loadPetaluma } from '@petaluma';
@@ -26,7 +26,7 @@ export interface FontGlyph {
   o: string;
   leftSideBearing?: number;
   advanceWidth?: number;
-  cached_outline?: string[];
+  cached_outline?: number[];
 }
 
 class Font {
@@ -61,57 +61,58 @@ class Font {
   }
 
   getResolution(): number {
-    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
-    return this.fontDataMetrics.fontData.resolution;
+    return this.getFontData().resolution;
   }
 
   // eslint-disable-next-line
   getMetrics(): Record<string, any> {
-    if (!this.fontDataMetrics.metrics) throw new RuntimeError('Missing metrics or font data');
-    return this.fontDataMetrics.metrics;
+    return defined(this.fontDataMetrics.metrics, 'FontError', 'Missing metrics');
   }
 
+  /**
+   * Use the provided key to look up a value in this font's metrics file (e.g., bravura_metrics.ts, petaluma_metrics.ts).
+   * @param key is a string separated by periods (e.g., stave.endPaddingMax, clef.lineCount.'5'.shiftY).
+   * @param defaultValue is returned if the lookup fails.
+   * @returns the retrieved value (or `defaultValue` if the lookup fails).
+   */
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
-    if (!this.fontDataMetrics.metrics) throw new RuntimeError('Missing metrics or font data');
-    const parts = key.split('.');
-    let val = this.fontDataMetrics.metrics;
     // console.log('lookupMetric:', key);
-    for (let i = 0; i < parts.length; i++) {
-      if (val[parts[i]] === undefined) {
+
+    const keyParts = key.split('.');
+
+    // Start with the top level font metrics object, and keep looking deeper into the object (via each part of the period-delimited key).
+    let currObj = this.getMetrics();
+    for (let i = 0; i < keyParts.length; i++) {
+      const keyPart = keyParts[i];
+      const value = currObj[keyPart];
+      if (value === undefined) {
+        // If the key lookup fails, we fall back to the defaultValue.
         return defaultValue;
       }
-      val = val[parts[i]];
+      // The most recent lookup succeeded, so we drill deeper into the object.
+      currObj = value;
     }
 
-    // console.log('found:', key, val);
-    return val;
+    // After checking every part of the key (i.e., the loop completed), return the most recently retrieved value.
+    // console.log('found:', key, currObj);
+    return currObj;
   }
 
   getFontData(): FontData {
-    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
-    return this.fontDataMetrics.fontData;
+    return defined(this.fontDataMetrics.fontData, 'FontError', 'Missing font data');
   }
 
   getGlyphs(): Record<string, FontGlyph> {
-    if (!this.fontDataMetrics.fontData) throw new RuntimeError('Missing metrics or font data');
-    return this.fontDataMetrics.fontData.glyphs;
+    return this.getFontData().glyphs;
   }
 }
 
 const Fonts = {
-  Bravura: (): Font => {
-    return new Font('Bravura');
-  },
-  Gonville: (): Font => {
-    return new Font('Gonville');
-  },
-  Petaluma: (): Font => {
-    return new Font('Petaluma');
-  },
-  Custom: (): Font => {
-    return new Font('Custom');
-  },
+  Bravura: (): Font => new Font('Bravura'),
+  Gonville: (): Font => new Font('Gonville'),
+  Petaluma: (): Font => new Font('Petaluma'),
+  Custom: (): Font => new Font('Custom'),
 };
 
 export { Fonts, Font };

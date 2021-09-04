@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { BoundingBox } from './boundingbox';
 import { Element } from './element';
 import { Factory } from './factory';
 import { FormatOptions, Formatter, FormatterOptions } from './formatter';
@@ -231,6 +232,7 @@ export class System extends Element {
     this.startX = startX;
     this.debugNoteMetricsYs = debugNoteMetricsYs;
     this.lastY = y;
+    this.boundingBox = new BoundingBox(this.options.x, this.options.y, this.options.width, this.lastY - this.options.y);
   }
 
   /** Render the system. */
@@ -247,7 +249,7 @@ export class System extends Element {
     }
 
     this.debugNoteMetricsYs.forEach((d) => {
-      d.voice.getTickables().forEach((note) => Note.plotMetrics(ctx, note, d.y));
+      d.voice.getTickables().forEach((tickable) => Note.plotMetrics(ctx, tickable, d.y));
     });
   }
 }

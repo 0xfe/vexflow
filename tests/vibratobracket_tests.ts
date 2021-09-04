@@ -7,74 +7,64 @@
 /* eslint-disable */
 // @ts-nocheck
 
+// TODO: "to: null" and "from: null" do not match the declared types in the factory.VibratoBracket(params) method.
+//       Should we omit the to: null / from: null? Set them to undefined? Update the declared types to accept null?
+// TODO: It's annoying to have to cast "as Note" or "as Note[]". Could we add a method to Voice to get the tickables as Note[]? Voice.getTickables() vs Voice.getNotes()?
+
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { QUnit, ok } from './declarations';
+import { Factory } from 'factory';
+import { Tickable } from 'tickable';
+import { Note } from 'note';
 
-function createTest(noteGroup1, setupVibratoBracket) {
-  return function (options: TestOptions) {
-    const f = VexFlowTests.makeFactory(options, 650, 200);
-    const stave = f.Stave();
-    const score = f.EasyScore();
+const VibratoBracketTests = {
+  Start(): void {
+    QUnit.module('VibratoBracket');
+    const run = VexFlowTests.runTests;
+    run('Simple VibratoBracket', simple);
+    run('Harsh VibratoBracket Without End Note', withoutEndNote);
+    run('Harsh VibratoBracket Without Start Note', withoutStartNote);
+  },
+};
 
-    const voice = score.voice(score.notes.apply(score, noteGroup1));
+// Helper function to set up the stave, easyscore, voice, and to format & draw.
+function createTest(noteGroup: string, setupVibratoBracket: (f: Factory, notes: Tickable[]) => void) {
+  return (options: TestOptions) => {
+    const factory = VexFlowTests.makeFactory(options, 650, 200);
+    const stave = factory.Stave();
+    const score = factory.EasyScore();
+    const voice = score.voice(score.notes(noteGroup));
 
-    setupVibratoBracket(f, voice.getTickables());
+    setupVibratoBracket(factory, voice.getTickables());
 
-    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-    f.draw();
+    factory.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    factory.draw();
 
     ok(true);
   };
 }
 
-const VibratoBracketTests = {
-  Start(): void {
-    const run = VexFlowTests.runTests;
+const simple = createTest('c4/4, c4, c4, c4', (factory, notes) => {
+  factory.VibratoBracket({
+    from: notes[0] as Note,
+    to: notes[3] as Note,
+    options: { line: 2 },
+  });
+});
 
-    QUnit.module('VibratoBracket');
+const withoutEndNote = createTest('c4/4, c4, c4, c4', (factory, notes) => {
+  factory.VibratoBracket({
+    from: notes[2] as Note,
+    to: null,
+    options: { line: 2, harsh: true },
+  });
+});
 
-    run(
-      'Simple VibratoBracket',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
-        f.VibratoBracket({
-          from: notes[0],
-          to: notes[3],
-          options: {
-            line: 2,
-          },
-        });
-      })
-    );
-
-    run(
-      'Harsh VibratoBracket Without End Note',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
-        f.VibratoBracket({
-          from: notes[2],
-          to: null,
-          options: {
-            line: 2,
-            harsh: true,
-          },
-        });
-      })
-    );
-
-    run(
-      'Harsh VibratoBracket Without Start Note',
-      createTest(['c4/4, c4, c4, c4'], function (f, notes) {
-        f.VibratoBracket({
-          from: null,
-          to: notes[2],
-          options: {
-            line: 2,
-            harsh: true,
-          },
-        });
-      })
-    );
-  },
-};
+const withoutStartNote = createTest('c4/4, c4, c4, c4', (factory, notes) => {
+  factory.VibratoBracket({
+    from: null,
+    to: notes[2] as Note,
+    options: { line: 2, harsh: true },
+  });
+});
 
 export { VibratoBracketTests };

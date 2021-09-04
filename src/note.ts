@@ -1,19 +1,18 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, drawDot } from './util';
-import { Flow } from './flow';
-import { Tickable } from './tickable';
-import { Stroke } from './strokes';
-import { Stave } from './stave';
-import { Voice } from './voice';
-import { TickContext } from './tickcontext';
-import { ModifierContext } from './modifiercontext';
-import { Modifier } from './modifier';
-import { KeyProps, RenderContext } from './types/common';
-import { GlyphProps } from './glyph';
-import { Fraction } from './fraction';
 import { Beam } from './beam';
+import { RuntimeError, drawDot, defined } from './util';
+import { Flow } from './flow';
+import { Fraction } from './fraction';
+import { GlyphProps } from './glyph';
+import { Modifier } from './modifier';
+import { Stave } from './stave';
+import { Stroke } from './strokes';
+import { Tickable } from './tickable';
+import { TickContext } from './tickcontext';
+import { KeyProps, RenderContext } from './types/common';
+import { Voice } from './voice';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -107,7 +106,7 @@ export abstract class Note extends Tickable {
   }
 
   /** Debug helper. Displays various note metrics for the given note. */
-  static plotMetrics(ctx: RenderContext, note: Note, yPos: number): void {
+  static plotMetrics(ctx: RenderContext, note: Tickable, yPos: number): void {
     const metrics = note.getMetrics();
     const xStart = note.getAbsoluteX() - metrics.modLeftPx - metrics.leftDisplacedHeadPx;
     const xPre1 = note.getAbsoluteX() - metrics.leftDisplacedHeadPx;
@@ -317,8 +316,10 @@ export abstract class Note extends Tickable {
   }
 
   /**
-   * Don't play notes by default, call them rests. This is also used by things like
-   * beams and dots for positioning.
+   * @returns true if this note is a type of rest.
+   *
+   * Rests don't have pitches, but take up space in the score.
+   * Subclasses should override this default implementation.
    */
   isRest(): boolean {
     return false;
@@ -340,10 +341,7 @@ export abstract class Note extends Tickable {
 
   /** Check and get the target stave. */
   checkStave(): Stave {
-    if (!this.stave) {
-      throw new RuntimeError('NoStave', 'No stave attached to instance');
-    }
-    return this.stave;
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   /** Set the target stave. */
@@ -455,23 +453,22 @@ export abstract class Note extends Tickable {
     return this.voice;
   }
 
-  /** Attache this note to `voice`. */
+  /** Attach this note to `voice`. */
   setVoice(voice: Voice): this {
     this.voice = voice;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
   /** Get the `TickContext` for this note. */
   getTickContext(): TickContext {
-    if (!this.tickContext) throw new RuntimeError('NoTickContext', 'Note has no tick context.');
-    return this.tickContext;
+    return this.checkTickContext();
   }
 
   /** Set the `TickContext` for this note. */
   setTickContext(tc: TickContext): this {
     this.tickContext = tc;
-    this.preFormatted = false;
+    this.setPreFormatted(false);
     return this;
   }
 
@@ -502,10 +499,7 @@ export abstract class Note extends Tickable {
 
   /** Check and get the beam. */
   checkBeam(): Beam {
-    if (!this.beam) {
-      throw new RuntimeError('NoBeam', 'No beam attached to instance');
-    }
-    return this.beam;
+    return defined(this.beam, 'NoBeam', 'No beam attached to instance');
   }
 
   /** Check it has a beam. */
@@ -519,24 +513,19 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  /** Attach this note to a modifier context. */
-  setModifierContext(mc?: ModifierContext): this {
-    this.modifierContext = mc;
-    return this;
-  }
-
-  /** Attach a modifier to this note. */
-  addModifier(a: number | Modifier, b: number | Modifier = 0): this {
-    let index: number;
-    let modifier: Modifier;
-
-    if (typeof a === 'object' && typeof b === 'number') {
-      index = b;
-      modifier = a;
-    } else {
+  /**
+   * Attach a modifier to this note.
+   * @param modifier the Modifier to add.
+   * @param index of the key to modify.
+   * @returns this
+   */
+  addModifier(modifier: Modifier, index: number = 0): this {
+    // Legacy versions of VexFlow had the two parameters swapped.
+    // We check here and throw an error if the argument types are not correct.
+    if (typeof modifier !== 'object' || typeof index !== 'number') {
       throw new RuntimeError(
         'WrongParams',
-        'Call signature to addModifier not supported, use addModifier(modifier, index) instead.'
+        'Call signature to addModifier not supported, use addModifier(modifier: Modifier, index) instead.'
       );
     }
     modifier.setNote(this);
@@ -601,26 +590,16 @@ export abstract class Note extends Tickable {
    * looking for the post-formatted x-position.
    */
   getAbsoluteX(): number {
-    if (!this.tickContext) {
-      throw new RuntimeError('NoTickContext', 'Note needs a TickContext assigned for an X-Value');
-    }
-
+    const tickContext = this.checkTickContext(`Can't getAbsoluteX() without a TickContext.`);
     // Position note to left edge of tick context.
-    let x = this.tickContext.getX();
+    let x = tickContext.getX();
     if (this.stave) {
       x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
     }
-
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();
     }
-
     return x;
-  }
-
-  /** Set preformatted status. */
-  setPreFormatted(value: boolean): void {
-    this.preFormatted = value;
   }
 
   /** Get the direction of the stem. */
@@ -651,5 +630,15 @@ export abstract class Note extends Tickable {
     tieEndX -= this.width / 2 + 2;
 
     return tieEndX;
+  }
+
+  // Get the pitches in the note
+  getKeys(): string[] {
+    return this.keys;
+  }
+
+  // Get the properties for all the keys in the note
+  getKeyProps(): KeyProps[] {
+    return this.keyProps;
   }
 }

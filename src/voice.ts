@@ -1,14 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { RuntimeError, check } from './util';
+
+import { BoundingBox } from './boundingbox';
+import { RuntimeError, defined } from './util';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
-import { Stave } from './stave';
-import { Note } from './note';
-import { BoundingBox } from './boundingbox';
-import { Tickable } from './tickable';
 import { RenderContext } from './types/common';
+import { Stave } from './stave';
+import { Tickable } from './tickable';
 
 export interface VoiceTime {
   num_beats: number;
@@ -37,7 +37,7 @@ export class Voice extends Element {
   protected readonly totalTicks: Fraction;
   protected readonly ticksUsed: Fraction;
   protected readonly largestTickWidth: number;
-  protected readonly tickables: Note[];
+  protected readonly tickables: Tickable[];
   protected readonly time: VoiceTime;
 
   /**
@@ -116,7 +116,7 @@ export class Voice extends Element {
   }
 
   /** Get the tickables in the voice. */
-  getTickables(): Note[] {
+  getTickables(): Tickable[] {
     return this.tickables;
   }
 
@@ -147,28 +147,28 @@ export class Voice extends Element {
   /** Set the voice's stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
-    this.boundingBox = undefined; // Reset bounding box so we can reformat
+    // Reset the bounding box so we can reformat.
+    this.boundingBox = undefined;
     return this;
+  }
+
+  getStave(): Stave | undefined {
+    return this.stave;
   }
 
   /** Get the bounding box for the voice. */
   getBoundingBox(): BoundingBox | undefined {
-    let boundingBox;
-    let bb;
-    let i;
-
     if (!this.boundingBox) {
-      boundingBox = undefined;
-
-      for (i = 0; i < this.tickables.length; ++i) {
-        this.tickables[i].setStave(check<Stave>(this.stave));
-
-        bb = this.tickables[i].getBoundingBox();
-        if (!bb) continue;
-
-        boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
+      const stave = this.checkStave();
+      let boundingBox = undefined;
+      for (let i = 0; i < this.tickables.length; ++i) {
+        const tickable = this.tickables[i];
+        tickable.setStave(stave);
+        const bb = tickable.getBoundingBox();
+        if (bb) {
+          boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
+        }
       }
-
       this.boundingBox = boundingBox;
     }
     return this.boundingBox;
@@ -208,7 +208,7 @@ export class Voice extends Element {
   protected reCalculateExpTicksUsed(): number {
     const totalTicks = this.ticksUsed.value();
     const exp = (tickable: Tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
-    this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b);
+    this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b, 0);
     return this.expTicksUsed;
   }
 
@@ -225,7 +225,7 @@ export class Voice extends Element {
   }
 
   /** Add a tickable to the voice. */
-  addTickable(tickable: Note): this {
+  addTickable(tickable: Tickable): this {
     if (!tickable.shouldIgnoreTicks()) {
       const ticks = tickable.getTicks();
 
@@ -259,51 +259,52 @@ export class Voice extends Element {
   }
 
   /** Add an array of tickables to the voice. */
-  addTickables(tickables: Note[]): this {
+  addTickables(tickables: Tickable[]): this {
     for (let i = 0; i < tickables.length; ++i) {
       this.addTickable(tickables[i]);
     }
-
     return this;
   }
 
   /** Preformat the voice by applying the voice's stave to each note. */
   preFormat(): this {
     if (this.preFormatted) return this;
-    const stave = check<Stave>(this.stave);
+    const stave = this.checkStave();
     this.tickables.forEach((tickable) => {
       if (!tickable.getStave()) {
         tickable.setStave(stave);
       }
     });
-
     this.preFormatted = true;
     return this;
+  }
+
+  checkStave(): Stave {
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
   /**
    * Render the voice onto the canvas `context` and an optional `stave`.
    * If `stave` is omitted, it is expected that the notes have staves
    * already set.
+   *
+   * This method also calculates the voice's boundingBox while drawing
+   * the notes. Note the similarities with this.getBoundingBox().
    */
-  draw(context: RenderContext = this.checkContext(), stave: Stave | undefined = this.stave): void {
+  draw(context: RenderContext = this.checkContext(), stave?: Stave): void {
+    stave = stave ?? this.stave;
     this.setRendered();
     let boundingBox = undefined;
     for (let i = 0; i < this.tickables.length; ++i) {
       const tickable = this.tickables[i];
-
-      // Set the stave if provided
-      if (stave) tickable.setStave(stave);
-
-      if (!tickable.getStave()) {
-        throw new RuntimeError('MissingStave', 'The voice cannot draw tickables without staves.');
+      // Set the stave if provided.
+      if (stave) {
+        tickable.setStave(stave);
       }
-
-      if (i === 0) boundingBox = tickable.getBoundingBox();
-
-      if (i > 0 && boundingBox) {
-        const tickable_bb = tickable.getBoundingBox();
-        if (tickable_bb) boundingBox.mergeWith(tickable_bb);
+      defined(tickable.getStave(), 'MissingStave', 'The voice cannot draw tickables without staves.');
+      const bb = tickable.getBoundingBox();
+      if (bb) {
+        boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
       }
 
       tickable.setContext(context);

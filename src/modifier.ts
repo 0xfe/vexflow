@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
@@ -41,11 +41,11 @@ export class Modifier extends Element {
   protected x_shift: number;
 
   private spacingFromNextModifier: number;
-  private modifier_context?: ModifierContext;
+  private modifierContext?: ModifierContext;
 
   /** Modifiers category string. */
   static get CATEGORY(): string {
-    return 'none';
+    return 'Modifier';
   }
 
   /** Modifiers can be positioned almost anywhere, relative to a note. */
@@ -103,16 +103,16 @@ export class Modifier extends Element {
 
   /** Get attached note (`StaveNote`, `TabNote`, etc.) */
   getNote(): Note {
-    if (!this.note) throw new RuntimeError('NoNote', 'Modifier has no note.');
-    return this.note;
+    return defined(this.note, 'NoNote', 'Modifier has no note.');
   }
 
-  /** Check and get attached note (`StaveNote`, `TabNote`, etc.) */
+  /**
+   * Used in draw() to check and get the attached note (`StaveNote`, `TabNote`, etc.).
+   * Also verifies that the index is valid.
+   */
   checkAttachedNote(): Note {
-    if (!this.note || this.index === undefined) {
-      throw new RuntimeError('NoAttachedNote', `Can't draw ${this.getCategory()} without a note and index.`);
-    }
-    return this.note;
+    defined(this.index, 'NoIndex', `Can't draw ${this.getCategory()} without an index.`);
+    return defined(this.note, 'NoNote', `Can't draw ${this.getCategory()} without a note.`);
   }
 
   /**
@@ -131,10 +131,7 @@ export class Modifier extends Element {
 
   /** Check and get note index, which is a specific note in a chord. */
   checkIndex(): number {
-    if (this.index === undefined) {
-      throw new RuntimeError('NoIndex', 'Modifier has an invalid index.');
-    }
-    return this.index;
+    return defined(this.index, 'NoIndex', 'Modifier has an invalid index.');
   }
 
   /** Set note index, which is a specific note in a chord. */
@@ -145,18 +142,17 @@ export class Modifier extends Element {
 
   /** Get `ModifierContext`. */
   getModifierContext(): ModifierContext | undefined {
-    return this.modifier_context;
+    return this.modifierContext;
   }
 
   /** Check and get `ModifierContext`. */
   checkModifierContext(): ModifierContext {
-    if (!this.modifier_context) throw new RuntimeError('NoModifierContext', 'Modifier Context Required');
-    return this.modifier_context;
+    return defined(this.modifierContext, 'NoModifierContext', 'Modifier Context Required');
   }
 
   /** Every modifier must be part of a `ModifierContext`. */
   setModifierContext(c: ModifierContext): this {
-    this.modifier_context = c;
+    this.modifierContext = c;
     return this;
   }
 
@@ -211,7 +207,7 @@ export class Modifier extends Element {
     return this;
   }
 
-  /** Get shitf modifier `x` */
+  /** Get shift modifier `x` */
   getXShift(): number {
     return this.x_shift;
   }
@@ -219,7 +215,7 @@ export class Modifier extends Element {
   /** Render the modifier onto the canvas. */
   draw(): void {
     this.checkContext();
-    throw new RuntimeError('MethodNotImplemented', 'draw() not implemented for this modifier.');
+    throw new RuntimeError('NotImplemented', 'draw() not implemented for this modifier.');
   }
 
   // aligns sub notes of NoteSubGroup (or GraceNoteGroup) to the main note with correct x-offset

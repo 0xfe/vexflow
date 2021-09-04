@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, log, check } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Note } from './note';
 import { Glyph } from './glyph';
 import { TextNoteStruct } from './textnote';
@@ -101,7 +101,7 @@ export class TextDynamics extends Note {
       const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new RuntimeError('Invalid dynamics character: ' + letter);
 
-      const size = check<number>(this.render_options.glyph_font_size);
+      const size = defined(this.render_options.glyph_font_size);
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph
@@ -112,7 +112,7 @@ export class TextDynamics extends Note {
 
     // Store the width of the text
     this.setWidth(total_width);
-    this.preFormatted = true;
+    this.setPreFormatted(true);
     return this;
   }
 

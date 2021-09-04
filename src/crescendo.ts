@@ -22,9 +22,8 @@ export interface CrescendoParams {
 }
 
 // To enable logging for this class. Set `Vex.Flow.Crescendo.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (Crescendo.DEBUG) log('Vex.Flow.Crescendo', args);
 }
 
@@ -101,7 +100,7 @@ export class Crescendo extends Note {
 
   // Preformat the note
   preFormat(): this {
-    this.preFormatted = true;
+    this.setPreFormatted(true);
     return this;
   }
 
