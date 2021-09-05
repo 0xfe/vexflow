@@ -44,17 +44,8 @@ function validNotes(): void {
   equal(parts.root, 'c');
   equal(parts.accidental, '##');
 
-  try {
-    music.getNoteParts('r');
-  } catch (e) {
-    equal(e.code, 'BadArguments', 'Invalid note: r');
-  }
-
-  try {
-    music.getNoteParts('');
-  } catch (e) {
-    equal(e.code, 'BadArguments', "Invalid note: ''");
-  }
+  throws(() => music.getNoteParts('r'), /BadArguments/, 'Invalid note: r');
+  throws(() => music.getNoteParts(''), /BadArguments/, "Invalid note: ''");
 }
 
 function validKeys(): void {
@@ -87,23 +78,9 @@ function validKeys(): void {
   equal(parts.accidental, '#');
   equal(parts.type, 'harm');
 
-  try {
-    music.getKeyParts('r');
-  } catch (e) {
-    equal(e.code, 'BadArguments', 'Invalid key: r');
-  }
-
-  try {
-    music.getKeyParts('');
-  } catch (e) {
-    equal(e.code, 'BadArguments', "Invalid key: ''");
-  }
-
-  try {
-    music.getKeyParts('#m');
-  } catch (e) {
-    equal(e.code, 'BadArguments', 'Invalid key: #m');
-  }
+  throws(() => music.getKeyParts('r'), /BadArguments/, 'Invalid key: r');
+  throws(() => music.getKeyParts(''), /BadArguments/, `Invalid key: ''`);
+  throws(() => music.getKeyParts('#m'), /BadArguments/, 'Invalid key: #m');
 }
 
 function noteValue(): void {
@@ -114,11 +91,7 @@ function noteValue(): void {
   let note = music.getNoteValue('c');
   equal(note, 0);
 
-  try {
-    music.getNoteValue('r');
-  } catch (e) {
-    ok(true, 'Invalid note');
-  }
+  throws(() => music.getNoteValue('r'), /BadArguments/, 'Invalid note name');
 
   note = music.getNoteValue('f#');
   equal(note, 6);
@@ -132,11 +105,7 @@ function intervalValue(): void {
   const value = music.getIntervalValue('b2');
   equal(value, 1);
 
-  try {
-    music.getIntervalValue('7');
-  } catch (e) {
-    ok(true, 'Invalid note');
-  }
+  throws(() => music.getIntervalValue('7'), /BadArguments/, 'Invalid interval name');
 }
 
 function relativeNotes(): void {
@@ -147,27 +116,27 @@ function relativeNotes(): void {
   let value = music.getRelativeNoteValue(music.getNoteValue('c'), music.getIntervalValue('b5'));
   equal(value, 6);
 
-  try {
-    music.getRelativeNoteValue(music.getNoteValue('bc'), music.getIntervalValue('b2'));
-  } catch (e) {
-    ok(true, 'Invalid note');
-  }
+  throws(
+    () => music.getRelativeNoteValue(music.getNoteValue('bc'), music.getIntervalValue('b2')),
+    /BadArguments/,
+    'Invalid note'
+  );
 
-  try {
-    music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p3'));
-  } catch (e) {
-    ok(true, 'Invalid interval');
-  }
+  throws(
+    () => music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p3')),
+    /BadArguments/,
+    'Invalid interval'
+  );
 
   // Direction
   value = music.getRelativeNoteValue(music.getNoteValue('d'), music.getIntervalValue('2'), -1);
   equal(value, 0);
 
-  try {
-    music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p4'), 0);
-  } catch (e) {
-    ok(true, 'Invalid direction');
-  }
+  throws(
+    () => music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('p4'), 0),
+    /BadArguments/,
+    'Invalid direction: 0'
+  );
 
   // Rollover
   value = music.getRelativeNoteValue(music.getNoteValue('b'), music.getIntervalValue('b5'));
@@ -186,21 +155,19 @@ function relativeNoteNames(): void {
   expect(9);
 
   const music = new Music();
+  equal(music.getRelativeNoteName('b', music.getNoteValue('c#')), 'b##');
   equal(music.getRelativeNoteName('c', music.getNoteValue('c')), 'c');
   equal(music.getRelativeNoteName('c', music.getNoteValue('db')), 'c#');
+  equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
   equal(music.getRelativeNoteName('c#', music.getNoteValue('db')), 'c#');
   equal(music.getRelativeNoteName('e', music.getNoteValue('f#')), 'e##');
   equal(music.getRelativeNoteName('e', music.getNoteValue('d#')), 'eb');
   equal(music.getRelativeNoteName('e', music.getNoteValue('fb')), 'e');
-
-  try {
-    music.getRelativeNoteName('e', music.getNoteValue('g#'));
-  } catch (e) {
-    ok(true, 'Too far');
-  }
-
-  equal(music.getRelativeNoteName('b', music.getNoteValue('c#')), 'b##');
-  equal(music.getRelativeNoteName('c', music.getNoteValue('b')), 'cb');
+  throws(
+    () => music.getRelativeNoteName('e', music.getNoteValue('g#')),
+    /BadArguments/,
+    'Too far away. Notes not related.'
+  );
 }
 
 function canonicalNotes(): void {
@@ -211,11 +178,7 @@ function canonicalNotes(): void {
   equal(music.getCanonicalNoteName(0), 'c');
   equal(music.getCanonicalNoteName(2), 'd');
 
-  try {
-    music.getCanonicalNoteName(-1);
-  } catch (e) {
-    ok(true, 'Invalid note value');
-  }
+  throws(() => music.getCanonicalNoteName(-1), /BadArguments/, 'Invalid note value');
 }
 
 function canonicalIntervals(): void {
@@ -226,11 +189,7 @@ function canonicalIntervals(): void {
   equal(music.getCanonicalIntervalName(0), 'unison');
   equal(music.getCanonicalIntervalName(2), 'M2');
 
-  try {
-    music.getCanonicalIntervalName(-1);
-  } catch (e) {
-    ok(true, 'Invalid interval value');
-  }
+  throws(() => music.getCanonicalIntervalName(-1), /BadArguments/, 'Invalid interval value');
 }
 
 function scaleTones(): void {

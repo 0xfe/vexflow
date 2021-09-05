@@ -69,17 +69,8 @@ function banjo(): void {
 function noteForFret(): void {
   expect(8);
   const tuning = new Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
-  try {
-    tuning.getNoteForFret(-1, 1);
-  } catch (e) {
-    equal(e.code, 'BadArguments', 'Fret -1');
-  }
-
-  try {
-    tuning.getNoteForFret(1, -1);
-  } catch (e) {
-    equal(e.code, 'BadArguments', 'String -1');
-  }
+  throws(() => tuning.getNoteForFret(-1, 1), /BadArguments/, 'Fret = -1');
+  throws(() => tuning.getNoteForFret(1, -1), /BadArguments/, 'String = -1');
 
   equal(tuning.getNoteForFret(0, 1), 'E/5', 'High E string');
   equal(tuning.getNoteForFret(5, 1), 'A/5', 'High E string, fret 5');

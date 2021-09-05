@@ -37,11 +37,7 @@ function parser(): void {
   expect(11);
 
   function catchError(spec: string): void {
-    try {
-      Flow.keySignature(spec);
-    } catch (e) {
-      equal(e.code, 'BadKeySignature', e.message);
-    }
+    throws(() => Flow.keySignature(spec), /BadKeySignature/);
   }
 
   catchError('asdf');
@@ -52,7 +48,6 @@ function parser(): void {
   catchError('b');
   catchError('Kb');
   catchError('Fb');
-  catchError('Ab');
   catchError('Dbm');
   catchError('B#m');
 
