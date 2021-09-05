@@ -14,22 +14,24 @@ export class CanvasContext implements RenderContext {
   static get WIDTH(): number {
     return 600;
   }
+
   static get HEIGHT(): number {
     return 400;
   }
+
   static get CANVAS_BROWSER_SIZE_LIMIT(): number {
     return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size.
   }
 
   static SanitizeCanvasDims(width: number, height: number): [number, number] {
-    if (Math.max(width, height) > this.CANVAS_BROWSER_SIZE_LIMIT) {
-      warn('Canvas dimensions exceed browser limit. Cropping to ' + this.CANVAS_BROWSER_SIZE_LIMIT);
-      if (width > this.CANVAS_BROWSER_SIZE_LIMIT) {
-        width = this.CANVAS_BROWSER_SIZE_LIMIT;
-        // note: Math.min return 0 for undefined, NaN for null. Would change inputs.
+    const limit = this.CANVAS_BROWSER_SIZE_LIMIT;
+    if (Math.max(width, height) > limit) {
+      warn('Canvas dimensions exceed browser limit. Cropping to ' + limit);
+      if (width > limit) {
+        width = limit;
       }
-      if (height > this.CANVAS_BROWSER_SIZE_LIMIT) {
-        height = this.CANVAS_BROWSER_SIZE_LIMIT;
+      if (height > limit) {
+        height = limit;
       }
     }
     return [width, height];
@@ -145,11 +147,11 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  // renderer.js calls ctx.scale() instead, so this method is never used.
+  // CanvasRenderingContext2D does not have a resize function.
+  // renderer.ts calls ctx.scale() instead, so this method is never used.
   // eslint-disable-next-line
   resize(width: number, height: number): this {
-    // Do nothing for now.
-    // CanvasRenderingContext2D does not have a resize function.
+    // DO NOTHING.
     return this;
   }
 
@@ -199,9 +201,9 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
+  // CanvasRenderingContext2D does not have a glow function.
   glow(): this {
-    // Do nothing for now.
-    // CanvasRenderingContext2D does not have a glow function.
+    // DO NOTHING.
     return this;
   }
 

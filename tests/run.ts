@@ -64,6 +64,7 @@ import { VFPrefixTests } from './vf_prefix_tests';
 import { VibratoBracketTests } from './vibratobracket_tests';
 import { VibratoTests } from './vibrato_tests';
 import { VoiceTests } from './voice_tests';
+import { RendererTests } from './renderer_tests';
 
 VexFlowTests.run = function () {
   AccidentalTests.Start();
@@ -101,6 +102,7 @@ VexFlowTests.run = function () {
   PedalMarkingTests.Start();
   PercussionTests.Start();
   RegistryTests.Start();
+  RendererTests.Start();
   RestsTests.Start();
   RhythmTests.Start();
   StaveConnectorTests.Start();

@@ -13,8 +13,8 @@ export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.get
  * Support Canvas & SVG rendering contexts.
  */
 export class Renderer {
-  protected elementId?: string | HTMLCanvasElement;
-  protected element: HTMLCanvasElement;
+  protected elementId?: string;
+  protected element: HTMLCanvasElement | HTMLDivElement;
   protected backend: number;
 
   protected ctx: RenderContext;
@@ -43,7 +43,7 @@ export class Renderer {
   static lastContext?: RenderContext = undefined;
 
   static buildContext(
-    elementId: string | HTMLCanvasElement,
+    elementId: string,
     backend: number,
     width: number,
     height: number,
@@ -145,23 +145,34 @@ export class Renderer {
     context.stroke();
   }
 
-  constructor(elementId: string | HTMLCanvasElement, backend: number) {
-    if (!elementId) {
+  /**
+   * @param canvasId can be:
+   *   - a string element ID (of a canvas or div element)
+   *   - a canvas element
+   *   - a div element, which will contain the SVG output
+   * @param backend Renderer.Backends.CANVAS or Renderer.Backends.SVG
+   */
+  constructor(canvasId: string | HTMLCanvasElement | HTMLDivElement, backend: number) {
+    if (!canvasId) {
       throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
+    } else if (typeof canvasId === 'string') {
+      this.elementId = canvasId;
+      this.element = document.getElementById(canvasId as string) as HTMLCanvasElement | HTMLDivElement;
+    } else if ('getContext' in canvasId /* HTMLCanvasElement */) {
+      this.element = canvasId as HTMLCanvasElement;
+    } else {
+      // Assume it's a HTMLDivElement.
+      this.element = canvasId as HTMLDivElement;
     }
-
-    this.element =
-      typeof elementId === 'string' && typeof document !== 'undefined'
-        ? (document.getElementById(elementId as string) as HTMLCanvasElement)
-        : (elementId as HTMLCanvasElement);
 
     // Verify backend and create context
     this.backend = backend;
     if (this.backend === Renderer.Backends.CANVAS) {
-      if (!this.element?.getContext) {
-        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${elementId}`);
+      const canvasElement = this.element as HTMLCanvasElement;
+      if (!canvasElement.getContext) {
+        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
       }
-      this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
+      this.ctx = Renderer.bolsterCanvasContext(canvasElement.getContext('2d'));
     } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {
@@ -171,16 +182,16 @@ export class Renderer {
 
   resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
+      const canvasElement = this.element as HTMLCanvasElement;
       [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
 
-      this.element.width = width * devicePixelRatio;
-      this.element.height = height * devicePixelRatio;
-      this.element.style.width = width + 'px';
-      this.element.style.height = height + 'px';
+      canvasElement.width = width * devicePixelRatio;
+      canvasElement.height = height * devicePixelRatio;
+      canvasElement.style.width = width + 'px';
+      canvasElement.style.height = height + 'px';
 
-      this.ctx = Renderer.bolsterCanvasContext(this.element.getContext('2d'));
       this.ctx.scale(devicePixelRatio, devicePixelRatio);
     } else {
       this.ctx.resize(width, height);
