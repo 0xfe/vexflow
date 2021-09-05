@@ -41,17 +41,16 @@ function strict(): void {
   equal(voice.getTicksUsed().value(), BEAT * 4, 'Four beats in voice');
   equal(voice.isComplete(), true, 'Voice is complete');
 
-  const beforeNumerator = voice.getTicksUsed().numerator;
-  try {
-    voice.addTickable(createTickable());
-  } catch (e) {
-    equal(e.code, 'BadArgument', 'Too many ticks exception');
-    equal(
-      voice.getTicksUsed().numerator,
-      beforeNumerator,
-      'Revert "ticksUsed" when it occurred "Too many ticks" exception'
-    );
-  }
+  const numeratorBeforeException = voice.getTicksUsed().numerator;
+  throws(() => voice.addTickable(createTickable()), /BadArgument/, '"Too many ticks" exception');
+
+  // Verify that adding too many ticks does not affect the `ticksUsed` property of the voice.
+  // See voice.ts: this.ticksUsed.subtract(ticks);
+  equal(
+    voice.getTicksUsed().numerator,
+    numeratorBeforeException,
+    'Revert `ticksUsed` after a "Too many ticks" exception'
+  );
 
   equal(voice.getSmallestTickCount().value(), BEAT, 'Smallest tick count is BEAT');
 }
