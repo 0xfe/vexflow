@@ -5,40 +5,31 @@
   "parserOptions": {
     "project": "tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "no-console": 1, // Means warning
     "prettier/prettier": 2 // Means error
   },
   "overrides": [
     {
-      "files": [ "**/*.ts" ],
+      "files": ["**/*.ts"],
       "extends": [
         "eslint:recommended",
         "prettier",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"    
+        "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
-        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-inferrable-types": "off"
       }
     },
     {
-      "files": [ "src/**/*.js" ],
-      "extends": [
-        "eslint:recommended",
-        "prettier"
-      ]
+      "files": ["src/**/*.js"],
+      "extends": ["eslint:recommended", "prettier"]
     },
     {
-      "files": [ "tests/**/*.js" ],
-      "extends": [
-        "eslint:recommended",
-        "prettier"
-      ],
+      "files": ["tests/**/*.js"],
+      "extends": ["eslint:recommended", "prettier"],
       "rules": {
         "no-restricted-globals": 0,
         "no-undef": 0,

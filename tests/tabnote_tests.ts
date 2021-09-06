@@ -77,11 +77,7 @@ function width(): void {
     duration: '1',
   });
 
-  try {
-    note.getWidth();
-  } catch (e) {
-    equal(e.code, 'UnformattedNote', 'Unformatted note should have no width');
-  }
+  throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
 }
 
 function tickContext(): void {

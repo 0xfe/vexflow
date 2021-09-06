@@ -1,5 +1,7 @@
 // node canvas.js > output.html
 
+/* eslint-disable no-console */
+
 const { createCanvas } = require('canvas');
 const Vex = require('../../build/vexflow-debug');
 const VF = Vex.Flow;
