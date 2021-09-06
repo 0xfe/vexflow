@@ -270,7 +270,7 @@ function textDynamics(options: TestOptions): void {
     { time: '7/4' }
   );
 
-  // This is refactored to use preCalculateMinWidth... to excersize 
+  // This is refactored to use preCalculateMinWidth... to exercise  
   // a bug fix when textDynamic got formatted more than once.
   var formatter = f.Formatter();
   formatter.joinVoices([voice]);
