@@ -3,7 +3,6 @@
 // A generic text parsing class for VexFlow.
 
 import { RuntimeError, log } from './util';
-import { Grammar } from './easyscore';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -64,6 +63,10 @@ function flattenMatches(r: Result | Result[]): Match {
   return results.map(flattenMatches); // nested array
 }
 
+export interface Grammar {
+  begin(): RuleFunction;
+}
+
 // This is the base parser class. Given an arbitrary context-free grammar, it
 // can parse any line and execute code when specific rules are met (e.g.,
 // when a string is terminated.)
@@ -120,10 +123,7 @@ export class Parser {
         pos: this.pos,
       };
     } else {
-      return {
-        success: false,
-        pos: this.pos,
-      };
+      return { success: false, pos: this.pos };
     }
   }
 
@@ -253,9 +253,7 @@ export class Parser {
     const matches: Match[] = [];
     result.matches = matches;
     if (result.results) {
-      result.results.forEach((r) => {
-        matches.push(flattenMatches(r));
-      });
+      result.results.forEach((r) => matches.push(flattenMatches(r)));
     }
     if (rule.run && result.success) {
       rule.run({ matches });

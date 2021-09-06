@@ -17,8 +17,8 @@ import { StaveNote } from 'stavenote';
 
 const ChordSymbolTests = {
   Start(): void {
-    const run = VexFlowTests.runTests;
     QUnit.module('ChordSymbol');
+    const run = VexFlowTests.runTests;
     run('Chord Symbol Font Size Tests', fontSize);
     run('Chord Symbol Kerning Tests', kern);
     run('Top Chord Symbols', top);

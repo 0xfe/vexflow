@@ -661,21 +661,21 @@ export class Factory {
   }
 
   /**
-   * Creates EasyScore. Normally the first step after constructing a factory.
+   * Creates EasyScore. Normally the first step after constructing a Factory.
    *
    * Example:
    *
    * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
    *
    * `const score: EasyScore = vf.EasyScore();`
-   * @param params.factory not required
-   * @param params.builder instance of Builder
-   * @param params.commitHooks function to call after a note element is created
-   * @param params.throwOnError throw error in case of parsing error
+   * @param options.factory optional instance of Factory
+   * @param options.builder instance of Builder
+   * @param options.commitHooks function to call after a note element is created
+   * @param options.throwOnError throw error in case of parsing error
    */
-  EasyScore(params: EasyScoreOptions = {}): EasyScore {
-    params.factory = this;
-    return new EasyScore(params);
+  EasyScore(options: Partial<EasyScoreOptions> = {}): EasyScore {
+    options.factory = this;
+    return new EasyScore(options);
   }
 
   PedalMarking(paramsP: { notes?: StaveNote[]; options?: { style: string } } = {}): PedalMarking {

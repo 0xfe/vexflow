@@ -3,14 +3,7 @@
 //
 // Parser Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: the Parser constructor should take a more generic Grammar class.
-//       Currently it specifies EasyScore's Grammar class. This prevents us from passing in a different grammar.
-//       See: https://github.com/0xfe/vexflow/pull/1117
-
-import { Parser, Result } from 'parser';
+import { Grammar, Parser, Result, RuleFunction } from 'parser';
 
 const ParserTests = {
   Start(): void {
@@ -25,13 +18,15 @@ const ParserTests = {
 /**
  * Grammar used in the first three test cases: basic, advanced, mixed.
  */
-class TestGrammar {
-  begin() {
-    return this.BEGIN;
+class TestGrammar implements Grammar {
+  // Test cases customize this field.
+  expect!: RuleFunction[];
+
+  // The begin() function is the only requirement when implementing the Grammar interface.
+  begin(): RuleFunction {
+    return () => ({ expect: this.expect });
   }
-  BEGIN() {
-    return { expect: [this.BIGORLITTLE, this.EOL] };
-  }
+
   BIGORLITTLE() {
     return { expect: [this.BIGLINE, this.LITTLELINE], or: true };
   }
@@ -93,25 +88,22 @@ class MicroScoreGrammar {
 }
 
 /**
- * Helper function which checks that the result is a parse failure, and verifies the error position.
+ * Check that the result is a parse failure, and verify the error position.
  */
-function fails(result: Result, expectedPos: number, msg?: string): void {
+function fails(result: Result, expectedErrorPos: number, msg?: string): void {
   notOk(result.success, msg);
-  equal(result.errorPos, expectedPos, msg);
+  equal(result.errorPos, expectedErrorPos, msg);
 }
 
 function basic(): void {
   const grammar = new TestGrammar();
+  grammar.expect = [grammar.LITTLELINE, grammar.EOL];
   const parser = new Parser(grammar);
 
-  grammar.BEGIN = function () {
-    return { expect: [grammar.LITTLELINE, grammar.EOL] };
-  };
-
+  // Each of these strings will parse correctly.
   const mustPass = ['first, second', 'first,second', 'first', 'first,second, third'];
-  mustPass.forEach(function (line) {
-    equal(parser.parse(line).success, true, line);
-  });
+  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
+
   fails(parser.parse(''), 0);
   fails(parser.parse('first second'), 6);
   fails(parser.parse('first,,'), 5);
@@ -121,16 +113,12 @@ function basic(): void {
 
 function advanced(): void {
   const grammar = new TestGrammar();
+  grammar.expect = [grammar.BIGLINE, grammar.EOL];
   const parser = new Parser(grammar);
 
-  grammar.BEGIN = function () {
-    return { expect: [grammar.BIGLINE, grammar.EOL] };
-  };
   const mustPass = ['{first}', '{first!}', '{first,second}', '{first,second!}', '{first,second,third!}'];
+  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
 
-  mustPass.forEach(function (line) {
-    equal(parser.parse(line).success, true, line);
-  });
   fails(parser.parse('{first,second,third,}'), 19);
   fails(parser.parse('first,second,third'), 0);
   fails(parser.parse('{first,second,third'), 19);
@@ -139,12 +127,12 @@ function advanced(): void {
 
 function mixed(): void {
   const grammar = new TestGrammar();
+  grammar.expect = [grammar.BIGORLITTLE, grammar.EOL];
   const parser = new Parser(grammar);
 
   const mustPass = ['{first,second,third!}', 'first, second'];
-  mustPass.forEach(function (line) {
-    equal(parser.parse(line).success, true, line);
-  });
+  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
+
   fails(parser.parse('first second'), 6);
 }
 
@@ -158,7 +146,7 @@ function microscore(): void {
     '40 [40.44.47] 45 47 [44.47.51]', // Mixed Notes and Chords: C4 [Cmajor] F4 G4 [Eminor]
   ];
 
-  mustPass.forEach(function (line) {
+  mustPass.forEach((line) => {
     const result = parser.parse(line);
     equal(result.success, true, line);
     equal(result.matches?.length, 3, line);
