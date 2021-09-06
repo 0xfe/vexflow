@@ -15,6 +15,7 @@ import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 import { Note } from 'note';
 import { TextNote } from 'textnote';
+import { Stave} from 'stave';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -276,7 +277,7 @@ function textDynamics(options: TestOptions): void {
   // const width = 250; //formatter.preCalculateMinTotalWidth([voice]);
   const width = formatter.preCalculateMinTotalWidth([voice]);
   formatter.format([voice]);
-  const stave = f.Stave({ y: 40, width: width + VF.Stave.defaultPadding });
+  const stave = f.Stave({ y: 40, width: width + Stave.defaultPadding });
   stave.draw();
   voice.draw(f.getContext(), stave);
   ok(true);
