@@ -91,7 +91,7 @@ export class TextDynamics extends Note {
   /** Preformat the dynamics text. */
   preFormat(): this {
     let total_width = 0;
-    // Issue 1122: length of this.glyphs must be <=
+    // length of this.glyphs must be <=
     // length of this.sequence, so if we're formatted before
     // create new glyphs.
     this.glyphs = [];
