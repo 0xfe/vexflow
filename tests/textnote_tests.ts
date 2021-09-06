@@ -258,7 +258,7 @@ function textDynamics(options: TestOptions): void {
   const voice = score.voice(
     [
       f.TextDynamics({ text: 'sfz', duration: '4' }),
-      f.TextDynamics({ text: 'sfz', duration: '4' }),
+      f.TextDynamics({ text: 'rfz', duration: '4' }),
       f.TextDynamics({ text: 'mp', duration: '4' }),
       f.TextDynamics({ text: 'ppp', duration: '4' }),
 
