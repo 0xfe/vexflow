@@ -8,7 +8,6 @@
 
 // TODO: Stroke constructor's second argument should be optional.
 // TODO: Factory.GraceNote() should probably take a Partial<GraceNoteStruct>
-// TODO: EasyScore.voice()'s first param should be Tickable[] instead of StaveNote[].
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Beam } from 'beam';

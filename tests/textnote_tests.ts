@@ -6,7 +6,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// TODO: EasyScore.voice() needs to accept Note[] (because we pass in arrays of TextDynamics, TextNote, Crescendo).
 // TODO: TextNote needs a setFont() accessor.
 // TODO: Line 177 => Property 'text' is missing but required in type 'TextNoteStruct'.
 //       Maybe Factory.TextNote() should accept a Partial<TextNoteStruct>?

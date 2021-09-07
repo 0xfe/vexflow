@@ -3,11 +3,6 @@
 //
 // Bach Demo
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: EasyScore.voice() should take Note[] for the first argument, since TextDynamics is not a StaveNote.
-
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Factory } from 'factory';
 import { Registry } from 'registry';

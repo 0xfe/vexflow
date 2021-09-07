@@ -3,12 +3,6 @@
 //
 // Three Voices Tests - Three voices in single staff.
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: EasyScore.voice(notes: StaveNote[], ...) should probably take a Note[].
-//       On lines 99, 132-133, 163, we try to pass TextNote[] into score.voice(...).
-
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { BuilderOptions } from 'easyscore';

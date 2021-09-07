@@ -3,11 +3,6 @@
 //
 // GhostNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: EasyScore.voice() should take Note[] for the first argument, since GhostNote is not a StaveNote.
-
 import { EasyScore } from 'easyscore';
 import { Factory } from 'factory';
 import { StaveNote } from 'stavenote';
