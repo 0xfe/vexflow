@@ -6,7 +6,6 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// TODO: EasyScore.voice() should take Note[] for the first argument, since TabNote is not a StaveNote.
 // TODO: SystemOptions.details might need to be typed as Partial<SystemFormatterOptions>
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';

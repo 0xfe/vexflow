@@ -8,6 +8,7 @@ import { FretHandFinger } from './frethandfinger';
 import { Grammar, Parser, Match, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './types/common';
 import { RuntimeError, log, defined } from './util';
+import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { TupletOptions } from './tuplet';
 import { Voice } from './voice';
@@ -511,7 +512,7 @@ export class EasyScore {
     return this.builder.getElements().notes;
   }
 
-  voice(notes: StaveNote[], options: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
+  voice(notes: Note[], options: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
     options = { time: this.defaults.time, ...options };
     return this.factory.Voice(options).addTickables(notes);
   }
