@@ -48,7 +48,7 @@ module.exports = (grunt) => {
       module: {
         rules: [
           {
-            test: /(\.ts?$|\.js?$)/,
+            test: /(\.ts$|\.js$)/,
             exclude: /node_modules/,
             use: [
               {
