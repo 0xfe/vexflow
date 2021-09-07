@@ -91,6 +91,10 @@ export class TextDynamics extends Note {
   /** Preformat the dynamics text. */
   preFormat(): this {
     let total_width = 0;
+    // length of this.glyphs must be <=
+    // length of this.sequence, so if we're formatted before
+    // create new glyphs.
+    this.glyphs = [];
     // Iterate through each letter
     this.sequence.split('').forEach((letter) => {
       // Get the glyph data for the letter

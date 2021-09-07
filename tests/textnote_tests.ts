@@ -15,6 +15,7 @@ import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 import { Note } from 'note';
 import { TextNote } from 'textnote';
+import { Stave} from 'stave';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -253,7 +254,6 @@ function crescendo(options: TestOptions): void {
 
 function textDynamics(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 600, 230);
-  const stave = f.Stave({ y: 40 });
   const score = f.EasyScore();
 
   const voice = score.voice(
@@ -270,10 +270,16 @@ function textDynamics(options: TestOptions): void {
     { time: '7/4' }
   );
 
-  f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-  f.draw();
-
+  // This is refactored to use preCalculateMinWidth... to exercise  
+  // a bug fix when textDynamic got formatted more than once.
+  var formatter = f.Formatter();
+  formatter.joinVoices([voice]);
+  // const width = 250; //formatter.preCalculateMinTotalWidth([voice]);
+  const width = formatter.preCalculateMinTotalWidth([voice]);
+  formatter.format([voice]);
+  const stave = f.Stave({ y: 40, width: width + Stave.defaultPadding });
+  stave.draw();
+  voice.draw(f.getContext(), stave);
   ok(true);
 }
 
