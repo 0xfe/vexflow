@@ -493,7 +493,7 @@ export class Factory {
   }
 
   TickContext(): TickContext {
-    return new TickContext().setContext(this.context);
+    return new TickContext();
   }
 
   ModifierContext(): ModifierContext {

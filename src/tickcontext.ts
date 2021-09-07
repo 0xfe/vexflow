@@ -5,7 +5,7 @@
 // tabs, etc.
 
 import { RuntimeError } from './util';
-import { Tickable } from './tickable';
+import { FormatterMetrics, Tickable } from './tickable';
 import { Fraction } from './fraction';
 import { NoteMetrics } from './note';
 import { Stave } from './stave';
@@ -22,7 +22,7 @@ export interface TickContextOptions {
 /**
  * TickContext formats abstract tickable objects, such as notes, chords, tabs, etc.
  */
-export class TickContext extends Tickable {
+export class TickContext {
   protected readonly tickID: number;
   protected readonly tickables: Tickable[];
   protected readonly tickablesByVoice: Record<string, Tickable>;
@@ -45,10 +45,9 @@ export class TickContext extends Tickable {
   protected minTickable?: Tickable;
   tContexts: TickContext[];
 
-  // eslint-disable-next-line
-  draw(...args: any[]): void {
-    // DO NOTHING.
-  }
+  protected preFormatted: boolean = false;
+  protected postFormatted: boolean = false;
+  protected width: number;
 
   static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;
@@ -58,9 +57,7 @@ export class TickContext extends Tickable {
   }
 
   constructor(options?: TickContextOptions) {
-    super();
     this.tickID = options && options.tickID ? options.tickID : 0;
-    this.setAttribute('type', 'TickContext');
     this.currentTick = new Fraction(0, 1);
 
     this.maxTicks = new Fraction(0, 1);
@@ -85,6 +82,8 @@ export class TickContext extends Tickable {
     this.totalLeftPx = 0; // Total left pixels
     this.totalRightPx = 0; // Total right pixels
     this.tContexts = []; // Parent array of tick contexts
+
+    this.width = 0;
   }
 
   getTickID(): number {
@@ -198,7 +197,7 @@ export class TickContext extends Tickable {
 
   setCurrentTick(tick: Fraction): void {
     this.currentTick = tick;
-    this.setPreFormatted(false);
+    this.preFormatted = false;
   }
 
   addTickable(tickable: Tickable, voiceIndex?: number): this {
@@ -207,8 +206,6 @@ export class TickContext extends Tickable {
     }
 
     if (!tickable.shouldIgnoreTicks()) {
-      this.ignore_ticks = false;
-
       const ticks = tickable.getTicks();
 
       if (ticks.greaterThan(this.maxTicks)) {
@@ -228,7 +225,7 @@ export class TickContext extends Tickable {
     tickable.setTickContext(this);
     this.tickables.push(tickable);
     this.tickablesByVoice[voiceIndex || 0] = tickable;
-    this.setPreFormatted(false);
+    this.preFormatted = false;
     return this;
   }
 
@@ -271,12 +268,27 @@ export class TickContext extends Tickable {
     return this;
   }
 
-  getStave(): Stave | undefined {
-    throw new RuntimeError('NotImplemented', 'getStave() not implemented.');
-  }
+  getFormatterMetrics(): FormatterMetrics {
+    return {
+      // The freedom of a tickable is the distance it can move without colliding
+      // with neighboring elements. A formatter can set these values during its
+      // formatting pass, which a different formatter can then use to fine tune.
+      freedom: { left: 0, right: 0 },
 
-  // eslint-disable-next-line
-  setStave(stave: Stave): this {
-    throw new RuntimeError('NotImplemented', 'setStave() not implemented.');
+      // The simplified rational duration of this tick as a string. It can be
+      // used as an index to a map or hashtable.
+      duration: '',
+
+      // The number of formatting iterations undergone.
+      iterations: 0,
+
+      // The space in pixels allocated by this formatter, along with the mean space
+      // for tickables of this duration, and the deviation from the mean.
+      space: {
+        used: 0,
+        mean: 0,
+        deviation: 0,
+      },
+    };
   }
 }
