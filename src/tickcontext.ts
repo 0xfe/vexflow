@@ -8,7 +8,6 @@ import { RuntimeError } from './util';
 import { FormatterMetrics, Tickable } from './tickable';
 import { Fraction } from './fraction';
 import { NoteMetrics } from './note';
-import { Stave } from './stave';
 
 export interface TickContextMetrics extends NoteMetrics {
   totalLeftPx: number;
