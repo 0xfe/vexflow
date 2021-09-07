@@ -19,7 +19,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
-    "browserify": "^17.0.0",
     "canvas": "^2.8.0",
     "docco": "^0.8.1",
     "eslint": "^7.32.0",
