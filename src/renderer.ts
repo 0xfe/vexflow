@@ -33,13 +33,6 @@ export class Renderer {
     DOWN: 3, // Downward leg
   };
 
-  /**
-   * Set this to true if you're using VexFlow inside a runtime
-   * that does not allow modifying canvas objects. There is a small
-   * performance degradation due to the extra indirection.
-   */
-  static readonly USE_CANVAS_PROXY = false;
-
   static lastContext?: RenderContext = undefined;
 
   static buildContext(
@@ -67,43 +60,6 @@ export class Renderer {
 
   static getSVGContext(elementId: string, width: number, height: number, background?: string): RenderContext {
     return Renderer.buildContext(elementId, Renderer.Backends.SVG, width, height, background);
-  }
-
-  // eslint-disable-next-line
-  static bolsterCanvasContext(ctx: any): RenderContext {
-    if (Renderer.USE_CANVAS_PROXY) {
-      return new CanvasContext(ctx);
-    }
-
-    // Modify the CanvasRenderingContext2D to include the following methods, if they do not already exist.
-    // TODO: Is a Proxy object appropriate here?
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
-    const methodNames = [
-      'clear',
-      'setFont',
-      'setRawFont',
-      'setFillStyle',
-      'setBackgroundFillStyle',
-      'setStrokeStyle',
-      'setShadowColor',
-      'setShadowBlur',
-      'setLineWidth',
-      'setLineCap',
-      'openGroup',
-      'closeGroup',
-      'getGroup',
-    ];
-
-    ctx.vexFlowCanvasContext = ctx;
-
-    methodNames.forEach((methodName) => {
-      if (!(methodName in ctx)) {
-        // eslint-disable-next-line
-        ctx[methodName] = (CanvasContext.prototype as any)[methodName];
-      }
-    });
-
-    return ctx;
   }
 
   // Draw a dashed line (horizontal, vertical or diagonal
@@ -172,7 +128,7 @@ export class Renderer {
       if (!canvasElement.getContext) {
         throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
       }
-      this.ctx = Renderer.bolsterCanvasContext(canvasElement.getContext('2d'));
+      this.ctx = new CanvasContext(canvasElement.getContext('2d')!);
     } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {

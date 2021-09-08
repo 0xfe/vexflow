@@ -1,6 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { RenderContext } from './types/common';
+import { RenderContext, TextMeasure } from './types/common';
 import { warn } from './util';
 
 /**
@@ -10,6 +10,7 @@ export class CanvasContext implements RenderContext {
   vexFlowCanvasContext: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement | { width: number; height: number };
   background_fillStyle?: string;
+  textHeight: number = 0;
 
   static get WIDTH(): number {
     return 600;
@@ -38,9 +39,6 @@ export class CanvasContext implements RenderContext {
   }
 
   /**
-   * This constructor is only called if Renderer.USE_CANVAS_PROXY is true.
-   * In most instances, we do not need to create a CanvasContext object.
-   * See Renderer.bolsterCanvasContext().
    * @param context
    */
   constructor(context: CanvasRenderingContext2D) {
@@ -76,11 +74,17 @@ export class CanvasContext implements RenderContext {
 
   setFont(family: string, size: number, weight: string): this {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
+    this.textHeight = (size * 4) / 3;
     return this;
   }
 
   setRawFont(font: string): this {
     this.vexFlowCanvasContext.font = font;
+
+    const fontArray = font.split(' ');
+    const size = Number(fontArray[0].match(/\d+/));
+    this.textHeight = (size * 4) / 3;
+
     return this;
   }
 
@@ -129,15 +133,8 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  // setLineDash is the one native method in a canvas context
-  // that begins with set, therefore we don't bolster the method
-  // if it already exists (see Renderer.bolsterCanvasContext).
-  // If it doesn't exist, we bolster it and assume it's looking for
-  // a ctx.lineDash method, as previous versions of VexFlow
-  // expected.
   setLineDash(dash: number[]): this {
-    // eslint-disable-next-line
-    (this.vexFlowCanvasContext as any).lineDash = dash;
+    this.vexFlowCanvasContext.setLineDash(dash);
     return this;
   }
 
@@ -222,8 +219,12 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  measureText(text: string): TextMetrics {
-    return this.vexFlowCanvasContext.measureText(text);
+  measureText(text: string): TextMeasure {
+    const metrics = this.vexFlowCanvasContext.measureText(text);
+    return {
+      width: metrics.width,
+      height: this.textHeight,
+    };
   }
 
   fillText(text: string, x: number, y: number): this {
@@ -242,7 +243,7 @@ export class CanvasContext implements RenderContext {
   }
 
   set font(value: string) {
-    this.vexFlowCanvasContext.font = value;
+    this.setRawFont(value);
   }
 
   get font(): string {
