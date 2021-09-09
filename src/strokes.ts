@@ -79,14 +79,14 @@ export class Stroke extends Modifier {
     return true;
   }
 
-  constructor(type: number, options: { all_voices: boolean }) {
+  constructor(type: number, options?: { all_voices: boolean }) {
     super();
     this.setAttribute('type', 'Stroke');
 
-    this.options = { ...options };
+    this.options = { all_voices: true, ...options };
 
     // multi voice - span stroke across all voices if true
-    this.all_voices = 'all_voices' in this.options ? this.options.all_voices : true;
+    this.all_voices = this.options.all_voices;
 
     // multi voice - end note of stroke, set in draw()
     this.type = type;
