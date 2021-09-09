@@ -342,7 +342,7 @@ export class Factory {
     return note;
   }
 
-  GraceNote(noteStruct: GraceNoteStruct): GraceNote {
+  GraceNote(noteStruct: Partial<GraceNoteStruct>): GraceNote {
     const note = new GraceNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
