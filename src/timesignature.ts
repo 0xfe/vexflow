@@ -38,13 +38,6 @@ export class TimeSignature extends StaveModifier {
     return 'TimeSignature';
   }
 
-  point: number;
-  bottomLine: number;
-  topLine: number;
-
-  protected info: TimeSignatureInfo;
-  protected validate_args: boolean;
-
   static get glyphs(): Record<string, { code: string; point: number; line: number }> {
     return {
       C: {
@@ -59,6 +52,13 @@ export class TimeSignature extends StaveModifier {
       },
     };
   }
+
+  point: number;
+  bottomLine: number;
+  topLine: number;
+
+  protected info: TimeSignatureInfo;
+  protected validate_args: boolean;
 
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();

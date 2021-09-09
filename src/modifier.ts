@@ -30,19 +30,6 @@ export enum ModifierPosition {
  * `ModifierContext`. This ensures that multiple voices don't trample all over each other.
  */
 export class Modifier extends Element {
-  // Modifiers are attached to a note and an index. An index is a specific head in a chord.
-  protected note?: Note;
-  protected index?: number;
-
-  protected width: number;
-  protected text_line: number;
-  protected position: ModifierPosition;
-  protected y_shift: number;
-  protected x_shift: number;
-
-  private spacingFromNextModifier: number;
-  private modifierContext?: ModifierContext;
-
   /**
    * Modifiers category string. Every modifier has a different category.
    * The `ModifierContext` uses this to determine the type and order of the modifiers.
@@ -58,13 +45,26 @@ export class Modifier extends Element {
 
   static get PositionString(): Record<string, number> {
     return {
-      center: Modifier.Position.CENTER,
-      above: Modifier.Position.ABOVE,
-      below: Modifier.Position.BELOW,
-      left: Modifier.Position.LEFT,
-      right: Modifier.Position.RIGHT,
+      center: ModifierPosition.CENTER,
+      above: ModifierPosition.ABOVE,
+      below: ModifierPosition.BELOW,
+      left: ModifierPosition.LEFT,
+      right: ModifierPosition.RIGHT,
     };
   }
+
+  // Modifiers are attached to a note and an index. An index is a specific head in a chord.
+  protected note?: Note;
+  protected index?: number;
+
+  protected width: number;
+  protected text_line: number;
+  protected position: ModifierPosition;
+  protected y_shift: number;
+  protected x_shift: number;
+
+  private spacingFromNextModifier: number;
+  private modifierContext?: ModifierContext;
 
   constructor() {
     super();

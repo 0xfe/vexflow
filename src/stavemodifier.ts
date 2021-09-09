@@ -26,7 +26,6 @@ export enum StaveModifierPosition {
 }
 
 export class StaveModifier extends Element {
-  /** StaveModifier category string. */
   static get CATEGORY(): string {
     return 'StaveModifier';
   }

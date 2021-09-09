@@ -10,13 +10,12 @@ import { isGraceNote } from 'typeguard';
 
 /** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {
-  protected readonly code: string;
-  protected readonly num: number;
-
-  /** Tremolos category string. */
   static get CATEGORY(): string {
     return 'Tremolo';
   }
+
+  protected readonly code: string;
+  protected readonly num: number;
 
   /**
    * @param num number of bars

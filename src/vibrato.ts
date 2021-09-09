@@ -16,7 +16,6 @@ export interface VibratoRenderOptions {
 
 /** `Vibrato` implements diverse vibratos. */
 export class Vibrato extends Modifier {
-  /** Get element CATEGORY string. */
   static get CATEGORY(): string {
     return 'Vibrato';
   }

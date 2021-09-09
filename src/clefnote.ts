@@ -12,13 +12,13 @@ import { ModifierContext } from './modifiercontext';
 
 /** ClefNote implements clef annotations in measures. */
 export class ClefNote extends Note {
-  protected clef_obj: Clef;
-  protected type: string;
-  protected clef: ClefType;
-
   static get CATEGORY(): string {
     return 'ClefNote';
   }
+
+  protected clef_obj: Clef;
+  protected type: string;
+  protected clef: ClefType;
 
   constructor(type: string, size?: string, annotation?: string) {
     super({ duration: 'b' });

@@ -26,7 +26,6 @@ export enum VoiceMode {
  * `Voice` is mainly a container object to group `Tickables` for formatting.
  */
 export class Voice extends Element {
-  /** Voice category string. */
   static get CATEGORY(): string {
     return 'Voice';
   }

@@ -34,6 +34,26 @@ export interface StemOptions {
 export class Stem extends Element {
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'Stem';
+  }
+
+  // Stem directions
+  static get UP(): number {
+    return 1;
+  }
+  static get DOWN(): number {
+    return -1;
+  }
+
+  // Theme
+  static get WIDTH(): number {
+    return Flow.STEM_WIDTH;
+  }
+  static get HEIGHT(): number {
+    return Flow.STEM_HEIGHT;
+  }
+
   protected hide: boolean;
   protected isStemlet: boolean;
   protected stemletHeight: number;
@@ -48,28 +68,6 @@ export class Stem extends Element {
   protected stem_direction: number;
   protected stem_extension: number;
   protected renderHeightAdjustment: number;
-
-  static get CATEGORY(): string {
-    return 'Stem';
-  }
-
-  // Stem directions
-  static get UP(): number {
-    return 1;
-  }
-
-  static get DOWN(): number {
-    return -1;
-  }
-
-  // Theme
-  static get WIDTH(): number {
-    return Flow.STEM_WIDTH;
-  }
-
-  static get HEIGHT(): number {
-    return Flow.STEM_HEIGHT;
-  }
 
   constructor(options?: StemOptions) {
     super();

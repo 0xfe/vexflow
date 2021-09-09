@@ -11,11 +11,6 @@ import { Builder } from './easyscore';
 import { ModifierContextState } from './modifiercontext';
 
 export class FretHandFinger extends Modifier {
-  protected finger: string;
-  protected x_offset: number;
-  protected y_offset: number;
-  protected font: FontInfo;
-
   static get CATEGORY(): string {
     return 'FretHandFinger';
   }
@@ -101,10 +96,8 @@ export class FretHandFinger extends Modifier {
   }
 
   static easyScoreHook({ fingerings }: { fingerings?: string } = {}, note: StaveNote, builder: Builder): void {
-    if (!fingerings) return;
-
     fingerings
-      .split(',')
+      ?.split(',')
       .map((fingeringString: string) => {
         const split = fingeringString.trim().split('.');
         const params: { number: string; position?: string } = { number: split[0] };
@@ -113,6 +106,11 @@ export class FretHandFinger extends Modifier {
       })
       .map((fingering: Modifier, index: number) => note.addModifier(fingering, index));
   }
+
+  protected finger: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected font: FontInfo;
 
   constructor(finger: string) {
     super();
