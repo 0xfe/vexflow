@@ -22,7 +22,7 @@ export abstract class StemmableNote extends Note {
   protected flag?: Glyph;
   protected stem_extension_override?: number;
 
-  constructor(note_struct: NoteStruct) {
+  constructor(note_struct: Partial<NoteStruct>) {
     super(note_struct);
     this.setAttribute('type', 'StemmableNote');
   }

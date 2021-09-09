@@ -24,7 +24,7 @@ export class GraceNote extends StaveNote {
     return 0.66;
   }
 
-  constructor(note_struct: GraceNoteStruct) {
+  constructor(note_struct: Partial<GraceNoteStruct>) {
     super({
       ...{
         glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
@@ -34,7 +34,7 @@ export class GraceNote extends StaveNote {
     });
     this.setAttribute('type', 'GraceNote');
 
-    this.slash = note_struct.slash;
+    this.slash = note_struct.slash || false;
     this.slur = true;
 
     this.buildNoteHeads();

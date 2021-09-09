@@ -151,7 +151,10 @@ export abstract class Note extends Tickable {
     ctx.restore();
   }
 
-  protected static parseDuration(durationString: string): NoteDuration | undefined {
+  protected static parseDuration(durationString?: string): NoteDuration | undefined {
+    if (!durationString) {
+      return undefined;
+    }
     const regexp = /(\d*\/?\d+|[a-z])(d*)([nrhms]|$)/;
     const result = regexp.exec(durationString);
     if (!result) {
@@ -165,7 +168,7 @@ export abstract class Note extends Tickable {
     return { duration, dots, type };
   }
 
-  protected static parseNoteStruct(noteStruct: NoteStruct): ParsedNote | undefined {
+  protected static parseNoteStruct(noteStruct: Partial<NoteStruct>): ParsedNote | undefined {
     const durationString = noteStruct.duration;
     const customTypes: string[] = [];
 
@@ -230,7 +233,7 @@ export abstract class Note extends Tickable {
    * positioning and layout.
    * To create a new note you need to provide a `noteStruct`.
    */
-  constructor(noteStruct: NoteStruct) {
+  constructor(noteStruct: Partial<NoteStruct>) {
     super();
     this.setAttribute('type', 'Note');
 

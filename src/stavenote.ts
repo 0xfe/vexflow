@@ -363,7 +363,7 @@ export class StaveNote extends StemmableNote {
     return true;
   }
 
-  constructor(noteStruct: StaveNoteStruct) {
+  constructor(noteStruct: Partial<StaveNoteStruct>) {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
