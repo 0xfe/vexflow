@@ -299,7 +299,7 @@ function cautionary(options: TestOptions): void {
   voice.getTickables().forEach((tickable) => {
     tickable
       .getModifiers()
-      .filter((modifier) => modifier.getAttribute('type') === 'Accidental')
+      .filter((modifier) => modifier.getAttribute('type') === Accidental.CATEGORY)
       .forEach((accid) => (accid as Accidental).setAsCautionary());
   });
 

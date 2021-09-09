@@ -54,7 +54,6 @@ export abstract class Tickable extends Element {
   protected intrinsicTicks: number;
   protected align_center: boolean;
 
-  /** Constructor */
   constructor() {
     super();
 

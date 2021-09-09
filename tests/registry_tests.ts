@@ -7,6 +7,7 @@ import { EasyScore } from 'easyscore';
 import { Element } from 'element';
 import { Factory } from 'factory';
 import { Registry } from 'registry';
+import { StaveNote } from 'stavenote';
 
 const RegistryTests = {
   Start(): void {
@@ -29,11 +30,10 @@ function registerAndClear(): void {
 
   registry.clear();
   notOk(registry.getElementById('foobar'));
-  throws(() => {
-    // eslint-disable-next-line
-    // @ts-ignore: intentional type mismatch to trigger an error.
-    registry.register(score.notes('C4'));
-  });
+
+  // eslint-disable-next-line
+  // @ts-ignore: intentional type mismatch to trigger an error.
+  throws(() => registry.register(score.notes('C4')));
 
   registry.clear();
   ok(registry.register(score.notes('C4[id="boobar"]')[0]).getElementById('boobar'));
@@ -53,10 +53,10 @@ function defaultRegistry(): void {
   notOk(registry.getElementById('foobar'));
 
   registry.clear();
-  equal(registry.getElementsByType('StaveNote').length, 0);
+  equal(registry.getElementsByType(StaveNote.CATEGORY).length, 0);
 
   score.notes('C5');
-  const elements = registry.getElementsByType('StaveNote');
+  const elements = registry.getElementsByType(StaveNote.CATEGORY);
   equal(elements.length, 1);
 }
 

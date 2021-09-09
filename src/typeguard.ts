@@ -30,7 +30,7 @@ export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Barli
  * @param obj check if this object is an instance of the provided `cls`.
  * @param cls a JavaScript class, such as `StaveNote`. `cls` is a constructor function, and it has a `prototype` property, and
  *            optionally a `CATEGORY` property (used in VexFlow for flexible type checking).
- * @param checkAncestors defaults to `true`, so we walk up the prototype chain to look for a matching `CATEGORY` / `.getCategory()`.
+ * @param checkAncestors defaults to `true`, so we walk up the prototype chain to look for a matching `CATEGORY`.
  *        If `false`, we do not check the superclass or other ancestors.
  * @returns true if `obj` is an instance of `ClassName`, or has a static `CATEGORY` property that matches `ClassName.CATEGORY`.
  */
@@ -46,7 +46,8 @@ export function isCategory<T>(
 
   // `obj.constructor` is a reference to the constructor function that created the `obj` instance.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor
-  if (obj instanceof cls || obj.constructor === cls) {
+  let constructorFcn = obj.constructor;
+  if (obj instanceof cls || constructorFcn === cls) {
     return true;
   }
 
@@ -59,7 +60,7 @@ export function isCategory<T>(
   if (checkAncestors) {
     // Walk up the prototype chain to look for a matching obj.constructor.CATEGORY.
     while (obj !== null) {
-      const constructorFcn = obj.constructor;
+      constructorFcn = obj.constructor;
       if ('CATEGORY' in constructorFcn && constructorFcn.CATEGORY === categoryToMatch) {
         return true;
       }
@@ -68,7 +69,6 @@ export function isCategory<T>(
     return false;
   } else {
     // Do not walk up the prototype chain. Just check this particular object's static .CATEGORY string.
-    const constructorFcn = obj.constructor;
     return 'CATEGORY' in constructorFcn && constructorFcn.CATEGORY === categoryToMatch;
   }
 }

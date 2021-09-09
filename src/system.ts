@@ -71,6 +71,7 @@ export class System extends Element {
   protected parts: SystemParams[];
   protected connector?: StaveConnector;
   protected debugNoteMetricsYs?: { y: number; voice: Voice }[];
+
   constructor(params: Partial<SystemOptions> = {}) {
     super();
     this.setOptions(params);
