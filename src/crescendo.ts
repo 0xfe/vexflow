@@ -65,15 +65,15 @@ export class Crescendo extends Note {
   };
 
   // Initialize the crescendo's properties
-  constructor(note_struct: NoteStruct) {
-    super(note_struct);
+  constructor(noteStruct: NoteStruct) {
+    super(noteStruct);
     this.setAttribute('type', 'Crescendo');
 
     // Whether the object is a decrescendo
     this.decrescendo = false;
 
     // The staff line to be placed on
-    this.line = note_struct.line || 0;
+    this.line = noteStruct.line || 0;
 
     // The height at the open end of the cresc/decresc
     this.height = 15;

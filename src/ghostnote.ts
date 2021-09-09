@@ -16,13 +16,13 @@ export class GhostNote extends StemmableNote {
       throw new RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify duration.');
     }
 
-    let note_struct;
+    let noteStruct;
 
     // Preserve backwards-compatibility
     if (typeof parameter === 'string') {
-      note_struct = { duration: parameter };
+      noteStruct = { duration: parameter };
     } else if (typeof parameter === 'object') {
-      note_struct = parameter;
+      noteStruct = parameter;
     } else {
       throw new RuntimeError(
         'BadArguments',
@@ -30,7 +30,7 @@ export class GhostNote extends StemmableNote {
       );
     }
 
-    super(note_struct);
+    super(noteStruct);
     this.setAttribute('type', 'GhostNote');
 
     // Note properties
