@@ -12,6 +12,13 @@ export interface TextMeasure {
   height: number;
 }
 
+export interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface KeyProps {
   stem_down_x_offset: number;
   stem_up_x_offset: number;

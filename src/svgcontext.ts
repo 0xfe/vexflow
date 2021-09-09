@@ -85,7 +85,9 @@ class MeasureTextCache {
     const bbox = this.txt.getBBox();
     svg.removeChild(this.txt);
 
-    // Remove the trailing 'pt' from the font size and scale to convert from pt to pixels.
+    // Remove the trailing 'pt' from the font size and scale to convert from points
+    // to canvas units.
+    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
     const fontSize = attributes['font-size'];
     const height = (fontSize.substring(0, fontSize.length - 2) * 4) / 3;
     return {
@@ -169,6 +171,12 @@ export class SVGContext implements RenderContext {
     this.state_stack = [];
   }
 
+  /**
+   * Use one of the overload signatures to create an SVG element of a specific type.
+   * The last overload accepts an arbitrary string, and is identical to the
+   * implementation signature.
+   * Feel free to add new overloads for other SVG element types as required.
+   */
   create(svgElementType: 'g'): SVGGElement;
   create(svgElementType: 'path'): SVGPathElement;
   create(svgElementType: 'rect'): SVGRectElement;
@@ -181,7 +189,7 @@ export class SVGContext implements RenderContext {
 
   // Allow grouping elements in containers for interactivity.
   openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): SVGGElement {
-    const group: SVGGElement = this.create('g');
+    const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
@@ -432,7 +440,7 @@ export class SVGContext implements RenderContext {
     }
 
     // Create the rect & style it:
-    const rectangle: SVGRectElement = this.create('rect');
+    const rectangle = this.create('rect');
     if (typeof attributes === 'undefined') {
       attributes = {
         fill: 'none',

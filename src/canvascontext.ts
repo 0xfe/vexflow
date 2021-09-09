@@ -83,6 +83,8 @@ export class CanvasContext implements RenderContext {
 
     const fontArray = font.split(' ');
     const size = Number(fontArray[0].match(/\d+/));
+    // The font size is specified in points, scale it to canvas units.
+    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
     this.textHeight = (size * 4) / 3;
 
     return this;

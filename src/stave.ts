@@ -14,7 +14,7 @@ import { StaveTempo, StaveTempoOptions } from './stavetempo';
 import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { TimeSignature } from './timesignature';
-import { FontInfo } from './types/common';
+import { Bounds, FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -60,6 +60,7 @@ export class Stave extends Element {
   protected end_x: number;
   protected measure: number;
   protected font: FontInfo;
+  protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
   protected defaultLedgerLineStyle: ElementStyle;
@@ -113,6 +114,7 @@ export class Stave extends Element {
       bottom_text_position: 4, // in staff lines
       line_config: [],
     };
+    this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
     this.options = { ...this.options, ...options };
     this.defaultLedgerLineStyle = {};
 
