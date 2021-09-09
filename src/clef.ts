@@ -27,7 +27,6 @@ export class Clef extends StaveModifier {
   /** To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`. */
   static DEBUG: boolean;
 
-  /** Clefs category string. */
   static get CATEGORY(): string {
     return 'Clef';
   }

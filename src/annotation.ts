@@ -38,12 +38,6 @@ export class Annotation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
   static DEBUG: boolean;
 
-  protected justification: Justify;
-  protected vert_justification: VerticalJustify;
-  protected text: string;
-  // Initialized by the constructor via this.setFont('Arial', 10)
-  protected font!: FontInfo;
-
   /** Annotations category string. */
   static get CATEGORY(): string {
     return 'Annotation';
@@ -53,10 +47,10 @@ export class Annotation extends Modifier {
   static Justify = Justify;
 
   static JustifyString: Record<string, number> = {
-    left: Annotation.Justify.LEFT,
-    right: Annotation.Justify.RIGHT,
-    center: Annotation.Justify.CENTER,
-    centerStem: Annotation.Justify.CENTER_STEM,
+    left: Justify.LEFT,
+    right: Justify.RIGHT,
+    center: Justify.CENTER,
+    centerStem: Justify.CENTER_STEM,
   };
 
   static VerticalJustify = VerticalJustify;
@@ -101,6 +95,12 @@ export class Annotation extends Modifier {
     return true;
   }
 
+  protected justification: Justify;
+  protected vert_justification: VerticalJustify;
+  protected text: string;
+  // Initialized by the constructor via this.setFont('Arial', 10).
+  protected font!: FontInfo;
+
   /**
    * Annotations inherit from `Modifier` and is positioned correctly when
    * in a `ModifierContext`.
@@ -110,7 +110,7 @@ export class Annotation extends Modifier {
     super();
 
     this.text = text;
-    this.justification = Annotation.Justify.CENTER;
+    this.justification = Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
     this.setFont('Arial', 10);
 
