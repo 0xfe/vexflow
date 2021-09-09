@@ -3,12 +3,6 @@
 //
 // GraceNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Factory.GraceNote() should take a Partial<GraceNoteStruct>
-//       Or .slash should be optional.
-//       The GraceNote constructor should also make sure that slash is set to false (instead of undefined).
 // TODO: In the 'stem' test (aka Grace Note Stem › SVG + Petaluma in flow.html), the Petaluma note heads are not scaled down properly.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
