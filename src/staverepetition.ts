@@ -7,15 +7,10 @@ import { FontInfo } from './types/common';
 import { Stave } from './stave';
 
 export class Repetition extends StaveModifier {
-  protected symbol_type: number;
-
-  protected x_shift: number;
-  protected y_shift: number;
-  protected font: FontInfo;
-
   static get CATEGORY(): string {
-    return 'repetitions';
+    return 'Repetition';
   }
+
   static readonly type = {
     NONE: 1, // no coda or segno
     CODA_LEFT: 2, // coda at beginning of stave
@@ -31,9 +26,14 @@ export class Repetition extends StaveModifier {
     FINE: 12, // Fine at end of stave
   };
 
+  protected symbol_type: number;
+
+  protected x_shift: number;
+  protected y_shift: number;
+  protected font: FontInfo;
+
   constructor(type: number, x: number, y_shift: number) {
     super();
-    this.setAttribute('type', 'Repetition');
 
     this.symbol_type = type;
     this.x = x;
@@ -45,10 +45,6 @@ export class Repetition extends StaveModifier {
       weight: 'bold',
       style: 'italic',
     };
-  }
-
-  getCategory(): string {
-    return Repetition.CATEGORY;
   }
 
   setShiftX(x: number): this {

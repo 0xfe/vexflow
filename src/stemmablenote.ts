@@ -13,7 +13,7 @@ import { GlyphProps } from './glyph';
 
 export abstract class StemmableNote extends Note {
   static get CATEGORY(): string {
-    return 'stemmablenote';
+    return 'StemmableNote';
   }
 
   stem_direction?: number;
@@ -24,7 +24,6 @@ export abstract class StemmableNote extends Note {
 
   constructor(noteStruct: Partial<NoteStruct>) {
     super(noteStruct);
-    this.setAttribute('type', 'StemmableNote');
   }
 
   // Get and set the note's `Stem`
@@ -256,9 +255,5 @@ export abstract class StemmableNote extends Note {
 
     this.setStem(new Stem(stemOptions));
     this.stem?.setContext(this.getContext()).draw();
-  }
-
-  getCategory(): string {
-    return StemmableNote.CATEGORY;
   }
 }

@@ -5,7 +5,6 @@ import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
-import { StaveNote } from './stavenote';
 import { Glyph, GlyphProps } from './glyph';
 import { RenderContext } from './types/common';
 import { BoundingBox } from './boundingbox';
@@ -100,6 +99,10 @@ export class NoteHead extends Note {
   /** To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`. */
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'NoteHead';
+  }
+
   glyph_code: string;
 
   protected custom_glyph: boolean = false;
@@ -115,13 +118,8 @@ export class NoteHead extends Note {
   protected index?: number;
   protected slashed: boolean;
 
-  static get CATEGORY(): string {
-    return 'notehead';
-  }
-
   constructor(head_options: NoteHeadStruct) {
     super(head_options);
-    this.setAttribute('type', 'NoteHead');
 
     this.index = head_options.index;
     this.x = head_options.x || 0;
@@ -129,7 +127,7 @@ export class NoteHead extends Note {
     this.note_type = head_options.note_type;
     this.duration = head_options.duration;
     this.displaced = head_options.displaced || false;
-    this.stem_direction = head_options.stem_direction || StaveNote.STEM_UP;
+    this.stem_direction = head_options.stem_direction || Stem.UP;
     this.line = head_options.line || 0;
 
     // Get glyph code based on duration and note type. This could be
@@ -160,10 +158,6 @@ export class NoteHead extends Note {
     };
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
-  }
-
-  getCategory(): string {
-    return NoteHead.CATEGORY;
   }
 
   /** Get the width of the notehead. */

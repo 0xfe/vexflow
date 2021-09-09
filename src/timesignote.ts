@@ -6,11 +6,14 @@ import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
 
 export class TimeSigNote extends Note {
+  static get CATEGORY(): string {
+    return 'TimeSigNote';
+  }
+
   protected timeSigInfo: TimeSignatureInfo;
 
   constructor(timeSpec: string, customPadding?: number) {
     super({ duration: 'b' });
-    this.setAttribute('type', 'TimeSigNote');
 
     const timeSignature = new TimeSignature(timeSpec, customPadding);
     this.timeSigInfo = timeSignature.getInfo();

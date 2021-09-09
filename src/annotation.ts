@@ -46,7 +46,7 @@ export class Annotation extends Modifier {
 
   /** Annotations category string. */
   static get CATEGORY(): string {
-    return 'annotations';
+    return 'Annotation';
   }
 
   /** Text annotations can be positioned and justified relative to the note. */
@@ -108,7 +108,6 @@ export class Annotation extends Modifier {
    */
   constructor(text: string) {
     super();
-    this.setAttribute('type', 'Annotation');
 
     this.text = text;
     this.justification = Annotation.Justify.CENTER;
@@ -117,11 +116,6 @@ export class Annotation extends Modifier {
 
     // The default width is calculated from the text.
     this.setWidth(Flow.textWidth(text));
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return Annotation.CATEGORY;
   }
 
   /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */

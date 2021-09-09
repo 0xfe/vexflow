@@ -13,8 +13,11 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 
 export class KeySignature extends StaveModifier {
-  protected glyphFontScale: number;
+  static get CATEGORY(): string {
+    return 'KeySignature';
+  }
 
+  protected glyphFontScale: number;
   protected glyphs: Glyph[];
   protected xPositions: number[];
   protected paddingForced: boolean;
@@ -23,10 +26,6 @@ export class KeySignature extends StaveModifier {
   protected accList: { type: string; line: number }[] = [];
   protected keySpec?: string;
   protected alterKeySpec?: string;
-
-  static get CATEGORY(): string {
-    return 'keysignatures';
-  }
 
   // Space between natural and following accidental depending
   // on vertical position
@@ -92,7 +91,6 @@ export class KeySignature extends StaveModifier {
   // Create a new Key Signature based on a `key_spec`
   constructor(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string) {
     super();
-    this.setAttribute('type', 'KeySignature');
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     this.setPosition(StaveModifier.Position.BEGIN);
@@ -100,10 +98,6 @@ export class KeySignature extends StaveModifier {
     this.glyphs = [];
     this.xPositions = []; // relative to this.x
     this.paddingForced = false;
-  }
-
-  getCategory(): string {
-    return KeySignature.CATEGORY;
   }
 
   // Add an accidental glyph to the `KeySignature` instance which represents

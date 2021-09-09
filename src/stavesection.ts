@@ -6,18 +6,17 @@ import { StaveModifier } from './stavemodifier';
 import { FontInfo } from './types/common';
 
 export class StaveSection extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'StaveSection';
+  }
+
   protected section: string;
   protected shift_x: number;
   protected shift_y: number;
   protected font: FontInfo;
 
-  static get CATEGORY(): string {
-    return 'stavesection';
-  }
-
   constructor(section: string, x: number, shift_y: number) {
     super();
-    this.setAttribute('type', 'StaveSection');
 
     this.setWidth(16);
     this.section = section;
@@ -29,10 +28,6 @@ export class StaveSection extends StaveModifier {
       size: 12,
       weight: 'bold',
     };
-  }
-
-  getCategory(): string {
-    return StaveSection.CATEGORY;
   }
 
   setStaveSection(section: string): this {

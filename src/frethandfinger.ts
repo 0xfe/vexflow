@@ -10,9 +10,6 @@ import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
 import { ModifierContextState } from './modifiercontext';
 
-/**
- * @constructor
- */
 export class FretHandFinger extends Modifier {
   protected finger: string;
   protected x_offset: number;
@@ -20,7 +17,7 @@ export class FretHandFinger extends Modifier {
   protected font: FontInfo;
 
   static get CATEGORY(): string {
-    return 'frethandfinger';
+    return 'FretHandFinger';
   }
 
   // Arrange fingerings inside a ModifierContext.
@@ -119,7 +116,6 @@ export class FretHandFinger extends Modifier {
 
   constructor(finger: string) {
     super();
-    this.setAttribute('type', 'FretHandFinger');
 
     this.finger = finger;
     this.width = 7;
@@ -133,10 +129,6 @@ export class FretHandFinger extends Modifier {
       size: 9,
       weight: 'bold',
     };
-  }
-
-  getCategory(): string {
-    return FretHandFinger.CATEGORY;
   }
 
   setFretHandFinger(finger: string): this {

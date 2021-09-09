@@ -8,6 +8,10 @@ import { FontInfo } from './types/common';
 import { Stave } from './stave';
 
 export class StaveText extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'StaveText';
+  }
+
   protected options: {
     shift_x: number;
     shift_y: number;
@@ -19,10 +23,6 @@ export class StaveText extends StaveModifier {
   protected shift_x?: number;
   protected shift_y?: number;
 
-  static get CATEGORY(): string {
-    return 'stavetext';
-  }
-
   constructor(
     text: string,
     position: number,
@@ -33,7 +33,6 @@ export class StaveText extends StaveModifier {
     }
   ) {
     super();
-    this.setAttribute('type', 'StaveText');
 
     this.setWidth(16);
     this.text = text;
@@ -50,10 +49,6 @@ export class StaveText extends StaveModifier {
       size: 16,
       weight: 'normal',
     };
-  }
-
-  getCategory(): string {
-    return StaveText.CATEGORY;
   }
 
   setStaveText(text: string): this {

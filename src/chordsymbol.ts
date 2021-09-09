@@ -35,6 +35,11 @@ function L(...args: any[]): void {
 
 export class ChordSymbol extends Modifier {
   static DEBUG: boolean = false;
+
+  static get CATEGORY(): string {
+    return 'ChordSymbol';
+  }
+
   protected static noFormat: boolean;
 
   protected symbolBlocks: ChordSymbolBlock[];
@@ -45,10 +50,6 @@ export class ChordSymbol extends Modifier {
   protected reportWidth: boolean;
   protected font: FontInfo;
   protected textFont: TextFont;
-
-  static get CATEGORY(): string {
-    return 'chordSymbol';
-  }
 
   // Chord symbols can be positioned and justified relative to the note.
   static readonly horizontalJustify = {
@@ -356,7 +357,6 @@ export class ChordSymbol extends Modifier {
   // This is the modifier version, meaning it is attached to an existing note.
   constructor() {
     super();
-    this.setAttribute('type', 'ChordSymbol');
     this.symbolBlocks = [];
     this.horizontal = ChordSymbol.horizontalJustify.LEFT;
     this.vertical = ChordSymbol.verticalJustify.TOP;
@@ -620,10 +620,6 @@ export class ChordSymbol extends Modifier {
     parameters.symbolType = ChordSymbol.symbolTypes.LINE;
     parameters.width = width;
     return this.addSymbolBlock(parameters);
-  }
-
-  getCategory(): string {
-    return ChordSymbol.CATEGORY;
   }
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.

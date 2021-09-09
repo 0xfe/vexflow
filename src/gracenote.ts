@@ -8,12 +8,10 @@ import { Flow } from './flow';
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash: boolean;
 }
-export class GraceNote extends StaveNote {
-  protected slash: boolean;
-  protected slur: boolean;
 
+export class GraceNote extends StaveNote {
   static get CATEGORY(): string {
-    return 'gracenotes';
+    return 'GraceNote';
   }
 
   static get LEDGER_LINE_OFFSET(): number {
@@ -24,6 +22,9 @@ export class GraceNote extends StaveNote {
     return 0.66;
   }
 
+  protected slash: boolean;
+  protected slur: boolean;
+
   constructor(noteStruct: Partial<GraceNoteStruct>) {
     super({
       ...{
@@ -32,7 +33,6 @@ export class GraceNote extends StaveNote {
       },
       ...noteStruct,
     });
-    this.setAttribute('type', 'GraceNote');
 
     this.slash = noteStruct.slash || false;
     this.slur = true;
@@ -58,10 +58,6 @@ export class GraceNote extends StaveNote {
     }
 
     return 0;
-  }
-
-  getCategory(): string {
-    return GraceNote.CATEGORY;
   }
 
   // FIXME: move this to more basic class.
@@ -133,7 +129,7 @@ export class GraceNote extends StaveNote {
         };
       }
 
-      // FIXME: avoide staff lines, leadger lines or others.
+      // FIXME: avoid staff lines, ledger lines or others.
 
       const ctx = this.checkContext();
       ctx.save();

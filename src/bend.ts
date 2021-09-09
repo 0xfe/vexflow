@@ -23,14 +23,8 @@ export interface BendRenderOptions {
 
 /** Bend implements tablature bends. */
 export class Bend extends Modifier {
-  protected text: string;
-  protected release: boolean;
-  protected phrase: BendPhrase[];
-  protected font: string;
-  protected render_options: BendRenderOptions;
-
   static get CATEGORY(): string {
-    return 'bends';
+    return 'Bend';
   }
 
   static get UP(): number {
@@ -41,7 +35,6 @@ export class Bend extends Modifier {
     return 1;
   }
 
-  // ## Static Methods
   // Arrange bends in `ModifierContext`
   static format(bends: Bend[], state: ModifierContextState): boolean {
     if (!bends || bends.length === 0) return false;
@@ -63,9 +56,15 @@ export class Bend extends Modifier {
     return true;
   }
 
+  protected text: string;
+  protected release: boolean;
+  protected phrase: BendPhrase[];
+  protected font: string;
+  protected render_options: BendRenderOptions;
+
   /**
-   * Constructor.
    * Example of a phrase:
+   * ```
    *    [{
    *     type: UP,
    *     text: "whole"
@@ -91,13 +90,13 @@ export class Bend extends Modifier {
    *     text: "1 1/2"
    *     width: 8;
    *   }]
+   * ```
    * @param text text for bend ("Full", "Half", etc.) (DEPRECATED)
    * @param release if true, render a release. (DEPRECATED)
    * @param phrase if set, ignore "text" and "release", and use the more sophisticated phrase specified
    */
   constructor(text: string, release: boolean = false, phrase?: BendPhrase[]) {
     super();
-    this.setAttribute('type', 'Bend');
 
     this.text = text;
     this.x_shift = 0;
@@ -119,11 +118,6 @@ export class Bend extends Modifier {
     }
 
     this.updateWidth();
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return Bend.CATEGORY;
   }
 
   /** Set horizontal shift in pixels. */

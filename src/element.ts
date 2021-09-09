@@ -35,6 +35,14 @@ export interface ElementStyle {
  */
 export abstract class Element {
   protected static ID: number = 1000;
+  protected static newID(): string {
+    return `auto${Element.ID++}`;
+  }
+
+  static get CATEGORY(): string {
+    return 'Element';
+  }
+
   private context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
@@ -46,24 +54,27 @@ export abstract class Element {
   protected fontStack!: Font[];
   protected musicFont!: Font;
 
-  protected static newID(): string {
-    return `auto${Element.ID++}`;
-  }
-
-  /** Constructor. */
-  constructor({ type }: { type?: string } = {}) {
+  constructor(/*{ type }: { type?: string } = {}*/) {
     this.attrs = {
       id: Element.newID(),
       el: undefined,
-      type: type || 'Base',
+      type: this.getCategory(),
       classes: {},
     };
+
+    // TODO: Do we need to call .setAttribute() if we already set type: this.getCategory() above?
+    // this.setAttribute('type', this.getCategory());
 
     this.rendered = false;
     this.setFontStack(Flow.DEFAULT_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
+  }
+
+  /** Get element category string. */
+  getCategory(): string {
+    return (<typeof Element>this.constructor).CATEGORY;
   }
 
   /** Set music fonts stack. */

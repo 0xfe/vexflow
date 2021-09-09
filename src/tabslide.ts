@@ -10,6 +10,10 @@ import { TieNotes } from './types/common';
 import { RuntimeError } from './util';
 
 export class TabSlide extends TabTie {
+  static get CATEGORY(): string {
+    return 'TabSlide';
+  }
+
   static get SLIDE_UP(): number {
     return 1;
   }
@@ -43,7 +47,6 @@ export class TabSlide extends TabTie {
    */
   constructor(notes: TieNotes, direction?: number) {
     super(notes, 'sl.');
-    this.setAttribute('type', 'TabSlide');
 
     // Determine the direction automatically if it is not provided.
     if (!direction) {

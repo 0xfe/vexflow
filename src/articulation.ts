@@ -12,8 +12,7 @@ import { StaveNote } from './stavenote';
 import { ModifierContextState } from './modifiercontext';
 import { Builder } from './easyscore';
 import { TabNote } from './tabnote';
-import { GraceNote } from './gracenote';
-import { isTabNote } from './typeguard';
+import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
 
 export interface ArticulationStruct {
   code?: string;
@@ -64,11 +63,14 @@ function snapLineToStaff(canSitBetweenLines: boolean, line: number, position: nu
   }
 }
 
+// Helper function for checking if a Note object is either a StaveNote or a GraceNote.
+const isStaveOrGraceNote = (note: Note) => isStaveNote(note) || isGraceNote(note);
+
 function getTopY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (isStaveOrGraceNoteCategory(note)) {
+  if (isStaveOrGraceNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -97,7 +99,7 @@ function getBottomY(note: Note, textLine: number): number {
   const stemDirection = note.getStemDirection();
   const { topY: stemTipY, baseY: stemBaseY } = note.getStemExtents();
 
-  if (isStaveOrGraceNoteCategory(note)) {
+  if (isStaveOrGraceNote(note)) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemBaseY;
@@ -137,7 +139,7 @@ function getInitialOffset(note: Note, position: number): number {
     (position === ABOVE && note.getStemDirection() === Stem.UP) ||
     (position === BELOW && note.getStemDirection() === Stem.DOWN);
 
-  if (isStaveOrGraceNoteCategory(note)) {
+  if (isStaveOrGraceNote(note)) {
     if (note.hasStem() && isOnStemTip) {
       return 0.5;
     } else {
@@ -154,12 +156,6 @@ function getInitialOffset(note: Note, position: number): number {
   }
 }
 
-// Helper function for checking if a Note object is either a StaveNote or a GraceNote.
-function isStaveOrGraceNoteCategory(note: Note): boolean {
-  const category = note.getCategory();
-  return category === StaveNote.CATEGORY || category === GraceNote.CATEGORY;
-}
-
 /**
  * Articulations and Accents are modifiers that can be
  * attached to notes. The complete list of articulations is available in
@@ -168,22 +164,24 @@ function isStaveOrGraceNoteCategory(note: Note): boolean {
  * See `tests/articulation_tests.ts` for usage examples.
  */
 export class Articulation extends Modifier {
+  /** To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`. */
+  static DEBUG: boolean;
+
+  /** Articulations category string. */
+  static get CATEGORY(): string {
+    return 'Articulation';
+  }
+
+  protected static readonly INITIAL_OFFSET: number = -0.5;
+
   /** Articulation code provided to the constructor. */
   readonly type: string;
-  protected static readonly INITIAL_OFFSET: number = -0.5;
 
   protected render_options: { font_scale: number };
   // articulation defined calling reset in constructor
   protected articulation!: ArticulationStruct;
   // glyph defined calling reset in constructor
   protected glyph!: Glyph;
-  /** To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`. */
-  static DEBUG: boolean;
-
-  /** Articulations category string. */
-  static get CATEGORY(): string {
-    return 'articulations';
-  }
 
   /**
    * FIXME:
@@ -260,7 +258,6 @@ export class Articulation extends Modifier {
    */
   constructor(type: string) {
     super();
-    this.setAttribute('type', 'Articulation');
 
     this.type = type;
     this.position = BELOW;
@@ -278,11 +275,6 @@ export class Articulation extends Modifier {
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
 
     this.setWidth(defined(this.glyph.getMetrics().width));
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return Articulation.CATEGORY;
   }
 
   /** Render articulation in position next to note. */

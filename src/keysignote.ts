@@ -6,11 +6,14 @@ import { KeySignature } from './keysignature';
 import { ModifierContext } from './modifiercontext';
 
 export class KeySigNote extends Note {
+  static get CATEGORY(): string {
+    return 'KeySigNote';
+  }
+
   protected keySignature: KeySignature;
 
   constructor(keySpec: string, cancelKeySpec: string, alterKeySpec: string) {
     super({ duration: 'b' });
-    this.setAttribute('type', 'KeySigNote');
 
     this.keySignature = new KeySignature(keySpec, cancelKeySpec, alterKeySpec);
 

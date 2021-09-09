@@ -50,7 +50,7 @@ export class Stem extends Element {
   protected renderHeightAdjustment: number;
 
   static get CATEGORY(): string {
-    return 'stem';
+    return 'Stem';
   }
 
   // Stem directions
@@ -73,7 +73,6 @@ export class Stem extends Element {
 
   constructor(options?: StemOptions) {
     super();
-    this.setAttribute('type', 'Stem');
 
     // Default notehead x bounds
     this.x_begin = options?.x_begin || 0;
@@ -134,11 +133,6 @@ export class Stem extends Element {
   setYBounds(y_top: number, y_bottom: number): void {
     this.y_top = y_top;
     this.y_bottom = y_bottom;
-  }
-
-  // The category of the object
-  getCategory(): string {
-    return Stem.CATEGORY;
   }
 
   // Gets the entire height for the stem

@@ -14,6 +14,20 @@ import { ModifierContextState } from './modifiercontext';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
 
 export class Stroke extends Modifier {
+  static get CATEGORY(): string {
+    return 'Stroke';
+  }
+
+  static readonly Type = {
+    BRUSH_DOWN: 1,
+    BRUSH_UP: 2,
+    ROLL_DOWN: 3, // Arpeggiated chord
+    ROLL_UP: 4, // Arpeggiated chord
+    RASQUEDO_DOWN: 5,
+    RASQUEDO_UP: 6,
+    ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
+  };
+
   protected options: {
     all_voices: boolean;
   };
@@ -27,20 +41,6 @@ export class Stroke extends Modifier {
     stroke_spacing: number;
   };
   protected font: FontInfo;
-
-  static get CATEGORY(): string {
-    return 'strokes';
-  }
-
-  static readonly Type = {
-    BRUSH_DOWN: 1,
-    BRUSH_UP: 2,
-    ROLL_DOWN: 3, // Arpeggiated chord
-    ROLL_UP: 4, // Arpeggiated chord
-    RASQUEDO_DOWN: 5,
-    RASQUEDO_UP: 6,
-    ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
-  };
 
   // Arrange strokes inside `ModifierContext`
   static format(strokes: Stroke[], state: ModifierContextState): boolean {
@@ -81,7 +81,6 @@ export class Stroke extends Modifier {
 
   constructor(type: number, options?: { all_voices: boolean }) {
     super();
-    this.setAttribute('type', 'Stroke');
 
     this.options = { all_voices: true, ...options };
 
@@ -106,10 +105,6 @@ export class Stroke extends Modifier {
 
     this.setXShift(0);
     this.setWidth(10);
-  }
-
-  getCategory(): string {
-    return Stroke.CATEGORY;
   }
 
   getPosition(): number {
@@ -139,7 +134,6 @@ export class Stroke extends Modifier {
       if (isNote(note)) {
         // Only Note objects have getYs().
         // note is an instance of either StaveNote or TabNote.
-        // note.getCategory() returns 'stavenotes' or 'tabnotes'
         ys = note.getYs();
         for (let n = 0; n < ys.length; n++) {
           if (this.note === notes[i] || this.all_voices) {

@@ -8,15 +8,18 @@
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Renderer } from './renderer';
-import { StaveNote } from './stavenote';
 import { FontInfo } from './types/common';
 import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
 import { isStaveNote, isStemmableNote } from './typeguard';
+import { Stem } from 'stem';
 
 export class StringNumber extends Modifier {
-  protected radius: number;
+  static get CATEGORY(): string {
+    return 'StringNumber';
+  }
 
+  protected radius: number;
   protected last_note?: Note;
   protected string_number: string;
   protected x_offset: number;
@@ -24,10 +27,6 @@ export class StringNumber extends Modifier {
   protected dashed: boolean;
   protected leg: number;
   protected font: FontInfo;
-
-  static get CATEGORY(): string {
-    return 'stringnumber';
-  }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -119,7 +118,6 @@ export class StringNumber extends Modifier {
 
   constructor(number: string) {
     super();
-    this.setAttribute('type', 'StringNumber');
 
     this.string_number = number;
     this.setWidth(20); // ???
@@ -136,10 +134,6 @@ export class StringNumber extends Modifier {
       size: 10,
       weight: 'bold',
     };
-  }
-
-  getCategory(): string {
-    return StringNumber.CATEGORY;
   }
 
   setLineEndType(leg: number): this {
@@ -192,7 +186,7 @@ export class StringNumber extends Modifier {
         let top = stem_ext.topY;
         let bottom = stem_ext.baseY + 2;
 
-        if (note.getStemDirection() === StaveNote.STEM_DOWN) {
+        if (note.getStemDirection() === Stem.DOWN) {
           top = stem_ext.baseY;
           bottom = stem_ext.topY - 2;
         }

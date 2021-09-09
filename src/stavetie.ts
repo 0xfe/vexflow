@@ -9,6 +9,10 @@ import { Element } from './element';
 import { FontInfo, TieNotes } from './types/common';
 
 export class StaveTie extends Element {
+  static get CATEGORY(): string {
+    return 'StaveTie';
+  }
+
   render_options: {
     cp2: number;
     last_x_shift: number;
@@ -43,7 +47,6 @@ export class StaveTie extends Element {
    */
   constructor(notes: TieNotes, text?: string) {
     super();
-    this.setAttribute('type', 'StaveTie');
     this.setNotes(notes);
     this.text = text;
     this.render_options = {

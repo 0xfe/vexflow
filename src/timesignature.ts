@@ -34,16 +34,16 @@ const assertIsValidFraction = (timeSpec: string) => {
 };
 
 export class TimeSignature extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'TimeSignature';
+  }
+
   point: number;
   bottomLine: number;
   topLine: number;
 
   protected info: TimeSignatureInfo;
   protected validate_args: boolean;
-
-  static get CATEGORY(): string {
-    return 'timesignatures';
-  }
 
   static get glyphs(): Record<string, { code: string; point: number; line: number }> {
     return {
@@ -62,7 +62,6 @@ export class TimeSignature extends StaveModifier {
 
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
-    this.setAttribute('type', 'TimeSignature');
     this.validate_args = validate_args;
 
     const padding = customPadding;
@@ -75,10 +74,6 @@ export class TimeSignature extends StaveModifier {
     this.info = this.parseTimeSpec(timeSpec);
     this.setWidth(defined(this.info.glyph.getMetrics().width));
     this.setPadding(padding);
-  }
-
-  getCategory(): string {
-    return TimeSignature.CATEGORY;
   }
 
   parseTimeSpec(timeSpec: string): TimeSignatureInfo {

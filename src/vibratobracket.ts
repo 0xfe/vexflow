@@ -7,9 +7,8 @@ import { Element } from './element';
 import { Vibrato } from './vibrato';
 import { Note } from './note';
 
-function L(
-  // eslint-disable-next-line
-  ...args: any []) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (VibratoBracket.DEBUG) log('Vex.Flow.VibratoBracket', args);
 }
 
@@ -17,6 +16,10 @@ function L(
 export class VibratoBracket extends Element {
   /** To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`. */
   static DEBUG: boolean;
+
+  static get CATEGORY(): string {
+    return 'VibratoBracket';
+  }
 
   protected line: number;
 
@@ -37,7 +40,6 @@ export class VibratoBracket extends Element {
    */
   constructor(bracket_data: { stop?: Note; start?: Note }) {
     super();
-    this.setAttribute('type', 'VibratoBracket');
 
     this.start = bracket_data.start;
     this.stop = bracket_data.stop;

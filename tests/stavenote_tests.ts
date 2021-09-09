@@ -220,16 +220,16 @@ function ticksNewAPI(): void {
 
 function stem(): void {
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
-  equal(note.getStemDirection(), StaveNote.STEM_UP, 'Default note has UP stem');
+  equal(note.getStemDirection(), Stem.UP, 'Default note has UP stem');
 }
 
 function autoStem(): void {
   const testData: [/* keys */ string[], /* expectedStemDirection */ number][] = [
-    [['c/5', 'e/5', 'g/5'], StaveNote.STEM_DOWN],
-    [['e/4', 'g/4', 'c/5'], StaveNote.STEM_UP],
-    [['c/5'], StaveNote.STEM_DOWN],
-    [['a/4', 'e/5', 'g/5'], StaveNote.STEM_DOWN],
-    [['b/4'], StaveNote.STEM_DOWN],
+    [['c/5', 'e/5', 'g/5'], Stem.DOWN],
+    [['e/4', 'g/4', 'c/5'], Stem.UP],
+    [['c/5'], Stem.DOWN],
+    [['a/4', 'e/5', 'g/5'], Stem.DOWN],
+    [['b/4'], Stem.DOWN],
   ];
   testData.forEach((td) => {
     const keys = td[0];
@@ -238,7 +238,7 @@ function autoStem(): void {
     equal(
       note.getStemDirection(),
       expectedStemDirection,
-      'Stem must be ' + (expectedStemDirection === StaveNote.STEM_UP ? 'up' : 'down')
+      'Stem must be ' + (expectedStemDirection === Stem.UP ? 'up' : 'down')
     );
   });
 }

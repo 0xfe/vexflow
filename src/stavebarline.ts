@@ -17,16 +17,16 @@ export enum BarlineType {
 }
 
 export class Barline extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'Barline';
+  }
+
   protected widths: Record<string, number>;
   protected paddings: Record<string, number>;
   protected layoutMetricsMap: Record<number, LayoutMetrics>;
 
   protected thickness: number;
   protected type!: BarlineType;
-
-  static get CATEGORY(): string {
-    return 'barlines';
-  }
 
   static get type(): typeof BarlineType {
     return BarlineType;
@@ -44,12 +44,8 @@ export class Barline extends StaveModifier {
     };
   }
 
-  /**
-   * @constructor
-   */
   constructor(type: BarlineType | string) {
     super();
-    this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
     const TYPE = BarlineType;
@@ -116,10 +112,6 @@ export class Barline extends StaveModifier {
     };
     this.setPosition(StaveModifier.Position.BEGIN);
     this.setType(type);
-  }
-
-  getCategory(): string {
-    return Barline.CATEGORY;
   }
 
   getType(): number {

@@ -13,6 +13,7 @@ import { StaveNote } from './stavenote';
 import { TupletOptions } from './tuplet';
 import { Voice } from './voice';
 import { Music } from './music';
+import { Stem } from 'stem';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -359,7 +360,7 @@ export class Builder {
 
     // Build a StaveNote using the information we gathered.
     const note = factory.StaveNote({ keys, duration, dots, type, clef, auto_stem });
-    if (!auto_stem) note.setStemDirection(stem === 'up' ? StaveNote.STEM_UP : StaveNote.STEM_DOWN);
+    if (!auto_stem) note.setStemDirection(stem === 'up' ? Stem.UP : Stem.DOWN);
 
     // Attach accidentals.
     const accidentals: (Accidental | undefined)[] = [];

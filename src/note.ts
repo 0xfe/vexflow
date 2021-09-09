@@ -83,6 +83,10 @@ export interface NoteStruct {
  * array of them. All notes also have a rendering context and belong to a stave.
  */
 export abstract class Note extends Tickable {
+  static get CATEGORY(): string {
+    return 'Note';
+  }
+
   keys: string[];
   keyProps: KeyProps[];
 
@@ -100,10 +104,6 @@ export abstract class Note extends Tickable {
   protected customTypes: string[];
   protected playNote?: Note;
   protected beam?: Beam;
-
-  static get CATEGORY(): string {
-    return 'note';
-  }
 
   /** Debug helper. Displays various note metrics for the given note. */
   static plotMetrics(ctx: RenderContext, note: Tickable, yPos: number): void {
@@ -231,11 +231,11 @@ export abstract class Note extends Tickable {
   /**
    * Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
    * positioning and layout.
-   * To create a new note you need to provide a `noteStruct`.
+   *
+   * @param noteStruct To create a new note you need to provide a `noteStruct`.
    */
   constructor(noteStruct: Partial<NoteStruct>) {
     super();
-    this.setAttribute('type', 'Note');
 
     if (!noteStruct) {
       throw new RuntimeError('BadArguments', 'Note must have valid initialization data to identify duration and type.');
@@ -353,14 +353,6 @@ export abstract class Note extends Tickable {
     this.setYs([stave.getYForLine(0)]); // Update Y values if the stave is changed.
     this.setContext(this.stave.getContext());
     return this;
-  }
-
-  /**
-   * `Note` is not really a modifier, but is used in
-   * a `ModifierContext`.
-   */
-  getCategory(): string {
-    return Note.CATEGORY;
   }
 
   /** Get spacing to the left of the notes. */

@@ -17,12 +17,11 @@ export class ClefNote extends Note {
   protected clef: ClefType;
 
   static get CATEGORY(): string {
-    return 'clefnote';
+    return 'ClefNote';
   }
 
   constructor(type: string, size?: string, annotation?: string) {
     super({ duration: 'b' });
-    this.setAttribute('type', 'ClefNote');
 
     this.type = type;
     this.clef_obj = new Clef(type, size, annotation);
@@ -66,11 +65,6 @@ export class ClefNote extends Note {
   addToModifierContext(mc: ModifierContext): this {
     // DO NOTHING.
     return this;
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return ClefNote.CATEGORY;
   }
 
   /** Set preformatted. */

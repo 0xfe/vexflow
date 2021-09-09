@@ -30,7 +30,7 @@ import { Stave } from 'stave';
 import { Barline, BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { Repetition } from 'staverepetition';
-import { Volta, VoltaType } from 'stavevolta';
+import { VoltaType } from 'stavevolta';
 import { Justification } from 'textnote';
 import { TimeSignature } from 'timesignature';
 import { StaveModifier } from 'stavemodifier';
@@ -72,8 +72,11 @@ function sortByCategory(): void {
   const bar0 = new Barline(BarlineType.SINGLE);
   const bar1 = new Barline(BarlineType.DOUBLE);
   const bar2 = new Barline(BarlineType.NONE);
-  const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
-  const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+
+  // const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
+  // const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+  const order0 = { Barline: 0, Clef: 1, KeySignature: 2, TimeSignature: 3 };
+  const order1 = { TimeSignature: 0, KeySignature: 1, Barline: 2, Clef: 3 };
 
   const sortAndCompare = (title: string, a: StaveModifier[], b: StaveModifier[], order: Record<string, number>) => {
     stave.sortByCategory(a, order);
@@ -544,7 +547,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   const mm2 = new Stave(mm1.getX() + mm1.getWidth(), mm1.getY(), 175);
   mm2.setBegBarType(BarlineType.REPEAT_BEGIN);
   mm2.setRepetitionTypeRight(Repetition.type.DS, 25);
-  mm2.setVoltaType(Volta.type.BEGIN_MID, '2.', -5);
+  mm2.setVoltaType(VoltaType.BEGIN_MID, '2.', -5);
   mm2.addClef('treble');
   mm2.addKeySignature('A');
   mm2.setMeasure(2);

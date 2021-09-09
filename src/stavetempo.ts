@@ -15,6 +15,10 @@ export interface StaveTempoOptions {
 }
 
 export class StaveTempo extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'StaveTempo';
+  }
+
   protected font: FontInfo;
   protected render_options: {
     glyph_font_scale: number;
@@ -24,13 +28,8 @@ export class StaveTempo extends StaveModifier {
   protected shift_x: number;
   protected shift_y: number;
 
-  static get CATEGORY(): string {
-    return 'stavetempo';
-  }
-
   constructor(tempo: StaveTempoOptions, x: number, shift_y: number) {
     super();
-    this.setAttribute('type', 'StaveTempo');
 
     this.tempo = tempo;
     this.position = StaveModifier.Position.ABOVE;
@@ -45,10 +44,6 @@ export class StaveTempo extends StaveModifier {
     this.render_options = {
       glyph_font_scale: 30, // font size for note
     };
-  }
-
-  getCategory(): string {
-    return StaveTempo.CATEGORY;
   }
 
   setTempo(tempo: StaveTempoOptions): this {

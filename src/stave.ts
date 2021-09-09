@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { isBarline } from 'typeguard';
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
@@ -45,6 +46,10 @@ export interface StaveOptions {
 }
 
 export class Stave extends Element {
+  static get CATEGORY(): string {
+    return 'Stave';
+  }
+
   protected start_x: number;
   protected clef: string;
   protected options: StaveOptions;
@@ -79,7 +84,6 @@ export class Stave extends Element {
 
   constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
     super();
-    this.setAttribute('type', 'Stave');
 
     this.x = x;
     this.y = y;
@@ -578,14 +582,26 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * @param position
+   * @param category
+   * @returns array of StaveModifiers that match by the provided position and category.
+   */
   getModifiers(position?: number, category?: string): StaveModifier[] {
-    if (position === undefined && category === undefined) return this.modifiers;
-
-    return this.modifiers.filter(
-      (modifier) =>
-        (position === undefined || position === modifier.getPosition()) &&
-        (category === undefined || category === modifier.getCategory())
-    );
+    const noPosition = position === undefined;
+    const noCategory = category === undefined;
+    if (noPosition && noCategory) {
+      return this.modifiers;
+    } else if (noPosition) {
+      // A category was provided.
+      return this.modifiers.filter((m: StaveModifier) => category === m.getCategory());
+    } else if (noCategory) {
+      // A position was provided.
+      return this.modifiers.filter((m: StaveModifier) => position === m.getPosition());
+    } else {
+      // Both position and category were provided!
+      return this.modifiers.filter((m: StaveModifier) => position === m.getPosition() && category === m.getCategory());
+    }
   }
 
   sortByCategory(items: StaveModifier[], order: Record<string, number>): void {
@@ -661,7 +677,7 @@ export class Stave extends Element {
 
     for (let i = 0; i < endModifiers.length; i++) {
       modifier = endModifiers[i];
-      lastBarlineIdx = modifier.getCategory() === Barline.CATEGORY ? i : lastBarlineIdx;
+      lastBarlineIdx = isBarline(modifier) ? i : lastBarlineIdx;
 
       widths.right = 0;
       widths.left = 0;
