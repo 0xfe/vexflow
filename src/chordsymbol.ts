@@ -547,8 +547,8 @@ export class ChordSymbol extends Modifier {
   // ### addText
   // Add a text block
   // eslint-disable-next-line
-  addText(text: string, parameters: any): this {
-    parameters = parameters == null ? {} : parameters;
+  addText(text: string, parameters?: any): this {
+    parameters = parameters == null || parameters == undefined ? {} : parameters;
     parameters.text = text;
     parameters.symbolType = ChordSymbol.symbolTypes.TEXT;
     return this.addSymbolBlock(parameters);
@@ -592,7 +592,7 @@ export class ChordSymbol extends Modifier {
   // `addGlyphOrText("(+5#11)")`
   // will use text for the '5' and '11', and glyphs for everything else.
   // eslint-disable-next-line
-  addGlyphOrText(text: string[], parameters: any): this {
+  addGlyphOrText(text: string, parameters: any): this {
     parameters = parameters == null ? {} : parameters;
     let str = '';
     for (let i = 0; i < text.length; ++i) {
