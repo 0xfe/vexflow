@@ -6,7 +6,7 @@ import { NoteStruct } from './note';
 import { GlyphNoteOptions } from './glyphnote';
 
 export class RepeatNote extends GlyphNote {
-  constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {
+  constructor(type: string, noteStruct?: Partial<NoteStruct>, options?: GlyphNoteOptions) {
     // Smufl Codes
     const CODES = {
       '1': 'repeat1Bar',
