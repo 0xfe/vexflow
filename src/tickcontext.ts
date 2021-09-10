@@ -5,7 +5,7 @@
 // tabs, etc.
 
 import { RuntimeError } from './util';
-import { FormatterMetrics, Tickable } from './tickable';
+import { Tickable } from './tickable';
 import { Fraction } from './fraction';
 import { NoteMetrics } from './note';
 
@@ -47,7 +47,7 @@ export class TickContext {
   protected preFormatted: boolean = false;
   protected postFormatted: boolean = false;
   protected width: number;
-  protected formatterMetrics: FormatterMetrics;
+  protected formatterMetrics: { freedom: { left: number; right: number } };
 
   static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;
@@ -85,25 +85,10 @@ export class TickContext {
 
     this.width = 0;
     this.formatterMetrics = {
-      // The freedom of a tickable is the distance it can move without colliding
+      // The freedom of a tickcontext is the distance it can move without colliding
       // with neighboring elements. A formatter can set these values during its
       // formatting pass, which a different formatter can then use to fine tune.
       freedom: { left: 0, right: 0 },
-
-      // The simplified rational duration of this tick as a string. It can be
-      // used as an index to a map or hashtable.
-      duration: '',
-
-      // The number of formatting iterations undergone.
-      iterations: 0,
-
-      // The space in pixels allocated by this formatter, along with the mean space
-      // for tickables of this duration, and the deviation from the mean.
-      space: {
-        used: 0,
-        mean: 0,
-        deviation: 0,
-      },
     };
   }
 
@@ -289,7 +274,7 @@ export class TickContext {
     return this;
   }
 
-  getFormatterMetrics(): FormatterMetrics {
+  getFormatterMetrics(): { freedom: { left: number; right: number } } {
     return this.formatterMetrics;
   }
 }
