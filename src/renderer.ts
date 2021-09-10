@@ -183,9 +183,16 @@ export class Renderer {
   resize(width: number, height: number): this {
     if (this.backend === Renderer.Backends.CANVAS) {
       const canvasElement = this.element as HTMLCanvasElement;
-      [width, height] = CanvasContext.SanitizeCanvasDims(width, height);
-
       const devicePixelRatio = window.devicePixelRatio || 1;
+
+      // Scale the canvas size by the device pixel ratio clamping to the maximum
+      // supported size.
+      [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio,
+                                                         height * devicePixelRatio);
+
+      // Divide back down by the pixel ratio and convert to integers.
+      width = (width / devicePixelRatio) | 0;
+      height = (height / devicePixelRatio) | 0;
 
       canvasElement.width = width * devicePixelRatio;
       canvasElement.height = height * devicePixelRatio;

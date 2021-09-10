@@ -670,7 +670,7 @@ function drawKeyStyles(options: TestOptions, contextBuilder: ContextBuilder): vo
   const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
     .setStave(stave)
     .addAccidental(1, new Accidental('b'))
-    .setKeyStyle(1, { shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue' });
+    .setKeyStyle(1, { shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue' });
 
   new TickContext().addTickable(note).preFormat().setX(25);
 
@@ -690,7 +690,7 @@ function drawNoteStyles(options: TestOptions, contextBuilder: ContextBuilder): v
     .setStave(stave)
     .addAccidental(1, new Accidental('b'));
 
-  note.setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+  note.setStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
   new TickContext().addTickable(note).preFormat().setX(25);
 
@@ -710,7 +710,7 @@ function drawNoteStemStyles(options: TestOptions, contextBuilder: ContextBuilder
     .setStave(stave)
     .addAccidental(1, new Accidental('b'));
 
-  note.setStemStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+  note.setStemStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
   new TickContext().addTickable(note).preFormat().setX(25);
 
@@ -783,7 +783,7 @@ function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBui
     .setStave(stave)
     .addAccidental(1, new Accidental('b'));
 
-  note.setFlagStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
+  note.setFlagStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
   new TickContext().addTickable(note).preFormat().setX(25);
 
@@ -845,7 +845,7 @@ function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): v
   staveNotes[1].setKeyStyle(0, { fillStyle: 'darkturquoise' });
 
   staveNotes[5].setStyle({ fillStyle: 'tomato', strokeStyle: 'tomato' });
-  beam3.setStyle({ shadowBlur: 20, shadowColor: 'blue' });
+  beam3.setStyle({ shadowBlur: 4, shadowColor: 'blue' });
 
   staveNotes[9].setLedgerLineStyle({ fillStyle: 'lawngreen', strokeStyle: 'lawngreen', lineWidth: 1 });
   staveNotes[9].setFlagStyle({ fillStyle: 'orange', strokeStyle: 'orange' });
