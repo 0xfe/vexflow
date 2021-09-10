@@ -47,6 +47,7 @@ export class TickContext {
   protected preFormatted: boolean = false;
   protected postFormatted: boolean = false;
   protected width: number;
+  protected formatterMetrics: FormatterMetrics;
 
   static getNextContext(tContext: TickContext): TickContext | undefined {
     const contexts = tContext.tContexts;
@@ -83,6 +84,27 @@ export class TickContext {
     this.tContexts = []; // Parent array of tick contexts
 
     this.width = 0;
+    this.formatterMetrics = {
+      // The freedom of a tickable is the distance it can move without colliding
+      // with neighboring elements. A formatter can set these values during its
+      // formatting pass, which a different formatter can then use to fine tune.
+      freedom: { left: 0, right: 0 },
+
+      // The simplified rational duration of this tick as a string. It can be
+      // used as an index to a map or hashtable.
+      duration: '',
+
+      // The number of formatting iterations undergone.
+      iterations: 0,
+
+      // The space in pixels allocated by this formatter, along with the mean space
+      // for tickables of this duration, and the deviation from the mean.
+      space: {
+        used: 0,
+        mean: 0,
+        deviation: 0,
+      },
+    };
   }
 
   getTickID(): number {
@@ -268,26 +290,6 @@ export class TickContext {
   }
 
   getFormatterMetrics(): FormatterMetrics {
-    return {
-      // The freedom of a tickable is the distance it can move without colliding
-      // with neighboring elements. A formatter can set these values during its
-      // formatting pass, which a different formatter can then use to fine tune.
-      freedom: { left: 0, right: 0 },
-
-      // The simplified rational duration of this tick as a string. It can be
-      // used as an index to a map or hashtable.
-      duration: '',
-
-      // The number of formatting iterations undergone.
-      iterations: 0,
-
-      // The space in pixels allocated by this formatter, along with the mean space
-      // for tickables of this duration, and the deviation from the mean.
-      space: {
-        used: 0,
-        mean: 0,
-        deviation: 0,
-      },
-    };
+    return this.formatterMetrics;
   }
 }
