@@ -15,8 +15,8 @@ export class GraceTabNote extends TabNote {
     return 'gracetabnotes';
   }
 
-  constructor(note_struct: TabNoteStruct) {
-    super(note_struct, false);
+  constructor(noteStruct: TabNoteStruct) {
+    super(noteStruct, false);
     this.setAttribute('type', 'GraceTabNote');
 
     this.render_options = {

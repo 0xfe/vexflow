@@ -252,7 +252,7 @@ export class Factory {
     return note;
   }
 
-  GlyphNote(glyph: Glyph, noteStruct: NoteStruct, options: GlyphNoteOptions): GlyphNote {
+  GlyphNote(glyph: Glyph, noteStruct: Partial<NoteStruct>, options?: GlyphNoteOptions): GlyphNote {
     const note = new GlyphNote(glyph, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -260,7 +260,7 @@ export class Factory {
     return note;
   }
 
-  RepeatNote(type: string, noteStruct: NoteStruct, options: GlyphNoteOptions): RepeatNote {
+  RepeatNote(type: string, noteStruct?: Partial<NoteStruct>, options?: GlyphNoteOptions): RepeatNote {
     const note = new RepeatNote(type, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -342,7 +342,7 @@ export class Factory {
     return note;
   }
 
-  GraceNote(noteStruct: GraceNoteStruct): GraceNote {
+  GraceNote(noteStruct: Partial<GraceNoteStruct>): GraceNote {
     const note = new GraceNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);

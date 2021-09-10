@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 // TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
-// TODO: Factory.GraceNote() should take a Partial<GraceNoteStruct>. We are omitting the 'slash' property.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';

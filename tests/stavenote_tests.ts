@@ -359,7 +359,7 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const restKeys = [restKey];
 
-  const note_structs: StaveNoteStruct[] = [
+  const noteStructs: StaveNoteStruct[] = [
     { clef: clef, keys: higherKeys, duration: '1/2' },
     { clef: clef, keys: lowerKeys, duration: 'w' },
     { clef: clef, keys: higherKeys, duration: 'h' },
@@ -390,7 +390,7 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
     { clef: clef, keys: restKeys, duration: '128r' },
     { keys: ['x/4'], duration: 'h' },
   ];
-  expect(note_structs.length * 2);
+  expect(noteStructs.length * 2);
 
   const colorDescendants = (parentItem: SVGElement, color: string) => () =>
     parentItem.querySelectorAll('*').forEach((child) => {
@@ -398,8 +398,8 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
       child.setAttribute('stroke', color);
     });
 
-  for (let i = 0; i < note_structs.length; ++i) {
-    const note = draw(staveNote(note_structs[i]), stave, ctx, (i + 1) * 25);
+  for (let i = 0; i < noteStructs.length; ++i) {
+    const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 25);
 
     // If this is an interactivity test (ui: true), then attach mouseover & mouseout handlers to the notes.
     if (options.params.ui) {
@@ -432,7 +432,7 @@ function drawBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder)
 
   const restKeys = [restKey];
 
-  const note_structs = [
+  const noteStructs = [
     { clef: clef, keys: higherKeys, duration: '1/2' },
     { clef: clef, keys: lowerKeys, duration: 'w' },
     { clef: clef, keys: higherKeys, duration: 'h' },
@@ -463,11 +463,11 @@ function drawBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder)
     { clef: clef, keys: restKeys, duration: '128r' },
     { keys: ['x/4'], duration: 'h' },
   ];
-  expect(note_structs.length * 2);
+  expect(noteStructs.length * 2);
 
-  for (let i = 0; i < note_structs.length; ++i) {
+  for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(
-      staveNote(note_structs[i]),
+      staveNote(noteStructs[i]),
       stave,
       ctx,
       (i + 1) * 25,
@@ -488,7 +488,7 @@ function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
   stave.addClef('bass');
   stave.draw();
 
-  const note_structs: StaveNoteStruct[] = [
+  const noteStructs: StaveNoteStruct[] = [
     { clef: 'bass', keys: ['c/3', 'e/3', 'a/3'], duration: '1/2' },
     { clef: 'bass', keys: ['c/2', 'e/2', 'a/2'], duration: 'w' },
     { clef: 'bass', keys: ['c/3', 'e/3', 'a/3'], duration: 'h' },
@@ -512,8 +512,8 @@ function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
     { keys: ['x/4'], duration: 'h' },
   ];
 
-  for (let i = 0; i < note_structs.length; ++i) {
-    const note = draw(staveNote(note_structs[i]), stave, ctx, (i + 1) * 25);
+  for (let i = 0; i < noteStructs.length; ++i) {
+    const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 25);
 
     ok(note.getX() > 0, 'Note ' + i + ' has X value');
     ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -530,7 +530,7 @@ function displacements(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave.setContext(ctx);
   stave.draw();
 
-  const note_structs = [
+  const noteStructs = [
     { keys: ['g/3', 'a/3', 'c/4', 'd/4', 'e/4'], duration: '1/2' },
     { keys: ['g/3', 'a/3', 'c/4', 'd/4', 'e/4'], duration: 'w' },
     { keys: ['d/4', 'e/4', 'f/4'], duration: 'h' },
@@ -550,10 +550,10 @@ function displacements(options: TestOptions, contextBuilder: ContextBuilder): vo
       stem_direction: Stem.DOWN,
     },
   ];
-  expect(note_structs.length * 2);
+  expect(noteStructs.length * 2);
 
-  for (let i = 0; i < note_structs.length; ++i) {
-    const note = draw(staveNote(note_structs[i]), stave, ctx, (i + 1) * 45);
+  for (let i = 0; i < noteStructs.length; ++i) {
+    const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 45);
 
     ok(note.getX() > 0, 'Note ' + i + ' has X value');
     ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
@@ -566,7 +566,7 @@ function drawHarmonicAndMuted(options: TestOptions, contextBuilder: ContextBuild
   stave.setContext(ctx);
   stave.draw();
 
-  const note_structs = [
+  const noteStructs = [
     { keys: ['c/4', 'e/4', 'a/4'], duration: '1/2h' },
     { keys: ['c/4', 'e/4', 'a/4'], duration: 'wh' },
     { keys: ['c/4', 'e/4', 'a/4'], duration: 'hh' },
@@ -605,10 +605,10 @@ function drawHarmonicAndMuted(options: TestOptions, contextBuilder: ContextBuild
     { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: Stem.DOWN },
     { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: Stem.DOWN },
   ];
-  expect(note_structs.length * 2);
+  expect(noteStructs.length * 2);
 
-  for (let i = 0; i < note_structs.length; ++i) {
-    const note = draw(staveNote(note_structs[i]), stave, ctx, i * 25 + 5);
+  for (let i = 0; i < noteStructs.length; ++i) {
+    const note = draw(staveNote(noteStructs[i]), stave, ctx, i * 25 + 5);
 
     ok(note.getX() > 0, 'Note ' + i + ' has X value');
     ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');

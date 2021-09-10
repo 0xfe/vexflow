@@ -22,8 +22,8 @@ export abstract class StemmableNote extends Note {
   protected flag?: Glyph;
   protected stem_extension_override?: number;
 
-  constructor(note_struct: NoteStruct) {
-    super(note_struct);
+  constructor(noteStruct: Partial<NoteStruct>) {
+    super(noteStruct);
     this.setAttribute('type', 'StemmableNote');
   }
 
