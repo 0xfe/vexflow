@@ -115,7 +115,13 @@ export class CanvasContext implements RenderContext {
   }
 
   setShadowBlur(blur: number): this {
-    this.vexFlowCanvasContext.shadowBlur = blur;
+    // CanvasRenderingContext2D does not scale the shadow blur by the current
+    // transform, so we have to do it manually. We assume uniform scaling
+    // (though allow for rotation) because the blur can only be scaled
+    // uniformly anyway.
+    const t = this.vexFlowCanvasContext.getTransform();
+    const scale = Math.sqrt(t.a * t.a + t.b * t.b + t.c * t.c + t.d * t.d);
+    this.vexFlowCanvasContext.shadowBlur = scale * blur;
     return this;
   }
 
@@ -198,12 +204,6 @@ export class CanvasContext implements RenderContext {
   // This is an attempt (hack) to simulate the HTML5 canvas arc method.
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
     this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
-    return this;
-  }
-
-  // CanvasRenderingContext2D does not have a glow function.
-  glow(): this {
-    // DO NOTHING.
     return this;
   }
 

@@ -540,41 +540,24 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  // Adapted from the source for Raphael's Element.glow
-  glow(): this {
-    // Calculate the width & paths of the glow:
-    if (this.shadow_attributes.width > 0) {
-      const sa = this.shadow_attributes;
-      const num_paths = sa.width / 2;
-      // Stroke at varying widths to create effect of gaussian blur:
-      for (let i = 1; i <= num_paths; i++) {
-        const attributes: Attributes = {
-          stroke: sa.color,
-          'stroke-linejoin': 'round',
-          'stroke-linecap': 'round',
-          'stroke-width': +(((sa.width * 0.4) / num_paths) * i).toFixed(3),
-          opacity: +((sa.opacity || 0.3) / num_paths).toFixed(3),
-        };
-
-        const path = this.create('path');
-        attributes.d = this.path;
-        this.applyAttributes(path, attributes);
-        this.add(path);
-      }
-    }
-    return this;
+  private getShadowStyle(): string {
+    const sa = this.shadow_attributes;
+    // A CSS drop-shadow filter blur looks different than a canvas shadowBlur
+    // of the same radius, so we scale the drop-shadow radius here to make it
+    // look close to the canvas shadow.
+    return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
   }
 
   fill(attributes: Attributes): this {
-    // If our current path is set to glow, make it glow
-    this.glow();
-
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
       attributes = { ...this.attributes, stroke: 'none' };
     }
 
     attributes.d = this.path;
+    if (this.shadow_attributes.width > 0) {
+      attributes.style = this.getShadowStyle();
+    }
 
     this.applyAttributes(path, attributes);
     this.add(path);
@@ -582,9 +565,6 @@ export class SVGContext implements RenderContext {
   }
 
   stroke(): this {
-    // If our current path is set to glow, make it glow.
-    this.glow();
-
     const path = this.create('path');
     const attributes: Attributes = {
       ...this.attributes,
@@ -592,6 +572,9 @@ export class SVGContext implements RenderContext {
       'stroke-width': this.lineWidth,
       d: this.path,
     };
+    if (this.shadow_attributes.width > 0) {
+      attributes.style = this.getShadowStyle();
+    }
 
     this.applyAttributes(path, attributes);
     this.add(path);

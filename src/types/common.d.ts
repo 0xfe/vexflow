@@ -73,7 +73,6 @@ export interface RenderContext {
   bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
   quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
-  glow(): this;
   fill(attributes?: any): this;
   stroke(): this;
   closePath(): this;
