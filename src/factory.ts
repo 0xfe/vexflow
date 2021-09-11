@@ -244,7 +244,7 @@ export class Factory {
     return stave;
   }
 
-  StaveNote(noteStruct: StaveNoteStruct): StaveNote {
+  StaveNote(noteStruct: Partial<StaveNoteStruct>): StaveNote {
     const note = new StaveNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -268,7 +268,7 @@ export class Factory {
     return note;
   }
 
-  GhostNote(noteStruct: string | NoteStruct): GhostNote {
+  GhostNote(noteStruct: string | Partial<NoteStruct>): GhostNote {
     const ghostNote = new GhostNote(noteStruct);
     if (this.stave) ghostNote.setStave(this.stave);
     ghostNote.setContext(this.context);
@@ -276,8 +276,8 @@ export class Factory {
     return ghostNote;
   }
 
-  TextNote(textNoteStruct: TextNoteStruct): TextNote {
-    const textNote = new TextNote(textNoteStruct);
+  TextNote(noteStruct: Partial<TextNoteStruct>): TextNote {
+    const textNote = new TextNote(noteStruct);
     if (this.stave) textNote.setStave(this.stave);
     textNote.setContext(this.context);
     this.renderQ.push(textNote);
@@ -334,7 +334,7 @@ export class Factory {
     return keySigNote;
   }
 
-  TabNote(noteStruct: TabNoteStruct): TabNote {
+  TabNote(noteStruct: Partial<TabNoteStruct>): TabNote {
     const note = new TabNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);

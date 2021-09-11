@@ -70,10 +70,10 @@ export class TextDynamics extends Note {
    * @param noteStruct an object that contains a `duration` property and a
    * `sequence` of letters that represents the letters to render.
    */
-  constructor(noteStruct: TextNoteStruct) {
+  constructor(noteStruct: Partial<TextNoteStruct>) {
     super(noteStruct);
 
-    this.sequence = noteStruct.text.toLowerCase();
+    this.sequence = (noteStruct.text || '').toLowerCase();
     this.line = noteStruct.line || 0;
     this.glyphs = [];
 

@@ -116,7 +116,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   stave.getModifiers()[2].setStyle(FS('blue'));
   stave.setContext(ctx).draw();
 
-  const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
+  const tabNote = (noteStruct: Partial<TabNoteStruct>) => new TabNote(noteStruct);
 
   const notes = [
     tabNote({

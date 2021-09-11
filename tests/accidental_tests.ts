@@ -59,7 +59,7 @@ function makeNewAccid(factory: Factory) {
  *
  */
 function autoAccidentalWorking(): void {
-  const createStaveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
+  const createStaveNote = (noteStruct: Partial<StaveNoteStruct>) => new StaveNote(noteStruct);
 
   let notes = [
     { keys: ['bb/4'], duration: '4' },

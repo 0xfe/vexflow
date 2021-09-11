@@ -13,12 +13,12 @@ export enum Justification {
 }
 
 export interface TextNoteStruct extends NoteStruct {
-  ignore_ticks?: boolean;
-  smooth?: boolean;
-  glyph?: string;
-  font?: FontInfo;
-  subscript?: string;
-  superscript?: string;
+  ignore_ticks: boolean;
+  smooth: boolean;
+  glyph: string;
+  font: FontInfo;
+  subscript: string;
+  superscript: string;
   text: string;
 }
 
@@ -108,11 +108,11 @@ export class TextNote extends Note {
     };
   }
 
-  constructor(noteStruct: TextNoteStruct) {
+  constructor(noteStruct: Partial<TextNoteStruct>) {
     super(noteStruct);
 
     // Note properties
-    this.text = noteStruct.text;
+    this.text = noteStruct.text || '';
     this.superscript = noteStruct.superscript;
     this.subscript = noteStruct.subscript;
     this.glyph = undefined;
