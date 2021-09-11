@@ -52,14 +52,14 @@ export interface StaveNoteFormatSettings {
 }
 
 export interface StaveNoteStruct extends NoteStruct {
-  stem_down_x_offset?: number;
-  stem_up_x_offset?: number;
-  stroke_px?: number;
-  glyph_font_scale?: number;
-  stem_direction?: number;
-  auto_stem?: boolean;
-  octave_shift?: number;
-  clef?: string;
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  stroke_px: number;
+  glyph_font_scale: number;
+  stem_direction: number;
+  auto_stem: boolean;
+  octave_shift: number;
+  clef: string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.StaveNote.DEBUG` to `true`.

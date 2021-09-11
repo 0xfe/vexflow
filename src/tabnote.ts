@@ -133,14 +133,14 @@ export class TabNote extends StemmableNote {
 
   // Initialize the TabNote with a `tab_struct` full of properties
   // and whether to `draw_stem` when rendering the note
-  constructor(tab_struct: TabNoteStruct, draw_stem?: boolean) {
-    super(tab_struct);
+  constructor(noteStruct: Partial<TabNoteStruct>, draw_stem?: boolean) {
+    super(noteStruct);
 
     this.ghost = false; // Renders parenthesis around notes
 
     // Note properties
     // The fret positions in the note. An array of `{ str: X, fret: X }`
-    this.positions = tab_struct.positions;
+    this.positions = noteStruct.positions || [];
 
     // Render Options
     this.render_options = {
@@ -168,8 +168,8 @@ export class TabNote extends StemmableNote {
 
     this.buildStem();
 
-    if (tab_struct.stem_direction) {
-      this.setStemDirection(tab_struct.stem_direction);
+    if (noteStruct.stem_direction) {
+      this.setStemDirection(noteStruct.stem_direction);
     } else {
       this.setStemDirection(Stem.UP);
     }

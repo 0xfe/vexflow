@@ -3,11 +3,6 @@
 //
 // NoteHead Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: NoteHead constructor should take a Partial<NoteHeadStruct>.
-//       In the basicBoundingBoxes() test case, we omit the note_type option.
 // TODO: There is a bug in RenderContext.scale(). The CanvasContext works as expected.
 //       Each time you call scale(sx, sy), it multiplies the sx and sy by the currently stored scale.
 //       The SVGContext operates differently. It just sets the sx and sy as the new scale, instead of multiplying it.
@@ -72,15 +67,15 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 /**
  * Used by the next two test cases to draw a note.
  */
-function showNote(struct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number) {
-  const note = new StaveNote(struct).setStave(stave);
+function showNote(noteStruct: Partial<StaveNoteStruct>, stave: Stave, ctx: RenderContext, x: number) {
+  const note = new StaveNote(noteStruct).setStave(stave);
   new TickContext().addTickable(note).preFormat().setX(x);
   note.setContext(ctx).draw();
   return note;
 }
 
 function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const notes: StaveNoteStruct[] = [
+  const notes: Partial<StaveNoteStruct>[] = [
     { keys: ['g/5/d0'], duration: '4' },
     { keys: ['g/5/d1'], duration: '4' },
     { keys: ['g/5/d2'], duration: '4' },
@@ -128,7 +123,7 @@ function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): voi
 }
 
 function drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const notes: StaveNoteStruct[] = [
+  const notes: Partial<StaveNoteStruct>[] = [
     { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
     { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
     { keys: ['a/4/d1', 'g/5/x2'], duration: '4' },

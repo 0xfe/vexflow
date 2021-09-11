@@ -17,21 +17,20 @@ function L(...args: any[]) {
 }
 
 export interface NoteHeadStruct extends NoteStruct {
-  glyph_font_scale?: number;
-  slashed?: boolean;
-  style?: ElementStyle;
-  stem_down_x_offset?: number;
-  stem_up_x_offset?: number;
-  custom_glyph_code?: string;
-  x_shift?: number;
-  line?: number;
-  stem_direction?: number;
-  displaced?: boolean;
-  //  duration: string;
+  glyph_font_scale: number;
+  slashed: boolean;
+  style: ElementStyle;
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  custom_glyph_code: string;
+  x_shift: number;
+  line: number;
+  stem_direction: number;
+  displaced: boolean;
   note_type: string;
-  y?: number;
-  x?: number;
-  index?: number;
+  y: number;
+  x: number;
+  index: number;
 }
 
 /**
@@ -108,7 +107,7 @@ export class NoteHead extends Note {
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
   protected stem_down_x_offset: number = 0;
-  protected note_type: string;
+  protected note_type?: string;
   protected displaced: boolean;
   protected stem_direction: number;
 
@@ -118,17 +117,16 @@ export class NoteHead extends Note {
   protected index?: number;
   protected slashed: boolean;
 
-  constructor(head_options: NoteHeadStruct) {
-    super(head_options);
+  constructor(noteStruct: Partial<NoteHeadStruct>) {
+    super(noteStruct);
 
-    this.index = head_options.index;
-    this.x = head_options.x || 0;
-    this.y = head_options.y || 0;
-    this.note_type = head_options.note_type;
-    this.duration = head_options.duration;
-    this.displaced = head_options.displaced || false;
-    this.stem_direction = head_options.stem_direction || Stem.UP;
-    this.line = head_options.line || 0;
+    this.index = noteStruct.index;
+    this.x = noteStruct.x || 0;
+    this.y = noteStruct.y || 0;
+    this.note_type = noteStruct.note_type;
+    this.displaced = noteStruct.displaced || false;
+    this.stem_direction = noteStruct.stem_direction || Stem.UP;
+    this.line = noteStruct.line || 0;
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
@@ -136,22 +134,22 @@ export class NoteHead extends Note {
     defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
 
     this.glyph_code = this.glyph.code_head;
-    this.x_shift = head_options.x_shift || 0;
-    if (head_options.custom_glyph_code) {
+    this.x_shift = noteStruct.x_shift || 0;
+    if (noteStruct.custom_glyph_code) {
       this.custom_glyph = true;
-      this.glyph_code = head_options.custom_glyph_code;
-      this.stem_up_x_offset = head_options.stem_up_x_offset || 0;
-      this.stem_down_x_offset = head_options.stem_down_x_offset || 0;
+      this.glyph_code = noteStruct.custom_glyph_code;
+      this.stem_up_x_offset = noteStruct.stem_up_x_offset || 0;
+      this.stem_down_x_offset = noteStruct.stem_down_x_offset || 0;
     }
 
-    this.style = head_options.style;
-    this.slashed = head_options.slashed || false;
+    this.style = noteStruct.style;
+    this.slashed = noteStruct.slashed || false;
 
     this.render_options = {
       ...this.render_options,
       ...{
         // font size for note heads
-        glyph_font_scale: head_options.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+        glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
         // number of stroke px to the left and right of head
         stroke_px: 3,
       },

@@ -15,7 +15,7 @@ export class GraceTabNote extends TabNote {
     return 'GraceTabNote';
   }
 
-  constructor(noteStruct: TabNoteStruct) {
+  constructor(noteStruct: Partial<TabNoteStruct>) {
     super(noteStruct, false);
 
     this.render_options = {
