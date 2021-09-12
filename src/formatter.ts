@@ -608,7 +608,6 @@ export class Formatter {
     // Pass 1: Give each note maximum width requested by context.
     contextList.forEach((tick) => {
       const context = contextMap[tick];
-      if (renderingContext) context.setContext(renderingContext);
 
       // Make sure that all tickables in this context have calculated their
       // space requirements.
