@@ -78,3 +78,14 @@ export function drawDot(ctx: RenderContext, x: number, y: number, color = '#55')
 export function prefix(text: string): string {
   return `vf-${text}`;
 }
+
+/**
+ * Convert an arbitrary angle in radians to the equivalent one in the range [0, pi).
+ */
+export function normalizeAngle(a: number): number {
+  a = a % (2 * Math.PI);
+  if (a < 0) {
+    a += 2 * Math.PI;
+  }
+  return a;
+}

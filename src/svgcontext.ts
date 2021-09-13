@@ -2,7 +2,7 @@
 // MIT License
 // @author Gregory Ristow (2015)
 
-import { RuntimeError, prefix } from './util';
+import { RuntimeError, normalizeAngle, prefix } from './util';
 import { RenderContext, TextMeasure } from './types/common';
 
 // eslint-disable-next-line
@@ -523,62 +523,49 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  // This is an attempt (hack) to simulate the HTML5 canvas arc method.
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
-    function normalizeAngle(angle: number) {
-      while (angle < 0) {
-        angle += Math.PI * 2;
-      }
-      while (angle > Math.PI * 2) {
-        angle -= Math.PI * 2;
-      }
-      return angle;
-    }
+    const x0 = x + radius * Math.cos(startAngle);
+    const y0 = y + radius * Math.sin(startAngle);
 
-    startAngle = normalizeAngle(startAngle);
-    endAngle = normalizeAngle(endAngle);
-
-    // Swap the start and end angles if necessary.
-    if (startAngle > endAngle) {
-      const tmp = startAngle;
-      startAngle = endAngle;
-      endAngle = tmp;
-      antiClockwise = !antiClockwise;
-    }
-
-    const delta = endAngle - startAngle;
-    if (delta > Math.PI) {
-      this.arcHelper(x, y, radius, startAngle, startAngle + delta / 2, antiClockwise);
-      this.arcHelper(x, y, radius, startAngle + delta / 2, endAngle, antiClockwise);
+    // Handle the edge case from the Canvas spec where arc length is greater than
+    // the circle's circumference:
+    //   https://html.spec.whatwg.org/multipage/canvas.html#ellipse-method-steps
+    if (
+      (!antiClockwise && endAngle - startAngle > 2 * Math.PI) ||
+      (antiClockwise && startAngle - endAngle > 2 * Math.PI)
+    ) {
+      const x1 = x + radius * Math.cos(startAngle + Math.PI);
+      const y1 = y + radius * Math.sin(startAngle + Math.PI);
+      // There's no way to specify a completely circular arc in SVG so we have to
+      // use two semi-circular arcs.
+      this.path += `M${x0} ${y0} A${radius} ${radius} 0 0 0 ${x1} ${y1} `;
+      this.path += `A${radius} ${radius} 0 0 0 ${x0} ${y0}`;
+      this.pen.x = x0;
+      this.pen.y = y0;
     } else {
-      this.arcHelper(x, y, radius, startAngle, endAngle, antiClockwise);
+      const x1 = x + radius * Math.cos(endAngle);
+      const y1 = y + radius * Math.sin(endAngle);
+
+      startAngle = normalizeAngle(startAngle);
+      endAngle = normalizeAngle(endAngle);
+
+      let large: boolean;
+      if (Math.abs(endAngle - startAngle) < Math.PI) {
+        large = antiClockwise;
+      } else {
+        large = !antiClockwise;
+      }
+      if (startAngle > endAngle) {
+        large = !large;
+      }
+
+      const sweep = !antiClockwise;
+
+      this.path += `M${x0} ${y0} A${radius} ${radius} 0 ${+large} ${+sweep} ${x1} ${y1}`;
+      this.pen.x = x1;
+      this.pen.y = y1;
     }
     return this;
-  }
-
-  arcHelper(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): void {
-    const x1 = x + radius * Math.cos(startAngle);
-    const y1 = y + radius * Math.sin(startAngle);
-
-    const x2 = x + radius * Math.cos(endAngle);
-    const y2 = y + radius * Math.sin(endAngle);
-
-    let largeArcFlag = 0;
-    let sweepFlag = 0;
-    if (antiClockwise) {
-      sweepFlag = 1;
-      if (endAngle - startAngle < Math.PI) {
-        largeArcFlag = 1;
-      }
-    } else if (endAngle - startAngle > Math.PI) {
-      largeArcFlag = 1;
-    }
-
-    this.path += `M${x1} ${y1} A${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${x2} ${y2}`;
-
-    if (!isNaN(this.pen.x) && !isNaN(this.pen.y)) {
-      this.path += 'M' + this.pen.x + ' ' + this.pen.y;
-    }
   }
 
   closePath(): this {
