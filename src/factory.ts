@@ -24,7 +24,7 @@ import { StaveConnector } from './staveconnector';
 import { System, SystemOptions } from './system';
 import { TickContext } from './tickcontext';
 import { Tuplet, TupletOptions } from './tuplet';
-import { Voice } from './voice';
+import { Voice, VoiceTime } from './voice';
 import { Beam } from './beam';
 import { Curve, CurveOptions } from './curve';
 import { GraceNote, GraceNoteStruct } from './gracenote';
@@ -284,7 +284,7 @@ export class Factory {
     return textNote;
   }
 
-  BarNote(params: { type?: BarlineType } = {}): BarNote {
+  BarNote(params: { type?: BarlineType | string } = {}): BarNote {
     const barNote = new BarNote(params.type);
     if (this.stave) barNote.setStave(this.stave);
     barNote.setContext(this.context);
@@ -326,7 +326,7 @@ export class Factory {
     return timeSigNote;
   }
 
-  KeySigNote(params: { key: string; cancelKey: string; alterKey: string }): KeySigNote {
+  KeySigNote(params: { key: string; cancelKey?: string; alterKey?: string[] }): KeySigNote {
     const keySigNote = new KeySigNote(params.key, params.cancelKey, params.alterKey);
     if (this.stave) keySigNote.setStave(this.stave);
     keySigNote.setContext(this.context);
@@ -508,7 +508,7 @@ export class Factory {
     return multimeasurerest;
   }
 
-  Voice(paramsP: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
+  Voice(paramsP: { time?: Partial<VoiceTime> | string; options?: { softmaxFactor: number } } = {}): Voice {
     const params = {
       ...{
         time: '4/4',

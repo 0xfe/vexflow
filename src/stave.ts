@@ -338,7 +338,7 @@ export class Stave extends Element {
   setText(
     text: string,
     position: number,
-    options: {
+    options?: {
       shift_x: number;
       shift_y: number;
       justification: number;

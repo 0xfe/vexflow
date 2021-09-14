@@ -572,14 +572,14 @@ export class ChordSymbol extends Modifier {
 
   // ### addGlyphSuperscript
   // add a glyph block with superscript modifier
-  addGlyphSuperscript(glyph: Glyph): this {
+  addGlyphSuperscript(glyph: string): this {
     const symbolType = ChordSymbol.symbolTypes.GLYPH;
     const symbolModifier = ChordSymbol.symbolModifiers.SUPERSCRIPT;
     return this.addSymbolBlock({ glyph, symbolType, symbolModifier });
   }
 
   // eslint-disable-next-line
-  addGlyph(glyph: string, parameters: any): this {
+  addGlyph(glyph: string, parameters?: any): this {
     parameters = parameters == null ? {} : parameters;
     parameters.glyph = glyph;
     parameters.symbolType = ChordSymbol.symbolTypes.GLYPH;
@@ -592,7 +592,7 @@ export class ChordSymbol extends Modifier {
   // `addGlyphOrText("(+5#11)")`
   // will use text for the '5' and '11', and glyphs for everything else.
   // eslint-disable-next-line
-  addGlyphOrText(text: string, parameters: any): this {
+  addGlyphOrText(text: string, parameters?: any): this {
     parameters = parameters == null ? {} : parameters;
     let str = '';
     for (let i = 0; i < text.length; ++i) {
@@ -615,7 +615,7 @@ export class ChordSymbol extends Modifier {
   // ### Add a line of the given width, used as a continuation of the previous
   // symbol in analysis, or lyrics, etc.
   // eslint-disable-next-line
-  addLine(width: number, parameters: any): this {
+  addLine(width: number, parameters?: any): this {
     parameters = parameters == null ? {} : parameters;
     parameters.symbolType = ChordSymbol.symbolTypes.LINE;
     parameters.width = width;
