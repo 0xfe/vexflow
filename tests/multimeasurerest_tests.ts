@@ -3,12 +3,6 @@
 //
 // MultiMeasureRest Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Line 158: Expected 2 arguments, but got 1.
-//       stave.setEndTimeSignature()'s second argument should be optional.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { MultimeasureRestRenderOptions } from 'multimeasurerest';

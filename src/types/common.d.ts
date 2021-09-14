@@ -57,7 +57,7 @@ export interface TypeProps extends KeyProps {
 
 export interface RenderContext {
   clear(): void;
-  setFont(family: string, size: number, weight: string): this;
+  setFont(family: string, size: number, weight: string = ''): this;
   setRawFont(font: string): this;
   setFillStyle(style: string): this;
   setBackgroundFillStyle(style: string): this;

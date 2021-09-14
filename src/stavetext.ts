@@ -26,7 +26,7 @@ export class StaveText extends StaveModifier {
   constructor(
     text: string,
     position: number,
-    options: {
+    options?: {
       shift_x: number;
       shift_y: number;
       justification: number;

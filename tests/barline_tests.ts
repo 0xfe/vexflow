@@ -3,11 +3,6 @@
 //
 // Barline Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Factory.BarNote()'s type argument expects BarlineType, but we pass in string. Did the previous API allow string?
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Barline, BarlineType } from 'stavebarline';
 
@@ -33,7 +28,7 @@ function simple(options: TestOptions): void {
 
   const notes = [
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
-    f.BarNote({ type: 'single' }), // => f.BarNote({ type: BarlineType.SINGLE })
+    f.BarNote({ type: 'single' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
       .addAccidental(0, f.Accidental({ type: 'n' }))
@@ -53,7 +48,7 @@ function style(options: TestOptions): void {
 
   const notes = [
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '2' }),
-    f.BarNote({ type: 'single' }), // => f.BarNote({ type: BarlineType.SINGLE })
+    f.BarNote({ type: 'single' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
       .addAccidental(0, f.Accidental({ type: 'n' }))

@@ -129,10 +129,10 @@ export class StaveConnector extends Element {
   /** Set optional associated Text. */
   setText(
     text: string,
-    options?: {
+    options: Partial<{
       shift_x: number;
       shift_y: number;
-    }
+    }> = {}
   ): this {
     this.texts.push({
       content: text,

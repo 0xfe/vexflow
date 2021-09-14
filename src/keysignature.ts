@@ -25,7 +25,7 @@ export class KeySignature extends StaveModifier {
   protected cancelKeySpec?: string;
   protected accList: { type: string; line: number }[] = [];
   protected keySpec?: string;
-  protected alterKeySpec?: string;
+  protected alterKeySpec?: string[];
 
   // Space between natural and following accidental depending
   // on vertical position
@@ -89,7 +89,7 @@ export class KeySignature extends StaveModifier {
   };
 
   // Create a new Key Signature based on a `key_spec`
-  constructor(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string) {
+  constructor(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string[]) {
     super();
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
@@ -242,7 +242,7 @@ export class KeySignature extends StaveModifier {
     return this.width;
   }
 
-  setKeySig(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string): this {
+  setKeySig(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string[]): this {
     this.formatted = false;
     this.keySpec = keySpec;
     this.cancelKeySpec = cancelKeySpec;
@@ -254,14 +254,14 @@ export class KeySignature extends StaveModifier {
   // Alter the accidentals of a key spec one by one.
   // Each alteration is a new accidental that replaces the
   // original accidental (or the canceled one).
-  alterKey(alterKeySpec: string): this {
+  alterKey(alterKeySpec: string[]): this {
     this.formatted = false;
     this.alterKeySpec = alterKeySpec;
 
     return this;
   }
 
-  convertToAlterAccList(alterKeySpec: string): void {
+  convertToAlterAccList(alterKeySpec: string[]): void {
     const max = Math.min(alterKeySpec.length, this.accList.length);
     for (let i = 0; i < max; ++i) {
       if (alterKeySpec[i]) {
