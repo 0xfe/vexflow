@@ -116,7 +116,7 @@ export class Stave extends Element {
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
     this.options = { ...this.options, ...options };
-    this.defaultLedgerLineStyle = {};
+    this.defaultLedgerLineStyle = { strokeStyle: '#444', lineWidth: 1.4 };
 
     this.resetLines();
 

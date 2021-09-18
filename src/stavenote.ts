@@ -367,8 +367,7 @@ export class StaveNote extends StemmableNote {
     super(noteStruct);
     this.setAttribute('type', 'StaveNote');
 
-    // Set default width of ledger lines to 2.0.
-    this.ledgerLineStyle = { lineWidth: 2.0 };
+    this.ledgerLineStyle = {};
 
     this.clef = noteStruct.clef ?? 'treble';
     this.octave_shift = noteStruct.octave_shift ?? 0;
@@ -1052,6 +1051,9 @@ export class StaveNote extends StemmableNote {
       displaced_x,
       non_displaced_x,
     } = this.getNoteHeadBounds();
+
+    // Early out if there are no ledger lines to draw.
+    if (highest_line < 6 && lowest_line > 0) return;
 
     const min_x = Math.min(displaced_x ?? 0, non_displaced_x ?? 0);
 
