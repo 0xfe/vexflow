@@ -490,8 +490,8 @@ export class ChordSymbol extends Modifier {
   // ChordSymbol allows multiple blocks so we can mix glyphs and font text.
   // Each block can have its own vertical orientation
   // eslint-disable-next-line
-  getSymbolBlock(parameters: any): any {
-    parameters = parameters == undefined ? {} : parameters;
+  getSymbolBlock(parameters?: any): any {
+    parameters = parameters ?? {};
     const symbolType = parameters.symbolType ? parameters.symbolType : ChordSymbol.symbolTypes.TEXT;
     const text = parameters.text ? parameters.text : '';
     const symbolModifier = parameters.symbolModifier ? parameters.symbolModifier : ChordSymbol.symbolModifiers.NONE;
@@ -548,7 +548,7 @@ export class ChordSymbol extends Modifier {
   // Add a text block
   // eslint-disable-next-line
   addText(text: string, parameters?: any): this {
-    parameters = parameters == null || parameters == undefined ? {} : parameters;
+    parameters = parameters ?? {};
     parameters.text = text;
     parameters.symbolType = ChordSymbol.symbolTypes.TEXT;
     return this.addSymbolBlock(parameters);
@@ -580,7 +580,7 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   addGlyph(glyph: string, parameters?: any): this {
-    parameters = parameters == null ? {} : parameters;
+    parameters = parameters ?? {};
     parameters.glyph = glyph;
     parameters.symbolType = ChordSymbol.symbolTypes.GLYPH;
     return this.addSymbolBlock(parameters);
@@ -593,7 +593,7 @@ export class ChordSymbol extends Modifier {
   // will use text for the '5' and '11', and glyphs for everything else.
   // eslint-disable-next-line
   addGlyphOrText(text: string, parameters?: any): this {
-    parameters = parameters == null ? {} : parameters;
+    parameters = parameters ?? {};
     let str = '';
     for (let i = 0; i < text.length; ++i) {
       if (ChordSymbol.glyphs[text[i]]) {
@@ -616,7 +616,7 @@ export class ChordSymbol extends Modifier {
   // symbol in analysis, or lyrics, etc.
   // eslint-disable-next-line
   addLine(width: number, parameters?: any): this {
-    parameters = parameters == null ? {} : parameters;
+    parameters = parameters ?? {};
     parameters.symbolType = ChordSymbol.symbolTypes.LINE;
     parameters.width = width;
     return this.addSymbolBlock(parameters);
