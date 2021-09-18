@@ -32,7 +32,7 @@ export interface StaveOptions {
   invert?: boolean;
   cps?: { x: number; y: number }[];
   bottom_text_position: number;
-  line_config: StaveLineConfig[];
+  line_config: Partial<StaveLineConfig>[];
   space_below_staff_ln: number;
   glyph_spacing_px: number;
   space_above_staff_ln: number;
@@ -329,7 +329,7 @@ export class Stave extends Element {
   }
 
   // Tempo functions
-  setTempo(tempo: StaveTempoOptions, y: number): this {
+  setTempo(tempo: Partial<StaveTempoOptions>, y: number): this {
     this.modifiers.push(new StaveTempo(tempo, this.x, y));
     return this;
   }
@@ -338,11 +338,11 @@ export class Stave extends Element {
   setText(
     text: string,
     position: number,
-    options?: {
+    options: Partial<{
       shift_x: number;
       shift_y: number;
       justification: number;
-    }
+    }> = {}
   ): this {
     this.modifiers.push(new StaveText(text, position, options));
     return this;
@@ -781,11 +781,11 @@ export class Stave extends Element {
 
   // Draw Simple barlines for backward compatability
   // Do not delete - draws the beginning bar of the stave
-  drawVertical(x: number, isDouble: boolean): void {
+  drawVertical(x: number, isDouble?: boolean): void {
     this.drawVerticalFixed(this.x + x, isDouble);
   }
 
-  drawVerticalFixed(x: number, isDouble: boolean): void {
+  drawVerticalFixed(x: number, isDouble?: boolean): void {
     const ctx = this.checkContext();
 
     const top_line = this.getYForLine(0);
@@ -796,15 +796,18 @@ export class Stave extends Element {
     ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
   }
 
-  drawVerticalBar(x: number): void {
-    this.drawVerticalBarFixed(this.x + x);
+  drawVerticalBar(x: number, isDouble?: boolean): void {
+    this.drawVerticalBarFixed(this.x + x, isDouble);
   }
 
-  drawVerticalBarFixed(x: number): void {
+  drawVerticalBarFixed(x: number, isDouble?: boolean): void {
     const ctx = this.checkContext();
 
     const top_line = this.getYForLine(0);
     const bottom_line = this.getYForLine(this.options.num_lines - 1);
+    if (isDouble) {
+      ctx.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
+    }
     ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
   }
 
@@ -812,7 +815,7 @@ export class Stave extends Element {
    * Get the current configuration for the Stave.
    * @return {Array} An array of configuration objects.
    */
-  getConfigForLines(): StaveLineConfig[] {
+  getConfigForLines(): Partial<StaveLineConfig>[] {
     return this.options.line_config;
   }
 
@@ -856,7 +859,7 @@ export class Stave extends Element {
    *   exactly the same number of elements as the num_lines configuration object set in
    *   the constructor.
    */
-  setConfigForLines(lines_configuration: StaveLineConfig[]): this {
+  setConfigForLines(lines_configuration: Partial<StaveLineConfig>[]): this {
     if (lines_configuration.length !== this.options.num_lines) {
       throw new RuntimeError(
         'StaveConfigError',
@@ -868,8 +871,8 @@ export class Stave extends Element {
     //  configuration options were supplied.
     // eslint-disable-next-line
     for (const line_config in lines_configuration) {
-      // Allow 'null' to be used if the caller just wants the default for a particular node.
-      if (!lines_configuration[line_config]) {
+      // Allow '{}' to be used if the caller just wants the default for a particular node.
+      if (lines_configuration[line_config].visible == undefined) {
         lines_configuration[line_config] = this.options.line_config[line_config];
       }
       this.options.line_config[line_config] = {
