@@ -7,6 +7,11 @@ export interface FontInfo {
   style?: string;
 }
 
+export interface TextMeasure {
+  width: number;
+  height: number;
+}
+
 export interface Bounds {
   x: number;
   y: number;
@@ -83,8 +88,7 @@ export interface RenderContext {
   closeGroup(): void;
   add(child: any): void;
 
-  /** canvas returns TextMetrics and SVG returns SVGRect. */
-  measureText(text: string): { width: number; height?: number };
+  measureText(text: string): TextMeasure;
 
   /** Maintain compatibility with the CanvasRenderingContext2D API. */
   font: string;

@@ -3,7 +3,7 @@
 // @author Gregory Ristow (2015)
 
 import { RuntimeError, prefix } from './util';
-import { RenderContext } from './types/common';
+import { RenderContext, TextMeasure } from './types/common';
 
 // eslint-disable-next-line
 type Attributes = { [key: string]: any };
@@ -41,10 +41,68 @@ interface State {
   lineWidth: number;
 }
 
+class MeasureTextCache {
+  protected txt: SVGTextElement;
+
+  // The cache is keyed first by the text string, then by the font attributes
+  // joined together.
+  protected cache: Record<string, Record<string, TextMeasure>> = {};
+
+  constructor() {
+    // Create the SVG elements that will be used to measure the text in the event
+    // of a cache miss.
+    this.txt = document.createElementNS(SVG_NS, 'text');
+  }
+
+  lookup(text: string, svg: SVGSVGElement, attributes: Attributes): TextMeasure {
+    let entries = this.cache[text];
+    if (entries === undefined) {
+      entries = {};
+      this.cache[text] = entries;
+    }
+
+    const family = attributes['font-family'];
+    const size = attributes['font-size'];
+    const style = attributes['font-style'];
+    const weight = attributes['font-weight'];
+
+    const key = `${family}%${size}%${style}%${weight}`;
+    let entry = entries[key];
+    if (entry === undefined) {
+      entry = this.measureImpl(text, svg, attributes);
+      entries[key] = entry;
+    }
+    return entry;
+  }
+
+  measureImpl(text: string, svg: SVGSVGElement, attributes: Attributes): TextMeasure {
+    this.txt.textContent = text;
+    this.txt.setAttributeNS(null, 'font-family', attributes['font-family']);
+    this.txt.setAttributeNS(null, 'font-size', attributes['font-size']);
+    this.txt.setAttributeNS(null, 'font-style', attributes['font-style']);
+    this.txt.setAttributeNS(null, 'font-weight', attributes['font-weight']);
+    svg.appendChild(this.txt);
+    const bbox = this.txt.getBBox();
+    svg.removeChild(this.txt);
+
+    // Remove the trailing 'pt' from the font size and scale to convert from points
+    // to canvas units.
+    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
+    const fontSize = attributes['font-size'];
+    const height = (fontSize.substring(0, fontSize.length - 2) * 4) / 3;
+    return {
+      width: bbox.width,
+      height: height,
+    };
+  }
+}
+
 /**
  * SVG rendering context with an API similar to CanvasRenderingContext2D.
  */
 export class SVGContext implements RenderContext {
+  protected static measureTextCache = new MeasureTextCache();
+
   element: HTMLElement; // the parent DOM object
   svg: SVGSVGElement;
   width: number = 0;
@@ -60,13 +118,11 @@ export class SVGContext implements RenderContext {
   parent: SVGGElement;
   groups: SVGGElement[];
   fontString: string = '';
-  fontSize: number = 0;
-  ie: boolean = false; // true if the browser is Internet Explorer.
 
   constructor(element: HTMLElement) {
     this.element = element;
 
-    const svg = this.create('svg') as SVGSVGElement;
+    const svg = this.create('svg');
     // Add it to the canvas:
     this.element.appendChild(svg);
 
@@ -113,18 +169,27 @@ export class SVGContext implements RenderContext {
     };
 
     this.state_stack = [];
-
-    // Test for Internet Explorer
-    this.iePolyfill();
   }
 
+  /**
+   * Use one of the overload signatures to create an SVG element of a specific type.
+   * The last overload accepts an arbitrary string, and is identical to the
+   * implementation signature.
+   * Feel free to add new overloads for other SVG element types as required.
+   */
+  create(svgElementType: 'g'): SVGGElement;
+  create(svgElementType: 'path'): SVGPathElement;
+  create(svgElementType: 'rect'): SVGRectElement;
+  create(svgElementType: 'svg'): SVGSVGElement;
+  create(svgElementType: 'text'): SVGTextElement;
+  create(svgElementType: string): SVGElement;
   create(svgElementType: string): SVGElement {
     return document.createElementNS(SVG_NS, svgElementType);
   }
 
   // Allow grouping elements in containers for interactivity.
   openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): SVGGElement {
-    const group: SVGGElement = this.create('g') as SVGGElement;
+    const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
     this.parent = group;
@@ -144,19 +209,6 @@ export class SVGContext implements RenderContext {
 
   add(elem: SVGElement): void {
     this.parent.appendChild(elem);
-  }
-
-  // Tests if the browser is Internet Explorer; if it is,
-  // we do some tricks to improve text layout. See the
-  // note at ieMeasureTextFix() for details.
-  iePolyfill(): void {
-    if (typeof navigator !== 'undefined') {
-      this.ie =
-        /MSIE 9/i.test(navigator.userAgent) ||
-        /MSIE 10/i.test(navigator.userAgent) ||
-        /rv:11\.0/i.test(navigator.userAgent) ||
-        /Trident/i.test(navigator.userAgent);
-    }
   }
 
   // ### Styling & State Methods:
@@ -195,9 +247,6 @@ export class SVGContext implements RenderContext {
       'font-style': foundItalic ? 'italic' : 'normal',
     };
 
-    // Store the font size so that if the browser is Internet
-    // Explorer we can fix its calculations of text width.
-    this.fontSize = Number(size);
     // Currently this.fontString only supports size & family. See setRawFont().
     this.fontString = `${size}pt ${family}`;
     this.attributes = { ...this.attributes, ...fontAttributes };
@@ -220,9 +269,6 @@ export class SVGContext implements RenderContext {
     this.attributes['font-family'] = family;
     this.state['font-family'] = family;
 
-    // Saves fontSize for IE polyfill.
-    // Use the Number() function to parse the array returned by String.prototype.match()!
-    this.fontSize = Number(size.match(/\d+/));
     return this;
   }
 
@@ -394,7 +440,7 @@ export class SVGContext implements RenderContext {
     }
 
     // Create the rect & style it:
-    const rectangle: SVGRectElement = this.create('rect') as SVGRectElement;
+    const rectangle = this.create('rect');
     if (typeof attributes === 'undefined') {
       attributes = {
         fill: 'none',
@@ -582,51 +628,8 @@ export class SVGContext implements RenderContext {
   }
 
   // ## Text Methods:
-  measureText(text: string): SVGRect {
-    const txt = this.create('text') as SVGTextElement;
-    if (typeof txt.getBBox !== 'function') {
-      return { x: 0, y: 0, width: 0, height: 0 } as SVGRect;
-    }
-
-    txt.textContent = text;
-    this.applyAttributes(txt, this.attributes);
-
-    // Temporarily add it to the document for measurement.
-    this.svg.appendChild(txt);
-
-    let bbox: SVGRect = txt.getBBox();
-    if (this.ie && text !== '' && this.attributes['font-style'] === 'italic') {
-      bbox = this.ieMeasureTextFix(bbox);
-    }
-
-    this.svg.removeChild(txt);
-    return bbox;
-  }
-
-  ieMeasureTextFix(bbox: DOMRect): SVGRect {
-    // Internet Explorer over-pads text in italics,
-    // resulting in giant width estimates for measureText.
-    // To fix this, we use this formula, tested against
-    // ie 11:
-    // overestimate (in pixels) = FontSize(in pt) * 1.196 + 1.96
-    // And then subtract the overestimate from calculated width.
-
-    const fontSize = Number(this.fontSize);
-    const m = 1.196;
-    const b = 1.9598;
-    const widthCorrection = m * fontSize + b;
-    const width = bbox.width - widthCorrection;
-    const height = bbox.height - 1.5;
-
-    // Get non-protected copy:
-    const box = {
-      x: bbox.x,
-      y: bbox.y,
-      width,
-      height,
-    };
-
-    return box as SVGRect;
+  measureText(text: string): TextMeasure {
+    return SVGContext.measureTextCache.lookup(text, this.svg, this.attributes);
   }
 
   fillText(text: string, x: number, y: number): this {

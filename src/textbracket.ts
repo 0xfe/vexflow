@@ -174,8 +174,9 @@ export class TextBracket extends Element {
     ctx.fillText(this.text, start.x, start.y);
 
     // Get the width and height for the octave number
-    const main_width = ctx.measureText(this.text).width;
-    const main_height = ctx.measureText('M').width;
+    const main_measure = ctx.measureText(this.text);
+    const main_width = main_measure.width;
+    const main_height = main_measure.height;
 
     // Calculate the y position for the super script
     const super_y = start.y - main_height / 2.5;
@@ -185,8 +186,9 @@ export class TextBracket extends Element {
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 
     // Determine width and height of the superscript
-    const superscript_width = ctx.measureText(this.superscript).width;
-    const super_height = ctx.measureText('M').width;
+    const super_measure = ctx.measureText(this.superscript);
+    const super_width = super_measure.width;
+    const super_height = super_measure.height;
 
     // Setup initial coordinates for the bracket line
     let start_x = start.x;
@@ -195,14 +197,14 @@ export class TextBracket extends Element {
 
     // Adjust x and y coordinates based on position
     if (this.position === TextBracket.Position.TOP) {
-      start_x += main_width + superscript_width + 5;
+      start_x += main_width + super_width + 5;
       line_y -= super_height / 2.7;
     } else if (this.position === TextBracket.Position.BOTTOM) {
       line_y += super_height / 2.7;
       start_x += main_width + 2;
 
       if (!this.render_options.underline_superscript) {
-        start_x += superscript_width;
+        start_x += super_width;
       }
     }
 

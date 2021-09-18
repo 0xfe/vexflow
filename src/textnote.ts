@@ -207,23 +207,18 @@ export class TextNote extends Note {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
-      let height = ctx.measureText(this.text).height;
-      // CanvasRenderingContext2D.measureText() does not have a height field.
-      if (typeof height === 'undefined') {
-        // TODO: Consolidate calls to ctx.measureText('M').
-        height = ctx.measureText('M').width;
-      }
+      const height = ctx.measureText(this.text).height;
 
       // Write superscript
       if (this.superscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.superscript, x + width + 2, y - height / 2.2);
+        ctx.fillText(this.superscript, x + this.width + 2, y - height / 2.2);
       }
 
       // Write subscript
       if (this.subscript) {
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
-        ctx.fillText(this.subscript, x + width + 2, y + height / 2.2 - 1);
+        ctx.fillText(this.subscript, x + this.width + 2, y + height / 2.2 - 1);
       }
 
       this.restoreStyle(ctx);
