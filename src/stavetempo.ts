@@ -24,11 +24,11 @@ export class StaveTempo extends StaveModifier {
     glyph_font_scale: number;
   };
 
-  protected tempo: StaveTempoOptions;
+  protected tempo: Partial<StaveTempoOptions>;
   protected shift_x: number;
   protected shift_y: number;
 
-  constructor(tempo: StaveTempoOptions, x: number, shift_y: number) {
+  constructor(tempo: Partial<StaveTempoOptions>, x: number, shift_y: number) {
     super();
 
     this.tempo = tempo;
@@ -71,7 +71,7 @@ export class StaveTempo extends StaveModifier {
     const scale = options.glyph_font_scale / 38;
     const name = this.tempo.name;
     const duration = this.tempo.duration;
-    const dots = this.tempo.dots;
+    const dots = this.tempo.dots || 0;
     const bpm = this.tempo.bpm;
     const font = this.font;
     let x = this.x + this.shift_x + shift_x;
