@@ -107,7 +107,6 @@ export class NoteHead extends Note {
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
   protected stem_down_x_offset: number = 0;
-  protected note_type?: string;
   protected displaced: boolean;
   protected stem_direction: number;
 
@@ -123,15 +122,15 @@ export class NoteHead extends Note {
     this.index = noteStruct.index;
     this.x = noteStruct.x || 0;
     this.y = noteStruct.y || 0;
-    this.note_type = noteStruct.note_type;
+    if (noteStruct.note_type) this.noteType = noteStruct.note_type;
     this.displaced = noteStruct.displaced || false;
     this.stem_direction = noteStruct.stem_direction || Stem.UP;
     this.line = noteStruct.line || 0;
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Flow.getGlyphProps(this.duration, this.note_type);
-    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.note_type}'`);
+    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     this.glyph_code = this.glyph.code_head;
     this.x_shift = noteStruct.x_shift || 0;
@@ -269,7 +268,7 @@ export class NoteHead extends Note {
 
     const y = this.y;
 
-    L("Drawing note head '", this.note_type, this.duration, "' at", head_x, y);
+    L("Drawing note head '", this.noteType, this.duration, "' at", head_x, y);
 
     // Begin and end positions for head.
     const stem_direction = this.stem_direction;
@@ -280,7 +279,7 @@ export class NoteHead extends Note {
     }
 
     const categorySuffix = `${this.glyph_code}Stem${stem_direction === Stem.UP ? 'Up' : 'Down'}`;
-    if (this.note_type === 's') {
+    if (this.noteType === 's') {
       const staveSpace = this.checkStave().getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
