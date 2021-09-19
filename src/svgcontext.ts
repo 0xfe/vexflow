@@ -458,12 +458,8 @@ export class SVGContext implements RenderContext {
   }
 
   fillRect(x: number, y: number, width: number, height: number): this {
-    if (height < 0) {
-      y += height;
-      height *= -1;
-    }
-
-    this.rect(x, y, width, height, this.attributes);
+    const attributes = { fill: this.attributes.fill };
+    this.rect(x, y, width, height, attributes);
     return this;
   }
 
