@@ -8,6 +8,10 @@ import { StaveTie } from './stavetie';
 import { TieNotes } from './types/common';
 
 export class TabTie extends StaveTie {
+  static get CATEGORY(): string {
+    return 'TabTie';
+  }
+
   static createHammeron(notes: TieNotes): TabTie {
     return new TabTie(notes, 'H');
   }
@@ -29,7 +33,6 @@ export class TabTie extends StaveTie {
    */
   constructor(notes: TieNotes, text?: string) {
     super(notes, text);
-    this.setAttribute('type', 'TabTie');
 
     this.render_options.cp1 = 9;
     this.render_options.cp2 = 11;

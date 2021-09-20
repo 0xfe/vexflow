@@ -17,7 +17,7 @@ import { RenderContext } from './types/common';
 
 export class NoteSubGroup extends Modifier {
   static get CATEGORY(): string {
-    return 'notesubgroup';
+    return 'NoteSubGroup';
   }
 
   // Arrange groups inside a `ModifierContext`
@@ -42,7 +42,6 @@ export class NoteSubGroup extends Modifier {
 
   constructor(subNotes: Note[]) {
     super();
-    this.setAttribute('type', 'NoteSubGroup');
 
     this.position = Modifier.Position.LEFT;
     this.subNotes = subNotes;
@@ -59,10 +58,6 @@ export class NoteSubGroup extends Modifier {
     }).setStrict(false);
 
     this.voice.addTickables(this.subNotes);
-  }
-
-  getCategory(): string {
-    return NoteSubGroup.CATEGORY;
   }
 
   preFormat(): void {

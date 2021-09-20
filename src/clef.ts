@@ -3,7 +3,7 @@
 // MIT License
 
 import { RuntimeError, log, defined } from './util';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 
@@ -27,6 +27,10 @@ export class Clef extends StaveModifier {
   /** To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`. */
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'Clef';
+  }
+
   annotation?: {
     code: string;
     line: number;
@@ -44,11 +48,6 @@ export class Clef extends StaveModifier {
   protected attachment?: Glyph;
   protected size?: string;
   protected type?: string;
-
-  /** Clefs category string. */
-  static get CATEGORY(): string {
-    return 'clefs';
-  }
 
   /**
    * Every clef name is associated with a glyph code from the font file
@@ -121,17 +120,11 @@ export class Clef extends StaveModifier {
   /** Create a new clef. */
   constructor(type: string, size?: string, annotation?: string) {
     super();
-    this.setAttribute('type', 'Clef');
 
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
     this.setWidth(this.musicFont.lookupMetric(`clef.${this.size}.width`));
     L('Creating clef:', type);
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return Clef.CATEGORY;
   }
 
   /** Set clef type, size and annotation. */

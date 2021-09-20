@@ -12,12 +12,11 @@ import { TabNote, TabNoteStruct } from './tabnote';
 
 export class GraceTabNote extends TabNote {
   static get CATEGORY(): string {
-    return 'gracetabnotes';
+    return 'GraceTabNote';
   }
 
   constructor(noteStruct: TabNoteStruct) {
     super(noteStruct, false);
-    this.setAttribute('type', 'GraceTabNote');
 
     this.render_options = {
       ...this.render_options,
@@ -32,10 +31,6 @@ export class GraceTabNote extends TabNote {
     };
 
     this.updateWidth();
-  }
-
-  getCategory(): string {
-    return GraceTabNote.CATEGORY;
   }
 
   draw(): void {

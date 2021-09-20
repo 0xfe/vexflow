@@ -7,7 +7,7 @@
 
 import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
 
 export interface TimeSignatureInfo {
@@ -34,15 +34,8 @@ const assertIsValidFraction = (timeSpec: string) => {
 };
 
 export class TimeSignature extends StaveModifier {
-  point: number;
-  bottomLine: number;
-  topLine: number;
-
-  protected info: TimeSignatureInfo;
-  protected validate_args: boolean;
-
   static get CATEGORY(): string {
-    return 'timesignatures';
+    return 'TimeSignature';
   }
 
   static get glyphs(): Record<string, { code: string; point: number; line: number }> {
@@ -60,9 +53,15 @@ export class TimeSignature extends StaveModifier {
     };
   }
 
+  point: number;
+  bottomLine: number;
+  topLine: number;
+
+  protected info: TimeSignatureInfo;
+  protected validate_args: boolean;
+
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
-    this.setAttribute('type', 'TimeSignature');
     this.validate_args = validate_args;
 
     const padding = customPadding;
@@ -71,14 +70,10 @@ export class TimeSignature extends StaveModifier {
     const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.info = this.parseTimeSpec(timeSpec);
     this.setWidth(defined(this.info.glyph.getMetrics().width));
     this.setPadding(padding);
-  }
-
-  getCategory(): string {
-    return TimeSignature.CATEGORY;
   }
 
   parseTimeSpec(timeSpec: string): TimeSignatureInfo {

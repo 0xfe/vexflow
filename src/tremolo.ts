@@ -6,33 +6,26 @@ import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Stem } from './stem';
+import { isGraceNote } from 'typeguard';
 
 /** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {
+  static get CATEGORY(): string {
+    return 'Tremolo';
+  }
+
   protected readonly code: string;
   protected readonly num: number;
 
-  /** Tremolos category string. */
-  static get CATEGORY(): string {
-    return 'tremolo';
-  }
-
   /**
-   * Constructor.
    * @param num number of bars
    */
   constructor(num: number) {
     super();
-    this.setAttribute('type', 'Tremolo');
 
     this.num = num;
     this.position = Modifier.Position.CENTER;
     this.code = 'tremolo1';
-  }
-
-  /** Get element CATEGORY string. */
-  getCategory(): string {
-    return Tremolo.CATEGORY;
   }
 
   /** Draw the tremolo on the rendering context. */
@@ -45,9 +38,10 @@ export class Tremolo extends Modifier {
 
     const start = note.getModifierStartXY(this.position, this.index);
     let x = start.x;
-    const isGraceNote = note.getCategory() === GraceNote.CATEGORY;
-    const scale = isGraceNote ? GraceNote.SCALE : 1;
-    const category = `tremolo.${isGraceNote ? 'grace' : 'default'}`;
+
+    const gn = isGraceNote(note);
+    const scale = gn ? GraceNote.SCALE : 1;
+    const category = `tremolo.${gn ? 'grace' : 'default'}`;
 
     const y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
     const height = this.num * y_spacing;

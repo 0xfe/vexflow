@@ -6,18 +6,16 @@
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Note } from './note';
-import { TabNote } from './tabnote';
 import { ModifierContextState } from './modifiercontext';
-import { GraceNote } from './gracenote';
-import { isStaveNote, isTabNote } from './typeguard';
+import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
 
 export class Dot extends Modifier {
+  static get CATEGORY(): string {
+    return 'Dot';
+  }
+
   protected radius: number;
   protected dot_shiftY: number;
-
-  static get CATEGORY(): string {
-    return 'dots';
-  }
 
   // Arrange dots inside a ModifierContext.
   static format(dots: Dot[], state: ModifierContextState): boolean {
@@ -107,12 +105,8 @@ export class Dot extends Modifier {
     return true;
   }
 
-  /**
-   * @constructor
-   */
   constructor() {
     super();
-    this.setAttribute('type', 'Dot');
 
     this.position = Modifier.Position.RIGHT;
 
@@ -121,13 +115,9 @@ export class Dot extends Modifier {
     this.dot_shiftY = 0;
   }
 
-  getCategory(): string {
-    return Dot.CATEGORY;
-  }
-
   setNote(note: Note): this {
     this.note = note;
-    if (note.getCategory() === GraceNote.CATEGORY) {
+    if (isGraceNote(note)) {
       this.radius *= 0.5;
       this.setWidth(3);
     }
@@ -149,8 +139,8 @@ export class Dot extends Modifier {
 
     const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
-    // Set the starting y coordinate to the base of the stem for TabNotes
-    if (note.getCategory() === TabNote.CATEGORY) {
+    // Set the starting y coordinate to the base of the stem for TabNotes.
+    if (isTabNote(note)) {
       start.y = note.getStemExtents().baseY;
     }
 

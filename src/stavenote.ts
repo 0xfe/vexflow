@@ -93,6 +93,33 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
 export class StaveNote extends StemmableNote {
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'StaveNote';
+  }
+
+  /**
+   * @deprecated Use Stem.UP.
+   */
+  static get STEM_UP(): number {
+    return Stem.UP;
+  }
+
+  /**
+   * @deprecated Use Stem.DOWN.
+   */
+  static get STEM_DOWN(): number {
+    return Stem.DOWN;
+  }
+
+  static get DEFAULT_LEDGER_LINE_OFFSET(): number {
+    return 3;
+  }
+
+  static get minNoteheadPadding(): number {
+    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+  }
+
   minLine: number = 0;
   maxLine: number = 0;
 
@@ -105,23 +132,6 @@ export class StaveNote extends StemmableNote {
   protected note_heads: NoteHead[];
   protected ledgerLineStyle: ElementStyle;
   protected flagStyle?: ElementStyle;
-
-  static get CATEGORY(): string {
-    return 'stavenotes';
-  }
-  static get STEM_UP(): number {
-    return Stem.UP;
-  }
-  static get STEM_DOWN(): number {
-    return Stem.DOWN;
-  }
-  static get DEFAULT_LEDGER_LINE_OFFSET(): number {
-    return 3;
-  }
-  static get minNoteheadPadding(): number {
-    const musicFont = Flow.DEFAULT_FONT_STACK[0];
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
-  }
 
   // ## Static Methods
   //
@@ -365,7 +375,6 @@ export class StaveNote extends StemmableNote {
 
   constructor(noteStruct: Partial<StaveNoteStruct>) {
     super(noteStruct);
-    this.setAttribute('type', 'StaveNote');
 
     this.ledgerLineStyle = {};
 
@@ -432,10 +441,6 @@ export class StaveNote extends StemmableNote {
     this.beam = beam;
     this.calcNoteDisplacements();
     return this;
-  }
-
-  getCategory(): string {
-    return StaveNote.CATEGORY;
   }
 
   // Builds a `Stem` for the note
@@ -886,12 +891,12 @@ export class StaveNote extends StemmableNote {
 
   // Get all accidentals in the `ModifierContext`
   getAccidentals(): Accidental[] {
-    return this.checkModifierContext().getMembers('accidentals') as Accidental[];
+    return this.checkModifierContext().getMembers(Accidental.CATEGORY) as Accidental[];
   }
 
   // Get all dots in the `ModifierContext`
   getDots(): Dot[] {
-    return this.checkModifierContext().getMembers('dots') as Dot[];
+    return this.checkModifierContext().getMembers(Dot.CATEGORY) as Dot[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`

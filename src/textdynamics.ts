@@ -22,6 +22,10 @@ export class TextDynamics extends Note {
   /** To enable logging for this class. Set `Vex.Flow.TextDynamics.DEBUG` to `true`. */
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'TextDynamics';
+  }
+
   protected sequence: string;
 
   protected line: number;
@@ -58,25 +62,24 @@ export class TextDynamics extends Note {
   }
 
   /**
+   * Create the dynamics marking.
+   *
    * A `TextDynamics` object inherits from `Note` so that it can be formatted
    * within a `Voice`.
-   * Create the dynamics marking. `text_struct` is an object
-   * that contains a `duration` property and a `sequence` of
-   * letters that represents the letters to render
+   *
+   * @param noteStruct an object that contains a `duration` property and a
+   * `sequence` of letters that represents the letters to render.
    */
-  constructor(text_struct: TextNoteStruct) {
-    super(text_struct);
-    this.setAttribute('type', 'TextDynamics');
+  constructor(noteStruct: TextNoteStruct) {
+    super(noteStruct);
 
-    this.sequence = text_struct.text.toLowerCase();
-    this.line = text_struct.line || 0;
+    this.sequence = noteStruct.text.toLowerCase();
+    this.line = noteStruct.line || 0;
     this.glyphs = [];
 
     this.render_options = {
       ...this.render_options,
-      ...{
-        glyph_font_size: 40,
-      },
+      glyph_font_size: 40,
     };
 
     L('New Dynamics Text: ', this.sequence);

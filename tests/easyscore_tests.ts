@@ -9,8 +9,8 @@ import { EasyScore } from 'easyscore';
 import { FretHandFinger } from 'frethandfinger';
 import { Modifier } from 'modifier';
 import { StaveConnector } from 'staveconnector';
-import { StaveNote } from 'stavenote';
 import { Tuplet } from 'tuplet';
+import { Stem } from 'stem';
 
 const EasyScoreTests = {
   Start(): void {
@@ -322,17 +322,17 @@ function drawOptionsTest(options: TestOptions): void {
   equal(note0.getAttribute('id'), 'foobar');
   ok(note0.hasClass('red'));
   ok(note0.hasClass('bold'));
-  equal(note0_modifier0.getCategory(), 'articulations');
+  equal(note0_modifier0.getCategory(), Articulation.CATEGORY);
   equal(note0_modifier0.type, 'a.');
   equal(note0_modifier0.getPosition(), Modifier.Position.BELOW);
-  equal(note0_modifier1.getCategory(), 'articulations');
+  equal(note0_modifier1.getCategory(), Articulation.CATEGORY);
   equal(note0_modifier1.type, 'a-');
   equal(note0_modifier1.getPosition(), Modifier.Position.ABOVE);
-  equal(note0.getStemDirection(), StaveNote.STEM_UP);
-  equal(note1_modifier0.getCategory(), 'articulations');
+  equal(note0.getStemDirection(), Stem.UP);
+  equal(note1_modifier0.getCategory(), Articulation.CATEGORY);
   equal(note1_modifier0.type, 'a>');
   equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
-  equal(notes[2].getStemDirection(), StaveNote.STEM_DOWN);
+  equal(notes[2].getStemDirection(), Stem.DOWN);
 }
 
 function drawFingeringsTest(options: TestOptions): void {

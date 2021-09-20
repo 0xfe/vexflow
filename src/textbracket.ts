@@ -23,9 +23,8 @@ export interface TextBracketParams {
 }
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
-function L(
-  // eslint-disable-next-line
-  ...args: any[]) {
+// eslint-disable-next-line
+function L(...args: any[]) {
   if (TextBracket.DEBUG) log('Vex.Flow.TextBracket', args);
 }
 
@@ -36,6 +35,10 @@ export enum TextBracketPosition {
 
 export class TextBracket extends Element {
   static DEBUG: boolean;
+
+  static get CATEGORY(): string {
+    return 'TextBracket';
+  }
 
   render_options: {
     dashed: boolean;
@@ -56,30 +59,35 @@ export class TextBracket extends Element {
   protected stop: Note;
   protected font: FontInfo;
 
+  /**
+   * @deprecated
+   */
   static get Positions(): typeof TextBracketPosition {
-    L('Positions is deprecated, use Position instead.');
-    return TextBracket.Position;
+    L('Positions is deprecated, use TextBracketPosition instead.');
+    return TextBracketPosition;
   }
 
   static get Position(): typeof TextBracketPosition {
     return TextBracketPosition;
   }
 
+  /**
+   * @deprecated Use `TextBracket.PositionString` instead.
+   */
   static get PositionsString(): Record<string, number> {
     L('PositionsString is deprecated, use PositionString instead.');
-    return TextBracket.PositionsString;
+    return TextBracket.PositionString;
   }
 
   static get PositionString(): Record<string, number> {
     return {
-      top: TextBracket.Position.TOP,
-      bottom: TextBracket.Position.BOTTOM,
+      top: TextBracketPosition.TOP,
+      bottom: TextBracketPosition.BOTTOM,
     };
   }
 
-  constructor({ start, stop, text = '', superscript = '', position = TextBracket.Position.TOP }: TextBracketParams) {
+  constructor({ start, stop, text = '', superscript = '', position = TextBracketPosition.TOP }: TextBracketParams) {
     super();
-    this.setAttribute('type', 'TextBracket');
 
     this.start = start;
     this.stop = stop;
@@ -149,10 +157,10 @@ export class TextBracket extends Element {
 
     let y = 0;
     switch (this.position) {
-      case TextBracket.Position.TOP:
+      case TextBracketPosition.TOP:
         y = this.start.checkStave().getYForTopText(this.line);
         break;
-      case TextBracket.Position.BOTTOM:
+      case TextBracketPosition.BOTTOM:
         y = this.start.checkStave().getYForBottomText(this.line + Flow.TEXT_HEIGHT_OFFSET_HACK);
         break;
       default:
@@ -196,10 +204,10 @@ export class TextBracket extends Element {
     const end_x = stop.x + this.stop.getGlyph().getWidth();
 
     // Adjust x and y coordinates based on position
-    if (this.position === TextBracket.Position.TOP) {
+    if (this.position === TextBracketPosition.TOP) {
       start_x += main_width + super_width + 5;
       line_y -= super_height / 2.7;
-    } else if (this.position === TextBracket.Position.BOTTOM) {
+    } else if (this.position === TextBracketPosition.BOTTOM) {
       line_y += super_height / 2.7;
       start_x += main_width + 2;
 

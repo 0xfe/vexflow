@@ -6,11 +6,11 @@ import { RuntimeError, log, defined } from './util';
 import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
-import { StaveNote } from './stavenote';
 import { Glyph } from './glyph';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
-import { TabNote } from './tabnote';
+import { Stem } from 'stem';
+import { isTabNote } from 'typeguard';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -27,6 +27,11 @@ function L(...args: any[]) {
 export class Ornament extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`. */
   static DEBUG: boolean;
+
+  /** Ornaments category string. */
+  static get CATEGORY(): string {
+    return 'Ornament';
+  }
 
   protected ornament: {
     code: string;
@@ -47,11 +52,6 @@ export class Ornament extends Modifier {
   protected accidentalUpper?: Glyph;
   protected accidentalLower?: Glyph;
   protected delayXShift?: number;
-
-  /** Ornaments category string. */
-  static get CATEGORY(): string {
-    return 'ornaments';
-  }
 
   /** Arrange ornaments inside `ModifierContext` */
   static format(ornaments: Ornament[], state: ModifierContextState): boolean {
@@ -163,7 +163,6 @@ export class Ornament extends Modifier {
    */
   constructor(type: string) {
     super();
-    this.setAttribute('type', 'Ornament');
 
     this.type = type;
     this.delayed = false;
@@ -215,11 +214,6 @@ export class Ornament extends Modifier {
     }
   }
 
-  /** Get element category string. */
-  getCategory(): string {
-    return Ornament.CATEGORY;
-  }
-
   /** Set whether the ornament is to be delayed. */
   setDelayed(delayed: boolean): this {
     this.delayed = delayed;
@@ -256,12 +250,12 @@ export class Ornament extends Modifier {
 
     // Get stem extents
     const stemExtents = note.checkStem().getExtents();
-    let y = stemDir === StaveNote.STEM_DOWN ? stemExtents.baseY : stemExtents.topY;
+    let y = stemDir === Stem.DOWN ? stemExtents.baseY : stemExtents.topY;
 
     // TabNotes don't have stems attached to them. Tab stems are rendered outside the stave.
-    if (note.getCategory() === TabNote.CATEGORY) {
+    if (isTabNote(note)) {
       if (note.hasStem()) {
-        if (stemDir === StaveNote.STEM_DOWN) {
+        if (stemDir === Stem.DOWN) {
           y = stave.getYForTopText(this.text_line);
         }
       } else {
@@ -270,7 +264,7 @@ export class Ornament extends Modifier {
       }
     }
 
-    const isPlacedOnNoteheadSide = stemDir === StaveNote.STEM_DOWN;
+    const isPlacedOnNoteheadSide = stemDir === Stem.DOWN;
     const spacing = stave.getSpacingBetweenLines();
     let lineSpacing = 1;
 

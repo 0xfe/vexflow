@@ -23,6 +23,10 @@ export enum CurvePosition {
 }
 
 export class Curve extends Element {
+  static get CATEGORY(): string {
+    return 'Curve';
+  }
+
   protected readonly render_options: CurveOptions;
   protected from: Note;
   protected to: Note;
@@ -46,7 +50,6 @@ export class Curve extends Element {
   //    y_shift: pixels to shift
   constructor(from: Note, to: Note, options: Partial<CurveOptions>) {
     super();
-    this.setAttribute('type', 'Curve');
 
     this.render_options = {
       thickness: 2,

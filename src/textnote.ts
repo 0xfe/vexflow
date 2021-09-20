@@ -28,6 +28,10 @@ export interface TextNoteStruct extends NoteStruct {
  * Examples of this would be such as dynamics, lyrics, chord changes, etc.
  */
 export class TextNote extends Note {
+  static get CATEGORY(): string {
+    return 'TextNote';
+  }
+
   protected text: string;
   protected superscript?: string;
   protected subscript?: string;
@@ -104,36 +108,35 @@ export class TextNote extends Note {
     };
   }
 
-  constructor(options: TextNoteStruct) {
-    super(options);
-    this.setAttribute('type', 'TextNote');
+  constructor(noteStruct: TextNoteStruct) {
+    super(noteStruct);
 
     // Note properties
-    this.text = options.text;
-    this.superscript = options.superscript;
-    this.subscript = options.subscript;
+    this.text = noteStruct.text;
+    this.superscript = noteStruct.superscript;
+    this.subscript = noteStruct.subscript;
     this.glyph = undefined;
     this.font = {
       family: 'Arial',
       size: 12,
       weight: '',
-      ...options.font,
+      ...noteStruct.font,
     };
 
     // Determine and set initial note width. Note that the text width is
     // an approximation and isn't very accurate. The only way to accurately
     // measure the length of text is with `canvasmeasureText()`
-    if (options.glyph) {
-      const struct = TextNote.GLYPHS[options.glyph];
-      if (!struct) throw new RuntimeError('Invalid glyph type: ' + options.glyph);
+    if (noteStruct.glyph) {
+      const struct = TextNote.GLYPHS[noteStruct.glyph];
+      if (!struct) throw new RuntimeError('Invalid glyph type: ' + noteStruct.glyph);
 
       this.glyph = new Glyph(struct.code, 40, { category: 'textNote' });
       this.setWidth(this.glyph.getMetrics().width);
     }
 
-    this.line = options.line || 0;
-    this.smooth = options.smooth || false;
-    this.ignore_ticks = options.ignore_ticks || false;
+    this.line = noteStruct.line || 0;
+    this.smooth = noteStruct.smooth || false;
+    this.ignore_ticks = noteStruct.ignore_ticks || false;
     this.justification = TextNote.Justification.LEFT;
   }
 

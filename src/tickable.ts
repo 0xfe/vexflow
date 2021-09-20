@@ -54,10 +54,8 @@ export abstract class Tickable extends Element {
   protected intrinsicTicks: number;
   protected align_center: boolean;
 
-  /** Constructor */
   constructor() {
     super();
-    this.setAttribute('type', 'Tickable');
 
     // These properties represent the duration of
     // this tickable element.
@@ -102,10 +100,6 @@ export abstract class Tickable extends Element {
         deviation: 0,
       },
     };
-  }
-
-  getCategory(): string {
-    return Tickable.CATEGORY;
   }
 
   /** Reset the Tickable, this function will be overloaded. */

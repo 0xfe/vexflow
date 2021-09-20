@@ -148,17 +148,9 @@ interface RenderOptions {
 }
 
 export class StaveLine extends Element {
-  readonly render_options: RenderOptions;
-
-  protected text: string;
-  protected font: FontInfo;
-
-  // These five instance variables are all initialized by the constructor via this.setNotes(notes).
-  protected notes!: StaveLineNotes;
-  protected first_note!: StaveNote;
-  protected first_indices!: number[];
-  protected last_note!: StaveNote;
-  protected last_indices!: number[];
+  static get CATEGORY(): string {
+    return 'StaveLine';
+  }
 
   // Text Positioning
   static readonly TextVerticalPosition = {
@@ -171,6 +163,18 @@ export class StaveLine extends Element {
     CENTER: 2,
     RIGHT: 3,
   };
+
+  readonly render_options: RenderOptions;
+
+  protected text: string;
+  protected font: FontInfo;
+
+  // These five instance variables are all initialized by the constructor via this.setNotes(notes).
+  protected notes!: StaveLineNotes;
+  protected first_note!: StaveNote;
+  protected first_indices!: number[];
+  protected last_note!: StaveNote;
+  protected last_indices!: number[];
 
   // Initialize the StaveLine with the given `notes`.
   //
@@ -186,7 +190,6 @@ export class StaveLine extends Element {
   //  ```
   constructor(notes: StaveLineNotes) {
     super();
-    this.setAttribute('type', 'StaveLine');
 
     this.setNotes(notes);
 
@@ -232,6 +235,7 @@ export class StaveLine extends Element {
     this.font = font;
     return this;
   }
+
   // The the annotation for the `StaveLine`
   setText(text: string): this {
     this.text = text;

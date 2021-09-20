@@ -59,6 +59,10 @@ export interface SystemOptions {
  * the system are formatted together.
  */
 export class System extends Element {
+  static get CATEGORY(): string {
+    return 'System';
+  }
+
   protected options!: SystemOptions;
   protected factory!: Factory;
   protected formatter?: Formatter;
@@ -67,9 +71,9 @@ export class System extends Element {
   protected parts: SystemParams[];
   protected connector?: StaveConnector;
   protected debugNoteMetricsYs?: { y: number; voice: Voice }[];
+
   constructor(params: Partial<SystemOptions> = {}) {
     super();
-    this.setAttribute('type', 'System');
     this.setOptions(params);
     this.parts = [];
   }

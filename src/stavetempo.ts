@@ -2,7 +2,7 @@
 // Author Radosaw Eichler 2012
 
 import { Flow } from './flow';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';
 import { Stave } from './stave';
@@ -15,6 +15,10 @@ export interface StaveTempoOptions {
 }
 
 export class StaveTempo extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'StaveTempo';
+  }
+
   protected font: FontInfo;
   protected render_options: {
     glyph_font_scale: number;
@@ -24,16 +28,11 @@ export class StaveTempo extends StaveModifier {
   protected shift_x: number;
   protected shift_y: number;
 
-  static get CATEGORY(): string {
-    return 'stavetempo';
-  }
-
   constructor(tempo: StaveTempoOptions, x: number, shift_y: number) {
     super();
-    this.setAttribute('type', 'StaveTempo');
 
     this.tempo = tempo;
-    this.position = StaveModifier.Position.ABOVE;
+    this.position = StaveModifierPosition.ABOVE;
     this.x = x;
     this.shift_x = 10;
     this.shift_y = shift_y;
@@ -45,10 +44,6 @@ export class StaveTempo extends StaveModifier {
     this.render_options = {
       glyph_font_scale: 30, // font size for note
     };
-  }
-
-  getCategory(): string {
-    return StaveTempo.CATEGORY;
   }
 
   setTempo(tempo: StaveTempoOptions): this {

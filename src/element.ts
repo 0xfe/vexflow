@@ -34,7 +34,15 @@ export interface ElementStyle {
  * of general functions and properties that can be inherited by all VexFlow elements.
  */
 export abstract class Element {
+  static get CATEGORY(): string {
+    return 'Element';
+  }
+
   protected static ID: number = 1000;
+  protected static newID(): string {
+    return `auto${Element.ID++}`;
+  }
+
   private context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
@@ -46,16 +54,11 @@ export abstract class Element {
   protected fontStack!: Font[];
   protected musicFont!: Font;
 
-  protected static newID(): string {
-    return `auto${Element.ID++}`;
-  }
-
-  /** Constructor. */
-  constructor({ type }: { type?: string } = {}) {
+  constructor() {
     this.attrs = {
       id: Element.newID(),
       el: undefined,
-      type: type || 'Base',
+      type: this.getCategory(),
       classes: {},
     };
 
@@ -64,6 +67,11 @@ export abstract class Element {
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
+  }
+
+  /** Get element category string. */
+  getCategory(): string {
+    return (<typeof Element>this.constructor).CATEGORY;
   }
 
   /** Set music fonts stack. */
@@ -137,28 +145,24 @@ export abstract class Element {
   /** Add a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
     this.attrs.classes[className] = true;
-    if (this.registry) {
-      this.registry.onUpdate({
-        id: this.attrs.id,
-        name: 'class',
-        value: className,
-        oldValue: undefined,
-      });
-    }
+    this.registry?.onUpdate({
+      id: this.attrs.id,
+      name: 'class',
+      value: className,
+      oldValue: undefined,
+    });
     return this;
   }
 
   /** Remove a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
     delete this.attrs.classes[className];
-    if (this.registry) {
-      this.registry.onUpdate({
-        id: this.attrs.id,
-        name: 'class',
-        value: undefined,
-        oldValue: className,
-      });
-    }
+    this.registry?.onUpdate({
+      id: this.attrs.id,
+      name: 'class',
+      value: undefined,
+      oldValue: className,
+    });
     return this;
   }
 
@@ -196,10 +200,8 @@ export abstract class Element {
     const oldID = this.attrs.id;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
-    if (this.registry) {
-      // Register with old id to support id changes.
-      this.registry.onUpdate({ id: oldID, name, value, oldValue });
-    }
+    // Register with old id to support id changes.
+    this.registry?.onUpdate({ id: oldID, name, value, oldValue });
     return this;
   }
 

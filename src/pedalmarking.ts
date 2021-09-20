@@ -34,6 +34,10 @@ export class PedalMarking extends Element {
   /** To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`. */
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'PedalMarking';
+  }
+
   protected line: number;
   protected type: number;
   protected custom_depress_text: string;
@@ -75,16 +79,6 @@ export class PedalMarking extends Element {
     mixed: PedalMarking.type.MIXED,
   };
 
-  /** Set pedal type. */
-  setType(type: string | number): this {
-    type = typeof type === 'string' ? PedalMarking.typeString[type] : type;
-
-    if (type >= PedalMarking.type.TEXT && type <= PedalMarking.type.MIXED) {
-      this.type = type;
-    }
-    return this;
-  }
-
   /**
    * Create a sustain pedal marking. Returns the defaults PedalMarking.
    * Which uses the traditional "Ped" and "*"" markings.
@@ -112,7 +106,6 @@ export class PedalMarking extends Element {
 
   constructor(notes: StaveNote[]) {
     super();
-    this.setAttribute('type', 'PedalMarking');
 
     this.notes = notes;
     this.type = PedalMarking.type.TEXT;
@@ -134,6 +127,16 @@ export class PedalMarking extends Element {
       bracket_line_width: 1,
       color: 'black',
     };
+  }
+
+  /** Set pedal type. */
+  setType(type: string | number): this {
+    type = typeof type === 'string' ? PedalMarking.typeString[type] : type;
+
+    if (type >= PedalMarking.type.TEXT && type <= PedalMarking.type.MIXED) {
+      this.type = type;
+    }
+    return this;
   }
 
   /**

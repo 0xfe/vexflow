@@ -10,6 +10,10 @@ export interface GlyphNoteOptions {
 }
 
 export class GlyphNote extends Note {
+  static get CATEGORY(): string {
+    return 'GlyphNote';
+  }
+
   protected options: GlyphNoteOptions;
 
   constructor(glyph: Glyph | undefined, noteStruct: Partial<NoteStruct>, options?: GlyphNoteOptions) {
@@ -19,7 +23,6 @@ export class GlyphNote extends Note {
       line: 2,
       ...options,
     };
-    this.setAttribute('type', 'GlyphNote');
 
     // Note properties
     this.ignore_ticks = this.options.ignoreTicks as boolean;
@@ -56,6 +59,7 @@ export class GlyphNote extends Note {
     }
     ctx.closeGroup();
   }
+
   draw(): void {
     const stave = this.checkStave();
     const ctx = stave.checkContext();

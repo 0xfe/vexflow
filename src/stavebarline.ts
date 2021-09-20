@@ -3,7 +3,7 @@
 // Author Larry Kuhns 2011
 
 import { Flow } from './flow';
-import { LayoutMetrics, StaveModifier } from './stavemodifier';
+import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Stave } from './stave';
 
 export enum BarlineType {
@@ -17,16 +17,16 @@ export enum BarlineType {
 }
 
 export class Barline extends StaveModifier {
+  static get CATEGORY(): string {
+    return 'Barline';
+  }
+
   protected widths: Record<string, number>;
   protected paddings: Record<string, number>;
   protected layoutMetricsMap: Record<number, LayoutMetrics>;
 
   protected thickness: number;
   protected type!: BarlineType;
-
-  static get CATEGORY(): string {
-    return 'barlines';
-  }
 
   static get type(): typeof BarlineType {
     return BarlineType;
@@ -44,12 +44,8 @@ export class Barline extends StaveModifier {
     };
   }
 
-  /**
-   * @constructor
-   */
   constructor(type: BarlineType | string) {
     super();
-    this.setAttribute('type', 'Barline');
     this.thickness = Flow.STAVE_LINE_THICKNESS;
 
     const TYPE = BarlineType;
@@ -114,12 +110,8 @@ export class Barline extends StaveModifier {
       paddingLeft: 5,
       paddingRight: 5,
     };
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type);
-  }
-
-  getCategory(): string {
-    return Barline.CATEGORY;
   }
 
   getType(): number {

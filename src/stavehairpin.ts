@@ -22,6 +22,10 @@ export interface StaveHairpinRenderOptions {
 }
 
 export class StaveHairpin extends Element {
+  static get CATEGORY(): string {
+    return 'StaveHairpin';
+  }
+
   protected hairpin: number;
 
   protected position: number;
@@ -54,9 +58,7 @@ export class StaveHairpin extends Element {
    **/
   static FormatByTicksAndDraw(
     ctx: RenderContext,
-    formatter: {
-      pixelsPerTick: number;
-    },
+    formatter: { pixelsPerTick: number },
     notes: Record<string, Note>,
     type: number,
     position: number,
@@ -107,7 +109,6 @@ export class StaveHairpin extends Element {
    */
   constructor(notes: Record<string, Note>, type: number) {
     super();
-    this.setAttribute('type', 'StaveHairpin');
     this.setNotes(notes);
     this.hairpin = type;
     this.position = Modifier.Position.BELOW;

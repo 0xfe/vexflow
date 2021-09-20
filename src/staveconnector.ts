@@ -30,6 +30,10 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
 
 /** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
+  static get CATEGORY(): string {
+    return 'StaveConnector';
+  }
+
   protected thickness: number;
   protected width: number;
   protected font: FontInfo;
@@ -92,7 +96,6 @@ export class StaveConnector extends Element {
 
   constructor(top_stave: Stave, bottom_stave: Stave) {
     super();
-    this.setAttribute('type', 'StaveConnector');
 
     this.thickness = Flow.STAVE_LINE_THICKNESS;
     this.width = 3;

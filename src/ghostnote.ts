@@ -8,30 +8,29 @@ import { Stave } from './stave';
 import { NoteStruct } from './note';
 import { ModifierContext } from './modifiercontext';
 
+const ERROR_MSG = 'Ghost note must have valid initialization data to identify duration.';
+
 export class GhostNote extends StemmableNote {
-  /** @constructor */
+  static get CATEGORY(): string {
+    return 'GhostNote';
+  }
+
   constructor(parameter: string | NoteStruct) {
-    // Sanity check
     if (!parameter) {
-      throw new RuntimeError('BadArguments', 'Ghost note must have valid initialization data to identify duration.');
+      throw new RuntimeError('BadArguments', ERROR_MSG);
     }
 
     let noteStruct;
-
-    // Preserve backwards-compatibility
     if (typeof parameter === 'string') {
+      // Preserve backwards-compatibility
       noteStruct = { duration: parameter };
     } else if (typeof parameter === 'object') {
       noteStruct = parameter;
     } else {
-      throw new RuntimeError(
-        'BadArguments',
-        'Ghost note must have valid initialization data to identify ' + 'duration.'
-      );
+      throw new RuntimeError('BadArguments', ERROR_MSG);
     }
 
     super(noteStruct);
-    this.setAttribute('type', 'GhostNote');
 
     // Note properties
     this.setWidth(0);

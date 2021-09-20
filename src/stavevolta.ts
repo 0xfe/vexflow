@@ -14,22 +14,22 @@ export enum VoltaType {
 }
 
 export class Volta extends StaveModifier {
-  protected volta: number;
-  protected number: string;
-
-  protected font: FontInfo;
-  protected y_shift: number;
   static get CATEGORY(): string {
-    return 'voltas';
+    return 'Volta';
   }
 
   static get type(): typeof VoltaType {
     return VoltaType;
   }
 
+  protected volta: number;
+  protected number: string;
+
+  protected font: FontInfo;
+  protected y_shift: number;
+
   constructor(type: number, number: string, x: number, y_shift: number) {
     super();
-    this.setAttribute('type', 'Volta');
     this.volta = type;
     this.x = x;
     this.y_shift = y_shift;
@@ -39,10 +39,6 @@ export class Volta extends StaveModifier {
       size: 9,
       weight: 'bold',
     };
-  }
-
-  getCategory(): string {
-    return Volta.CATEGORY;
   }
 
   setShiftY(y: number): this {
@@ -58,14 +54,14 @@ export class Volta extends StaveModifier {
     const top_y = stave.getYForTopText(stave.getOptions().num_lines) + this.y_shift;
     const vert_height = 1.5 * stave.getOptions().spacing_between_lines_px;
     switch (this.volta) {
-      case Volta.type.BEGIN:
+      case VoltaType.BEGIN:
         ctx.fillRect(this.x + x, top_y, 1, vert_height);
         break;
-      case Volta.type.END:
+      case VoltaType.END:
         width -= 5;
         ctx.fillRect(this.x + x + width, top_y, 1, vert_height);
         break;
-      case Volta.type.BEGIN_END:
+      case VoltaType.BEGIN_END:
         width -= 3;
         ctx.fillRect(this.x + x, top_y, 1, vert_height);
         ctx.fillRect(this.x + x + width, top_y, 1, vert_height);
@@ -74,7 +70,7 @@ export class Volta extends StaveModifier {
         break;
     }
     // If the beginning of a volta, draw measure number
-    if (this.volta === Volta.type.BEGIN || this.volta === Volta.type.BEGIN_END) {
+    if (this.volta === VoltaType.BEGIN || this.volta === VoltaType.BEGIN_END) {
       ctx.save();
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.number, this.x + x + 5, top_y + 15);

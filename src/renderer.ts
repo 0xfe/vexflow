@@ -127,8 +127,14 @@ export class Renderer {
       const canvasElement = this.element as HTMLCanvasElement;
       if (!canvasElement.getContext) {
         throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
+      } else {
+        const context = canvasElement.getContext('2d');
+        if (context) {
+          this.ctx = new CanvasContext(context);
+        } else {
+          throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
+        }
       }
-      this.ctx = new CanvasContext(canvasElement.getContext('2d')!);
     } else if (this.backend === Renderer.Backends.SVG) {
       this.ctx = new SVGContext(this.element);
     } else {
@@ -143,8 +149,7 @@ export class Renderer {
 
       // Scale the canvas size by the device pixel ratio clamping to the maximum
       // supported size.
-      [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio,
-                                                         height * devicePixelRatio);
+      [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
 
       // Divide back down by the pixel ratio and convert to integers.
       width = (width / devicePixelRatio) | 0;

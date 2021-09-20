@@ -8,11 +8,11 @@ import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifierPosition } from './stavemodifier';
 import { TimeSignature } from './timesignature';
 import { Stave } from './stave';
 import { RenderContext } from './types/common';
-import { Barline } from './stavebarline';
+import { isBarline } from 'typeguard';
 
 export interface MultimeasureRestRenderOptions {
   number_of_measures?: number;
@@ -49,6 +49,10 @@ function get_semibrave_rest() {
 }
 
 export class MultiMeasureRest extends Element {
+  static get CATEGORY(): string {
+    return 'MultiMeasureRest';
+  }
+
   protected render_options: MultimeasureRestRenderOptions;
   protected xs: { left: number; right: number };
   protected number_of_measures: number;
@@ -72,7 +76,6 @@ export class MultiMeasureRest extends Element {
   //   * `semibrave_rest_glyph_scale` - Size of the semibrave(1-bar) rest symbol.
   constructor(number_of_measures: number, options: Partial<MultimeasureRestRenderOptions>) {
     super();
-    this.setAttribute('type', 'MultiMeasureRest');
 
     const point = this.musicFont.lookupMetric('digits.point');
     const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
@@ -219,8 +222,9 @@ export class MultiMeasureRest extends Element {
 
     // FIXME: getNoteStartX() returns x+5(barline width) and
     // getNoteEndX() returns x + width(no barline width) by default. how to fix?
-    const begModifiers = stave.getModifiers(StaveModifier.Position.BEGIN);
-    if (begModifiers.length === 1 && begModifiers[0].getCategory() === Barline.CATEGORY) {
+    const begModifiers = stave.getModifiers(StaveModifierPosition.BEGIN);
+
+    if (begModifiers.length === 1 && isBarline(begModifiers[0])) {
       left -= begModifiers[0].getWidth();
     }
 

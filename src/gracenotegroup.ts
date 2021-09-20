@@ -13,11 +13,11 @@ import { Voice } from './voice';
 import { Beam } from './beam';
 import { StaveTie } from './stavetie';
 import { TabTie } from './tabtie';
-import { StaveNote } from './stavenote';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 import { RenderContext } from './types/common';
+import { isStaveNote } from 'typeguard';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -29,6 +29,10 @@ function L(...args: any) {
 export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'GraceNoteGroup';
+  }
+
   protected readonly voice: Voice;
   protected readonly grace_notes: StemmableNote[];
   protected readonly show_slur?: boolean;
@@ -38,10 +42,6 @@ export class GraceNoteGroup extends Modifier {
   protected render_options: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
   protected beams: Beam[];
-
-  static get CATEGORY(): string {
-    return 'gracenotegroups';
-  }
 
   /** Arranges groups inside a `ModifierContext`. */
   static format(gracenote_groups: GraceNoteGroup[], state: ModifierContextState): boolean {
@@ -57,7 +57,7 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < gracenote_groups.length; ++i) {
       const gracenote_group = gracenote_groups[i];
       const note = gracenote_group.getNote();
-      const is_stavenote = note.getCategory() === StaveNote.CATEGORY;
+      const is_stavenote = isStaveNote(note);
       const spacing = is_stavenote ? group_spacing_stave : group_spacing_tab;
 
       if (is_stavenote && note !== prev_note) {
@@ -94,7 +94,6 @@ export class GraceNoteGroup extends Modifier {
   //** `GraceNoteGroup` inherits from `Modifier` and is placed inside a `ModifierContext`. */
   constructor(grace_notes: StemmableNote[], show_slur?: boolean) {
     super();
-    this.setAttribute('type', 'GraceNoteGroup');
 
     this.position = Modifier.Position.LEFT;
     this.grace_notes = grace_notes;
@@ -119,10 +118,6 @@ export class GraceNoteGroup extends Modifier {
     this.voice.addTickables(this.grace_notes);
 
     return this;
-  }
-
-  getCategory(): string {
-    return GraceNoteGroup.CATEGORY;
   }
 
   preFormat(): void {
@@ -169,19 +164,14 @@ export class GraceNoteGroup extends Modifier {
 
     this.alignSubNotesWithNote(this.getGraceNotes(), note); // Modifier function
 
-    // Draw notes
-    this.grace_notes.forEach((graceNote) => {
-      graceNote.setContext(ctx).draw();
-    });
-
-    // Draw beam
-    this.beams.forEach((beam) => {
-      beam.setContext(ctx).draw();
-    });
+    // Draw grace notes.
+    this.grace_notes.forEach((graceNote) => graceNote.setContext(ctx).draw());
+    // Draw beams.
+    this.beams.forEach((beam) => beam.setContext(ctx).draw());
 
     if (this.show_slur) {
-      // Create and draw slur
-      const is_stavenote = note.getCategory() === StaveNote.CATEGORY;
+      // Create and draw slur.
+      const is_stavenote = isStaveNote(note);
       const TieClass = is_stavenote ? StaveTie : TabTie;
 
       this.slur = new TieClass({

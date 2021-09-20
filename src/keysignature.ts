@@ -8,13 +8,16 @@
 
 import { defined, RuntimeError } from './util';
 import { Flow } from './flow';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 
 export class KeySignature extends StaveModifier {
-  protected glyphFontScale: number;
+  static get CATEGORY(): string {
+    return 'KeySignature';
+  }
 
+  protected glyphFontScale: number;
   protected glyphs: Glyph[];
   protected xPositions: number[];
   protected paddingForced: boolean;
@@ -23,10 +26,6 @@ export class KeySignature extends StaveModifier {
   protected accList: { type: string; line: number }[] = [];
   protected keySpec?: string;
   protected alterKeySpec?: string;
-
-  static get CATEGORY(): string {
-    return 'keysignatures';
-  }
 
   // Space between natural and following accidental depending
   // on vertical position
@@ -92,18 +91,13 @@ export class KeySignature extends StaveModifier {
   // Create a new Key Signature based on a `key_spec`
   constructor(keySpec: string, cancelKeySpec?: string, alterKeySpec?: string) {
     super();
-    this.setAttribute('type', 'KeySignature');
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
     this.glyphs = [];
     this.xPositions = []; // relative to this.x
     this.paddingForced = false;
-  }
-
-  getCategory(): string {
-    return KeySignature.CATEGORY;
   }
 
   // Add an accidental glyph to the `KeySignature` instance which represents
@@ -295,7 +289,7 @@ export class KeySignature extends StaveModifier {
 
     if (this.accList.length > 0) {
       const clef =
-        (this.position === StaveModifier.Position.END ? stave.getEndClef() : stave.getClef()) || stave.getClef();
+        (this.position === StaveModifierPosition.END ? stave.getEndClef() : stave.getClef()) || stave.getClef();
       if (cancelAccList) {
         this.convertAccLines(clef, cancelAccList.type, cancelAccList.accList);
       }

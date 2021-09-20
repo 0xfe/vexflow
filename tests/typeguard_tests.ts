@@ -4,6 +4,9 @@
 //
 // TypeGuard Tests
 
+// eslint-disable-next-line
+// @ts-nocheck to support ES5 style class declaration in the fakeES5() test case.
+
 import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
 import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
@@ -13,7 +16,8 @@ const TypeGuardTests = {
   Start(): void {
     QUnit.module('TypeGuard');
     test('Real VexFlow Types', real);
-    test('Fake VexFlow Types', fake);
+    test('Fake VexFlow Types in ES5', fakeES5);
+    test('Fake VexFlow Types in ES6', fakeES6);
     test('instanceof', fallbackToInstanceOf);
     test('Edge Case ES5/ES6', edgeCaseES5vsES6);
   },
@@ -34,20 +38,56 @@ function real(): void {
   ok(isNote(t), 'TabNote extends StemmableNote which extends Note, so t is a Note');
 }
 
-function fake(): void {
-  const fakeStaveNote = {
-    getCategory: () => 'stavenotes',
-  };
-  ok(isStaveNote(fakeStaveNote), 'Fake StaveNote is a StaveNote.');
-  notOk(isNote(fakeStaveNote), 'Fake StaveNote is not a Note. Categories do not match.');
+/**
+ * Helper function to test the fake VexFlow objects we create in fakeES5() and fakeES6().
+ */
+function checkFakeObjects(fakeStemmableNote: unknown, fakeStaveNote: unknown): void {
+  ok(isStemmableNote(fakeStemmableNote), 'Fake StemmableNote is a StemmableNote.');
+  notOk(isNote(fakeStemmableNote), 'Fake StemmableNote is not a Note (no ancestors with the correct CATEGORY).');
 
-  const fakeStemmableNote = {
-    getCategory() {
-      return StemmableNote.CATEGORY;
-    },
-  };
-  ok(isStemmableNote(fakeStemmableNote), 'Returns the correct category string.');
-  notOk(isNote(fakeStemmableNote), 'The fake stemmable note does not have any ancestors with the correct category.');
+  ok(isCategory(fakeStaveNote, StaveNote), 'Fake StaveNote is a StaveNote.');
+  ok(isStaveNote(fakeStaveNote), 'Fake StaveNote is a StaveNote (via helper function).');
+  ok(isCategory(fakeStaveNote, StemmableNote), 'Fake StaveNote is also a StemmableNote (via inheritance).');
+  notOk(isNote(fakeStaveNote), 'Fake StaveNote is not a Note. CATEGORY does not match.');
+}
+
+/**
+ * Demonstrate that an object (ES5-style) can pass the isCategory(...) test if it
+ * has the correct static .CATEGORY property.
+ */
+function fakeES5(): void {
+  function FakeStemmableNote() {
+    this.isFake = true;
+  }
+  FakeStemmableNote.CATEGORY = StemmableNote.CATEGORY;
+
+  function FakeStaveNote() {
+    FakeStemmableNote.call(this);
+  }
+  FakeStaveNote.CATEGORY = StaveNote.CATEGORY;
+  FakeStaveNote.prototype = Object.create(FakeStemmableNote.prototype);
+  FakeStaveNote.prototype.constructor = FakeStaveNote;
+
+  const fakeStemmableNote = new FakeStemmableNote();
+  const fakeStaveNote = new FakeStaveNote();
+  checkFakeObjects(fakeStemmableNote, fakeStaveNote);
+}
+
+/**
+ * Demonstrate that an object (ES6-style) can pass the isCategory(...) test if it
+ * or its ancestor has the correct static .CATEGORY property.
+ */
+function fakeES6(): void {
+  class FakeStemmableNote {
+    static CATEGORY = StemmableNote.CATEGORY;
+  }
+  class FakeStaveNote extends FakeStemmableNote {
+    static CATEGORY = StaveNote.CATEGORY;
+  }
+
+  const fakeStemmableNote = new FakeStemmableNote();
+  const fakeStaveNote = new FakeStaveNote();
+  checkFakeObjects(fakeStemmableNote, fakeStaveNote);
 }
 
 /**

@@ -16,12 +16,11 @@ export interface VibratoRenderOptions {
 
 /** `Vibrato` implements diverse vibratos. */
 export class Vibrato extends Modifier {
-  protected render_options: VibratoRenderOptions;
-
-  /** Get element CATEGORY string. */
   static get CATEGORY(): string {
-    return 'vibratos';
+    return 'Vibrato';
   }
+
+  protected render_options: VibratoRenderOptions;
 
   /** Arrange vibratos inside a `ModifierContext`. */
   static format(vibratos: Vibrato[], state: ModifierContextState, context: ModifierContext): boolean {
@@ -33,7 +32,7 @@ export class Vibrato extends Modifier {
     let shift = state.right_shift - 7;
 
     // If there's a bend, drop the text line
-    const bends = context.getMembers(Bend.CATEGORY) as Modifier[];
+    const bends = context.getMembers(Bend.CATEGORY) as Bend[];
     if (bends && bends.length > 0) {
       text_line--;
     }
@@ -54,7 +53,6 @@ export class Vibrato extends Modifier {
 
   constructor() {
     super();
-    this.setAttribute('type', 'Vibrato');
 
     this.position = Modifier.Position.RIGHT;
     this.render_options = {
@@ -66,11 +64,6 @@ export class Vibrato extends Modifier {
     };
 
     this.setVibratoWidth(this.render_options.vibrato_width);
-  }
-
-  /** Get element category string. */
-  getCategory(): string {
-    return Vibrato.CATEGORY;
   }
 
   /** Set harsh vibrato. */

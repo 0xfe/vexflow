@@ -8,11 +8,14 @@ Please help test this beta release and [report issues on GitHub](https://github.
 
 ## Breaking
 
-- The tsconfig.json `compilerOptions.target` has been updated to ES6 / ES2015. If you are targeting an older environment such as Internet Explorer, you will need to build directly from source code (and change the target back to ES5).
+- The tsconfig.json `compilerOptions.target` has been updated to ES6 / ES2015. If you are targeting an older environment, you will need to build directly from source code (and change the target back to ES5).
 - `Stave.setNumLines(n: number)` requires a number. Previously, a string would also work. See: [stave.ts](https://github.com/0xfe/vexflow/blob/master/src/stave.ts) and [#1083](https://github.com/0xfe/vexflow/issues/1083).
 - `Note.addModifier(modifier: Modifier, index?: number): this` now throws a RuntimeError if the parameters are reversed.
 - `TickContext.getTickableForVoice(voiceIndex: number): Tickable` was previously named `getTickablesForVoice(voiceIndex: number): Note`. We removed the `s` because the method returns a single Tickable. You will need to update calls to this function if you are upgrading from a build from between April 2020 to August 2021.
-- Changed `Modifier.CATEGORY` to `'Modifier'` instead of `'none'`. The static property `.CATEGORY` is used by VexFlow internally to differentiate objects.
+- `Element` and its subclasses have a static `CATEGORY` string property, used by VexFlow internally to differentiate objects. This string has been standardized to be singular, with UpperCamelCase capitalization.
+  - Examples:
+    - `Accidental.CATEGORY` is now `'Accidental'` instead of `'accidentals'`.
+    - `Modifier.CATEGORY` is now `'Modifier'` instead of `'none'`.
 
 # 3.0.9 / 2020-04-21
 

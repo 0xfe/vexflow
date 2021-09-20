@@ -26,6 +26,14 @@ export enum StaveModifierPosition {
 }
 
 export class StaveModifier extends Element {
+  static get CATEGORY(): string {
+    return 'StaveModifier';
+  }
+
+  static get Position(): typeof StaveModifierPosition {
+    return StaveModifierPosition;
+  }
+
   protected width: number = 0;
   protected x: number = 0;
 
@@ -34,16 +42,11 @@ export class StaveModifier extends Element {
   protected stave?: Stave;
   protected layoutMetrics?: LayoutMetrics;
 
-  static get Position(): typeof StaveModifierPosition {
-    return StaveModifierPosition;
-  }
-
   constructor() {
     super();
-    this.setAttribute('type', 'StaveModifier');
 
     this.padding = 10;
-    this.position = StaveModifier.Position.ABOVE;
+    this.position = StaveModifierPosition.ABOVE;
   }
 
   getPosition(): number {
@@ -84,10 +87,6 @@ export class StaveModifier extends Element {
   setX(x: number): this {
     this.x = x;
     return this;
-  }
-
-  getCategory(): string {
-    return '';
   }
 
   placeGlyphOnLine(glyph: Glyph, stave: Stave, line?: number, customShift = 0): void {

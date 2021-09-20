@@ -34,6 +34,26 @@ export interface StemOptions {
 export class Stem extends Element {
   static DEBUG: boolean;
 
+  static get CATEGORY(): string {
+    return 'Stem';
+  }
+
+  // Stem directions
+  static get UP(): number {
+    return 1;
+  }
+  static get DOWN(): number {
+    return -1;
+  }
+
+  // Theme
+  static get WIDTH(): number {
+    return Flow.STEM_WIDTH;
+  }
+  static get HEIGHT(): number {
+    return Flow.STEM_HEIGHT;
+  }
+
   protected hide: boolean;
   protected isStemlet: boolean;
   protected stemletHeight: number;
@@ -49,31 +69,8 @@ export class Stem extends Element {
   protected stem_extension: number;
   protected renderHeightAdjustment: number;
 
-  static get CATEGORY(): string {
-    return 'stem';
-  }
-
-  // Stem directions
-  static get UP(): number {
-    return 1;
-  }
-
-  static get DOWN(): number {
-    return -1;
-  }
-
-  // Theme
-  static get WIDTH(): number {
-    return Flow.STEM_WIDTH;
-  }
-
-  static get HEIGHT(): number {
-    return Flow.STEM_HEIGHT;
-  }
-
   constructor(options?: StemOptions) {
     super();
-    this.setAttribute('type', 'Stem');
 
     // Default notehead x bounds
     this.x_begin = options?.x_begin || 0;
@@ -134,11 +131,6 @@ export class Stem extends Element {
   setYBounds(y_top: number, y_bottom: number): void {
     this.y_top = y_top;
     this.y_bottom = y_bottom;
-  }
-
-  // The category of the object
-  getCategory(): string {
-    return Stem.CATEGORY;
   }
 
   // Gets the entire height for the stem

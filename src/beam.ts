@@ -11,8 +11,7 @@ import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
 import { RenderContext } from './types/common';
-import { TabNote } from './tabnote';
-import { StaveNote } from './stavenote';
+import { isStaveNote, isTabNote } from 'typeguard';
 
 function calculateStemDirection(notes: StemmableNote[]) {
   let lineSum = 0;
@@ -30,13 +29,13 @@ function calculateStemDirection(notes: StemmableNote[]) {
   return Stem.UP;
 }
 
-const getStemSlope = (firstNote: StemmableNote, lastNote: StemmableNote) => {
+function getStemSlope(firstNote: StemmableNote, lastNote: StemmableNote) {
   const firstStemTipY = firstNote.getStemExtents().topY;
   const firstStemX = firstNote.getStemX();
   const lastStemTipY = lastNote.getStemExtents().topY;
   const lastStemX = lastNote.getStemX();
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
-};
+}
 
 const BEAM_LEFT = 'L';
 const BEAM_RIGHT = 'R';
@@ -44,6 +43,10 @@ const BEAM_BOTH = 'B';
 
 /** `Beams` span over a set of `StemmableNotes`. */
 export class Beam extends Element {
+  static get CATEGORY(): string {
+    return 'Beam';
+  }
+
   render_options: {
     flat_beam_offset?: number;
     flat_beams: boolean;
@@ -58,6 +61,7 @@ export class Beam extends Element {
     partial_beam_length: number;
     min_flat_beam_offset: number;
   };
+
   notes: StemmableNote[];
   postFormatted: boolean;
   slope: number = 0;
@@ -69,6 +73,7 @@ export class Beam extends Element {
   private break_on_indices: number[];
   private beam_count: number;
   private unbeamable?: boolean;
+
   /**
    * Get the default beam groups for a provided time signature.
    * Attempt to guess if the time signature is not found in table.
@@ -133,10 +138,7 @@ export class Beam extends Element {
    * @param groups an array of `Fraction` representing beat groupings for the beam
    */
   static applyAndGetBeams(voice: Voice, stem_direction?: number, groups?: Fraction[]): Beam[] {
-    return Beam.generateBeams(voice.getTickables() as StemmableNote[], {
-      groups,
-      stem_direction,
-    });
+    return Beam.generateBeams(voice.getTickables() as StemmableNote[], { groups, stem_direction });
   }
 
   /**
@@ -432,7 +434,6 @@ export class Beam extends Element {
 
   constructor(notes: StemmableNote[], auto_stem: boolean = false) {
     super();
-    this.setAttribute('type', 'Beam');
 
     if (!notes || notes.length === 0) {
       throw new RuntimeError('BadArguments', 'No notes provided for beam.');
@@ -464,12 +465,12 @@ export class Beam extends Element {
 
     let stem_direction = this.stem_direction;
     // Figure out optimal stem direction based on given notes
-    if (auto_stem && notes[0].getCategory() === StaveNote.CATEGORY) {
+
+    if (auto_stem && isStaveNote(notes[0])) {
       stem_direction = calculateStemDirection(notes);
-    } else if (auto_stem && notes[0].getCategory() === TabNote.CATEGORY) {
+    } else if (auto_stem && isTabNote(notes[0])) {
       // Auto Stem TabNotes
       const stem_weight = notes.reduce((memo, note) => memo + note.getStemDirection(), 0);
-
       stem_direction = stem_weight > -1 ? Stem.UP : Stem.DOWN;
     }
 
@@ -903,7 +904,7 @@ export class Beam extends Element {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (this.notes[0].getCategory() === TabNote.CATEGORY || this.render_options.flat_beams) {
+    if (isTabNote(this.notes[0]) || this.render_options.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();

@@ -26,6 +26,20 @@ export enum VoiceMode {
  * `Voice` is mainly a container object to group `Tickables` for formatting.
  */
 export class Voice extends Element {
+  static get CATEGORY(): string {
+    return 'Voice';
+  }
+
+  /**
+   * Modes allow the addition of ticks in three different ways:
+   * - STRICT: This is the default. Ticks must fill the voice.
+   * - SOFT: Ticks can be added without restrictions.
+   * - FULL: Ticks do not need to fill the voice, but can't exceed the maximum tick length.
+   */
+  static get Mode(): typeof VoiceMode {
+    return VoiceMode;
+  }
+
   protected resolutionMultiplier: number;
   protected smallestTickCount: Fraction;
   protected stave?: Stave;
@@ -40,19 +54,8 @@ export class Voice extends Element {
   protected readonly tickables: Tickable[];
   protected readonly time: VoiceTime;
 
-  /**
-   * Modes allow the addition of ticks in three different ways:
-   * - STRICT: This is the default. Ticks must fill the voice.
-   * - SOFT: Ticks can be added without restrictions.
-   * - FULL: Ticks do not need to fill the voice, but can't exceed the maximum tick length.
-   */
-  static get Mode(): typeof VoiceMode {
-    return VoiceMode;
-  }
-
   constructor(time?: Partial<VoiceTime> | string, options?: { softmaxFactor: number }) {
     super();
-    this.setAttribute('type', 'Voice');
 
     this.options = {
       softmaxFactor: 100,

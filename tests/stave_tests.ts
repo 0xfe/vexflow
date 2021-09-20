@@ -30,7 +30,7 @@ import { Stave } from 'stave';
 import { Barline, BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { Repetition } from 'staverepetition';
-import { Volta, VoltaType } from 'stavevolta';
+import { VoltaType } from 'stavevolta';
 import { Justification } from 'textnote';
 import { TimeSignature } from 'timesignature';
 import { StaveModifier } from 'stavemodifier';
@@ -72,8 +72,11 @@ function sortByCategory(): void {
   const bar0 = new Barline(BarlineType.SINGLE);
   const bar1 = new Barline(BarlineType.DOUBLE);
   const bar2 = new Barline(BarlineType.NONE);
-  const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
-  const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+
+  // const order0 = { barlines: 0, clefs: 1, keysignatures: 2, timesignatures: 3 };
+  // const order1 = { timesignatures: 0, keysignatures: 1, barlines: 2, clefs: 3 };
+  const order0 = { Barline: 0, Clef: 1, KeySignature: 2, TimeSignature: 3 };
+  const order1 = { TimeSignature: 0, KeySignature: 1, Barline: 2, Clef: 3 };
 
   const sortAndCompare = (title: string, a: StaveModifier[], b: StaveModifier[], order: Record<string, number>) => {
     stave.sortByCategory(a, order);
@@ -544,7 +547,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   const mm2 = new Stave(mm1.getX() + mm1.getWidth(), mm1.getY(), 175);
   mm2.setBegBarType(BarlineType.REPEAT_BEGIN);
   mm2.setRepetitionTypeRight(Repetition.type.DS, 25);
-  mm2.setVoltaType(Volta.type.BEGIN_MID, '2.', -5);
+  mm2.setVoltaType(VoltaType.BEGIN_MID, '2.', -5);
   mm2.addClef('treble');
   mm2.addKeySignature('A');
   mm2.setMeasure(2);
@@ -578,7 +581,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
 
   // bar 5: d.s. shift (similar potential x-shift concern)
   const mm5 = new Stave(mm4.getX() + mm4.getWidth(), mm4.getY(), 175);
-  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
+  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
   mm5.setEndBarType(BarlineType.DOUBLE);
   mm5.setRepetitionTypeRight(Repetition.type.DS, 25);
   mm5.addClef('treble');
@@ -591,7 +594,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
 
   // bar 6: d.s. without modifiers
   const mm6 = new Stave(mm5.getX() + mm5.getWidth(), mm5.getY(), 175);
-  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
+  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
   mm6.setRepetitionTypeRight(Repetition.type.DS, 25);
   mm6.setMeasure(6);
   mm6.setSection('E', 0);

@@ -3,6 +3,10 @@
 import { Stave, StaveOptions } from './stave';
 
 export class TabStave extends Stave {
+  static get CATEGORY(): string {
+    return 'TabStave';
+  }
+
   constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
     const tab_options = {
       ...{
@@ -14,7 +18,6 @@ export class TabStave extends Stave {
     };
 
     super(x, y, width, tab_options);
-    this.setAttribute('type', 'TabStave');
   }
 
   getYForGlyphs(): number {

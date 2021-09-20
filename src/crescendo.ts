@@ -53,6 +53,11 @@ function renderHairpin(ctx: RenderContext, params: CrescendoParams) {
 export class Crescendo extends Note {
   static DEBUG: boolean;
 
+  /** Crescendo category string. */
+  static get CATEGORY(): string {
+    return 'Crescendo';
+  }
+
   protected decrescendo: boolean;
   protected height: number;
   protected line: number;
@@ -67,7 +72,6 @@ export class Crescendo extends Note {
   // Initialize the crescendo's properties
   constructor(noteStruct: NoteStruct) {
     super(noteStruct);
-    this.setAttribute('type', 'Crescendo');
 
     // Whether the object is a decrescendo
     this.decrescendo = false;

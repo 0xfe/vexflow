@@ -1,13 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { isBarline } from 'typeguard';
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { Flow } from './flow';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Repetition } from './staverepetition';
 import { StaveSection } from './stavesection';
 import { StaveTempo, StaveTempoOptions } from './stavetempo';
@@ -44,7 +45,28 @@ export interface StaveOptions {
   num_lines: number;
 }
 
+// Used by Stave.format() to sort the modifiers at the beginning and end of a stave.
+// The keys (computed property names) match the CATEGORY property in the
+// Barline, Clef, KeySignature, TimeSignature classes.
+const SORT_ORDER_BEG_MODIFIERS = {
+  [Barline.CATEGORY]: 0,
+  [Clef.CATEGORY]: 1,
+  [KeySignature.CATEGORY]: 2,
+  [TimeSignature.CATEGORY]: 3,
+};
+
+const SORT_ORDER_END_MODIFIERS = {
+  [TimeSignature.CATEGORY]: 0,
+  [KeySignature.CATEGORY]: 1,
+  [Barline.CATEGORY]: 2,
+  [Clef.CATEGORY]: 3,
+};
+
 export class Stave extends Element {
+  static get CATEGORY(): string {
+    return 'Stave';
+  }
+
   protected start_x: number;
   protected clef: string;
   protected options: StaveOptions;
@@ -79,7 +101,6 @@ export class Stave extends Element {
 
   constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
     super();
-    this.setAttribute('type', 'Stave');
 
     this.x = x;
     this.y = y;
@@ -266,12 +287,12 @@ export class Stave extends Element {
 
     if (!this.formatted) this.format();
 
-    if (this.getModifiers(StaveModifier.Position.BEGIN).length === 1) {
+    if (this.getModifiers(StaveModifierPosition.BEGIN).length === 1) {
       return 0;
     }
 
     // for right position modifiers zero shift seems correct, see 'Volta + Modifier Measure Test'
-    if (this.modifiers[index].getPosition() === StaveModifier.Position.RIGHT) {
+    if (this.modifiers[index].getPosition() === StaveModifierPosition.RIGHT) {
       return 0;
     }
 
@@ -407,7 +428,7 @@ export class Stave extends Element {
   }
 
   addEndModifier(modifier: StaveModifier): this {
-    this.addModifier(modifier, StaveModifier.Position.END);
+    this.addModifier(modifier, StaveModifierPosition.END);
     return this;
   }
 
@@ -433,10 +454,10 @@ export class Stave extends Element {
 
   setClef(clefSpec: string, size?: string, annotation?: string, position?: number): this {
     if (position === undefined) {
-      position = StaveModifier.Position.BEGIN;
+      position = StaveModifierPosition.BEGIN;
     }
 
-    if (position === StaveModifier.Position.END) {
+    if (position === StaveModifierPosition.END) {
       this.endClef = clefSpec;
     } else {
       this.clef = clefSpec;
@@ -457,7 +478,7 @@ export class Stave extends Element {
   }
 
   setEndClef(clefSpec: string, size?: string, annotation?: string): this {
-    this.setClef(clefSpec, size, annotation, StaveModifier.Position.END);
+    this.setClef(clefSpec, size, annotation, StaveModifierPosition.END);
     return this;
   }
 
@@ -467,7 +488,7 @@ export class Stave extends Element {
 
   setKeySignature(keySpec: string, cancelKeySpec?: string, position?: number): this {
     if (position === undefined) {
-      position = StaveModifier.Position.BEGIN;
+      position = StaveModifierPosition.BEGIN;
     }
 
     const keySignatures = this.getModifiers(position, KeySignature.CATEGORY) as KeySignature[];
@@ -481,13 +502,13 @@ export class Stave extends Element {
   }
 
   setEndKeySignature(keySpec: string, cancelKeySpec?: string): this {
-    this.setKeySignature(keySpec, cancelKeySpec, StaveModifier.Position.END);
+    this.setKeySignature(keySpec, cancelKeySpec, StaveModifierPosition.END);
     return this;
   }
 
   setTimeSignature(timeSpec: string, customPadding?: number, position?: number): this {
     if (position === undefined) {
-      position = StaveModifier.Position.BEGIN;
+      position = StaveModifierPosition.BEGIN;
     }
 
     const timeSignatures = this.getModifiers(position, TimeSignature.CATEGORY) as TimeSignature[];
@@ -500,8 +521,8 @@ export class Stave extends Element {
     return this;
   }
 
-  setEndTimeSignature(timeSpec: string, customPadding: number): this {
-    this.setTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
+  setEndTimeSignature(timeSpec: string, customPadding?: number): this {
+    this.setTimeSignature(timeSpec, customPadding, StaveModifierPosition.END);
     return this;
   }
 
@@ -517,7 +538,7 @@ export class Stave extends Element {
    */
   addKeySignature(keySpec: string, cancelKeySpec?: string, position?: number): this {
     if (position === undefined) {
-      position = StaveModifier.Position.BEGIN;
+      position = StaveModifierPosition.BEGIN;
     }
     this.addModifier(new KeySignature(keySpec, cancelKeySpec).setPosition(position), position);
     return this;
@@ -536,9 +557,9 @@ export class Stave extends Element {
    * @returns
    */
   addClef(clef: string, size?: string, annotation?: string, position?: number): this {
-    if (position === undefined || position === StaveModifier.Position.BEGIN) {
+    if (position === undefined || position === StaveModifierPosition.BEGIN) {
       this.clef = clef;
-    } else if (position === StaveModifier.Position.END) {
+    } else if (position === StaveModifierPosition.END) {
       this.endClef = clef;
     }
 
@@ -547,7 +568,7 @@ export class Stave extends Element {
   }
 
   addEndClef(clef: string, size?: string, annotation?: string): this {
-    this.addClef(clef, size, annotation, StaveModifier.Position.END);
+    this.addClef(clef, size, annotation, StaveModifierPosition.END);
     return this;
   }
 
@@ -568,7 +589,7 @@ export class Stave extends Element {
   }
 
   addEndTimeSignature(timeSpec: string, customPadding?: number): this {
-    this.addTimeSignature(timeSpec, customPadding, StaveModifier.Position.END);
+    this.addTimeSignature(timeSpec, customPadding, StaveModifierPosition.END);
     return this;
   }
 
@@ -578,16 +599,32 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * @param position
+   * @param category
+   * @returns array of StaveModifiers that match the provided position and category.
+   */
   getModifiers(position?: number, category?: string): StaveModifier[] {
-    if (position === undefined && category === undefined) return this.modifiers;
-
-    return this.modifiers.filter(
-      (modifier) =>
-        (position === undefined || position === modifier.getPosition()) &&
-        (category === undefined || category === modifier.getCategory())
-    );
+    const noPosition = position === undefined;
+    const noCategory = category === undefined;
+    if (noPosition && noCategory) {
+      return this.modifiers;
+    } else if (noPosition) {
+      // A category was provided.
+      return this.modifiers.filter((m: StaveModifier) => category === m.getCategory());
+    } else if (noCategory) {
+      // A position was provided.
+      return this.modifiers.filter((m: StaveModifier) => position === m.getPosition());
+    } else {
+      // Both position and category were provided!
+      return this.modifiers.filter((m: StaveModifier) => position === m.getPosition() && category === m.getCategory());
+    }
   }
 
+  /**
+   * Use the modifier's `getCategory()` as a key for the `order` array.
+   * The retrieved value is used to sort modifiers from left to right (0 to to 3).
+   */
   sortByCategory(items: StaveModifier[], order: Record<string, number>): void {
     for (let i = items.length - 1; i >= 0; i--) {
       for (let j = 0; j < i; j++) {
@@ -604,22 +641,11 @@ export class Stave extends Element {
     const begBarline = this.modifiers[0] as Barline;
     const endBarline = this.modifiers[1];
 
-    const begModifiers = this.getModifiers(StaveModifier.Position.BEGIN);
-    const endModifiers = this.getModifiers(StaveModifier.Position.END);
+    const begModifiers = this.getModifiers(StaveModifierPosition.BEGIN);
+    const endModifiers = this.getModifiers(StaveModifierPosition.END);
 
-    this.sortByCategory(begModifiers, {
-      barlines: 0,
-      clefs: 1,
-      keysignatures: 2,
-      timesignatures: 3,
-    });
-
-    this.sortByCategory(endModifiers, {
-      timesignatures: 0,
-      keysignatures: 1,
-      barlines: 2,
-      clefs: 3,
-    });
+    this.sortByCategory(begModifiers, SORT_ORDER_BEG_MODIFIERS);
+    this.sortByCategory(endModifiers, SORT_ORDER_END_MODIFIERS);
 
     if (begModifiers.length > 1 && begBarline.getType() === BarlineType.REPEAT_BEGIN) {
       begModifiers.push(begModifiers.splice(0, 1)[0]);
@@ -661,7 +687,7 @@ export class Stave extends Element {
 
     for (let i = 0; i < endModifiers.length; i++) {
       modifier = endModifiers[i];
-      lastBarlineIdx = modifier.getCategory() === Barline.CATEGORY ? i : lastBarlineIdx;
+      lastBarlineIdx = isBarline(modifier) ? i : lastBarlineIdx;
 
       widths.right = 0;
       widths.left = 0;

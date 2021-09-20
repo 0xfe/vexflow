@@ -104,6 +104,12 @@ export class ModifierContext {
     return this.addMember(member);
   }
 
+  /**
+   * this.members maps CATEGORY strings to arrays of Tickable | Modifier | StaveNote | TabNote.
+   * Here we add a new member to this.members, and create a new array if needed.
+   * @param member
+   * @returns this
+   */
   addMember(member: ModifierContextMember): this {
     const category = member.getCategory();
     if (!this.members[category]) {
@@ -115,6 +121,9 @@ export class ModifierContext {
     return this;
   }
 
+  /**
+   * @deprecated
+   */
   getModifiers(category: string): ModifierContextMember[] {
     L('getModifiers is deprecated, use getMembers instead.');
     return this.getMembers(category);

@@ -19,15 +19,19 @@ function L(...args: any[]) {
  * See `tests/barnote_tests.ts` for usage examples.
  */
 export class BarNote extends Note {
-  protected metrics: { widths: Record<string, number> };
   /** To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`. */
   static DEBUG: boolean;
+
+  static get CATEGORY(): string {
+    return 'BarNote';
+  }
+
+  protected metrics: { widths: Record<string, number> };
   // Initialized by the constructor via this.setType(type)
   protected type!: BarlineType;
 
   constructor(type = BarlineType.SINGLE) {
     super({ duration: 'b' });
-    this.setAttribute('type', 'BarNote');
 
     this.metrics = {
       widths: {},

@@ -7,6 +7,7 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
+import { isDot } from 'typeguard';
 import { Dot } from './dot';
 import { Flow } from './flow';
 import { Glyph, GlyphProps } from './glyph';
@@ -122,19 +123,18 @@ function getPartialStemLines(stem_y: number, unused_strings: number[][], stave: 
 }
 
 export class TabNote extends StemmableNote {
+  static get CATEGORY(): string {
+    return 'TabNote';
+  }
+
   protected ghost: boolean;
   protected glyphs: GlyphProps[] = [];
   protected positions: TabNotePosition[];
-
-  static get CATEGORY(): string {
-    return 'tabnotes';
-  }
 
   // Initialize the TabNote with a `tab_struct` full of properties
   // and whether to `draw_stem` when rendering the note
   constructor(tab_struct: TabNoteStruct, draw_stem?: boolean) {
     super(tab_struct);
-    this.setAttribute('type', 'TabNote');
 
     this.ghost = false; // Renders parenthesis around notes
 
@@ -182,11 +182,6 @@ export class TabNote extends StemmableNote {
   reset(): this {
     if (this.stave) this.setStave(this.stave);
     return this;
-  }
-
-  // The ModifierContext category
-  getCategory(): string {
-    return TabNote.CATEGORY;
   }
 
   // Set as ghost `TabNote`, surrounds the fret positions with parenthesis.
@@ -376,12 +371,13 @@ export class TabNote extends StemmableNote {
     }
   }
 
-  // Render the modifiers onto the context
+  // Render the modifiers onto the context.
   drawModifiers(): void {
-    // Draw the modifiers
     this.modifiers.forEach((modifier) => {
-      // Only draw the dots if enabled
-      if (modifier.getCategory() === Dot.CATEGORY && !this.render_options.draw_dots) return;
+      // Only draw the dots if enabled.
+      if (isDot(modifier) && !this.render_options.draw_dots) {
+        return;
+      }
 
       modifier.setContext(this.getContext());
       modifier.drawWithStyle();
@@ -446,7 +442,7 @@ export class TabNote extends StemmableNote {
     }
   }
 
-  // The main rendering function for the entire note
+  // The main rendering function for the entire note.
   draw(): void {
     const ctx = this.checkContext();
 

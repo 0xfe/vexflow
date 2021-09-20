@@ -10,17 +10,9 @@ import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
 import { ModifierContextState } from './modifiercontext';
 
-/**
- * @constructor
- */
 export class FretHandFinger extends Modifier {
-  protected finger: string;
-  protected x_offset: number;
-  protected y_offset: number;
-  protected font: FontInfo;
-
   static get CATEGORY(): string {
-    return 'frethandfinger';
+    return 'FretHandFinger';
   }
 
   // Arrange fingerings inside a ModifierContext.
@@ -104,10 +96,8 @@ export class FretHandFinger extends Modifier {
   }
 
   static easyScoreHook({ fingerings }: { fingerings?: string } = {}, note: StaveNote, builder: Builder): void {
-    if (!fingerings) return;
-
     fingerings
-      .split(',')
+      ?.split(',')
       .map((fingeringString: string) => {
         const split = fingeringString.trim().split('.');
         const params: { number: string; position?: string } = { number: split[0] };
@@ -117,9 +107,13 @@ export class FretHandFinger extends Modifier {
       .map((fingering: Modifier, index: number) => note.addModifier(fingering, index));
   }
 
+  protected finger: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected font: FontInfo;
+
   constructor(finger: string) {
     super();
-    this.setAttribute('type', 'FretHandFinger');
 
     this.finger = finger;
     this.width = 7;
@@ -133,10 +127,6 @@ export class FretHandFinger extends Modifier {
       size: 9,
       weight: 'bold',
     };
-  }
-
-  getCategory(): string {
-    return FretHandFinger.CATEGORY;
   }
 
   setFretHandFinger(finger: string): this {
