@@ -220,6 +220,7 @@ function multiNotationAndTab(options: TestOptions): void {
   ok(true, 'Strokes Test Notation & Tab Multi Voice');
 }
 
+/*
 function drawTabStrokes(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 600, 200);
   const stave1 = f.TabStave({ width: 250 }).setEndBarType(Barline.type.DOUBLE);
@@ -307,6 +308,7 @@ function drawTabStrokes(options: TestOptions): void {
 
   ok(true, 'Strokes Tab test');
 }
+*/
 
 function notesWithTab(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 500, 300);

@@ -3,16 +3,11 @@
 //
 // StaveModifier Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Make second argument to setEndTimeSignature(...) optional.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
-import { StaveModifier } from 'stavemodifier';
+import { BarlineType } from 'stavebarline';
 import { ContextBuilder } from 'renderer';
+import { StaveModifierPosition } from 'stavemodifier';
 
 const StaveModifierTests = {
   Start(): void {
@@ -61,24 +56,24 @@ function drawBeginAndEnd(options: TestOptions, contextBuilder: ContextBuilder): 
   stave.setTimeSignature('C|');
   stave.setKeySignature('Db');
   stave.setClef('treble');
-  stave.setBegBarType(Barline.type.REPEAT_BEGIN);
+  stave.setBegBarType(BarlineType.REPEAT_BEGIN);
   stave.setEndClef('alto');
   stave.setEndTimeSignature('9/8');
   stave.setEndKeySignature('G', 'C#');
-  stave.setEndBarType(Barline.type.DOUBLE);
+  stave.setEndBarType(BarlineType.DOUBLE);
   stave.draw();
 
   // change
-  const END = StaveModifier.Position.END;
+  const END = StaveModifierPosition.END;
   stave.setY(100);
   stave.setTimeSignature('3/4');
   stave.setKeySignature('G', 'C#');
   stave.setClef('bass');
-  stave.setBegBarType(Barline.type.SINGLE);
+  stave.setBegBarType(BarlineType.SINGLE);
   stave.setClef('treble', undefined, undefined, END);
   stave.setTimeSignature('C', undefined, END);
   stave.setKeySignature('F', undefined, END);
-  stave.setEndBarType(Barline.type.SINGLE);
+  stave.setEndBarType(BarlineType.SINGLE);
   stave.draw();
 
   ok(true, 'all pass');

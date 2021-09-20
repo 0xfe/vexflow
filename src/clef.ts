@@ -3,7 +3,7 @@
 // MIT License
 
 import { RuntimeError, log, defined } from './util';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 
@@ -121,7 +121,7 @@ export class Clef extends StaveModifier {
   constructor(type: string, size?: string, annotation?: string) {
     super();
 
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
     this.setWidth(this.musicFont.lookupMetric(`clef.${this.size}.width`));
     L('Creating clef:', type);

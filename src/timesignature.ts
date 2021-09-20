@@ -7,7 +7,7 @@
 
 import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
 
 export interface TimeSignatureInfo {
@@ -70,7 +70,7 @@ export class TimeSignature extends StaveModifier {
     const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.info = this.parseTimeSpec(timeSpec);
     this.setWidth(defined(this.info.glyph.getMetrics().width));
     this.setPadding(padding);

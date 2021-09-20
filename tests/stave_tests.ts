@@ -581,7 +581,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
 
   // bar 5: d.s. shift (similar potential x-shift concern)
   const mm5 = new Stave(mm4.getX() + mm4.getWidth(), mm4.getY(), 175);
-  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
+  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
   mm5.setEndBarType(BarlineType.DOUBLE);
   mm5.setRepetitionTypeRight(Repetition.type.DS, 25);
   mm5.addClef('treble');
@@ -594,7 +594,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
 
   // bar 6: d.s. without modifiers
   const mm6 = new Stave(mm5.getX() + mm5.getWidth(), mm5.getY(), 175);
-  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifier.Position.RIGHT);
+  // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
   mm6.setRepetitionTypeRight(Repetition.type.DS, 25);
   mm6.setMeasure(6);
   mm6.setSection('E', 0);

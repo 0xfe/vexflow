@@ -2,8 +2,8 @@
 // Author Taehoon Moon 2014
 
 import { RuntimeError } from './util';
-import { StaveModifier } from './stavemodifier';
-import { TextNote } from './textnote';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Justification, TextNote } from './textnote';
 import { FontInfo } from './types/common';
 import { Stave } from './stave';
 
@@ -87,20 +87,18 @@ export class StaveText extends StaveModifier {
 
     let x;
     let y;
-    const Position = StaveModifier.Position;
-    const Justification = TextNote.Justification;
     switch (this.position) {
-      case Position.LEFT:
-      case Position.RIGHT:
+      case StaveModifierPosition.LEFT:
+      case StaveModifierPosition.RIGHT:
         y = (stave.getYForLine(0) + stave.getBottomLineY()) / 2 + this.options.shift_y;
-        if (this.position === Position.LEFT) {
+        if (this.position === StaveModifierPosition.LEFT) {
           x = stave.getX() - text_width - 24 + this.options.shift_x;
         } else {
           x = stave.getX() + stave.getWidth() + 24 + this.options.shift_x;
         }
         break;
-      case Position.ABOVE:
-      case Position.BELOW:
+      case StaveModifierPosition.ABOVE:
+      case StaveModifierPosition.BELOW:
         x = stave.getX() + this.options.shift_x;
         if (this.options.justification === Justification.CENTER) {
           x += stave.getWidth() / 2 - text_width / 2;
@@ -108,7 +106,7 @@ export class StaveText extends StaveModifier {
           x += stave.getWidth() - text_width;
         }
 
-        if (this.position === Position.ABOVE) {
+        if (this.position === StaveModifierPosition.ABOVE) {
           y = stave.getYForTopText(2) + this.options.shift_y;
         } else {
           y = stave.getYForBottomText(2) + this.options.shift_y;

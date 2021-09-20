@@ -46,7 +46,7 @@ export class StaveModifier extends Element {
     super();
 
     this.padding = 10;
-    this.position = StaveModifier.Position.ABOVE;
+    this.position = StaveModifierPosition.ABOVE;
   }
 
   getPosition(): number {

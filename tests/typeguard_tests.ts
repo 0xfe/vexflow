@@ -5,7 +5,7 @@
 // TypeGuard Tests
 
 // eslint-disable-next-line
-// @ts-nocheck to support ES5 style class declaration in the fake() test case.
+// @ts-nocheck to support ES5 style class declaration in the fakeES5() test case.
 
 import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
 import { StaveNote } from 'stavenote';
@@ -41,7 +41,7 @@ function real(): void {
 /**
  * Helper function to test the fake VexFlow objects we create in fakeES5() and fakeES6().
  */
-function checkFakeObjects(fakeStemmableNote, fakeStaveNote): void {
+function checkFakeObjects(fakeStemmableNote: unknown, fakeStaveNote: unknown): void {
   ok(isStemmableNote(fakeStemmableNote), 'Fake StemmableNote is a StemmableNote.');
   notOk(isNote(fakeStemmableNote), 'Fake StemmableNote is not a Note (no ancestors with the correct CATEGORY).');
 

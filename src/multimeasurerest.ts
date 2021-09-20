@@ -8,7 +8,7 @@ import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifierPosition } from './stavemodifier';
 import { TimeSignature } from './timesignature';
 import { Stave } from './stave';
 import { RenderContext } from './types/common';
@@ -222,7 +222,7 @@ export class MultiMeasureRest extends Element {
 
     // FIXME: getNoteStartX() returns x+5(barline width) and
     // getNoteEndX() returns x + width(no barline width) by default. how to fix?
-    const begModifiers = stave.getModifiers(StaveModifier.Position.BEGIN);
+    const begModifiers = stave.getModifiers(StaveModifierPosition.BEGIN);
 
     if (begModifiers.length === 1 && isBarline(begModifiers[0])) {
       left -= begModifiers[0].getWidth();

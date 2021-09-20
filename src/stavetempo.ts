@@ -2,7 +2,7 @@
 // Author Radosaw Eichler 2012
 
 import { Flow } from './flow';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';
 import { Stave } from './stave';
@@ -32,7 +32,7 @@ export class StaveTempo extends StaveModifier {
     super();
 
     this.tempo = tempo;
-    this.position = StaveModifier.Position.ABOVE;
+    this.position = StaveModifierPosition.ABOVE;
     this.x = x;
     this.shift_x = 10;
     this.shift_y = shift_y;

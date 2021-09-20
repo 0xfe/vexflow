@@ -8,7 +8,7 @@
 
 import { defined, RuntimeError } from './util';
 import { Flow } from './flow';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 
@@ -93,7 +93,7 @@ export class KeySignature extends StaveModifier {
     super();
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
     this.glyphs = [];
     this.xPositions = []; // relative to this.x
@@ -289,7 +289,7 @@ export class KeySignature extends StaveModifier {
 
     if (this.accList.length > 0) {
       const clef =
-        (this.position === StaveModifier.Position.END ? stave.getEndClef() : stave.getClef()) || stave.getClef();
+        (this.position === StaveModifierPosition.END ? stave.getEndClef() : stave.getClef()) || stave.getClef();
       if (cancelAccList) {
         this.convertAccLines(clef, cancelAccList.type, cancelAccList.accList);
       }

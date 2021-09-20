@@ -3,7 +3,7 @@
 // Author Larry Kuhns 2011
 
 import { Flow } from './flow';
-import { LayoutMetrics, StaveModifier } from './stavemodifier';
+import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Stave } from './stave';
 
 export enum BarlineType {
@@ -110,7 +110,7 @@ export class Barline extends StaveModifier {
       paddingLeft: 5,
       paddingRight: 5,
     };
-    this.setPosition(StaveModifier.Position.BEGIN);
+    this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type);
   }
 
