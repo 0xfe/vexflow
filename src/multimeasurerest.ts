@@ -1,7 +1,7 @@
 // VexFlow - Music Engraving for HTML5
 // Copyright Mohit Muthanna 2010
 //
-// This class implements multiple measure rests
+// This class implements multiple measure rests.
 
 import { defined } from './util';
 import { Flow } from './flow';
@@ -15,34 +15,55 @@ import { RenderContext } from './types/common';
 import { isBarline } from 'typeguard';
 
 export interface MultimeasureRestRenderOptions {
+  /** Extracted by Factory.MultiMeasureRest() and passed to the MultiMeasureRest constructor. */
   number_of_measures: number;
-  padding_left?: number;
-  line?: number;
-  number_glyph_point?: number;
-  show_number?: boolean;
-  line_thickness?: number;
-  symbol_spacing?: number;
-  serif_thickness?: number;
+
+  /** Use rest symbols. Defaults to `false`, which renders a thick horizontal line with serifs at both ends. */
   use_symbols?: boolean;
+
+  /** Horizontal spacing between rest symbol glyphs (if `use_symbols` is `true`).*/
+  symbol_spacing?: number;
+
+  /** Show the number of measures at the top. Defaults to `true`. */
+  show_number?: boolean;
+
+  /** Vertical position of the "number of measures" text (measured in stave lines). Defaults to -0.5, which is above the stave. 6.5 is below the stave. */
   number_line?: number;
-  spacing_between_lines_px?: number;
-  semibreve_rest_glyph_scale?: number;
+
+  /** Font size of the "number of measures" text. */
+  number_glyph_point?: number;
+
+  /** Left padding from `stave.getX()`. */
+  padding_left?: number;
+
+  /** Right padding from `stave.getX() + stave.getWidth()` */
   padding_right?: number;
+
+  /** Vertical position of the rest line or symbols, expressed as stave lines. Default: 2. The top stave line is 1, and the bottom stave line is 5. */
+  line?: number;
+
+  /** Defaults to the number of vertical pixels between stave lines. Used for serif height or 2-bar / 4-bar symbol height. */
+  spacing_between_lines_px?: number;
+
+  /** Size of the semibreve (1-bar) rest symbol. Other symbols are scaled accordingly. */
+  semibreve_rest_glyph_scale?: number;
+
+  /** Thickness of the rest line. Used when `use_symbols` is false. Defaults to half the space between stave lines. */
+  line_thickness?: number;
+
+  /** Thickness of the rest line's serif. Used when `use_symbols` is false. */
+  serif_thickness?: number;
 }
 
-let semibreve_rest: {
-  glyph_font_scale: number;
-  glyph_code: string;
-  width: number;
-};
+let semibreve_rest: { glyph_font_scale: number; glyph_code: string; width: number };
 
 function get_semibreve_rest() {
   if (!semibreve_rest) {
-    const notehead = new NoteHead({ duration: 'w', note_type: 'r' });
+    const noteHead = new NoteHead({ duration: 'w', note_type: 'r' });
     semibreve_rest = {
-      glyph_font_scale: notehead.render_options.glyph_font_scale,
-      glyph_code: notehead.glyph_code,
-      width: notehead.getWidth(),
+      glyph_font_scale: noteHead.render_options.glyph_font_scale,
+      glyph_code: noteHead.glyph_code,
+      width: noteHead.getWidth(),
     };
   }
   return semibreve_rest;
@@ -53,29 +74,32 @@ export class MultiMeasureRest extends Element {
     return 'MultiMeasureRest';
   }
 
-  protected render_options: MultimeasureRestRenderOptions;
-  protected xs: { left: number; right: number };
+  protected render_options: Required<MultimeasureRestRenderOptions>;
+  protected xs = { left: NaN, right: NaN };
   protected number_of_measures: number;
 
   protected stave?: Stave;
-  // Parameters:
-  // * `number_of_measures` - Number of measures.
-  // * `options` - The options object.
-  //   * `show_number` - Show number of measures string or not.
-  //   * `number_line` -  Staff line to render the number of measures string.
-  //   * `number_glyph_point` - Size of the number of measures string glyphs.
-  //   * `padding_left` - Left padding from stave x.
-  //   * `padding_right` - Right padding from stave end x.
-  //   * `line` - Staff line to render rest line or rest symbols.
-  //   * `spacing_between_lines_px` - Spacing between staff lines to
-  // resolve serif height or {2-bar and 4-bar}rest symbol height.
-  //   * `line_thickness` - Rest line thickness.
-  //   * `serif_thickness` - Rest serif line thickness.
-  //   * `use_symbols` - Use rest symbols or not.
-  //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
-  //   * `semibreve_rest_glyph_scale` - Size of the semibreve(1-bar) rest symbol.
+
+  private hasPaddingLeft = false;
+  private hasPaddingRight = false;
+  private hasLineThickness = false;
+  private hasSymbolSpacing = false;
+
+  /**
+   *
+   * @param number_of_measures Number of measures.
+   * @param options The options object.
+   */
   constructor(number_of_measures: number, options: MultimeasureRestRenderOptions) {
     super();
+
+    this.number_of_measures = number_of_measures;
+
+    // Keep track of whether these four options were provided.
+    this.hasPaddingLeft = typeof options.padding_left === 'number';
+    this.hasPaddingRight = typeof options.padding_right === 'number';
+    this.hasLineThickness = typeof options.line_thickness === 'number';
+    this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
     // Any numeric fields in `this.render_options` can be safely be cast "as number" when needed.
     this.render_options = {
@@ -84,20 +108,18 @@ export class MultiMeasureRest extends Element {
       number_line: -0.5,
       number_glyph_point: this.musicFont.lookupMetric('digits.point'), // same as TimeSignature.
       line: 2,
-      spacing_between_lines_px: 10, // same as Stave.
+      spacing_between_lines_px: Flow.STAVE_LINE_DISTANCE, // same as Stave.
       serif_thickness: 2,
       semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE, // same as NoteHead.
+      padding_left: 0,
+      padding_right: 0,
+      line_thickness: 5,
+      symbol_spacing: 0,
       ...options,
     };
 
     const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
     this.render_options.number_line += fontLineShift;
-
-    this.number_of_measures = number_of_measures;
-    this.xs = {
-      left: NaN,
-      right: NaN,
-    };
   }
 
   getXs(): { left: number; right: number } {
@@ -117,69 +139,70 @@ export class MultiMeasureRest extends Element {
     return defined(this.stave, 'NoStave', 'No stave attached to instance.');
   }
 
-  drawLine(ctx: RenderContext, left: number, right: number, sbl: number): void {
-    const y = this.checkStave().getYForLine(this.render_options.line as number);
-    const padding = (right - left) * 0.1;
+  drawLine(stave: Stave, ctx: RenderContext, left: number, right: number, spacingBetweenLines: number): void {
+    const options = this.render_options;
 
+    const y = stave.getYForLine(options.line);
+    const padding = (right - left) * 0.1;
     left += padding;
     right -= padding;
 
-    const serif = {
-      thickness: this.render_options.serif_thickness as number,
-      height: sbl,
-    };
-    let lineThicknessHalf = sbl * 0.25;
-    if (this.render_options.line_thickness != undefined) {
-      lineThicknessHalf = this.render_options.line_thickness * 0.5;
+    let lineThicknessHalf;
+    if (this.hasLineThickness) {
+      lineThicknessHalf = options.line_thickness * 0.5;
+    } else {
+      lineThicknessHalf = spacingBetweenLines * 0.25;
     }
-
+    const serifThickness = options.serif_thickness;
+    const top = y - spacingBetweenLines;
+    const bot = y + spacingBetweenLines;
+    const leftIndented = left + serifThickness;
+    const rightIndented = right - serifThickness;
+    const lineTop = y - lineThicknessHalf;
+    const lineBottom = y + lineThicknessHalf;
     ctx.save();
     ctx.beginPath();
-    ctx.moveTo(left, y - sbl);
-    ctx.lineTo(left + serif.thickness, y - sbl);
-    ctx.lineTo(left + serif.thickness, y - lineThicknessHalf);
-    ctx.lineTo(right - serif.thickness, y - lineThicknessHalf);
-    ctx.lineTo(right - serif.thickness, y - sbl);
-    ctx.lineTo(right, y - sbl);
-    ctx.lineTo(right, y + sbl);
-    ctx.lineTo(right - serif.thickness, y + sbl);
-    ctx.lineTo(right - serif.thickness, y + lineThicknessHalf);
-    ctx.lineTo(left + serif.thickness, y + lineThicknessHalf);
-    ctx.lineTo(left + serif.thickness, y + sbl);
-    ctx.lineTo(left, y + sbl);
+    ctx.moveTo(left, top);
+    ctx.lineTo(leftIndented, top);
+    ctx.lineTo(leftIndented, lineTop);
+    ctx.lineTo(rightIndented, lineTop);
+    ctx.lineTo(rightIndented, top);
+    ctx.lineTo(right, top);
+    ctx.lineTo(right, bot);
+    ctx.lineTo(rightIndented, bot);
+    ctx.lineTo(rightIndented, lineBottom);
+    ctx.lineTo(leftIndented, lineBottom);
+    ctx.lineTo(leftIndented, bot);
+    ctx.lineTo(left, bot);
     ctx.closePath();
     ctx.fill();
   }
 
-  drawSymbols(ctx: RenderContext, left: number, right: number, sbl: number): void {
-    const stave = this.checkStave();
+  drawSymbols(stave: Stave, ctx: RenderContext, left: number, right: number, spacingBetweenLines: number): void {
     const n4 = Math.floor(this.number_of_measures / 4);
     const n = this.number_of_measures % 4;
     const n2 = Math.floor(n / 2);
     const n1 = n % 2;
 
-    const semibreve_rest = get_semibreve_rest();
-    const semibreve_rest_width =
-      semibreve_rest.width * (this.render_options.semibreve_rest_glyph_scale / semibreve_rest.glyph_font_scale);
+    const options = this.render_options;
+    const rest = get_semibreve_rest();
+    const rest_scale = options.semibreve_rest_glyph_scale;
+    const rest_width = rest.width * (rest_scale / rest.glyph_font_scale);
     const glyphs = {
       2: {
-        width: semibreve_rest_width * 0.5,
-        height: sbl,
+        width: rest_width * 0.5,
+        height: spacingBetweenLines,
       },
       1: {
-        width: semibreve_rest_width,
+        width: rest_width,
       },
     };
 
-    let spacing = semibreve_rest_width * 1.35;
-    if (this.render_options.symbol_spacing != undefined) {
-      spacing = this.render_options.symbol_spacing;
-    }
+    const spacing = this.hasSymbolSpacing ? options.symbol_spacing : rest_width * 1.35;
 
     const width = n4 * glyphs[2].width + n2 * glyphs[2].width + n1 * glyphs[1].width + (n4 + n2 + n1 - 1) * spacing;
     let x = left + (right - left) * 0.5 - width * 0.5;
-
-    const line = this.render_options.line as number;
+    const line = options.line;
     const yTop = stave.getYForLine(line - 1);
     const yMiddle = stave.getYForLine(line);
     const yBottom = stave.getYForLine(line + 1);
@@ -198,7 +221,7 @@ export class MultiMeasureRest extends Element {
       x += glyphs[2].width + spacing;
     }
     for (let i = 0; i < n1; ++i) {
-      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibreve_rest_glyph_scale, semibreve_rest.glyph_code);
+      Glyph.renderGlyph(ctx, x, yTop, rest_scale, rest.glyph_code);
       x += glyphs[1].width + spacing;
     }
 
@@ -210,44 +233,45 @@ export class MultiMeasureRest extends Element {
     this.setRendered();
 
     const stave = this.checkStave();
-    const sbl = this.render_options.spacing_between_lines_px as number;
 
     let left = stave.getNoteStartX();
     let right = stave.getNoteEndX();
 
-    // FIXME: getNoteStartX() returns x+5(barline width) and
-    // getNoteEndX() returns x + width(no barline width) by default. how to fix?
+    // FIXME: getNoteStartX() returns x + 5(barline width)
+    //        getNoteEndX() returns x + width(no barline width)
+    // See Stave constructor. How do we fix this?
+    // Here, we subtract the barline width.
     const begModifiers = stave.getModifiers(StaveModifierPosition.BEGIN);
-
     if (begModifiers.length === 1 && isBarline(begModifiers[0])) {
       left -= begModifiers[0].getWidth();
     }
 
-    if (this.render_options.padding_left != undefined) {
-      left = stave.getX() + this.render_options.padding_left;
+    const options = this.render_options;
+    if (this.hasPaddingLeft) {
+      left = stave.getX() + options.padding_left;
     }
-
-    if (this.render_options.padding_right != undefined) {
-      right = stave.getX() + stave.getWidth() - this.render_options.padding_right;
+    if (this.hasPaddingRight) {
+      right = stave.getX() + stave.getWidth() - options.padding_right;
     }
 
     this.xs.left = left;
     this.xs.right = right;
 
-    if (this.render_options.use_symbols) {
-      this.drawSymbols(ctx, left, right, sbl);
+    const spacingBetweenLines = options.spacing_between_lines_px;
+    if (options.use_symbols) {
+      this.drawSymbols(stave, ctx, left, right, spacingBetweenLines);
     } else {
-      this.drawLine(ctx, left, right, sbl);
+      this.drawLine(stave, ctx, left, right, spacingBetweenLines);
     }
 
-    if (this.render_options.show_number) {
+    if (options.show_number) {
       const timeSpec = '/' + this.number_of_measures;
       const timeSig = new TimeSignature(timeSpec, 0, false);
-      timeSig.point = this.render_options.number_glyph_point as number;
+      timeSig.point = options.number_glyph_point;
       timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);
       timeSig.setX(left + (right - left) * 0.5 - timeSig.getInfo().glyph.getMetrics().width * 0.5);
-      timeSig.bottomLine = this.render_options.number_line as number;
+      timeSig.bottomLine = options.number_line;
       timeSig.setContext(ctx).draw();
     }
   }

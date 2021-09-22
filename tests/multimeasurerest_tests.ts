@@ -49,7 +49,12 @@ function simple(options: TestOptions): void {
     [line_spacing_15px, { number_of_measures: 12, spacing_between_lines_px: 15, number_glyph_point: 40 * 1.5 }],
     [
       line_spacing_15px,
-      { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true, number_glyph_point: 40 * 1.5 },
+      {
+        number_of_measures: 9,
+        spacing_between_lines_px: 15,
+        use_symbols: true,
+        number_glyph_point: 40 * 1.5,
+      },
     ],
     [
       line_spacing_15px,
