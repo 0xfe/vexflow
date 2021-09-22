@@ -264,7 +264,7 @@ export class Stave extends Element {
       fillStyle: this.options.fill_style,
       strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
       lineWidth: Flow.STAVE_LINE_THICKNESS,
-      ...(this.style || {}),
+      ...this.style,
     };
   }
 
@@ -279,7 +279,7 @@ export class Stave extends Element {
    * @param  {Number} index The index from which to determine the shift
    * @return {Number}       The amount of pixels shifted
    */
-  getModifierXShift(index = 0): number {
+  getModifierXShift(index: number = 0): number {
     if (typeof index !== 'number') {
       throw new RuntimeError('InvalidIndex', 'Must be of number type');
     }

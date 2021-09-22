@@ -9,11 +9,9 @@ export class TabStave extends Stave {
 
   constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
     const tab_options = {
-      ...{
-        spacing_between_lines_px: 13,
-        num_lines: 6,
-        top_text_position: 1,
-      },
+      spacing_between_lines_px: 13,
+      num_lines: 6,
+      top_text_position: 1,
       ...options,
     };
 

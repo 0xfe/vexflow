@@ -27,10 +27,8 @@ export class GraceNote extends StaveNote {
 
   constructor(noteStruct: Partial<GraceNoteStruct>) {
     super({
-      ...{
-        glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
-        stroke_px: GraceNote.LEDGER_LINE_OFFSET,
-      },
+      glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+      stroke_px: GraceNote.LEDGER_LINE_OFFSET,
       ...noteStruct,
     });
 
