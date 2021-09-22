@@ -96,7 +96,7 @@ export class Factory {
     return new Factory({ renderer: { elementId, width, height, backend: Renderer.Backends.SVG } });
   }
 
-  protected options: FactoryOptions;
+  protected options: Required<FactoryOptions>;
 
   protected stave?: Stave;
   protected context!: RenderContext;
@@ -144,34 +144,27 @@ export class Factory {
   }
 
   getOptions(): Required<FactoryOptions> {
-    // Assume we did not unset `this.options.stave`, `this.options.renderer`, or `this.options.font`.
-    return this.options as Required<FactoryOptions>;
+    return this.options;
   }
 
   setOptions(options?: FactoryOptions): void {
     this.options = { ...this.options, ...options };
 
-    if (this.options.renderer?.elementId !== null) {
-      this.initRenderer();
-    }
+    this.initRenderer();
     this.reset();
   }
 
   initRenderer(): void {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     const { elementId, backend, width, height, background } = this.options.renderer;
-    if (elementId === '') {
-      L(this);
-      throw new RuntimeError('HTML DOM element not set in Factory');
+    if (elementId === null) {
+      return;
     }
 
-    this.context = Renderer.buildContext(
-      elementId as string,
-      backend ?? Renderer.Backends.SVG,
-      width,
-      height,
-      background
-    );
+    if (elementId === '' || typeof elementId !== 'string') {
+      L(this);
+      throw new RuntimeError('renderer.elementId not set in FactoryOptions');
+    }
+    this.context = Renderer.buildContext(elementId, backend ?? Renderer.Backends.SVG, width, height, background);
   }
 
   getContext(): RenderContext {
@@ -198,7 +191,6 @@ export class Factory {
   }
 
   Stave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): Stave {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     if (!this.options.stave) throw new RuntimeError('NoStave');
     const p = {
       x: 0,
@@ -218,7 +210,6 @@ export class Factory {
   }
 
   TabStave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): TabStave {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     if (!this.options.stave) throw new RuntimeError('NoStave');
 
     const p = {
