@@ -15,18 +15,18 @@ import { RenderContext } from './types/common';
 import { isBarline } from 'typeguard';
 
 export interface MultimeasureRestRenderOptions {
-  number_of_measures?: number;
+  number_of_measures: number;
   padding_left?: number;
-  line: number;
-  number_glyph_point: number;
-  show_number: boolean;
+  line?: number;
+  number_glyph_point?: number;
+  show_number?: boolean;
   line_thickness?: number;
   symbol_spacing?: number;
-  serif_thickness: number;
-  use_symbols: boolean;
-  number_line: number;
-  spacing_between_lines_px: number;
-  semibreve_rest_glyph_scale: number;
+  serif_thickness?: number;
+  use_symbols?: boolean;
+  number_line?: number;
+  spacing_between_lines_px?: number;
+  semibreve_rest_glyph_scale?: number;
   padding_right?: number;
 }
 
@@ -74,30 +74,23 @@ export class MultiMeasureRest extends Element {
   //   * `use_symbols` - Use rest symbols or not.
   //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
   //   * `semibreve_rest_glyph_scale` - Size of the semibreve(1-bar) rest symbol.
-  constructor(number_of_measures: number, options: Partial<MultimeasureRestRenderOptions>) {
+  constructor(number_of_measures: number, options: MultimeasureRestRenderOptions) {
     super();
 
-    const point = this.musicFont.lookupMetric('digits.point');
-    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
-
+    // Any numeric fields in `this.render_options` can be safely be cast "as number" when needed.
     this.render_options = {
+      use_symbols: false,
       show_number: true,
       number_line: -0.5,
-      number_glyph_point: point, // same as TimeSignature.
-
+      number_glyph_point: this.musicFont.lookupMetric('digits.point'), // same as TimeSignature.
       line: 2,
-
       spacing_between_lines_px: 10, // same as Stave.
-
       serif_thickness: 2,
-
-      use_symbols: false,
-
-      /* same as NoteHead. */
-      semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
+      semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE, // same as NoteHead.
+      ...options,
     };
-    this.render_options = { ...this.render_options, ...options };
 
+    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
     this.render_options.number_line += fontLineShift;
 
     this.number_of_measures = number_of_measures;
@@ -125,14 +118,14 @@ export class MultiMeasureRest extends Element {
   }
 
   drawLine(ctx: RenderContext, left: number, right: number, sbl: number): void {
-    const y = this.checkStave().getYForLine(this.render_options.line);
+    const y = this.checkStave().getYForLine(this.render_options.line as number);
     const padding = (right - left) * 0.1;
 
     left += padding;
     right -= padding;
 
     const serif = {
-      thickness: this.render_options.serif_thickness,
+      thickness: this.render_options.serif_thickness as number,
       height: sbl,
     };
     let lineThicknessHalf = sbl * 0.25;
@@ -185,9 +178,11 @@ export class MultiMeasureRest extends Element {
 
     const width = n4 * glyphs[2].width + n2 * glyphs[2].width + n1 * glyphs[1].width + (n4 + n2 + n1 - 1) * spacing;
     let x = left + (right - left) * 0.5 - width * 0.5;
-    const yTop = stave.getYForLine(this.render_options.line - 1);
-    const yMiddle = stave.getYForLine(this.render_options.line);
-    const yBottom = stave.getYForLine(this.render_options.line + 1);
+
+    const line = this.render_options.line as number;
+    const yTop = stave.getYForLine(line - 1);
+    const yMiddle = stave.getYForLine(line);
+    const yBottom = stave.getYForLine(line + 1);
 
     ctx.save();
     ctx.setStrokeStyle('none');
@@ -215,7 +210,7 @@ export class MultiMeasureRest extends Element {
     this.setRendered();
 
     const stave = this.checkStave();
-    const sbl = this.render_options.spacing_between_lines_px;
+    const sbl = this.render_options.spacing_between_lines_px as number;
 
     let left = stave.getNoteStartX();
     let right = stave.getNoteEndX();
@@ -248,11 +243,11 @@ export class MultiMeasureRest extends Element {
     if (this.render_options.show_number) {
       const timeSpec = '/' + this.number_of_measures;
       const timeSig = new TimeSignature(timeSpec, 0, false);
-      timeSig.point = this.render_options.number_glyph_point;
+      timeSig.point = this.render_options.number_glyph_point as number;
       timeSig.setTimeSig(timeSpec);
       timeSig.setStave(stave);
       timeSig.setX(left + (right - left) * 0.5 - timeSig.getInfo().glyph.getMetrics().width * 0.5);
-      timeSig.bottomLine = this.render_options.number_line;
+      timeSig.bottomLine = this.render_options.number_line as number;
       timeSig.setContext(ctx).draw();
     }
   }

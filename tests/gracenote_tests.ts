@@ -161,7 +161,7 @@ const createNoteForStemTest = (
   stem_direction: number,
   slash: boolean = false
 ): StaveNote => {
-  const struct: Partial<GraceNoteStruct> | Partial<StaveNoteStruct> = { duration, slash };
+  const struct: GraceNoteStruct | StaveNoteStruct = { duration, slash };
   struct.stem_direction = stem_direction;
   struct.keys = keys;
   return noteBuilder(struct);

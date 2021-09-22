@@ -599,8 +599,7 @@ function drawTempo(options: TestOptions, contextBuilder: ContextBuilder): void {
   let x = 0;
   let y = 50;
 
-  // TODO: Change tempo to Partial<StaveTempoOptions> or make .name optional in StaveTempoOptions.
-  function drawTempoStaveBar(width: number, tempo: Partial<StaveTempoOptions>, tempo_y: number, notes?: StaveNote[]) {
+  function drawTempoStaveBar(width: number, tempo: StaveTempoOptions, tempo_y: number, notes?: StaveNote[]) {
     const staveBar = new Stave(padding + x, y, width);
     if (x === 0) staveBar.addClef('treble');
     staveBar.setTempo(tempo, tempo_y);

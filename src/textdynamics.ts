@@ -70,17 +70,14 @@ export class TextDynamics extends Note {
    * @param noteStruct an object that contains a `duration` property and a
    * `sequence` of letters that represents the letters to render.
    */
-  constructor(noteStruct: Partial<TextNoteStruct>) {
+  constructor(noteStruct: TextNoteStruct) {
     super(noteStruct);
 
     this.sequence = (noteStruct.text || '').toLowerCase();
     this.line = noteStruct.line || 0;
     this.glyphs = [];
 
-    this.render_options = {
-      ...this.render_options,
-      glyph_font_size: 40,
-    };
+    this.render_options = { ...this.render_options, glyph_font_size: 40 };
 
     L('New Dynamics Text: ', this.sequence);
   }

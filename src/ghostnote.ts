@@ -15,7 +15,7 @@ export class GhostNote extends StemmableNote {
     return 'GhostNote';
   }
 
-  constructor(parameter: string | Partial<NoteStruct>) {
+  constructor(parameter: string | NoteStruct) {
     if (!parameter) {
       throw new RuntimeError('BadArguments', ERROR_MSG);
     }

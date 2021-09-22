@@ -8,13 +8,14 @@ import { Element } from './element';
 import { Note } from './note';
 
 export interface CurveOptions {
-  thickness: number;
-  x_shift: number;
-  y_shift: number;
-  position: string | number;
-  position_end: string | number;
-  invert: boolean;
-  cps: { x: number; y: number }[];
+  /** Two control points for the bezier curves. */
+  cps?: { x: number; y: number }[];
+  thickness?: number;
+  x_shift?: number;
+  y_shift?: number;
+  position?: string | number;
+  position_end?: string | number;
+  invert?: boolean;
 }
 
 export enum CurvePosition {
@@ -88,16 +89,17 @@ export class Curve extends Element {
 
   renderCurve(params: { last_y: number; last_x: number; first_y: number; first_x: number; direction: number }): void {
     const ctx = this.checkContext();
-    const cps = this.render_options.cps;
+    // eslint-disable-next-line
+    const cps = this.render_options.cps!;
 
-    const x_shift = this.render_options.x_shift;
-    const y_shift = this.render_options.y_shift * params.direction;
+    const x_shift = this.render_options.x_shift as number;
+    const y_shift = (this.render_options.y_shift as number) * params.direction;
 
     const first_x = params.first_x + x_shift;
     const first_y = params.first_y + y_shift;
     const last_x = params.last_x - x_shift;
     const last_y = params.last_y + y_shift;
-    const thickness = this.render_options.thickness;
+    const thickness = this.render_options.thickness as number;
 
     const cp_spacing = (last_x - first_x) / (cps.length + 2);
 
@@ -139,7 +141,7 @@ export class Curve extends Element {
     let metric = 'baseY';
     let end_metric = 'baseY';
 
-    function getPosition(position: string | number) {
+    function getPosition(position?: string | number) {
       return typeof position === 'string' ? Curve.PositionString[position] : position;
     }
     const position = getPosition(this.render_options.position);

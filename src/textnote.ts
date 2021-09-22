@@ -13,13 +13,13 @@ export enum Justification {
 }
 
 export interface TextNoteStruct extends NoteStruct {
-  ignore_ticks: boolean;
-  smooth: boolean;
-  glyph: string;
-  font: FontInfo;
-  subscript: string;
-  superscript: string;
-  text: string;
+  text?: string;
+  glyph?: string;
+  ignore_ticks?: boolean;
+  smooth?: boolean;
+  font?: FontInfo;
+  subscript?: string;
+  superscript?: string;
 }
 
 /**
@@ -108,36 +108,35 @@ export class TextNote extends Note {
     };
   }
 
-  constructor(noteStruct: Partial<TextNoteStruct>) {
+  constructor(noteStruct: TextNoteStruct) {
     super(noteStruct);
 
-    // Note properties
     this.text = noteStruct.text || '';
     this.superscript = noteStruct.superscript;
     this.subscript = noteStruct.subscript;
-    this.glyph = undefined;
     this.font = {
       family: 'Arial',
       size: 12,
       weight: '',
       ...noteStruct.font,
     };
+    this.line = noteStruct.line || 0;
+    this.smooth = noteStruct.smooth || false;
+    this.ignore_ticks = noteStruct.ignore_ticks || false;
+    this.justification = Justification.LEFT;
 
     // Determine and set initial note width. Note that the text width is
     // an approximation and isn't very accurate. The only way to accurately
-    // measure the length of text is with `canvasmeasureText()`
+    // measure the length of text is with `CanvasRenderingContext2D.measureText()`.
     if (noteStruct.glyph) {
       const struct = TextNote.GLYPHS[noteStruct.glyph];
       if (!struct) throw new RuntimeError('Invalid glyph type: ' + noteStruct.glyph);
 
       this.glyph = new Glyph(struct.code, 40, { category: 'textNote' });
       this.setWidth(this.glyph.getMetrics().width);
+    } else {
+      this.glyph = undefined;
     }
-
-    this.line = noteStruct.line || 0;
-    this.smooth = noteStruct.smooth || false;
-    this.ignore_ticks = noteStruct.ignore_ticks || false;
-    this.justification = TextNote.Justification.LEFT;
   }
 
   /** Set the horizontal justification of the TextNote. */

@@ -8,6 +8,7 @@ import { Factory } from 'factory';
 import { Registry } from 'registry';
 import { BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
+import { EasyScoreOptions } from 'easyscore';
 
 const BachDemoTests = {
   Start(): void {
@@ -24,7 +25,7 @@ function minuet1(options: TestOptions): void {
   const id = (id: string) => registry.getElementById(id) as StaveNote;
 
   const f: Factory = VexFlowTests.makeFactory(options, 1100, 900);
-  const score = f.EasyScore({ throwOnError: true });
+  const score = f.EasyScore({ throwOnError: true } as EasyScoreOptions);
 
   // Bind these three functions so the code looks cleaner.
   // Instead of score.voice(...), just call voice(...).

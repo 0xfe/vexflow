@@ -67,7 +67,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 /**
  * Used by the next two test cases to draw a note.
  */
-function showNote(noteStruct: Partial<StaveNoteStruct>, stave: Stave, ctx: RenderContext, x: number) {
+function showNote(noteStruct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number) {
   const note = new StaveNote(noteStruct).setStave(stave);
   new TickContext().addTickable(note).preFormat().setX(x);
   note.setContext(ctx).draw();
@@ -75,7 +75,7 @@ function showNote(noteStruct: Partial<StaveNoteStruct>, stave: Stave, ctx: Rende
 }
 
 function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const notes: Partial<StaveNoteStruct>[] = [
+  const notes: StaveNoteStruct[] = [
     { keys: ['g/5/d0'], duration: '4' },
     { keys: ['g/5/d1'], duration: '4' },
     { keys: ['g/5/d2'], duration: '4' },
@@ -123,7 +123,7 @@ function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): voi
 }
 
 function drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const notes: Partial<StaveNoteStruct>[] = [
+  const notes: StaveNoteStruct[] = [
     { keys: ['a/4/d0', 'g/5/x3'], duration: '4' },
     { keys: ['a/4/x3', 'g/5/d0'], duration: '4' },
     { keys: ['a/4/d1', 'g/5/x2'], duration: '4' },

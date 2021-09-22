@@ -492,9 +492,10 @@ export class ChordSymbol extends Modifier {
   // eslint-disable-next-line
   getSymbolBlock(parameters?: any): any {
     parameters = parameters ?? {};
-    const symbolType = parameters.symbolType ? parameters.symbolType : ChordSymbol.symbolTypes.TEXT;
-    const text = parameters.text ? parameters.text : '';
-    const symbolModifier = parameters.symbolModifier ? parameters.symbolModifier : ChordSymbol.symbolModifiers.NONE;
+    const symbolType = parameters.symbolType ?? ChordSymbol.symbolTypes.TEXT;
+    const text = parameters.text ?? '';
+    const symbolModifier = parameters.symbolModifier ?? ChordSymbol.symbolModifiers.NONE;
+
     const xShift = 0;
     const yShift = 0;
     const vAlign = 0;

@@ -6,7 +6,7 @@ import { Stem } from './stem';
 import { Flow } from './flow';
 
 export interface GraceNoteStruct extends StaveNoteStruct {
-  slash: boolean;
+  slash?: boolean;
 }
 
 export class GraceNote extends StaveNote {

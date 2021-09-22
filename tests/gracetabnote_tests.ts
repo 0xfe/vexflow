@@ -26,8 +26,8 @@ const GraceTabNoteTests = {
 };
 
 // Helper functions to create TabNote and GraceTabNote objects.
-const tabNote = (noteStruct: Partial<TabNoteStruct>) => new TabNote(noteStruct);
-const graceTabNote = (noteStruct: Partial<TabNoteStruct>) => new GraceTabNote(noteStruct);
+const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
+const graceTabNote = (noteStruct: TabNoteStruct) => new GraceTabNote(noteStruct);
 
 /**
  * Helper function to build a RenderContext and TabStave.

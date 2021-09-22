@@ -4,14 +4,17 @@
 import { RuntimeError } from './util';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
-import { FontInfo } from './types/common';
 import { Stave } from './stave';
+import { FontInfo } from 'types/common';
 
 export class StaveText extends StaveModifier {
   static get CATEGORY(): string {
     return 'StaveText';
   }
 
+  protected text: string;
+  protected shift_x?: number;
+  protected shift_y?: number;
   protected options: {
     shift_x: number;
     shift_y: number;
@@ -19,18 +22,10 @@ export class StaveText extends StaveModifier {
   };
   protected font: FontInfo;
 
-  protected text: string;
-  protected shift_x?: number;
-  protected shift_y?: number;
-
   constructor(
     text: string,
     position: number,
-    options: Partial<{
-      shift_x: number;
-      shift_y: number;
-      justification: number;
-    }> = {}
+    options: { shift_x?: number; shift_y?: number; justification?: number } = {}
   ) {
     super();
 
@@ -41,8 +36,8 @@ export class StaveText extends StaveModifier {
       shift_x: 0,
       shift_y: 0,
       justification: TextNote.Justification.CENTER,
+      ...options,
     };
-    this.options = { ...this.options, ...options };
 
     this.font = {
       family: 'times',

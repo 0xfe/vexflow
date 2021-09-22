@@ -1,9 +1,11 @@
 import { Note } from '../note';
 
 export interface FontInfo {
-  size: number;
-  weight: string;
   family: string;
+  size: number;
+  /** `bold` or a numeric string '900' as inspired by CSS font-weight. */
+  weight: string;
+  /** `italic` as inspired by CSS font-style. */
   style?: string;
 }
 

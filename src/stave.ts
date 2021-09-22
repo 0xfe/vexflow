@@ -19,30 +19,27 @@ import { Bounds, FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
-  visible: boolean;
+  visible?: boolean;
 }
 
 export interface StaveOptions {
-  // [name: string]: any;
-  spacing: number;
-  thickness: number;
-  x_shift: number;
-  y_shift: number;
-  position_end?: number;
-  invert?: boolean;
+  spacing?: number;
+  thickness?: number;
+  x_shift?: number;
+  y_shift?: number;
   cps?: { x: number; y: number }[];
-  bottom_text_position: number;
-  line_config: Partial<StaveLineConfig>[];
-  space_below_staff_ln: number;
-  glyph_spacing_px: number;
-  space_above_staff_ln: number;
-  vertical_bar_width: number;
-  fill_style: string;
-  left_bar: boolean;
-  right_bar: boolean;
-  spacing_between_lines_px: number;
-  top_text_position: number;
-  num_lines: number;
+  bottom_text_position?: number;
+  line_config?: StaveLineConfig[];
+  space_below_staff_ln?: number;
+  glyph_spacing_px?: number;
+  space_above_staff_ln?: number;
+  vertical_bar_width?: number;
+  fill_style?: string;
+  left_bar?: boolean;
+  right_bar?: boolean;
+  spacing_between_lines_px?: number;
+  top_text_position?: number;
+  num_lines?: number;
 }
 
 // Used by Stave.format() to sort the modifiers at the beginning and end of a stave.
@@ -69,7 +66,7 @@ export class Stave extends Element {
 
   protected start_x: number;
   protected clef: string;
-  protected options: StaveOptions;
+  protected options: Required<StaveOptions>;
   protected endClef?: string;
 
   protected x: number;
@@ -99,7 +96,7 @@ export class Stave extends Element {
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
-  constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
+  constructor(x: number, y: number, width: number, options?: StaveOptions) {
     super();
 
     this.x = x;
@@ -134,9 +131,10 @@ export class Stave extends Element {
       top_text_position: 1, // in staff lines
       bottom_text_position: 4, // in staff lines
       line_config: [],
+      cps: [],
+      ...options,
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
-    this.options = { ...this.options, ...options };
     this.defaultLedgerLineStyle = { strokeStyle: '#444', lineWidth: 1.4 };
 
     this.resetLines();
@@ -156,6 +154,7 @@ export class Stave extends Element {
   getDefaultLedgerLineStyle(): ElementStyle {
     return { ...this.getStyle(), ...this.defaultLedgerLineStyle };
   }
+
   space(spacing: number): number {
     return this.options.spacing_between_lines_px * spacing;
   }
@@ -169,7 +168,7 @@ export class Stave extends Element {
     this.options.bottom_text_position = this.options.num_lines;
   }
 
-  getOptions(): StaveOptions {
+  getOptions(): Required<StaveOptions> {
     return this.options;
   }
 
@@ -329,7 +328,7 @@ export class Stave extends Element {
   }
 
   // Tempo functions
-  setTempo(tempo: Partial<StaveTempoOptions>, y: number): this {
+  setTempo(tempo: StaveTempoOptions, y: number): this {
     this.modifiers.push(new StaveTempo(tempo, this.x, y));
     return this;
   }
@@ -338,11 +337,11 @@ export class Stave extends Element {
   setText(
     text: string,
     position: number,
-    options: Partial<{
-      shift_x: number;
-      shift_y: number;
-      justification: number;
-    }> = {}
+    options: {
+      shift_x?: number;
+      shift_y?: number;
+      justification?: number;
+    } = {}
   ): this {
     this.modifiers.push(new StaveText(text, position, options));
     return this;
@@ -815,7 +814,7 @@ export class Stave extends Element {
    * Get the current configuration for the Stave.
    * @return {Array} An array of configuration objects.
    */
-  getConfigForLines(): Partial<StaveLineConfig>[] {
+  getConfigForLines(): StaveLineConfig[] {
     return this.options.line_config;
   }
 
@@ -859,7 +858,7 @@ export class Stave extends Element {
    *   exactly the same number of elements as the num_lines configuration object set in
    *   the constructor.
    */
-  setConfigForLines(lines_configuration: Partial<StaveLineConfig>[]): this {
+  setConfigForLines(lines_configuration: StaveLineConfig[]): this {
     if (lines_configuration.length !== this.options.num_lines) {
       throw new RuntimeError(
         'StaveConfigError',

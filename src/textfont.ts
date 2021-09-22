@@ -180,6 +180,9 @@ export class TextFont {
     let selectedFont = undefined;
     const fallback = TextFont.fontRegistry[0];
     let candidates: TextFontRegistry[] = [];
+    if (!fd.family) {
+      fd.family = 'Arial';
+    }
     const families = fd.family.split(',');
     for (i = 0; i < families.length; ++i) {
       const famliy = families[i];

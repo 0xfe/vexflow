@@ -17,20 +17,20 @@ function L(...args: any[]) {
 }
 
 export interface NoteHeadStruct extends NoteStruct {
-  glyph_font_scale: number;
-  slashed: boolean;
-  style: ElementStyle;
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
-  custom_glyph_code: string;
-  x_shift: number;
-  line: number;
-  stem_direction: number;
-  displaced: boolean;
-  note_type: string;
-  y: number;
-  x: number;
-  index: number;
+  line?: number;
+  glyph_font_scale?: number;
+  slashed?: boolean;
+  style?: ElementStyle;
+  stem_down_x_offset?: number;
+  stem_up_x_offset?: number;
+  custom_glyph_code?: string;
+  x_shift?: number;
+  stem_direction?: number;
+  displaced?: boolean;
+  note_type?: string;
+  x?: number;
+  y?: number;
+  index?: number;
 }
 
 /**
@@ -116,7 +116,7 @@ export class NoteHead extends Note {
   protected index?: number;
   protected slashed: boolean;
 
-  constructor(noteStruct: Partial<NoteHeadStruct>) {
+  constructor(noteStruct: NoteHeadStruct) {
     super(noteStruct);
 
     this.index = noteStruct.index;
@@ -146,12 +146,10 @@ export class NoteHead extends Note {
 
     this.render_options = {
       ...this.render_options,
-      ...{
-        // font size for note heads
-        glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
-        // number of stroke px to the left and right of head
-        stroke_px: 3,
-      },
+      // font size for note heads
+      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      // number of stroke px to the left and right of head
+      stroke_px: 3,
     };
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));

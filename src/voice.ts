@@ -13,7 +13,8 @@ import { Tickable } from './tickable';
 export interface VoiceTime {
   num_beats: number;
   beat_value: number;
-  resolution: number;
+  /** Defaults to `Flow.RESOLUTION` if not provided. */
+  resolution?: number;
 }
 
 export enum VoiceMode {
@@ -85,7 +86,7 @@ export class Voice extends Element {
     };
 
     // Recalculate total ticks.
-    this.totalTicks = new Fraction(this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
+    this.totalTicks = new Fraction(this.time.num_beats * ((this.time.resolution as number) / this.time.beat_value), 1);
 
     this.resolutionMultiplier = 1;
 
@@ -144,7 +145,7 @@ export class Voice extends Element {
 
   /** Get the actual tick resolution for the voice. */
   getActualResolution(): number {
-    return this.resolutionMultiplier * this.time.resolution;
+    return this.resolutionMultiplier * (this.time.resolution as number);
   }
 
   /** Set the voice's stave. */

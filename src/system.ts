@@ -39,18 +39,17 @@ export interface SystemParams {
  */
 export interface SystemOptions {
   factory?: Factory;
-  noPadding: boolean;
-  debugFormatter: boolean;
-  connector?: StaveConnector;
-  spaceBetweenStaves: number;
-  formatIterations: number;
-  autoWidth: boolean;
-  x: number;
-  width: number;
-  y: number;
-  details: SystemFormatterOptions;
-  formatOptions: FormatOptions;
-  noJustification: boolean;
+  noPadding?: boolean;
+  debugFormatter?: boolean;
+  spaceBetweenStaves?: number;
+  formatIterations?: number;
+  autoWidth?: boolean;
+  x?: number;
+  width?: number;
+  y?: number;
+  details?: SystemFormatterOptions;
+  formatOptions?: FormatOptions;
+  noJustification?: boolean;
 }
 
 /**
@@ -63,7 +62,7 @@ export class System extends Element {
     return 'System';
   }
 
-  protected options!: SystemOptions;
+  protected options!: Required<SystemOptions>;
   protected factory!: Factory;
   protected formatter?: Formatter;
   protected startX?: number;
@@ -80,7 +79,9 @@ export class System extends Element {
 
   /** Set formatting options. */
   setOptions(options: Partial<SystemOptions> = {}): void {
+    this.factory = options.factory ?? new Factory({ renderer: { elementId: null, width: 0, height: 0 } });
     this.options = {
+      factory: this.factory,
       x: 10,
       y: 10,
       width: 500,
@@ -99,11 +100,10 @@ export class System extends Element {
         ...options.formatOptions,
       },
     };
+
     if (this.options.noJustification === false && typeof options.width === 'undefined') {
       this.options.autoWidth = true;
     }
-
-    this.factory = this.options.factory || new Factory({ renderer: { elementId: null, width: 0, height: 0 } });
   }
 
   /** Set associated context. */

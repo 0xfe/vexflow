@@ -153,7 +153,7 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   // Helper function
-  function showNote(noteStruct: Partial<TabNoteStruct>, stave: TabStave, ctx: RenderContext, x: number): TabNote {
+  function showNote(noteStruct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
     const tabNote = new TabNote(noteStruct);
     const tickContext = new TickContext();
     tickContext.addTickable(tabNote).preFormat().setX(x);
@@ -178,7 +178,7 @@ function drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void
   stave.setContext(ctx);
   stave.draw();
 
-  const specs: Partial<TabNoteStruct>[] = [
+  const specs: TabNoteStruct[] = [
     {
       positions: [
         { str: 3, fret: 6 },
@@ -251,7 +251,7 @@ function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave.setContext(ctx);
   stave.draw();
 
-  const specs: Partial<TabNoteStruct>[] = [
+  const specs: TabNoteStruct[] = [
     {
       positions: [
         { str: 3, fret: 6 },
@@ -324,7 +324,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
   stave.setContext(ctx);
   stave.draw();
 
-  const specs: Partial<TabNoteStruct>[] = [
+  const specs: TabNoteStruct[] = [
     {
       positions: [
         { str: 3, fret: 6 },
@@ -399,7 +399,7 @@ function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuild
   stave.setContext(ctx);
   stave.draw();
 
-  const specs: Partial<TabNoteStruct>[] = [
+  const specs: TabNoteStruct[] = [
     {
       positions: [
         { str: 3, fret: 6 },
@@ -478,7 +478,7 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
   stave.setContext(ctx);
   stave.draw();
 
-  const specs: Partial<TabNoteStruct>[] = [
+  const specs: TabNoteStruct[] = [
     {
       positions: [
         { str: 3, fret: 6 },

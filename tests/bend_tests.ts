@@ -27,7 +27,7 @@ const BendTests = {
 };
 
 // Helper functions for creating TabNote and Bend objects.
-const note = (noteStruct: Partial<TabNoteStruct>) => new TabNote(noteStruct);
+const note = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 const bendWithText = (text: string, release = false) => new Bend(text, release);
 const bendWithPhrase = (phrase: BendPhrase[]) => new Bend('', false, phrase);
 
