@@ -27,9 +27,14 @@ interface Distance {
 }
 
 export interface FormatterOptions {
+  /** Defaults to 100. */
   softmaxFactor?: number;
+
+  /** Defaults to `false`. */
   globalSoftmax?: boolean;
-  maxIterations: number;
+
+  /** Defaults to 5. */
+  maxIterations?: number;
 }
 
 export interface FormatOptions {
@@ -49,6 +54,9 @@ export interface AlignmentContexts<T> {
 
 type addToContextFn<T> = (tickable: Tickable, context: T, voiceIndex: number) => void;
 type makeContextFn<T> = (tick?: { tickID: number }) => T;
+
+// Helper function
+const sumArray = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 /**
  * Create `Alignment`s for each tick in `voices`. Also calculate the
@@ -168,7 +176,7 @@ export class Formatter {
   protected totalCost: number;
   protected totalShift: number;
   protected tickContexts?: AlignmentContexts<TickContext>;
-  protected formatterOptions: FormatterOptions;
+  protected formatterOptions: Required<FormatterOptions>;
   protected modifierContexts?: AlignmentContexts<ModifierContext>;
   protected voices: Voice[];
   protected lossHistory: number[];
@@ -385,11 +393,12 @@ export class Formatter {
     });
   }
 
-  constructor(formatterOptions: Partial<FormatterOptions> = {}) {
+  constructor(options?: FormatterOptions) {
     this.formatterOptions = {
       globalSoftmax: false,
+      softmaxFactor: 100,
       maxIterations: 5,
-      ...formatterOptions,
+      ...options,
     };
     this.justifyWidth = 0;
     this.totalCost = 0;
@@ -628,8 +637,8 @@ export class Formatter {
     });
 
     // Use softmax based on all notes across all staves. (options.globalSoftmax)
-    const formatterOptions = this.formatterOptions;
-    const softmaxFactor = formatterOptions.softmaxFactor || 100;
+    const { globalSoftmax, softmaxFactor, maxIterations } = this.formatterOptions;
+
     const exp = (tick: number) => softmaxFactor ** (contextMap[tick].getMaxTicks().value() / totalTicks);
     const expTicksUsed = sumArray(contextList.map(exp));
 
@@ -704,7 +713,7 @@ export class Formatter {
 
               // Calculate the expected distance of the current context from the last matching tickable. The
               // distance is scaled down by the softmax for the voice.
-              if (formatterOptions.globalSoftmax) {
+              if (globalSoftmax) {
                 const t = totalTicks;
                 expectedDistance = (softmaxFactor ** (maxTicks / t) / expTicksUsed) * adjustedJustifyWidth;
               } else if (typeof backTickable !== 'undefined') {
@@ -769,7 +778,7 @@ export class Formatter {
     const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
     const maxX = adjustedJustifyWidth - paddingMin;
 
-    let iterations = this.formatterOptions.maxIterations;
+    let iterations = maxIterations;
     while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
       // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
       // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
@@ -886,13 +895,13 @@ export class Formatter {
    * @param alpha the "learning rate" for the formatter. It determines how much of a shift
    * the formatter should make based on its cost function.
    */
-  tune(options?: { alpha: number }): number {
-    if (!this.tickContexts) return 0;
+  tune(options?: { alpha?: number }): number {
     const contexts = this.tickContexts;
-    options = {
-      alpha: 0.5,
-      ...options,
-    };
+    if (!contexts) {
+      return 0;
+    }
+
+    const alpha = options?.alpha ?? 0.5;
 
     // Move `current` tickcontext by `shift` pixels, and adjust the freedom
     // on adjacent tickcontexts.
@@ -926,7 +935,7 @@ export class Formatter {
         }
       }
 
-      shift *= defined(options).alpha;
+      shift *= alpha;
       this.totalShift += shift;
     });
 
@@ -990,10 +999,9 @@ export class Formatter {
     return this;
   }
 
-  // This method is just like `format` except that the `justifyWidth` is inferred
-  // from the `stave`.
+  // This method is just like `format` except that the `justifyWidth` is inferred from the `stave`.
   formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatOptions): this {
-    const options: FormatOptions = { padding: 10, /*stave,*/ context: stave.getContext(), ...optionsParam };
+    const options: FormatOptions = { padding: 10, context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - Stave.defaultPadding;
@@ -1001,7 +1009,3 @@ export class Formatter {
     return this.format(voices, justifyWidth, options);
   }
 }
-
-// Helper functions.
-const sum = (a: number, b: number) => a + b;
-const sumArray = (arr: number[]) => arr.reduce(sum, 0);

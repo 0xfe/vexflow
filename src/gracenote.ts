@@ -25,7 +25,7 @@ export class GraceNote extends StaveNote {
   protected slash: boolean;
   protected slur: boolean;
 
-  constructor(noteStruct: Partial<GraceNoteStruct>) {
+  constructor(noteStruct: GraceNoteStruct) {
     super({
       glyph_font_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
       stroke_px: GraceNote.LEDGER_LINE_OFFSET,

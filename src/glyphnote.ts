@@ -16,7 +16,7 @@ export class GlyphNote extends Note {
 
   protected options: GlyphNoteOptions;
 
-  constructor(glyph: Glyph | undefined, noteStruct: Partial<NoteStruct>, options?: GlyphNoteOptions) {
+  constructor(glyph: Glyph | undefined, noteStruct: NoteStruct, options?: GlyphNoteOptions) {
     super(noteStruct);
     this.options = {
       ignoreTicks: false,

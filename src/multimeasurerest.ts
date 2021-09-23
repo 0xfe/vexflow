@@ -101,7 +101,6 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
-    // Any numeric fields in `this.render_options` can be safely be cast "as number" when needed.
     this.render_options = {
       use_symbols: false,
       show_number: true,
