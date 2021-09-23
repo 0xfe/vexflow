@@ -139,7 +139,7 @@ export class TextBracket extends Element {
   }
 
   // Set the font for the text
-  setFont(font: Partial<FontInfo>): this {
+  setFont(font: FontInfo): this {
     // We use Object.assign to support partial updates to the font object
     this.font = { ...this.font, ...font };
     return this;

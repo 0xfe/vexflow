@@ -12,12 +12,9 @@ import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
-interface FormatterTuneOptions {
+export interface SystemFormatterOptions extends FormatterOptions {
   alpha?: number;
 }
-
-// SystemFormatterOptions is a combination of two interfaces, with no additional fields.
-export interface SystemFormatterOptions extends FormatterTuneOptions, FormatterOptions {}
 
 export interface SystemParams {
   voices: Voice[];

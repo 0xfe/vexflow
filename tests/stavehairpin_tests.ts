@@ -8,7 +8,6 @@
 // @ts-nocheck
 
 // TODO: Incorrect property names in the options object: vo, left_ho, right_ho.
-// TODO: StaveHairpin.setRenderOptions() should take a Partial<StaveHairpinRenderOptions>.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { RenderContext } from 'types/common';
@@ -37,7 +36,7 @@ function drawHairpin(
   ctx: RenderContext,
   type: number,
   position: number,
-  options?: Partial<StaveHairpinRenderOptions>
+  options?: StaveHairpinRenderOptions
 ) {
   const hairpin = new StaveHairpin({ first_note, last_note }, type);
   hairpin.setContext(ctx);

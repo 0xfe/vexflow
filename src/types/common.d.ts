@@ -80,14 +80,17 @@ export interface RenderContext {
   bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
   quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
+  // eslint-disable-next-line
   fill(attributes?: any): this;
   stroke(): this;
   closePath(): this;
   fillText(text: string, x: number, y: number): this;
   save(): this;
   restore(): this;
+  // eslint-disable-next-line
   openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any;
   closeGroup(): void;
+  // eslint-disable-next-line
   add(child: any): void;
 
   measureText(text: string): TextMeasure;

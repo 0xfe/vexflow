@@ -160,11 +160,18 @@ export class Factory {
       return;
     }
 
-    if (elementId === '' || typeof elementId !== 'string') {
+    if (elementId === '') {
       L(this);
       throw new RuntimeError('renderer.elementId not set in FactoryOptions');
     }
-    this.context = Renderer.buildContext(elementId, backend ?? Renderer.Backends.SVG, width, height, background);
+
+    this.context = Renderer.buildContext(
+      elementId as string,
+      backend ?? Renderer.Backends.SVG,
+      width,
+      height,
+      background
+    );
   }
 
   getContext(): RenderContext {
