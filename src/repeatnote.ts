@@ -18,7 +18,7 @@ export class RepeatNote extends GlyphNote {
     return 'RepeatNote';
   }
 
-  constructor(type: string, noteStruct?: Partial<NoteStruct>, options?: GlyphNoteOptions) {
+  constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {
     super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
 
     const glyphCode = CODES[type] || 'repeat1Bar';
