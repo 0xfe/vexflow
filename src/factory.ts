@@ -634,9 +634,6 @@ export class Factory {
    * @param options.commitHooks function to call after a note element is created
    * @param options.throwOnError throw error in case of parsing error
    */
-  // TODO: EasyScoreOptions make all properties optional.
-  // eslint-disable-next-line
-  // @ts-ignore
   EasyScore(options: EasyScoreOptions = {}): EasyScore {
     options.factory = this;
     return new EasyScore(options);
