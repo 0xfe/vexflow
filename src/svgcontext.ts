@@ -42,17 +42,11 @@ interface State {
 }
 
 class MeasureTextCache {
-  protected txt: SVGTextElement;
+  protected txt?: SVGTextElement;
 
   // The cache is keyed first by the text string, then by the font attributes
   // joined together.
   protected cache: Record<string, Record<string, TextMeasure>> = {};
-
-  constructor() {
-    // Create the SVG elements that will be used to measure the text in the event
-    // of a cache miss.
-    this.txt = document.createElementNS(SVG_NS, 'text');
-  }
 
   lookup(text: string, svg: SVGSVGElement, attributes: Attributes): TextMeasure {
     let entries = this.cache[text];
@@ -76,14 +70,22 @@ class MeasureTextCache {
   }
 
   measureImpl(text: string, svg: SVGSVGElement, attributes: Attributes): TextMeasure {
-    this.txt.textContent = text;
-    this.txt.setAttributeNS(null, 'font-family', attributes['font-family']);
-    this.txt.setAttributeNS(null, 'font-size', attributes['font-size']);
-    this.txt.setAttributeNS(null, 'font-style', attributes['font-style']);
-    this.txt.setAttributeNS(null, 'font-weight', attributes['font-weight']);
-    svg.appendChild(this.txt);
-    const bbox = this.txt.getBBox();
-    svg.removeChild(this.txt);
+    let txt = this.txt;
+    if (!txt) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txt = document.createElementNS(SVG_NS, 'text');
+      this.txt = txt;
+    }
+
+    txt.textContent = text;
+    txt.setAttributeNS(null, 'font-family', attributes['font-family']);
+    txt.setAttributeNS(null, 'font-size', attributes['font-size']);
+    txt.setAttributeNS(null, 'font-style', attributes['font-style']);
+    txt.setAttributeNS(null, 'font-weight', attributes['font-weight']);
+    svg.appendChild(txt);
+    const bbox = txt.getBBox();
+    svg.removeChild(txt);
 
     // Remove the trailing 'pt' from the font size and scale to convert from points
     // to canvas units.
