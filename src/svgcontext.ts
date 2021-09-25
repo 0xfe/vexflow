@@ -34,6 +34,10 @@ const attrNamesToIgnoreMap: { [nodeName: string]: Attributes } = {
 /** Create the SVG in the SVG namespace. */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+function round3(x: number): string {
+  return (Math.round(x * 1000) / 1000).toString();
+}
+
 interface State {
   state: Attributes;
   attributes: Attributes;
@@ -496,28 +500,29 @@ export class SVGContext implements RenderContext {
   }
 
   moveTo(x: number, y: number): this {
-    this.path += 'M' + x + ' ' + y;
+    this.path += 'M' + round3(x) + ' ' + round3(y);
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   lineTo(x: number, y: number): this {
-    this.path += 'L' + x + ' ' + y;
+    this.path += 'L' + round3(x) + ' ' + round3(y);
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
-    this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
+    this.path +=
+      'C' + round3(x1) + ' ' + round3(y1) + ',' + round3(x2) + ' ' + round3(y2) + ',' + round3(x) + ' ' + round3(y);
     this.pen.x = x;
     this.pen.y = y;
     return this;
   }
 
   quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
-    this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
+    this.path += 'Q' + round3(x1) + ' ' + round3(y1) + ',' + round3(x) + ' ' + round3(y);
     this.pen.x = x;
     this.pen.y = y;
     return this;
@@ -538,8 +543,8 @@ export class SVGContext implements RenderContext {
       const y1 = y + radius * Math.sin(startAngle + Math.PI);
       // There's no way to specify a completely circular arc in SVG so we have to
       // use two semi-circular arcs.
-      this.path += `M${x0} ${y0} A${radius} ${radius} 0 0 0 ${x1} ${y1} `;
-      this.path += `A${radius} ${radius} 0 0 0 ${x0} ${y0}`;
+      this.path += `M${round3(x0)} ${round3(y0)} A${radius} ${radius} 0 0 0 ${round3(x1)} ${round3(y1)} `;
+      this.path += `A${round3(radius)} ${round3(radius)} 0 0 0 ${round3(x0)} ${round3(y0)}`;
       this.pen.x = x0;
       this.pen.y = y0;
     } else {
@@ -561,7 +566,9 @@ export class SVGContext implements RenderContext {
 
       const sweep = !antiClockwise;
 
-      this.path += `M${x0} ${y0} A${radius} ${radius} 0 ${+large} ${+sweep} ${x1} ${y1}`;
+      this.path += `M${round3(x0)} ${round3(y0)} A${round3(radius)} ${round3(radius)} 0 ${+large} ${+sweep} ${round3(
+        x1
+      )} ${round3(y1)}`;
       this.pen.x = x1;
       this.pen.y = y1;
     }
@@ -578,7 +585,7 @@ export class SVGContext implements RenderContext {
     // A CSS drop-shadow filter blur looks different than a canvas shadowBlur
     // of the same radius, so we scale the drop-shadow radius here to make it
     // look close to the canvas shadow.
-    return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
+    return `filter: drop-shadow(0 0 ${round3(sa.width / 1.5)}px ${sa.color})`;
   }
 
   fill(attributes: Attributes): this {
