@@ -297,7 +297,6 @@ export class Glyph extends Element {
     const go = new GlyphOutline(outline, x_pos, y_pos, scale);
 
     ctx.beginPath();
-    ctx.moveTo(x_pos, y_pos);
     let x, y: number;
     while (!go.done()) {
       switch (go.next()) {
