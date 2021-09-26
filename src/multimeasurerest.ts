@@ -26,26 +26,26 @@ export interface MultimeasureRestRenderOptions {
   use_symbols: boolean;
   number_line: number;
   spacing_between_lines_px: number;
-  semibrave_rest_glyph_scale: number;
+  semibreve_rest_glyph_scale: number;
   padding_right?: number;
 }
 
-let semibrave_rest: {
+let semibreve_rest: {
   glyph_font_scale: number;
   glyph_code: string;
   width: number;
 };
 
-function get_semibrave_rest() {
-  if (!semibrave_rest) {
+function get_semibreve_rest() {
+  if (!semibreve_rest) {
     const notehead = new NoteHead({ duration: 'w', note_type: 'r' });
-    semibrave_rest = {
+    semibreve_rest = {
       glyph_font_scale: notehead.render_options.glyph_font_scale,
       glyph_code: notehead.glyph_code,
       width: notehead.getWidth(),
     };
   }
-  return semibrave_rest;
+  return semibreve_rest;
 }
 
 export class MultiMeasureRest extends Element {
@@ -73,7 +73,7 @@ export class MultiMeasureRest extends Element {
   //   * `serif_thickness` - Rest serif line thickness.
   //   * `use_symbols` - Use rest symbols or not.
   //   * `symbol_spacing` - Spacing between each rest symbol glyphs.
-  //   * `semibrave_rest_glyph_scale` - Size of the semibrave(1-bar) rest symbol.
+  //   * `semibreve_rest_glyph_scale` - Size of the semibreve(1-bar) rest symbol.
   constructor(number_of_measures: number, options: Partial<MultimeasureRestRenderOptions>) {
     super();
 
@@ -94,7 +94,7 @@ export class MultiMeasureRest extends Element {
       use_symbols: false,
 
       /* same as NoteHead. */
-      semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
+      semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE,
     };
     this.render_options = { ...this.render_options, ...options };
 
@@ -165,20 +165,20 @@ export class MultiMeasureRest extends Element {
     const n2 = Math.floor(n / 2);
     const n1 = n % 2;
 
-    const semibrave_rest = get_semibrave_rest();
-    const semibrave_rest_width =
-      semibrave_rest.width * (this.render_options.semibrave_rest_glyph_scale / semibrave_rest.glyph_font_scale);
+    const semibreve_rest = get_semibreve_rest();
+    const semibreve_rest_width =
+      semibreve_rest.width * (this.render_options.semibreve_rest_glyph_scale / semibreve_rest.glyph_font_scale);
     const glyphs = {
       2: {
-        width: semibrave_rest_width * 0.5,
+        width: semibreve_rest_width * 0.5,
         height: sbl,
       },
       1: {
-        width: semibrave_rest_width,
+        width: semibreve_rest_width,
       },
     };
 
-    let spacing = semibrave_rest_width * 1.35;
+    let spacing = semibreve_rest_width * 1.35;
     if (this.render_options.symbol_spacing != undefined) {
       spacing = this.render_options.symbol_spacing;
     }
@@ -203,7 +203,7 @@ export class MultiMeasureRest extends Element {
       x += glyphs[2].width + spacing;
     }
     for (let i = 0; i < n1; ++i) {
-      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibrave_rest_glyph_scale, semibrave_rest.glyph_code);
+      Glyph.renderGlyph(ctx, x, yTop, this.render_options.semibreve_rest_glyph_scale, semibreve_rest.glyph_code);
       x += glyphs[1].width + spacing;
     }
 
