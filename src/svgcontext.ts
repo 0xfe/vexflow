@@ -577,7 +577,7 @@ export class SVGContext implements RenderContext {
     this.path = path;
     this.pen.x = NaN;
     this.pen.y = NaN;
-    this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})` });
+    this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})`, fill: 'blue' });
     return this;
   }
 

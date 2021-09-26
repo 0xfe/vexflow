@@ -235,6 +235,7 @@ export class CanvasContext implements RenderContext {
       x /* translateX */,
       y /* translateY */
     );
+    ctx.fillStyle = 'red';
     ctx.fill(new Path2D(path));
     ctx.restore();
     return this;
