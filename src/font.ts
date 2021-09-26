@@ -23,7 +23,8 @@ export interface FontGlyph {
   y_min?: number;
   y_max?: number;
   ha: number;
-  o: string;
+  o: string; // OLD Modified SVG Path
+  d?: string; // SVG Path
   leftSideBearing?: number;
   advanceWidth?: number;
   cached_outline?: number[];

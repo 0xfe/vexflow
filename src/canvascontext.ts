@@ -221,6 +221,25 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
+  /**
+   * @param path a SVG path string
+   */
+  fillPath(path: string, scale: number, x: number, y: number): this {
+    const ctx = this.vexFlowCanvasContext;
+    ctx.save();
+    ctx.transform(
+      scale /* scaleX */,
+      0 /* skewY */,
+      0 /* skewX */,
+      scale /* scaleY */,
+      x /* translateX */,
+      y /* translateY */
+    );
+    ctx.fill(new Path2D(path));
+    ctx.restore();
+    return this;
+  }
+
   measureText(text: string): TextMeasure {
     const metrics = this.vexFlowCanvasContext.measureText(text);
     return {

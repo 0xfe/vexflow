@@ -573,6 +573,14 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
+  fillPath(path: string, scale: number, x: number, y: number): this {
+    this.path = path;
+    this.pen.x = NaN;
+    this.pen.y = NaN;
+    this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})` });
+    return this;
+  }
+
   private getShadowStyle(): string {
     const sa = this.shadow_attributes;
     // A CSS drop-shadow filter blur looks different than a canvas shadowBlur
@@ -581,7 +589,7 @@ export class SVGContext implements RenderContext {
     return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
   }
 
-  fill(attributes: Attributes): this {
+  fill(attributes?: Attributes): this {
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
       attributes = { ...this.attributes, stroke: 'none' };

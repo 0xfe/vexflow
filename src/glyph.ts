@@ -59,6 +59,7 @@ export interface GlyphMetrics {
   ha: number;
   outline: number[];
   font: Font;
+  path?: string; // SVG Path
 }
 
 export const enum OutlineCode {
@@ -74,16 +75,12 @@ class GlyphCacheEntry {
   point: number = -1;
 
   constructor(fontStack: Font[], code: string, category?: string) {
-    this.metrics = Glyph.loadMetrics(fontStack, code, category);
-    this.bbox = Glyph.getOutlineBoundingBox(
-      this.metrics.outline,
-      this.metrics.scale,
-      this.metrics.x_shift,
-      this.metrics.y_shift
-    );
+    const metrics = Glyph.loadMetrics(fontStack, code, category);
+    this.metrics = metrics;
+    this.bbox = Glyph.getOutlineBoundingBox(metrics.outline, metrics.scale, metrics.x_shift, metrics.y_shift);
 
     if (category) {
-      this.point = Glyph.lookupFontMetric(this.metrics.font, category, code, 'point', -1);
+      this.point = Glyph.lookupFontMetric(metrics.font, category, code, 'point', -1);
     }
   }
 }
@@ -131,13 +128,13 @@ class GlyphOutline {
     let i = 0;
     while (i < parts.length) {
       switch (parts[i++]) {
-        case 'm':
+        case 'M':
           result.push(OutlineCode.MOVE, parseInt(parts[i++]), parseInt(parts[i++]));
           break;
-        case 'l':
+        case 'L':
           result.push(OutlineCode.LINE, parseInt(parts[i++]), parseInt(parts[i++]));
           break;
-        case 'q':
+        case 'Q':
           result.push(
             OutlineCode.QUADRATIC,
             parseInt(parts[i++]),
@@ -146,7 +143,7 @@ class GlyphOutline {
             parseInt(parts[i++])
           );
           break;
-        case 'b':
+        case 'C':
           result.push(
             OutlineCode.BEZIER,
             parseInt(parts[i++]),
@@ -216,7 +213,11 @@ export class Glyph extends Element {
     for (let i = 0; i < fontStack.length; i++) {
       font = fontStack[i];
       glyph = font.getGlyphs()[code];
-      if (glyph) return { glyph, font };
+      if (glyph) {
+        return { glyph, font };
+      } else {
+        console.log(`Can't find ${code} in ${font.getName()}...`);
+      }
     }
 
     throw new RuntimeError('BadGlyph', `Glyph ${code} does not exist in font.`);
@@ -225,6 +226,7 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
+    // TODO: RONYEH - Change to glyph.d for the path!
     if (!glyph.o) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
 
     let x_shift = 0;
@@ -252,6 +254,7 @@ export class Glyph extends Element {
       scale,
       ha,
       outline: glyph.cached_outline,
+      path: glyph.d,
       font,
       width: x_max - x_min,
       height: ha,
@@ -289,7 +292,18 @@ export class Glyph extends Element {
 
     const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
 
-    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
+    if (metrics.path) {
+      ctx.fillPath(metrics.path, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
+    } else {
+      console.log('THE OLD WAY');
+      Glyph.renderOutline(
+        ctx,
+        metrics.outline,
+        scale * metrics.scale,
+        x_pos + metrics.x_shift,
+        y_pos + metrics.y_shift
+      );
+    }
     return metrics;
   }
 
@@ -298,7 +312,6 @@ export class Glyph extends Element {
 
     ctx.beginPath();
     ctx.moveTo(x_pos, y_pos);
-    let x, y: number;
     while (!go.done()) {
       switch (go.next()) {
         case OutlineCode.MOVE:
@@ -308,14 +321,10 @@ export class Glyph extends Element {
           ctx.lineTo(go.nextX(), go.nextY());
           break;
         case OutlineCode.QUADRATIC:
-          x = go.nextX();
-          y = go.nextY();
-          ctx.quadraticCurveTo(go.nextX(), go.nextY(), x, y);
+          ctx.quadraticCurveTo(go.nextX(), go.nextY(), go.nextX(), go.nextY());
           break;
         case OutlineCode.BEZIER:
-          x = go.nextX();
-          y = go.nextY();
-          ctx.bezierCurveTo(go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
+          ctx.bezierCurveTo(go.nextX(), go.nextY(), go.nextX(), go.nextY(), go.nextX(), go.nextY());
           break;
       }
     }
@@ -330,6 +339,8 @@ export class Glyph extends Element {
     let penX: number = x_pos;
     let penY: number = y_pos;
     let x, y: number;
+    let x1, y1: number;
+    let x2, y2: number;
     while (!go.done()) {
       switch (go.next()) {
         case OutlineCode.MOVE:
@@ -344,16 +355,22 @@ export class Glyph extends Element {
           bboxComp.addPoint(penX, penY);
           break;
         case OutlineCode.QUADRATIC:
+          x1 = go.nextX();
+          y1 = go.nextY();
           x = go.nextX();
           y = go.nextY();
-          bboxComp.addQuadraticCurve(penX, penY, go.nextX(), go.nextY(), x, y);
+          bboxComp.addQuadraticCurve(penX, penY, x1, y1, x, y);
           penX = x;
           penY = y;
           break;
         case OutlineCode.BEZIER:
+          x1 = go.nextX();
+          y1 = go.nextY();
+          x2 = go.nextX();
+          y2 = go.nextY();
           x = go.nextX();
           y = go.nextY();
-          bboxComp.addBezierCurve(penX, penY, go.nextX(), go.nextY(), go.nextX(), go.nextY(), x, y);
+          bboxComp.addBezierCurve(penX, penY, x1, y1, x2, y2, x, y);
           penX = x;
           penY = y;
           break;

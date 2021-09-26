@@ -1,4 +1,5 @@
-// Creates a new Gonville font using SMuFL key codes
+// Creates a new Gonville font using SMuFL key codes.
+// BEFORE running this script, we need to first run gonville_extract_glyphs.js
 
 const fs = require('fs');
 const process = require('process');
@@ -6,7 +7,7 @@ const path = require('path');
 
 function LogError(...args) {
   // eslint-disable-next-line
-  console.error(...args)
+  console.error(...args);
 }
 
 const args = process.argv.slice(2);
@@ -23,20 +24,20 @@ const customGlyphs = require('./fonts/custom_font');
 
 const gonvilleOutput = {
   ...gonvilleGlyphs,
-  glyphs: {}
+  glyphs: {},
 };
 
 const customOutput = {
   resolution: 1000,
   familyName: 'VexflowCustom',
-  glyphs: {}
+  glyphs: {},
 };
 
 const usedGlyphs = {};
-Object.keys(gonvilleGlyphs.glyphs).forEach(g => {
+Object.keys(gonvilleGlyphs.glyphs).forEach((g) => {
   usedGlyphs[g] = false;
 });
-Object.keys(customGlyphs.glyphs).forEach(g => {
+Object.keys(customGlyphs.glyphs).forEach((g) => {
   usedGlyphs[g] = false;
 });
 
@@ -55,7 +56,10 @@ Object.keys(VALID_CODES).forEach((code) => {
   }
 });
 
-LogError('Unused glyphs: ', Object.keys(usedGlyphs).filter(v => !usedGlyphs[v]));
+LogError(
+  'Unused glyphs: ',
+  Object.keys(usedGlyphs).filter((v) => !usedGlyphs[v])
+);
 
 const gonvillePath = path.join(outDir, 'gonville_glyphs.js');
 LogError('Writing to file:', gonvillePath);

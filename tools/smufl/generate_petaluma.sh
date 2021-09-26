@@ -1,0 +1,1 @@
+node smufl_fontgen.js fonts/Petaluma-1.065.otf ../../src/fonts/petaluma_glyphs.ts

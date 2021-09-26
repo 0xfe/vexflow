@@ -1,0 +1,1 @@
+node smufl_fontgen.js fonts/Bravura-1.392.otf ../../src/fonts/bravura_glyphs.ts

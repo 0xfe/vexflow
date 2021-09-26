@@ -88,6 +88,8 @@ export interface RenderContext {
   closeGroup(): void;
   add(child: any): void;
 
+  fillPath(path: string, scale: number, x: number, y: number): this;
+
   measureText(text: string): TextMeasure;
 
   /** Maintain compatibility with the CanvasRenderingContext2D API. */
