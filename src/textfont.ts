@@ -21,8 +21,7 @@ export interface TextFontMetrics {
   advanceWidth: number;
 }
 
-export interface TextFontRegistry {
-  [name: string]: unknown;
+export interface TextFontInfo extends Record<string, unknown> {
   name?: string;
   resolution?: number;
   glyphs?: Record<string, TextFontMetrics>;
@@ -37,45 +36,94 @@ export interface TextFontRegistry {
   description: string;
 }
 
-// To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (TextFont.DEBUG) log('Vex.Flow.TextFont', args);
 }
 
+/**
+ * Helper for `TextFont.createTextFont()`.
+ * @param weight a string (e.g., 'bold') or a number (e.g., 600 / semi-bold in the OpenType spec).
+ * @returns true if the font weight indicates bold.
+ */
+function isBold(weight?: string | number): boolean {
+  if (!weight) {
+    return false;
+  } else if (typeof weight === 'number') {
+    return weight >= 600;
+  } else {
+    // a string can be 'bold' or '700'
+    const parsedWeight = parseInt(weight, 10);
+    if (isNaN(parsedWeight)) {
+      return weight.toLowerCase() === 'bold';
+    } else {
+      return parsedWeight >= 600;
+    }
+  }
+}
+
+/**
+ * Helper for `TextFont.createTextFont()`.
+ * @param style
+ * @returns true if the font style indicates 'italic'.
+ */
+function isItalic(style?: string): boolean {
+  if (!style) {
+    return false;
+  } else {
+    return style.toLowerCase() === 'italic';
+  }
+}
+
 export class TextFont {
-  static DEBUG: boolean;
+  /** To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`. */
+  static DEBUG: boolean = false;
+
   static get CATEGORY(): string {
     return 'TextFont';
   }
 
-  resolution: number = 1000;
-  protected name?: string;
-  protected glyphs: Record<string, TextFontMetrics> = {};
-  protected family: string = '';
-  protected serifs?: boolean;
-  protected monospaced?: boolean;
-  protected italic?: boolean;
-  protected bold?: boolean;
-  protected superscriptOffset?: number;
-  protected subscriptOffset?: number;
-  protected description?: string;
-  protected maxSizeGlyph: string;
-  protected weight: string;
-  protected style: string;
-  protected fontCacheKey: string = '';
+  static SANS_SERIF: string = 'Arial, sans-serif';
+  static SERIF: string = 'Times New Roman, Times, serif';
 
-  protected static registryInstance: TextFontRegistry[];
+  // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
+  /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
+  static convertToPxScaleFactor: Record<string, number> = {
+    pt: 4 / 3,
+    px: 1,
+    em: 16,
+    '%': 4 / 25,
+    in: 96,
+    mm: 96 / 25.4,
+    cm: 96 / 2.54,
+  };
+
+  /**
+   * @param fontSize The font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
+   * or as a number (the unit is assumed to be 'pt'). See `TextFont.convertToPxScaleFactor` for the supported
+   * units (e.g., pt, em, %).
+   * @returns the number of pixels that is equivalent to `fontSize`
+   */
+  static convertToPixels(fontSize: string | number): number {
+    if (typeof fontSize === 'number') {
+      // Assume the fontSize is specified in pt.
+      return (fontSize * 4) / 3;
+    } else {
+      const value = parseInt(fontSize);
+      const unit = fontSize.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      const conversionFactor = TextFont.convertToPxScaleFactor[unit] ?? 1;
+      return value * conversionFactor;
+    }
+  }
+
+  protected static registryInstance: TextFontInfo[];
   protected static textWidthCacheInstance?: Record<string, Record<string, number>>;
-
-  protected size: number;
-  protected attrs: { type: string };
 
   // ### fontRegistry
   // Getter of an array of available fonts.  Applications may register their
   // own fonts and the metrics for those fonts will be available to the
   // application.
-  static get fontRegistry(): TextFontRegistry[] {
+  static get fontRegistry(): TextFontInfo[] {
     if (!TextFont.registryInstance) {
       TextFont.registryInstance = [];
       TextFont.registryInstance.push({
@@ -90,7 +138,7 @@ export class TextFont {
         maxSizeGlyph: 'H',
         superscriptOffset: 0.66,
         subscriptOffset: 0.66,
-        description: 'Default serif text font to pair with Bravura/Gonville engraving font',
+        description: 'Default text font to pair with Bravura/Gonville engraving font',
       });
       TextFont.registryInstance.push({
         name: 'petalumaScript',
@@ -104,7 +152,7 @@ export class TextFont {
         maxSizeGlyph: 'H',
         superscriptOffset: 0.66,
         subscriptOffset: 0.66,
-        description: 'Default sans-serif text font to pair with Petaluma engraving font',
+        description: 'Default text font to pair with Petaluma engraving font',
       });
     }
     return TextFont.registryInstance;
@@ -114,9 +162,9 @@ export class TextFont {
   // Web font files are generally distributed per weight and style (bold, italic).
   // return the family with the attributes that are available for that font.
   // We assume descriptions are the same for different weights/styles.
-  static getFontFamilies(): TextFontRegistry[] {
-    const hash: Record<string, TextFontRegistry> = {};
-    const returnedFonts: TextFontRegistry[] = [];
+  static getFontFamilies(): TextFontInfo[] {
+    const hash: Record<string, TextFontInfo> = {};
+    const returnedFonts: TextFontInfo[] = [];
     TextFont.fontRegistry.forEach((font) => {
       if (!hash[font.family]) {
         hash[font.family] = {
@@ -141,27 +189,6 @@ export class TextFont {
     return returnedFonts;
   }
 
-  // ### fontWeightToBold
-  // return true if the font weight indicates we desire a 'bold'
-  // used in getTextFontFromVexFontData
-  static fontWeightToBold(fw?: string): boolean {
-    if (!fw) {
-      return false;
-    }
-    if (isNaN(parseInt(fw, 10))) {
-      return fw.toLowerCase() === 'bold';
-    }
-    // very subjective...
-    return parseInt(fw, 10) >= 600;
-  }
-
-  // ### fontStyleToItalic
-  // return true if the font style indicates we desire 'italic' style
-  // used in getTextFontFromVexFontData
-  static fontStyleToItalic(fs?: string): boolean {
-    return typeof fs === 'string' && fs.toLowerCase() === 'italic';
-  }
-
   // ### textWidthCache
   // Static cache of widths hashed on font/string.
   static get textWidthCache(): Record<string, Record<string, number>> {
@@ -171,83 +198,115 @@ export class TextFont {
     return TextFont.textWidthCacheInstance;
   }
 
-  // ### getTextFontFromVexFontData
-  // Find the font that most closely matches the parameters from the given font data.
-  // Primarily we look for font family, also bold and italic attributes.  This
-  // method will always return a fallback font if there are no matches.
-  static getTextFontFromVexFontData(fd: FontInfo): TextFont {
-    let i = 0;
-    let selectedFont = undefined;
-    const fallback = TextFont.fontRegistry[0];
-    let candidates: TextFontRegistry[] = [];
-    if (!fd.family) {
-      fd.family = 'Arial';
+  /**
+   * Find the font that most closely matches the parameters from the given font data.
+   * We look for font family, bold, and italic attributes.
+   * This method will always return a fallback font if there are no matches.
+   */
+  static createTextFont(fontInfo: FontInfo = {}): TextFont {
+    let candidates: TextFontInfo[] = [];
+    if (!fontInfo.family) {
+      fontInfo.family = TextFont.SANS_SERIF;
     }
-    const families = fd.family.split(',');
-    for (i = 0; i < families.length; ++i) {
-      const famliy = families[i];
-      candidates = TextFont.fontRegistry.filter((font) => font.family === famliy);
+    const families = fontInfo.family.split(',');
+    for (const family of families) {
+      candidates = TextFont.fontRegistry.filter((font) => font.family === family);
       if (candidates.length) {
         break;
       }
     }
+
+    let selectedFont;
     if (candidates.length === 0) {
-      selectedFont = new TextFont(fallback);
+      // No match, so return a fallback font.
+      selectedFont = new TextFont(TextFont.fontRegistry[0]);
     } else if (candidates.length === 1) {
       selectedFont = new TextFont(candidates[0]);
     } else {
-      const bold = TextFont.fontWeightToBold(fd.weight);
-      const italic = TextFont.fontStyleToItalic(fd.style);
-      const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
-      if (perfect) {
-        selectedFont = new TextFont(perfect);
+      const bold = isBold(fontInfo.weight);
+      const italic = isItalic(fontInfo.style);
+      const perfectMatch = candidates.find((fontInfo) => fontInfo.bold === bold && fontInfo.italic === italic);
+      if (perfectMatch) {
+        selectedFont = new TextFont(perfectMatch);
       } else {
-        const ok = candidates.find((font) => font.italic === italic || font.bold === bold);
-        if (ok) {
-          selectedFont = new TextFont(ok);
+        const partialMatch = candidates.find((fontInfo) => fontInfo.italic === italic || fontInfo.bold === bold);
+        if (partialMatch) {
+          selectedFont = new TextFont(partialMatch);
         } else {
           selectedFont = new TextFont(candidates[0]);
         }
       }
     }
-    if (typeof fd.size === 'number' && fd.size > 0) {
-      selectedFont.setFontSize(fd.size);
+    if (typeof fontInfo.size === 'number' && fontInfo.size > 0) {
+      selectedFont.setFontSize(fontInfo.size);
     }
     return selectedFont;
   }
 
-  static getFontDataByName(fontName: string): TextFontRegistry | undefined {
-    return TextFont.fontRegistry.find((fd) => fd.name === fontName);
+  static getFontDataByName(fontName: string): TextFontInfo | undefined {
+    return TextFont.fontRegistry.find((fontInfo) => fontInfo.name === fontName);
   }
 
   // ### registerFont
   // Applications may register their own fonts and the metrics, and those metrics
   // will be available to the application for formatting.  See fontRegistry
   // for format of font metrics.  Metrics can be generated from any font file
-  // using font_fontgen.js in the tools/smufl directory.
-  static registerFont(fontData: TextFontRegistry, overwrite?: boolean): void {
-    // Get via external reference to make sure initial object is created
-    const reg = TextFont.fontRegistry;
-    const exists = reg.find((td) => fontData.name === td.name);
+  // using textmetrics_fontgen.js in the tools/smufl directory.
+  static registerFont(fontInfo: TextFontInfo, overwrite?: boolean): void {
+    // Use the external getter to make sure initial object is created.
+    const exists = TextFont.fontRegistry.find((tf) => fontInfo.name === tf.name);
     if (exists && overwrite) {
       TextFont.registryInstance = TextFont.fontRegistry.filter((fd) => fd.name !== exists.name);
     }
     if (!exists) {
-      L('registering font ' + fontData.name);
-      TextFont.registryInstance.push(fontData);
+      L('Registering font ' + fontInfo.name);
+      TextFont.registryInstance.push(fontInfo);
     }
   }
 
-  // ## Prototype Methods
-  //
-  // create a font instance.
-  // The preferred method for returning an instance of this class is via
-  // getTextFontFromVexFontData
-  constructor(params: TextFontRegistry) {
+  /**
+   * 16pt * 3 = 48pt
+   * 8px / 2 = 4px
+   * @param size
+   * @param scaleFactor
+   * @returns
+   */
+  static scaleFontSize(size: number | string | undefined, scaleFactor: number): string | number | undefined {
+    if (size === undefined) return undefined;
+    if (typeof size === 'number') {
+      return size * scaleFactor;
+    } else {
+      const value = parseInt(size);
+      const unit = size.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      return `${value * scaleFactor}${unit}`;
+    }
+  }
+
+  resolution: number = 1000;
+  protected name?: string;
+  protected glyphs: Record<string, TextFontMetrics> = {};
+  protected family: string = '';
+  protected serifs?: boolean;
+  protected monospaced?: boolean;
+  protected italic?: boolean;
+  protected bold?: boolean;
+  protected superscriptOffset?: number;
+  protected subscriptOffset?: number;
+  protected description?: string;
+  protected maxSizeGlyph: string;
+  protected weight: string;
+  protected style: string;
+  protected fontCacheKey: string = '';
+  /** Specified in pt units. */
+  protected size: number;
+  protected attrs: { type: string };
+
+  /** The preferred method for returning an instance of this class is via `TextFont.createTextFont()` */
+  constructor(params: TextFontInfo) {
     this.size = 14;
     this.maxSizeGlyph = 'H';
-    this.weight = '';
-    this.style = '';
+    this.weight = 'normal';
+    this.style = 'normal';
     this.attrs = { type: TextFont.CATEGORY };
     if (!params.name) {
       throw new RuntimeError('BadArgument', 'Font constructor must specify a name');
@@ -267,7 +326,7 @@ export class TextFont {
     this.updateCacheKey();
   }
 
-  updateParams(params: TextFontRegistry): void {
+  updateParams(params: TextFontInfo): void {
     if (params.name) this.name = params.name;
     if (params.resolution) this.resolution = params.resolution;
     if (params.glyphs) this.glyphs = params.glyphs;
@@ -322,10 +381,9 @@ export class TextFont {
     return TextFont.textWidthCache[this.fontCacheKey][s];
   }
 
-  // ### pointsToPixels
-  // The font size is specified in points, convert to 'pixels' in the svg space
+  // The font size is specified in points, convert to 'pixels' in the SVG space
   get pointsToPixels(): number {
-    return this.size / 72 / (1 / 96);
+    return (this.size * 4) / 3;
   }
 
   setFontSize(size: number): this {

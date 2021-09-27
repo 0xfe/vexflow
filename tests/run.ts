@@ -66,6 +66,7 @@ import { VFPrefixTests } from './vf_prefix_tests';
 import { VibratoTests } from './vibrato_tests';
 import { VibratoBracketTests } from './vibratobracket_tests';
 import { VoiceTests } from './voice_tests';
+import { TextFontTests } from './textfont_tests';
 
 VexFlowTests.run = function () {
   AccidentalTests.Start();
@@ -121,6 +122,7 @@ VexFlowTests.run = function () {
   TabStaveTests.Start();
   TabTieTests.Start();
   TextBracketTests.Start();
+  TextFontTests.Start();
   TextNoteTests.Start();
   ThreeVoicesTests.Start();
   TickContextTests.Start();

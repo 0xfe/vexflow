@@ -12,6 +12,7 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { Voice, VoiceMode } from 'voice';
+import { TextFont } from 'textfont';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -97,7 +98,6 @@ function tickContext(): void {
 
 function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 140);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
@@ -246,7 +246,6 @@ function drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void
 
 function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
@@ -384,7 +383,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont('sans-serif', 10, 'bold');
+  ctx.setFont(TextFont.SANS_SERIF, 10, 'bold');
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -394,7 +393,6 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
 
 function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 250);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550, { num_lines: 8 });
   stave.setContext(ctx);

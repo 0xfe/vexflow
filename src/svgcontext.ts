@@ -2,6 +2,7 @@
 // MIT License
 // @author Gregory Ristow (2015)
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { normalizeAngle, prefix, RuntimeError } from './util';
 
@@ -115,13 +116,15 @@ export class SVGContext extends RenderContext {
   pen: { x: number; y: number };
   lineWidth: number;
   attributes: Attributes;
-  background_attributes: Attributes;
   shadow_attributes: Attributes;
   state: Attributes;
   state_stack: State[];
   parent: SVGGElement;
   groups: SVGGElement[];
+
   fontString: string = '';
+  fontParser?: HTMLElement;
+  backgroundFillStyle: string = 'white';
 
   constructor(element: HTMLElement) {
     super();
@@ -141,14 +144,15 @@ export class SVGContext extends RenderContext {
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
-      'font-family': 'Arial',
-      'font-size': '8pt',
+      'font-family': TextFont.SANS_SERIF,
+      'font-size': '10pt',
       'font-weight': 'normal',
+      'font-style': 'normal',
     };
 
     const defaultAttributes = {
       'stroke-dasharray': 'none',
-      'font-family': 'Arial',
+      'font-family': TextFont.SANS_SERIF,
       'font-size': '10pt',
       'font-weight': 'normal',
       'font-style': 'normal',
@@ -158,13 +162,6 @@ export class SVGContext extends RenderContext {
       'stroke-width': 0.3,
       fill: 'black',
       stroke: 'black',
-      ...defaultAttributes,
-    };
-
-    this.background_attributes = {
-      'stroke-width': 0,
-      fill: 'white',
-      stroke: 'white',
       ...defaultAttributes,
     };
 
@@ -218,62 +215,68 @@ export class SVGContext extends RenderContext {
 
   // ### Styling & State Methods:
 
-  setFont(family: string, size: number, weight?: string): this {
-    // In SVG italic is handled by font-style.
-    // We search the weight argument and apply bold and italic
-    // to font-weight and font-style respectively.
-    let foundBold = false;
-    let foundItalic = false;
-    // Weight might also be a number (200, 400, etc...) so we
+  /**
+   * @param f a string that specifies the font family, or a `FontInfo` options object.
+   * If the first argument is a `FontInfo`, the other arguments below are ignored.
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is inserted into the font-weight attribute (e.g., font-weight="bold")
+   * @param style is inserted into the font-style attribute (e.g., font-style="italic")
+   */
+  setFont(
+    f: string | FontInfo = TextFont.SANS_SERIF,
+    size: string | number = 10,
+    weight: string | number = 'normal',
+    style: string = 'normal'
+  ): this {
+    let family;
+    if (typeof f === 'string') {
+      family = f;
+    } else {
+      family = f.family;
+      size = f.size ?? 10;
+      weight = f.weight ?? 'normal';
+      style = f.style ?? 'normal';
+    }
+
+    // Backwards compatibility with 3.0.9.
+    // If weight is specified, but style is not, we have to search weight for 'bold' and 'italic'.
+    // Weight might be a number (200, 400, etc...) so we first
     // test its type to be sure we have access to String methods.
-    if (typeof weight === 'string') {
-      // look for "italic" in the weight:
-      if (weight.indexOf('italic') !== -1) {
-        weight = weight.replace(/italic/g, '');
-        foundItalic = true;
-      }
-      // look for "bold" in weight
-      if (weight.indexOf('bold') !== -1) {
-        weight = weight.replace(/bold/g, '');
-        foundBold = true;
-      }
-      // remove any remaining spaces
-      weight = weight.replace(/ /g, '');
-    }
-    const noWeightProvided = typeof weight === 'undefined' || weight === '';
-    if (noWeightProvided) {
-      weight = 'normal';
+    if (typeof weight === 'string' && weight !== 'normal' && style === 'normal') {
+      weight = weight.includes('bold') ? 'bold' : 'normal';
+      style = weight.includes('italic') ? 'italic' : 'normal';
     }
 
+    // Backwards compatibility with 3.0.9.
+    // If size is a number, we assume the unit is pt.
+    if (typeof size === 'number') {
+      size = `${size}pt`;
+    }
+
+    this.fontString = `${style} ${weight} ${size} ${family}`;
     const fontAttributes = {
+      'font-style': style,
+      'font-weight': weight,
+      'font-size': size,
       'font-family': family,
-      'font-size': size + 'pt',
-      'font-weight': foundBold ? 'bold' : weight,
-      'font-style': foundItalic ? 'italic' : 'normal',
     };
-
-    // Currently this.fontString only supports size & family. See setRawFont().
-    this.fontString = `${size}pt ${family}`;
     this.attributes = { ...this.attributes, ...fontAttributes };
     this.state = { ...this.state, ...fontAttributes };
 
     return this;
   }
 
+  /**
+   * @param font a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   * @returns this
+   */
   setRawFont(font: string): this {
-    this.fontString = font.trim();
-    // Assumes size first, splits on space -- which is presently
-    // how all existing modules are calling this.
-    const fontArray = this.fontString.split(' ');
-
-    const size = fontArray[0];
-    this.attributes['font-size'] = size;
-    this.state['font-size'] = size;
-
-    const family = fontArray[1];
-    this.attributes['font-family'] = family;
-    this.state['font-family'] = family;
-
+    if (!this.fontParser) {
+      this.fontParser = document.createElement('span');
+    }
+    this.fontParser.style.font = font;
+    const { fontFamily, fontSize, fontWeight, fontStyle } = this.fontParser.style;
+    this.setFont(fontFamily, fontSize, fontWeight, fontStyle);
     return this;
   }
 
@@ -282,9 +285,12 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
+  /**
+   * Used to set the fill color for `clearRect()`. This allows us to simulate
+   * cutting a "hole" into the SVG drawing.
+   */
   setBackgroundFillStyle(style: string): this {
-    this.background_attributes.fill = style;
-    this.background_attributes.stroke = style;
+    this.backgroundFillStyle = style;
     return this;
   }
 
@@ -431,33 +437,21 @@ export class SVGContext extends RenderContext {
       this.svg.removeChild(this.svg.lastChild);
     }
 
-    // Replace the viewbox attribute we just removed:
+    // Replace the viewbox attribute we just removed.
     this.scale(this.state.scale.x, this.state.scale.y);
   }
 
   // ## Rectangles:
   rect(x: number, y: number, width: number, height: number, attributes?: Attributes): this {
-    // Avoid invalid negative height attribs by
-    // flipping the rectangle on its head:
+    // Avoid invalid negative height attributes by flipping the rectangle on its head:
     if (height < 0) {
       y += height;
       height *= -1;
     }
 
-    // Create the rect & style it:
     const rectangle = this.create('rect');
-    if (typeof attributes === 'undefined') {
-      attributes = {
-        fill: 'none',
-        'stroke-width': this.lineWidth,
-        stroke: 'black',
-      };
-    }
-
-    attributes = { ...attributes, x, y, width, height };
-
-    this.applyAttributes(rectangle, attributes);
-
+    attributes = attributes ?? { fill: 'none', 'stroke-width': this.lineWidth, stroke: 'black' };
+    this.applyAttributes(rectangle, { x, y, width, height, ...attributes });
     this.add(rectangle);
     return this;
   }
@@ -469,21 +463,13 @@ export class SVGContext extends RenderContext {
   }
 
   clearRect(x: number, y: number, width: number, height: number): this {
-    // TODO(GCR): Improve implementation of this...
-    // Currently it draws a box of the background color, rather
-    // than creating alpha through lower z-levels.
+    // Currently this fills a rect with the backgroundFillStyle, rather
+    // than "cut a hole" into the existing shapes.
     //
-    // See the implementation of this in SVGKit:
-    // http://sourceforge.net/projects/svgkit/
-    // as a starting point.
-    //
-    // Adding a large number of transform paths (as we would
-    // have to do) could be a real performance hit.  Since
-    // tabNote seems to be the only module that makes use of this
+    // Since tabNote seems to be the only module that makes use of this
     // it may be worth creating a separate tabStave that would
     // draw lines around locations of tablature fingering.
-    //
-    this.rect(x, y, width, height, this.background_attributes);
+    this.rect(x, y, width, height, { 'stroke-width': 0, fill: this.backgroundFillStyle });
     return this;
   }
 

@@ -96,7 +96,7 @@ function drawSlashNoteHead(
  */
 export class NoteHead extends Note {
   /** To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'NoteHead';
@@ -147,7 +147,7 @@ export class NoteHead extends Note {
     this.render_options = {
       ...this.render_options,
       // font size for note heads
-      glyph_font_scale: noteStruct.glyph_font_scale || Tables.DEFAULT_NOTATION_FONT_SCALE,
+      glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     };

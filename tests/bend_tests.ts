@@ -40,7 +40,7 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont(' 10pt Arial');
+  ctx.setRawFont('10pt ' + TextFont.SANS_SERIF);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -185,7 +185,7 @@ function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void 
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont(' 10pt Arial');
+  ctx.setRawFont('10pt Arial');
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const phrase1 = [

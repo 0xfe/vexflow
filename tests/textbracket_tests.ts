@@ -76,7 +76,7 @@ function simple1(options: TestOptions): void {
       options: {
         position: 'top',
         superscript: 'superscript',
-        font: { family: 'Arial', size: 15, weight: '' },
+        font: { family: 'Arial', size: 15, weight: 'normal' },
       },
     }),
   ];

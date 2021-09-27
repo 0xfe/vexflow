@@ -112,7 +112,7 @@ export class StaveModifier extends Element {
   }
 
   // eslint-disable-next-line
-  draw(element?: Element, x_shift?: number): void {
+  draw(...args: any[]): void {
     // DO NOTHING.
   }
 }

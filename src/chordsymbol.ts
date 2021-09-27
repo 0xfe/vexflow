@@ -1,10 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Author: @AaronDavidNewman
+// Author: Aaron (@AaronDavidNewman)
 //
-// This implements chord symbols as modifiers that can be attached to notes.
-// Chord symbols can contain multiple 'blocks' which can contain
-// text or glyphs with various positioning options.
+// This implements chord symbols above/below a chord.
+// Chord symbols are modifiers that can be attached to notes.
+// They can contain multiple 'blocks' which represent text or
+// glyphs with various positioning options.
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
@@ -70,15 +71,17 @@ export class ChordSymbol extends Modifier {
     return 'ChordSymbol';
   }
 
+  /** Currently unused. */
+  protected static noFormat: boolean = false;
+
   protected symbolBlocks: ChordSymbolBlock[];
   protected horizontal: number;
   protected vertical: number;
   protected useKerning: boolean;
   protected reportWidth: boolean;
-  protected font: FontInfo;
-  protected textFont: TextFont;
-  /** Currently unused. */
-  protected static noFormat: boolean = false;
+
+  // Initialized by the constructor via this.setFont().
+  protected textFont!: TextFont;
 
   // Chord symbols can be positioned and justified relative to the note.
   static readonly horizontalJustify = HorizontalJustify;
@@ -136,7 +139,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): number {
-    return Tables.DEFAULT_FONT_STACK[0].getResolution();
+    return Tables.MUSIC_FONT_STACK[0].getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -253,15 +256,15 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static get chordSymbolMetrics(): any {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
+    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
+    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
   }
 
   static get upperKerningText(): string[] {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
+    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
   }
 
   /**
@@ -373,18 +376,11 @@ export class ChordSymbol extends Modifier {
     this.useKerning = true;
     this.reportWidth = true;
 
-    let fontFamily = 'Arial';
+    let family = 'Roboto Slab, Times, serif';
     if (this.musicFont.getName() === 'Petaluma') {
-      fontFamily = 'petalumaScript,Arial';
-    } else {
-      fontFamily = 'Roboto Slab,Times';
+      family = 'petalumaScript, Arial, sans-serif';
     }
-    this.font = {
-      family: fontFamily,
-      size: 12,
-      weight: '',
-    };
-    this.textFont = TextFont.getTextFontFromVexFontData(this.font);
+    this.setFont(family, 12);
   }
 
   // ### pointsToPixels
@@ -615,15 +611,27 @@ export class ChordSymbol extends Modifier {
     return this.addSymbolBlock({ ...params, symbolType, width });
   }
 
-  // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
-  setFont(family: string, size: number, weight: string): this {
-    this.font = { family, size, weight };
-    this.textFont = TextFont.getTextFontFromVexFontData(this.font);
+  /**
+   * @param f a string that specifies the font family, or a `FontInfo` options object.
+   * If the first argument is a `FontInfo`, the other arguments below are ignored.
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is inserted into the font-weight attribute (e.g., font-weight="bold")
+   * @param style is inserted into the font-style attribute (e.g., font-style="italic")
+   */
+  setFont(
+    f: string | FontInfo = TextFont.SANS_SERIF,
+    size: string | number = 10,
+    weight: string | number = 'normal',
+    style: string = 'normal'
+  ): this {
+    super.setFont(f, size, weight, style);
+    this.textFont = TextFont.createTextFont(this.font);
     return this;
   }
 
+  /** Just change the font size, while keeping everything else the same. */
   setFontSize(size: number): this {
-    this.font.size = size;
+    this.setFont({ ...this.font, size });
     this.textFont.setFontSize(size);
     return this;
   }
@@ -681,7 +689,7 @@ export class ChordSymbol extends Modifier {
     ctx.openGroup(classString, this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
 
     let y: number;
 
@@ -723,23 +731,27 @@ export class ChordSymbol extends Modifier {
     L('Rendering ChordSymbol: ', this.textFont, x, y);
 
     this.symbolBlocks.forEach((symbol) => {
-      const sp = this.isSuperscript(symbol);
-      const sub = this.isSubscript(symbol);
+      const isSuper = this.isSuperscript(symbol);
+      const isSub = this.isSubscript(symbol);
       let curY = y;
       L('shift was ', symbol.xShift, symbol.yShift);
       L('curY pre sub ', curY);
-      if (sp) {
+      if (isSuper) {
         curY += this.superscriptOffset;
       }
-      if (sub) {
+      if (isSub) {
         curY += this.subscriptOffset;
       }
       L('curY sup/sub ', curY);
 
       if (symbol.symbolType === SymbolTypes.TEXT) {
-        if (sp || sub) {
+        if (isSuper || isSub) {
           ctx.save();
-          ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
+          if (this.font) {
+            const { family, size, weight, style } = this.font;
+            const smallerFontSize = TextFont.scaleFontSize(size, ChordSymbol.superSubRatio);
+            ctx.setFont(family, smallerFontSize, weight, style);
+          }
         }
         // TODO???
         // We estimate the text width, fill it in with the empirical value so the formatting is even.
@@ -749,7 +761,7 @@ export class ChordSymbol extends Modifier {
         L('Rendering Text: ', symbol.text, x + symbol.xShift, curY + symbol.yShift);
 
         ctx.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
-        if (sp || sub) {
+        if (isSuper || isSub) {
           ctx.restore();
         }
       } else if (symbol.symbolType === SymbolTypes.GLYPH && symbol.glyph) {

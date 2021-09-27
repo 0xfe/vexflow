@@ -28,7 +28,7 @@ function L(...args: any) {
 
 /** GraceNoteGroup is used to format and render grace notes. */
 export class GraceNoteGroup extends Modifier {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'GraceNoteGroup';

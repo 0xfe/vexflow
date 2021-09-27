@@ -27,7 +27,7 @@ function L(...args: any[]) {
  */
 export class Ornament extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Ornaments category string. */
   static get CATEGORY(): string {
@@ -155,7 +155,7 @@ export class Ornament extends Modifier {
    */
   // eslint-disable-next-line
   getMetrics(): any {
-    return this.getFontStack()[0].getMetrics().glyphs.jazzOrnaments[this.ornament.code];
+    return this.getMusicFontStack()[0].getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
   /**

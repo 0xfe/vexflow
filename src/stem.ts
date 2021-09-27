@@ -9,7 +9,6 @@ import { Element } from './element';
 import { Tables } from './tables';
 import { log, RuntimeError } from './util';
 
-// To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (Stem.DEBUG) log('Vex.Flow.Stem', args);
@@ -32,7 +31,8 @@ export interface StemOptions {
 }
 
 export class Stem extends Element {
-  static DEBUG: boolean;
+  /** To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`. */
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'Stem';

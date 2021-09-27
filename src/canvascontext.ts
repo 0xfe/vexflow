@@ -1,6 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Font, FontInfo } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
@@ -13,6 +14,9 @@ export class CanvasContext extends RenderContext {
 
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
+
+  /** Use a hidden span element to help us parse CSS font strings. */
+  fontParser?: HTMLElement;
 
   static get WIDTH(): number {
     return 600;

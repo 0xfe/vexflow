@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { TextFont } from 'textfont';
+
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
@@ -10,6 +12,13 @@ export class Repetition extends StaveModifier {
   static get CATEGORY(): string {
     return 'Repetition';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: TextFont.SERIF,
+    size: 12,
+    weight: 'bold',
+    style: 'normal',
+  };
 
   static readonly type = {
     NONE: 1, // no coda or segno
@@ -30,7 +39,6 @@ export class Repetition extends StaveModifier {
 
   protected x_shift: number;
   protected y_shift: number;
-  protected font: FontInfo;
 
   constructor(type: number, x: number, y_shift: number) {
     super();
@@ -39,12 +47,8 @@ export class Repetition extends StaveModifier {
     this.x = x;
     this.x_shift = 0;
     this.y_shift = y_shift;
-    this.font = {
-      family: 'times',
-      size: 12,
-      weight: 'bold',
-      style: 'italic',
-    };
+
+    this.setFont(this.getDefaultFont());
   }
 
   setShiftX(x: number): this {
@@ -117,7 +121,8 @@ export class Repetition extends StaveModifier {
     const ctx = stave.checkContext();
 
     ctx.save();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
+
     // Default to right symbol
     let text_x = 0 + this.x_shift;
     let symbol_x = x + this.x_shift;

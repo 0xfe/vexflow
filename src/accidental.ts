@@ -41,7 +41,7 @@ export class Accidental extends Modifier {
   /** Accidental code provided to the constructor. */
   readonly type: string;
   /** To enable logging for this class. Set `Vex.Flow.Accidental.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
   protected accidental: {
     code: string;
     parenRightPaddingAdjustment: number;
@@ -73,7 +73,7 @@ export class Accidental extends Modifier {
       lineSpace?: number;
     };
 
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.MUSIC_FONT_STACK[0];
     const noteheadAccidentalPadding = musicFont.lookupMetric('accidental.noteheadAccidentalPadding');
     const leftShift = state.left_shift + noteheadAccidentalPadding;
     const accidentalSpacing = musicFont.lookupMetric('accidental.accidentalSpacing');

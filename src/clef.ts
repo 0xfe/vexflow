@@ -25,7 +25,7 @@ function L(...args: any[]) {
  */
 export class Clef extends StaveModifier {
   /** To enable logging for this class, set `Vex.Flow.Clef.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'Clef';

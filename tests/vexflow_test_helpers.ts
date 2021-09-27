@@ -29,11 +29,11 @@ export interface TestOptions {
 // Each test case will switch through the available fonts, and then restore the original font when done.
 let originalFontStack: Font[];
 function useTempFontStack(fontName: string): void {
-  originalFontStack = Flow.DEFAULT_FONT_STACK;
-  Flow.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+  originalFontStack = Flow.MUSIC_FONT_STACK;
+  Flow.MUSIC_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
 }
 function restoreOriginalFontStack(): void {
-  Flow.DEFAULT_FONT_STACK = originalFontStack;
+  Flow.MUSIC_FONT_STACK = originalFontStack;
 }
 
 // A micro util inspired by jQuery.
@@ -258,7 +258,7 @@ class VexFlowTests {
    */
   static plotLegendForNoteWidth(ctx: RenderContext, x: number, y: number): void {
     ctx.save();
-    ctx.setFont('Arial', 8, '');
+    ctx.setFont(TextFont.SANS_SERIF, 8);
 
     const spacing = 12;
     let lastY = y;
