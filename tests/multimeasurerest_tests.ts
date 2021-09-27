@@ -64,7 +64,7 @@ function simple(options: TestOptions): void {
         spacing_between_lines_px: 15,
         use_symbols: true,
         number_glyph_point: 40 * 1.5,
-        semibrave_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * 1.5,
+        semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE * 1.5,
       },
     ],
   ];
