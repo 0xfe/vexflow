@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { TextFont } from 'textfont';
+
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { FontInfo } from './types/common';
@@ -33,14 +35,12 @@ export class TextNote extends Note {
     return 'TextNote';
   }
 
-  protected text: string;
-  protected superscript?: string;
-  protected subscript?: string;
-  protected smooth: boolean;
-
-  protected font: FontInfo;
-  protected justification: Justification;
-  protected line: number;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 12,
+    weight: 'normal',
+    style: 'normal',
+  };
 
   static get Justification(): typeof Justification {
     return Justification;
@@ -109,18 +109,20 @@ export class TextNote extends Note {
     };
   }
 
+  protected text: string;
+  protected superscript?: string;
+  protected subscript?: string;
+  protected smooth: boolean;
+  protected justification: Justification;
+  protected line: number;
+
   constructor(noteStruct: TextNoteStruct) {
     super(noteStruct);
 
     this.text = noteStruct.text || '';
     this.superscript = noteStruct.superscript;
     this.subscript = noteStruct.subscript;
-    this.font = {
-      family: 'Arial',
-      size: 12,
-      weight: '',
-      ...noteStruct.font,
-    };
+    this.setFont({ ...this.getDefaultFont(), ...noteStruct.font });
     this.line = noteStruct.line || 0;
     this.smooth = noteStruct.smooth || false;
     this.ignore_ticks = noteStruct.ignore_ticks || false;
@@ -164,14 +166,14 @@ export class TextNote extends Note {
         // Width already set.
       } else {
         const ctx = this.checkContext();
-        ctx.setFont(this.font.family, this.font.size, this.font.weight);
+        ctx.setFont(this.font);
         this.setWidth(ctx.measureText(this.text).width);
       }
     }
 
-    if (this.justification === TextNote.Justification.CENTER) {
+    if (this.justification === Justification.CENTER) {
       this.leftDisplacedHeadPx = this.width / 2;
-    } else if (this.justification === TextNote.Justification.RIGHT) {
+    } else if (this.justification === Justification.RIGHT) {
       this.leftDisplacedHeadPx = this.width;
     }
 
@@ -197,9 +199,9 @@ export class TextNote extends Note {
     // Align based on tick-context width.
     const width = this.getWidth();
 
-    if (this.justification === TextNote.Justification.CENTER) {
+    if (this.justification === Justification.CENTER) {
       x -= width / 2;
-    } else if (this.justification === TextNote.Justification.RIGHT) {
+    } else if (this.justification === Justification.RIGHT) {
       x -= width;
     }
 
@@ -208,22 +210,27 @@ export class TextNote extends Note {
       y = stave.getYForLine(this.line + -3);
       this.glyph.render(ctx, x, y);
     } else {
+      // We called this.setFont() in the constructor, so we know this.font is available.
+      // eslint-disable-next-line
+      const { family, size, weight, style } = this.font!;
+
       y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.setFont(family, size, weight, style);
       ctx.fillText(this.text, x, y);
 
       const height = ctx.measureText(this.text).height;
 
-      // Write superscript
+      // Scale the font size by 1/1.3.
+      const smallerFontSize = TextFont.scaleFontSize(size, 0.769231);
+
       if (this.superscript) {
-        ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+        ctx.setFont(family, smallerFontSize, weight, style);
         ctx.fillText(this.superscript, x + this.width + 2, y - height / 2.2);
       }
 
-      // Write subscript
       if (this.subscript) {
-        ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+        ctx.setFont(family, smallerFontSize, weight, style);
         ctx.fillText(this.subscript, x + this.width + 2, y + height / 2.2 - 1);
       }
 

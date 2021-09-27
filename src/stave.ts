@@ -4,6 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
+import { Font } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -64,6 +65,13 @@ export class Stave extends Element {
     return 'Stave';
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 8,
+    weight: 'normal',
+    style: 'normal',
+  };
+
   protected start_x: number;
   protected clef: string;
   protected options: Required<StaveOptions>;
@@ -78,7 +86,6 @@ export class Stave extends Element {
   protected formatted: boolean;
   protected end_x: number;
   protected measure: number;
-  protected font: FontInfo;
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
@@ -87,12 +94,13 @@ export class Stave extends Element {
   // This is the sum of the padding that normally goes on left + right of a stave during
   // drawing. Used to size staves correctly with content width.
   static get defaultPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.MUSIC_FONT_STACK[0];
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
+
   // Right padding, used by system if startX is already determined.
   static get rightPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.MUSIC_FONT_STACK[0];
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
@@ -109,11 +117,8 @@ export class Stave extends Element {
     this.measure = 0;
     this.clef = 'treble';
     this.endClef = undefined;
-    this.font = {
-      family: 'sans-serif',
-      size: 8,
-      weight: '',
-    };
+    this.setFont(this.getDefaultFont());
+
     this.options = {
       spacing: 2,
       thickness: 2,
@@ -764,7 +769,7 @@ export class Stave extends Element {
     // Render measure numbers
     if (this.measure > 0) {
       ctx.save();
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.setFont(this.font);
       const text_width = ctx.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;
       ctx.fillText('' + this.measure, this.x - text_width / 2, y);

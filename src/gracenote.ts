@@ -27,7 +27,7 @@ export class GraceNote extends StaveNote {
 
   constructor(noteStruct: GraceNoteStruct) {
     super({
-      glyph_font_scale: Tables.DEFAULT_NOTATION_FONT_SCALE * GraceNote.SCALE,
+      glyph_font_scale: Tables.NOTATION_FONT_SCALE * GraceNote.SCALE,
       stroke_px: GraceNote.LEDGER_LINE_OFFSET,
       ...noteStruct,
     });
@@ -60,7 +60,7 @@ export class GraceNote extends StaveNote {
 
   // FIXME: move this to more basic class.
   getStaveNoteScale(): number {
-    return this.render_options.glyph_font_scale / Tables.DEFAULT_NOTATION_FONT_SCALE;
+    return this.render_options.glyph_font_scale / Tables.NOTATION_FONT_SCALE;
   }
 
   draw(): void {

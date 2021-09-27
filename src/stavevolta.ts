@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { TextFont } from 'textfont';
+
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 import { FontInfo } from './types/common';
@@ -22,10 +24,16 @@ export class Volta extends StaveModifier {
     return VoltaType;
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 9,
+    weight: 'bold',
+    style: 'normal',
+  };
+
   protected volta: number;
   protected number: string;
 
-  protected font: FontInfo;
   protected y_shift: number;
 
   constructor(type: number, number: string, x: number, y_shift: number) {
@@ -34,11 +42,7 @@ export class Volta extends StaveModifier {
     this.x = x;
     this.y_shift = y_shift;
     this.number = number;
-    this.font = {
-      family: 'sans-serif',
-      size: 9,
-      weight: 'bold',
-    };
+    this.setFont(this.getDefaultFont());
   }
 
   setShiftY(y: number): this {
@@ -72,7 +76,7 @@ export class Volta extends StaveModifier {
     // If the beginning of a volta, draw measure number
     if (this.volta === VoltaType.BEGIN || this.volta === VoltaType.BEGIN_END) {
       ctx.save();
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.setFont(this.font);
       ctx.fillText(this.number, this.x + x + 5, top_y + 15);
       ctx.restore();
     }

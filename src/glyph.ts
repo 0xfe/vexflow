@@ -279,7 +279,7 @@ export class Glyph extends Element {
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
-      fontStack: Tables.DEFAULT_FONT_STACK,
+      fontStack: Tables.MUSIC_FONT_STACK,
       ...options,
     };
     const data = Glyph.cache.lookup(params.fontStack, code, params.category);
@@ -383,7 +383,7 @@ export class Glyph extends Element {
     this.code = code;
     this.point = point;
     this.options = {
-      fontStack: this.getFontStack(),
+      fontStack: this.getMusicFontStack(),
     };
 
     this.x_shift = 0;

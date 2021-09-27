@@ -3,6 +3,8 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
+import { TextFont } from 'textfont';
+
 import { Builder } from './easyscore';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -14,6 +16,13 @@ export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
     return 'FretHandFinger';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 9,
+    weight: 'bold',
+    style: 'normal',
+  };
 
   // Arrange fingerings inside a ModifierContext.
   static format(nums: FretHandFinger[], state: ModifierContextState): boolean {
@@ -110,7 +119,6 @@ export class FretHandFinger extends Modifier {
   protected finger: string;
   protected x_offset: number;
   protected y_offset: number;
-  protected font: FontInfo;
 
   constructor(finger: string) {
     super();
@@ -122,11 +130,7 @@ export class FretHandFinger extends Modifier {
     this.y_shift = 0;
     this.x_offset = 0; // Horizontal offset from default
     this.y_offset = 0; // Vertical offset from default
-    this.font = {
-      family: 'sans-serif',
-      size: 9,
-      weight: 'bold',
-    };
+    this.setFont(this.getDefaultFont());
   }
 
   setFretHandFinger(finger: string): this {
@@ -177,7 +181,7 @@ export class FretHandFinger extends Modifier {
     }
 
     ctx.save();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
     ctx.fillText('' + this.finger, dot_x, dot_y);
     ctx.restore();
   }

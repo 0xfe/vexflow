@@ -3,17 +3,12 @@
 //
 // Text Note Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: TextNote needs a setFont() accessor.
-
 import { Crescendo } from '../src/crescendo';
 import { Flow } from '../src/flow';
+import { Font } from '../src/font';
 import { Note } from '../src/note';
-import { TextNote } from '../src/textnote';
 import { Stave } from '../src/stave';
-
+import { TextNote } from '../src/textnote';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextNoteTests = {
@@ -142,7 +137,7 @@ function superscriptAndSubscript(options: TestOptions): void {
 
   voice2.getTickables().forEach((note) => {
     const textNote = note as TextNote;
-    textNote.font = { family: 'Serif', size: 15, weight: '' };
+    textNote.setFont({ family: Font.SERIF, size: 15 });
     textNote.setLine(13);
     textNote.setJustification(TextNote.Justification.LEFT);
   });

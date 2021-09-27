@@ -4,6 +4,8 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
+import { TextFont } from 'textfont';
+
 import { TieNotes } from './stavetie';
 import { TabNote } from './tabnote';
 import { TabTie } from './tabtie';
@@ -73,7 +75,7 @@ export class TabSlide extends TabTie {
     this.render_options.cp2 = 14;
     this.render_options.y_shift = 0.5;
 
-    this.setFont({ family: 'Times', size: 10, weight: 'bold italic' });
+    this.setFont({ family: Font.SERIF, size: 10, weight: 'bold', style: 'italic' });
   }
 
   renderTie(params: {

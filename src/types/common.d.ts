@@ -1,8 +1,16 @@
 export interface FontInfo {
-  family: string;
-  size: number;
-  /** `bold` or a numeric string '900' as inspired by CSS font-weight. */
-  weight: string;
+  /** CSS font-family, e.g., 'Arial', 'Arial, Helvetica, sans-serif', 'Times, serif' */
+  family?: string;
+
+  /**
+   * CSS font-size (e.g., '10pt', '12px').
+   * For backwards compatibility with 3.0.9, plain numbers are assumed to be specified in 'pt'.
+   */
+  size?: number | string;
+
+  /** `bold` or a number (e.g., 900) as inspired by CSS font-weight. */
+  weight?: string | number;
+
   /** `italic` as inspired by CSS font-style. */
   style?: string;
 }

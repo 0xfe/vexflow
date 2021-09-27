@@ -7,6 +7,8 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
+import { Font } from 'font';
+
 import { Dot } from './dot';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -147,7 +149,7 @@ export class TabNote extends StemmableNote {
     this.render_options = {
       ...this.render_options,
       // font size for note heads and rests
-      glyph_font_scale: Tables.DEFAULT_TABLATURE_FONT_SCALE,
+      glyph_font_scale: Tables.TABLATURE_FONT_SCALE,
       // Flag to draw a stem
       draw_stem,
       // Flag to draw dot modifiers
@@ -159,7 +161,7 @@ export class TabNote extends StemmableNote {
       // normal glyph scale
       scale: 1.0,
       // default tablature font
-      font: '10pt Arial',
+      font: `10pt ${Font.SANS_SERIF}`,
     };
 
     this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
@@ -385,27 +387,27 @@ export class TabNote extends StemmableNote {
 
   // Render the stem extension through the fret positions
   drawStemThrough(): void {
-    const stem_x = this.getStemX();
-    const stem_y = this.getStemY();
+    const stemX = this.getStemX();
+    const stemY = this.getStemY();
     const ctx = this.checkContext();
 
-    const stem_through = this.render_options.draw_stem_through_stave;
-    const draw_stem = this.render_options.draw_stem;
-    if (draw_stem && stem_through) {
-      const total_lines = this.checkStave().getNumLines();
-      const strings_used = this.positions.map((position) => Number(position.str));
+    const drawStem = this.render_options.draw_stem;
+    const stemThrough = this.render_options.draw_stem_through_stave;
+    if (drawStem && stemThrough) {
+      const numLines = this.checkStave().getNumLines();
+      const stringsUsed = this.positions.map((position) => Number(position.str));
 
-      const unused_strings = getUnusedStringGroups(total_lines, strings_used);
-      const stem_lines = getPartialStemLines(stem_y, unused_strings, this.checkStave(), this.getStemDirection());
+      const unusedStrings = getUnusedStringGroups(numLines, stringsUsed);
+      const stemLines = getPartialStemLines(stemY, unusedStrings, this.checkStave(), this.getStemDirection());
 
       ctx.save();
       ctx.setLineWidth(Stem.WIDTH);
-      stem_lines.forEach((bounds) => {
+      stemLines.forEach((bounds) => {
         if (bounds.length === 0) return;
 
         ctx.beginPath();
-        ctx.moveTo(stem_x, bounds[0]);
-        ctx.lineTo(stem_x, bounds[bounds.length - 1]);
+        ctx.moveTo(stemX, bounds[0]);
+        ctx.lineTo(stemX, bounds[bounds.length - 1]);
         ctx.stroke();
         ctx.closePath();
       });

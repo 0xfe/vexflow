@@ -4,6 +4,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
 import { Tables } from './tables';
@@ -43,6 +44,17 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
+  /**
+   * Default font for text.
+   * See `Element.musicFont` and `Element.musicFontStack` to customize the font for musical symbols placed on the score.
+   */
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 10,
+    weight: 'normal',
+    style: 'normal',
+  };
+
   private context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
@@ -50,9 +62,15 @@ export abstract class Element {
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
 
-  // fontStack and musicFont are both initialized by the constructor via this.setFontStack(...).
-  protected fontStack!: Font[];
+  // Initialized by the constructor via this.setMusicFontStack(...).
+  protected musicFontStack!: Font[];
+
+  /** The font used to render musical glyphs (e.g., treble clef).*/
+  // Initialized by the constructor via this.setMusicFontStack(...).
   protected musicFont!: Font;
+
+  /** Some elements include text. You can customize the font family, size, weight, and style. */
+  protected font?: Required<FontInfo>;
 
   constructor() {
     this.attrs = {
@@ -63,7 +81,7 @@ export abstract class Element {
     };
 
     this.rendered = false;
-    this.setFontStack(Tables.DEFAULT_FONT_STACK);
+    this.setMusicFontStack(Tables.MUSIC_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
@@ -74,16 +92,56 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /** Set music fonts stack. */
-  setFontStack(fontStack: Font[]): this {
-    this.fontStack = fontStack;
+  /**
+   * Set the music engraving fonts. The first item is the default.
+   * Other fonts serve as backups, if a glyph is not found in the first font.
+   */
+  setMusicFontStack(fontStack: Font[]): this {
+    this.musicFontStack = fontStack;
     this.musicFont = fontStack[0];
     return this;
   }
 
   /** Get music fonts stack. */
-  getFontStack(): Font[] {
-    return this.fontStack;
+  getMusicFontStack(): Font[] {
+    return this.musicFontStack;
+  }
+
+  /**
+   * Return the default text font. To render text, an element should
+   * call `this.setFont(this.getDefaultFont())` in its constructor.
+   */
+  getDefaultFont(): Required<FontInfo> {
+    return (<typeof Element>this.constructor).TEXT_FONT;
+  }
+
+  /**
+   * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   *
+   * @param f a string that specifies the font family, or a `FontInfo` options object.
+   * If the first argument is a `FontInfo`, the other arguments below are ignored.
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is inserted into the font-weight attribute (e.g., font-weight="bold")
+   * @param style is inserted into the font-style attribute (e.g., font-style="italic")
+   */
+  setFont(
+    f: string | FontInfo = Font.SANS_SERIF,
+    size: string | number = 10,
+    weight: string | number = 'normal',
+    style: string = 'normal'
+  ): this {
+    if (typeof f === 'string') {
+      this.font = { family: f, size, weight, style };
+    } else {
+      // Follow CSS conventions. Unspecified params are reset to the default.
+      this.font = { ...this.getDefaultFont(), ...f };
+    }
+    return this;
+  }
+
+  /** Return a copy of the FontInfo object, or undefined if `setFont()` has never been called. */
+  getFont(): Required<FontInfo> | undefined {
+    return this.font ? { ...this.font } : undefined;
   }
 
   /** Set the draw style of a stemmable note. */

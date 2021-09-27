@@ -41,7 +41,7 @@ import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextBracket } from './textbracket';
 import { TextDynamics } from './textdynamics';
-import { TextFont, TextFontRegistry } from './textfont';
+import { TextFont } from './textfont';
 import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
@@ -62,11 +62,7 @@ export interface FactoryOptions {
     height: number;
     background?: string;
   };
-  font?: {
-    family: string;
-    size: number;
-    weight: string;
-  };
+  font: FontInfo;
 }
 
 // eslint-disable-next-line
@@ -75,14 +71,18 @@ function L(...args: any[]) {
 }
 
 /**
- * Factory implements a high level API around VexFlow. It will eventually
- * become the canonical way to use VexFlow.
- *
- * *This API is currently DRAFT*
+ * Factory implements a high level API around VexFlow.
  */
 export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 10,
+    weight: 'normal',
+    style: 'normal',
+  };
 
   /**
    * Static simplified function to access constructor without providing FactoryOptions
@@ -97,7 +97,7 @@ export class Factory {
     return new Factory({ renderer: { elementId, width, height } });
   }
 
-  protected options: Required<FactoryOptions>;
+  protected options: FactoryOptions;
 
   protected stave?: Stave;
   protected context!: RenderContext;
@@ -125,11 +125,7 @@ export class Factory {
         height: 200,
         background: '#FFF',
       },
-      font: {
-        family: 'Arial',
-        size: 10,
-        weight: '',
-      },
+      font: Factory.TEXT_FONT,
     };
 
     this.setOptions(options);
@@ -346,6 +342,7 @@ export class Factory {
     fontFamily?: string;
     fontSize?: number;
     fontWeight?: string;
+    fontStyle?: string;
   }): Annotation {
     const p = {
       text: 'p',
@@ -353,7 +350,8 @@ export class Factory {
       hJustify: 'center',
       fontFamily: 'Times',
       fontSize: 14,
-      fontWeight: 'bold italic',
+      fontWeight: 'bold',
+      fontStyle: 'italic',
       options: {},
       ...params,
     };
@@ -361,7 +359,7 @@ export class Factory {
     const annotation = new Annotation(p.text);
     annotation.setJustification(p.hJustify);
     annotation.setVerticalJustification(p.vJustify);
-    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight);
+    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight, p.fontStyle);
     annotation.setContext(this.context);
     return annotation;
   }
@@ -660,11 +658,6 @@ export class Factory {
     const group = new NoteSubGroup(p.notes);
     group.setContext(this.context);
     return group;
-  }
-
-  TextFont(params: TextFontRegistry): TextFont {
-    params.factory = this;
-    return new TextFont(params);
   }
 
   /** Render the score. */

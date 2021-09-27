@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { TextFont } from 'textfont';
+
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 import { FontInfo } from './types/common';
@@ -10,10 +12,16 @@ export class StaveSection extends StaveModifier {
     return 'StaveSection';
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 12,
+    weight: 'bold',
+    style: 'normal',
+  };
+
   protected section: string;
   protected shift_x: number;
   protected shift_y: number;
-  protected font: FontInfo;
 
   constructor(section: string, x: number, shift_y: number) {
     super();
@@ -23,11 +31,7 @@ export class StaveSection extends StaveModifier {
     this.x = x;
     this.shift_x = 0;
     this.shift_y = shift_y;
-    this.font = {
-      family: 'sans-serif',
-      size: 12,
-      weight: 'bold',
-    };
+    this.setFont(this.getDefaultFont());
   }
 
   setStaveSection(section: string): this {
@@ -51,7 +55,8 @@ export class StaveSection extends StaveModifier {
 
     ctx.save();
     ctx.setLineWidth(2);
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
+
     const text_width = ctx.measureText('' + this.section).width;
     let width = text_width + 6; // add left & right padding
     if (width < 18) width = 18;

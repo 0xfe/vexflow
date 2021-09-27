@@ -161,23 +161,40 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
-  get DEFAULT_FONT_STACK(): Font[] {
-    return Tables.DEFAULT_FONT_STACK;
+  /**
+   * Use Flow.setMusicFont(...fontNames).
+   *
+   * @param fonts
+   */
+  setMusicFontStack(fonts: Font[]): void {
+    Tables.MUSIC_FONT_STACK = fonts.slice();
   },
-  set DEFAULT_FONT_STACK(value: Font[]) {
-    Tables.DEFAULT_FONT_STACK = value;
+
+  /**
+   * @returns a copy of the current music font stack.
+   */
+  getMusicFontStack(): Font[] {
+    return Tables.MUSIC_FONT_STACK.slice();
   },
-  get DEFAULT_NOTATION_FONT_SCALE(): number {
-    return Tables.DEFAULT_NOTATION_FONT_SCALE;
+
+  /**
+   * @returns the `Font` object at the head of the music font stack.
+   */
+  currentMusicFont(): Font {
+    return Tables.currentMusicFont();
   },
-  set DEFAULT_NOTATION_FONT_SCALE(value: number) {
-    Tables.DEFAULT_NOTATION_FONT_SCALE = value;
+
+  get NOTATION_FONT_SCALE(): number {
+    return Tables.NOTATION_FONT_SCALE;
   },
-  get DEFAULT_TABLATURE_FONT_SCALE(): number {
-    return Tables.DEFAULT_TABLATURE_FONT_SCALE;
+  set NOTATION_FONT_SCALE(value: number) {
+    Tables.NOTATION_FONT_SCALE = value;
   },
-  set DEFAULT_TABLATURE_FONT_SCALE(value: number) {
-    Tables.DEFAULT_TABLATURE_FONT_SCALE = value;
+  get TABLATURE_FONT_SCALE(): number {
+    return Tables.TABLATURE_FONT_SCALE;
+  },
+  set TABLATURE_FONT_SCALE(value: number) {
+    Tables.TABLATURE_FONT_SCALE = value;
   },
   get RESOLUTION(): number {
     return Tables.RESOLUTION;

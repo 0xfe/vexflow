@@ -4,6 +4,7 @@
 // Vibrato Tests
 
 import { Bend } from '../src/bend';
+import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { ContextBuilder } from '../src/renderer';
 import { TabNote, TabNoteStruct } from '../src/tabnote';
@@ -89,7 +90,7 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.3, 1.3);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
-  ctx.setFont('Arial', VexFlowTests.Font.size, '');
+  ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [

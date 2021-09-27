@@ -5,6 +5,7 @@
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
+import { Font } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
@@ -19,14 +20,12 @@ export class StringNumber extends Modifier {
     return 'StringNumber';
   }
 
-  protected radius: number;
-  protected last_note?: Note;
-  protected string_number: string;
-  protected x_offset: number;
-  protected y_offset: number;
-  protected dashed: boolean;
-  protected leg: number;
-  protected font: FontInfo;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 10,
+    weight: 'bold',
+    style: 'normal',
+  };
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -116,6 +115,14 @@ export class StringNumber extends Modifier {
     return true;
   }
 
+  protected radius: number;
+  protected last_note?: Note;
+  protected string_number: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected dashed: boolean;
+  protected leg: number;
+
   constructor(number: string) {
     super();
 
@@ -129,11 +136,7 @@ export class StringNumber extends Modifier {
     this.dashed = true; // true - draw dashed extension  false - no extension
     this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
-    this.font = {
-      family: 'sans-serif',
-      size: 10,
-      weight: 'bold',
-    };
+    this.setFont(this.getDefaultFont());
   }
 
   setLineEndType(leg: number): this {
@@ -216,7 +219,7 @@ export class StringNumber extends Modifier {
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
     ctx.setLineWidth(1.5);
     ctx.stroke();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 

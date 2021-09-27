@@ -10,7 +10,7 @@ const canvas = createCanvas(500, 500);
 
 const renderer = new VF.Renderer(canvas, VF.Renderer.Backends.CANVAS);
 const context = renderer.getContext();
-context.setFont('Arial', 10, '').setBackgroundFillStyle('#eed');
+context.setFont('Arial', 10).setBackgroundFillStyle('#eed');
 
 const stave = new VF.Stave(10, 40, 400);
 stave.addClef('treble');
