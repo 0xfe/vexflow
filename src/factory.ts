@@ -109,7 +109,6 @@ export class Factory {
       },
       renderer: {
         elementId: '',
-        backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
         background: '#FFF',
@@ -126,7 +125,11 @@ export class Factory {
   }
 
   /**
-   * Static simplified function to access constructor without providing FactoryOptions
+   * Static simplified function to access constructor without providing FactoryOptions.
+   *
+   * The type of renderer created depends on the type of element specified. A CANVAS renderer
+   * will be created for an HTMLCanvasElement and an SVG renderer will be created for an
+   * HTMLDivElement.
    *
    * Example:
    *
@@ -135,7 +138,7 @@ export class Factory {
    * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
    */
   static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
-    return new Factory({ renderer: { elementId, width, height, backend: Renderer.Backends.SVG } });
+    return new Factory({ renderer: { elementId, width, height } });
   }
 
   reset(): void {
@@ -162,19 +165,19 @@ export class Factory {
 
   initRenderer(): void {
     if (!this.options.renderer) throw new RuntimeError('NoRenderer');
-    const { elementId, backend, width, height, background } = this.options.renderer;
-    if (elementId === '') {
+    const { elementId, width, height, background } = this.options.renderer;
+    if (elementId == null || elementId === '') {
       L(this);
       throw new RuntimeError('HTML DOM element not set in Factory');
     }
 
-    this.context = Renderer.buildContext(
-      elementId as string,
-      backend ?? Renderer.Backends.SVG,
-      width,
-      height,
-      background
-    );
+    let backend = this.options.renderer.backend;
+    if (backend === undefined) {
+      const elem = document.getElementById(elementId);
+      backend = elem instanceof HTMLCanvasElement ? Renderer.Backends.CANVAS : Renderer.Backends.SVG;
+    }
+
+    this.context = Renderer.buildContext(elementId as string, backend, width, height, background);
   }
 
   getContext(): RenderContext {

@@ -146,18 +146,29 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  // Only called if Renderer.USE_CANVAS_PROXY is true.
   scale(x: number, y: number): this {
     this.vexFlowCanvasContext.scale(x, y);
     return this;
   }
 
-  // CanvasRenderingContext2D does not have a resize function.
-  // renderer.ts calls ctx.scale() instead, so this method is never used.
-  // eslint-disable-next-line
   resize(width: number, height: number): this {
-    // DO NOTHING.
-    return this;
+    const canvasElement = this.vexFlowCanvasContext.canvas;
+    const devicePixelRatio = window.devicePixelRatio || 1;
+
+    // Scale the canvas size by the device pixel ratio clamping to the maximum
+    // supported size.
+    [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
+
+    // Divide back down by the pixel ratio and convert to integers.
+    width = (width / devicePixelRatio) | 0;
+    height = (height / devicePixelRatio) | 0;
+
+    canvasElement.width = width * devicePixelRatio;
+    canvasElement.height = height * devicePixelRatio;
+    canvasElement.style.width = width + 'px';
+    canvasElement.style.height = height + 'px';
+
+    return this.scale(devicePixelRatio, devicePixelRatio);
   }
 
   rect(x: number, y: number, width: number, height: number): this {
