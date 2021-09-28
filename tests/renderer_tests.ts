@@ -7,12 +7,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
+import { CanvasContext } from 'canvascontext';
 import { Factory, FactoryOptions } from 'factory';
 import { Formatter } from 'formatter';
 import { Renderer } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
+import { SVGContext } from 'svgcontext';
 import { RenderContext } from 'types/common';
+import { RuntimeError } from 'util';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 // TODO: Should FactoryOptions.renderer.elementId also accept a canvas | div?
@@ -42,6 +45,7 @@ const RendererTests = {
     //   Pass in:  element ID string  OR  canvas/div element.
     run('Renderer API with element ID string', stringElementId, USE_RENDERER);
     run('Renderer API with canvas or div', canvasOrDivElement, USE_RENDERER);
+    run('Renderer API with context', passRenderContext);
     run('Factory API with element ID string', stringElementId, USE_FACTORY);
     run('Factory API with canvas or div', canvasOrDivElement, USE_FACTORY);
   },
@@ -152,6 +156,28 @@ function canvasOrDivElement(options: TestOptions): void {
   } else {
     useFactoryAPI(element, options.backend);
   }
+  ok(true);
+}
+
+/**
+ * Pass the render context directly to the Renderer constructor.
+ */
+function passRenderContext(options: TestOptions): void {
+  let context: RenderContext;
+  const element = document.getElementById(options.elementId) as HTMLCanvasElement | HTMLDivElement;
+  if (element instanceof HTMLCanvasElement) {
+    const ctx = element.getContext('2d');
+    if (!ctx) {
+      throw new RuntimeError(`Couldn't get context from element "${options.elemendId}"`);
+    }
+    context = new CanvasContext(ctx);
+  } else {
+    context = new SVGContext(element);
+  }
+
+  const renderer = new Renderer(context);
+  renderer.resize(STAVE_WIDTH, STAVE_HEIGHT);
+  drawStave(new Stave(0, 0, STAVE_WIDTH - STAVE_RIGHT_MARGIN).setContext(context), context);
   ok(true);
 }
 
