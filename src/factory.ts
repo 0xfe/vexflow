@@ -174,7 +174,11 @@ export class Factory {
     let backend = this.options.renderer.backend;
     if (backend === undefined) {
       const elem = document.getElementById(elementId);
-      backend = elem instanceof HTMLCanvasElement ? Renderer.Backends.CANVAS : Renderer.Backends.SVG;
+      if (elem instanceof window.HTMLCanvasElement) {
+        backend = Renderer.Backends.CANVAS;
+      } else {
+        backend = Renderer.Backends.SVG;
+      }
     }
 
     this.context = Renderer.buildContext(elementId as string, backend, width, height, background);

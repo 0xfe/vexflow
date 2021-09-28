@@ -124,7 +124,7 @@ export class Renderer {
 
       // Verify backend and create context
       if (backend === Renderer.Backends.CANVAS) {
-        if (!(element instanceof HTMLCanvasElement)) {
+        if (!(element instanceof window.HTMLCanvasElement)) {
           throw new RuntimeError('BadElement', 'CANVAS context requires an HTMLCanvasElement');
         }
         const context = element.getContext('2d');

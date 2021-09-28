@@ -165,7 +165,7 @@ function canvasOrDivElement(options: TestOptions): void {
 function passRenderContext(options: TestOptions): void {
   let context: RenderContext;
   const element = document.getElementById(options.elementId) as HTMLCanvasElement | HTMLDivElement;
-  if (element instanceof HTMLCanvasElement) {
+  if (element instanceof window.HTMLCanvasElement) {
     const ctx = element.getContext('2d');
     if (!ctx) {
       throw new RuntimeError(`Couldn't get context from element "${options.elemendId}"`);
