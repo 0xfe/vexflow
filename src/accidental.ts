@@ -102,7 +102,7 @@ export class Accidental extends Modifier {
         prevNote = note;
       }
       if (stave) {
-        const lineSpace = stave.getOptions().spacing_between_lines_px;
+        const lineSpace = stave.getSpacingBetweenLines();
         const y = stave.getYForLine(props.line);
         const accLine = Math.round((y / lineSpace) * 2) / 2;
         accList.push({ y, line: accLine, shift: shiftL, acc, lineSpace });

@@ -123,7 +123,7 @@ export class Repetition extends StaveModifier {
     let symbol_x = x + this.x_shift;
     if (this.symbol_type === Repetition.type.CODA_LEFT) {
       // Offset Coda text to right of stave beginning
-      text_x = this.x + stave.getOptions().vertical_bar_width;
+      text_x = this.x + stave.getVerticalBarWidth();
       symbol_x = text_x + ctx.measureText(text).width + 12;
     } else if (this.symbol_type === Repetition.type.DS) {
       const modifierWidth = stave.getNoteStartX() - this.x;

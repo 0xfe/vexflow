@@ -173,7 +173,7 @@ export class StringNumber extends Modifier {
     const note = this.checkAttachedNote();
     this.setRendered();
 
-    const line_space = note.checkStave().getOptions().spacing_between_lines_px;
+    const line_space = note.checkStave().getSpacingBetweenLines();
 
     const start = note.getModifierStartXY(this.position, this.index);
     let dot_x = start.x + this.x_shift + this.x_offset;

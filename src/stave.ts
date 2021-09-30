@@ -168,10 +168,6 @@ export class Stave extends Element {
     this.options.bottom_text_position = this.options.num_lines;
   }
 
-  getOptions(): Required<StaveOptions> {
-    return this.options;
-  }
-
   setNoteStartX(x: number): this {
     if (!this.formatted) this.format();
 
@@ -404,9 +400,7 @@ export class Stave extends Element {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
     const headroom = options.space_above_staff_ln;
-    const y = this.y + headroom * spacing + 5 * spacing - line * spacing;
-
-    return y;
+    return this.y + headroom * spacing + 5 * spacing - line * spacing;
   }
 
   getYForGlyphs(): number {
@@ -757,11 +751,12 @@ export class Stave extends Element {
 
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
     for (let i = 0; i < this.modifiers.length; i++) {
+      const modifier = this.modifiers[i];
       // Only draw modifier if it has a draw function
-      if (typeof this.modifiers[i].draw === 'function') {
-        this.modifiers[i].applyStyle(ctx);
-        this.modifiers[i].draw(this, this.getModifierXShift(i));
-        this.modifiers[i].restoreStyle(ctx);
+      if (typeof modifier.draw === 'function') {
+        modifier.applyStyle(ctx);
+        modifier.draw(this, this.getModifierXShift(i));
+        modifier.restoreStyle(ctx);
       }
     }
 
@@ -808,6 +803,10 @@ export class Stave extends Element {
       ctx.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
     }
     ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
+  }
+
+  getVerticalBarWidth(): number {
+    return this.options.vertical_bar_width;
   }
 
   /**

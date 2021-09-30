@@ -143,13 +143,8 @@ export class Factory {
     this.stave = undefined; // current stave
   }
 
-  getOptions(): Required<FactoryOptions> {
-    return this.options;
-  }
-
   setOptions(options?: FactoryOptions): void {
     this.options = { ...this.options, ...options };
-
     this.initRenderer();
     this.reset();
   }
@@ -192,20 +187,14 @@ export class Factory {
   }
 
   /** Return pixels from current stave spacing. */
-  space(spacing: number): number {
-    if (!this.options.stave) throw new RuntimeError('NoStave');
-    return this.options.stave.space * spacing;
-  }
 
   Stave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): Stave {
-    if (!this.options.stave) throw new RuntimeError('NoStave');
+    const staveSpace = this.options.stave.space;
     const p = {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - this.space(1),
-      options: {
-        spacing_between_lines_px: this.options.stave.space,
-      },
+      width: this.options.renderer.width - staveSpace * 1.0,
+      options: { spacing_between_lines_px: staveSpace * 1.0 },
       ...params,
     };
 
@@ -217,13 +206,12 @@ export class Factory {
   }
 
   TabStave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): TabStave {
-    if (!this.options.stave) throw new RuntimeError('NoStave');
-
+    const staveSpace = this.options.stave.space;
     const p = {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - this.space(1),
-      options: { spacing_between_lines_px: this.options.stave.space * 1.3 },
+      width: this.options.renderer.width - staveSpace * 1.0,
+      options: { spacing_between_lines_px: staveSpace * 1.3 },
       ...params,
     };
 

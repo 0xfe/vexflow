@@ -574,8 +574,8 @@ export class ChordSymbol extends Modifier {
     return this.addSymbolBlock({ glyph, symbolType, symbolModifier });
   }
 
-  // eslint-disable-next-line
   /** Add a glyph block. */
+  // eslint-disable-next-line
   addGlyph(glyph: string, params: any = {}): this {
     const symbolType = SymbolTypes.GLYPH;
     return this.addSymbolBlock({ ...params, glyph, symbolType });
