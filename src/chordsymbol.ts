@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
+// Author: @AaronDavidNewman
 //
-// This file implements chord symbols as modifiers that can be attached to
-// notes.  Chord symbols can contain multiple 'blocks' which can contain
+// This implements chord symbols as modifiers that can be attached to notes.
+// Chord symbols can contain multiple 'blocks' which can contain
 // text or glyphs with various positioning options.
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
@@ -15,17 +15,7 @@ import { TextFont } from './textfont';
 import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
 import { StemmableNote } from './stemmablenote';
-
-export interface ChordSymbolBlock {
-  vAlign: boolean;
-  symbolModifier: number;
-  text: string;
-  yShift: number;
-  xShift: number;
-  width: number;
-  glyph: Glyph;
-  symbolType: number;
-}
+import { ModifierContextState } from 'modifiercontext';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -33,6 +23,45 @@ function L(...args: any[]): void {
   if (ChordSymbol.DEBUG) log('Vex.Flow.ChordSymbol', args);
 }
 
+export interface ChordSymbolBlock {
+  text: string;
+  symbolType: SymbolTypes;
+  symbolModifier: SymbolModifiers;
+  xShift: number;
+  yShift: number;
+  vAlign: boolean;
+  width: number;
+  glyph?: Glyph;
+}
+
+export enum HorizontalJustify {
+  LEFT = 1,
+  CENTER = 2,
+  RIGHT = 3,
+  CENTER_STEM = 4,
+}
+
+export enum VerticalJustify {
+  TOP = 1,
+  BOTTOM = 2,
+}
+
+export enum SymbolTypes {
+  GLYPH = 1,
+  TEXT = 2,
+  LINE = 3,
+}
+
+export enum SymbolModifiers {
+  NONE = 1,
+  SUBSCRIPT = 2,
+  SUPERSCRIPT = 3,
+}
+
+/**
+ * ChordSymbol is a modifier that creates a chord symbol above/below a chord.
+ * As a modifier, it is attached to an existing note.
+ */
 export class ChordSymbol extends Modifier {
   static DEBUG: boolean = false;
 
@@ -40,58 +69,47 @@ export class ChordSymbol extends Modifier {
     return 'ChordSymbol';
   }
 
-  protected static noFormat: boolean;
-
   protected symbolBlocks: ChordSymbolBlock[];
-
   protected horizontal: number;
   protected vertical: number;
   protected useKerning: boolean;
   protected reportWidth: boolean;
   protected font: FontInfo;
   protected textFont: TextFont;
+  /** Currently unused. */
+  protected static noFormat: boolean = false;
 
   // Chord symbols can be positioned and justified relative to the note.
-  static readonly horizontalJustify = {
-    LEFT: 1,
-    CENTER: 2,
-    RIGHT: 3,
-    CENTER_STEM: 4,
+  static readonly horizontalJustify = HorizontalJustify;
+
+  static readonly horizontalJustifyString: Record<string, HorizontalJustify> = {
+    left: HorizontalJustify.LEFT,
+    right: HorizontalJustify.RIGHT,
+    center: HorizontalJustify.CENTER,
+    centerStem: HorizontalJustify.CENTER_STEM,
   };
 
-  static readonly horizontalJustifyString: Record<string, number> = {
-    left: ChordSymbol.horizontalJustify.LEFT,
-    right: ChordSymbol.horizontalJustify.RIGHT,
-    center: ChordSymbol.horizontalJustify.CENTER,
-    centerStem: ChordSymbol.horizontalJustify.CENTER_STEM,
-  };
+  static readonly verticalJustify = VerticalJustify;
 
-  static readonly verticalJustify = {
-    TOP: 1,
-    BOTTOM: 2,
+  static readonly verticalJustifyString: Record<string, VerticalJustify> = {
+    top: VerticalJustify.TOP,
+    above: VerticalJustify.TOP,
+    below: VerticalJustify.BOTTOM,
+    bottom: VerticalJustify.BOTTOM,
   };
 
   static get superSubRatio(): number {
     return ChordSymbol.chordSymbolMetrics.global.superSubRatio;
   }
 
-  // ### NOTEXTFORMAT
-  // used to globally turn off text formatting, if the built-in formatting does not
-  // work for your font..
-  static get NOTEXTFORMAT(): boolean {
-    return typeof ChordSymbol.noFormat === 'undefined' ? false : ChordSymbol.noFormat;
-  }
-
-  static set NOTEXTFORMAT(val: boolean) {
+  /** Currently unused: Globally turn off text formatting, if the built-in formatting does not work for your font. */
+  static set NO_TEXT_FORMAT(val: boolean) {
     ChordSymbol.noFormat = val;
   }
 
-  static readonly verticalJustifyString: Record<string, number> = {
-    top: ChordSymbol.verticalJustify.TOP,
-    above: ChordSymbol.verticalJustify.TOP,
-    below: ChordSymbol.verticalJustify.BOTTOM,
-    bottom: ChordSymbol.verticalJustify.BOTTOM,
-  };
+  static get NO_TEXT_FORMAT(): boolean {
+    return ChordSymbol.noFormat;
+  }
 
   // eslint-disable-next-line
   static getMetricForGlyph(glyphCode: string): any {
@@ -228,17 +246,9 @@ export class ChordSymbol extends Modifier {
     },
   };
 
-  static readonly symbolTypes = {
-    GLYPH: 1,
-    TEXT: 2,
-    LINE: 3,
-  };
+  static readonly symbolTypes = SymbolTypes;
 
-  static readonly symbolModifiers = {
-    NONE: 1,
-    SUBSCRIPT: 2,
-    SUPERSCRIPT: 3,
-  };
+  static readonly symbolModifiers = SymbolModifiers;
 
   // eslint-disable-next-line
   static get chordSymbolMetrics(): any {
@@ -253,12 +263,11 @@ export class ChordSymbol extends Modifier {
     return Flow.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
   }
 
-  // ### format
-  // try to estimate the width of the whole chord symbol, based on the
-  // sum of the widths of the individual blocks.  Also estimate how many
-  // lines above/below the staff we need`
-  // eslint-disable-next-line
-  static format(instances: any, state: any): boolean {
+  /**
+   * Estimate the width of the whole chord symbol, based on the sum of the widths of the individual blocks.
+   * Estimate how many lines above/below the staff we need.
+   */
+  static format(instances: ChordSymbol[], state: ModifierContextState): boolean {
     if (!instances || instances.length === 0) return false;
 
     let width = 0;
@@ -277,7 +286,7 @@ export class ChordSymbol extends Modifier {
         const sup = instance.isSuperscript(symbol);
         const sub = instance.isSubscript(symbol);
         const subAdj = sup || sub ? ChordSymbol.superSubRatio : 1;
-        const adj = symbol.symbolType === ChordSymbol.symbolTypes.GLYPH ? glyphAdj * subAdj : fontAdj * subAdj;
+        const adj = symbol.symbolType === SymbolTypes.GLYPH ? glyphAdj * subAdj : fontAdj * subAdj;
 
         // If there are super/subscripts, they extend beyond the line so
         // assume they take up 2 lines
@@ -287,17 +296,21 @@ export class ChordSymbol extends Modifier {
 
         // If there is a symbol-specific offset, add it but consider font
         // size since font and glyphs will be interspersed
-        if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH) {
+        if (symbol.symbolType === SymbolTypes.GLYPH && symbol.glyph !== undefined) {
           symbol.yShift += ChordSymbol.getYShiftForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
           symbol.xShift += ChordSymbol.getXShiftForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
           symbol.glyph.scale = symbol.glyph.scale * adj;
           symbol.width = ChordSymbol.getWidthForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
-        } else if (symbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
+        } else if (symbol.symbolType === SymbolTypes.TEXT) {
           symbol.width = symbol.width * instance.textFont.pointsToPixels * subAdj;
           symbol.yShift += instance.getYOffsetForText(symbol.text) * adj;
         }
 
-        if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH && symbol.glyph.code === ChordSymbol.glyphs.over.code) {
+        if (
+          symbol.symbolType === SymbolTypes.GLYPH &&
+          symbol.glyph !== undefined &&
+          symbol.glyph.code === ChordSymbol.glyphs.over.code
+        ) {
           lineSpaces = 2;
         }
         symbol.width += ChordSymbol.spacingBetweenBlocks * instance.pointsToPixels * subAdj;
@@ -330,7 +343,7 @@ export class ChordSymbol extends Modifier {
       instance.updateKerningAdjustments();
       instance.updateOverBarAdjustments();
 
-      if (instance.getVertical() === ChordSymbol.verticalJustify.TOP) {
+      if (instance.getVertical() === VerticalJustify.TOP) {
         instance.setTextLine(state.top_text_line);
         state.top_text_line += lineSpaces;
       } else {
@@ -351,15 +364,11 @@ export class ChordSymbol extends Modifier {
     return true;
   }
 
-  // ## Prototype Methods
-  //
-  // chordSymbol is a modifier that creates a chord symbol above/below a chord
-  // This is the modifier version, meaning it is attached to an existing note.
   constructor() {
     super();
     this.symbolBlocks = [];
-    this.horizontal = ChordSymbol.horizontalJustify.LEFT;
-    this.vertical = ChordSymbol.verticalJustify.TOP;
+    this.horizontal = HorizontalJustify.LEFT;
+    this.vertical = VerticalJustify.TOP;
     this.useKerning = true;
     this.reportWidth = true;
 
@@ -401,26 +410,26 @@ export class ChordSymbol extends Modifier {
   }
 
   updateOverBarAdjustments(): void {
-    let symIx = 0;
-    const barIx = this.symbolBlocks.findIndex(
-      (symbol) =>
-        symbol.symbolType === ChordSymbol.symbolTypes.GLYPH && symbol.glyph.code === 'csymDiagonalArrangementSlash'
+    const barIndex = this.symbolBlocks.findIndex(
+      ({ symbolType, glyph }: ChordSymbolBlock) =>
+        symbolType === SymbolTypes.GLYPH && glyph !== undefined && glyph.code === 'csymDiagonalArrangementSlash'
     );
 
-    if (barIx < 0) {
+    if (barIndex < 0) {
       return;
     }
-    const bar = this.symbolBlocks[barIx];
+    const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
     const yoff = 0.25 * this.pointsToPixels;
-    for (symIx === 0; symIx < barIx; ++symIx) {
-      const symbol = this.symbolBlocks[symIx];
+    let symIndex = 0;
+    for (symIndex === 0; symIndex < barIndex; ++symIndex) {
+      const symbol = this.symbolBlocks[symIndex];
       symbol.xShift = symbol.xShift + xoff;
       symbol.yShift = symbol.yShift - yoff;
     }
 
-    for (symIx = barIx + 1; symIx < this.symbolBlocks.length; ++symIx) {
-      const symbol = this.symbolBlocks[symIx];
+    for (symIndex = barIndex + 1; symIndex < this.symbolBlocks.length; ++symIndex) {
+      const symbol = this.symbolBlocks[symIndex];
       symbol.xShift = symbol.xShift - xoff;
       symbol.yShift = symbol.yShift + yoff;
     }
@@ -435,192 +444,174 @@ export class ChordSymbol extends Modifier {
     }
   }
 
-  // ### getKerningAdjustment
-  // Do some very basic kerning so that letter chords like 'A' don't have
-  // the extensions hanging off to the right.
+  /** Do some basic kerning so that letter chords like 'A' don't have the extensions hanging off to the right. */
   getKerningAdjustment(j: number): number {
     if (!this.useKerning) {
       return 0;
     }
-    const symbol = this.symbolBlocks[j];
-    const kernConst = ChordSymbol.kerningOffset * this.pointsToPixels;
+    const currSymbol = this.symbolBlocks[j];
     const prevSymbol = j > 0 ? this.symbolBlocks[j - 1] : undefined;
-    let rv = 0;
+    let adjustment = 0;
 
     // Move things into the '/' over bar
-    if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH && symbol.glyph.code === ChordSymbol.glyphs.over.code) {
-      rv += symbol.glyph.metrics.x_shift;
+    if (
+      currSymbol.symbolType === SymbolTypes.GLYPH &&
+      currSymbol.glyph !== undefined &&
+      currSymbol.glyph.code === ChordSymbol.glyphs.over.code
+    ) {
+      adjustment += currSymbol.glyph.metrics.x_shift;
     }
 
     if (
       prevSymbol !== undefined &&
-      prevSymbol.symbolType === ChordSymbol.symbolTypes.GLYPH &&
+      prevSymbol.symbolType === SymbolTypes.GLYPH &&
+      prevSymbol.glyph !== undefined &&
       prevSymbol.glyph.code === ChordSymbol.glyphs.over.code
     ) {
-      rv += prevSymbol.glyph.metrics.x_shift;
+      adjustment += prevSymbol.glyph.metrics.x_shift;
     }
 
-    // For superscripts that follow a letter without much top part, move it to the
-    // left slightly
+    // For superscripts that follow a letter without much top part, move it to the left slightly
     let preKernUpper = false;
     let preKernLower = false;
-    if (prevSymbol != null && prevSymbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
+    if (prevSymbol !== undefined && prevSymbol.symbolType === SymbolTypes.TEXT) {
       preKernUpper = ChordSymbol.upperKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    // TODO: adjustkern for  for font size.
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.pointsToPixels;
+    // TODO: adjust kern for font size.
     // Where should this constant live?
-    if (preKernUpper && symbol.symbolModifier === ChordSymbol.symbolModifiers.SUPERSCRIPT) {
-      rv += kernConst;
+    if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {
+      adjustment += kerningOffsetPixels;
     }
 
-    if (preKernLower && symbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
-      if (symbol.text[0] >= 'a' && symbol.text[0] <= 'z') {
-        rv += kernConst / 2;
+    if (preKernLower && currSymbol.symbolType === SymbolTypes.TEXT) {
+      if (currSymbol.text[0] >= 'a' && currSymbol.text[0] <= 'z') {
+        adjustment += kerningOffsetPixels / 2;
       }
       if (ChordSymbol.upperKerningText.some((xx) => xx === prevSymbol?.text[prevSymbol.text.length - 1])) {
-        rv += kernConst / 2;
+        adjustment += kerningOffsetPixels / 2;
       }
     }
-    return rv;
+    return adjustment;
   }
 
-  // ### getSymbolBlock
-  // ChordSymbol allows multiple blocks so we can mix glyphs and font text.
-  // Each block can have its own vertical orientation
+  /**
+   * ChordSymbol allows multiple blocks so we can mix glyphs and font text.
+   * Each block can have its own vertical orientation.
+   */
   // eslint-disable-next-line
-  getSymbolBlock(parameters?: any): any {
-    parameters = parameters ?? {};
-    const symbolType = parameters.symbolType ?? ChordSymbol.symbolTypes.TEXT;
-    const text = parameters.text ?? '';
-    const symbolModifier = parameters.symbolModifier ?? ChordSymbol.symbolModifiers.NONE;
-
-    const xShift = 0;
-    const yShift = 0;
-    const vAlign = 0;
-
-    const rv = {
-      text,
+  getSymbolBlock(params: any = {}): ChordSymbolBlock {
+    const symbolType = params.symbolType ?? SymbolTypes.TEXT;
+    const symbolBlock: ChordSymbolBlock = {
+      text: params.text ?? '',
       symbolType,
-      symbolModifier,
-      xShift,
-      yShift,
-      vAlign,
+      symbolModifier: params.symbolModifier ?? SymbolModifiers.NONE,
+      xShift: 0,
+      yShift: 0,
+      vAlign: false,
       width: 0,
-      glyph: undefined as Glyph | undefined,
     };
 
-    rv.width = 0;
-    // Note: all symbol widths are resolution and font-independent.  We convert to
-    // pixel values when we know what the font is.
-    if (symbolType === ChordSymbol.symbolTypes.GLYPH && typeof parameters.glyph === 'string') {
-      const glyphArgs = ChordSymbol.glyphs[parameters.glyph];
+    // Note: all symbol widths are resolution and font-independent.
+    // We convert to pixel values when we know what the font is.
+    if (symbolType === SymbolTypes.GLYPH && typeof params.glyph === 'string') {
+      const glyphArgs = ChordSymbol.glyphs[params.glyph];
       const glyphPoints = 20;
-      rv.glyph = new Glyph(glyphArgs.code, glyphPoints, { category: 'chordSymbol' });
+      symbolBlock.glyph = new Glyph(glyphArgs.code, glyphPoints, { category: 'chordSymbol' });
       // Beware: glyph.metrics is not the same as glyph.getMetrics() !
       // rv.glyph.point = rv.glyph.point * rv.glyph.metrics.scale;
       // rv.width = rv.glyph.getMetrics().width;
       // don't set yShift here, b/c we need to do it at formatting time after the font is set.
-    } else if (symbolType === ChordSymbol.symbolTypes.TEXT) {
-      let twidth = 0;
-      for (let i = 0; i < rv.text.length; ++i) {
-        twidth += this.getWidthForCharacter(rv.text[i]);
+    } else if (symbolType === SymbolTypes.TEXT) {
+      let textWidth = 0;
+      for (let i = 0; i < symbolBlock.text.length; ++i) {
+        textWidth += this.getWidthForCharacter(symbolBlock.text[i]);
       }
-      rv.width = twidth;
-    } else if (symbolType === ChordSymbol.symbolTypes.LINE) {
-      rv.width = parameters.width;
+      symbolBlock.width = textWidth;
+    } else if (symbolType === SymbolTypes.LINE) {
+      symbolBlock.width = params.width;
     }
 
-    return rv;
+    return symbolBlock;
   }
 
-  // ### addSymbolBlock
-  // Add a symbol to this chord, could be text, glyph or line.
+  /** Add a symbol to this chord, could be text, glyph or line. */
   // eslint-disable-next-line
   addSymbolBlock(parameters: any): this {
     this.symbolBlocks.push(this.getSymbolBlock(parameters));
     return this;
   }
 
-  // ### Convenience functions follow that let you create different types of
-  // chord symbol parts easily
-  // ### addText
-  // Add a text block
+  // ### Convenience functions for creating different types of chord symbol parts.
+
+  /** Add a text block. */
   // eslint-disable-next-line
-  addText(text: string, parameters?: any): this {
-    parameters = parameters ?? {};
-    parameters.text = text;
-    parameters.symbolType = ChordSymbol.symbolTypes.TEXT;
-    return this.addSymbolBlock(parameters);
+  addText(text: string, parameters: any = {}): this {
+    const symbolType = SymbolTypes.TEXT;
+    return this.addSymbolBlock({ ...parameters, text, symbolType });
   }
 
-  // ### addTextSuperscript
-  // add a text block with superscript modifier
+  /** Add a text block with superscript modifier. */
   addTextSuperscript(text: string): this {
-    const symbolType = ChordSymbol.symbolTypes.TEXT;
-    const symbolModifier = ChordSymbol.symbolModifiers.SUPERSCRIPT;
+    const symbolType = SymbolTypes.TEXT;
+    const symbolModifier = SymbolModifiers.SUPERSCRIPT;
     return this.addSymbolBlock({ text, symbolType, symbolModifier });
   }
 
-  // ### addTextSubscript
-  // add a text block with subscript modifier
+  /** Add a text block with subscript modifier. */
   addTextSubscript(text: string): this {
-    const symbolType = ChordSymbol.symbolTypes.TEXT;
-    const symbolModifier = ChordSymbol.symbolModifiers.SUBSCRIPT;
+    const symbolType = SymbolTypes.TEXT;
+    const symbolModifier = SymbolModifiers.SUBSCRIPT;
     return this.addSymbolBlock({ text, symbolType, symbolModifier });
   }
 
-  // ### addGlyphSuperscript
-  // add a glyph block with superscript modifier
+  /** Add a glyph block with superscript modifier. */
   addGlyphSuperscript(glyph: string): this {
-    const symbolType = ChordSymbol.symbolTypes.GLYPH;
-    const symbolModifier = ChordSymbol.symbolModifiers.SUPERSCRIPT;
+    const symbolType = SymbolTypes.GLYPH;
+    const symbolModifier = SymbolModifiers.SUPERSCRIPT;
     return this.addSymbolBlock({ glyph, symbolType, symbolModifier });
   }
 
   // eslint-disable-next-line
-  addGlyph(glyph: string, parameters?: any): this {
-    parameters = parameters ?? {};
-    parameters.glyph = glyph;
-    parameters.symbolType = ChordSymbol.symbolTypes.GLYPH;
-    return this.addSymbolBlock(parameters);
+  /** Add a glyph block. */
+  addGlyph(glyph: string, params: any = {}): this {
+    const symbolType = SymbolTypes.GLYPH;
+    return this.addSymbolBlock({ ...params, glyph, symbolType });
   }
 
-  // ### addGlyphOrText
-  // Add a glyph for each character in 'text'.  If the glyph is not
-  // available, use text from the font.  E.g.:
-  // `addGlyphOrText("(+5#11)")`
-  // will use text for the '5' and '11', and glyphs for everything else.
+  /**
+   * Add a glyph for each character in 'text'. If the glyph is not available, use text from the font.
+   * e.g. `addGlyphOrText('(+5#11)')` will use text for the '5' and '11', and glyphs for everything else.
+   */
   // eslint-disable-next-line
-  addGlyphOrText(text: string, parameters?: any): this {
-    parameters = parameters ?? {};
+  addGlyphOrText(text: string, params: any = {}): this {
     let str = '';
     for (let i = 0; i < text.length; ++i) {
-      if (ChordSymbol.glyphs[text[i]]) {
+      const char = text[i];
+      if (ChordSymbol.glyphs[char]) {
         if (str.length > 0) {
-          this.addText(str, parameters);
+          this.addText(str, params);
           str = '';
         }
-        this.addGlyph(text[i], parameters);
+        this.addGlyph(char, params);
       } else {
-        str += text[i];
+        // Collect consecutive characters with no glyphs.
+        str += char;
       }
     }
     if (str.length > 0) {
-      this.addText(str, parameters);
+      this.addText(str, params);
     }
     return this;
   }
 
-  // ### Add a line of the given width, used as a continuation of the previous
-  // symbol in analysis, or lyrics, etc.
+  /** Add a line of the given width, used as a continuation of the previous symbol in analysis, or lyrics, etc. */
   // eslint-disable-next-line
-  addLine(width: number, parameters?: any): this {
-    parameters = parameters ?? {};
-    parameters.symbolType = ChordSymbol.symbolTypes.LINE;
-    parameters.width = width;
-    return this.addSymbolBlock(parameters);
+  addLine(width: number, params: any = {}): this {
+    const symbolType = SymbolTypes.LINE;
+    return this.addSymbolBlock({ ...params, symbolType, width });
   }
 
   // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
@@ -641,10 +632,9 @@ export class ChordSymbol extends Modifier {
     return this;
   }
 
-  // Set vertical position of text (above or below stave). `just` must be
-  // a value in `ChordSymbol.vertical`.
-  setVertical(just: string | number): this {
-    this.vertical = typeof just === 'string' ? ChordSymbol.verticalJustifyString[just] : just;
+  /** Set vertical position of text (above or below stave). */
+  setVertical(vj: VerticalJustify | string | number): this {
+    this.vertical = typeof vj === 'string' ? ChordSymbol.verticalJustifyString[vj] : vj;
     return this;
   }
 
@@ -652,30 +642,33 @@ export class ChordSymbol extends Modifier {
     return this.vertical;
   }
 
-  // Get and set horizontal justification. `justification` is a value in
-  // `ChordSymbol.Justify`.
-  setHorizontal(just: string | number): this {
-    this.horizontal = typeof just === 'string' ? ChordSymbol.horizontalJustifyString[just] : just;
+  /** Set horizontal justification. */
+  setHorizontal(hj: HorizontalJustify | string | number): this {
+    this.horizontal = typeof hj === 'string' ? ChordSymbol.horizontalJustifyString[hj] : hj;
     return this;
   }
 
+  getHorizontal(): number {
+    return this.horizontal;
+  }
+
   getWidth(): number {
-    let rv = 0;
+    let width = 0;
     this.symbolBlocks.forEach((symbol) => {
-      rv += symbol.vAlign ? 0 : symbol.width;
+      width += symbol.vAlign ? 0 : symbol.width;
     });
-    return rv;
+    return width;
   }
 
   isSuperscript(symbol: ChordSymbolBlock): boolean {
-    return symbol.symbolModifier !== undefined && symbol.symbolModifier === ChordSymbol.symbolModifiers.SUPERSCRIPT;
+    return symbol.symbolModifier !== undefined && symbol.symbolModifier === SymbolModifiers.SUPERSCRIPT;
   }
 
   isSubscript(symbol: ChordSymbolBlock): boolean {
-    return symbol.symbolModifier !== undefined && symbol.symbolModifier === ChordSymbol.symbolModifiers.SUBSCRIPT;
+    return symbol.symbolModifier !== undefined && symbol.symbolModifier === SymbolModifiers.SUBSCRIPT;
   }
 
-  // Render text and glyphs above/below the note
+  /** Render text and glyphs above/below the note. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote() as StemmableNote;
@@ -693,23 +686,22 @@ export class ChordSymbol extends Modifier {
 
     // The position of the text varies based on whether or not the note
     // has a stem.
-    const has_stem = note.hasStem();
+    const hasStem = note.hasStem();
     const stave = note.checkStave();
 
-    if (this.vertical === ChordSymbol.verticalJustify.BOTTOM) {
-      // HACK: We need to compensate for the text's height since its origin
-      // is bottom-right.
+    if (this.vertical === VerticalJustify.BOTTOM) {
+      // HACK: We need to compensate for the text's height since its origin is bottom-right.
       y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
-      if (has_stem) {
+      if (hasStem) {
         const stem_ext = note.checkStem().getExtents();
         const spacing = stave.getSpacingBetweenLines();
         const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));
       }
     } else {
-      // (this.vertical === ChordSymbol.verticalJustify.TOP)
+      // (this.vertical === VerticalJustify.TOP)
       y = Math.min(stave.getYForTopText(this.text_line), note.getYs()[0] - 10);
-      if (has_stem) {
+      if (hasStem) {
         const stem_ext = note.checkStem().getExtents();
         const spacing = stave.getSpacingBetweenLines();
         y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);
@@ -717,13 +709,14 @@ export class ChordSymbol extends Modifier {
     }
 
     let x = start.x;
-    if (this.horizontal === ChordSymbol.horizontalJustify.LEFT) {
+    if (this.horizontal === HorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.horizontal === ChordSymbol.horizontalJustify.RIGHT) {
+    } else if (this.horizontal === HorizontalJustify.RIGHT) {
       x = start.x + this.getWidth();
-    } else if (this.horizontal === ChordSymbol.horizontalJustify.CENTER) {
+    } else if (this.horizontal === HorizontalJustify.CENTER) {
       x = start.x - this.getWidth() / 2;
-    } /* CENTER_STEM */ else {
+    } else {
+      // HorizontalJustify.CENTER_STEM
       x = note.getStemX() - this.getWidth() / 2;
     }
     L('Rendering ChordSymbol: ', this.textFont, x, y);
@@ -742,26 +735,27 @@ export class ChordSymbol extends Modifier {
       }
       L('curY sup/sub ', curY);
 
-      if (symbol.symbolType === ChordSymbol.symbolTypes.TEXT) {
+      if (symbol.symbolType === SymbolTypes.TEXT) {
         if (sp || sub) {
           ctx.save();
           ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
         }
-        // We estimate the text width, fill it in with the empirical value so the
-        // formatting is even.
-        /* const textDim = ctx.measureText(symbol.text);
-        symbol.width = textDim.width; */
+        // TODO???
+        // We estimate the text width, fill it in with the empirical value so the formatting is even.
+        // const textDim = ctx.measureText(symbol.text);
+        // symbol.width = textDim.width;
+
         L('Rendering Text: ', symbol.text, x + symbol.xShift, curY + symbol.yShift);
 
         ctx.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
         if (sp || sub) {
           ctx.restore();
         }
-      } else if (symbol.symbolType === ChordSymbol.symbolTypes.GLYPH) {
+      } else if (symbol.symbolType === SymbolTypes.GLYPH && symbol.glyph) {
         curY += symbol.yShift;
         L('Rendering Glyph: ', symbol.glyph.code, x + symbol.xShift, curY);
         symbol.glyph.render(ctx, x + symbol.xShift, curY);
-      } else if (symbol.symbolType === ChordSymbol.symbolTypes.LINE) {
+      } else if (symbol.symbolType === SymbolTypes.LINE) {
         L('Rendering Line : ', symbol.width, x, curY);
         ctx.beginPath();
         ctx.setLineWidth(1); // ?
