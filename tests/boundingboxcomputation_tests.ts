@@ -120,7 +120,7 @@ function quadratic(options: TestOptions): void {
   // Draw curve.
   ctx.setLineWidth(1);
   ctx.fillStyle = '#000';
-  Glyph.renderOutline(ctx, o, 1, 0, 0);
+  // Glyph.renderOutline(ctx, o, 1, 0, 0);
 
   // Draw control points.
   ctx.strokeStyle = '#f00';
@@ -218,7 +218,7 @@ function cubic(options: TestOptions): void {
   // Draw curve.
   ctx.setLineWidth(1);
   ctx.fillStyle = '#000';
-  Glyph.renderOutline(ctx, o, 1, 0, 0);
+  // Glyph.renderOutline(ctx, o, 1, 0, 0);
 
   // Draw control points.
   ctx.strokeStyle = '#f00';

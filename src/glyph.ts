@@ -37,9 +37,7 @@ export interface GlyphProps {
   duration_codes: Record<string, DurationCode>;
   validTypes: Record<string, string>;
   shift_y: number;
-
   getWidth(a?: number): number;
-
   getMetrics(): GlyphMetrics;
 }
 
@@ -59,7 +57,7 @@ export interface GlyphMetrics {
   ha: number;
   outline: number[];
   font: Font;
-  path?: string; // SVG Path
+  path: string; // SVG Path
 }
 
 export const enum OutlineCode {
@@ -226,8 +224,7 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
-    // TODO: RONYEH - Change to glyph.d for the path!
-    if (!glyph.o) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
+    if (!glyph.d) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
 
     let x_shift = 0;
     let y_shift = 0;
@@ -265,48 +262,41 @@ export class Glyph extends Element {
    * Renders glyphs from the default font stack.
    *
    * @param ctx Canvas or SVG context
-   * @param x_pos x coordinate
-   * @param y_pos y coordinate
-   * @param point the point size of the font
+   * @param x x coordinate
+   * @param y y coordinate
+   * @param fontSize the point size of the font
    * @param code the glyph code in font.getGlyphs()
    * @param options
-   * @returns
    */
+  // Note Heads
   static renderGlyph(
     ctx: RenderContext,
-    x_pos: number,
-    y_pos: number,
-    point: number,
+    x: number,
+    y: number,
+    fontSize: number,
     code: string,
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
-    const params = {
-      fontStack: Flow.DEFAULT_FONT_STACK,
-      ...options,
-    };
+    const params = { fontStack: Flow.DEFAULT_FONT_STACK, ...options };
     const data = Glyph.cache.lookup(params.fontStack, code, params.category);
     const metrics = data.metrics;
     if (data.point != -1) {
-      point = data.point;
+      fontSize = data.point;
     }
 
-    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
+    const scale = (fontSize * 72.0) / (metrics.font.getResolution() * 100.0);
 
-    if (metrics.path) {
-      ctx.fillPath(metrics.path, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
-    } else {
-      console.log('THE OLD WAY');
-      Glyph.renderOutline(
-        ctx,
-        metrics.outline,
-        scale * metrics.scale,
-        x_pos + metrics.x_shift,
-        y_pos + metrics.y_shift
-      );
-    }
+    Glyph.renderPath(ctx, metrics.path, scale * metrics.scale, x + metrics.x_shift, y + metrics.y_shift);
+    // Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
     return metrics;
   }
 
+  static renderPath(ctx: RenderContext, path: string = '', scale: number, x_pos: number, y_pos: number): void {
+    scale *= 1.44; // MAGIC HACK!?!?
+    ctx.fillPath(path, scale, x_pos, y_pos);
+  }
+
+  /*
   static renderOutline(ctx: RenderContext, outline: number[], scale: number, x_pos: number, y_pos: number): void {
     const go = new GlyphOutline(outline, x_pos, y_pos, scale);
 
@@ -330,6 +320,7 @@ export class Glyph extends Element {
     }
     ctx.fill();
   }
+  */
 
   static getOutlineBoundingBox(outline: number[], scale: number, x_pos: number, y_pos: number): BoundingBox {
     const go = new GlyphOutline(outline, x_pos, y_pos, scale);
@@ -443,6 +434,10 @@ export class Glyph extends Element {
     return this;
   }
 
+  checkStave(): Stave {
+    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
+  }
+
   setXShift(x_shift: number): this {
     this.x_shift = x_shift;
     return this;
@@ -486,6 +481,7 @@ export class Glyph extends Element {
       x_shift: metrics.x_shift,
       y_shift: metrics.y_shift,
       outline: metrics.outline,
+      path: metrics.path,
       font: metrics.font,
       ha: metrics.ha,
     };
@@ -510,38 +506,34 @@ export class Glyph extends Element {
     this.setOriginY(y);
   }
 
+  // pianissimo, staccato dots, flags
   render(ctx: RenderContext, x: number, y: number): void {
     const metrics = this.checkMetrics();
-
-    const outline = metrics.outline;
+    const xPos = x + this.originShift.x + metrics.x_shift;
+    const yPos = y + this.originShift.y + metrics.y_shift;
     const scale = this.scale * metrics.scale;
 
     this.setRendered();
     this.applyStyle(ctx);
-    const xPos = x + this.originShift.x + metrics.x_shift;
-    const yPos = y + this.originShift.y + metrics.y_shift;
-    Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
+    // Glyph.renderOutline(ctx, metrics.outline, scale, xPos, yPos);
+    Glyph.renderPath(ctx, metrics.path, scale, xPos, yPos);
     this.restoreStyle(ctx);
   }
 
-  checkStave(): Stave {
-    return defined(this.stave, 'NoStave', 'No stave attached to instance.');
-  }
-
+  // Clefs and Stave Modifiers at the beginning...
   renderToStave(x: number): void {
-    const context = this.checkContext();
-    const metrics = this.checkMetrics();
+    const ctx = this.checkContext();
     const stave = this.checkStave();
 
-    const outline = metrics.outline;
+    const metrics = this.checkMetrics();
+    const xPos = x + this.x_shift + metrics.x_shift;
+    const yPos = stave.getYForGlyphs() + this.y_shift + metrics.y_shift;
     const scale = this.scale * metrics.scale;
 
     this.setRendered();
-    this.applyStyle();
-
-    const xPos = x + this.x_shift + metrics.x_shift;
-    const yPos = stave.getYForGlyphs() + this.y_shift + metrics.y_shift;
-    Glyph.renderOutline(context, outline, scale, xPos, yPos);
-    this.restoreStyle();
+    this.applyStyle(ctx);
+    // Glyph.renderOutline(ctx, metrics.outline, scale, xPos, yPos);
+    Glyph.renderPath(ctx, metrics.path, scale, xPos, yPos);
+    this.restoreStyle(ctx);
   }
 }

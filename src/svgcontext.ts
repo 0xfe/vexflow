@@ -559,7 +559,7 @@ export class SVGContext implements RenderContext {
 
   fillPath(path: string, scale: number, x: number, y: number): this {
     this.path = path;
-    this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})`, fill: 'blue' });
+    this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})`, fill: 'magenta' });
     return this;
   }
 

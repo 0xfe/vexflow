@@ -57,17 +57,16 @@ export class TimeSignatureGlyph extends Glyph {
 
   renderToStave(x: number): void {
     const stave = this.checkStave();
+    const ctx = this.checkContext();
 
     let start_x = x + this.topStartX;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + this.x_shift,
-        stave.getYForLine(this.timeSignature.topLine)
-      );
+      const metrics = glyph.getMetrics();
+      const xPos = start_x + this.x_shift;
+      const yPos = stave.getYForLine(this.timeSignature.topLine);
+      // Glyph.renderOutline(ctx, metrics.outline, this.scale, xPos, yPos);
+      Glyph.renderPath(ctx, metrics.path, this.scale, xPos, yPos);
       start_x += defined(glyph.getMetrics().width);
     }
 
@@ -75,13 +74,11 @@ export class TimeSignatureGlyph extends Glyph {
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
       this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + glyph.getMetrics().x_shift,
-        stave.getYForLine(this.timeSignature.bottomLine)
-      );
+      const metrics = glyph.getMetrics();
+      const xPos = start_x + glyph.getMetrics().x_shift;
+      const yPos = stave.getYForLine(this.timeSignature.bottomLine);
+      // Glyph.renderOutline(ctx, metrics.outline, this.scale, xPos, yPos);
+      Glyph.renderPath(ctx, metrics.path, this.scale, xPos, yPos);
       start_x += defined(glyph.getMetrics().width);
     }
   }

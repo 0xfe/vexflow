@@ -13,40 +13,12 @@ function LogError(...args) {
 
 // Convert OTF glyph path to Vexflow glyph path.
 function toVFPath(glyph) {
-  // TODO: What if we convert it to 1000 pt???
-  const pointSize = 72;
-  const scale = 20;
-  // const pointSize = 1000;
-  // const scale = 1;
-
   const bb = glyph.getBoundingBox();
-  const path72 = glyph.getPath(0, 0, pointSize);
+  const path72 = glyph.getPath(0, 0, 72);
+  const pathString72 = path72.toPathData(2 /* decimal places */);
 
-  const path1000 = glyph.getPath(0, 0, 1000);
-  const pathString1000 = path1000.toPathData(2 /* decimal places */);
-
-  function fix(f, invert = false) {
-    return Math.round(f * scale * (invert ? -1 : 1));
-  }
-
-  const ops = path72.commands.map((p) => {
-    switch (p.type) {
-      case 'M':
-        return `M ${fix(p.x)} ${fix(p.y, true)}`;
-      case 'L':
-        return `L ${fix(p.x)} ${fix(p.y, true)}`;
-      case 'C':
-        return `C ${fix(p.x1)} ${fix(p.y1, true)} ${fix(p.x2)} ${fix(p.y2, true)} ${fix(p.x)} ${fix(p.y, true)}`;
-      case 'Q':
-        return `Q ${fix(p.x1)} ${fix(p.y1, true)} ${fix(p.x)} ${fix(p.y, true)}`;
-      case 'Z':
-        return 'Z';
-      default:
-        throw new Error(`unsupported path type: ${p.type}: ${p}`);
-    }
-  });
-
-  const pathStringVF = ops.join(' ');
+  const path = glyph.getPath(0, 0, 1000 /* point size */);
+  const pathString = path.toPathData(2 /* decimal places */);
 
   return {
     x_min: bb.x1,
@@ -54,8 +26,8 @@ function toVFPath(glyph) {
     y_min: bb.y1,
     y_max: bb.y2,
     ha: bb.y2 - bb.y1, // height of the glyph
-    o: pathStringVF, // THE OLD WAY
-    d: pathString1000, // THE NEW WAY
+    d: pathString,
+    d72: pathString72,
   };
 }
 

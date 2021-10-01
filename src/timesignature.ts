@@ -119,9 +119,10 @@ export class TimeSignature extends StaveModifier {
     const stave = this.checkStave();
 
     this.setRendered();
-    this.info.glyph.setStave(stave);
-    this.info.glyph.setContext(stave.getContext());
-    this.placeGlyphOnLine(this.info.glyph, stave, this.info.line);
-    this.info.glyph.renderToStave(this.x);
+    const glyph = this.info.glyph;
+    glyph.setStave(stave);
+    glyph.setContext(stave.getContext());
+    this.placeGlyphOnLine(glyph, stave, this.info.line);
+    glyph.renderToStave(this.x);
   }
 }
