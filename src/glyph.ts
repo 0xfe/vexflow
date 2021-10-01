@@ -49,13 +49,15 @@ export interface GlyphOptions {
 export interface GlyphMetrics {
   width: number;
   height: number;
-  x_min: number;
-  x_max: number;
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
   x_shift: number;
   y_shift: number;
   scale: number;
   ha: number;
-  outline: number[];
+  // outline: number[];
   font: Font;
   path: string; // SVG Path
 }
@@ -75,7 +77,10 @@ class GlyphCacheEntry {
   constructor(fontStack: Font[], code: string, category?: string) {
     const metrics = Glyph.loadMetrics(fontStack, code, category);
     this.metrics = metrics;
-    this.bbox = Glyph.getOutlineBoundingBox(metrics.outline, metrics.scale, metrics.x_shift, metrics.y_shift);
+
+    const bbox = new BoundingBox(metrics.xMin, metrics.yMin, metrics.width, metrics.height);
+    this.bbox = bbox;
+    // this.bbox = Glyph.getOutlineBoundingBox(metrics.outline, metrics.scale, metrics.x_shift, metrics.y_shift);
 
     if (category) {
       this.point = Glyph.lookupFontMetric(metrics.font, category, code, 'point', -1);
@@ -235,8 +240,10 @@ export class Glyph extends Element {
       scale = Glyph.lookupFontMetric(font, category, code, 'scale', 1);
     }
 
-    const x_min = glyph.x_min;
-    const x_max = glyph.x_max;
+    const xMin = glyph.xMin;
+    const xMax = glyph.xMax;
+    const yMin = glyph.yMin;
+    const yMax = glyph.yMax;
     const ha = glyph.ha;
 
     if (!glyph.cached_outline) {
@@ -244,16 +251,18 @@ export class Glyph extends Element {
     }
 
     return {
-      x_min,
-      x_max,
+      xMin,
+      xMax,
+      yMin,
+      yMax,
       x_shift,
       y_shift,
       scale,
       ha,
-      outline: glyph.cached_outline,
+      // outline: glyph.cached_outline,
       path: glyph.d,
       font,
-      width: x_max - x_min,
+      width: xMax - xMin,
       height: ha,
     };
   }
@@ -473,8 +482,10 @@ export class Glyph extends Element {
     const metrics = this.checkMetrics();
     const metricsScale = metrics.scale;
     return {
-      x_min: metrics.x_min * this.scale * metricsScale,
-      x_max: metrics.x_max * this.scale * metricsScale,
+      xMin: metrics.xMin * this.scale * metricsScale,
+      xMax: metrics.xMax * this.scale * metricsScale,
+      yMin: metrics.yMin * this.scale * metricsScale,
+      yMax: metrics.yMax * this.scale * metricsScale,
       width: this.bbox.getW(),
       height: this.bbox.getH(),
       scale: this.scale * metricsScale,

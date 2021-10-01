@@ -18,13 +18,14 @@ export interface FontDataMetrics {
 }
 
 export interface FontGlyph {
-  x_min: number;
-  x_max: number;
-  y_min?: number;
-  y_max?: number;
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+  height: number;
   ha: number;
-  o: string; // OLD Modified SVG Path
-  d?: string; // SVG Path
+  // o: string; // OLD Modified SVG Path
+  d: string; // SVG Path
   leftSideBearing?: number;
   advanceWidth?: number;
   cached_outline?: number[];

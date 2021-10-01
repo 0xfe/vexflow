@@ -11,26 +11,6 @@ function LogError(...args) {
   console.error(...args);
 }
 
-// Convert OTF glyph path to Vexflow glyph path.
-function toVFPath(glyph) {
-  const bb = glyph.getBoundingBox();
-  // const path72 = glyph.getPath(0, 0, 72);
-  // const pathString72 = path72.toPathData(2 /* decimal places */);
-
-  const path = glyph.getPath(0, 0, 1000 /* point size */);
-  const pathString = path.toPathData(2 /* decimal places */);
-
-  return {
-    x_min: bb.x1,
-    x_max: bb.x2,
-    y_min: bb.y1,
-    y_max: bb.y2,
-    ha: bb.y2 - bb.y1, // height of the glyph
-    d: pathString,
-    // d72: pathString72,
-  };
-}
-
 const args = process.argv.slice(2);
 if (args.length < 2) {
   LogError('Usage: node fontgen.js [fontfile.otf] [outfile.json]');
@@ -64,7 +44,24 @@ Object.keys(VALID_CODES).forEach((k) => {
     console.log('No glyph for ' + k);
   } else {
     const glyph = font.charToGlyph(intCode);
-    fontData[k] = toVFPath(glyph);
+    const bb = glyph.getBoundingBox();
+    const path = glyph.getPath(0, 0, 1000 /* point size */);
+    const pathString = path.toPathData(2 /* decimal places */);
+
+    fontData[k] = {
+      x_min: bb.x1,
+      x_max: bb.x2,
+      y_min: bb.y1,
+      y_max: bb.y2,
+      ha: bb.y2 - bb.y1, // height of the glyph
+      //
+      xMin: bb.x1,
+      xMax: bb.x2,
+      yMin: -bb.y2,
+      yMax: -bb.y1,
+      height: bb.y2 - bb.y1,
+      d: pathString,
+    };
   }
 });
 
