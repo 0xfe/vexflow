@@ -51,8 +51,8 @@ export class Volta extends StaveModifier {
     this.setRendered();
 
     let width = stave.getWidth() - x; // don't include x (offset) for width
-    const top_y = stave.getYForTopText(stave.getOptions().num_lines) + this.y_shift;
-    const vert_height = 1.5 * stave.getOptions().spacing_between_lines_px;
+    const top_y = stave.getYForTopText(stave.getNumLines()) + this.y_shift;
+    const vert_height = 1.5 * stave.getSpacingBetweenLines();
     switch (this.volta) {
       case VoltaType.BEGIN:
         ctx.fillRect(this.x + x, top_y, 1, vert_height);

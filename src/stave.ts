@@ -19,30 +19,27 @@ import { Bounds, FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
-  visible: boolean;
+  visible?: boolean;
 }
 
 export interface StaveOptions {
-  // [name: string]: any;
-  spacing: number;
-  thickness: number;
-  x_shift: number;
-  y_shift: number;
-  position_end?: number;
-  invert?: boolean;
+  spacing?: number;
+  thickness?: number;
+  x_shift?: number;
+  y_shift?: number;
   cps?: { x: number; y: number }[];
-  bottom_text_position: number;
-  line_config: StaveLineConfig[];
-  space_below_staff_ln: number;
-  glyph_spacing_px: number;
-  space_above_staff_ln: number;
-  vertical_bar_width: number;
-  fill_style: string;
-  left_bar: boolean;
-  right_bar: boolean;
-  spacing_between_lines_px: number;
-  top_text_position: number;
-  num_lines: number;
+  bottom_text_position?: number;
+  line_config?: StaveLineConfig[];
+  space_below_staff_ln?: number;
+  glyph_spacing_px?: number;
+  space_above_staff_ln?: number;
+  vertical_bar_width?: number;
+  fill_style?: string;
+  left_bar?: boolean;
+  right_bar?: boolean;
+  spacing_between_lines_px?: number;
+  top_text_position?: number;
+  num_lines?: number;
 }
 
 // Used by Stave.format() to sort the modifiers at the beginning and end of a stave.
@@ -69,7 +66,7 @@ export class Stave extends Element {
 
   protected start_x: number;
   protected clef: string;
-  protected options: StaveOptions;
+  protected options: Required<StaveOptions>;
   protected endClef?: string;
 
   protected x: number;
@@ -99,7 +96,7 @@ export class Stave extends Element {
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
-  constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
+  constructor(x: number, y: number, width: number, options?: StaveOptions) {
     super();
 
     this.x = x;
@@ -134,9 +131,10 @@ export class Stave extends Element {
       top_text_position: 1, // in staff lines
       bottom_text_position: 4, // in staff lines
       line_config: [],
+      cps: [],
+      ...options,
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
-    this.options = { ...this.options, ...options };
     this.defaultLedgerLineStyle = { strokeStyle: '#444', lineWidth: 1.4 };
 
     this.resetLines();
@@ -156,6 +154,7 @@ export class Stave extends Element {
   getDefaultLedgerLineStyle(): ElementStyle {
     return { ...this.getStyle(), ...this.defaultLedgerLineStyle };
   }
+
   space(spacing: number): number {
     return this.options.spacing_between_lines_px * spacing;
   }
@@ -167,10 +166,6 @@ export class Stave extends Element {
     }
     this.height = (this.options.num_lines + this.options.space_above_staff_ln) * this.options.spacing_between_lines_px;
     this.options.bottom_text_position = this.options.num_lines;
-  }
-
-  getOptions(): StaveOptions {
-    return this.options;
   }
 
   setNoteStartX(x: number): this {
@@ -265,7 +260,7 @@ export class Stave extends Element {
       fillStyle: this.options.fill_style,
       strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
       lineWidth: Flow.STAVE_LINE_THICKNESS,
-      ...(this.style || {}),
+      ...this.style,
     };
   }
 
@@ -280,7 +275,7 @@ export class Stave extends Element {
    * @param  {Number} index The index from which to determine the shift
    * @return {Number}       The amount of pixels shifted
    */
-  getModifierXShift(index = 0): number {
+  getModifierXShift(index: number = 0): number {
     if (typeof index !== 'number') {
       throw new RuntimeError('InvalidIndex', 'Must be of number type');
     }
@@ -339,10 +334,10 @@ export class Stave extends Element {
     text: string,
     position: number,
     options: {
-      shift_x: number;
-      shift_y: number;
-      justification: number;
-    }
+      shift_x?: number;
+      shift_y?: number;
+      justification?: number;
+    } = {}
   ): this {
     this.modifiers.push(new StaveText(text, position, options));
     return this;
@@ -405,9 +400,7 @@ export class Stave extends Element {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
     const headroom = options.space_above_staff_ln;
-    const y = this.y + headroom * spacing + 5 * spacing - line * spacing;
-
-    return y;
+    return this.y + headroom * spacing + 5 * spacing - line * spacing;
   }
 
   getYForGlyphs(): number {
@@ -758,11 +751,12 @@ export class Stave extends Element {
 
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
     for (let i = 0; i < this.modifiers.length; i++) {
+      const modifier = this.modifiers[i];
       // Only draw modifier if it has a draw function
-      if (typeof this.modifiers[i].draw === 'function') {
-        this.modifiers[i].applyStyle(ctx);
-        this.modifiers[i].draw(this, this.getModifierXShift(i));
-        this.modifiers[i].restoreStyle(ctx);
+      if (typeof modifier.draw === 'function') {
+        modifier.applyStyle(ctx);
+        modifier.draw(this, this.getModifierXShift(i));
+        modifier.restoreStyle(ctx);
       }
     }
 
@@ -781,11 +775,11 @@ export class Stave extends Element {
 
   // Draw Simple barlines for backward compatability
   // Do not delete - draws the beginning bar of the stave
-  drawVertical(x: number, isDouble: boolean): void {
+  drawVertical(x: number, isDouble?: boolean): void {
     this.drawVerticalFixed(this.x + x, isDouble);
   }
 
-  drawVerticalFixed(x: number, isDouble: boolean): void {
+  drawVerticalFixed(x: number, isDouble?: boolean): void {
     const ctx = this.checkContext();
 
     const top_line = this.getYForLine(0);
@@ -796,16 +790,23 @@ export class Stave extends Element {
     ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
   }
 
-  drawVerticalBar(x: number): void {
-    this.drawVerticalBarFixed(this.x + x);
+  drawVerticalBar(x: number, isDouble?: boolean): void {
+    this.drawVerticalBarFixed(this.x + x, isDouble);
   }
 
-  drawVerticalBarFixed(x: number): void {
+  drawVerticalBarFixed(x: number, isDouble?: boolean): void {
     const ctx = this.checkContext();
 
     const top_line = this.getYForLine(0);
     const bottom_line = this.getYForLine(this.options.num_lines - 1);
+    if (isDouble) {
+      ctx.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
+    }
     ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
+  }
+
+  getVerticalBarWidth(): number {
+    return this.options.vertical_bar_width;
   }
 
   /**
@@ -868,8 +869,8 @@ export class Stave extends Element {
     //  configuration options were supplied.
     // eslint-disable-next-line
     for (const line_config in lines_configuration) {
-      // Allow 'null' to be used if the caller just wants the default for a particular node.
-      if (!lines_configuration[line_config]) {
+      // Allow '{}' to be used if the caller just wants the default for a particular node.
+      if (lines_configuration[line_config].visible == undefined) {
         lines_configuration[line_config] = this.options.line_config[line_config];
       }
       this.options.line_config[line_config] = {

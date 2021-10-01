@@ -30,7 +30,7 @@ export class BarNote extends Note {
   // Initialized by the constructor via this.setType(type)
   protected type!: BarlineType;
 
-  constructor(type = BarlineType.SINGLE) {
+  constructor(type: string | BarlineType = BarlineType.SINGLE) {
     super({ duration: 'b' });
 
     this.metrics = {

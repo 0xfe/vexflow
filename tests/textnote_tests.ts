@@ -7,14 +7,12 @@
 // @ts-nocheck
 
 // TODO: TextNote needs a setFont() accessor.
-// TODO: Line 177 => Property 'text' is missing but required in type 'TextNoteStruct'.
-//       Maybe Factory.TextNote() should accept a Partial<TextNoteStruct>?
 
 import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 import { Note } from 'note';
 import { TextNote } from 'textnote';
-import { Stave} from 'stave';
+import { Stave } from 'stave';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -269,9 +267,9 @@ function textDynamics(options: TestOptions): void {
     { time: '7/4' }
   );
 
-  // This is refactored to use preCalculateMinWidth... to exercise  
+  // This is refactored to use preCalculateMinWidth... to exercise
   // a bug fix when textDynamic got formatted more than once.
-  var formatter = f.Formatter();
+  const formatter = f.Formatter();
   formatter.joinVoices([voice]);
   // const width = 250; //formatter.preCalculateMinTotalWidth([voice]);
   const width = formatter.preCalculateMinTotalWidth([voice]);

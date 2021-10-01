@@ -52,12 +52,13 @@ export interface StaveNoteFormatSettings {
 }
 
 export interface StaveNoteStruct extends NoteStruct {
+  /** `Stem.UP` or `Stem.DOWN`. */
+  stem_direction?: number;
+  auto_stem?: boolean;
   stem_down_x_offset?: number;
   stem_up_x_offset?: number;
   stroke_px?: number;
   glyph_font_scale?: number;
-  stem_direction?: number;
-  auto_stem?: boolean;
   octave_shift?: number;
   clef?: string;
 }
@@ -373,7 +374,7 @@ export class StaveNote extends StemmableNote {
     return true;
   }
 
-  constructor(noteStruct: Partial<StaveNoteStruct>) {
+  constructor(noteStruct: StaveNoteStruct) {
     super(noteStruct);
 
     this.ledgerLineStyle = {};
@@ -397,12 +398,10 @@ export class StaveNote extends StemmableNote {
 
     this.render_options = {
       ...this.render_options,
-      ...{
-        // font size for note heads and rests
-        glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
-        // number of stroke px to the left and right of head
-        stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
-      },
+      // font size for note heads and rests
+      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      // number of stroke px to the left and right of head
+      stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
     };
 
     this.calculateKeyProps();

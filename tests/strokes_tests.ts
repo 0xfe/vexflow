@@ -80,7 +80,7 @@ function arpeggioDirectionless(options: TestOptions): void {
 
   const notes1 = score.notes('(g4 b4 d5)/4, (g4 b4 d5 g5), (g4 b4 d5 g5), (g4 b4 d5)', { stem: 'up' });
 
-  const graceNoteStructs: Partial<GraceNoteStruct>[] = [
+  const graceNoteStructs: GraceNoteStruct[] = [
     { keys: ['e/4'], duration: '32' },
     { keys: ['f/4'], duration: '32' },
     { keys: ['g/4'], duration: '32' },

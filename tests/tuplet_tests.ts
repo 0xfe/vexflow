@@ -3,12 +3,6 @@
 //
 // Tuplet Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Factory.Voice() requires its 'time' parameter to be a string.
-//       However, we pass { num_beats: 4, beat_value: 4 }.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Formatter } from 'formatter';
 import { Stem } from 'stem';

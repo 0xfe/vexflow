@@ -174,7 +174,7 @@ export class Clef extends StaveModifier {
     if (this.type === 'tab') {
       const glyph = defined(this.glyph, 'ClefError', "Can't set stave without glyph.");
 
-      const numLines = this.stave.getOptions().num_lines;
+      const numLines = this.stave.getNumLines();
       const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
       const shiftY = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
       glyph.setPoint(point);

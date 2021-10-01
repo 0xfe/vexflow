@@ -127,23 +127,16 @@ export class StaveConnector extends Element {
   }
 
   /** Set optional associated Text. */
-  setText(
-    text: string,
-    options?: {
-      shift_x: number;
-      shift_y: number;
-    }
-  ): this {
+  setText(text: string, options: { shift_x?: number; shift_y?: number } = {}): this {
     this.texts.push({
       content: text,
-      options: { ...{ shift_x: 0, shift_y: 0 }, ...options },
+      options: {
+        shift_x: 0,
+        shift_y: 0,
+        ...options,
+      },
     });
     return this;
-  }
-
-  /** Set text font. */
-  setFont(font: FontInfo): void {
-    this.font = { ...this.font, ...font };
   }
 
   /** Set connector x shift. */

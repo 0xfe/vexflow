@@ -3,11 +3,6 @@
 //
 // Bend Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: ctx.setFont()'s 3rd argument "weight" should be optional, and default to ''.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
@@ -32,7 +27,7 @@ const BendTests = {
 };
 
 // Helper functions for creating TabNote and Bend objects.
-const note = (struct: TabNoteStruct) => new TabNote(struct);
+const note = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 const bendWithText = (text: string, release = false) => new Bend(text, release);
 const bendWithPhrase = (phrase: BendPhrase[]) => new Bend('', false, phrase);
 

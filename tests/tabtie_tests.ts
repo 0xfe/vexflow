@@ -33,7 +33,7 @@ const TabTieTests = {
 /**
  * Helper function to create TabNote objects.
  */
-const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
+const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 
 /**
  * Helper function to create a RenderContext and TabStave.

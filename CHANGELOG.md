@@ -16,6 +16,7 @@ Please help test this beta release and [report issues on GitHub](https://github.
   - Examples:
     - `Accidental.CATEGORY` is now `'Accidental'` instead of `'accidentals'`.
     - `Modifier.CATEGORY` is now `'Modifier'` instead of `'none'`.
+- `ChordSymbol.NO_TEXT_FORMAT` was previously named `ChordSymbol.NOTEXTFORMAT`.
 
 # 3.0.9 / 2020-04-21
 

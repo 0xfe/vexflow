@@ -61,12 +61,13 @@ export interface ParsedNote {
 }
 
 export interface NoteStruct {
+  /** Array of pitches, e.g: `['c/4', 'e/4', 'g/4']` */
+  keys?: string[];
   /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
-  duration: string;
+  duration?: string;
   line?: number;
   /** The number of dots, which affects the duration. */
   dots?: number;
-  keys?: string[];
   /** The note type (e.g., `r` for rest, `s` for slash notes, etc.). */
   type?: string;
   align_center?: boolean;
@@ -168,12 +169,9 @@ export abstract class Note extends Tickable {
     return { duration, dots, type };
   }
 
-  protected static parseNoteStruct(noteStruct: Partial<NoteStruct>): ParsedNote | undefined {
-    const durationString = noteStruct.duration;
-    const customTypes: string[] = [];
-
+  protected static parseNoteStruct(noteStruct: NoteStruct): ParsedNote | undefined {
     // Preserve backwards-compatibility
-    const durationProps = Note.parseDuration(durationString);
+    const durationProps = Note.parseDuration(noteStruct.duration);
     if (!durationProps) {
       return undefined;
     }
@@ -185,6 +183,7 @@ export abstract class Note extends Tickable {
     }
 
     // If no type specified, check duration or custom types
+    const customTypes: string[] = [];
     if (!type) {
       type = durationProps.type || 'n';
 
@@ -234,7 +233,7 @@ export abstract class Note extends Tickable {
    *
    * @param noteStruct To create a new note you need to provide a `noteStruct`.
    */
-  constructor(noteStruct: Partial<NoteStruct>) {
+  constructor(noteStruct: NoteStruct) {
     super();
 
     if (!noteStruct) {
@@ -242,8 +241,8 @@ export abstract class Note extends Tickable {
     }
 
     /** Parses `noteStruct` and get note properties. */
-    const initStruct = Note.parseNoteStruct(noteStruct);
-    if (!initStruct) {
+    const parsedNoteStruct = Note.parseNoteStruct(noteStruct);
+    if (!parsedNoteStruct) {
       throw new RuntimeError('BadArguments', `Invalid note initialization object: ${JSON.stringify(noteStruct)}`);
     }
 
@@ -252,17 +251,17 @@ export abstract class Note extends Tickable {
     // per-pitch properties
     this.keyProps = [];
 
-    this.duration = initStruct.duration;
-    this.dots = initStruct.dots;
-    this.noteType = initStruct.type;
-    this.customTypes = initStruct.customTypes;
+    this.duration = parsedNoteStruct.duration;
+    this.dots = parsedNoteStruct.dots;
+    this.noteType = parsedNoteStruct.type;
+    this.customTypes = parsedNoteStruct.customTypes;
 
     if (noteStruct.duration_override) {
       // Custom duration
       this.setDuration(noteStruct.duration_override);
     } else {
       // Default duration
-      this.setIntrinsicTicks(initStruct.ticks);
+      this.setIntrinsicTicks(parsedNoteStruct.ticks);
     }
 
     this.modifiers = [];

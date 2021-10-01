@@ -3,11 +3,6 @@
 //
 // NoteHead Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: NoteHead constructor should take a Partial<NoteHeadStruct>.
-//       In the basicBoundingBoxes() test case, we omit the note_type option.
 // TODO: There is a bug in RenderContext.scale(). The CanvasContext works as expected.
 //       Each time you call scale(sx, sy), it multiplies the sx and sy by the currently stored scale.
 //       The SVGContext operates differently. It just sets the sx and sy as the new scale, instead of multiplying it.
@@ -72,8 +67,8 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 /**
  * Used by the next two test cases to draw a note.
  */
-function showNote(struct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number) {
-  const note = new StaveNote(struct).setStave(stave);
+function showNote(noteStruct: StaveNoteStruct, stave: Stave, ctx: RenderContext, x: number) {
+  const note = new StaveNote(noteStruct).setStave(stave);
   new TickContext().addTickable(note).preFormat().setX(x);
   note.setContext(ctx).draw();
   return note;

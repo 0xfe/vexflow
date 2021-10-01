@@ -57,7 +57,7 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
 }
 
 // Helper function to create TabNote objects.
-const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
+const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 
 /**
  * Test Case

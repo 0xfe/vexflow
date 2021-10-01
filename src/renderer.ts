@@ -36,18 +36,17 @@ export class Renderer {
   static lastContext?: RenderContext = undefined;
 
   static buildContext(
-    elementId: string,
+    elementId: string | HTMLCanvasElement | HTMLDivElement,
     backend: number,
     width: number,
     height: number,
-    background?: string
+    background: string = '#FFF'
   ): RenderContext {
     const renderer = new Renderer(elementId, backend);
     if (width && height) {
       renderer.resize(width, height);
     }
 
-    if (!background) background = '#FFF';
     const ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     Renderer.lastContext = ctx;
@@ -113,7 +112,7 @@ export class Renderer {
       throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
     } else if (typeof canvasId === 'string') {
       this.elementId = canvasId;
-      this.element = document.getElementById(canvasId as string) as HTMLCanvasElement | HTMLDivElement;
+      this.element = document.getElementById(canvasId) as HTMLCanvasElement | HTMLDivElement;
     } else if ('getContext' in canvasId /* HTMLCanvasElement */) {
       this.element = canvasId as HTMLCanvasElement;
     } else {

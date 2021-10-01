@@ -20,21 +20,14 @@ export class GraceTabNote extends TabNote {
 
     this.render_options = {
       ...this.render_options,
-      ...{
-        // vertical shift from stave line
-        y_shift: 0.3,
-        // grace glyph scale
-        scale: 0.6,
-        // grace tablature font
-        font: '7.5pt Arial',
-      },
+      // vertical shift from stave line
+      y_shift: 0.3,
+      // grace glyph scale
+      scale: 0.6,
+      // grace tablature font
+      font: '7.5pt Arial',
     };
 
     this.updateWidth();
-  }
-
-  draw(): void {
-    super.draw();
-    this.setRendered();
   }
 }
