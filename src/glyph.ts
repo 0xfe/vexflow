@@ -292,7 +292,7 @@ export class Glyph extends Element {
   }
 
   static renderPath(ctx: RenderContext, path: string = '', scale: number, x_pos: number, y_pos: number): void {
-    scale *= 1.44; // MAGIC HACK!?!?
+    scale *= 1.44; // MAGIC HACK! Converts 1000 => 72 * 20.
     ctx.fillPath(path, scale, x_pos, y_pos);
   }
 

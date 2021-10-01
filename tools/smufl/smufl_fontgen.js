@@ -14,8 +14,8 @@ function LogError(...args) {
 // Convert OTF glyph path to Vexflow glyph path.
 function toVFPath(glyph) {
   const bb = glyph.getBoundingBox();
-  const path72 = glyph.getPath(0, 0, 72);
-  const pathString72 = path72.toPathData(2 /* decimal places */);
+  // const path72 = glyph.getPath(0, 0, 72);
+  // const pathString72 = path72.toPathData(2 /* decimal places */);
 
   const path = glyph.getPath(0, 0, 1000 /* point size */);
   const pathString = path.toPathData(2 /* decimal places */);
@@ -27,7 +27,7 @@ function toVFPath(glyph) {
     y_max: bb.y2,
     ha: bb.y2 - bb.y1, // height of the glyph
     d: pathString,
-    d72: pathString72,
+    // d72: pathString72,
   };
 }
 
