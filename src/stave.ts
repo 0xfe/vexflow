@@ -773,38 +773,6 @@ export class Stave extends Element {
     return this;
   }
 
-  // Draw Simple barlines for backward compatability
-  // Do not delete - draws the beginning bar of the stave
-  drawVertical(x: number, isDouble?: boolean): void {
-    this.drawVerticalFixed(this.x + x, isDouble);
-  }
-
-  drawVerticalFixed(x: number, isDouble?: boolean): void {
-    const ctx = this.checkContext();
-
-    const top_line = this.getYForLine(0);
-    const bottom_line = this.getYForLine(this.options.num_lines - 1);
-    if (isDouble) {
-      ctx.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
-    }
-    ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
-  }
-
-  drawVerticalBar(x: number, isDouble?: boolean): void {
-    this.drawVerticalBarFixed(this.x + x, isDouble);
-  }
-
-  drawVerticalBarFixed(x: number, isDouble?: boolean): void {
-    const ctx = this.checkContext();
-
-    const top_line = this.getYForLine(0);
-    const bottom_line = this.getYForLine(this.options.num_lines - 1);
-    if (isDouble) {
-      ctx.fillRect(x - 3, top_line, 1, bottom_line - top_line + 1);
-    }
-    ctx.fillRect(x, top_line, 1, bottom_line - top_line + 1);
-  }
-
   getVerticalBarWidth(): number {
     return this.options.vertical_bar_width;
   }
