@@ -108,7 +108,6 @@ export class SVGContext implements RenderContext {
   width: number = 0;
   height: number = 0;
   path: string;
-  pen: { x: number; y: number };
   lineWidth: number;
   attributes: Attributes;
   background_attributes: Attributes;
@@ -132,7 +131,6 @@ export class SVGContext implements RenderContext {
     this.parent = this.svg;
 
     this.path = '';
-    this.pen = { x: NaN, y: NaN };
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
@@ -490,36 +488,26 @@ export class SVGContext implements RenderContext {
 
   beginPath(): this {
     this.path = '';
-    this.pen.x = NaN;
-    this.pen.y = NaN;
     return this;
   }
 
   moveTo(x: number, y: number): this {
     this.path += 'M' + x + ' ' + y;
-    this.pen.x = x;
-    this.pen.y = y;
     return this;
   }
 
   lineTo(x: number, y: number): this {
     this.path += 'L' + x + ' ' + y;
-    this.pen.x = x;
-    this.pen.y = y;
     return this;
   }
 
   bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
     this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
-    this.pen.x = x;
-    this.pen.y = y;
     return this;
   }
 
   quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
     this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
-    this.pen.x = x;
-    this.pen.y = y;
     return this;
   }
 
@@ -540,8 +528,6 @@ export class SVGContext implements RenderContext {
       // use two semi-circular arcs.
       this.path += `M${x0} ${y0} A${radius} ${radius} 0 0 0 ${x1} ${y1} `;
       this.path += `A${radius} ${radius} 0 0 0 ${x0} ${y0}`;
-      this.pen.x = x0;
-      this.pen.y = y0;
     } else {
       const x1 = x + radius * Math.cos(endAngle);
       const y1 = y + radius * Math.sin(endAngle);
@@ -562,8 +548,6 @@ export class SVGContext implements RenderContext {
       const sweep = !antiClockwise;
 
       this.path += `M${x0} ${y0} A${radius} ${radius} 0 ${+large} ${+sweep} ${x1} ${y1}`;
-      this.pen.x = x1;
-      this.pen.y = y1;
     }
     return this;
   }
@@ -575,8 +559,6 @@ export class SVGContext implements RenderContext {
 
   fillPath(path: string, scale: number, x: number, y: number): this {
     this.path = path;
-    this.pen.x = NaN;
-    this.pen.y = NaN;
     this.fill({ transform: `translate(${x} ${y}) scale(${scale} ${scale})`, fill: 'blue' });
     return this;
   }
