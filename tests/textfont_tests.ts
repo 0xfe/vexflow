@@ -21,7 +21,7 @@ function fontParsing(): void {
   // Bend
   const b = new Bend('1/2', true);
   const bFont = b.getFont();
-  equal(bFont?.family, 'Helvetica Neue, Arial, sans-serif');
+  equal(bFont?.family, 'Arial, sans-serif');
 
   // TEST EACH CLASS THAT HAS A TEXT_FONT
   // XXX .... XXX

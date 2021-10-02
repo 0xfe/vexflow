@@ -1,9 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
-//
 // This file handles a registry of text font metric information, so all
-// VEX modules can take advantage of font metrics in a uniform way.
+// VexFlow modules can take advantage of font metrics in a uniform way.
 //
 
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
@@ -141,7 +139,7 @@ export class TextFont {
         description: 'Default text font to pair with Bravura/Gonville engraving font',
       });
       TextFont.registryInstance.push({
-        name: 'petalumaScript',
+        name: 'PetalumaScript',
         resolution: PetalumaScriptTextMetrics.resolution,
         glyphs: PetalumaScriptTextMetrics.glyphs,
         family: PetalumaScriptTextMetrics.fontFamily,

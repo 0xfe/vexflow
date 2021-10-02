@@ -151,7 +151,7 @@ module.exports = (grunt) => {
       options: { fix: true },
     },
     qunit: {
-      files: ['tests/flow.html'],
+      files: ['tests/flow-headless-browser.html'],
     },
     copy: {
       release: {

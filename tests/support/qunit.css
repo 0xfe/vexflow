@@ -12,7 +12,7 @@
 /** Font Family and Sizes */
 
 #qunit-tests, #qunit-header, #qunit-banner, #qunit-testrunner-toolbar, #qunit-userAgent, #qunit-testresult {
-	font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+	font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 #qunit-testrunner-toolbar, #qunit-userAgent, #qunit-testresult, #qunit-tests li { font-size: small; }
@@ -38,8 +38,6 @@
 	font-size: 1.5em;
 	line-height: 1em;
 	font-weight: 400;
-
-	border-radius: 5px 5px 0 0;
 }
 
 #qunit-header a {
