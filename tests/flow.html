@@ -6,12 +6,13 @@
     <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
     <meta charset="UTF-8" />
   </head>
+
   <body>
     <div style="text-align: center">
       <div id="qunit"></div>
       <div id="qunit-fixture"></div>
       <div>
-        <h2>[ <a href="http://vexflow.com">Home</a> ] [ <a href="https://github.com/0xfe/vexflow">GitHub</a> ]</h2>
+        <h2>[ <a href="https://vexflow.com">Home</a> ] [ <a href="https://github.com/0xfe/vexflow">GitHub</a> ]</h2>
         <h3>
           See the: <a id="vex-src" target="_blank"></a>. Don't forget to run the
           <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!
@@ -47,6 +48,7 @@
 
       let vexURL;
       let testsURL;
+      let vexPlusTestsURL;
       let isVersionFourOrNewer = true;
 
       if (ver.includes('unpkg')) {
@@ -66,6 +68,7 @@
         }
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
+        vexPlusTestsURL = '../' + path + '/vexflow-debug-with-tests.js';
       }
 
       // Display which VexFlow version we loaded.
@@ -75,10 +78,10 @@
 
       let loadVexFlow;
       if (isVersionFourOrNewer) {
-        // When loading version >= 4.0.0, only load vexflow-tests.js
-        loadVexFlow = () => loadScript(testsURL);
+        // When loading version >= 4.0.0, only load vexflow-debug-with-tests.js
+        loadVexFlow = () => loadScript(vexPlusTestsURL);
       } else {
-        // When loading versions <= 3.0.9, load both vexflow-debug.js and vexflow-tests.js
+        // When loading versions <= 3.0.9, load vexflow-debug.js and then vexflow-tests.js
         loadVexFlow = () => loadScript(vexURL).then(() => loadScript(testsURL));
       }
 

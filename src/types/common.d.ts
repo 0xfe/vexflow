@@ -1,5 +1,5 @@
 export interface FontInfo {
-  /** CSS font-family, e.g., 'Arial', 'Arial, Helvetica, sans-serif', 'Times, serif' */
+  /** CSS font-family, e.g., 'Arial', 'Helvetica Neue, Arial, sans-serif', 'Times, serif' */
   family?: string;
 
   /**

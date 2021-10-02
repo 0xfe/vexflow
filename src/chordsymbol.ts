@@ -379,7 +379,7 @@ export class ChordSymbol extends Modifier {
 
     let family = 'Roboto Slab, Times, serif';
     if (this.musicFont.getName() === 'Petaluma') {
-      family = 'petalumaScript, Arial, sans-serif';
+      family = 'PetalumaScript, Arial, sans-serif';
     }
     this.setFont(family, 12);
   }
