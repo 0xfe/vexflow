@@ -107,8 +107,8 @@ function autoAccidentalWorking(): void {
   equal(hasAccidental(notes[2]), true, 'Added flat');
   equal(hasAccidental(notes[3]), true, 'Added sharp');
   equal(hasAccidental(notes[4]), false, 'Sharp remembered');
-  equal(hasAccidental(notes[5]), false, 'Flat remembered');
-  equal(hasAccidental(notes[6]), false, 'Flat remembered');
+  equal(hasAccidental(notes[5]), true, 'Added flat(different octave)');
+  equal(hasAccidental(notes[6]), true, 'Added flat(different octave)');
   equal(hasAccidental(notes[7]), false, 'sharp remembered');
 
   notes = [
@@ -930,12 +930,12 @@ function automaticAccidentalsMultiVoiceOffset(options: TestOptions): void {
 
   equal(hasAccidental(notes1[0]), true);
   equal(hasAccidental(notes1[1]), false);
-  equal(hasAccidental(notes1[2]), false);
-  equal(hasAccidental(notes1[3]), false);
-  equal(hasAccidental(notes1[4]), false);
-  equal(hasAccidental(notes1[5]), false);
-  equal(hasAccidental(notes1[6]), false);
-  equal(hasAccidental(notes1[7]), false);
+  equal(hasAccidental(notes1[2]), true);
+  equal(hasAccidental(notes1[3]), true);
+  equal(hasAccidental(notes1[4]), true);
+  equal(hasAccidental(notes1[5]), true);
+  equal(hasAccidental(notes1[6]), true);
+  equal(hasAccidental(notes1[7]), true);
 
   new Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
 
