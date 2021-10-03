@@ -31,7 +31,6 @@ const StaveTests = {
     const run = VexFlowTests.runTests;
     run('Stave Draw Test', draw);
     run('Open Stave Draw Test', drawOpenStave);
-    run('Vertical Bar Test', drawVerticalBar);
     run('Multiple Stave Barline Test', drawMultipleMeasures);
     run('Multiple Stave Repeats Test', drawRepeats);
     run('Stave End Modifiers Test', drawEndModifiers);
@@ -133,19 +132,6 @@ function drawOpenStave(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave = new Stave(10, 150, 300, { right_bar: false });
   stave.setContext(ctx);
   stave.draw();
-
-  ok(true, 'all pass');
-}
-
-function drawVerticalBar(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 120);
-  const stave = new Stave(10, 10, 300);
-  stave.setContext(ctx);
-  stave.draw();
-  stave.drawVerticalBar(50, true);
-  stave.drawVerticalBar(150, false);
-  stave.drawVertical(250, true);
-  stave.drawVertical(300);
 
   ok(true, 'all pass');
 }
