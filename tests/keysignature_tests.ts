@@ -4,12 +4,6 @@
 // Key Signature Tests
 //
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: KeySignature.alterKey(alterKeySpec: string) should accept a string[] instead.
-// TODO: Factory.KeySigNote() should take a Partial<T>, or allow cancelKey and alterKey to be optional.
-
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';

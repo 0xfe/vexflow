@@ -22,7 +22,7 @@ const VibratoTests = {
 };
 
 // Helper function to create TabNote objects.
-const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
+const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 
 /**
  * Default vibrato symbol (wavy line) on top of a tab with two notes fretted.

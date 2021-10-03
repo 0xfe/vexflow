@@ -82,7 +82,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 // Optional: Use a helper function to make your code more concise.
-const note = (s: StaveNoteStruct) => new StaveNote(s);
+const note = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
 
 /**
  * Rests are intermixed within beamed notes (with the stems and beams at the top).
@@ -337,7 +337,7 @@ function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void 
   const ctx = contextBuilder(options.elementId, 600, 200);
   const stave = new Stave(50, 10, 500).addClef('treble').setContext(ctx).addTimeSignature('4/4').draw();
 
-  const noteOnStave = (s: StaveNoteStruct) => new StaveNote(s).setStave(stave);
+  const noteOnStave = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct).setStave(stave);
 
   const notes1 = [
     noteOnStave({ keys: ['c/4', 'e/4', 'g/4'], duration: '4' }),

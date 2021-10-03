@@ -126,7 +126,7 @@ export class Stroke extends Modifier {
     let topY = start.y;
     let botY = start.y;
     const x = start.x - 5;
-    const line_space = note.checkStave().getOptions().spacing_between_lines_px;
+    const line_space = note.checkStave().getSpacingBetweenLines();
 
     const notes = this.checkModifierContext().getMembers(note.getCategory());
     for (let i = 0; i < notes.length; i++) {

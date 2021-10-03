@@ -3,11 +3,6 @@
 //
 // Formatter Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: SystemOptions.details might need to be typed as Partial<SystemFormatterOptions>
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
@@ -456,7 +451,7 @@ function proportional(options: TestOptions): void {
     debugFormatter: debug,
     noJustification: !(options.params.justify === undefined && true),
     formatIterations: options.params.iterations,
-    options: { alpha: options.params.alpha },
+    details: { alpha: options.params.alpha },
   });
 
   const score = f.EasyScore();

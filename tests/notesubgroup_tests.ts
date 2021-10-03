@@ -25,7 +25,7 @@ const NoteSubGroupTests = {
 // Return three helper functions for creating StaveNotes, and adding Accidental & NoteSubGroup to those StaveNotes.
 function createShortcuts(f: Factory) {
   return {
-    createStaveNote: (struct: StaveNoteStruct) => f.StaveNote(struct),
+    createStaveNote: (noteStruct: StaveNoteStruct) => f.StaveNote(noteStruct),
     addAccidental: (note: StaveNote, accid: string) => note.addModifier(f.Accidental({ type: accid }), 0),
     addSubGroup: (note: StaveNote, subNotes: Note[]) => note.addModifier(f.NoteSubGroup({ notes: subNotes }), 0),
   };

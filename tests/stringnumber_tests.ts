@@ -3,11 +3,6 @@
 //
 // StringNumber Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Stroke constructor's second argument should be optional.
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Renderer } from 'renderer';
 import { BarlineType } from 'stavebarline';

@@ -73,14 +73,11 @@ export class TextDynamics extends Note {
   constructor(noteStruct: TextNoteStruct) {
     super(noteStruct);
 
-    this.sequence = noteStruct.text.toLowerCase();
+    this.sequence = (noteStruct.text || '').toLowerCase();
     this.line = noteStruct.line || 0;
     this.glyphs = [];
 
-    this.render_options = {
-      ...this.render_options,
-      glyph_font_size: 40,
-    };
+    this.render_options = { ...this.render_options, glyph_font_size: 40 };
 
     L('New Dynamics Text: ', this.sequence);
   }

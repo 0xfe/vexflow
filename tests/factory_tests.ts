@@ -28,7 +28,9 @@ function defaults(): void {
     renderer: { elementId: null, width: 700, height: 500 },
   });
 
-  const options = factory.getOptions();
+  // eslint-disable-next-line
+  // @ts-ignore access a protected member for testing purposes.
+  const options = factory.options;
   equal(options.renderer.width, 700);
   equal(options.renderer.height, 500);
   equal(options.renderer.elementId, null);

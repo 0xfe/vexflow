@@ -14,9 +14,9 @@ export class GlyphNote extends Note {
     return 'GlyphNote';
   }
 
-  protected options: GlyphNoteOptions;
+  protected options: Required<GlyphNoteOptions>;
 
-  constructor(glyph: Glyph | undefined, noteStruct: Partial<NoteStruct>, options?: GlyphNoteOptions) {
+  constructor(glyph: Glyph | undefined, noteStruct: NoteStruct, options?: GlyphNoteOptions) {
     super(noteStruct);
     this.options = {
       ignoreTicks: false,
@@ -25,7 +25,7 @@ export class GlyphNote extends Note {
     };
 
     // Note properties
-    this.ignore_ticks = this.options.ignoreTicks as boolean;
+    this.ignore_ticks = this.options.ignoreTicks;
     if (glyph) {
       this.setGlyph(glyph);
     }
@@ -67,15 +67,16 @@ export class GlyphNote extends Note {
     ctx.openGroup('glyphNote', this.getAttribute('id'));
 
     // Context is set when setStave is called on Note
-    if (!this.glyph.getContext()) {
-      this.glyph.setContext(ctx);
+    const glyph = this.glyph;
+    if (!glyph.getContext()) {
+      glyph.setContext(ctx);
     }
 
-    this.glyph.setStave(stave);
-    this.glyph.setYShift(stave.getYForLine(this.options.line as number) - stave.getYForGlyphs());
+    glyph.setStave(stave);
+    glyph.setYShift(stave.getYForLine(this.options.line) - stave.getYForGlyphs());
 
     const x = this.isCenterAligned() ? this.getAbsoluteX() - this.getWidth() / 2 : this.getAbsoluteX();
-    this.glyph.renderToStave(x);
+    glyph.renderToStave(x);
     this.drawModifiers();
     ctx.closeGroup();
   }

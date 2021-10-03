@@ -3,12 +3,6 @@
 //
 // MultiMeasureRest Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Line 158: Expected 2 arguments, but got 1.
-//       stave.setEndTimeSignature()'s second argument should be optional.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { MultimeasureRestRenderOptions } from 'multimeasurerest';
@@ -31,7 +25,7 @@ function simple(options: TestOptions): void {
   //   item[0] => staveParams to adjust vertical spacing between lines
   //   item[1] => multiMeasureRestParams
   // eslint-disable-next-line
-  const params: [any, Partial<MultimeasureRestRenderOptions>][] = [
+  const params: [any, MultimeasureRestRenderOptions][] = [
     [{}, { number_of_measures: 2, show_number: false }],
     [{}, { number_of_measures: 2 }],
     [{}, { number_of_measures: 2, line_thickness: 8, serif_thickness: 3 }],
@@ -55,7 +49,12 @@ function simple(options: TestOptions): void {
     [line_spacing_15px, { number_of_measures: 12, spacing_between_lines_px: 15, number_glyph_point: 40 * 1.5 }],
     [
       line_spacing_15px,
-      { number_of_measures: 9, spacing_between_lines_px: 15, use_symbols: true, number_glyph_point: 40 * 1.5 },
+      {
+        number_of_measures: 9,
+        spacing_between_lines_px: 15,
+        use_symbols: true,
+        number_glyph_point: 40 * 1.5,
+      },
     ],
     [
       line_spacing_15px,
@@ -110,7 +109,7 @@ function staveWithModifiers(options: TestOptions): void {
   let y = 0;
 
   // eslint-disable-next-line
-  const params: [any, Partial<MultimeasureRestRenderOptions>][] = [
+  const params: [any, MultimeasureRestRenderOptions][] = [
     [{ clef: 'treble', params: { width: 150 } }, { number_of_measures: 5 }],
     [{ clef: 'treble', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],
     [{ clef: 'treble', timeSig: '4/4', keySig: 'G', params: { width: 150 } }, { number_of_measures: 5 }],

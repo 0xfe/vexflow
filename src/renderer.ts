@@ -23,18 +23,17 @@ export class Renderer {
   static lastContext?: RenderContext = undefined;
 
   static buildContext(
-    elementId: string,
+    elementId: string | HTMLCanvasElement | HTMLDivElement,
     backend: number,
     width: number,
     height: number,
-    background?: string
+    background: string = '#FFF'
   ): RenderContext {
     const renderer = new Renderer(elementId, backend);
     if (width && height) {
       renderer.resize(width, height);
     }
 
-    if (!background) background = '#FFF';
     const ctx = renderer.getContext();
     ctx.setBackgroundFillStyle(background);
     Renderer.lastContext = ctx;
@@ -96,8 +95,7 @@ export class Renderer {
    * @param backend Renderer.Backends.CANVAS or Renderer.Backends.SVG
    */
   constructor(context: RenderContext);
-  constructor(canvas: string | HTMLCanvasElement, backend: Renderer.Backends.CANVAS);
-  constructor(canvas: string | HTMLDivElement, backend: Renderer.Backends.SVG);
+  constructor(canvas: string | HTMLCanvasElement | HTMLDivElement, backend: number);
   constructor(arg0: string | HTMLCanvasElement | HTMLDivElement | RenderContext, arg1?: number) {
     if (isRenderContext(arg0)) {
       // The user has provided what looks like a RenderContext, let's just use it.

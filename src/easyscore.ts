@@ -231,11 +231,11 @@ interface BuilderElements {
   accidentals: (Accidental | undefined)[][];
 }
 
-export interface BuilderOptions {
+// Extending Record<string, any> allows arbitrary properties via Builder.reset() & EasyScore.parse().
+// eslint-disable-next-line
+export interface BuilderOptions extends Record<string, any> {
   stem?: string;
   clef?: string;
-  // eslint-disable-next-line
-  [x: string]: any; // allow arbitrary properties via Builder.reset() & EasyScore.parse().
 }
 
 export class Builder {
@@ -254,7 +254,7 @@ export class Builder {
     this.reset();
   }
 
-  reset(options: BuilderOptions = {}): void {
+  reset(options?: BuilderOptions): void {
     this.options = {
       stem: 'auto',
       clef: 'treble',
@@ -387,18 +387,18 @@ export class Builder {
 }
 
 export interface EasyScoreOptions {
-  factory: Factory;
-  builder: Builder;
-  commitHooks: CommitHook[];
-  throwOnError: boolean;
+  factory?: Factory;
+  builder?: Builder;
+  commitHooks?: CommitHook[];
+  throwOnError?: boolean;
 }
 
-export interface EasyScoreDefaults {
-  clef: string;
-  time: string;
-  stem: string;
-  // eslint-disable-next-line
-  [x: string]: any; // allow arbitrary properties via set(defaults)
+// Extending Record<string, any> allows arbitrary properties via set(defaults).
+// eslint-disable-next-line
+export interface EasyScoreDefaults extends Record<string, any> {
+  clef?: string;
+  time?: string;
+  stem?: string;
 }
 
 /**
@@ -440,7 +440,7 @@ export class EasyScore {
   grammar!: EasyScoreGrammar;
   parser!: Parser;
 
-  constructor(options: Partial<EasyScoreOptions> = {}) {
+  constructor(options: EasyScoreOptions = {}) {
     this.setOptions(options);
   }
 
@@ -452,7 +452,7 @@ export class EasyScore {
    * @param defaults.stem default stem arrangement (auto | up | down)
    * @returns this
    */
-  set(defaults: Partial<EasyScoreDefaults>): this {
+  set(defaults: EasyScoreDefaults): this {
     this.defaults = { ...this.defaults, ...defaults };
     return this;
   }
@@ -461,7 +461,7 @@ export class EasyScore {
    * @param options.factory is required.
    * @returns this
    */
-  setOptions(options: Partial<EasyScoreOptions>): this {
+  setOptions(options: EasyScoreOptions): this {
     // eslint-disable-next-line
     const factory = options.factory!; // ! operator, because options.factory was set in Factory.EasyScore().
     const builder = options.builder ?? new Builder(factory);
@@ -478,7 +478,7 @@ export class EasyScore {
     this.builder = builder;
     this.grammar = new EasyScoreGrammar(this.builder);
     this.parser = new Parser(this.grammar);
-    this.options.commitHooks.forEach((commitHook) => this.addCommitHook(commitHook));
+    this.options.commitHooks?.forEach((commitHook) => this.addCommitHook(commitHook));
     return this;
   }
 

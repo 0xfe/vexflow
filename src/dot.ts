@@ -135,7 +135,7 @@ export class Dot extends Modifier {
     this.setRendered();
 
     const stave = note.checkStave();
-    const lineSpace = stave.getOptions().spacing_between_lines_px;
+    const lineSpace = stave.getSpacingBetweenLines();
 
     const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 

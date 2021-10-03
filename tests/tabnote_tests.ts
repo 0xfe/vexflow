@@ -153,8 +153,8 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   // Helper function
-  function showNote(struct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
-    const tabNote = new TabNote(struct);
+  function showNote(noteStruct: TabNoteStruct, stave: TabStave, ctx: RenderContext, x: number): TabNote {
+    const tabNote = new TabNote(noteStruct);
     const tickContext = new TickContext();
     tickContext.addTickable(tabNote).preFormat().setX(x);
     tabNote.setContext(ctx).setStave(stave);

@@ -7,13 +7,11 @@ export class TabStave extends Stave {
     return 'TabStave';
   }
 
-  constructor(x: number, y: number, width: number, options?: Partial<StaveOptions>) {
+  constructor(x: number, y: number, width: number, options?: StaveOptions) {
     const tab_options = {
-      ...{
-        spacing_between_lines_px: 13,
-        num_lines: 6,
-        top_text_position: 1,
-      },
+      spacing_between_lines_px: 13,
+      num_lines: 6,
+      top_text_position: 1,
       ...options,
     };
 

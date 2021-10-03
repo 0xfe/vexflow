@@ -43,8 +43,8 @@ const AnnotationTests = {
 const FONT_SIZE = VexFlowTests.Font.size;
 
 // Helper functions to create TabNote and StaveNote objects.
-const tabNote = (struct: TabNoteStruct) => new TabNote(struct);
-const staveNote = (struct: StaveNoteStruct) => new StaveNote(struct);
+const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
+const staveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
 
 /**
  * Show lyrics using Annotation objects.

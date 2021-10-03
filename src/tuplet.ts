@@ -96,13 +96,13 @@ export class Tuplet extends Element {
     return 15;
   }
 
-  constructor(notes: Note[], options?: TupletOptions) {
+  constructor(notes: Note[], options: TupletOptions = {}) {
     super();
     if (!notes || !notes.length) {
       throw new RuntimeError('BadArguments', 'No notes provided for tuplet.');
     }
 
-    this.options = { ...options };
+    this.options = options;
     this.notes = notes;
     this.num_notes = this.options.num_notes != undefined ? this.options.num_notes : notes.length;
 

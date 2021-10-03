@@ -3,11 +3,6 @@
 //
 // ChordSymbol Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// ChordSymbol methods addGlyphOrText(), addLine(), addText()) need their second arguments to be optional.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
 import { ChordSymbol } from 'chordsymbol';
@@ -243,7 +238,7 @@ function topJustify(options: TestOptions): void {
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
 
-  function draw(chord1: ChordSymbol, chord2: ChordSymbol, y) {
+  function draw(chord1: ChordSymbol, chord2: ChordSymbol, y: number) {
     const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
 
     const notes = [

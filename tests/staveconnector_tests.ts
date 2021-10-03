@@ -3,11 +3,6 @@
 //
 // StaveConnector Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: StaveConnector.setText() needs an optional shift_x.
-// TODO: Stave.setText()'s third argument needs to be optional.
 // TODO: Should we change StaveConnector.type => StaveConnectorType? We are inconsistent with this.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';

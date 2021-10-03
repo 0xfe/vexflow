@@ -90,7 +90,7 @@ export class Accidental extends Modifier {
     // First determine the accidentals' Y positions from the note.keys
     for (let i = 0; i < accidentals.length; ++i) {
       const acc = accidentals[i];
-      const note = acc.getNote() as StaveNote;
+      const note = acc.getNote();
       const stave = note.getStave();
       const index = acc.checkIndex();
       const props = note.getKeyProps()[index];
@@ -102,7 +102,7 @@ export class Accidental extends Modifier {
         prevNote = note;
       }
       if (stave) {
-        const lineSpace = stave.getOptions().spacing_between_lines_px;
+        const lineSpace = stave.getSpacingBetweenLines();
         const y = stave.getYForLine(props.line);
         const accLine = Math.round((y / lineSpace) * 2) / 2;
         accList.push({ y, line: accLine, shift: shiftL, acc, lineSpace });

@@ -29,7 +29,7 @@ export class FretHandFinger extends Modifier {
 
     for (let i = 0; i < nums.length; ++i) {
       const num = nums[i];
-      const note = num.getNote() as StaveNote;
+      const note = num.getNote();
       const pos = num.getPosition();
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];

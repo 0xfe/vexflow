@@ -316,9 +316,7 @@ export class Articulation extends Modifier {
 
     if (!isTab) {
       const offsetDirection = position === ABOVE ? -1 : +1;
-      const noteLine = isTab
-        ? (note as TabNote).getPositions()[index].str
-        : (note as StaveNote).getKeyProps()[index].line;
+      const noteLine = note.getKeyProps()[index].line;
       const distanceFromNote = (note.getYs()[index] - y) / staffSpace;
       const articLine = distanceFromNote + Number(noteLine);
       const snappedLine = snapLineToStaff(canSitBetweenLines, articLine, position, offsetDirection);

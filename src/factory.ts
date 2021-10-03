@@ -2,7 +2,7 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { RuntimeError, log } from './util';
+import { RuntimeError, log, defined } from './util';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Annotation } from './annotation';
@@ -24,7 +24,7 @@ import { StaveConnector } from './staveconnector';
 import { System, SystemOptions } from './system';
 import { TickContext } from './tickcontext';
 import { Tuplet, TupletOptions } from './tuplet';
-import { Voice } from './voice';
+import { Voice, VoiceTime } from './voice';
 import { Beam } from './beam';
 import { Curve, CurveOptions } from './curve';
 import { GraceNote, GraceNoteStruct } from './gracenote';
@@ -51,17 +51,17 @@ import { StemmableNote } from './stemmablenote';
 import { Element } from './element';
 
 export interface FactoryOptions {
-  stave: {
+  stave?: {
     space: number;
   };
-  renderer: {
+  renderer?: {
     elementId: string | null;
     backend?: number;
     width: number;
     height: number;
     background?: string;
   };
-  font: {
+  font?: {
     family: string;
     size: number;
     weight: string;
@@ -83,7 +83,20 @@ export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
   static DEBUG: boolean;
 
-  protected options: FactoryOptions;
+  /**
+   * Static simplified function to access constructor without providing FactoryOptions
+   *
+   * Example:
+   *
+   * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
+   *
+   * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
+   */
+  static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
+    return new Factory({ renderer: { elementId, width, height } });
+  }
+
+  protected options: Required<FactoryOptions>;
 
   protected stave?: Stave;
   protected context!: RenderContext;
@@ -93,17 +106,15 @@ export class Factory {
   protected systems!: System[];
 
   /**
-   * Constructor.
-   *
    * Example:
    *
    * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
    *
    * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
    */
-  constructor(options: Partial<FactoryOptions> = {}) {
+  constructor(options: FactoryOptions = {}) {
     L('New factory: ', options);
-    const defaults: FactoryOptions = {
+    this.options = {
       stave: {
         space: 10,
       },
@@ -120,25 +131,7 @@ export class Factory {
       },
     };
 
-    this.options = defaults;
     this.setOptions(options);
-  }
-
-  /**
-   * Static simplified function to access constructor without providing FactoryOptions.
-   *
-   * The type of renderer created depends on the type of element specified. A CANVAS renderer
-   * will be created for an HTMLCanvasElement and an SVG renderer will be created for an
-   * HTMLDivElement.
-   *
-   * Example:
-   *
-   * Create an SVG renderer and attach it to the DIV element named "boo" to render using <page-width> 1200 and <page-height> 600
-   *
-   * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
-   */
-  static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
-    return new Factory({ renderer: { elementId, width, height } });
   }
 
   reset(): void {
@@ -149,26 +142,21 @@ export class Factory {
     this.stave = undefined; // current stave
   }
 
-  getOptions(): FactoryOptions {
-    return this.options;
-  }
-
-  setOptions(options: Partial<FactoryOptions> = {}): void {
-    if (options.stave) this.options.stave = options.stave;
-    if (options.renderer) this.options.renderer = options.renderer;
-    if (options.font) this.options.font = options.font;
-    if (this.options.renderer.elementId !== null) {
-      this.initRenderer();
-    }
+  setOptions(options?: FactoryOptions): void {
+    this.options = { ...this.options, ...options };
+    this.initRenderer();
     this.reset();
   }
 
   initRenderer(): void {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
     const { elementId, width, height, background } = this.options.renderer;
-    if (elementId == null || elementId === '') {
+    if (elementId === null) {
+      return;
+    }
+
+    if (elementId === '') {
       L(this);
-      throw new RuntimeError('HTML DOM element not set in Factory');
+      throw new RuntimeError('renderer.elementId not set in FactoryOptions');
     }
 
     let backend = this.options.renderer.backend;
@@ -202,49 +190,35 @@ export class Factory {
   }
 
   /** Return pixels from current stave spacing. */
-  space(spacing: number): number {
-    if (!this.options.stave) throw new RuntimeError('NoStave');
-    return this.options.stave.space * spacing;
-  }
 
-  Stave(paramsP: { x?: number; y?: number; width?: number; options?: Partial<StaveOptions> } = {}): Stave {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
-    if (!this.options.stave) throw new RuntimeError('NoStave');
-    const params = {
-      ...{
-        x: 0,
-        y: 0,
-        width: this.options.renderer.width - this.space(1),
-        options: {
-          spacing_between_lines_px: this.options.stave.space,
-        },
-      },
-      ...paramsP,
+  Stave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): Stave {
+    const staveSpace = this.options.stave.space;
+    const p = {
+      x: 0,
+      y: 0,
+      width: this.options.renderer.width - staveSpace * 1.0,
+      options: { spacing_between_lines_px: staveSpace * 1.0 },
+      ...params,
     };
 
-    const stave: Stave = new Stave(params.x, params.y, params.width, params.options);
+    const stave: Stave = new Stave(p.x, p.y, p.width, p.options);
     this.staves.push(stave);
     stave.setContext(this.context);
     this.stave = stave;
     return stave;
   }
 
-  TabStave(paramsP: { x?: number; y?: number; width?: number; options?: Partial<StaveOptions> } = {}): TabStave {
-    if (!this.options.renderer) throw new RuntimeError('NoRenderer');
-    if (!this.options.stave) throw new RuntimeError('NoStave');
-    const params = {
-      ...{
-        x: 0,
-        y: 0,
-        width: this.options.renderer.width - this.space(1),
-        options: {
-          spacing_between_lines_px: this.options.stave.space * 1.3,
-        },
-      },
-      ...paramsP,
+  TabStave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): TabStave {
+    const staveSpace = this.options.stave.space;
+    const p = {
+      x: 0,
+      y: 0,
+      width: this.options.renderer.width - staveSpace * 1.0,
+      options: { spacing_between_lines_px: staveSpace * 1.3 },
+      ...params,
     };
 
-    const stave = new TabStave(params.x, params.y, params.width, params.options);
+    const stave = new TabStave(p.x, p.y, p.width, p.options);
     this.staves.push(stave);
     stave.setContext(this.context);
     this.stave = stave;
@@ -259,7 +233,7 @@ export class Factory {
     return note;
   }
 
-  GlyphNote(glyph: Glyph, noteStruct: Partial<NoteStruct>, options?: GlyphNoteOptions): GlyphNote {
+  GlyphNote(glyph: Glyph, noteStruct: NoteStruct, options?: GlyphNoteOptions): GlyphNote {
     const note = new GlyphNote(glyph, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -267,7 +241,7 @@ export class Factory {
     return note;
   }
 
-  RepeatNote(type: string, noteStruct?: Partial<NoteStruct>, options?: GlyphNoteOptions): RepeatNote {
+  RepeatNote(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions): RepeatNote {
     const note = new RepeatNote(type, noteStruct, options);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -283,15 +257,15 @@ export class Factory {
     return ghostNote;
   }
 
-  TextNote(textNoteStruct: TextNoteStruct): TextNote {
-    const textNote = new TextNote(textNoteStruct);
+  TextNote(noteStruct: TextNoteStruct): TextNote {
+    const textNote = new TextNote(noteStruct);
     if (this.stave) textNote.setStave(this.stave);
     textNote.setContext(this.context);
     this.renderQ.push(textNote);
     return textNote;
   }
 
-  BarNote(params: { type?: BarlineType } = {}): BarNote {
+  BarNote(params: { type?: BarlineType | string } = {}): BarNote {
     const barNote = new BarNote(params.type);
     if (this.stave) barNote.setStave(this.stave);
     barNote.setContext(this.context);
@@ -299,41 +273,37 @@ export class Factory {
     return barNote;
   }
 
-  ClefNote(paramsP: { type?: string; options?: { size?: string; annotation?: string } } = {}): ClefNote {
-    const params = {
-      ...{
-        type: 'treble',
-        options: {
-          size: 'default',
-          annotation: undefined,
-        },
+  ClefNote(params?: { type?: string; options?: { size?: string; annotation?: string } }): ClefNote {
+    const p = {
+      type: 'treble',
+      options: {
+        size: 'default',
+        annotation: undefined,
       },
-      ...paramsP,
+      ...params,
     };
 
-    const clefNote = new ClefNote(params.type, params.options.size, params.options.annotation);
+    const clefNote = new ClefNote(p.type, p.options.size, p.options.annotation);
     if (this.stave) clefNote.setStave(this.stave);
     clefNote.setContext(this.context);
     this.renderQ.push(clefNote);
     return clefNote;
   }
 
-  TimeSigNote(paramsP: { time?: string } = {}): TimeSigNote {
-    const params = {
-      ...{
-        time: '4/4',
-      },
-      ...paramsP,
+  TimeSigNote(params?: { time?: string }): TimeSigNote {
+    const p = {
+      time: '4/4',
+      ...params,
     };
 
-    const timeSigNote = new TimeSigNote(params.time);
+    const timeSigNote = new TimeSigNote(p.time);
     if (this.stave) timeSigNote.setStave(this.stave);
     timeSigNote.setContext(this.context);
     this.renderQ.push(timeSigNote);
     return timeSigNote;
   }
 
-  KeySigNote(params: { key: string; cancelKey: string; alterKey: string }): KeySigNote {
+  KeySigNote(params: { key: string; cancelKey?: string; alterKey?: string[] }): KeySigNote {
     const keySigNote = new KeySigNote(params.key, params.cancelKey, params.alterKey);
     if (this.stave) keySigNote.setStave(this.stave);
     keySigNote.setContext(this.context);
@@ -349,7 +319,7 @@ export class Factory {
     return note;
   }
 
-  GraceNote(noteStruct: Partial<GraceNoteStruct>): GraceNote {
+  GraceNote(noteStruct: GraceNoteStruct): GraceNote {
     const note = new GraceNote(noteStruct);
     if (this.stave) note.setStave(this.stave);
     note.setContext(this.context);
@@ -368,107 +338,94 @@ export class Factory {
     return accid;
   }
 
-  Annotation(
-    paramsP: {
-      text?: string;
-      vJustify?: string;
-      hJustify?: string;
-      fontFamily?: string;
-      fontSize?: number;
-      fontWeight?: string;
-    } = {}
-  ): Annotation {
-    const params = {
-      ...{
-        text: 'p',
-        vJustify: 'below',
-        hJustify: 'center',
-        fontFamily: 'Times',
-        fontSize: 14,
-        fontWeight: 'bold italic',
-        options: {},
-      },
-      ...paramsP,
+  Annotation(params?: {
+    text?: string;
+    vJustify?: string;
+    hJustify?: string;
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+  }): Annotation {
+    const p = {
+      text: 'p',
+      vJustify: 'below',
+      hJustify: 'center',
+      fontFamily: 'Times',
+      fontSize: 14,
+      fontWeight: 'bold italic',
+      options: {},
+      ...params,
     };
 
-    const annotation = new Annotation(params.text);
-    annotation.setJustification(params.hJustify);
-    annotation.setVerticalJustification(params.vJustify);
-    annotation.setFont(params.fontFamily, params.fontSize, params.fontWeight);
+    const annotation = new Annotation(p.text);
+    annotation.setJustification(p.hJustify);
+    annotation.setVerticalJustification(p.vJustify);
+    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight);
     annotation.setContext(this.context);
     return annotation;
   }
 
-  ChordSymbol(
-    paramsP: {
-      vJustify?: string;
-      hJustify?: string;
-      kerning?: boolean;
-      reportWidth?: boolean;
-      fontFamily?: string;
-      fontSize?: number;
-      fontWeight?: string;
-    } = {}
-  ): ChordSymbol {
-    const params = {
-      ...{
-        vJustify: 'top',
-        hJustify: 'center',
-        kerning: true,
-        reportWidth: true,
-      },
-      ...paramsP,
+  ChordSymbol(params?: {
+    vJustify?: string;
+    hJustify?: string;
+    kerning?: boolean;
+    reportWidth?: boolean;
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+  }): ChordSymbol {
+    const p = {
+      vJustify: 'top',
+      hJustify: 'center',
+      kerning: true,
+      reportWidth: true,
+      ...params,
     };
 
     const chordSymbol = new ChordSymbol();
-    chordSymbol.setHorizontal(params.hJustify);
-    chordSymbol.setVertical(params.vJustify);
-    chordSymbol.setEnableKerning(params.kerning);
-    chordSymbol.setReportWidth(params.reportWidth);
+    chordSymbol.setHorizontal(p.hJustify);
+    chordSymbol.setVertical(p.vJustify);
+    chordSymbol.setEnableKerning(p.kerning);
+    chordSymbol.setReportWidth(p.reportWidth);
     // There is a default font based on the engraving font.  Only set then
     // font if it is specific, else use the default
-    if (typeof params.fontFamily === 'string' && typeof params.fontSize === 'number') {
-      if (typeof params.fontWeight === 'string')
-        chordSymbol.setFont(params.fontFamily, params.fontSize, params.fontWeight);
-      else chordSymbol.setFont(params.fontFamily, params.fontSize, '');
-    } else if (typeof params.fontSize === 'number') {
-      chordSymbol.setFontSize(params.fontSize);
+    if (typeof p.fontFamily === 'string' && typeof p.fontSize === 'number') {
+      if (typeof p.fontWeight === 'string') chordSymbol.setFont(p.fontFamily, p.fontSize, p.fontWeight);
+      else chordSymbol.setFont(p.fontFamily, p.fontSize, '');
+    } else if (typeof p.fontSize === 'number') {
+      chordSymbol.setFontSize(p.fontSize);
     }
     chordSymbol.setContext(this.context);
     return chordSymbol;
   }
 
-  Articulation(paramsP: { type?: string; position?: string | number } = {}): Articulation {
-    const params = {
-      ...{
-        type: 'a.',
-        position: 'above',
-      },
-      ...paramsP,
+  Articulation(params?: { type?: string; position?: string | number }): Articulation {
+    const p = {
+      type: 'a.',
+      position: 'above',
+      ...params,
     };
 
-    const articulation = new Articulation(params.type);
-    articulation.setPosition(params.position);
+    const articulation = new Articulation(p.type);
+    articulation.setPosition(p.position);
     articulation.setContext(this.context);
     return articulation;
   }
 
-  TextDynamics(paramsP: { text?: string; duration?: string; dots?: number; line?: number } = {}): TextDynamics {
-    const params = {
-      ...{
-        text: 'p',
-        duration: 'q',
-        dots: 0,
-        line: 0,
-      },
-      ...paramsP,
+  TextDynamics(params?: { text?: string; duration?: string; dots?: number; line?: number }): TextDynamics {
+    const p = {
+      text: 'p',
+      duration: 'q',
+      dots: 0,
+      line: 0,
+      ...params,
     };
 
     const text = new TextDynamics({
-      text: params.text,
-      line: params.line,
-      duration: params.duration,
-      dots: params.dots,
+      text: p.text,
+      line: p.line,
+      duration: p.duration,
+      dots: p.dots,
     });
 
     if (this.stave) text.setStave(this.stave);
@@ -477,17 +434,15 @@ export class Factory {
     return text;
   }
 
-  Fingering(paramsP: { number: string; position?: string }): FretHandFinger {
-    const params = {
-      ...{
-        number: '0',
-        position: 'left',
-      },
-      ...paramsP,
+  Fingering(params: { number?: string; position?: string }): FretHandFinger {
+    const p = {
+      number: '0',
+      position: 'left',
+      ...params,
     };
 
-    const fingering = new FretHandFinger(params.number);
-    fingering.setPosition(params.position);
+    const fingering = new FretHandFinger(p.number);
+    fingering.setPosition(p.position);
     fingering.setContext(this.context);
     return fingering;
   }
@@ -507,22 +462,20 @@ export class Factory {
     return new ModifierContext();
   }
 
-  MultiMeasureRest(params: Partial<MultimeasureRestRenderOptions>): MultiMeasureRest {
-    if (params.number_of_measures === undefined) throw new RuntimeError('NoNumberOfMeasures');
-    const multimeasurerest = new MultiMeasureRest(params.number_of_measures, params);
-    multimeasurerest.setContext(this.context);
-    this.renderQ.push(multimeasurerest);
-    return multimeasurerest;
+  MultiMeasureRest(params: MultimeasureRestRenderOptions): MultiMeasureRest {
+    const numMeasures = defined(params.number_of_measures, 'NoNumberOfMeasures');
+    const multiMeasureRest = new MultiMeasureRest(numMeasures, params);
+    multiMeasureRest.setContext(this.context);
+    this.renderQ.push(multiMeasureRest);
+    return multiMeasureRest;
   }
 
-  Voice(paramsP: { time?: string; options?: { softmaxFactor: number } } = {}): Voice {
-    const params = {
-      ...{
-        time: '4/4',
-      },
-      ...paramsP,
+  Voice(params?: { time?: VoiceTime | string; options?: { softmaxFactor: number } }): Voice {
+    const p = {
+      time: '4/4',
+      ...params,
     };
-    const voice = new Voice(params.time, params.options);
+    const voice = new Voice(p.time, p.options);
     this.voices.push(voice);
     return voice;
   }
@@ -534,20 +487,18 @@ export class Factory {
     return connector;
   }
 
-  Formatter(options: Partial<FormatterOptions> = {}): Formatter {
+  Formatter(options?: FormatterOptions): Formatter {
     return new Formatter(options);
   }
 
-  Tuplet(paramsP: { notes?: Note[]; options?: TupletOptions } = {}): Tuplet {
-    const params = {
-      ...{
-        notes: [],
-        options: {},
-      },
-      ...paramsP,
+  Tuplet(params?: { notes?: Note[]; options?: TupletOptions }): Tuplet {
+    const p = {
+      notes: [],
+      options: {},
+      ...params,
     };
 
-    const tuplet = new Tuplet(params.notes, params.options).setContext(this.context);
+    const tuplet = new Tuplet(p.notes, p.options).setContext(this.context);
     this.renderQ.push(tuplet);
     return tuplet;
   }
@@ -559,7 +510,7 @@ export class Factory {
     return beam;
   }
 
-  Curve(params: { from: Note; to: Note; options: Partial<CurveOptions> }): Curve {
+  Curve(params: { from: Note; to: Note; options: CurveOptions }): Curve {
     const curve = new Curve(params.from, params.to, params.options).setContext(this.context);
     this.renderQ.push(curve);
     return curve;
@@ -641,7 +592,7 @@ export class Factory {
       superscript: string;
       position: string;
       line?: number;
-      font?: Partial<FontInfo>;
+      font?: FontInfo;
     };
   }): TextBracket {
     const textBracket = new TextBracket({
@@ -660,7 +611,10 @@ export class Factory {
     return textBracket;
   }
 
-  System(params: Partial<SystemOptions> = {}): System {
+  // TODO: SystemOptions make all properties optional.
+  // eslint-disable-next-line
+  // @ts-ignore
+  System(params: SystemOptions = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);
     this.systems.push(system);
@@ -668,69 +622,63 @@ export class Factory {
   }
 
   /**
-   * Creates EasyScore. Normally the first step after constructing a Factory.
-   *
-   * Example:
-   *
-   * `const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});`
-   *
-   * `const score: EasyScore = vf.EasyScore();`
+   * Creates EasyScore. Normally the first step after constructing a Factory. For example:
+   * ```
+   * const vf: Factory = new Vex.Flow.Factory({renderer: { elementId: 'boo', width: 1200, height: 600 }});
+   * const score: EasyScore = vf.EasyScore();
+   * ```
    * @param options.factory optional instance of Factory
    * @param options.builder instance of Builder
    * @param options.commitHooks function to call after a note element is created
    * @param options.throwOnError throw error in case of parsing error
    */
-  EasyScore(options: Partial<EasyScoreOptions> = {}): EasyScore {
+  EasyScore(options: EasyScoreOptions = {}): EasyScore {
     options.factory = this;
     return new EasyScore(options);
   }
 
-  PedalMarking(paramsP: { notes?: StaveNote[]; options?: { style: string } } = {}): PedalMarking {
-    const params = {
-      ...{
-        notes: [],
-        options: {
-          style: 'mixed',
-        },
+  PedalMarking(params?: { notes?: StaveNote[]; options?: { style: string } }): PedalMarking {
+    const p = {
+      notes: [],
+      options: {
+        style: 'mixed',
       },
-      ...paramsP,
+      ...params,
     };
 
-    const pedal = new PedalMarking(params.notes);
-    pedal.setType(PedalMarking.typeString[params.options.style]);
+    const pedal = new PedalMarking(p.notes);
+    pedal.setType(PedalMarking.typeString[p.options.style]);
     pedal.setContext(this.context);
     this.renderQ.push(pedal);
     return pedal;
   }
 
-  NoteSubGroup(paramsP: { notes?: Note[] } = {}): NoteSubGroup {
-    const params = {
-      ...{
-        notes: [],
-      },
-      ...paramsP,
+  NoteSubGroup(params?: { notes?: Note[] }): NoteSubGroup {
+    const p = {
+      notes: [],
+      ...params,
     };
 
-    const group = new NoteSubGroup(params.notes);
+    const group = new NoteSubGroup(p.notes);
     group.setContext(this.context);
     return group;
   }
 
   TextFont(params: TextFontRegistry): TextFont {
     params.factory = this;
-    const textFont = new TextFont(params);
-    return textFont;
+    return new TextFont(params);
   }
 
   /** Render the score. */
   draw(): void {
-    this.systems.forEach((i) => i.setContext(this.context).format());
-    this.staves.forEach((i) => i.setContext(this.context).draw());
-    this.voices.forEach((i) => i.setContext(this.context).draw());
-    this.renderQ.forEach((i) => {
-      if (!i.isRendered()) i.setContext(this.context).draw();
+    const ctx = this.context;
+    this.systems.forEach((s) => s.setContext(ctx).format());
+    this.staves.forEach((s) => s.setContext(ctx).draw());
+    this.voices.forEach((v) => v.setContext(ctx).draw());
+    this.renderQ.forEach((e) => {
+      if (!e.isRendered()) e.setContext(ctx).draw();
     });
-    this.systems.forEach((i) => i.setContext(this.context).draw());
+    this.systems.forEach((s) => s.setContext(ctx).draw());
     this.reset();
   }
 }

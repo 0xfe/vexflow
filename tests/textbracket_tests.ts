@@ -4,6 +4,7 @@
 // TextBracket Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { FontInfo } from '../src/types/common';
 
 const TextBracketTests = {
   Start(): void {
@@ -89,7 +90,7 @@ function simple1(options: TestOptions): void {
         superscript: 'vb',
         position: 'bottom',
         line: 3,
-        font: { size: 30 },
+        font: { size: 30 } as FontInfo,
       },
     }),
     f.TextBracket({

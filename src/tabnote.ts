@@ -30,6 +30,7 @@ export interface TabNotePosition {
 export interface TabNoteStruct extends StaveNoteStruct {
   positions: TabNotePosition[];
 }
+
 // Gets the unused strings grouped together if consecutive.
 //
 // Parameters:
@@ -131,36 +132,34 @@ export class TabNote extends StemmableNote {
   protected glyphs: GlyphProps[] = [];
   protected positions: TabNotePosition[];
 
-  // Initialize the TabNote with a `tab_struct` full of properties
+  // Initialize the TabNote with a `noteStruct` full of properties
   // and whether to `draw_stem` when rendering the note
-  constructor(tab_struct: TabNoteStruct, draw_stem?: boolean) {
-    super(tab_struct);
+  constructor(noteStruct: TabNoteStruct, draw_stem: boolean = false) {
+    super(noteStruct);
 
     this.ghost = false; // Renders parenthesis around notes
 
     // Note properties
     // The fret positions in the note. An array of `{ str: X, fret: X }`
-    this.positions = tab_struct.positions;
+    this.positions = noteStruct.positions || [];
 
     // Render Options
     this.render_options = {
       ...this.render_options,
-      ...{
-        // font size for note heads and rests
-        glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
-        // Flag to draw a stem
-        draw_stem,
-        // Flag to draw dot modifiers
-        draw_dots: draw_stem,
-        // Flag to extend the main stem through the stave and fret positions
-        draw_stem_through_stave: false,
-        // vertical shift from stave line
-        y_shift: 0,
-        // normal glyph scale
-        scale: 1.0,
-        // default tablature font
-        font: '10pt Arial',
-      },
+      // font size for note heads and rests
+      glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
+      // Flag to draw a stem
+      draw_stem,
+      // Flag to draw dot modifiers
+      draw_dots: draw_stem,
+      // Flag to extend the main stem through the stave and fret positions
+      draw_stem_through_stave: false,
+      // vertical shift from stave line
+      y_shift: 0,
+      // normal glyph scale
+      scale: 1.0,
+      // default tablature font
+      font: '10pt Arial',
     };
 
     this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
@@ -168,8 +167,8 @@ export class TabNote extends StemmableNote {
 
     this.buildStem();
 
-    if (tab_struct.stem_direction) {
-      this.setStemDirection(tab_struct.stem_direction);
+    if (noteStruct.stem_direction) {
+      this.setStemDirection(noteStruct.stem_direction);
     } else {
       this.setStemDirection(Stem.UP);
     }
@@ -253,7 +252,7 @@ export class TabNote extends StemmableNote {
         const text = '' + glyph.text;
         if (text.toUpperCase() !== 'X') {
           ctx.save();
-          ctx.setRawFont(this.render_options.font as string);
+          ctx.setRawFont(this.render_options.font);
           glyph.width = ctx.measureText(text).width;
           ctx.restore();
           glyph.getWidth = () => glyph.width;
