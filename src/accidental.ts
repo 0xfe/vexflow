@@ -90,7 +90,7 @@ export class Accidental extends Modifier {
     // First determine the accidentals' Y positions from the note.keys
     for (let i = 0; i < accidentals.length; ++i) {
       const acc = accidentals[i];
-      const note = acc.getNote() as StaveNote;
+      const note = acc.getNote();
       const stave = note.getStave();
       const index = acc.checkIndex();
       const props = note.getKeyProps()[index];
