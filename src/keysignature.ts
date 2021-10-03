@@ -303,10 +303,6 @@ export class KeySignature extends StaveModifier {
   }
 
   draw(): void {
-    if (!this.x) {
-      throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
-    }
-
     const stave = this.checkStave();
 
     if (!this.formatted) this.format();

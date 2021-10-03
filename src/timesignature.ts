@@ -112,10 +112,6 @@ export class TimeSignature extends StaveModifier {
   }
 
   draw(): void {
-    if (!this.x) {
-      throw new RuntimeError('TimeSignatureError', "Can't draw time signature without x.");
-    }
-
     const stave = this.checkStave();
 
     this.setRendered();
