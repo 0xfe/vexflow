@@ -68,8 +68,8 @@ export class Stave extends Element {
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
     size: 8,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   protected start_x: number;

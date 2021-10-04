@@ -4,6 +4,9 @@
 // Text Font Tests
 
 import { Bend } from 'bend';
+import { StaveNote } from 'stavenote';
+import { TextBracket } from 'textbracket';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { TextNote } from 'textnote';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
@@ -18,13 +21,29 @@ const TextFontTests = {
 };
 
 function fontParsing(): void {
-  // Bend
   const b = new Bend('1/2', true);
   const bFont = b.getFont();
-  equal(bFont?.family, 'Arial, sans-serif');
+  // Check the default font.
+  equal(bFont?.family, TextFont.SANS_SERIF);
+  equal(bFont?.size, TextFont.SIZE);
+  equal(bFont?.weight, FontWeight.NORMAL);
+  equal(bFont?.style, FontStyle.NORMAL);
 
-  // TEST EACH CLASS THAT HAS A TEXT_FONT
-  // XXX .... XXX
+  const f1 = 'Roboto Slab, serif';
+  const t = new TextNote({ duration: '4', font: { family: f1 } });
+  equal(f1, t.getFont()?.family);
+
+  const n1 = new StaveNote({ keys: ['e/5'], duration: '4' });
+  const n2 = new StaveNote({ keys: ['c/5'], duration: '4' });
+  const tb = new TextBracket({ start: n1, stop: n2 });
+  const f2 = tb.getFont();
+  equal(f2?.size, 15);
+  equal(f2?.style, FontStyle.ITALIC);
+
+  // The line-height /3 is currently ignored.
+  const f3 = TextFont.parseFont(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
+  const sizeInPixels = TextFont.convertToPixels(f3.size);
+  equal(sizeInPixels, 24);
 }
 
 function setFont(options: TestOptions): void {

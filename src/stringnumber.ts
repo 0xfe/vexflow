@@ -1,18 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { Font } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
 import { Stem } from './stem';
 import { isStaveNote, isStemmableNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
@@ -21,10 +19,10 @@ export class StringNumber extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SANS_SERIF,
-    size: 10,
-    weight: 'bold',
-    style: 'normal',
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   // ## Static Methods

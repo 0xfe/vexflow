@@ -23,8 +23,8 @@ export class StaveTempo extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SERIF,
     size: 14,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   protected tempo: StaveTempoOptions;

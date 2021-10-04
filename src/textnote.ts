@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
@@ -38,8 +38,8 @@ export class TextNote extends Note {
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
     size: 12,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   static get Justification(): typeof Justification {
@@ -222,7 +222,7 @@ export class TextNote extends Note {
       const height = ctx.measureText(this.text).height;
 
       // Scale the font size by 1/1.3.
-      const smallerFontSize = TextFont.scaleFontSize(size, 0.769231);
+      const smallerFontSize = TextFont.scaleSize(size, 0.769231);
 
       if (this.superscript) {
         ctx.setFont(family, smallerFontSize, weight, style);

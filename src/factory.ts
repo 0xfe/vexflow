@@ -12,6 +12,7 @@ import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
 import { EasyScore, EasyScoreOptions } from './easyscore';
 import { Element } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
@@ -46,7 +47,6 @@ import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
 import { Tuplet, TupletOptions } from './tuplet';
-import { FontInfo } from './types/common';
 import { defined, log, RuntimeError } from './util';
 import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
@@ -62,7 +62,7 @@ export interface FactoryOptions {
     height: number;
     background?: string;
   };
-  font: FontInfo;
+  font?: FontInfo;
 }
 
 // eslint-disable-next-line
@@ -77,12 +77,8 @@ export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
   static DEBUG: boolean = false;
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /**
    * Static simplified function to access constructor without providing FactoryOptions
@@ -97,7 +93,7 @@ export class Factory {
     return new Factory({ renderer: { elementId, width, height } });
   }
 
-  protected options: FactoryOptions;
+  protected options: Required<FactoryOptions>;
 
   protected stave?: Stave;
   protected context!: RenderContext;
@@ -335,31 +331,26 @@ export class Factory {
     return accid;
   }
 
-  Annotation(params?: {
-    text?: string;
-    vJustify?: string;
-    hJustify?: string;
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-    fontStyle?: string;
-  }): Annotation {
+  Annotation(params?: { text?: string; vJustify?: string; hJustify?: string; font?: FontInfo }): Annotation {
     const p = {
       text: 'p',
       vJustify: 'below',
       hJustify: 'center',
-      fontFamily: 'Times',
-      fontSize: 14,
-      fontWeight: 'bold',
-      fontStyle: 'italic',
       options: {},
       ...params,
     };
-
+    // TODO: Factory.Annotation has a different default font from new Annotation()...
+    const font = {
+      family: TextFont.SERIF,
+      size: 14,
+      weight: FontWeight.BOLD,
+      style: FontStyle.ITALIC,
+      ...p.font,
+    };
     const annotation = new Annotation(p.text);
     annotation.setJustification(p.hJustify);
     annotation.setVerticalJustification(p.vJustify);
-    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight, p.fontStyle);
+    annotation.setFont(font);
     annotation.setContext(this.context);
     return annotation;
   }

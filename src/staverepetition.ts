@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -16,8 +16,8 @@ export class Repetition extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SERIF,
     size: 12,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   static readonly type = {

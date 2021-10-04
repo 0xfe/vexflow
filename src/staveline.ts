@@ -52,12 +52,8 @@ export class StaveLine extends Element {
     return 'StaveLine';
   }
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   // Text Positioning
   static readonly TextVerticalPosition = {

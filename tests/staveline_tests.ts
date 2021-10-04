@@ -3,7 +3,7 @@
 //
 // StaveLine Tests
 
-import { TextFont } from 'textfont';
+import { Font } from '../src/font';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveLineTests = {
@@ -34,7 +34,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: Font.SERIF, size: 12, weight: 'italic' },
+      font: { family: Font.SERIF, size: 12, style: 'italic' },
       text: 'gliss.',
     },
   });

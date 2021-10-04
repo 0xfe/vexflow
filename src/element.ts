@@ -45,14 +45,14 @@ export abstract class Element {
   }
 
   /**
-   * Default font for text.
-   * See `Element.musicFont` and `Element.musicFontStack` to customize the font for musical symbols placed on the score.
+   * Default font for text. This is not related to music engraving. Instead, see `Flow.setMusicFont(...fontNames)`
+   * to customize the font for musical symbols placed on the score.
    */
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
+    size: Font.SIZE,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   private context?: RenderContext;

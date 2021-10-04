@@ -123,7 +123,6 @@ export class SVGContext extends RenderContext {
   groups: SVGGElement[];
 
   fontString: string = '';
-  fontParser?: HTMLElement;
   backgroundFillStyle: string = 'white';
 
   constructor(element: HTMLElement) {
@@ -224,7 +223,7 @@ export class SVGContext extends RenderContext {
    */
   setFont(
     f: string | FontInfo = Font.SANS_SERIF,
-    size: string | number = 10,
+    size: string | number = Font.SIZE,
     weight: string | number = 'normal',
     style: string = 'normal'
   ): this {
@@ -233,7 +232,7 @@ export class SVGContext extends RenderContext {
       family = f;
     } else {
       family = f.family;
-      size = f.size ?? 10;
+      size = f.size ?? TextFont.SIZE;
       weight = f.weight ?? 'normal';
       style = f.style ?? 'normal';
     }
@@ -271,12 +270,7 @@ export class SVGContext extends RenderContext {
    * @returns this
    */
   setRawFont(font: string): this {
-    if (!this.fontParser) {
-      this.fontParser = document.createElement('span');
-    }
-    this.fontParser.style.font = font;
-    const { fontFamily, fontSize, fontWeight, fontStyle } = this.fontParser.style;
-    this.setFont(fontFamily, fontSize, fontWeight, fontStyle);
+    this.setFont(TextFont.parseFont(font));
     return this;
   }
 

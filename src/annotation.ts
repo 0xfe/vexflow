@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Font, FontInfo } from './font';
+import { Element } from './element';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFont } from './textfont';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -43,12 +43,7 @@ export class Annotation extends Modifier {
     return 'Annotation';
   }
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /** Text annotations can be positioned and justified relative to the note. */
   static Justify = Justify;
@@ -79,12 +74,12 @@ export class Annotation extends Modifier {
     for (let i = 0; i < annotations.length; ++i) {
       let testWidth = 0;
       const annotation = annotations[i];
-      const textFont = TextFont.createTextFont(annotation.font);
+      const textFormatter = TextFormatter.create(annotation.font);
 
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
+      const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
       // Get the string width from the font metrics
-      testWidth = textFont.getWidthForString(annotation.text);
+      testWidth = textFormatter.getWidthForString(annotation.text);
       width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);

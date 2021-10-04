@@ -5,6 +5,23 @@ import { loadPetaluma } from '@petaluma';
 
 import { defined } from './util';
 
+export interface FontInfo {
+  /** CSS font-family, e.g., 'Arial', 'Helvetica Neue, Arial, sans-serif', 'Times, serif' */
+  family?: string;
+
+  /**
+   * CSS font-size (e.g., '10pt', '12px').
+   * For backwards compatibility with 3.0.9, plain numbers are assumed to be specified in 'pt'.
+   */
+  size?: number | string;
+
+  /** `bold` or a number (e.g., 900) as inspired by CSS font-weight. */
+  weight?: string | number;
+
+  /** `italic` as inspired by CSS font-style. */
+  style?: string;
+}
+
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
   fontFamily?: string;
@@ -36,6 +53,9 @@ class Font {
 
   /** Default serif font family. */
   static SERIF: string = 'Times New Roman, serif';
+
+  /** Default font size in `pt`. */
+  static SIZE: number = 10;
 
   protected name: string;
   protected fontDataMetrics: FontDataMetrics;
