@@ -38,8 +38,8 @@ export class StaveConnector extends Element {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 16,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   /**

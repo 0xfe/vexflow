@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { FontInfo } from 'types/common';
 
 import { Stave } from './stave';
@@ -17,8 +17,8 @@ export class StaveText extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 16,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   protected options: {

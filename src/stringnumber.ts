@@ -5,7 +5,7 @@
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -23,9 +23,9 @@ export class StringNumber extends Modifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'bold',
-    style: 'normal',
+    size: TextFont.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   // ## Static Methods

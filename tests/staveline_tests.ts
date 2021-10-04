@@ -34,7 +34,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: TextFont.SERIF, size: 12, weight: 'italic' },
+      font: { family: TextFont.SERIF, size: 12, style: 'italic' },
       text: 'gliss.',
     },
   });

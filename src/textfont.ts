@@ -9,6 +9,16 @@ import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
+export enum FontWeight {
+  NORMAL = 'normal',
+  BOLD = 'bold',
+}
+
+export enum FontStyle {
+  NORMAL = 'normal',
+  ITALIC = 'italic',
+}
+
 export interface TextFontMetrics {
   x_min: number;
   x_max: number;
@@ -40,7 +50,7 @@ function L(...args: any[]) {
 }
 
 /**
- * Helper for `TextFont.createTextFont()`.
+ * Helper for `TextFont.createFormatter()`.
  * @param weight a string (e.g., 'bold') or a number (e.g., 600 / semi-bold in the OpenType spec).
  * @returns true if the font weight indicates bold.
  */
@@ -61,7 +71,7 @@ function isBold(weight?: string | number): boolean {
 }
 
 /**
- * Helper for `TextFont.createTextFont()`.
+ * Helper for `TextFont.createFormatter()`.
  * @param style
  * @returns true if the font style indicates 'italic'.
  */
@@ -73,6 +83,9 @@ function isItalic(style?: string): boolean {
   }
 }
 
+// Internal <span></span> element for parsing CSS font shorthand strings.
+let fontParser: HTMLSpanElement;
+
 export class TextFont {
   /** To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`. */
   static DEBUG: boolean = false;
@@ -81,8 +94,26 @@ export class TextFont {
     return 'TextFont';
   }
 
+  /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
-  static SERIF: string = 'Times New Roman, Times, serif';
+
+  /** Default serif font family. */
+  static SERIF: string = 'Times, Times New Roman, serif';
+
+  /** Default font size. */
+  static SIZE: number = 10;
+
+  /**
+   * @param fontShorthand a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   */
+  static parseFont(fontShorthand: string): FontInfo {
+    if (!fontParser) {
+      fontParser = document.createElement('span');
+    }
+    fontParser.style.font = fontShorthand;
+    const { fontFamily, fontSize, fontWeight, fontStyle } = fontParser.style;
+    return { family: fontFamily, size: fontSize, weight: fontWeight, style: fontStyle };
+  }
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
@@ -102,13 +133,16 @@ export class TextFont {
    * units (e.g., pt, em, %).
    * @returns the number of pixels that is equivalent to `fontSize`
    */
-  static convertToPixels(fontSize: string | number): number {
+  static convertToPixels(fontSize: string | number = TextFont.SIZE): number {
     if (typeof fontSize === 'number') {
       // Assume the fontSize is specified in pt.
       return (fontSize * 4) / 3;
     } else {
-      const value = parseInt(fontSize);
-      const unit = fontSize.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      const value = parseFloat(fontSize);
+      if (isNaN(value)) {
+        return 0;
+      }
+      const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
       const conversionFactor = TextFont.convertToPxScaleFactor[unit] ?? 1;
       return value * conversionFactor;
     }
@@ -201,7 +235,7 @@ export class TextFont {
    * We look for font family, bold, and italic attributes.
    * This method will always return a fallback font if there are no matches.
    */
-  static createTextFont(fontInfo: FontInfo = {}): TextFont {
+  static createFormatter(fontInfo: FontInfo = {}): TextFont {
     let candidates: TextFontInfo[] = [];
     if (!fontInfo.family) {
       fontInfo.family = TextFont.SANS_SERIF;
@@ -263,27 +297,39 @@ export class TextFont {
   }
 
   /**
-   * 16pt * 3 = 48pt
-   * 8px / 2 = 4px
-   * @param size
-   * @param scaleFactor
-   * @returns
+   * @param fontSize a number representing a font size, or a string font size with units.
+   * @param scaleFactor multiply the size by this factor.
+   * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48)
    */
-  static scaleFontSize(size: number | string | undefined, scaleFactor: number): string | number | undefined {
-    if (size === undefined) return undefined;
-    if (typeof size === 'number') {
-      return size * scaleFactor;
+  static scaleSize<T extends number | string>(fontSize: T, scaleFactor: number): T {
+    if (typeof fontSize === 'number') {
+      return (fontSize * scaleFactor) as T;
     } else {
-      const value = parseInt(size);
-      const unit = size.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
-      return `${value * scaleFactor}${unit}`;
+      const value = parseFloat(fontSize);
+      const unit = fontSize.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      return `${value * scaleFactor}${unit}` as T;
     }
   }
 
-  resolution: number = 1000;
+  static convertSizeToNumber(fontSize: number | string): number {
+    if (typeof fontSize === 'number') {
+      return fontSize;
+    } else {
+      return parseFloat(fontSize);
+    }
+  }
+
+  protected family: string = '';
+  /** Specified in pt units. */
+  protected size: number;
+  protected weight: string;
+  protected style: string;
+
+  /** Font metrics are extracted at 1000 upem (units per em). */
+  protected resolution: number = 1000;
+
   protected name?: string;
   protected glyphs: Record<string, TextFontMetrics> = {};
-  protected family: string = '';
   protected serifs?: boolean;
   protected monospaced?: boolean;
   protected italic?: boolean;
@@ -292,14 +338,10 @@ export class TextFont {
   protected subscriptOffset?: number;
   protected description?: string;
   protected maxSizeGlyph: string;
-  protected weight: string;
-  protected style: string;
-  protected fontCacheKey: string = '';
-  /** Specified in pt units. */
-  protected size: number;
+  protected widthCacheKey: string = '';
   protected attrs: { type: string };
 
-  /** The preferred method for returning an instance of this class is via `TextFont.createTextFont()` */
+  /** The preferred method for returning an instance of this class is via `TextFont.createFormatter()` */
   constructor(params: TextFontInfo) {
     this.size = 14;
     this.maxSizeGlyph = 'H';
@@ -338,9 +380,9 @@ export class TextFont {
     if (params.subscriptOffset) this.subscriptOffset = params.subscriptOffset;
   }
 
-  // Create a hash with the current font data, so we can cache computed widths
+  /** Create a hash with the current font data, so we can cache computed widths. */
   updateCacheKey(): void {
-    this.fontCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
+    this.widthCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
   }
 
   getMetricForCharacter(c: string): TextFontMetrics {
@@ -352,35 +394,43 @@ export class TextFont {
 
   get maxHeight(): number {
     const glyph = this.getMetricForCharacter(this.maxSizeGlyph);
-    return (glyph.ha / this.resolution) * this.pointsToPixels;
+    return (glyph.ha / this.resolution) * this.sizeInPixels;
   }
 
   getWidthForCharacter(c: string): number {
     const metric = this.getMetricForCharacter(c);
     if (!metric) {
-      return 0.65 * this.pointsToPixels;
+      return 0.65 * this.sizeInPixels;
     }
-    return (metric.advanceWidth / this.resolution) * this.pointsToPixels;
+    return (metric.advanceWidth / this.resolution) * this.sizeInPixels;
+  }
+
+  /**
+   * The character's advanceWidth as a fraction of an `em` unit.
+   * A 250 advanceWidth in a 1000 unitsPerEm font returns 0.25.
+   */
+  getWidthForCharacterInEm(c: string): number {
+    return this.getMetricForCharacter(c).advanceWidth / this.resolution;
   }
 
   getWidthForString(s: string): number {
     // Store width in 2-level cache, so I don't have to recompute for
     // same string/font
-    if (typeof TextFont.textWidthCache[this.fontCacheKey] === 'undefined') {
-      TextFont.textWidthCache[this.fontCacheKey] = {};
+    if (typeof TextFont.textWidthCache[this.widthCacheKey] === 'undefined') {
+      TextFont.textWidthCache[this.widthCacheKey] = {};
     }
     let width = 0;
-    if (!TextFont.textWidthCache[this.fontCacheKey][s]) {
+    if (!TextFont.textWidthCache[this.widthCacheKey][s]) {
       for (let j = 0; j < s.length; ++j) {
         width += this.getWidthForCharacter(s[j]);
       }
-      TextFont.textWidthCache[this.fontCacheKey][s] = width;
+      TextFont.textWidthCache[this.widthCacheKey][s] = width;
     }
-    return TextFont.textWidthCache[this.fontCacheKey][s];
+    return TextFont.textWidthCache[this.widthCacheKey][s];
   }
 
   // The font size is specified in points, convert to 'pixels' in the SVG space
-  get pointsToPixels(): number {
+  get sizeInPixels(): number {
     return (this.size * 4) / 3;
   }
 
@@ -389,5 +439,9 @@ export class TextFont {
     // font size mangled into cache key, so use the correct one.
     this.updateCacheKey();
     return this;
+  }
+
+  getResolution(): number {
+    return this.resolution;
   }
 }

@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { FontInfo } from 'types/common';
 
 import { Glyph } from './glyph';
@@ -24,8 +24,8 @@ export class StaveTempo extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 14,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   protected tempo: StaveTempoOptions;

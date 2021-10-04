@@ -15,9 +15,6 @@ export class CanvasContext extends RenderContext {
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
 
-  /** Use a hidden span element to help us parse CSS font strings. */
-  fontParser?: HTMLElement;
-
   static get WIDTH(): number {
     return 600;
   }

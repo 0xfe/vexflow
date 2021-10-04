@@ -3,7 +3,7 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 import { Builder } from './easyscore';
 import { Modifier } from './modifier';
@@ -20,8 +20,8 @@ export class FretHandFinger extends Modifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
     size: 9,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   // Arrange fingerings inside a ModifierContext.

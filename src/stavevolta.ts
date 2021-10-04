@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 import { FontInfo } from './types/common';
@@ -26,8 +26,8 @@ export class Volta extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
     size: 9,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   protected volta: number;

@@ -22,12 +22,8 @@ export class StaveTie extends Element {
     return 'StaveTie';
   }
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   public render_options: {
     cp2: number;

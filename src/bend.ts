@@ -2,7 +2,7 @@
 // MIT License
 
 import { FontInfo } from 'types/common';
-import { TextFont } from 'textfont';
+import { Element } from 'element';
 
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -31,12 +31,8 @@ export class Bend extends Modifier {
     return 1;
   }
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   // Arrange bends in `ModifierContext`
   static format(bends: Bend[], state: ModifierContextState): boolean {

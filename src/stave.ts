@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { isBarline } from 'typeguard';
 
 import { BoundingBox } from './boundingbox';
@@ -69,8 +69,8 @@ export class Stave extends Element {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
     size: 8,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   protected start_x: number;

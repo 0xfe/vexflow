@@ -31,7 +31,7 @@ export class Stroke extends Modifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
-    size: 10,
+    size: TextFont.SIZE,
     weight: 'bold',
     style: 'italic',
   };

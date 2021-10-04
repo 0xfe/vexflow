@@ -50,9 +50,9 @@ export abstract class Element {
    */
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
+    size: TextFont.SIZE,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   private context?: RenderContext;
