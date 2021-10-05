@@ -3,9 +3,6 @@
 //
 // BoundingBoxComputation Tests
 
-// TODO: Provide a unique names for each test, so we can render separate PNGs.
-// Append an index to line 20 'Quadratic Test' and line 21 'Cubic Test'.
-
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BoundingBoxComputation } from 'boundingboxcomputation';
 import { Glyph, OutlineCode } from 'glyph';
@@ -16,8 +13,12 @@ const BoundingBoxComputationTests = {
     QUnit.module('BoundingBoxComputation');
     test('Point Test', point);
     const run = VexFlowTests.runTests;
-    quadraticParams.forEach((params /*, index*/) => run('Quadratic Test', quadratic, params));
-    cubicParams.forEach((params /*, index*/) => run('Cubic Test', cubic, params));
+    quadraticParams.forEach((params, index) => {
+      run(`Quadratic Test ${index}`, quadratic, params);
+    });
+    cubicParams.forEach((params, index) => {
+      run(`Cubic Test ${index}`, cubic, params);
+    });
   },
 };
 
