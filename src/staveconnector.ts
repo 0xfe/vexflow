@@ -36,7 +36,7 @@ export class StaveConnector extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SERIF,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

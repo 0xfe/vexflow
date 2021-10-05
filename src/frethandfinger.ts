@@ -18,7 +18,7 @@ export class FretHandFinger extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SANS_SERIF,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
     size: 9,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

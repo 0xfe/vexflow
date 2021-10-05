@@ -96,8 +96,9 @@ function simple(options: TestOptions): void {
   const str = 'TACET';
   const context = f.getContext();
   context.save();
-  context.setFont(Font.SERIF, 16, 'bold');
-  const metrics = context.measureText('TACET');
+  context.setFont('Times', 16, 'bold');
+  // context.setFont(Font.SERIF, 16, 'bold'); // RONYEH
+  const metrics = context.measureText(str);
   context.fillText(str, xs.left + (xs.right - xs.left) * 0.5 - metrics.width * 0.5, strY);
   context.restore();
 

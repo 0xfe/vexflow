@@ -210,17 +210,16 @@ export class TextNote extends Note {
       y = stave.getYForLine(this.line + -3);
       this.glyph.render(ctx, x, y);
     } else {
-      // We called this.setFont() in the constructor, so we know this.font is available.
-      // eslint-disable-next-line
-      const { family, size, weight, style } = this.font!;
-
       y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
-      ctx.setFont(family, size, weight, style);
+      ctx.setFont(this.font);
       ctx.fillText(this.text, x, y);
 
       const height = ctx.measureText(this.text).height;
 
+      // We called this.setFont() in the constructor, so we know this.font is available.
+      // eslint-disable-next-line
+      const { family, size, weight, style } = this.font!;
       // Scale the font size by 1/1.3.
       const smallerFontSize = TextFont.scaleSize(size, 0.769231);
 

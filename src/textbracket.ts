@@ -44,7 +44,7 @@ export class TextBracket extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SERIF,
+    family: 'serif' /* RONYEH: Font.SERIF */,
     size: 15,
     weight: FontWeight.NORMAL,
     style: FontStyle.ITALIC,

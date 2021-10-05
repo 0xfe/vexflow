@@ -57,10 +57,12 @@ function setFont(options: TestOptions): void {
     factory.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: 'q' }),
   ]);
 
+  const defaultFont = TextNote.TEXT_FONT;
+
   // Set the default before we instantiate TextNote objects with the factory.
   TextNote.TEXT_FONT = {
     family: 'Georgia, Courier New, serif',
-    size: 13,
+    size: 14,
     weight: 'bold',
     style: 'italic',
   };
@@ -75,6 +77,9 @@ function setFont(options: TestOptions): void {
   formatter.joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
   factory.draw();
+
+  // Restore the previous default, or else it will affect the rest of the tests.
+  TextNote.TEXT_FONT = defaultFont;
   ok(true);
 }
 

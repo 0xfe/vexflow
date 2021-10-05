@@ -1,12 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { Font } from './font';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 
 export interface StaveTempoOptions {
   bpm?: number;
@@ -21,7 +20,7 @@ export class StaveTempo extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: Font.SERIF,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 14,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
