@@ -6,7 +6,7 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { defined, RuntimeError } from './util';
+import { defined } from './util';
 import { Flow } from './flow';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
@@ -303,10 +303,6 @@ export class KeySignature extends StaveModifier {
   }
 
   draw(): void {
-    if (!this.x) {
-      throw new RuntimeError('KeySignatureError', "Can't draw key signature without x.");
-    }
-
     const stave = this.checkStave();
 
     if (!this.formatted) this.format();

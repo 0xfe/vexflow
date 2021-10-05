@@ -2,7 +2,7 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
+import { log, defined } from './util';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -185,7 +185,6 @@ export class Clef extends StaveModifier {
 
   /** Render clef. */
   draw(): void {
-    if (!this.x) throw new RuntimeError('ClefError', "Can't draw clef without x.");
     const glyph = defined(this.glyph, 'ClefError', "Can't draw clef without glyph.");
     const stave = this.checkStave();
     this.setRendered();
