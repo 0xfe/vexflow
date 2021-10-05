@@ -659,6 +659,14 @@ export class Formatter {
       const distances: Distance[] = contextList.map((tick: number, i: number) => {
         const context: TickContext = contextMap[tick];
         const voices = context.getTickablesByVoice();
+        // special case, if this is a single-note measure, put the note in the center
+        if (contextList.length === 1) {
+          return {
+            expectedDistance: (adjustedJustifyWidth - context.getWidth()) / 2,
+            fromTickablePx: 0,
+            maxNegativeShiftPx: 0,
+          };
+        }
         let backTickable: Tickable | undefined;
         if (i > 0) {
           const prevContext: TickContext = contextMap[contextList[i - 1]];
@@ -719,7 +727,6 @@ export class Formatter {
               } else if (typeof backTickable !== 'undefined') {
                 expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
               }
-
               return {
                 expectedDistance,
                 maxNegativeShiftPx,
@@ -753,10 +760,11 @@ export class Formatter {
             negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
             spaceAccum += -negativeShiftPx;
           }
-
           context.setX(contextX + spaceAccum);
+        } else if (contextList.length === 1) {
+          // Special case:  If there is only one tickable, move it towards the center.
+          context.setX(context.getX() + idealDistances[index].expectedDistance);
         }
-
         // Move center aligned tickables to middle
         context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
           tickable.setCenterXShift(centerX - context.getX());
@@ -771,20 +779,48 @@ export class Formatter {
       lastContext.getMetrics().notePx -
       lastContext.getMetrics().totalRightPx -
       firstContext.getMetrics().totalLeftPx;
-    let targetWidth = adjustedJustifyWidth;
-    let actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
     const musicFont = Flow.DEFAULT_FONT_STACK[0];
-    const paddingMax = musicFont.lookupMetric('stave.endPaddingMax');
-    const paddingMin = musicFont.lookupMetric('stave.endPaddingMin');
+    const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
+    const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
+    let targetWidth = adjustedJustifyWidth;
+    let distances = calculateIdealDistances(targetWidth);
+    let actualWidth = shiftToIdealDistances(distances);
+    // Calculate right justification by finding max of (configured value, min distance between tickables)
+    // so measures with lots of white space use it evenly, and crowded measures use at least the configured
+    // space
+    const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
+      let mdCalc = targetWidth / 2;
+      if (distances.length > 1) {
+        for (let di = 1; di < distances.length; ++di) {
+          mdCalc = Math.min(distances[di].expectedDistance / 2, mdCalc);
+        }
+      }
+      return mdCalc;
+    };
+    const minDistance = calcMinDistance(targetWidth, distances);
+    const multiNote = contextList.length > 1;
+    // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
+    let paddingMax = configMaxPadding;
+    // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
+    // existing visual regression tests.
+    if (paddingMax * 2 < minDistance) {
+      paddingMax = minDistance;
+      L('Right padding to ' + minDistance);
+    }
+    const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
     const maxX = adjustedJustifyWidth - paddingMin;
 
     let iterations = maxIterations;
-    while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
+    while (
+      (actualWidth > maxX && iterations > 0 && multiNote) ||
+      (actualWidth + paddingMax < maxX && iterations > 1 && multiNote)
+    ) {
       // If we couldn't fit all the notes into the jusification width, it's because the softmax-scaled
       // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
       // as 4 16th-notes). Run another pass, now that we know how much to justify.
       targetWidth -= actualWidth - maxX;
-      actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
+      distances = calculateIdealDistances(targetWidth);
+      actualWidth = shiftToIdealDistances(distances);
       iterations--;
     }
 

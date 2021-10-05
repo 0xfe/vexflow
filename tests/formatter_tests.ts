@@ -6,6 +6,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
+import { Tables } from 'tables';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
 import { FontGlyph } from 'font';
@@ -15,7 +16,7 @@ import { Registry } from 'registry';
 import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
-import { Voice } from 'voice';
+import { Voice, VoiceTime } from 'voice';
 import { MockTickable } from './mocks';
 
 const FormatterTests = {
@@ -24,6 +25,7 @@ const FormatterTests = {
     test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
+    run('Whitespace and justify', rightJustify);
     run('Notehead padding', noteHeadPadding);
     run('Justification and alignment with accidentals', accidentalJustification);
     run('Long measure taking full space', longMeasureProblems);
@@ -88,6 +90,35 @@ function buildTickContexts(): void {
     tickables1[1].getX() < tickables2[1].getX(),
     'Second note of voice 2 is to the right of the second note of voice 1'
   );
+}
+function rightJustify(options: TestOptions): void {
+  const y = 40;
+  const f = VexFlowTests.makeFactory(options, 1200, 300);
+  const getTickables = (time: VoiceTime, n: number, duration: string): Voice => {
+    const tickar: StaveNote[] = [];
+    let i = 0;
+    for (i = 0; i < n; ++i) {
+      tickar.push(new StaveNote({ keys: ['f/4'], duration }));
+    }
+    return new Voice(time).addTickables(tickar);
+  };
+  const renderTest = (time: VoiceTime, n: number, duration: string, x: number, width: number) => {
+    const VF = Vex.Flow;
+    const formatter = f.Formatter();
+
+    const stave = f.Stave({ x, y: 40, width });
+    // stave.addClef('treble').addTimeSignature('4/4');
+
+    const voice = getTickables(time, n, duration);
+    formatter.joinVoices([voice]).formatToStave([voice], stave);
+    stave.draw();
+    voice.draw(f.getContext(), stave);
+  };
+  renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 2, '2', 10, 300);
+  renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 1, 'w', 310, 300);
+  renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 3, '4', 610, 300);
+  renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 6, '8', 910, 300);
+  ok(true);
 }
 
 function noteHeadPadding(options: TestOptions): void {
@@ -267,6 +298,14 @@ function unalignedNoteDurations2(options: TestOptions): void {
 }
 
 function justifyStaveNotes(options: TestOptions): void {
+  function glyphPixels(): number {
+    return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
+  }
+
+  function glyphWidth(vexGlyph: string): number {
+    const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+    return (glyph.x_max - glyph.x_min) * glyphPixels();
+  }
   const f = VexFlowTests.makeFactory(options, 520, 280);
   const ctx = f.getContext();
   const score = f.EasyScore();
@@ -280,7 +319,9 @@ function justifyStaveNotes(options: TestOptions): void {
       score.voice(score.notes('(bb4 e#5 a5)/4, (d5 e5 f5)/2, (c##5 fb5 a5)/4', { stem: 'up' })),
     ];
 
-    f.Formatter().joinVoices(voices).format(voices, width);
+    f.Formatter()
+      .joinVoices(voices)
+      .format(voices, width - (Stave.defaultPadding + glyphWidth('gClef')));
 
     // Show the the width of notes via a horizontal line with red, green, yellow, blue, gray indicators.
     voices[0].getTickables().forEach((note) => Note.plotMetrics(ctx, note, y + 140)); // Bottom line.
