@@ -13,15 +13,11 @@ const BoundingBoxComputationTests = {
     QUnit.module('BoundingBoxComputation');
     test('Point Test', point);
     const run = VexFlowTests.runTests;
-    let n = 1;
-    quadraticParams.forEach((params /*, index*/) => {
-      run(`Quadratic Test ${n}`, quadratic, params);
-      n++;
+    quadraticParams.forEach((params, index) => {
+      run(`Quadratic Test ${index}`, quadratic, params);
     });
-    n = 1;
-    cubicParams.forEach((params /*, index*/) => {
-      run(`Cubic Test ${n}`, cubic, params);
-      n++;
+    cubicParams.forEach((params, index) => {
+      run(`Cubic Test ${index}`, cubic, params);
     });
   },
 };
