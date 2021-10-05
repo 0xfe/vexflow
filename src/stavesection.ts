@@ -12,7 +12,7 @@ export class StaveSection extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
+    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
     size: 12,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

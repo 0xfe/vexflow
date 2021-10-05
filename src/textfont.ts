@@ -98,7 +98,7 @@ export class TextFont {
   static SANS_SERIF: string = 'Arial, sans-serif';
 
   /** Default serif font family. */
-  static SERIF: string = 'Times, Times New Roman, serif';
+  static SERIF: string = 'Times New Roman, serif';
 
   /** Default font size. */
   static SIZE: number = 10;

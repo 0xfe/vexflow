@@ -30,7 +30,7 @@ export class Stroke extends Modifier {
   };
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SERIF,
+    family: 'serif' /* RONYEH: TextFont.SERIF */,
     size: TextFont.SIZE,
     weight: 'bold',
     style: 'italic',

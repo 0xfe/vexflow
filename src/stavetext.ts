@@ -15,7 +15,7 @@ export class StaveText extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SERIF,
+    family: 'Times' /* RONYEH: TextFont.SERIF*/,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

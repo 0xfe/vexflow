@@ -99,7 +99,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = '10pt ' + TextFont.SANS_SERIF;
+  ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -129,7 +129,8 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.strokeStyle = '#221';
   const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
-  const annotation = (text: string) => new Annotation(text).setFont(TextFont.SERIF, FONT_SIZE, 'normal', 'italic');
+  const annotation = (text: string) =>
+    new Annotation(text).setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic');
 
   const notes = [
     staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
@@ -145,7 +146,7 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = '10pt ' + TextFont.SANS_SERIF;
+  ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -160,7 +161,10 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
       positions: [{ str: 2, fret: 9 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('(8va)').setFont(TextFont.SERIF, FONT_SIZE, 'normal', 'italic'), 0)
+      .addModifier(
+        new Annotation('(8va)').setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic'),
+        0
+      )
       .addModifier(new Annotation('A.H.'), 0),
   ];
 
@@ -176,7 +180,8 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.setFont(TextFont.SANS_SERIF, FONT_SIZE);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-  const annotation = (text: string) => new Annotation(text).setFont(TextFont.SERIF, FONT_SIZE, 'normal', 'italic');
+  const annotation = (text: string) =>
+    new Annotation(text).setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic');
 
   const notes = [
     tabNote({
@@ -219,7 +224,9 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string) =>
-    new Annotation(text).setFont(TextFont.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
+    new Annotation(text)
+      .setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE)
+      .setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
 
   const notes = [
     staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
@@ -321,7 +328,7 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-  ctx.font = '10pt ' + TextFont.SANS_SERIF;
+  ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();

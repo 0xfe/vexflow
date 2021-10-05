@@ -22,7 +22,7 @@ export class StaveTempo extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SERIF,
+    family: 'Times' /* RONYEH: TextFont.SERIF */,
     size: 14,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

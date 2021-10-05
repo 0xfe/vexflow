@@ -138,7 +138,7 @@ function superscriptAndSubscript(options: TestOptions): void {
 
   voice2.getTickables().forEach((note) => {
     const textNote = note as TextNote;
-    textNote.setFont({ family: TextFont.SERIF, size: 15 });
+    textNote.setFont({ family: 'serif' /* RONYEH: TextFont.SERIF */, size: 15 });
     textNote.setLine(13);
     textNote.setJustification(TextNote.Justification.LEFT);
   });

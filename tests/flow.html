@@ -84,7 +84,10 @@
       const host = 'https://unpkg.com/vexflow-fonts@1.0.1/';
       const srcURLs = (path) => `url(${host}${path}2) format('woff2'), url(${host}${path}) format('woff')`;
       const robotoFont = new FontFace('Roboto Slab', srcURLs('robotoslab/RobotoSlab-Medium_2.001.woff'));
-      const petalumaFont = new FontFace('PetalumaScript', srcURLs('petaluma/PetalumaScript_1.10.woff'));
+
+      // const petalumaFont = new FontFace('PetalumaScript', srcURLs('petaluma/PetalumaScript_1.10.woff'));
+      const petalumaLocalURL = `url(../releases/fonts/petalumascript-webfont.woff) format('woff')`;
+      const petalumaFont = new FontFace('PetalumaScript', petalumaLocalURL);
 
       loadVexFlow()
         .then(() => robotoFont.load())

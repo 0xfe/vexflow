@@ -341,7 +341,7 @@ export class Factory {
     };
     // TODO: Factory.Annotation has a different default font from new Annotation()...
     const font = {
-      family: TextFont.SERIF,
+      family: 'Times' /* RONYEH: TextFont.SERIF */,
       size: 14,
       weight: FontWeight.BOLD,
       style: FontStyle.ITALIC,

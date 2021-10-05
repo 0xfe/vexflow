@@ -67,7 +67,7 @@ export class Stave extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
+    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF*/,
     size: 8,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

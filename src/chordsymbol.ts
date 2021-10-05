@@ -9,13 +9,12 @@
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
-import { ModifierContextState } from 'modifiercontext';
-
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFont } from './textfont';
+import { FontStyle, FontWeight, TextFont } from './textfont';
 import { FontInfo } from './types/common';
 import { log } from './util';
 
@@ -352,28 +351,35 @@ export class ChordSymbol extends Modifier {
   /** Currently unused. */
   protected static noFormat: boolean = false;
 
-  protected symbolBlocks: ChordSymbolBlock[];
-  protected horizontal: number;
-  protected vertical: number;
-  protected useKerning: boolean;
-  protected reportWidth: boolean;
+  protected symbolBlocks: ChordSymbolBlock[] = [];
+  protected horizontal: number = HorizontalJustify.LEFT;
+  protected vertical: number = VerticalJustify.TOP;
+  protected useKerning: boolean = true;
+  protected reportWidth: boolean = true;
 
   // Initialized by the constructor via this.setFont().
   protected textFormatter!: TextFont;
 
   constructor() {
     super();
-    this.symbolBlocks = [];
-    this.horizontal = HorizontalJustify.LEFT;
-    this.vertical = VerticalJustify.TOP;
-    this.useKerning = true;
-    this.reportWidth = true;
+    this.setFont(this.getDefaultFont());
+  }
 
+  /**
+   * Choose a font family that works well with the current music engraving font.
+   * Overrides `Element.getDefaultFont()`.
+   */
+  getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
     if (this.musicFont.getName() === 'Petaluma') {
       family = 'PetalumaScript, Arial, sans-serif';
     }
-    this.setFont(family, 12);
+    return {
+      family,
+      size: 12,
+      weight: FontWeight.NORMAL,
+      style: FontStyle.NORMAL,
+    };
   }
 
   /**
@@ -516,7 +522,7 @@ export class ChordSymbol extends Modifier {
     } else if (symbolType === SymbolTypes.TEXT) {
       let textWidth = 0;
       for (let i = 0; i < symbolBlock.text.length; ++i) {
-        // TODO (AaronDavidNewman / ronyeh): Should this calculation be done in pixels or in em???
+        // TODO (AaronDavidNewman): Should this calculation be done in pixels or in em???
         textWidth += this.textFormatter.getWidthForCharacterInEm(symbolBlock.text[i]);
       }
       symbolBlock.width = textWidth;
