@@ -659,14 +659,6 @@ export class Formatter {
       const distances: Distance[] = contextList.map((tick: number, i: number) => {
         const context: TickContext = contextMap[tick];
         const voices = context.getTickablesByVoice();
-        // special case, if this is a single-note measure, put the note in the center
-        if (contextList.length === 1) {
-          return {
-            expectedDistance: (adjustedJustifyWidth - context.getWidth()) / 2,
-            fromTickablePx: 0,
-            maxNegativeShiftPx: 0,
-          };
-        }
         let backTickable: Tickable | undefined;
         if (i > 0) {
           const prevContext: TickContext = contextMap[contextList[i - 1]];
@@ -761,9 +753,6 @@ export class Formatter {
             spaceAccum += -negativeShiftPx;
           }
           context.setX(contextX + spaceAccum);
-        } else if (contextList.length === 1) {
-          // Special case:  If there is only one tickable, move it towards the center.
-          context.setX(context.getX() + idealDistances[index].expectedDistance);
         }
         // Move center aligned tickables to middle
         context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
