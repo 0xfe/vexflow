@@ -12,7 +12,6 @@ import { Glyph } from './glyph';
 import { ModifierContextState } from './modifiercontext';
 import { Voice } from './voice';
 import { Note } from './note';
-import { StaveNote } from './stavenote';
 import { Tickable } from './tickable';
 import { isCategory, isGraceNote, isGraceNoteGroup, isStaveNote } from './typeguard';
 

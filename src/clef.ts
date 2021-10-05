@@ -2,7 +2,7 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
+import { log, defined } from './util';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';

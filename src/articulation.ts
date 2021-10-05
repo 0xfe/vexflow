@@ -11,7 +11,6 @@ import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { ModifierContextState } from './modifiercontext';
 import { Builder } from './easyscore';
-import { TabNote } from './tabnote';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
 
 export interface ArticulationStruct {
