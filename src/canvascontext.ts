@@ -200,9 +200,8 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  // This is an attempt (hack) to simulate the HTML5 canvas arc method.
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
-    this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, antiClockwise);
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this {
+    this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, counterclockwise);
     return this;
   }
 

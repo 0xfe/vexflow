@@ -79,7 +79,7 @@ export interface RenderContext {
   lineTo(x: number, y: number): this;
   bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
   quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this;
   // eslint-disable-next-line
   fill(attributes?: any): this;
   stroke(): this;
