@@ -34,6 +34,8 @@ const attrNamesToIgnoreMap: { [nodeName: string]: Attributes } = {
 /** Create the SVG in the SVG namespace. */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+const TWO_PI = 2 * Math.PI;
+
 interface State {
   state: Attributes;
   attributes: Attributes;
@@ -521,16 +523,16 @@ export class SVGContext implements RenderContext {
     return this;
   }
 
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this {
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this {
     const x0 = x + radius * Math.cos(startAngle);
     const y0 = y + radius * Math.sin(startAngle);
 
-    // Handle the edge case from the Canvas spec where arc length is greater than
+    // Handle the edge case where arc length is greater than or equal to
     // the circle's circumference:
     //   https://html.spec.whatwg.org/multipage/canvas.html#ellipse-method-steps
     if (
-      (!antiClockwise && endAngle - startAngle > 2 * Math.PI) ||
-      (antiClockwise && startAngle - endAngle > 2 * Math.PI)
+      (!counterclockwise && endAngle - startAngle >= TWO_PI) ||
+      (counterclockwise && startAngle - endAngle >= TWO_PI)
     ) {
       const x1 = x + radius * Math.cos(startAngle + Math.PI);
       const y1 = y + radius * Math.sin(startAngle + Math.PI);
@@ -549,15 +551,15 @@ export class SVGContext implements RenderContext {
 
       let large: boolean;
       if (Math.abs(endAngle - startAngle) < Math.PI) {
-        large = antiClockwise;
+        large = counterclockwise;
       } else {
-        large = !antiClockwise;
+        large = !counterclockwise;
       }
       if (startAngle > endAngle) {
         large = !large;
       }
 
-      const sweep = !antiClockwise;
+      const sweep = !counterclockwise;
 
       this.path += `M${x0} ${y0} A${radius} ${radius} 0 ${+large} ${+sweep} ${x1} ${y1}`;
       this.pen.x = x1;
