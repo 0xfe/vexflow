@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 
 /** `RuntimeError` will be thrown by VexFlow classes in case of error. */
 export class RuntimeError extends Error {

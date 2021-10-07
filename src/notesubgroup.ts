@@ -13,7 +13,7 @@ import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 
 export class NoteSubGroup extends Modifier {
   static get CATEGORY(): string {

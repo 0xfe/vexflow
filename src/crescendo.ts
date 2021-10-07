@@ -10,8 +10,8 @@
 
 import { log } from './util';
 import { Note, NoteStruct } from './note';
+import { RenderContext } from './rendercontext';
 import { TickContext } from './tickcontext';
-import { RenderContext } from './types/common';
 
 export interface CrescendoParams {
   reverse: boolean;

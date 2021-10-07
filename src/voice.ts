@@ -6,7 +6,7 @@ import { RuntimeError, defined } from './util';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Fraction } from './fraction';
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Tickable } from './tickable';
 

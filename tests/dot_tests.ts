@@ -6,11 +6,11 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Beam } from 'beam';
 import { ModifierContext } from 'modifiercontext';
+import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { TickContext } from 'tickcontext';
-import { RenderContext } from 'types/common';
 import { Note } from 'note';
 
 const DotTests = {

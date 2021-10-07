@@ -1,7 +1,5 @@
 import { Note } from '../note';
 
-export { RenderContext } from '../rendercontext';
-
 export interface FontInfo {
   family: string;
   size: number;

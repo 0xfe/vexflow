@@ -6,8 +6,8 @@ import { defined } from './util';
 import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
-import { RenderContext } from './types/common';
 import { Flow } from './flow';
+import { RenderContext } from './rendercontext';
 
 /** Element attributes. */
 export interface ElementAttributes {

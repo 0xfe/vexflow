@@ -10,7 +10,7 @@ import { RuntimeError } from './util';
 import { Element } from './element';
 import { Modifier } from './modifier';
 import { Note } from './note';
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 
 export interface StaveHairpinRenderOptions {
   right_shift_ticks: number;

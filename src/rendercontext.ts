@@ -32,7 +32,14 @@ export abstract class RenderContext {
   abstract lineTo(x: number, y: number): this;
   abstract bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
   abstract quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
-  abstract arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, antiClockwise: boolean): this;
+  abstract arc(
+    x: number,
+    y: number,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+    antiClockwise: boolean
+  ): this;
   // eslint-disable-next-line
   abstract fill(attributes?: any): this;
   abstract stroke(): this;
@@ -55,4 +62,3 @@ export abstract class RenderContext {
   abstract set strokeStyle(style: string | CanvasGradient | CanvasPattern);
   abstract get strokeStyle(): string | CanvasGradient | CanvasPattern;
 }
-

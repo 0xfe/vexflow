@@ -10,8 +10,9 @@
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './flow';
-import { FontInfo, RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
+import { FontInfo } from './types/common';
 
 export interface StaveLineNotes {
   first_note: StaveNote;

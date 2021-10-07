@@ -10,8 +10,9 @@
 import { RuntimeError, log } from './util';
 import { Flow } from './flow';
 import { Element } from './element';
+import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
-import { FontInfo, RenderContext } from './types/common';
+import { FontInfo } from './types/common';
 import { Note } from './note';
 
 export interface TextBracketParams {

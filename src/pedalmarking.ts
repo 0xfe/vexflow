@@ -4,7 +4,8 @@
 import { RuntimeError, log } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
-import { FontInfo, RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
+import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
 
 // eslint-disable-next-line

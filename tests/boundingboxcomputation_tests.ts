@@ -6,7 +6,7 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BoundingBoxComputation } from 'boundingboxcomputation';
 import { Glyph, OutlineCode } from 'glyph';
-import { RenderContext } from 'types/common';
+import { RenderContext } from 'rendercontext';
 
 const BoundingBoxComputationTests = {
   Start(): void {
