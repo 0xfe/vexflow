@@ -131,7 +131,7 @@ export class Renderer {
         }
         this.ctx = new CanvasContext(context);
       } else if (backend === Renderer.Backends.SVG) {
-        if (!(element instanceof HTMLDivElement)) {
+        if (!(element instanceof window.HTMLDivElement)) {
           throw new RuntimeError('BadElement', 'SVG context requires an HTMLDivElement.');
         }
         this.ctx = new SVGContext(element);

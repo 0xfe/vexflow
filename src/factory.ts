@@ -150,11 +150,11 @@ export class Factory {
 
   initRenderer(): void {
     const { elementId, width, height, background } = this.options.renderer;
-    if (elementId === null) {
+    if (elementId == null) {
       return;
     }
 
-    if (elementId === '') {
+    if (elementId == '') {
       L(this);
       throw new RuntimeError('renderer.elementId not set in FactoryOptions');
     }
