@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { RenderContext, TextMeasure } from './types/common';
+import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
 /**
  * A rendering context for the Canvas backend (CanvasRenderingContext2D).
  */
-export class CanvasContext implements RenderContext {
+export class CanvasContext extends RenderContext {
   vexFlowCanvasContext: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement | { width: number; height: number };
   background_fillStyle?: string;
@@ -42,6 +42,8 @@ export class CanvasContext implements RenderContext {
    * @param context
    */
   constructor(context: CanvasRenderingContext2D) {
+    super();
+
     // Use a name that is unlikely to clash with a canvas context property.
     this.vexFlowCanvasContext = context;
     if (!context.canvas) {
@@ -59,7 +61,7 @@ export class CanvasContext implements RenderContext {
   }
 
   // eslint-disable-next-line
-  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any {
+  openGroup(cls: string, id?: string, attrs?: GroupAttributes): any {
     // Containers not implemented.
   }
 
@@ -72,7 +74,7 @@ export class CanvasContext implements RenderContext {
     // Containers not implemented.
   }
 
-  setFont(family: string, size: number, weight: string): this {
+  setFont(family: string, size: number, weight?: string): this {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
     this.textHeight = (size * 4) / 3;
     return this;
