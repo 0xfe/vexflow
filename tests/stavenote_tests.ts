@@ -108,7 +108,9 @@ function draw(
   note.setContext(context).draw();
 
   if (drawBoundingBox) {
-    note.getBoundingBox().draw(context);
+    const bb = note.getBoundingBox();
+    context.rect(bb.getX(), bb.getY(), bb.getW(), bb.getH());
+    context.stroke();
   }
   return note;
 }
