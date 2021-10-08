@@ -224,16 +224,16 @@ export class SVGContext extends RenderContext {
   setFont(
     f: string | FontInfo = Font.SANS_SERIF,
     size: string | number = Font.SIZE,
-    weight: string | number = 'normal',
-    style: string = 'normal'
+    weight: string | number = FontWeight.NORMAL,
+    style: string = FontStyle.NORMAL
   ): this {
     let family;
     if (typeof f === 'string') {
       family = f;
     } else {
       family = f.family;
-      size = f.size ?? TextFont.SIZE;
-      weight = f.weight ?? 'normal';
+      size = f.size ?? Font.SIZE;
+      weight = f.weight ?? FontWeight.NORMAL;
       style = f.style ?? 'normal';
     }
 
@@ -270,7 +270,7 @@ export class SVGContext extends RenderContext {
    * @returns this
    */
   setRawFont(font: string): this {
-    this.setFont(TextFont.parseFont(font));
+    this.setFont(Font.parseFont(font));
     return this;
   }
 

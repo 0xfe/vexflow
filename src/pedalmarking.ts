@@ -1,13 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
 import { Element } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line

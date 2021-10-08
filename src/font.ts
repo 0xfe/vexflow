@@ -41,13 +41,29 @@ export interface FontGlyph {
   y_min?: number;
   y_max?: number;
   ha: number;
-  o: string;
   leftSideBearing?: number;
   advanceWidth?: number;
+  o?: string; // RONYEH-FONT: Made this optional to be compatible with robotoslab_textmetrics & petalumascript_textmetrics.
   cached_outline?: number[];
 }
 
+export enum FontWeight {
+  NORMAL = 'normal',
+  BOLD = 'bold',
+}
+
+export enum FontStyle {
+  NORMAL = 'normal',
+  ITALIC = 'italic',
+}
+
+// Internal <span></span> element for parsing CSS font shorthand strings.
+let fontParser: HTMLSpanElement;
+
 class Font {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Static Members
+
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
 
@@ -57,13 +73,129 @@ class Font {
   /** Default font size in `pt`. */
   static SIZE: number = 10;
 
+  // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
+  /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
+  static convertToPxScaleFactor: Record<string, number> = {
+    pt: 4 / 3,
+    px: 1,
+    em: 16,
+    '%': 4 / 25,
+    in: 96,
+    mm: 96 / 25.4,
+    cm: 96 / 2.54,
+  };
+
+  /**
+   * @param fontSize The font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
+   * or as a number (the unit is assumed to be 'pt'). See `Font.convertToPxScaleFactor` for the supported
+   * units (e.g., pt, em, %).
+   * @returns the number of pixels that is equivalent to `fontSize`
+   */
+  static convertToPixels(fontSize: string | number = Font.SIZE): number {
+    if (typeof fontSize === 'number') {
+      // Assume the fontSize is specified in pt.
+      return (fontSize * 4) / 3;
+    } else {
+      const value = parseFloat(fontSize);
+      if (isNaN(value)) {
+        return 0;
+      }
+      const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
+      const conversionFactor = Font.convertToPxScaleFactor[unit] ?? 1;
+      return value * conversionFactor;
+    }
+  }
+
+  /**
+   * @param fontShorthand a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   */
+  static parseFont(fontShorthand: string): FontInfo {
+    if (!fontParser) {
+      fontParser = document.createElement('span');
+    }
+    fontParser.style.font = fontShorthand;
+    const { fontFamily, fontSize, fontWeight, fontStyle } = fontParser.style;
+    return { family: fontFamily, size: fontSize, weight: fontWeight, style: fontStyle };
+  }
+
+  /**
+   * @param fontSize a number representing a font size, or a string font size with units.
+   * @param scaleFactor multiply the size by this factor.
+   * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48)
+   */
+  static scaleSize<T extends number | string>(fontSize: T, scaleFactor: number): T {
+    if (typeof fontSize === 'number') {
+      return (fontSize * scaleFactor) as T;
+    } else {
+      const value = parseFloat(fontSize);
+      const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
+      return `${value * scaleFactor}${unit}` as T;
+    }
+  }
+
+  static convertSizeToNumber(fontSize: number | string): number {
+    if (typeof fontSize === 'number') {
+      return fontSize;
+    } else {
+      return parseFloat(fontSize);
+    }
+  }
+
+  /**
+   * Helper for `TextFont.createFormatter()`.
+   * @param weight a string (e.g., 'bold') or a number (e.g., 600 / semi-bold in the OpenType spec).
+   * @returns true if the font weight indicates bold.
+   */
+  static isBold(weight?: string | number): boolean {
+    if (!weight) {
+      return false;
+    } else if (typeof weight === 'number') {
+      return weight >= 600;
+    } else {
+      // a string can be 'bold' or '700'
+      const parsedWeight = parseInt(weight, 10);
+      if (isNaN(parsedWeight)) {
+        return weight.toLowerCase() === 'bold';
+      } else {
+        return parsedWeight >= 600;
+      }
+    }
+  }
+
+  /**
+   * Helper for `TextFont.createFormatter()`.
+   * @param style
+   * @returns true if the font style indicates 'italic'.
+   */
+  static isItalic(style?: string): boolean {
+    if (!style) {
+      return false;
+    } else {
+      return style.toLowerCase() === FontStyle.ITALIC;
+    }
+  }
+
+  static loadDefaultWebFonts(): void {
+    //
+    console.log('loadDefaultWebFonts!!!');
+  }
+
+  static loadWebFont(): void {
+    //
+    // XXXX
+    console.log('loadWebFont YAY!!!');
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Instance Members
+
   protected name: string;
   protected fontDataMetrics: FontDataMetrics;
 
   // eslint-disable-next-line
   constructor(name: string, metrics?: Record<string, any>, fontData?: FontData) {
     this.name = name;
-    this.fontDataMetrics = { fontData: undefined, metrics: undefined };
+    this.fontDataMetrics = {};
     switch (name) {
       case 'Bravura':
         loadBravura(this.fontDataMetrics);

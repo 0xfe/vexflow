@@ -3,7 +3,8 @@
 //
 // TextBracket Tests
 
-import { FontInfo } from '../src/types/common';
+import { FontInfo } from 'font';
+
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextBracketTests = {

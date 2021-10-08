@@ -7,9 +7,8 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { Font } from 'font';
-
 import { Dot } from './dot';
+import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { Stave } from './stave';

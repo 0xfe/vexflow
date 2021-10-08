@@ -144,7 +144,7 @@ export const Flow = {
   TabTie,
   TextBracket,
   TextDynamics,
-  TextFont,
+  TextFont, // TODO: RONYEH rename to FontFormatter
   TextNote,
   TickContext,
   TimeSignature,

@@ -16,10 +16,10 @@ export class TabSlide extends TabTie {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF */,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 10,
-    weight: 'bold',
-    style: 'italic',
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
 
   static get SLIDE_UP(): number {

@@ -98,11 +98,8 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-<<<<<<< HEAD
-  ctx.font = '10pt ' + Font.SANS_SERIF;
-=======
-  ctx.font = '10pt Arial, sans-serif';
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+  ctx.font = ' 10pt Arial';
+  // ctx.font = '10pt Arial, sans-serif'; // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -132,12 +129,8 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.strokeStyle = '#221';
   const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
-<<<<<<< HEAD
-  const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
-=======
-  const annotation = (text: string) =>
-    new Annotation(text).setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic');
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+  const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'normal', 'italic'); // BUG: Previously passed 'italic' into font weight.
+  // const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic'); // RONYEH
 
   const notes = [
     staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
@@ -153,11 +146,8 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-<<<<<<< HEAD
-  ctx.font = '10pt ' + Font.SANS_SERIF;
-=======
-  ctx.font = '10pt Arial, sans-serif';
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+  ctx.font = ' 10pt Arial';
+  // ctx.font = '10pt Arial'; // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -172,14 +162,8 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
       positions: [{ str: 2, fret: 9 }],
       duration: 'h',
     })
-<<<<<<< HEAD
-      .addModifier(new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic'), 0)
-=======
-      .addModifier(
-        new Annotation('(8va)').setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic'),
-        0
-      )
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+      .addModifier(new Annotation('(8va)').setFont('Times', FONT_SIZE, 'normal', 'italic'), 0) // BUG: Previously passed 'italic' into font weight.
+      // .addModifier(new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic'), 0) // RONYEH
       .addModifier(new Annotation('A.H.'), 0),
   ];
 
@@ -192,15 +176,12 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
-  ctx.setFont(Font.SANS_SERIF, FONT_SIZE);
+  ctx.setFont('Arial', FONT_SIZE);
+  // ctx.setFont(Font.SANS_SERIF, FONT_SIZE); // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-<<<<<<< HEAD
-  const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
-=======
-  const annotation = (text: string) =>
-    new Annotation(text).setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE, 'normal', 'italic');
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+  const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
+  // const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic'); // RONYEH
 
   const notes = [
     tabNote({
@@ -243,13 +224,8 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string) =>
-<<<<<<< HEAD
-    new Annotation(text).setFont(Font.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
-=======
-    new Annotation(text)
-      .setFont('Times' /* RONYEH: TextFont.SERIF */, FONT_SIZE)
-      .setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+    new Annotation(text).setFont('Times', FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
+  // new Annotation(text).setFont(Font.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM); // RONYEH
 
   const notes = [
     staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
@@ -351,11 +327,8 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-<<<<<<< HEAD
-  ctx.font = '10pt ' + Font.SANS_SERIF;
-=======
-  ctx.font = '10pt Arial, sans-serif';
->>>>>>> Add an element ID to the title div of test cases on flow.html.
+  ctx.font = '10pt Arial';
+  // ctx.font = '10pt Arial, sans-serif'; // RONYEH
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();

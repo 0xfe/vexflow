@@ -112,7 +112,7 @@ export class StaveNote extends StemmableNote {
     return Stem.DOWN;
   }
 
-  static get DEFAULT_LEDGER_LINE_OFFSET(): number {
+  static get LEDGER_LINE_OFFSET(): number {
     return 3;
   }
 
@@ -401,7 +401,7 @@ export class StaveNote extends StemmableNote {
       // font size for note heads and rests
       glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
-      stroke_px: noteStruct.stroke_px || StaveNote.DEFAULT_LEDGER_LINE_OFFSET,
+      stroke_px: noteStruct.stroke_px || StaveNote.LEDGER_LINE_OFFSET,
     };
 
     this.calculateKeyProps();

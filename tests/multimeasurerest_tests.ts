@@ -3,8 +3,6 @@
 //
 // MultiMeasureRest Tests
 
-import { Font } from 'font';
-
 import { Flow } from '../src/flow';
 import { MultimeasureRestRenderOptions } from '../src/multimeasurerest';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';

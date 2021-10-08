@@ -1,11 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export enum Justification {
@@ -221,7 +219,7 @@ export class TextNote extends Note {
       // eslint-disable-next-line
       const { family, size, weight, style } = this.font!;
       // Scale the font size by 1/1.3.
-      const smallerFontSize = TextFont.scaleSize(size, 0.769231);
+      const smallerFontSize = Font.scaleSize(size, 0.769231);
 
       if (this.superscript) {
         ctx.setFont(family, smallerFontSize, weight, style);
