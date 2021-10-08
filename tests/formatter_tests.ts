@@ -6,7 +6,6 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
-import { Tables } from 'tables';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
 import { FontGlyph } from 'font';
@@ -92,7 +91,6 @@ function buildTickContexts(): void {
   );
 }
 function rightJustify(options: TestOptions): void {
-  const y = 40;
   const f = VexFlowTests.makeFactory(options, 1200, 300);
   const getTickables = (time: VoiceTime, n: number, duration: string): Voice => {
     const tickar: StaveNote[] = [];
@@ -103,7 +101,6 @@ function rightJustify(options: TestOptions): void {
     return new Voice(time).addTickables(tickar);
   };
   const renderTest = (time: VoiceTime, n: number, duration: string, x: number, width: number) => {
-    const VF = Vex.Flow;
     const formatter = f.Formatter();
 
     const stave = f.Stave({ x, y: 40, width });
