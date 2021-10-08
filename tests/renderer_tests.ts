@@ -5,7 +5,6 @@
 // Renderer Tests
 
 /* eslint-disable */
-// @ts-nocheck
 
 import { CanvasContext } from 'canvascontext';
 import { Factory, FactoryOptions } from 'factory';
@@ -127,7 +126,7 @@ function useRendererAPI(e: HTMLCanvasElement | HTMLDivElement | string, backend:
  */
 function useFactoryAPI(e: HTMLCanvasElement | HTMLDivElement | string, backend: number) {
   const opts: FactoryOptions = {
-    renderer: { elementId: e, width: STAVE_WIDTH, height: STAVE_HEIGHT, backend },
+    renderer: { elementId: e as string, width: STAVE_WIDTH, height: STAVE_HEIGHT, backend },
   };
   const factory = new Factory(opts);
   drawStave(factory.Stave(), factory.getContext());
@@ -168,7 +167,7 @@ function passRenderContext(options: TestOptions): void {
   if (element instanceof window.HTMLCanvasElement) {
     const ctx = element.getContext('2d');
     if (!ctx) {
-      throw new RuntimeError(`Couldn't get context from element "${options.elemendId}"`);
+      throw new RuntimeError(`Couldn't get context from element "${options.elementId}"`);
     }
     context = new CanvasContext(ctx);
   } else {

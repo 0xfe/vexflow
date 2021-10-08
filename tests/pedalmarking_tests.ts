@@ -4,12 +4,11 @@
 // PedalMarking Tests
 
 /* eslint-disable */
-// @ts-nocheck
-
 // TODO: Fix Error => Type 'Tickable' is not assignable to type 'StaveNote'.
 
-import { Factory } from 'factory';
-import { Tickable } from 'tickable';
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { Tickable } from '../src/tickable';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const PedalMarkingTests = {
@@ -30,7 +29,7 @@ const PedalMarkingTests = {
 /**
  * Every test below uses this to set up the score and two staves/voices.
  */
-function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => void) {
+function createTest(makePedal: (f: Factory, v1: Note[], v2: Note[]) => void) {
   return (options: TestOptions) => {
     const f = VexFlowTests.makeFactory(options, 550, 200);
     const score = f.EasyScore();
@@ -43,7 +42,7 @@ function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => v
     const voice1 = score.voice(score.notes('c4/4, c4, c4, c4', { stem: 'up' }));
     f.Formatter().joinVoices([voice1]).formatToStave([voice1], stave1);
 
-    makePedal(f, voice0.getTickables(), voice1.getTickables());
+    makePedal(f, voice0.getTickables() as Note[], voice1.getTickables() as Note[]);
 
     f.draw();
 
@@ -52,7 +51,7 @@ function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => v
 }
 
 function withSimplePedal(style: string) {
-  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+  return (factory: Factory, notes0: Note[], notes1: Note[]) =>
     factory.PedalMarking({
       notes: [notes0[0], notes0[2], notes0[3], notes1[3]],
       options: { style },
@@ -60,7 +59,7 @@ function withSimplePedal(style: string) {
 }
 
 function withReleaseAndDepressedPedal(style: string) {
-  return (factory: Factory, notes0: Tickable[], notes1: Tickable[]) =>
+  return (factory: Factory, notes0: Note[], notes1: Note[]) =>
     factory.PedalMarking({
       notes: [notes0[0], notes0[3], notes0[3], notes1[1], notes1[1], notes1[3]],
       options: { style },

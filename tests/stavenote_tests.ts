@@ -4,7 +4,6 @@
 // StaveNote Tests
 
 /* eslint-disable */
-// @ts-nocheck
 
 // TODO: Stroke constructor's second argument should be optional.
 // TODO: ElementStyle's lineWidth is declared as a number, but we pass in a string '3'. Should we also allow string?
@@ -799,7 +798,7 @@ function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBui
 function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 400, 160);
   const stave = new Stave(10, 10, 380);
-  stave.setStyle({ strokeStyle: '#EEAAEE', lineWidth: '3' });
+  stave.setStyle({ strokeStyle: '#EEAAEE', lineWidth: 3 });
   stave.setContext(ctx);
   stave.draw();
 

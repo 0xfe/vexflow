@@ -3,10 +3,10 @@
 //
 // GhostNote Tests
 
-import { EasyScore } from 'easyscore';
-import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
+import { EasyScore } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { StaveNote } from '../src/stavenote';
+import { Note } from '../src/note';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GhostNoteTests = {
@@ -42,7 +42,7 @@ const basic = createTest((f: Factory, score: EasyScore) => {
   const voiceTop = score.voice(score.notes('f#5/4, f5, db5, c5, c5/8, d5, fn5, e5, d5, c5', { stem: 'up' }), {
     time: '7/4',
   });
-  const notesTop = voiceTop.getTickables() as StemmableNote[];
+  const notesTop = voiceTop.getTickables() as Note[];
   f.Beam({ notes: notesTop.slice(4, 8) });
   f.Beam({ notes: notesTop.slice(8, 10) });
 
@@ -96,11 +96,10 @@ const dotted = createTest((f: Factory, score: EasyScore) => {
     { time: '8/4' }
   );
 
-  const notes1 = voice1.getTickables() as StemmableNote[];
-  const notes2 = voice2.getTickables() as StemmableNote[];
+  const notes1 = voice1.getTickables() as Note[];
+  const notes2 = voice2.getTickables() as Note[];
 
-  const addAccidental = (note: StemmableNote, type: string) =>
-    (note as StaveNote).addAccidental(0, f.Accidental({ type }));
+  const addAccidental = (note: Note, type: string) => (note as StaveNote).addAccidental(0, f.Accidental({ type }));
 
   addAccidental(notes1[1], 'bb');
   addAccidental(notes1[4], '#');

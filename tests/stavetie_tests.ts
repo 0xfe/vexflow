@@ -10,11 +10,11 @@
 //       Change null => undefined?
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { BuilderOptions } from 'easyscore';
-import { Factory } from 'factory';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-import { Stem } from 'stem';
+import { BuilderOptions } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
+import { Stem } from '../src/stem';
 
 const StaveTieTests = {
   Start(): void {

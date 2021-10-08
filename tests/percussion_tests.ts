@@ -5,7 +5,6 @@
 // Percussion Tests
 
 /* eslint-disable */
-// @ts-nocheck
 
 // TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
 
@@ -127,9 +126,9 @@ const basic0 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '4', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice0.getTickables() });
-  f.Beam({ notes: voice1.getTickables().slice(0, 2) });
-  f.Beam({ notes: voice1.getTickables().slice(3, 6) });
+  f.Beam({ notes: voice0.getTickables() as Note[]});
+  f.Beam({ notes: voice1.getTickables().slice(0, 2) as Note[] });
+  f.Beam({ notes: voice1.getTickables().slice(3, 6) as Note[] });
 });
 
 const basic1 = createSingleMeasureTest((f) => {
@@ -161,7 +160,7 @@ const basic2 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
       f.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
     ]);
-  f.Beam({ notes: voice0.getTickables().slice(1, 8) });
+  f.Beam({ notes: voice0.getTickables().slice(1, 8) as Note[] });
 
   const voice1 = f
     .Voice()
@@ -174,8 +173,8 @@ const basic2 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice1.getTickables().slice(0, 2) });
-  f.Beam({ notes: voice1.getTickables().slice(4, 6) });
+  f.Beam({ notes: voice1.getTickables().slice(0, 2) as Note[]});
+  f.Beam({ notes: voice1.getTickables().slice(4, 6) as Note[]});
 });
 
 const snare0 = createSingleMeasureTest((f) => {
