@@ -90,7 +90,10 @@
       const petalumaFont = new FontFace('PetalumaScript', petalumaLocalURL);
 
       loadVexFlow()
-        .then(() => robotoFont.load())
+        .then(() => {
+          console.log(VF.Font.loadDefaultWebFonts());
+          return robotoFont.load();
+        })
         .then(() => petalumaFont.load())
         .then(() => {
           document.fonts.add(robotoFont);

@@ -3,13 +3,11 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
 import { Builder } from './easyscore';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
@@ -18,7 +16,7 @@ export class FretHandFinger extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
     size: 9,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

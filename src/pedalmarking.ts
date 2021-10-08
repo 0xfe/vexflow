@@ -1,13 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
 import { Element } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -42,7 +40,7 @@ export class PedalMarking extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SERIF,
+    family: Font.SERIF,
     size: 12,
     weight: FontWeight.BOLD,
     style: FontStyle.ITALIC,

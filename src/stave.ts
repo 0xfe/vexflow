@@ -1,12 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-import { isBarline } from 'typeguard';
-
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -17,7 +15,8 @@ import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
-import { Bounds, FontInfo } from './types/common';
+import { isBarline } from './typeguard';
+import { Bounds } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -67,7 +66,7 @@ export class Stave extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF*/,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF*/,
     size: 8,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

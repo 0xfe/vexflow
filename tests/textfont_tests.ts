@@ -3,10 +3,12 @@
 //
 // Text Font Tests
 
+// TODO RONYEH: Rename this to Font Tests / font_tests.ts
+
 import { Bend } from 'bend';
+import { Font, FontStyle, FontWeight } from 'font';
 import { StaveNote } from 'stavenote';
 import { TextBracket } from 'textbracket';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { TextNote } from 'textnote';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
@@ -24,8 +26,8 @@ function fontParsing(): void {
   const b = new Bend('1/2', true);
   const bFont = b.getFont();
   // Check the default font.
-  equal(bFont?.family, TextFont.SANS_SERIF);
-  equal(bFont?.size, TextFont.SIZE);
+  equal(bFont?.family, Font.SANS_SERIF);
+  equal(bFont?.size, Font.SIZE);
   equal(bFont?.weight, FontWeight.NORMAL);
   equal(bFont?.style, FontStyle.NORMAL);
 
@@ -41,8 +43,8 @@ function fontParsing(): void {
   equal(f2?.style, FontStyle.ITALIC);
 
   // The line-height /3 is currently ignored.
-  const f3 = TextFont.parseFont(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
-  const sizeInPixels = TextFont.convertToPixels(f3.size);
+  const f3 = Font.parseFont(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
+  const sizeInPixels = Font.convertToPixels(f3.size);
   equal(sizeInPixels, 24);
 }
 

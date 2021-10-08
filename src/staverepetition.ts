@@ -1,12 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
-import { FontInfo } from './types/common';
 
 export class Repetition extends StaveModifier {
   static get CATEGORY(): string {
@@ -14,7 +12,7 @@ export class Repetition extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF */,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 12,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

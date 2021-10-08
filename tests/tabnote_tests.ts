@@ -12,7 +12,7 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { Voice, VoiceMode } from 'voice';
-import { TextFont } from 'textfont';
+import { Font } from 'font';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -383,7 +383,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont(TextFont.SANS_SERIF, 10, 'bold');
+  ctx.setFont(Font.SANS_SERIF, 10, 'bold');
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);

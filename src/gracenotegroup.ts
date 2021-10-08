@@ -5,8 +5,6 @@
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
 
-import { isStaveNote } from 'typeguard';
-
 import { Beam } from './beam';
 import { Formatter } from './formatter';
 import { Modifier } from './modifier';
@@ -17,6 +15,7 @@ import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabTie } from './tabtie';
+import { isStaveNote } from './typeguard';
 import { log } from './util';
 import { Voice } from './voice';
 

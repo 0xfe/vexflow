@@ -1,8 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Stem } from 'stem';
-
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Factory } from './factory';
@@ -12,6 +10,7 @@ import { Note } from './note';
 import { Grammar, Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
+import { Stem } from './stem';
 import { TupletOptions } from './tuplet';
 import { defined, log, RuntimeError } from './util';
 import { Voice } from './voice';

@@ -1,10 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
-import { FontInfo } from './types/common';
+import { FontInfo, FontWeight, FontStyle } from './font';
 
 export class StaveSection extends StaveModifier {
   static get CATEGORY(): string {
@@ -12,7 +11,7 @@ export class StaveSection extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
     size: 12,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

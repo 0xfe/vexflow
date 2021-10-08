@@ -1,10 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { TextFont } from 'textfont';
-
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { ModifierContext } from './modifiercontext';
 import { RenderContext } from './rendercontext';
@@ -225,7 +224,7 @@ export class Formatter {
     }
 
     ctx.save();
-    ctx.setFont(TextFont.SANS_SERIF, 8);
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     contextGaps.gaps.forEach((gap) => {
       stroke(x + gap.x1, x + gap.x2, 'rgba(100,200,100,0.4)');

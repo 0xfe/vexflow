@@ -4,14 +4,12 @@
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
-import { TextFont } from 'textfont';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
@@ -30,10 +28,10 @@ export class Stroke extends Modifier {
   };
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'serif' /* RONYEH: TextFont.SERIF */,
-    size: TextFont.SIZE,
-    weight: 'bold',
-    style: 'italic',
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
 
   // Arrange strokes inside `ModifierContext`

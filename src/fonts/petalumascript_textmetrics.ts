@@ -860,7 +860,7 @@ export const PetalumaScriptTextMetrics = {
     },
   },
   fontFamily_RONYEH: 'PetalumaScript',
-  fontFamily: 'Petaluma Script' /* Need to remove the space! */,
+  fontFamily: 'PetalumaScript' /* RONYEH: Fixed by removing the space. */,
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };

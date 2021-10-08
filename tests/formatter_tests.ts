@@ -713,7 +713,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times' /* RONYEH: TextFont.SERIF */, 12, 'normal')
+            .setFont('Times' /* RONYEH: Font.SERIF */, 12, 'normal')
         );
       }
       notes.push(note);

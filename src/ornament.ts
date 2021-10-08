@@ -2,15 +2,14 @@
 // Author: Cyril Silverman
 // MIT License
 
-import { Stem } from 'stem';
-import { isTabNote } from 'typeguard';
-
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TickContext } from './tickcontext';
+import { isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line

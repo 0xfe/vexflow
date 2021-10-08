@@ -3,7 +3,6 @@
 //
 // StaveLine Tests
 
-import { TextFont } from 'textfont';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveLineTests = {
@@ -34,7 +33,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: 'serif' /* RONYEH: TextFont.SERIF */, size: 12, style: 'italic' },
+      font: { family: 'serif' /* RONYEH: Font.SERIF */, size: 12, style: 'italic' },
       text: 'gliss.',
     },
   });

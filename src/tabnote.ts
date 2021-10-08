@@ -7,10 +7,8 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { TextFont } from 'textfont';
-import { isDot } from 'typeguard';
-
 import { Dot } from './dot';
+import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { Stave } from './stave';
@@ -18,6 +16,7 @@ import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { isDot } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface TabNotePosition {
@@ -161,7 +160,7 @@ export class TabNote extends StemmableNote {
       // normal glyph scale
       scale: 1.0,
       // default tablature font
-      font: `10pt ${TextFont.SANS_SERIF}`,
+      font: `10pt ${Font.SANS_SERIF}`,
     };
 
     this.glyph = Tables.getGlyphProps(this.duration, this.noteType);

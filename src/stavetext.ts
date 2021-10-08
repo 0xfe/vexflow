@@ -1,9 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-import { FontInfo } from 'types/common';
-
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
@@ -15,7 +13,7 @@ export class StaveText extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF*/,
+    family: 'Times' /* RONYEH: Font.SERIF*/,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

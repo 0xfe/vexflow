@@ -49,8 +49,8 @@ export abstract class Element {
    * See `Element.musicFont` and `Element.musicFontStack` to customize the font for musical symbols placed on the score.
    */
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
-    size: TextFont.SIZE,
+    family: Font.SANS_SERIF,
+    size: Font.SIZE,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,
   };
@@ -125,7 +125,7 @@ export abstract class Element {
    * @param style is inserted into the font-style attribute (e.g., font-style="italic")
    */
   setFont(
-    f: string | FontInfo = TextFont.SANS_SERIF,
+    f: string | FontInfo = Font.SANS_SERIF,
     size: string | number = 10,
     weight: string | number = 'normal',
     style: string = 'normal'

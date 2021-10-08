@@ -143,7 +143,7 @@ export class SVGContext extends RenderContext {
     this.lineWidth = 1.0;
     this.state = {
       scale: { x: 1, y: 1 },
-      'font-family': TextFont.SANS_SERIF,
+      'font-family': Font.SANS_SERIF,
       'font-size': '10pt',
       'font-weight': 'normal',
       'font-style': 'normal',
@@ -151,7 +151,7 @@ export class SVGContext extends RenderContext {
 
     const defaultAttributes = {
       'stroke-dasharray': 'none',
-      'font-family': TextFont.SANS_SERIF,
+      'font-family': Font.SANS_SERIF,
       'font-size': '10pt',
       'font-weight': 'normal',
       'font-style': 'normal',
@@ -222,18 +222,18 @@ export class SVGContext extends RenderContext {
    * @param style is inserted into the font-style attribute (e.g., font-style="italic")
    */
   setFont(
-    f: string | FontInfo = TextFont.SANS_SERIF,
-    size: string | number = TextFont.SIZE,
-    weight: string | number = 'normal',
-    style: string = 'normal'
+    f: string | FontInfo = Font.SANS_SERIF,
+    size: string | number = Font.SIZE,
+    weight: string | number = FontWeight.NORMAL,
+    style: string = FontStyle.NORMAL
   ): this {
     let family;
     if (typeof f === 'string') {
       family = f;
     } else {
       family = f.family;
-      size = f.size ?? TextFont.SIZE;
-      weight = f.weight ?? 'normal';
+      size = f.size ?? Font.SIZE;
+      weight = f.weight ?? FontWeight.NORMAL;
       style = f.style ?? 'normal';
     }
 
@@ -270,7 +270,7 @@ export class SVGContext extends RenderContext {
    * @returns this
    */
   setRawFont(font: string): this {
-    this.setFont(TextFont.parseFont(font));
+    this.setFont(Font.parseFont(font));
     return this;
   }
 

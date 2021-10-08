@@ -5,15 +5,13 @@
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { FontStyle, FontWeight, TextFont } from 'textfont';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
 import { Stem } from './stem';
 import { isStaveNote, isStemmableNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
@@ -22,8 +20,8 @@ export class StringNumber extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
-    size: TextFont.SIZE,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    size: Font.SIZE,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
   };

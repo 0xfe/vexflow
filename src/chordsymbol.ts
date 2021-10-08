@@ -9,13 +9,12 @@
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { FontStyle, FontWeight, TextFont } from './textfont';
-import { FontInfo } from './types/common';
 import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -90,7 +89,7 @@ export class ChordSymbol extends Modifier {
   };
 
   static get superSubRatio(): number {
-    return ChordSymbol.chordSymbolMetrics.global.superSubRatio;
+    return ChordSymbol.metrics.global.superSubRatio;
   }
 
   /** Currently unused: Globally turn off text formatting, if the built-in formatting does not work for your font. */
@@ -104,8 +103,8 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static getMetricForGlyph(glyphCode: string): any {
-    if (ChordSymbol.chordSymbolMetrics[glyphCode]) {
-      return ChordSymbol.chordSymbolMetrics[glyphCode];
+    if (ChordSymbol.metrics[glyphCode]) {
+      return ChordSymbol.metrics[glyphCode];
     }
     return undefined;
   }
@@ -115,7 +114,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get spacingBetweenBlocks(): number {
-    return ChordSymbol.chordSymbolMetrics.global.spacing / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.spacing / ChordSymbol.engravingFontResolution;
   }
 
   static getWidthForGlyph(glyph: Glyph): number {
@@ -143,15 +142,15 @@ export class ChordSymbol extends Modifier {
   }
 
   static get superscriptOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.superscriptOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.superscriptOffset / ChordSymbol.engravingFontResolution;
   }
 
   static get subscriptOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.subscriptOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.subscriptOffset / ChordSymbol.engravingFontResolution;
   }
 
   static get kerningOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.kerningOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.kerningOffset / ChordSymbol.engravingFontResolution;
   }
 
   // Glyph data
@@ -223,16 +222,19 @@ export class ChordSymbol extends Modifier {
   static readonly symbolModifiers = SymbolModifiers;
 
   // eslint-disable-next-line
-  static get chordSymbolMetrics(): any {
+  static get metrics(): any {
     return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
-    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
+    // For example, see: `bravura_metrics.ts`
+    // BravuraMetrics.glyphs.chordSymbol.global.lowerKerningText, which returns an array of letters.
+    // ['D', 'F', 'P', 'T', 'V', 'Y']
+    return ChordSymbol.metrics.global.lowerKerningText;
   }
 
   static get upperKerningText(): string[] {
-    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
+    return ChordSymbol.metrics.global.upperKerningText;
   }
 
   static isSuperscript(block: ChordSymbolBlock): boolean {
@@ -257,8 +259,8 @@ export class ChordSymbol extends Modifier {
     for (const symbol of symbols) {
       // symbol.font was initialized by the constructor via this.setFont().
       // eslint-disable-next-line
-      const fontSize = TextFont.convertSizeToNumber(symbol.font!.size);
-      const fontAdj = TextFont.scaleSize(fontSize, 0.05);
+      const fontSize = Font.convertSizeToNumber(symbol.font!.size);
+      const fontAdj = Font.scaleSize(fontSize, 0.05);
       const glyphAdj = fontAdj * 2;
       let lineSpaces = 1;
       let vAlign = false;
@@ -278,7 +280,7 @@ export class ChordSymbol extends Modifier {
 
         // If there is a symbol-specific offset, add it but consider font
         // size since font and glyphs will be interspersed.
-        const fontSize = symbol.textFormatter.sizeInPixels;
+        const fontSize = symbol.textFormatter.fontSizeInPx;
         const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
           block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
@@ -388,11 +390,11 @@ export class ChordSymbol extends Modifier {
    */
 
   get superscriptOffset(): number {
-    return ChordSymbol.superscriptOffset * this.textFormatter.sizeInPixels;
+    return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPx;
   }
 
   get subscriptOffset(): number {
-    return ChordSymbol.subscriptOffset * this.textFormatter.sizeInPixels;
+    return ChordSymbol.subscriptOffset * this.textFormatter.fontSizeInPx;
   }
 
   setReportWidth(value: boolean): this {
@@ -415,7 +417,7 @@ export class ChordSymbol extends Modifier {
     }
     const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
-    const yoff = 0.25 * this.textFormatter.sizeInPixels;
+    const yoff = 0.25 * this.textFormatter.fontSizeInPx;
     let symIndex = 0;
     for (symIndex === 0; symIndex < barIndex; ++symIndex) {
       const symbol = this.symbolBlocks[symIndex];
@@ -474,7 +476,7 @@ export class ChordSymbol extends Modifier {
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.sizeInPixels;
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.fontSizeInPx;
     // TODO: adjust kern for font size.
     // Where should this constant live?
     if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {
@@ -618,7 +620,7 @@ export class ChordSymbol extends Modifier {
    * @param style is inserted into the font-style attribute (e.g., font-style="italic")
    */
   setFont(
-    f: string | FontInfo = TextFont.SANS_SERIF,
+    f: string | FontInfo = Font.SANS_SERIF,
     size: string | number = 10,
     weight: string | number = 'normal',
     style: string = 'normal'
@@ -673,7 +675,8 @@ export class ChordSymbol extends Modifier {
     for (i = 0; i < text.length; ++i) {
       const metric = this.textFormatter.getMetricForCharacter(text[i]);
       if (metric) {
-        acc = metric.y_max < acc ? metric.y_max : acc;
+        const yMax = metric.y_max ?? 0;
+        acc = yMax < acc ? yMax : acc;
       }
     }
 
@@ -753,7 +756,7 @@ export class ChordSymbol extends Modifier {
           ctx.save();
           if (this.font) {
             const { family, size, weight, style } = this.font;
-            const smallerFontSize = TextFont.scaleSize(size, ChordSymbol.superSubRatio);
+            const smallerFontSize = Font.scaleSize(size, ChordSymbol.superSubRatio);
             ctx.setFont(family, smallerFontSize, weight, style);
           }
         }

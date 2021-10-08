@@ -4,6 +4,7 @@
 // Bend Tests
 
 import { Bend, BendPhrase } from 'bend';
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { ModifierContext } from 'modifiercontext';
 import { Note } from 'note';
@@ -40,7 +41,7 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont('10pt ' + TextFont.SANS_SERIF);
+  ctx.setRawFont('10pt ' + Font.SANS_SERIF);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
