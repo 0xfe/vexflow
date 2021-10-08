@@ -93,7 +93,7 @@ export class Factory {
    * `const vf: Factory = Vex.Flow.Factory.newFromElementId('boo', 1200, 600 );`
    */
   static newFromElementId(elementId: string | null, width = 500, height = 200): Factory {
-    return new Factory({ renderer: { elementId, width, height, backend: Renderer.Backends.SVG } });
+    return new Factory({ renderer: { elementId, width, height } });
   }
 
   protected options: Required<FactoryOptions>;
@@ -120,7 +120,6 @@ export class Factory {
       },
       renderer: {
         elementId: '',
-        backend: Renderer.Backends.SVG,
         width: 500,
         height: 200,
         background: '#FFF',
@@ -150,23 +149,27 @@ export class Factory {
   }
 
   initRenderer(): void {
-    const { elementId, backend, width, height, background } = this.options.renderer;
-    if (elementId === null) {
+    const { elementId, width, height, background } = this.options.renderer;
+    if (elementId == null) {
       return;
     }
 
-    if (elementId === '') {
+    if (elementId == '') {
       L(this);
       throw new RuntimeError('renderer.elementId not set in FactoryOptions');
     }
 
-    this.context = Renderer.buildContext(
-      elementId as string,
-      backend ?? Renderer.Backends.SVG,
-      width,
-      height,
-      background
-    );
+    let backend = this.options.renderer.backend;
+    if (backend === undefined) {
+      const elem = document.getElementById(elementId);
+      if (elem instanceof window.HTMLCanvasElement) {
+        backend = Renderer.Backends.CANVAS;
+      } else {
+        backend = Renderer.Backends.SVG;
+      }
+    }
+
+    this.context = Renderer.buildContext(elementId as string, backend, width, height, background);
   }
 
   getContext(): RenderContext {
