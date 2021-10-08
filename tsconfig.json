@@ -16,6 +16,7 @@
       "@gonville": ["fonts/loadStatic"],
       "@petaluma": ["fonts/loadStatic"],
       "@custom": ["fonts/loadStatic"]
-    }
-  }
+    },
+  },
+  "exclude": ["./src/fonts/legacy"]
 }
