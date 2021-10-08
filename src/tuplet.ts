@@ -50,7 +50,6 @@ import { Formatter } from './formatter';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
 import { Note } from './note';
-import { StemmableNote } from './stemmablenote';
 
 export interface TupletOptions {
   beats_occupied?: number;
@@ -302,8 +301,8 @@ export class Tuplet extends Element {
     this.setRendered();
 
     // determine x value of left bound of tuplet
-    const first_note = this.notes[0] as StemmableNote;
-    const last_note = this.notes[this.notes.length - 1] as StemmableNote;
+    const first_note = this.notes[0];
+    const last_note = this.notes[this.notes.length - 1];
 
     if (!this.bracketed) {
       this.x_pos = first_note.getStemX();

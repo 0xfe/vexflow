@@ -14,7 +14,6 @@ import { Glyph } from './glyph';
 import { TextFont } from './textfont';
 import { Modifier } from './modifier';
 import { FontInfo } from './types/common';
-import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from 'modifiercontext';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -671,7 +670,7 @@ export class ChordSymbol extends Modifier {
   /** Render text and glyphs above/below the note. */
   draw(): void {
     const ctx = this.checkContext();
-    const note = this.checkAttachedNote() as StemmableNote;
+    const note = this.checkAttachedNote();
     this.setRendered();
 
     // We're changing context parameters. Save current state.

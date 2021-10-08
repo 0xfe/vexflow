@@ -7,7 +7,6 @@ import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { Glyph } from './glyph';
-import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
 import { Stem } from 'stem';
 import { isTabNote } from 'typeguard';
@@ -239,7 +238,7 @@ export class Ornament extends Modifier {
   /** Render ornament in position next to note. */
   draw(): void {
     const ctx = this.checkContext();
-    const note = this.checkAttachedNote() as StemmableNote;
+    const note = this.checkAttachedNote();
     this.setRendered();
 
     const stemDir = note.getStemDirection();

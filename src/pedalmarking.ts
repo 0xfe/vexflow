@@ -6,7 +6,8 @@ import { Element } from './element';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { FontInfo } from './types/common';
-import { StaveNote } from './stavenote';
+import { Note } from './note';
+==== BASE ====
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -50,7 +51,7 @@ export class PedalMarking extends Element {
     bracket_line_width: number;
   };
   protected font: FontInfo;
-  protected notes: StaveNote[];
+  protected notes: Note[];
 
   /** Glyph data */
   static readonly GLYPHS: Record<string, { code: string; y_shift: number; x_shift: number }> = {
@@ -84,13 +85,13 @@ export class PedalMarking extends Element {
    * Create a sustain pedal marking. Returns the defaults PedalMarking.
    * Which uses the traditional "Ped" and "*"" markings.
    */
-  static createSustain(notes: StaveNote[]): PedalMarking {
+  static createSustain(notes: Note[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     return pedal;
   }
 
   /** Create a sostenuto pedal marking */
-  static createSostenuto(notes: StaveNote[]): PedalMarking {
+  static createSostenuto(notes: Note[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     pedal.setType(PedalMarking.type.MIXED);
     pedal.setCustomText('Sost. Ped.');
@@ -98,14 +99,14 @@ export class PedalMarking extends Element {
   }
 
   /** Create an una corda pedal marking */
-  static createUnaCorda(notes: StaveNote[]): PedalMarking {
+  static createUnaCorda(notes: Note[]): PedalMarking {
     const pedal = new PedalMarking(notes);
     pedal.setType(PedalMarking.type.TEXT);
     pedal.setCustomText('una corda', 'tre corda');
     return pedal;
   }
 
-  constructor(notes: StaveNote[]) {
+  constructor(notes: Note[]) {
     super();
 
     this.notes = notes;

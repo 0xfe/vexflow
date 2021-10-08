@@ -4,7 +4,6 @@
 import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
 import { TextFont } from './textfont';
 import { FontInfo } from './types/common';
 import { log } from './util';
@@ -179,7 +178,7 @@ export class Annotation extends Modifier {
     } else if (this.justification === Annotation.Justify.CENTER) {
       x = start.x - text_width / 2;
     } /* CENTER_STEM */ else {
-      x = (note as StemmableNote).getStemX() - text_width / 2;
+      x = note.getStemX() - text_width / 2;
     }
 
     let stem_ext: Record<string, number> = {};
@@ -190,7 +189,7 @@ export class Annotation extends Modifier {
     // The position of the text varies based on whether or not the note
     // has a stem.
     if (has_stem) {
-      stem_ext = (note as StemmableNote).checkStem().getExtents();
+      stem_ext = note.checkStem().getExtents();
       spacing = stave.getSpacingBetweenLines();
     }
 

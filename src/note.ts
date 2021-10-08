@@ -14,6 +14,7 @@ import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { KeyProps } from './types/common';
 import { Voice } from './voice';
+import { Stem } from 'stem';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -480,6 +481,26 @@ export abstract class Note extends Tickable {
   /** Accessor to hasStem. */
   hasStem(): boolean {
     return false;
+  }
+
+  getStem(): Stem | undefined {
+    return undefined;
+  }
+
+  getBeamCount(): number {
+    return 0;
+  }
+
+  setStemDirection(direction?: number): this {
+    throw new RuntimeError('NoStem', 'No stem attached to instance');
+  }
+
+  getStemX(): number {
+    throw new RuntimeError('NoStem', 'No stem attached to instance');
+  }
+
+  checkStem(): Stem {
+    throw new RuntimeError('NoStem', 'No stem attached to instance');
   }
 
   /** Accessor to note type. */

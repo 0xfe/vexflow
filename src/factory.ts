@@ -504,7 +504,7 @@ export class Factory {
     return tuplet;
   }
 
-  Beam(params: { notes: StemmableNote[]; options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] } }): Beam {
+  Beam(params: { notes: Note[]; options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] } }): Beam {
     const beam = new Beam(params.notes, params.options?.autoStem).setContext(this.context);
     beam.breakSecondaryAt(params.options?.secondaryBeamBreaks ?? []);
     this.renderQ.push(beam);
@@ -638,7 +638,7 @@ export class Factory {
     return new EasyScore(options);
   }
 
-  PedalMarking(params?: { notes?: StaveNote[]; options?: { style: string } }): PedalMarking {
+  PedalMarking(params?: { notes?: Note[]; options?: { style: string } }): PedalMarking {
     const p = {
       notes: [],
       options: {
