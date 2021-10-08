@@ -41,6 +41,10 @@ const AccidentalTests = {
     run('Automatic Accidentals - No Accidentals Necessary (EasyScore)', automaticAccidentals3);
     run('Automatic Accidentals - Multi Voice Inline', automaticAccidentalsMultiVoiceInline);
     run('Automatic Accidentals - Multi Voice Offset', automaticAccidentalsMultiVoiceOffset);
+    run('Automatic Accidentals - Key C, Single Octave', automaticAccidentalsCornerCases1);
+    run('Automatic Accidentals - Key C, Two Octaves', automaticAccidentalsCornerCases2);
+    run('Automatic Accidentals - Key C#, Single Octave', automaticAccidentalsCornerCases3);
+    run('Automatic Accidentals - Key C#, Two Octaves', automaticAccidentalsCornerCases4);
     run('Factory API', factoryAPI);
   },
 };
@@ -107,8 +111,8 @@ function autoAccidentalWorking(): void {
   equal(hasAccidental(notes[2]), true, 'Added flat');
   equal(hasAccidental(notes[3]), true, 'Added sharp');
   equal(hasAccidental(notes[4]), false, 'Sharp remembered');
-  equal(hasAccidental(notes[5]), false, 'Flat remembered');
-  equal(hasAccidental(notes[6]), false, 'Flat remembered');
+  equal(hasAccidental(notes[5]), true, 'Added flat(different octave)');
+  equal(hasAccidental(notes[6]), true, 'Added flat(different octave)');
   equal(hasAccidental(notes[7]), false, 'sharp remembered');
 
   notes = [
@@ -930,14 +934,198 @@ function automaticAccidentalsMultiVoiceOffset(options: TestOptions): void {
 
   equal(hasAccidental(notes1[0]), true);
   equal(hasAccidental(notes1[1]), false);
-  equal(hasAccidental(notes1[2]), false);
-  equal(hasAccidental(notes1[3]), false);
-  equal(hasAccidental(notes1[4]), false);
-  equal(hasAccidental(notes1[5]), false);
-  equal(hasAccidental(notes1[6]), false);
-  equal(hasAccidental(notes1[7]), false);
+  equal(hasAccidental(notes1[2]), true);
+  equal(hasAccidental(notes1[3]), true);
+  equal(hasAccidental(notes1[4]), true);
+  equal(hasAccidental(notes1[5]), true);
+  equal(hasAccidental(notes1[6]), true);
+  equal(hasAccidental(notes1[7]), true);
 
   new Formatter().joinVoices([voice0, voice1]).formatToStave([voice0, voice1], stave);
+
+  f.draw();
+
+  ok(true);
+}
+
+function automaticAccidentalsCornerCases1(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 150);
+  const stave = f.Stave().addKeySignature('C');
+
+  const notes0 = [
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+  ].map(f.StaveNote.bind(f));
+
+  const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
+
+  Accidental.applyAccidentals([voice0], 'C');
+
+  equal(hasAccidental(notes0[0]), false);
+  equal(hasAccidental(notes0[1]), true);
+  equal(hasAccidental(notes0[2]), false);
+  equal(hasAccidental(notes0[3]), true);
+  equal(hasAccidental(notes0[4]), false);
+  equal(hasAccidental(notes0[5]), true);
+  equal(hasAccidental(notes0[6]), false);
+  equal(hasAccidental(notes0[7]), true);
+  equal(hasAccidental(notes0[8]), false);
+
+  new Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+
+  f.draw();
+
+  ok(true);
+}
+
+function automaticAccidentalsCornerCases2(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 150);
+  const stave = f.Stave().addKeySignature('C');
+
+  const notes0 = [
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/5'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+  ].map(f.StaveNote.bind(f));
+
+  const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
+
+  Accidental.applyAccidentals([voice0], 'C');
+
+  equal(hasAccidental(notes0[0]), false);
+  equal(hasAccidental(notes0[2]), true);
+  equal(hasAccidental(notes0[4]), false);
+  equal(hasAccidental(notes0[6]), true);
+  equal(hasAccidental(notes0[8]), false);
+  equal(hasAccidental(notes0[10]), true);
+  equal(hasAccidental(notes0[12]), false);
+  equal(hasAccidental(notes0[14]), true);
+  equal(hasAccidental(notes0[16]), false);
+  equal(hasAccidental(notes0[1]), false);
+  equal(hasAccidental(notes0[3]), true);
+  equal(hasAccidental(notes0[5]), false);
+  equal(hasAccidental(notes0[7]), true);
+  equal(hasAccidental(notes0[9]), false);
+  equal(hasAccidental(notes0[11]), true);
+  equal(hasAccidental(notes0[13]), false);
+  equal(hasAccidental(notes0[15]), true);
+  equal(hasAccidental(notes0[17]), false);
+
+  new Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+
+  f.draw();
+
+  ok(true);
+}
+
+function automaticAccidentalsCornerCases3(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 150);
+  const stave = f.Stave().addKeySignature('C#');
+
+  const notes0 = [
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+  ].map(f.StaveNote.bind(f));
+
+  const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
+
+  Accidental.applyAccidentals([voice0], 'C#');
+
+  equal(hasAccidental(notes0[0]), true);
+  equal(hasAccidental(notes0[1]), true);
+  equal(hasAccidental(notes0[2]), false);
+  equal(hasAccidental(notes0[3]), true);
+  equal(hasAccidental(notes0[4]), false);
+  equal(hasAccidental(notes0[5]), true);
+  equal(hasAccidental(notes0[6]), false);
+  equal(hasAccidental(notes0[7]), true);
+  equal(hasAccidental(notes0[8]), false);
+
+  new Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
+
+  f.draw();
+
+  ok(true);
+}
+
+function automaticAccidentalsCornerCases4(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 150);
+  const stave = f.Stave().addKeySignature('C#');
+
+  const notes0 = [
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c#/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/5'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/4'], duration: '4', stem_direction: -1 },
+    { keys: ['cb/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+    { keys: ['c/4'], duration: '4', stem_direction: -1 },
+    { keys: ['c/5'], duration: '4', stem_direction: -1 },
+  ].map(f.StaveNote.bind(f));
+
+  const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
+
+  Accidental.applyAccidentals([voice0], 'C#');
+
+  equal(hasAccidental(notes0[0]), true);
+  equal(hasAccidental(notes0[2]), true);
+  equal(hasAccidental(notes0[4]), false);
+  equal(hasAccidental(notes0[6]), true);
+  equal(hasAccidental(notes0[8]), false);
+  equal(hasAccidental(notes0[10]), true);
+  equal(hasAccidental(notes0[12]), false);
+  equal(hasAccidental(notes0[14]), true);
+  equal(hasAccidental(notes0[16]), false);
+  equal(hasAccidental(notes0[1]), true);
+  equal(hasAccidental(notes0[3]), true);
+  equal(hasAccidental(notes0[5]), false);
+  equal(hasAccidental(notes0[7]), true);
+  equal(hasAccidental(notes0[9]), false);
+  equal(hasAccidental(notes0[11]), true);
+  equal(hasAccidental(notes0[13]), false);
+  equal(hasAccidental(notes0[15]), true);
+  equal(hasAccidental(notes0[17]), false);
+
+  new Formatter().joinVoices([voice0]).formatToStave([voice0], stave);
 
   f.draw();
 
