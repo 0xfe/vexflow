@@ -7,6 +7,8 @@
 import { RuntimeError } from './util';
 import { Element } from './element';
 import { FontInfo, TieNotes } from './types/common';
+import { Note } from 'note';
+import { Stave } from 'stave';
 
 export class StaveTie extends Element {
   static get CATEGORY(): string {
@@ -165,7 +167,7 @@ export class StaveTie extends Element {
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
+    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, (stave as Stave).getYForTopText() - 1);
     ctx.restore();
   }
 
@@ -186,9 +188,9 @@ export class StaveTie extends Element {
       stem_direction = first_note.getStemDirection();
       first_ys = first_note.getYs();
     } else {
-      const stave = last_note.checkStave();
+      const stave = (last_note as Note).checkStave();
       first_x_px = stave.getTieStartX();
-      first_ys = last_note.getYs();
+      first_ys = (last_note as Note).getYs();
       this.notes.first_indices = this.notes.last_indices;
     }
 
@@ -197,9 +199,9 @@ export class StaveTie extends Element {
       stem_direction = last_note.getStemDirection();
       last_ys = last_note.getYs();
     } else {
-      const stave = first_note.checkStave();
+      const stave = (first_note as Note).checkStave();
       last_x_px = stave.getTieEndX();
-      last_ys = first_note.getYs();
+      last_ys = (first_note as Note).getYs();
       this.notes.last_indices = this.notes.first_indices;
     }
 
