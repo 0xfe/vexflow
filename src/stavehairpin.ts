@@ -29,7 +29,7 @@ export class StaveHairpin extends Element {
   protected hairpin: number;
 
   protected position: number;
-  protected render_options: StaveHairpinRenderOptions;
+  protected renderOptions: StaveHairpinRenderOptions;
 
   // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: Record<string, Note>;
@@ -113,7 +113,7 @@ export class StaveHairpin extends Element {
     this.hairpin = type;
     this.position = Modifier.Position.BELOW;
 
-    this.render_options = {
+    this.renderOptions = {
       height: 10,
       y_shift: 0, // vertical offset
       left_shift_px: 0, // left horizontal offset
@@ -137,7 +137,7 @@ export class StaveHairpin extends Element {
       options.left_shift_px != null &&
       options.right_shift_px != null
     ) {
-      this.render_options = options;
+      this.renderOptions = options;
     }
     return this;
   }
@@ -166,7 +166,7 @@ export class StaveHairpin extends Element {
     staff_height: number;
   }): void {
     const ctx = this.checkContext();
-    let dis = this.render_options.y_shift + 20;
+    let dis = this.renderOptions.y_shift + 20;
     let y_shift = params.first_y;
 
     if (this.position === Modifier.Position.ABOVE) {
@@ -174,21 +174,21 @@ export class StaveHairpin extends Element {
       y_shift = params.first_y - params.staff_height;
     }
 
-    const l_shift = this.render_options.left_shift_px;
-    const r_shift = this.render_options.right_shift_px;
+    const l_shift = this.renderOptions.left_shift_px;
+    const r_shift = this.renderOptions.right_shift_px;
 
     ctx.beginPath();
 
     switch (this.hairpin) {
       case StaveHairpin.type.CRESC:
         ctx.moveTo(params.last_x + r_shift, y_shift + dis);
-        ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height / 2 + dis);
-        ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height + dis);
+        ctx.lineTo(params.first_x + l_shift, y_shift + this.renderOptions.height / 2 + dis);
+        ctx.lineTo(params.last_x + r_shift, y_shift + this.renderOptions.height + dis);
         break;
       case StaveHairpin.type.DECRESC:
         ctx.moveTo(params.first_x + l_shift, y_shift + dis);
-        ctx.lineTo(params.last_x + r_shift, y_shift + this.render_options.height / 2 + dis);
-        ctx.lineTo(params.first_x + l_shift, y_shift + this.render_options.height + dis);
+        ctx.lineTo(params.last_x + r_shift, y_shift + this.renderOptions.height / 2 + dis);
+        ctx.lineTo(params.first_x + l_shift, y_shift + this.renderOptions.height + dis);
         break;
       default:
         // Default is NONE, so nothing to draw

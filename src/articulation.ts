@@ -176,7 +176,7 @@ export class Articulation extends Modifier {
   /** Articulation code provided to the constructor. */
   readonly type: string;
 
-  protected render_options: { font_scale: number };
+  protected renderOptions: { font_scale: number };
   // articulation defined calling reset in constructor
   protected articulation!: ArticulationStruct;
   // glyph defined calling reset in constructor
@@ -260,7 +260,7 @@ export class Articulation extends Modifier {
 
     this.type = type;
     this.position = BELOW;
-    this.render_options = {
+    this.renderOptions = {
       font_scale: 38,
     };
 
@@ -271,7 +271,7 @@ export class Articulation extends Modifier {
     this.articulation = Flow.articulationCodes(this.type);
     const articulation = defined(this.articulation, 'ArgumentError', `Articulation not found: ${this.type}`);
     const code = (this.position === ABOVE ? articulation.aboveCode : articulation.belowCode) || articulation.code;
-    this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
+    this.glyph = new Glyph(code ?? '', this.renderOptions.font_scale);
 
     this.setWidth(defined(this.glyph.getMetrics().width));
   }

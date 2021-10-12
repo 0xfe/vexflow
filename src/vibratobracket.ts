@@ -25,7 +25,7 @@ export class VibratoBracket extends Element {
 
   protected start?: Note;
   protected stop?: Note;
-  protected render_options: {
+  protected renderOptions: {
     vibrato_width: number;
     wave_height: number;
     wave_girth: number;
@@ -46,7 +46,7 @@ export class VibratoBracket extends Element {
 
     this.line = 1;
 
-    this.render_options = {
+    this.renderOptions = {
       harsh: false,
       wave_height: 6,
       wave_width: 4,
@@ -63,7 +63,7 @@ export class VibratoBracket extends Element {
 
   /** Set harsh vibrato bracket. */
   setHarsh(harsh: boolean): this {
-    this.render_options.harsh = harsh;
+    this.renderOptions.harsh = harsh;
     return this;
   }
 
@@ -86,10 +86,10 @@ export class VibratoBracket extends Element {
       (this.start && this.start.checkStave().getTieEndX() - 10) ||
       0;
 
-    this.render_options.vibrato_width = stop_x - start_x;
+    this.renderOptions.vibrato_width = stop_x - start_x;
 
     L('Rendering VibratoBracket: start_x:', start_x, 'stop_x:', stop_x, 'y:', y);
 
-    Vibrato.renderVibrato(ctx, start_x, y, this.render_options);
+    Vibrato.renderVibrato(ctx, start_x, y, this.renderOptions);
   }
 }

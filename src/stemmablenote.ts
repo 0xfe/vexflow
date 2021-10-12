@@ -56,7 +56,7 @@ export abstract class StemmableNote extends Note {
     if (this.hasFlag()) {
       const flagCode = this.getStemDirection() === Stem.DOWN ? glyph.code_flag_downstem : glyph.code_flag_upstem;
 
-      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale, { category });
+      this.flag = new Glyph(flagCode, this.renderOptions.glyph_font_scale, { category });
     }
   }
 
@@ -213,7 +213,7 @@ export abstract class StemmableNote extends Note {
 
       return Math.min(
         stave.getYForTopText(textLine),
-        extents.topY - this.render_options.annotation_spacing * (textLine + 1)
+        extents.topY - this.renderOptions.annotation_spacing * (textLine + 1)
       );
     } else {
       return stave.getYForTopText(textLine);
@@ -227,10 +227,7 @@ export abstract class StemmableNote extends Note {
       const extents = this.getStemExtents();
       if (!extents) throw new RuntimeError('InvalidState', 'Stem does not have extents.');
 
-      return Math.max(
-        stave.getYForTopText(textLine),
-        extents.baseY + this.render_options.annotation_spacing * textLine
-      );
+      return Math.max(stave.getYForTopText(textLine), extents.baseY + this.renderOptions.annotation_spacing * textLine);
     } else {
       return stave.getYForBottomText(textLine);
     }

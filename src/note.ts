@@ -93,7 +93,7 @@ export abstract class Note extends Tickable {
   keyProps: KeyProps[];
 
   protected stave?: Stave;
-  protected render_options: NoteRenderOptions;
+  protected renderOptions: NoteRenderOptions;
   protected duration: string;
   protected dots: number;
   protected leftDisplacedHeadPx: number;
@@ -291,7 +291,7 @@ export abstract class Note extends Tickable {
     }
 
     // The render surface.
-    this.render_options = {
+    this.renderOptions = {
       annotation_spacing: 5,
       glyph_font_scale: 1,
       stroke_px: 1,
@@ -406,7 +406,7 @@ export abstract class Note extends Tickable {
       if (this.glyph.getMetrics) {
         return this.glyph.getMetrics().width;
       } else if (this.glyph.getWidth) {
-        return this.glyph.getWidth(this.render_options.glyph_font_scale);
+        return this.glyph.getWidth(this.renderOptions.glyph_font_scale);
       }
     }
 
@@ -639,24 +639,24 @@ export abstract class Note extends Tickable {
 
   /** Set drawStem render option */
   setDrawStem(drawStem: boolean): this {
-    this.render_options.draw_stem = drawStem;
+    this.renderOptions.draw_stem = drawStem;
     return this;
   }
 
   /** Set drawDots render option */
   setDrawDots(drawDots: boolean): this {
-    this.render_options.draw_dots = drawDots;
+    this.renderOptions.draw_dots = drawDots;
     return this;
   }
 
   /** Set drawStemThroughStaves render option */
   setDrawStemThroughStaves(drawStemThroughStaves: boolean): this {
-    this.render_options.draw_stem_through_stave = drawStemThroughStaves;
+    this.renderOptions.draw_stem_through_stave = drawStemThroughStaves;
     return this;
   }
 
   /** Get GlyphFontScale render option */
   getGlyphFontScale(): number {
-    return this.render_options.glyph_font_scale;
+    return this.renderOptions.glyph_font_scale;
   }
 }

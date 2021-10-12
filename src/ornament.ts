@@ -43,7 +43,7 @@ export class Ornament extends Modifier {
   protected delayed: boolean;
   protected reportedWidth: number;
   protected adjustForStemDirection: boolean;
-  protected render_options: {
+  protected renderOptions: {
     accidentalUpperPadding: number;
     accidentalLowerPadding: number;
     font_scale: number;
@@ -167,7 +167,7 @@ export class Ornament extends Modifier {
     this.type = type;
     this.delayed = false;
 
-    this.render_options = {
+    this.renderOptions = {
       font_scale: 38,
       accidentalLowerPadding: 3,
       accidentalUpperPadding: 3,
@@ -198,7 +198,7 @@ export class Ornament extends Modifier {
     this.x_shift = metrics ? metrics.xOffset : 0;
     this.y_shift = metrics ? metrics.yOffset : 0;
 
-    this.glyph = new Glyph(this.ornament.code, this.render_options.font_scale, {
+    this.glyph = new Glyph(this.ornament.code, this.renderOptions.font_scale, {
       category: `ornament.${this.ornament.code}`,
     });
 
@@ -222,7 +222,7 @@ export class Ornament extends Modifier {
 
   /** Set the upper accidental for the ornament. */
   setUpperAccidental(accid: string): this {
-    const scale = this.render_options.font_scale / 1.3;
+    const scale = this.renderOptions.font_scale / 1.3;
     this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalUpper.setOrigin(0.5, 1.0);
     return this;
@@ -230,7 +230,7 @@ export class Ornament extends Modifier {
 
   /** Set the lower accidental for the ornament. */
   setLowerAccidental(accid: string): this {
-    const scale = this.render_options.font_scale / 1.3;
+    const scale = this.renderOptions.font_scale / 1.3;
     this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
     this.accidentalLower.setOrigin(0.5, 1.0);
     return this;
@@ -311,7 +311,7 @@ export class Ornament extends Modifier {
     if (this.accidentalLower) {
       this.accidentalLower.render(ctx, glyphX, glyphY);
       glyphY -= this.accidentalLower.getMetrics().height;
-      glyphY -= this.render_options.accidentalLowerPadding;
+      glyphY -= this.renderOptions.accidentalLowerPadding;
     }
 
     if (this.stemUpYOffset && note.hasStem() && note.getStemDirection() === 1) {
@@ -324,7 +324,7 @@ export class Ornament extends Modifier {
     this.glyph.render(ctx, glyphX + this.x_shift, glyphY);
 
     if (this.accidentalUpper) {
-      glyphY -= this.glyph.getMetrics().height + this.render_options.accidentalUpperPadding;
+      glyphY -= this.glyph.getMetrics().height + this.renderOptions.accidentalUpperPadding;
       this.accidentalUpper.render(ctx, glyphX, glyphY);
     }
     ctx.closeGroup();

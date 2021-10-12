@@ -77,7 +77,7 @@ export class TextDynamics extends Note {
     this.line = noteStruct.line || 0;
     this.glyphs = [];
 
-    this.render_options = { ...this.render_options, glyph_font_size: 40 };
+    this.renderOptions = { ...this.renderOptions, glyph_font_size: 40 };
 
     L('New Dynamics Text: ', this.sequence);
   }
@@ -101,7 +101,7 @@ export class TextDynamics extends Note {
       const glyph_data = TextDynamics.GLYPHS[letter];
       if (!glyph_data) throw new RuntimeError('Invalid dynamics character: ' + letter);
 
-      const size = defined(this.render_options.glyph_font_size);
+      const size = defined(this.renderOptions.glyph_font_size);
       const glyph = new Glyph(glyph_data.code, size, { category: 'textNote' });
 
       // Add the glyph

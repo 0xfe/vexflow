@@ -396,8 +396,8 @@ export class StaveNote extends StemmableNote {
     this.note_heads = [];
     this.modifiers = [];
 
-    this.render_options = {
-      ...this.render_options,
+    this.renderOptions = {
+      ...this.renderOptions,
       // font size for note heads and rests
       glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
@@ -499,7 +499,7 @@ export class StaveNote extends StemmableNote {
         displaced,
         stem_direction: stemDirection,
         custom_glyph_code: noteProps.code,
-        glyph_font_scale: this.render_options.glyph_font_scale,
+        glyph_font_scale: this.renderOptions.glyph_font_scale,
         x_shift: noteProps.shift_right,
         stem_up_x_offset: noteProps.stem_up_x_offset,
         stem_down_x_offset: noteProps.stem_down_x_offset,
@@ -694,14 +694,14 @@ export class StaveNote extends StemmableNote {
     const extents = this.getStemExtents();
     return Math.min(
       this.checkStave().getYForTopText(textLine),
-      extents.topY - this.render_options.annotation_spacing * (textLine + 1)
+      extents.topY - this.renderOptions.annotation_spacing * (textLine + 1)
     );
   }
   getYForBottomText(textLine: number): number {
     const extents = this.getStemExtents();
     return Math.max(
       this.checkStave().getYForTopText(textLine),
-      extents.baseY + this.render_options.annotation_spacing * textLine
+      extents.baseY + this.renderOptions.annotation_spacing * textLine
     );
   }
 
@@ -1034,7 +1034,7 @@ export class StaveNote extends StemmableNote {
     const stave = this.checkStave();
     const {
       glyph,
-      render_options: { stroke_px },
+      renderOptions: { stroke_px },
     } = this;
     const ctx = this.checkContext();
     const width = glyph.getWidth() + stroke_px * 2;

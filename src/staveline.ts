@@ -3,7 +3,7 @@
 // ## Description
 //
 // This file implements `StaveLine` which are simply lines that connect
-// two notes. This object is highly configurable, see the `render_options`.
+// two notes. This object is highly configurable, see the `renderOptions`.
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
@@ -165,7 +165,7 @@ export class StaveLine extends Element {
     RIGHT: 3,
   };
 
-  protected render_options: RenderOptions;
+  protected renderOptions: RenderOptions;
 
   protected text: string;
   protected font: FontInfo;
@@ -202,7 +202,7 @@ export class StaveLine extends Element {
       weight: '',
     };
 
-    this.render_options = {
+    this.renderOptions = {
       // Space to add to the left or the right
       padding_left: 4,
       padding_right: 3,
@@ -267,17 +267,17 @@ export class StaveLine extends Element {
   // Apply the style of the `StaveLine` to the context
   applyLineStyle(): void {
     const ctx = this.checkContext();
-    const render_options = this.render_options;
+    const renderOptions = this.renderOptions;
 
-    if (render_options.line_dash) {
-      ctx.setLineDash(render_options.line_dash);
+    if (renderOptions.line_dash) {
+      ctx.setLineDash(renderOptions.line_dash);
     }
 
-    if (render_options.line_width) {
-      ctx.setLineWidth(render_options.line_width);
+    if (renderOptions.line_width) {
+      ctx.setLineWidth(renderOptions.line_width);
     }
 
-    if (render_options.rounded_end) {
+    if (renderOptions.rounded_end) {
       ctx.setLineCap('round');
     } else {
       ctx.setLineCap('square');
@@ -292,8 +292,8 @@ export class StaveLine extends Element {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
     }
 
-    const render_options = this.render_options;
-    const color = render_options.color;
+    const renderOptions = this.renderOptions;
+    const color = renderOptions.color;
     if (color) {
       ctx.setStrokeStyle(color);
       ctx.setFillStyle(color);
@@ -307,7 +307,7 @@ export class StaveLine extends Element {
 
     const first_note = this.first_note;
     const last_note = this.last_note;
-    const render_options = this.render_options;
+    const renderOptions = this.renderOptions;
 
     ctx.save();
     this.applyLineStyle();
@@ -324,34 +324,34 @@ export class StaveLine extends Element {
       const upwards_slope = start_position.y > end_position.y;
 
       // Adjust `x` coordinates for modifiers
-      start_position.x += first_note.getMetrics().modRightPx + render_options.padding_left;
-      end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
+      start_position.x += first_note.getMetrics().modRightPx + renderOptions.padding_left;
+      end_position.x -= last_note.getMetrics().modLeftPx + renderOptions.padding_right;
 
       // Adjust first `x` coordinates for displacements
       const notehead_width = first_note.getGlyph().getWidth();
       const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
-        start_position.x += notehead_width + render_options.padding_left;
+        start_position.x += notehead_width + renderOptions.padding_left;
       }
 
       // Adjust last `x` coordinates for displacements
       const last_displaced = last_note.getKeyProps()[last_index].displaced;
       if (last_displaced && last_note.getStemDirection() === -1) {
-        end_position.x -= notehead_width + render_options.padding_right;
+        end_position.x -= notehead_width + renderOptions.padding_right;
       }
 
       // Adjust y position better if it's not coming from the center of the note
       start_position.y += upwards_slope ? -3 : 1;
       end_position.y += upwards_slope ? 2 : 0;
 
-      drawArrowLine(ctx, start_position, end_position, this.render_options);
+      drawArrowLine(ctx, start_position, end_position, this.renderOptions);
     });
 
     ctx.restore();
 
     // Determine the x coordinate where to start the text
     const text_width = ctx.measureText(this.text).width;
-    const justification = render_options.text_justification;
+    const justification = renderOptions.text_justification;
     let x = 0;
     if (justification === StaveLine.TextJustification.LEFT) {
       x = start_position.x;
@@ -365,7 +365,7 @@ export class StaveLine extends Element {
 
     // Determine the y value to start the text
     let y = 0;
-    const vertical_position = render_options.text_position_vertical;
+    const vertical_position = renderOptions.text_position_vertical;
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.checkStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
@@ -383,55 +383,55 @@ export class StaveLine extends Element {
 
   /** Set drawEndArrow render option */
   setDrawEndArrow(drawEndArrow: boolean): this {
-    this.render_options.draw_end_arrow = drawEndArrow;
+    this.renderOptions.draw_end_arrow = drawEndArrow;
     return this;
   }
 
   /** Set drawStartArrow render option */
   setDrawStartArrow(drawStartArrow: boolean): this {
-    this.render_options.draw_start_arrow = drawStartArrow;
+    this.renderOptions.draw_start_arrow = drawStartArrow;
     return this;
   }
 
   /** Set arrowheadAngle render option */
   setArrowheadAngle(arrowheadAngle: number): this {
-    this.render_options.arrowhead_angle = arrowheadAngle;
+    this.renderOptions.arrowhead_angle = arrowheadAngle;
     return this;
   }
 
   /** Set arrowheadLength render option */
   setArrowheadLength(arrowheadLength: number): this {
-    this.render_options.arrowhead_length = arrowheadLength;
+    this.renderOptions.arrowhead_length = arrowheadLength;
     return this;
   }
 
   /** Set textJustification render option */
   setTextJustification(textJustification: number): this {
-    this.render_options.text_justification = textJustification;
+    this.renderOptions.text_justification = textJustification;
     return this;
   }
 
   /** Set textPositionVertical render option */
   setTextPositionVertical(textPositionVertical: number): this {
-    this.render_options.text_position_vertical = textPositionVertical;
+    this.renderOptions.text_position_vertical = textPositionVertical;
     return this;
   }
 
   /** Set lineWidth render option */
   setLineWidth(lineWidth: number): this {
-    this.render_options.line_width = lineWidth;
+    this.renderOptions.line_width = lineWidth;
     return this;
   }
 
   /** Set lineDash render option */
   setLineDash(lineDash: number[]): this {
-    this.render_options.line_dash = lineDash;
+    this.renderOptions.line_dash = lineDash;
     return this;
   }
 
   /** Set color render option */
   setColor(color: string): this {
-    this.render_options.color = color;
+    this.renderOptions.color = color;
     return this;
   }
 }

@@ -35,7 +35,7 @@ export class Stroke extends Modifier {
   protected type: number;
 
   protected note_end?: Note;
-  protected render_options: {
+  protected renderOptions: {
     font_scale: number;
     stroke_px: number;
     stroke_spacing: number;
@@ -91,7 +91,7 @@ export class Stroke extends Modifier {
     this.type = type;
     this.position = Modifier.Position.LEFT;
 
-    this.render_options = {
+    this.renderOptions = {
       font_scale: 38,
       stroke_px: 3,
       stroke_spacing: 10,
@@ -220,12 +220,12 @@ export class Stroke extends Modifier {
       strokeLine = 'wiggly';
       if (isStaveNote(note)) {
         for (let i = topY; i <= botY; i += line_space) {
-          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
+          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.renderOptions.font_scale, 'vexWiggleArpeggioUp');
         }
       } else {
         let i;
         for (i = topY; i <= botY; i += 10) {
-          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
+          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.renderOptions.font_scale, 'vexWiggleArpeggioUp');
         }
         if (this.type === Stroke.Type.RASQUEDO_DOWN) {
           text_y = i + 0.25 * line_space;
@@ -238,7 +238,7 @@ export class Stroke extends Modifier {
     }
 
     // Draw the arrow head
-    Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
+    Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.renderOptions.font_scale, arrow, {
       category: `stroke.${arrow}.${strokeLine}`,
     });
 

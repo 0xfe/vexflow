@@ -20,7 +20,7 @@ export class Vibrato extends Modifier {
     return 'Vibrato';
   }
 
-  protected render_options: VibratoRenderOptions;
+  protected renderOptions: VibratoRenderOptions;
 
   /** Arrange vibratos inside a `ModifierContext`. */
   static format(vibratos: Vibrato[], state: ModifierContextState, context: ModifierContext): boolean {
@@ -55,7 +55,7 @@ export class Vibrato extends Modifier {
     super();
 
     this.position = Modifier.Position.RIGHT;
-    this.render_options = {
+    this.renderOptions = {
       harsh: false,
       vibrato_width: 20,
       wave_height: 6,
@@ -63,18 +63,18 @@ export class Vibrato extends Modifier {
       wave_girth: 2,
     };
 
-    this.setVibratoWidth(this.render_options.vibrato_width);
+    this.setVibratoWidth(this.renderOptions.vibrato_width);
   }
 
   /** Set harsh vibrato. */
   setHarsh(harsh: boolean): this {
-    this.render_options.harsh = harsh;
+    this.renderOptions.harsh = harsh;
     return this;
   }
 
   /** Set vibrato width in pixels. */
   setVibratoWidth(width: number): this {
-    this.render_options.vibrato_width = width;
+    this.renderOptions.vibrato_width = width;
     this.setWidth(width);
     return this;
   }
@@ -90,7 +90,7 @@ export class Vibrato extends Modifier {
     const vx = start.x + this.x_shift;
     const vy = note.getYForTopText(this.text_line) + 2;
 
-    Vibrato.renderVibrato(ctx, vx, vy, this.render_options);
+    Vibrato.renderVibrato(ctx, vx, vy, this.renderOptions);
   }
 
   /**

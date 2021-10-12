@@ -69,9 +69,9 @@ export class TabSlide extends TabTie {
     }
 
     this.direction = direction;
-    this.render_options.cp1 = 11;
-    this.render_options.cp2 = 14;
-    this.render_options.y_shift = 0.5;
+    this.renderOptions.cp1 = 11;
+    this.renderOptions.cp2 = 14;
+    this.renderOptions.y_shift = 0.5;
 
     this.setFont({ family: 'Times', size: 10, weight: 'bold italic' });
   }
@@ -100,7 +100,7 @@ export class TabSlide extends TabTie {
     // eslint-disable-next-line
     const first_indices = this.notes.first_indices!;
     for (let i = 0; i < first_indices.length; ++i) {
-      const slide_y = first_ys[first_indices[i]] + this.render_options.y_shift;
+      const slide_y = first_ys[first_indices[i]] + this.renderOptions.y_shift;
 
       if (isNaN(slide_y)) {
         throw new RuntimeError('BadArguments', 'Bad indices for slide rendering.');

@@ -47,7 +47,7 @@ export class Beam extends Element {
     return 'Beam';
   }
 
-  protected render_options: {
+  protected renderOptions: {
     flat_beam_offset?: number;
     flat_beams: boolean;
     secondary_break_ticks?: number;
@@ -398,14 +398,14 @@ export class Beam extends Element {
       const beam = new Beam(group);
 
       if (config.show_stemlets) {
-        beam.render_options.show_stemlets = true;
+        beam.renderOptions.show_stemlets = true;
       }
       if (config.secondary_breaks) {
-        beam.render_options.secondary_break_ticks = Flow.durationToTicks(config.secondary_breaks);
+        beam.renderOptions.secondary_break_ticks = Flow.durationToTicks(config.secondary_breaks);
       }
       if (config.flat_beams === true) {
-        beam.render_options.flat_beams = true;
-        beam.render_options.flat_beam_offset = config.flat_beam_offset;
+        beam.renderOptions.flat_beams = true;
+        beam.renderOptions.flat_beam_offset = config.flat_beam_offset;
       }
       beams.push(beam);
     });
@@ -488,7 +488,7 @@ export class Beam extends Element {
     this.notes = notes;
     this.beam_count = this.getBeamCount();
     this.break_on_indices = [];
-    this.render_options = {
+    this.renderOptions = {
       beam_width: 5,
       max_slope: 0.25,
       min_slope: -0.25,
@@ -532,7 +532,7 @@ export class Beam extends Element {
     const {
       notes,
       stem_direction: stemDirection,
-      render_options: { max_slope, min_slope, slope_iterations, slope_cost },
+      renderOptions: { max_slope, min_slope, slope_iterations, slope_cost },
     } = this;
 
     const firstNote = notes[0];
@@ -571,7 +571,7 @@ export class Beam extends Element {
       const distanceFromIdeal = Math.abs(idealSlope - slope);
 
       // This tries to align most beams to something closer to the idealSlope, but
-      // doesn't go crazy. To disable, set this.render_options.slope_cost = 0
+      // doesn't go crazy. To disable, set this.renderOptions.slope_cost = 0
       const cost = slope_cost * distanceFromIdeal + Math.abs(totalStemExtension);
 
       // update state when a more ideal slope is found
@@ -591,7 +591,7 @@ export class Beam extends Element {
     const {
       notes,
       stem_direction,
-      render_options: { beam_width, min_flat_beam_offset, flat_beam_offset },
+      renderOptions: { beam_width, min_flat_beam_offset, flat_beam_offset },
     } = this;
 
     // If a flat beam offset has not yet been supplied or calculated,
@@ -638,11 +638,11 @@ export class Beam extends Element {
 
     if (!flat_beam_offset) {
       // Set the offset for the group based on the calculations above.
-      this.render_options.flat_beam_offset = offset;
+      this.renderOptions.flat_beam_offset = offset;
     } else if (stem_direction === Stem.DOWN && offset > flat_beam_offset) {
-      this.render_options.flat_beam_offset = offset;
+      this.renderOptions.flat_beam_offset = offset;
     } else if (stem_direction === Stem.UP && offset < flat_beam_offset) {
-      this.render_options.flat_beam_offset = offset;
+      this.renderOptions.flat_beam_offset = offset;
     }
 
     // for flat beams, the slope and y_shift are simply 0
@@ -658,8 +658,8 @@ export class Beam extends Element {
 
     // For flat beams, set the first and last Y to the offset, rather than
     //  using the note's stem extents.
-    if (this.render_options.flat_beams && this.render_options.flat_beam_offset) {
-      beamY = this.render_options.flat_beam_offset;
+    if (this.renderOptions.flat_beams && this.renderOptions.flat_beam_offset) {
+      beamY = this.renderOptions.flat_beam_offset;
     }
     return beamY;
   }
@@ -675,7 +675,7 @@ export class Beam extends Element {
       y_shift,
       stem_direction,
       beam_count,
-      render_options: { show_stemlets, stemlet_extension, beam_width },
+      renderOptions: { show_stemlets, stemlet_extension, beam_width },
     } = this;
 
     const firstNote = notes[0];
@@ -736,7 +736,7 @@ export class Beam extends Element {
     type BeamInfo = { start: number; end?: number };
     const beam_lines: BeamInfo[] = [];
     let current_beam: BeamInfo | undefined = undefined;
-    const partial_beam_length = this.render_options.partial_beam_length;
+    const partial_beam_length = this.renderOptions.partial_beam_length;
     let previous_should_break = false;
     let tick_tally = 0;
     for (let i = 0; i < this.notes.length; ++i) {
@@ -754,7 +754,7 @@ export class Beam extends Element {
 
         // If the secondary breaks were auto-configured in the render options,
         //  handle that as well.
-        if (this.render_options.secondary_break_ticks && tick_tally >= this.render_options.secondary_break_ticks) {
+        if (this.renderOptions.secondary_break_ticks && tick_tally >= this.renderOptions.secondary_break_ticks) {
           tick_tally = 0;
           should_break = true;
         }
@@ -858,7 +858,7 @@ export class Beam extends Element {
     const firstNote = this.notes[0];
     let beamY = this.getBeamYToDraw();
     const firstStemX = firstNote.getStemX();
-    const beamThickness = this.render_options.beam_width * this.stem_direction;
+    const beamThickness = this.renderOptions.beam_width * this.stem_direction;
 
     // Draw the beams.
     for (let i = 0; i < valid_beam_durations.length; ++i) {
@@ -904,7 +904,7 @@ export class Beam extends Element {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (isTabNote(this.notes[0]) || this.render_options.flat_beams) {
+    if (isTabNote(this.notes[0]) || this.renderOptions.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();
@@ -932,13 +932,13 @@ export class Beam extends Element {
 
   /** Set beamWidth render option */
   setBeamWidth(beamWidth: number): this {
-    this.render_options.beam_width = beamWidth;
+    this.renderOptions.beam_width = beamWidth;
     return this;
   }
 
   /** Set partialBeamLength render option */
   setPartialBeamLength(partialBeamLength: number): this {
-    this.render_options.partial_beam_length = partialBeamLength;
+    this.renderOptions.partial_beam_length = partialBeamLength;
     return this;
   }
 }

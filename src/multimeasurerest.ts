@@ -74,7 +74,7 @@ export class MultiMeasureRest extends Element {
     return 'MultiMeasureRest';
   }
 
-  protected render_options: Required<MultimeasureRestRenderOptions>;
+  protected renderOptions: Required<MultimeasureRestRenderOptions>;
   protected xs = { left: NaN, right: NaN };
   protected number_of_measures: number;
 
@@ -101,7 +101,7 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
-    this.render_options = {
+    this.renderOptions = {
       use_symbols: false,
       show_number: true,
       number_line: -0.5,
@@ -118,7 +118,7 @@ export class MultiMeasureRest extends Element {
     };
 
     const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
-    this.render_options.number_line += fontLineShift;
+    this.renderOptions.number_line += fontLineShift;
   }
 
   getXs(): { left: number; right: number } {
@@ -139,7 +139,7 @@ export class MultiMeasureRest extends Element {
   }
 
   drawLine(stave: Stave, ctx: RenderContext, left: number, right: number, spacingBetweenLines: number): void {
-    const options = this.render_options;
+    const options = this.renderOptions;
 
     const y = stave.getYForLine(options.line);
     const padding = (right - left) * 0.1;
@@ -183,7 +183,7 @@ export class MultiMeasureRest extends Element {
     const n2 = Math.floor(n / 2);
     const n1 = n % 2;
 
-    const options = this.render_options;
+    const options = this.renderOptions;
     const rest = get_semibreve_rest();
     const rest_scale = options.semibreve_rest_glyph_scale;
     const rest_width = rest.width * (rest_scale / rest.glyph_font_scale);
@@ -245,7 +245,7 @@ export class MultiMeasureRest extends Element {
       left -= begModifiers[0].getWidth();
     }
 
-    const options = this.render_options;
+    const options = this.renderOptions;
     if (this.hasPaddingLeft) {
       left = stave.getX() + options.padding_left;
     }

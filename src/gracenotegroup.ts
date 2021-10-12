@@ -39,7 +39,7 @@ export class GraceNoteGroup extends Modifier {
 
   protected preFormatted: boolean = false;
   protected formatter: Formatter;
-  protected render_options: { slur_y_shift: number };
+  protected renderOptions: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
   protected beams: Beam[];
 
@@ -109,7 +109,7 @@ export class GraceNoteGroup extends Modifier {
       resolution: Flow.RESOLUTION,
     }).setStrict(false);
 
-    this.render_options = {
+    this.renderOptions = {
       slur_y_shift: 0,
     };
 
@@ -182,7 +182,7 @@ export class GraceNoteGroup extends Modifier {
       });
 
       this.slur.setCp2(12);
-      this.slur.setYShift((is_stavenote ? 7 : 5) + this.render_options.slur_y_shift);
+      this.slur.setYShift((is_stavenote ? 7 : 5) + this.renderOptions.slur_y_shift);
       this.slur.setContext(ctx).draw();
     }
   }

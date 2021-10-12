@@ -34,9 +34,9 @@ export class TabTie extends StaveTie {
   constructor(notes: TieNotes, text?: string) {
     super(notes, text);
 
-    this.render_options.cp1 = 9;
-    this.render_options.cp2 = 11;
-    this.render_options.y_shift = 3;
+    this.renderOptions.cp1 = 9;
+    this.renderOptions.cp2 = 11;
+    this.renderOptions.y_shift = 3;
 
     this.direction = -1; // Tab tie's are always face up.
   }

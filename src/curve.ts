@@ -28,7 +28,7 @@ export class Curve extends Element {
     return 'Curve';
   }
 
-  protected readonly render_options: Required<CurveOptions>;
+  protected readonly renderOptions: Required<CurveOptions>;
   protected from: Note;
   protected to: Note;
 
@@ -52,7 +52,7 @@ export class Curve extends Element {
   constructor(from: Note, to: Note, options: CurveOptions) {
     super();
 
-    this.render_options = {
+    this.renderOptions = {
       thickness: 2,
       x_shift: 0,
       y_shift: 10,
@@ -90,16 +90,16 @@ export class Curve extends Element {
   renderCurve(params: { last_y: number; last_x: number; first_y: number; first_x: number; direction: number }): void {
     const ctx = this.checkContext();
 
-    const x_shift = this.render_options.x_shift;
-    const y_shift = this.render_options.y_shift * params.direction;
+    const x_shift = this.renderOptions.x_shift;
+    const y_shift = this.renderOptions.y_shift * params.direction;
 
     const first_x = params.first_x + x_shift;
     const first_y = params.first_y + y_shift;
     const last_x = params.last_x - x_shift;
     const last_y = params.last_y + y_shift;
-    const thickness = this.render_options.thickness;
+    const thickness = this.renderOptions.thickness;
 
-    const cps = this.render_options.cps;
+    const cps = this.renderOptions.cps;
     const { x: cp0x, y: cp0y } = cps[0];
     const { x: cp1x, y: cp1y } = cps[1];
 
@@ -146,8 +146,8 @@ export class Curve extends Element {
     function getPosition(position: string | number) {
       return typeof position === 'string' ? Curve.PositionString[position] : position;
     }
-    const position = getPosition(this.render_options.position);
-    const position_end = getPosition(this.render_options.position_end);
+    const position = getPosition(this.renderOptions.position);
+    const position_end = getPosition(this.renderOptions.position_end);
 
     if (position === CurvePosition.NEAR_TOP) {
       metric = 'topY';
@@ -185,7 +185,7 @@ export class Curve extends Element {
       last_x,
       first_y,
       last_y,
-      direction: stem_direction * (this.render_options.invert === true ? -1 : 1),
+      direction: stem_direction * (this.renderOptions.invert === true ? -1 : 1),
     });
     return true;
   }
