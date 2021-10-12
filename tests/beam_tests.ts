@@ -3,6 +3,8 @@
 //
 // Beam Tests
 
+// TODO: Factory.Beam()'s 'notes' argument is a Note[], but we only have access to Tickable[].
+
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from '../src/beam';
 import { Stem } from '../src/stem';

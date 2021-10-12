@@ -3,9 +3,6 @@
 //
 // Auto Beaming Tests
 
-/* eslint-disable */
-
-// TODO: Beam has a "private readonly stem_direction" without an accessor.
 // TODO: Beam.generateBeams(voice.getTickables() as Note[], ...) requires a cast to Note[].
 //       Is there a cleaner way to handle this?
 

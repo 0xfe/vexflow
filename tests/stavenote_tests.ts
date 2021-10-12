@@ -3,11 +3,7 @@
 //
 // StaveNote Tests
 
-/* eslint-disable */
-
-// TODO: Stroke constructor's second argument should be optional.
-// TODO: ElementStyle's lineWidth is declared as a number, but we pass in a string '3'. Should we also allow string?
-// TODO: In StaveNote.preFormat() line 929, should noteHeadPadding default to StaveNote.minNoteheadPadding?
+// TODO: In StaveNote.preFormat(), should noteHeadPadding default to StaveNote.minNoteheadPadding?
 //       The bounding box of a note changes slightly when we add a ModifierContext (even if we add zero modifiers).
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';

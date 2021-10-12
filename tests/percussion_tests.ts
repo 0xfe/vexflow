@@ -4,9 +4,7 @@
 //
 // Percussion Tests
 
-/* eslint-disable */
-
-// TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
+// TODO: Type 'Tickable[]' is not assignable to type 'Note[]'.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
@@ -126,7 +124,7 @@ const basic0 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '4', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice0.getTickables() as Note[]});
+  f.Beam({ notes: voice0.getTickables() as Note[] });
   f.Beam({ notes: voice1.getTickables().slice(0, 2) as Note[] });
   f.Beam({ notes: voice1.getTickables().slice(3, 6) as Note[] });
 });
@@ -173,8 +171,8 @@ const basic2 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice1.getTickables().slice(0, 2) as Note[]});
-  f.Beam({ notes: voice1.getTickables().slice(4, 6) as Note[]});
+  f.Beam({ notes: voice1.getTickables().slice(0, 2) as Note[] });
+  f.Beam({ notes: voice1.getTickables().slice(4, 6) as Note[] });
 });
 
 const snare0 = createSingleMeasureTest((f) => {

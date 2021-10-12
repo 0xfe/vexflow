@@ -3,12 +3,10 @@
 //
 // PedalMarking Tests
 
-/* eslint-disable */
-// TODO: Fix Error => Type 'Tickable' is not assignable to type 'StaveNote'.
+// TODO: Fix Error => Type 'Tickable' is not assignable to type 'Note'.
 
 import { Factory } from '../src/factory';
 import { Note } from '../src/note';
-import { Tickable } from '../src/tickable';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const PedalMarkingTests = {

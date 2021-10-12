@@ -4,8 +4,6 @@
 //
 // Renderer Tests
 
-/* eslint-disable */
-
 import { CanvasContext } from 'canvascontext';
 import { Factory, FactoryOptions } from 'factory';
 import { Formatter } from 'formatter';
