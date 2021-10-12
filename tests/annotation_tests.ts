@@ -358,13 +358,13 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const notes1 = specs.map((noteSpec) => {
     const note = new TabNote(noteSpec);
-    note.render_options.draw_stem = true;
+    note.setDrawStem(true);
     return note;
   });
 
   const notes2 = specs.map((noteSpec) => {
     const note = new TabNote(noteSpec);
-    note.render_options.draw_stem = true;
+    note.setDrawStem(true);
     note.setStemDirection(-1);
     return note;
   });

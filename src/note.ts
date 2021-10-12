@@ -93,7 +93,7 @@ export abstract class Note extends Tickable {
   keyProps: KeyProps[];
 
   protected stave?: Stave;
-  render_options: NoteRenderOptions;
+  protected render_options: NoteRenderOptions;
   protected duration: string;
   protected dots: number;
   protected leftDisplacedHeadPx: number;
@@ -635,5 +635,28 @@ export abstract class Note extends Tickable {
   // Get the properties for all the keys in the note
   getKeyProps(): KeyProps[] {
     return this.keyProps;
+  }
+
+  /** Set drawStem render option */
+  setDrawStem(drawStem: boolean): this {
+    this.render_options.draw_stem = drawStem;
+    return this;
+  }
+
+  /** Set drawDots render option */
+  setDrawDots(drawDots: boolean): this {
+    this.render_options.draw_dots = drawDots;
+    return this;
+  }
+
+  /** Set drawStemThroughStaves render option */
+  setDrawStemThroughStaves(drawStemThroughStaves: boolean): this {
+    this.render_options.draw_stem_through_stave = drawStemThroughStaves;
+    return this;
+  }
+
+  /** Get GlyphFontScale render option */
+  getGlyphFontScale(): number {
+    return this.render_options.glyph_font_scale;
   }
 }

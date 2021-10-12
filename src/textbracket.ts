@@ -41,7 +41,7 @@ export class TextBracket extends Element {
     return 'TextBracket';
   }
 
-  render_options: {
+  protected render_options: {
     dashed: boolean;
     color: string;
     line_width: number;
@@ -136,6 +136,30 @@ export class TextBracket extends Element {
   setDashed(dashed: boolean, dash?: number[]): this {
     this.render_options.dashed = dashed;
     if (dash) this.render_options.dash = dash;
+    return this;
+  }
+
+  /** Set lineWidth render option */
+  setLineWidth(lineWidth: number): this {
+    this.render_options.line_width = lineWidth;
+    return this;
+  }
+
+  /** Set showBracket render option */
+  setShowBracket(showBracket: boolean): this {
+    this.render_options.show_bracket = showBracket;
+    return this;
+  }
+
+  /** Set underlineSuperscript render option */
+  setUnderlineSuperscript(underlineSuperscript: boolean): this {
+    this.render_options.underline_superscript = underlineSuperscript;
+    return this;
+  }
+
+  /** Set bracketHeight render option */
+  setBracketHeight(bracketHeight: number): this {
+    this.render_options.bracket_height = bracketHeight;
     return this;
   }
 

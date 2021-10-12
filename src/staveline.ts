@@ -165,7 +165,7 @@ export class StaveLine extends Element {
     RIGHT: 3,
   };
 
-  readonly render_options: RenderOptions;
+  protected render_options: RenderOptions;
 
   protected text: string;
   protected font: FontInfo;
@@ -378,6 +378,60 @@ export class StaveLine extends Element {
     ctx.fillText(this.text, x, y);
     ctx.restore();
 
+    return this;
+  }
+
+  /** Set drawEndArrow render option */
+  setDrawEndArrow(drawEndArrow: boolean): this {
+    this.render_options.draw_end_arrow = drawEndArrow;
+    return this;
+  }
+
+  /** Set drawStartArrow render option */
+  setDrawStartArrow(drawStartArrow: boolean): this {
+    this.render_options.draw_start_arrow = drawStartArrow;
+    return this;
+  }
+
+  /** Set arrowheadAngle render option */
+  setArrowheadAngle(arrowheadAngle: number): this {
+    this.render_options.arrowhead_angle = arrowheadAngle;
+    return this;
+  }
+
+  /** Set arrowheadLength render option */
+  setArrowheadLength(arrowheadLength: number): this {
+    this.render_options.arrowhead_length = arrowheadLength;
+    return this;
+  }
+
+  /** Set textJustification render option */
+  setTextJustification(textJustification: number): this {
+    this.render_options.text_justification = textJustification;
+    return this;
+  }
+
+  /** Set textPositionVertical render option */
+  setTextPositionVertical(textPositionVertical: number): this {
+    this.render_options.text_position_vertical = textPositionVertical;
+    return this;
+  }
+
+  /** Set lineWidth render option */
+  setLineWidth(lineWidth: number): this {
+    this.render_options.line_width = lineWidth;
+    return this;
+  }
+
+  /** Set lineDash render option */
+  setLineDash(lineDash: number[]): this {
+    this.render_options.line_dash = lineDash;
+    return this;
+  }
+
+  /** Set color render option */
+  setColor(color: string): this {
+    this.render_options.color = color;
     return this;
   }
 }

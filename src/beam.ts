@@ -47,7 +47,7 @@ export class Beam extends Element {
     return 'Beam';
   }
 
-  render_options: {
+  protected render_options: {
     flat_beam_offset?: number;
     flat_beams: boolean;
     secondary_break_ticks?: number;
@@ -928,5 +928,17 @@ export class Beam extends Element {
     this.applyStyle();
     this.drawBeamLines(ctx);
     this.restoreStyle();
+  }
+
+  /** Set beamWidth render option */
+  setBeamWidth(beamWidth: number): this {
+    this.render_options.beam_width = beamWidth;
+    return this;
+  }
+
+  /** Set partialBeamLength render option */
+  setPartialBeamLength(partialBeamLength: number): this {
+    this.render_options.partial_beam_length = partialBeamLength;
+    return this;
   }
 }

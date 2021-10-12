@@ -232,7 +232,7 @@ function drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void
 
   const notes = specs.map((struct) => {
     const tabNote = new TabNote(struct);
-    tabNote.render_options.draw_stem = true;
+    tabNote.setDrawStem(true);
     return tabNote;
   });
 
@@ -305,7 +305,7 @@ function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): vo
 
   const notes = specs.map((struct) => {
     const tabNote = new TabNote(struct);
-    tabNote.render_options.draw_stem = true;
+    tabNote.setDrawStem(true);
     tabNote.setStemDirection(-1);
     return tabNote;
   });
@@ -378,8 +378,8 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
 
   const notes = specs.map((struct) => {
     const tabNote = new TabNote(struct);
-    tabNote.render_options.draw_stem = true;
-    tabNote.render_options.draw_stem_through_stave = true;
+    tabNote.setDrawStem(true);
+    tabNote.setDrawStemThroughStaves(true);
     return tabNote;
   });
 
@@ -456,8 +456,8 @@ function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuild
 
   const notes = specs.map((struct) => {
     const tabNote = new TabNote(struct);
-    tabNote.render_options.draw_stem = true;
-    tabNote.render_options.draw_stem_through_stave = true;
+    tabNote.setDrawStem(true);
+    tabNote.setDrawStemThroughStaves(true);
     tabNote.setStemDirection(-1);
     return tabNote;
   });
