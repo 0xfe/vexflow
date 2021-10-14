@@ -36,4 +36,4 @@ To create text metrics for your own font, first obtain an open-type font (.otf) 
 $ node textmetrics_fontgen.js myFont.otf myFont_textmetrics.json
 ```
 
-You can register your metrics using `TextFont.registerFont()` and the metrics will be available for your module. See the `chordsymbol.ts` module for examples.
+You can register your metrics using `TextFormatter.registerFont()` and the metrics will be available for your module. See the `chordsymbol.ts` module for examples.

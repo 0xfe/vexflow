@@ -1,7 +1,7 @@
-import { CustomFont } from "./custom_glyphs";
-import { CustomMetrics } from "./custom_metrics";
+import { CustomFont } from './custom_glyphs';
+import { CustomMetrics } from './custom_metrics';
 
-const Custom = { 
+const Custom = {
   fontData: CustomFont,
   metrics: CustomMetrics,
 };

@@ -3,8 +3,6 @@
 //
 // Text Font Tests
 
-// TODO RONYEH: Rename this to Font Tests / font_tests.ts
-
 import { Bend } from 'bend';
 import { Font, FontStyle, FontWeight } from 'font';
 import { StaveNote } from 'stavenote';
@@ -13,9 +11,9 @@ import { TextNote } from 'textnote';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-const TextFontTests = {
+const FontTests = {
   Start(): void {
-    QUnit.module('TextFont');
+    QUnit.module('Font');
     test('Font Parsing', fontParsing);
     const run = VexFlowTests.runTests;
     run('Set Font', setFont);
@@ -85,4 +83,4 @@ function setFont(options: TestOptions): void {
   ok(true);
 }
 
-export { TextFontTests };
+export { FontTests };

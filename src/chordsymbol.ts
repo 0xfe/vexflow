@@ -361,7 +361,7 @@ export class ChordSymbol extends Modifier {
   protected reportWidth: boolean = true;
 
   // Initialized by the constructor via this.setFont().
-  protected textFormatter!: TextFont;
+  protected textFormatter!: TextFormatter;
 
   constructor() {
     super();
@@ -627,7 +627,7 @@ export class ChordSymbol extends Modifier {
     style: string = 'normal'
   ): this {
     super.setFont(f, size, weight, style);
-    this.textFormatter = TextFont.createFormatter(this.font);
+    this.textFormatter = TextFormatter.create(this.font);
     return this;
   }
 

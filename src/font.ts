@@ -29,10 +29,26 @@ export interface FontData {
   generatedOn?: string;
 }
 
+/** Specified in the `xxx_metrics.ts` files. */
+export interface FontMetrics extends Record<string, any> {
+  name: string;
+  smufl: boolean;
+  stave?: Record<string, number>;
+  accidental?: Record<string, number>;
+  clef?: Record<string, any>;
+  pedalMarking?: Record<string, Record<string, number>>;
+  digits?: Record<string, number>;
+  // Not specified in gonville_metrics.ts.
+  articulation?: Record<string, Record<string, number>>;
+  tremolo?: Record<string, Record<string, number>>;
+  // Not specified in bravura_metrics.ts or gonville_metrics.ts.
+  noteHead?: Record<string, Record<string, number>>;
+  glyphs: Record<string, Record<string, any>>;
+}
+
 export interface FontDataMetrics {
   fontData?: FontData;
-  // eslint-disable-next-line
-  metrics?: Record<string, any>;
+  metrics?: FontMetrics;
 }
 
 export interface FontGlyph {
@@ -43,7 +59,7 @@ export interface FontGlyph {
   ha: number;
   leftSideBearing?: number;
   advanceWidth?: number;
-  o?: string; // RONYEH-FONT: Made this optional to be compatible with robotoslab_textmetrics & petalumascript_textmetrics.
+  o?: string; // RONYEH-FONT: Made this optional to be compatible with robotoslab_glyphs & petalumascript_glyphs.
   cached_outline?: number[];
 }
 
@@ -142,7 +158,6 @@ class Font {
   }
 
   /**
-   * Helper for `TextFont.createFormatter()`.
    * @param weight a string (e.g., 'bold') or a number (e.g., 600 / semi-bold in the OpenType spec).
    * @returns true if the font weight indicates bold.
    */
@@ -163,7 +178,6 @@ class Font {
   }
 
   /**
-   * Helper for `TextFont.createFormatter()`.
    * @param style
    * @returns true if the font style indicates 'italic'.
    */
@@ -193,7 +207,7 @@ class Font {
   protected fontDataMetrics: FontDataMetrics;
 
   // eslint-disable-next-line
-  constructor(name: string, metrics?: Record<string, any>, fontData?: FontData) {
+  constructor(name: string, metrics?: FontMetrics, fontData?: FontData) {
     this.name = name;
     this.fontDataMetrics = {};
     switch (name) {
@@ -268,10 +282,10 @@ class Font {
 }
 
 const Fonts = {
-  Bravura: (): Font => new Font('Bravura'),
-  Gonville: (): Font => new Font('Gonville'),
-  Petaluma: (): Font => new Font('Petaluma'),
-  Custom: (): Font => new Font('Custom'),
+  Bravura: () => new Font('Bravura'),
+  Gonville: () => new Font('Gonville'),
+  Petaluma: () => new Font('Petaluma'),
+  Custom: () => new Font('Custom'),
 };
 
 export { Font, Fonts };

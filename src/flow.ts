@@ -65,7 +65,7 @@ import { TabStave } from './tabstave';
 import { TabTie } from './tabtie';
 import { TextBracket } from './textbracket';
 import { TextDynamics } from './textdynamics';
-import { TextFont } from './textfont';
+import { TextFormatter } from './textformatter';
 import { TextNote } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSignature } from './timesignature';
@@ -97,6 +97,7 @@ export const Flow = {
   Element,
   Factory,
   Font,
+  TextFormatter,
   Fonts,
   Formatter,
   Fraction,
@@ -144,7 +145,6 @@ export const Flow = {
   TabTie,
   TextBracket,
   TextDynamics,
-  TextFont, // TODO: RONYEH rename to FontFormatter
   TextNote,
   TickContext,
   TimeSignature,

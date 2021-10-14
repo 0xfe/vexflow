@@ -1,15 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// This file handles a registry of text font metric information, so all
-// VexFlow modules can take advantage of font metrics in a uniform way.
-//
 
-import { Font } from './font';
-import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
-import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
-import { log, RuntimeError } from './util';
+import { Font, FontGlyph, FontInfo, FontStyle, FontWeight } from './font';
+import { log } from './util';
 
-export interface TextFontInfo extends Record<string, unknown> {
+export interface TextFormatterInfo extends Record<string, unknown> {
   name?: string;
   resolution?: number;
   glyphs?: Record<string, FontGlyph>;
@@ -26,7 +21,7 @@ export interface TextFontInfo extends Record<string, unknown> {
 
 // eslint-disable-next-line
 function L(...args: any[]) {
-  if (TextFont.DEBUG) log('Vex.Flow.TextFont', args);
+  if (TextFormatter.DEBUG) log('Vex.Flow.TextFormatter', args);
 }
 
 /**
@@ -43,15 +38,16 @@ function L(...args: any[]) {
 const textWidthCache: Record<string, Record<string, number>> = {};
 
 /**
- * Applications may register additional fonts via TextFont.registerFont().
+ * Applications may register additional fonts via TextFormatter.registerFont().
  * The metrics for those fonts will be made available to the application.
  */
-const fontRegistry: Record<string, TextFontInfo> = {
+// TODO: Move the fontRegistry over to Font???
+const fontRegistry: Record<string, TextFormatterInfo> = {
   'Roboto Slab': {
     name: 'Roboto Slab',
-    family: RobotoSlabTextMetrics.fontFamily,
-    resolution: RobotoSlabTextMetrics.resolution,
-    glyphs: RobotoSlabTextMetrics.glyphs,
+    family: RobotoSlabFont.fontFamily,
+    resolution: RobotoSlabFont.resolution,
+    glyphs: RobotoSlabFont.glyphs,
     serifs: true,
     monospaced: false,
     italic: false,
@@ -63,9 +59,9 @@ const fontRegistry: Record<string, TextFontInfo> = {
   },
   PetalumaScript: {
     name: 'PetalumaScript',
-    family: PetalumaScriptTextMetrics.fontFamily,
-    resolution: PetalumaScriptTextMetrics.resolution,
-    glyphs: PetalumaScriptTextMetrics.glyphs,
+    family: PetalumaScriptFont.fontFamily,
+    resolution: PetalumaScriptFont.resolution,
+    glyphs: PetalumaScriptFont.glyphs,
     serifs: false,
     monospaced: false,
     italic: false,
@@ -77,12 +73,12 @@ const fontRegistry: Record<string, TextFontInfo> = {
   },
 };
 
-export class TextFont {
-  /** To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`. */
+export class TextFormatter {
+  /** To enable logging for this class. Set `Vex.Flow.TextFormatter.DEBUG` to `true`. */
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'TextFont';
+    return 'TextFormatter';
   }
 
   /**
@@ -90,8 +86,8 @@ export class TextFont {
    * Return all available families with the attributes that are available for each font.
    * We assume descriptions are the same for different weights / styles.
    */
-  static getFontFamilies(): TextFontInfo[] {
-    const retrievedFonts: Record<string, TextFontInfo> = {};
+  static getFontFamilies(): TextFormatterInfo[] {
+    const retrievedFonts: Record<string, TextFormatterInfo> = {};
 
     for (const fontName in fontRegistry) {
       const fontInfo = fontRegistry[fontName];
@@ -127,12 +123,12 @@ export class TextFont {
    * We compare font family, bold, and italic attributes.
    * This method will always return a fallback font if there are no matches.
    */
-  static createFormatter(requestedFont: FontInfo = {}): TextFont {
+  static create(requestedFont: FontInfo = {}): TextFormatter {
     if (!requestedFont.family) {
       requestedFont.family = Font.SANS_SERIF;
     }
 
-    const candidates: TextFontInfo[] = [];
+    const candidates: TextFormatterInfo[] = [];
     // The incoming font family is a string of comma-separated font family names
     // (e.g., `PetalumaScript, Arial, sans-serif`).
     const requestedFamilies = requestedFont.family.split(/\s*,\s*/);
@@ -151,21 +147,21 @@ export class TextFont {
     let selectedFont;
     if (candidates.length === 0) {
       // No match, so return a fallback font.
-      selectedFont = new TextFont(Object.values(fontRegistry)[0]);
+      selectedFont = new TextFormatter(Object.values(fontRegistry)[0]);
     } else if (candidates.length === 1) {
-      selectedFont = new TextFont(candidates[0]);
+      selectedFont = new TextFormatter(candidates[0]);
     } else {
       const bold = Font.isBold(requestedFont.weight);
       const italic = Font.isItalic(requestedFont.style);
       const perfectMatch = candidates.find((f) => f.bold === bold && f.italic === italic);
       if (perfectMatch) {
-        selectedFont = new TextFont(perfectMatch);
+        selectedFont = new TextFormatter(perfectMatch);
       } else {
         const partialMatch = candidates.find((f) => f.italic === italic || f.bold === bold);
         if (partialMatch) {
-          selectedFont = new TextFont(partialMatch);
+          selectedFont = new TextFormatter(partialMatch);
         } else {
-          selectedFont = new TextFont(candidates[0]);
+          selectedFont = new TextFormatter(candidates[0]);
         }
       }
     }
@@ -177,7 +173,7 @@ export class TextFont {
     return selectedFont;
   }
 
-  static getFontInfoByName(fontName: string): TextFontInfo | undefined {
+  static getFontInfoByName(fontName: string): TextFormatterInfo | undefined {
     return fontRegistry[fontName];
   }
 
@@ -190,7 +186,7 @@ export class TextFont {
    * @param fontInfo
    * @param overwrite
    */
-  static registerFont(fontInfo: TextFontInfo, overwrite: boolean = false): void {
+  static registerFont(fontInfo: TextFormatterInfo, overwrite: boolean = false): void {
     const fontName = fontInfo.name ?? '';
     const currFontInfo = fontRegistry[fontName];
     if (typeof currFontInfo === 'undefined' || overwrite) {
@@ -228,17 +224,17 @@ export class TextFont {
 
   // protected attrs: { type: string }; // RONYEH-FONT UNUSED
 
-  /** The preferred method for returning an instance of this class is via `TextFont.createFormatter()` */
-  constructor(params: TextFontInfo) {
+  /** The preferred method for returning an instance of this class is via `TextFormatter.create()` */
+  constructor(params: TextFormatterInfo) {
     if (!params.name) {
       throw new RuntimeError('BadArgument', 'Font must specify a name.');
     }
 
     if (params.glyphs && params.resolution) {
-      TextFont.registerFont(params /*, overwrite = false */);
+      TextFormatter.registerFont(params /*, overwrite = false */);
     }
 
-    const fontInfo = params.glyphs ? params : TextFont.getFontInfoByName(params.name);
+    const fontInfo = params.glyphs ? params : TextFormatter.getFontInfoByName(params.name);
     if (fontInfo) {
       this.updateParams(fontInfo);
     }
@@ -246,7 +242,7 @@ export class TextFont {
     this.updateWidthCacheKey();
   }
 
-  updateParams(params: TextFontInfo): void {
+  updateParams(params: TextFormatterInfo): void {
     if (params.name) this.name = params.name;
     if (params.family) this.family = params.family;
     if (params.resolution) this.resolution = params.resolution;
