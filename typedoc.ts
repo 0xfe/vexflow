@@ -68,7 +68,7 @@ export * from './src/tabstave';
 export * from './src/tabtie';
 export * from './src/textbracket';
 export * from './src/textdynamics';
-export * from './src/textfont';
+export * from './src/textformatter';
 export * from './src/textnote';
 export * from './src/tickable';
 export * from './src/tickcontext';

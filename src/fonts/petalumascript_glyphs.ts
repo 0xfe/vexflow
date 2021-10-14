@@ -1,4 +1,4 @@
-export const PetalumaScriptTextMetrics = {
+export const PetalumaScriptFont = {
   name: 'PetalumaScript',
   smufl: false,
   spacing: 50,
@@ -859,8 +859,7 @@ export const PetalumaScriptTextMetrics = {
       advanceWidth: 308,
     },
   },
-  fontFamily_RONYEH: 'PetalumaScript',
-  fontFamily: 'PetalumaScript' /* RONYEH: Fixed by removing the space. */,
+  fontFamily: 'PetalumaScript' /* RONYEH/TODO: Remember to remove the space!!! */,
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };

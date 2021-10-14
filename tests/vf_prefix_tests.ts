@@ -71,7 +71,7 @@ import { TabStave } from 'tabstave';
 import { TabTie } from 'tabtie';
 import { TextBracket } from 'textbracket';
 import { TextDynamics } from 'textdynamics';
-import { TextFont } from 'textfont';
+import { TextFormatter } from 'textformatter';
 import { TextNote } from 'textnote';
 import { TickContext } from 'tickcontext';
 import { TimeSignature } from 'timesignature';
@@ -160,7 +160,7 @@ function VF_Prefix(): void {
   equal(TabTie, VF.TabTie);
   equal(TextBracket, VF.TextBracket);
   equal(TextDynamics, VF.TextDynamics);
-  equal(TextFont, VF.TextFont);
+  equal(TextFormatter, VF.TextFormatter);
   equal(TextNote, VF.TextNote);
   equal(TickContext, VF.TickContext);
   equal(TimeSignature, VF.TimeSignature);

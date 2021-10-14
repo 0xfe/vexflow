@@ -16,6 +16,7 @@ import { CurveTests } from './curve_tests';
 import { DotTests } from './dot_tests';
 import { EasyScoreTests } from './easyscore_tests';
 import { FactoryTests } from './factory_tests';
+import { FontTests } from './font_tests';
 import { FormatterTests } from './formatter_tests';
 import { FractionTests } from './fraction_tests';
 import { GhostNoteTests } from './ghostnote_tests';
@@ -66,7 +67,6 @@ import { VFPrefixTests } from './vf_prefix_tests';
 import { VibratoTests } from './vibrato_tests';
 import { VibratoBracketTests } from './vibratobracket_tests';
 import { VoiceTests } from './voice_tests';
-import { TextFontTests } from './textfont_tests';
 
 VexFlowTests.run = function () {
   AccidentalTests.Start();
@@ -86,6 +86,7 @@ VexFlowTests.run = function () {
   DotTests.Start();
   EasyScoreTests.Start();
   FactoryTests.Start();
+  FontTests.Start();
   FormatterTests.Start();
   FractionTests.Start();
   GhostNoteTests.Start();
@@ -122,7 +123,6 @@ VexFlowTests.run = function () {
   TabStaveTests.Start();
   TabTieTests.Start();
   TextBracketTests.Start();
-  TextFontTests.Start();
   TextNoteTests.Start();
   ThreeVoicesTests.Start();
   TickContextTests.Start();

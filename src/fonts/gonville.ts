@@ -1,7 +1,7 @@
-import { GonvilleFont } from "./gonville_glyphs";
-import { GonvilleMetrics } from "./gonville_metrics";
+import { GonvilleFont } from './gonville_glyphs';
+import { GonvilleMetrics } from './gonville_metrics';
 
-const Gonville = { 
+const Gonville = {
   fontData: GonvilleFont,
   metrics: GonvilleMetrics,
 };
