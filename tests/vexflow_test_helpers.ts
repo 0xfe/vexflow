@@ -5,7 +5,7 @@
 
 import { Factory } from 'factory';
 import { Flow } from 'flow';
-import { Font, Fonts } from 'font';
+import { Font, MusicFont } from 'font';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
 
@@ -135,9 +135,9 @@ class VexFlowTests {
    *
    */
   static FONT_STACKS: Record<string, Font[]> = {
-    Bravura: [Fonts.Bravura(), Fonts.Gonville(), Fonts.Custom()],
-    Gonville: [Fonts.Gonville(), Fonts.Bravura(), Fonts.Custom()],
-    Petaluma: [Fonts.Petaluma(), Fonts.Gonville(), Fonts.Custom()],
+    Bravura: [MusicFont.Bravura(), MusicFont.Gonville(), MusicFont.Custom()],
+    Gonville: [MusicFont.Gonville(), MusicFont.Bravura(), MusicFont.Custom()],
+    Petaluma: [MusicFont.Petaluma(), MusicFont.Gonville(), MusicFont.Custom()],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {

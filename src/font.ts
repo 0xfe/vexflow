@@ -77,7 +77,7 @@ export enum FontStyle {
 // Internal <span></span> element for parsing CSS font shorthand strings.
 let fontParser: HTMLSpanElement;
 
-class Font {
+export class Font {
   //
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Static Members
@@ -85,6 +85,8 @@ class Font {
   static get CATEGORY(): string {
     return 'Font';
   }
+
+  static FONT_HOST_URL = 'https://unpkg.com/vexflow-fonts@1.0.1/';
 
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
@@ -195,15 +197,36 @@ class Font {
     }
   }
 
-  static loadDefaultWebFonts(): void {
-    //
-    console.log('loadDefaultWebFonts!!!');
+  /**
+   * @param fontName
+   * @param woffURL The absolute or relative URL to the woff file.
+   * @param includeWoff2 If true, we assume that a woff2 file is in
+   * the same folder as the woff file, and will append a `2` to the url.
+   */
+  static async loadWebFont(fontName: string, woffURL: string, includeWoff2: boolean = true): Promise<FontFace> {
+    const woff2URL = includeWoff2 ? `url(${woffURL}2) format('woff2'), ` : '';
+    const woff1URL = `url(${woffURL}) format('woff')`;
+    const woffURLs = woff2URL + woff1URL;
+    const font = new FontFace(fontName, woffURLs);
+    await font.load();
+    document.fonts.add(font);
+    return font;
   }
 
-  static loadWebFont(): void {
-    //
-    // XXXX
-    console.log('loadWebFont YAY!!!');
+  static async loadRobotoSlab(): Promise<void> {
+    Font.loadWebFont('Roboto Slab', Font.FONT_HOST_URL + 'robotoslab/RobotoSlab-Medium_2.001.woff');
+  }
+
+  static async loadPetalumaScript(): Promise<void> {
+    Font.loadWebFont('PetalumaScript', Font.FONT_HOST_URL + 'petaluma/PetalumaScript_1.10_FS.woff');
+  }
+
+  /**
+   * See `flow.html` for an example of how to use this method.
+   */
+  static async loadWebFonts(): Promise<void> {
+    Font.loadRobotoSlab();
+    Font.loadPetalumaScript();
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,18 +243,26 @@ class Font {
       case 'Bravura':
         loadBravura(this.fontDataMetrics);
         break;
-      case 'Custom':
-        loadCustom(this.fontDataMetrics);
-        break;
       case 'Gonville':
         loadGonville(this.fontDataMetrics);
         break;
       case 'Petaluma':
         loadPetaluma(this.fontDataMetrics);
         break;
-      default:
-        this.fontDataMetrics.metrics = metrics;
+      case 'Custom':
+        loadCustom(this.fontDataMetrics);
+        break;
+      case 'RobotoSlab':
         this.fontDataMetrics.fontData = fontData;
+        this.fontDataMetrics.metrics = undefined;
+        break;
+      case 'PetalumaScript':
+        this.fontDataMetrics.fontData = fontData;
+        this.fontDataMetrics.metrics = undefined;
+        break;
+      default:
+        this.fontDataMetrics.fontData = fontData;
+        this.fontDataMetrics.metrics = metrics;
     }
   }
 
@@ -287,11 +318,14 @@ class Font {
   }
 }
 
-const Fonts = {
+export const MusicFont = {
   Bravura: () => new Font('Bravura'),
   Gonville: () => new Font('Gonville'),
   Petaluma: () => new Font('Petaluma'),
   Custom: () => new Font('Custom'),
 };
 
-export { Font, Fonts };
+export const TextFont = {
+  RobotoSlab: () => new Font('XXX'),
+  PetalumaScript: () => new Font('XXX'),
+};

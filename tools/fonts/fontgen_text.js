@@ -1,7 +1,7 @@
 /*
 Convert text font to Vexflow text font metrics.
 
-Usage: node fontgen.js myFont.otf ../../src/fonts/myFont_metrics.js
+Usage: node fontgen_text.js MyFont.otf ../../src/fonts/myfont_glyphs.ts
 */
 
 const fs = require('fs');
@@ -11,7 +11,7 @@ const opentype = require('opentype.js');
 
 function LogError(...args) {
   // eslint-disable-next-line
-  console.error(...args)
+  console.error(...args);
 }
 
 // Converte OTF glyph path to Vexflow glyph path
@@ -25,20 +25,20 @@ function toVFPath(glyph) {
   }
 
   return {
-    'x_min': bb.x1,
-    'x_max': bb.x2,
-    'y_min': bb.y1,
-    'y_max': bb.y2,
-    'ha': bb.y2 - bb.y1,
-    'leftSideBearing': glyph.leftSideBearing,
-    'advanceWidth': glyph.advanceWidth
+    x_min: bb.x1,
+    x_max: bb.x2,
+    y_min: bb.y1,
+    y_max: bb.y2,
+    ha: bb.y2 - bb.y1,
+    leftSideBearing: glyph.leftSideBearing,
+    advanceWidth: glyph.advanceWidth,
   };
 }
 
 const args = process.argv.slice(2);
 if (args.length < 2) {
-  LogError('Usage: node fontgen.js [fontfile.otf] [outfile.json]');
-  LogError('E.g: node fontgen.js bravura-v1.otf bravura.smufl.js');
+  LogError('Usage: node fontgen_text.js [fontfile.otf] [outfile.ts]');
+  LogError('e.g:   node fontgen_text.js MyFont.otf myfont_glyphs.ts');
   process.exit(255);
 }
 
@@ -71,5 +71,4 @@ const fileData = {
 const varName = fileData.fontFamily.replace(/\s+/, '_');
 
 LogError('Writing to file:', outFile);
-fs.writeFileSync(outFile,
-  `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);
+fs.writeFileSync(outFile, `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);

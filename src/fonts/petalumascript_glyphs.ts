@@ -859,7 +859,7 @@ export const PetalumaScriptFont = {
       advanceWidth: 308,
     },
   },
-  fontFamily: 'PetalumaScript' /* RONYEH/TODO: Remember to remove the space!!! */,
+  fontFamily: 'PetalumaScript' /* RONYEH/TODO: This must match perfectly! */,
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };

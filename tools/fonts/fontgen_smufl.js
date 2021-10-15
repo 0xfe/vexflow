@@ -1,7 +1,7 @@
 /*
 Convert SMuFL OTF font to Vexflow glyph file.
 
-Usage: node fontgen.js Bravura.otf ../../src/fonts/bravura_glyphs.js
+Usage: node fontgen_smufl.js Bravura_1.392.otf ../../src/fonts/bravura_glyphs.ts
 */
 
 const fs = require('fs');
@@ -11,10 +11,10 @@ const opentype = require('opentype.js');
 
 function LogError(...args) {
   // eslint-disable-next-line
-  console.error(...args)
+  console.error(...args);
 }
 
-// Converte OTF glyph path to Vexflow glyph path
+// Convert OTF glyph path to Vexflow glyph path
 function toVFPath(glyph) {
   const pointSize = 72;
   const scale = 72 * 20;
@@ -26,32 +26,37 @@ function toVFPath(glyph) {
 
   const ops = path.commands.map((p) => {
     switch (p.type) {
-      case 'M': return `m ${fix(p.x)} ${fix(p.y, true)}`;
-      case 'L': return `l ${fix(p.x)} ${fix(p.y, true)}`;
+      case 'M':
+        return `m ${fix(p.x)} ${fix(p.y, true)}`;
+      case 'L':
+        return `l ${fix(p.x)} ${fix(p.y, true)}`;
       case 'C': // Note Vexflow uses 'b' instead of 'c' to represent bezier curves.
         return `b ${fix(p.x)} ${fix(p.y, true)} ${fix(p.x1)} ${fix(p.y1, true)} ${fix(p.x2)} ${fix(p.y2, true)}`;
-      case 'Q': return `q ${fix(p.x)} ${fix(p.y, true)} ${fix(p.x1)} ${fix(p.y1, true)}`;
-      case 'Z': return 'z';
-      default: throw new Error(`unsupported path type: ${p.type}: ${p}`);
+      case 'Q':
+        return `q ${fix(p.x)} ${fix(p.y, true)} ${fix(p.x1)} ${fix(p.y1, true)}`;
+      case 'Z':
+        return 'z';
+      default:
+        throw new Error(`unsupported path type: ${p.type}: ${p}`);
     }
   });
 
   const pathStr = ops.join(' ');
 
   return {
-    'x_min': bb.x1,
-    'x_max': bb.x2,
-    'y_min': bb.y1,
-    'y_max': bb.y2,
-    'ha': bb.y2 - bb.y1,
-    'o': pathStr,
+    x_min: bb.x1,
+    x_max: bb.x2,
+    y_min: bb.y1,
+    y_max: bb.y2,
+    ha: bb.y2 - bb.y1,
+    o: pathStr,
   };
 }
 
 const args = process.argv.slice(2);
 if (args.length < 2) {
-  LogError('Usage: node fontgen.js [fontfile.otf] [outfile.json]');
-  LogError('E.g: node fontgen.js bravura-v1.otf bravura.smufl.js');
+  LogError('Usage: node fontgen_smufl.js [fontfile.otf] [outfile.json]');
+  LogError('e.g: node fontgen_smufl.js Bravura_1.392.otf bravura_glyphs.ts');
   process.exit(255);
 }
 
@@ -67,7 +72,7 @@ const fontData = {};
 
 // For each code in VALID_CODES, load the UTF code point from glyphnames.json, look
 // it up in the font file, and generate a vexflow path.
-Object.keys(VALID_CODES).forEach(k => {
+Object.keys(VALID_CODES).forEach((k) => {
   const glyphCode = glyphNames[k];
   if (!glyphCode) {
     LogError('Skipping missing glyph:', k);
@@ -84,7 +89,6 @@ Object.keys(VALID_CODES).forEach(k => {
   }
 });
 
-
 // File format for fonts/font_glyphs.js
 const fileData = {
   glyphs: fontData,
@@ -97,5 +101,4 @@ const fileData = {
 const varName = fileData.fontFamily.replace(/\s+/, '_');
 
 LogError('Writing to file:', outFile);
-fs.writeFileSync(outFile,
-  `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);
+fs.writeFileSync(outFile, `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);

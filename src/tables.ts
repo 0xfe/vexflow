@@ -3,7 +3,7 @@
 /* eslint-disable key-spacing */
 
 import { ArticulationStruct } from './articulation';
-import { Fonts } from './font';
+import { MusicFont } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';
@@ -331,7 +331,7 @@ export const Tables = {
    * Customize this to choose a different music font.
    * For example: Vex.Tables.MUSIC_FONT_STACK = [Fonts.Petaluma(), Fonts.Custom()];
    */
-  MUSIC_FONT_STACK: [Fonts.Bravura(), Fonts.Gonville(), Fonts.Custom()],
+  MUSIC_FONT_STACK: [MusicFont.Bravura(), MusicFont.Gonville(), MusicFont.Custom()],
   NOTATION_FONT_SCALE: 39,
   TABLATURE_FONT_SCALE: 39,
 

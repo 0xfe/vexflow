@@ -80,25 +80,8 @@
         loadVexFlow = () => loadScript(vexURL).then(() => loadScript(testsURL));
       }
 
-      // Load web fonts before running the tests.
-      const host = 'https://unpkg.com/vexflow-fonts@1.0.1/';
-      const srcURLs = (path) => `url(${host}${path}2) format('woff2'), url(${host}${path}) format('woff')`;
-      const robotoFont = new FontFace('Roboto Slab', srcURLs('robotoslab/RobotoSlab-Medium_2.001.woff'));
-
-      // const petalumaFont = new FontFace('PetalumaScript', srcURLs('petaluma/PetalumaScript_1.10.woff'));
-      const petalumaLocalURL = `url(../releases/fonts/petalumascript-webfont.woff) format('woff')`;
-      const petalumaFont = new FontFace('PetalumaScript', petalumaLocalURL);
-
       loadVexFlow()
-        .then(() => {
-          console.log(VF.Font.loadDefaultWebFonts());
-          return robotoFont.load();
-        })
-        .then(() => petalumaFont.load())
-        .then(() => {
-          document.fonts.add(robotoFont);
-          document.fonts.add(petalumaFont);
-        })
+        .then(() => Vex.Flow.Font.loadWebFonts())
         // Load qunit.js as late as possible to avoid a race condition
         // where the QUnit module drop down box doesn't appear if
         // Vex.Flow.Test.run() happens too late,
