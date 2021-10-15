@@ -3,7 +3,7 @@
 /* eslint-disable key-spacing */
 
 import { ArticulationStruct } from './articulation';
-import { Font, Fonts } from './font';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';

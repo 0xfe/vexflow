@@ -115,7 +115,6 @@ function VF_Prefix(): void {
   equal(Factory, VF.Factory);
   equal(Flow.RESOLUTION, VF.RESOLUTION);
   equal(Font, VF.Font);
-  equal(Fonts, VF.Fonts);
   equal(Formatter, VF.Formatter);
   propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
   equal(Fraction, VF.Fraction);

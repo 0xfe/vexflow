@@ -15,7 +15,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, Fonts } from './font';
+import { Font, MusicFont } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -98,7 +98,7 @@ export const Flow = {
   Factory,
   Font,
   TextFormatter,
-  Fonts,
+  Fonts: MusicFont,
   Formatter,
   Fraction,
   FretHandFinger,

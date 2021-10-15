@@ -41,8 +41,7 @@ const textWidthCache: Record<string, Record<string, number>> = {};
  * Applications may register additional fonts via TextFormatter.registerFont().
  * The metrics for those fonts will be made available to the application.
  */
-// TODO: Move the fontRegistry over to Font???
-const fontRegistry: Record<string, TextFormatterInfo> = {
+const registry: Record<string, TextFormatterInfo> = {
   'Roboto Slab': {
     name: 'Roboto Slab',
     family: RobotoSlabFont.fontFamily,
@@ -89,8 +88,8 @@ export class TextFormatter {
   static getFontFamilies(): TextFormatterInfo[] {
     const retrievedFonts: Record<string, TextFormatterInfo> = {};
 
-    for (const fontName in fontRegistry) {
-      const fontInfo = fontRegistry[fontName];
+    for (const fontName in registry) {
+      const fontInfo = registry[fontName];
 
       // It is possible for font files to have a different `fontName` (e.g., MyFont-Medium, MyFont-Black),
       // while sharing the same `family` field. TODO: Verify this comment!
@@ -133,8 +132,8 @@ export class TextFormatter {
     // (e.g., `PetalumaScript, Arial, sans-serif`).
     const requestedFamilies = requestedFont.family.split(/\s*,\s*/);
     for (const requestedFamily of requestedFamilies) {
-      for (const fontName in fontRegistry) {
-        const font = fontRegistry[fontName];
+      for (const fontName in registry) {
+        const font = registry[fontName];
         if (font.family === requestedFamily) {
           candidates.push(font);
         }
@@ -147,7 +146,7 @@ export class TextFormatter {
     let selectedFont;
     if (candidates.length === 0) {
       // No match, so return a fallback font.
-      selectedFont = new TextFormatter(Object.values(fontRegistry)[0]);
+      selectedFont = new TextFormatter(Object.values(registry)[0]);
     } else if (candidates.length === 1) {
       selectedFont = new TextFormatter(candidates[0]);
     } else {
@@ -174,7 +173,7 @@ export class TextFormatter {
   }
 
   static getFontInfoByName(fontName: string): TextFormatterInfo | undefined {
-    return fontRegistry[fontName];
+    return registry[fontName];
   }
 
   /**
@@ -188,9 +187,9 @@ export class TextFormatter {
    */
   static registerFont(fontInfo: TextFormatterInfo, overwrite: boolean = false): void {
     const fontName = fontInfo.name ?? '';
-    const currFontInfo = fontRegistry[fontName];
+    const currFontInfo = registry[fontName];
     if (typeof currFontInfo === 'undefined' || overwrite) {
-      fontRegistry[fontName] = fontInfo;
+      registry[fontName] = fontInfo;
     }
   }
 
@@ -221,8 +220,6 @@ export class TextFormatter {
   protected maxSizeGlyph: string = 'H';
 
   protected widthCacheKey: string = '';
-
-  // protected attrs: { type: string }; // RONYEH-FONT UNUSED
 
   /** The preferred method for returning an instance of this class is via `TextFormatter.create()` */
   constructor(params: TextFormatterInfo) {
