@@ -57,6 +57,7 @@ import { TextNoteTests } from './textnote_tests';
 import { ThreeVoicesTests } from './threevoice_tests';
 import { TickContextTests } from './tickcontext_tests';
 import { TimeSignatureTests } from './timesignature_tests';
+import { TremoloTests } from './tremolo_tests';
 import { TuningTests } from './tuning_tests';
 import { TupletTests } from './tuplet_tests';
 import { TypeGuardTests } from './typeguard_tests';
@@ -124,6 +125,7 @@ VexFlowTests.run = function () {
   ThreeVoicesTests.Start();
   TickContextTests.Start();
   TimeSignatureTests.Start();
+  TremoloTests.Start();
   TuningTests.Start();
   TupletTests.Start();
   TypeGuardTests.Start();
