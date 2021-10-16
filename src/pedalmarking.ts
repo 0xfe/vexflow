@@ -7,7 +7,6 @@ import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { FontInfo } from './types/common';
 import { Note } from './note';
-==== BASE ====
 
 // eslint-disable-next-line
 function L(...args: any[]) {

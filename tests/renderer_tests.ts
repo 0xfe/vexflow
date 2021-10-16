@@ -12,7 +12,7 @@ import { Renderer } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { SVGContext } from 'svgcontext';
-import { RuntimeError } from 'util';
+import { RuntimeError } from '../src/util';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 // TODO: Should FactoryOptions.renderer.elementId also accept a canvas | div?
