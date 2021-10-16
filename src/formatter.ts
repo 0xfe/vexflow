@@ -772,7 +772,7 @@ export class Formatter {
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     let targetWidth = adjustedJustifyWidth;
-    let distances = calculateIdealDistances(targetWidth);
+    const distances = calculateIdealDistances(targetWidth);
     let actualWidth = shiftToIdealDistances(distances);
     // Calculate right justification by finding max of (configured value, min distance between tickables)
     // so measures with lots of white space use it evenly, and crowded measures use at least the configured
@@ -789,13 +789,9 @@ export class Formatter {
     const minDistance = calcMinDistance(targetWidth, distances);
     const multiNote = contextList.length > 1;
     // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
-    let paddingMax = configMaxPadding;
     // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
     // existing visual regression tests.
-    if (paddingMax * 2 < minDistance) {
-      paddingMax = minDistance;
-      L('Right padding to ' + minDistance);
-    }
+    const paddingMax = configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
     const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
     const maxX = adjustedJustifyWidth - paddingMin;
 
@@ -808,8 +804,7 @@ export class Formatter {
       // widths between different durations differ across stave (e.g., 1 quarter note is not the same pixel-width
       // as 4 16th-notes). Run another pass, now that we know how much to justify.
       targetWidth -= actualWidth - maxX;
-      distances = calculateIdealDistances(targetWidth);
-      actualWidth = shiftToIdealDistances(distances);
+      actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
 
