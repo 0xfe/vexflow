@@ -10,11 +10,11 @@
 import { CanvasContext } from 'canvascontext';
 import { Factory, FactoryOptions } from 'factory';
 import { Formatter } from 'formatter';
+import { RenderContext } from 'rendercontext';
 import { Renderer } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { SVGContext } from 'svgcontext';
-import { RenderContext } from 'types/common';
 import { RuntimeError } from 'util';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

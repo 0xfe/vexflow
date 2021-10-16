@@ -11,12 +11,12 @@ import { Modifier } from './modifier';
 import { Formatter } from './formatter';
 import { Voice } from './voice';
 import { Beam } from './beam';
+import { RenderContext } from './rendercontext';
 import { StaveTie } from './stavetie';
 import { TabTie } from './tabtie';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from './modifiercontext';
-import { RenderContext } from './types/common';
 import { isStaveNote } from 'typeguard';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.

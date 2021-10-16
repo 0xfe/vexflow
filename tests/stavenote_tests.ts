@@ -21,6 +21,7 @@ import { Formatter } from 'formatter';
 import { Fraction } from 'fraction';
 import { FretHandFinger } from 'frethandfinger';
 import { Modifier, ModifierPosition } from 'modifier';
+import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
@@ -28,7 +29,6 @@ import { Stem } from 'stem';
 import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { TickContext } from 'tickcontext';
-import { RenderContext } from 'types/common';
 import { ModifierContext } from 'modifiercontext';
 
 const StaveNoteTests = {
@@ -108,7 +108,9 @@ function draw(
   note.setContext(context).draw();
 
   if (drawBoundingBox) {
-    note.getBoundingBox().draw(context);
+    const bb = note.getBoundingBox();
+    context.rect(bb.getX(), bb.getY(), bb.getW(), bb.getH());
+    context.stroke();
   }
   return note;
 }

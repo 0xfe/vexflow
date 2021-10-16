@@ -43,6 +43,7 @@ import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
 import { Renderer } from './renderer';
+import { RenderContext } from './rendercontext';
 import { RepeatNote } from './repeatnote';
 import { Repetition } from './staverepetition';
 import { Stave } from './stave';
@@ -123,6 +124,7 @@ export const Flow = {
   Parser,
   PedalMarking,
   Registry,
+  RenderContext,
   Renderer,
   RepeatNote,
   Repetition,

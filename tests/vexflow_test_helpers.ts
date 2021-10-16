@@ -5,7 +5,7 @@
 
 import { Flow } from 'flow';
 import { Assert } from './types/qunit';
-import { RenderContext } from 'types/common';
+import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';
 import { Font, Fonts } from 'font';

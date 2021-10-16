@@ -2,8 +2,8 @@
 // MIT License
 
 import { CanvasContext } from './canvascontext';
+import { RenderContext } from './rendercontext';
 import { SVGContext } from './svgcontext';
-import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
 // A ContextBuilder is either Renderer.getSVGContext or Renderer.getCanvasContext.

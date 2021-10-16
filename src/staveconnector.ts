@@ -5,8 +5,9 @@ import { RuntimeError } from './util';
 import { Element } from './element';
 import { Flow } from './flow';
 import { Glyph } from './glyph';
-import { FontInfo, RenderContext } from './types/common';
 import { Stave } from './stave';
+import { RenderContext } from './rendercontext';
+import { FontInfo } from './types/common';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
   if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {

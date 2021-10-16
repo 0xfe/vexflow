@@ -6,11 +6,11 @@ import { Flow } from './flow';
 import { Element } from './element';
 import { Fraction } from './fraction';
 import { Tuplet } from './tuplet';
+import { RenderContext } from './rendercontext';
 import { Stem } from './stem';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { Voice } from './voice';
-import { RenderContext } from './types/common';
 import { isStaveNote, isTabNote } from 'typeguard';
 
 function calculateStemDirection(notes: StemmableNote[]) {

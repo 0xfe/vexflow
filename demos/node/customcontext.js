@@ -9,8 +9,9 @@ const VF = Vex.Flow;
 // A custom Vex.Flow.RenderContext implementation.
 // This is just a stub for demonstration purposes that console.logs all method
 // calls and arguments.
-class CustomContext {
+class CustomContext extends VF.RenderContext {
   constructor() {
+    super();
     this.font = '';
     this.fillStyle = '';
     this.strokeStyle = '';

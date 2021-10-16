@@ -3,8 +3,8 @@
 
 import { Modifier } from './modifier';
 import { Bend } from './bend';
-import { RenderContext } from './types/common';
 import { ModifierContext, ModifierContextState } from './modifiercontext';
+import { RenderContext } from './rendercontext';
 
 export interface VibratoRenderOptions {
   wave_height: number;

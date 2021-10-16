@@ -3,7 +3,7 @@
 // @author Gregory Ristow (2015)
 
 import { RuntimeError, normalizeAngle, prefix } from './util';
-import { RenderContext, TextMeasure } from './types/common';
+import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 
 // eslint-disable-next-line
 type Attributes = { [key: string]: any };
@@ -104,7 +104,7 @@ class MeasureTextCache {
 /**
  * SVG rendering context with an API similar to CanvasRenderingContext2D.
  */
-export class SVGContext implements RenderContext {
+export class SVGContext extends RenderContext {
   protected static measureTextCache = new MeasureTextCache();
 
   element: HTMLElement; // the parent DOM object
@@ -124,6 +124,7 @@ export class SVGContext implements RenderContext {
   fontString: string = '';
 
   constructor(element: HTMLElement) {
+    super();
     this.element = element;
 
     const svg = this.create('svg');
@@ -192,7 +193,7 @@ export class SVGContext implements RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): SVGGElement {
+  openGroup(cls: string, id?: string, attrs?: GroupAttributes): SVGGElement {
     const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
@@ -217,7 +218,7 @@ export class SVGContext implements RenderContext {
 
   // ### Styling & State Methods:
 
-  setFont(family: string, size: number, weight: string): this {
+  setFont(family: string, size: number, weight?: string): this {
     // In SVG italic is handled by font-style.
     // We search the weight argument and apply bold and italic
     // to font-weight and font-style respectively.

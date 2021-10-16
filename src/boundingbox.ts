@@ -1,8 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RenderContext } from './types/common';
-
 /** Bounding boxes for interactive notation */
 
 export class BoundingBox {
@@ -85,7 +83,7 @@ export class BoundingBox {
    * Merge my box with given box. Creates a bigger bounding box unless
    * the given box is contained in this one.
    */
-  mergeWith(boundingBox: BoundingBox, ctx?: RenderContext): this {
+  mergeWith(boundingBox: BoundingBox): this {
     const that = boundingBox;
 
     const new_x = this.x < that.x ? this.x : that.x;
@@ -98,20 +96,6 @@ export class BoundingBox {
     this.w = new_w;
     this.h = new_h;
 
-    if (ctx) this.draw(ctx);
     return this;
-  }
-
-  /**
-   * Render the BoundingBox.
-   * @param ctx rendering context
-   * @param x horizontal shift
-   * @param y vertical shift
-   */
-  draw(ctx: RenderContext, x?: number, y?: number): void {
-    if (!x) x = 0;
-    if (!y) y = 0;
-    ctx.rect(this.x + x, this.y + y, this.w, this.h);
-    ctx.stroke();
   }
 }

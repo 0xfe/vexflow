@@ -9,11 +9,6 @@ export interface FontInfo {
   style?: string;
 }
 
-export interface TextMeasure {
-  width: number;
-  height: number;
-}
-
 export interface Bounds {
   x: number;
   y: number;
@@ -55,54 +50,6 @@ export interface TypeProps extends KeyProps {
   code_flag_upstem: string;
   code_flag_downstem: string;
   position: string;
-}
-
-export interface RenderContext {
-  clear(): void;
-  setFont(family: string, size: number, weight: string = ''): this;
-  setRawFont(font: string): this;
-  setFillStyle(style: string): this;
-  setBackgroundFillStyle(style: string): this;
-  setStrokeStyle(style: string): this;
-  setShadowColor(color: string): this;
-  setShadowBlur(blur: number): this;
-  setLineWidth(width: number): this;
-  setLineCap(capType: CanvasLineCap): this;
-  setLineDash(dashPattern: number[]): this;
-  scale(x: number, y: number): this;
-  rect(x: number, y: number, width: number, height: number): this;
-  resize(width: number, height: number): this;
-  fillRect(x: number, y: number, width: number, height: number): this;
-  clearRect(x: number, y: number, width: number, height: number): this;
-  beginPath(): this;
-  moveTo(x: number, y: number): this;
-  lineTo(x: number, y: number): this;
-  bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
-  quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this;
-  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this;
-  // eslint-disable-next-line
-  fill(attributes?: any): this;
-  stroke(): this;
-  closePath(): this;
-  fillText(text: string, x: number, y: number): this;
-  save(): this;
-  restore(): this;
-  // eslint-disable-next-line
-  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any;
-  closeGroup(): void;
-  // eslint-disable-next-line
-  add(child: any): void;
-
-  measureText(text: string): TextMeasure;
-
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  font: string;
-
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  fillStyle: string | CanvasGradient | CanvasPattern;
-
-  /** Maintain compatibility with the CanvasRenderingContext2D API. */
-  strokeStyle: string | CanvasGradient | CanvasPattern;
 }
 
 export interface TieNotes {
