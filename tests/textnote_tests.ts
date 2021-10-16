@@ -8,11 +8,11 @@
 
 // TODO: TextNote needs a setFont() accessor.
 
-import { Crescendo } from '../src/crescendo';
-import { Flow } from '../src/flow';
-import { Note } from '../src/note';
-import { TextNote } from '../src/textnote';
-import { Stave } from '../src/stave';
+import { Crescendo } from 'crescendo';
+import { Flow } from 'flow';
+import { Note } from 'note';
+import { TextNote } from 'textnote';
+import { Stave } from 'stave';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

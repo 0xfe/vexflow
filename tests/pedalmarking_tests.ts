@@ -5,8 +5,8 @@
 
 // TODO: Fix Error => Type 'Tickable' is not assignable to type 'Note'.
 
-import { Factory } from '../src/factory';
-import { Note } from '../src/note';
+import { Factory } from 'factory';
+import { Note } from 'note';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const PedalMarkingTests = {

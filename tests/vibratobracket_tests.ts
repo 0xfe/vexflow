@@ -5,9 +5,9 @@
 // VibratoBracket Tests
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Factory } from '../src/factory';
-import { Tickable } from '../src/tickable';
-import { Note } from '../src/note';
+import { Factory } from 'factory';
+import { Tickable } from 'tickable';
+import { Note } from 'note';
 
 const VibratoBracketTests = {
   Start(): void {

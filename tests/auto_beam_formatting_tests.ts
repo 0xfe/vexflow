@@ -7,11 +7,11 @@
 //       Is there a cleaner way to handle this?
 
 import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
-import { Beam } from '../src/beam';
-import { Fraction } from '../src/fraction';
-import { Stem } from '../src/stem';
-import { Note } from '../src/note';
-import { EasyScore } from '../src/easyscore';
+import { Beam } from 'beam';
+import { Fraction } from 'fraction';
+import { Stem } from 'stem';
+import { Note } from 'note';
+import { EasyScore } from 'easyscore';
 
 const AutoBeamFormattingTests = {
   Start(): void {

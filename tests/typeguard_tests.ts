@@ -7,10 +7,10 @@
 // eslint-disable-next-line
 // @ts-nocheck to support ES5 style class declaration in the fakeES5() test case.
 
-import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from '../src/typeguard';
-import { StaveNote } from '../src/stavenote';
-import { TabNote } from '../src/tabnote';
-import { StemmableNote } from '../src/stemmablenote';
+import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
+import { StaveNote } from 'stavenote';
+import { TabNote } from 'tabnote';
+import { StemmableNote } from 'stemmablenote';
 
 const TypeGuardTests = {
   Start(): void {

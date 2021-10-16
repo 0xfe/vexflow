@@ -14,6 +14,7 @@ import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { Tremolo } from 'tremolo';
+import { Note } from 'note';
 
 const PercussionTests = {
   Start(): void {
