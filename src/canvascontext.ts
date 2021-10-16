@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { RenderContext, TextMeasure } from './types/common';
+import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
 /**
  * A rendering context for the Canvas backend (CanvasRenderingContext2D).
  */
-export class CanvasContext implements RenderContext {
+export class CanvasContext extends RenderContext {
   vexFlowCanvasContext: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement | { width: number; height: number };
   background_fillStyle?: string;
@@ -42,6 +42,8 @@ export class CanvasContext implements RenderContext {
    * @param context
    */
   constructor(context: CanvasRenderingContext2D) {
+    super();
+
     // Use a name that is unlikely to clash with a canvas context property.
     this.vexFlowCanvasContext = context;
     if (!context.canvas) {
@@ -59,7 +61,7 @@ export class CanvasContext implements RenderContext {
   }
 
   // eslint-disable-next-line
-  openGroup(cls: string, id?: string, attrs?: { pointerBBox: boolean }): any {
+  openGroup(cls: string, id?: string, attrs?: GroupAttributes): any {
     // Containers not implemented.
   }
 
@@ -72,7 +74,7 @@ export class CanvasContext implements RenderContext {
     // Containers not implemented.
   }
 
-  setFont(family: string, size: number, weight: string): this {
+  setFont(family: string, size: number, weight?: string): this {
     this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
     this.textHeight = (size * 4) / 3;
     return this;
@@ -146,18 +148,29 @@ export class CanvasContext implements RenderContext {
     return this;
   }
 
-  // Only called if Renderer.USE_CANVAS_PROXY is true.
   scale(x: number, y: number): this {
     this.vexFlowCanvasContext.scale(x, y);
     return this;
   }
 
-  // CanvasRenderingContext2D does not have a resize function.
-  // renderer.ts calls ctx.scale() instead, so this method is never used.
-  // eslint-disable-next-line
   resize(width: number, height: number): this {
-    // DO NOTHING.
-    return this;
+    const canvasElement = this.vexFlowCanvasContext.canvas;
+    const devicePixelRatio = window.devicePixelRatio || 1;
+
+    // Scale the canvas size by the device pixel ratio clamping to the maximum
+    // supported size.
+    [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
+
+    // Divide back down by the pixel ratio and convert to integers.
+    width = (width / devicePixelRatio) | 0;
+    height = (height / devicePixelRatio) | 0;
+
+    canvasElement.width = width * devicePixelRatio;
+    canvasElement.height = height * devicePixelRatio;
+    canvasElement.style.width = width + 'px';
+    canvasElement.style.height = height + 'px';
+
+    return this.scale(devicePixelRatio, devicePixelRatio);
   }
 
   rect(x: number, y: number, width: number, height: number): this {

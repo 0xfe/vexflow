@@ -12,11 +12,11 @@
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Factory } from 'factory';
+import { RenderContext } from 'rendercontext';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { Tremolo } from 'tremolo';
-import { RenderContext } from 'types/common';
 
 const PercussionTests = {
   Start(): void {

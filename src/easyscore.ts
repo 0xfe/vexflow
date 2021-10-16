@@ -6,7 +6,7 @@ import { Articulation } from './articulation';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
 import { Grammar, Parser, Match, Result, Rule, RuleFunction } from './parser';
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 import { RuntimeError, log, defined } from './util';
 import { Note } from './note';
 import { StaveNote } from './stavenote';

@@ -2,36 +2,23 @@
 // MIT License
 
 import { CanvasContext } from './canvascontext';
+import { RenderContext } from './rendercontext';
 import { SVGContext } from './svgcontext';
-import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 
 // A ContextBuilder is either Renderer.getSVGContext or Renderer.getCanvasContext.
 export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.getCanvasContext;
 
+// eslint-disable-next-line
+function isRenderContext(obj: any): obj is RenderContext {
+  return obj.setShadowBlur !== undefined;
+}
+
 /**
  * Support Canvas & SVG rendering contexts.
  */
 export class Renderer {
-  protected elementId?: string;
-  protected element: HTMLCanvasElement | HTMLDivElement;
-  protected backend: number;
-
   protected ctx: RenderContext;
-  // eslint-disable-next-line
-  protected paper: any;
-
-  static readonly Backends = {
-    CANVAS: 1,
-    SVG: 2,
-  };
-
-  // End of line types
-  static readonly LineEndType = {
-    NONE: 1, // No leg
-    UP: 2, // Upward leg
-    DOWN: 3, // Downward leg
-  };
 
   static lastContext?: RenderContext = undefined;
 
@@ -107,67 +94,74 @@ export class Renderer {
    *   - a div element, which will contain the SVG output
    * @param backend Renderer.Backends.CANVAS or Renderer.Backends.SVG
    */
-  constructor(canvasId: string | HTMLCanvasElement | HTMLDivElement, backend: number) {
-    if (!canvasId) {
-      throw new RuntimeError('BadArgument', 'Invalid id for renderer.');
-    } else if (typeof canvasId === 'string') {
-      this.elementId = canvasId;
-      this.element = document.getElementById(canvasId) as HTMLCanvasElement | HTMLDivElement;
-    } else if ('getContext' in canvasId /* HTMLCanvasElement */) {
-      this.element = canvasId as HTMLCanvasElement;
+  constructor(context: RenderContext);
+  constructor(canvas: string | HTMLCanvasElement | HTMLDivElement, backend: number);
+  constructor(arg0: string | HTMLCanvasElement | HTMLDivElement | RenderContext, arg1?: number) {
+    if (isRenderContext(arg0)) {
+      // The user has provided what looks like a RenderContext, let's just use it.
+      // TODO(tommadams): RenderContext is an interface, can we introduce a context base class
+      // to make this check more robust?
+      this.ctx = arg0;
     } else {
-      // Assume it's a HTMLDivElement.
-      this.element = canvasId as HTMLDivElement;
-    }
-
-    // Verify backend and create context
-    this.backend = backend;
-    if (this.backend === Renderer.Backends.CANVAS) {
-      const canvasElement = this.element as HTMLCanvasElement;
-      if (!canvasElement.getContext) {
-        throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
-      } else {
-        const context = canvasElement.getContext('2d');
-        if (context) {
-          this.ctx = new CanvasContext(context);
-        } else {
-          throw new RuntimeError('BadElement', `Can't get canvas context from element: ${canvasId}`);
-        }
+      if (arg1 === undefined) {
+        // The backend must be specified if the render context isn't directly provided.
+        throw new RuntimeError('InvalidArgument', 'Missing backend argument');
       }
-    } else if (this.backend === Renderer.Backends.SVG) {
-      this.ctx = new SVGContext(this.element);
-    } else {
-      throw new RuntimeError('InvalidBackend', `No support for backend: ${this.backend}`);
+      const backend: number = arg1;
+
+      let element: HTMLElement;
+      if (typeof arg0 == 'string') {
+        const maybeElement = document.getElementById(arg0);
+        if (maybeElement == null) {
+          throw new RuntimeError('BadElementId', `Can't find element with ID "${maybeElement}"`);
+        }
+        element = maybeElement;
+      } else {
+        element = arg0 as HTMLElement;
+      }
+
+      // Verify backend and create context
+      if (backend === Renderer.Backends.CANVAS) {
+        if (!(element instanceof window.HTMLCanvasElement)) {
+          throw new RuntimeError('BadElement', 'CANVAS context requires an HTMLCanvasElement');
+        }
+        const context = element.getContext('2d');
+        if (!context) {
+          throw new RuntimeError('BadElement', "Can't get canvas context");
+        }
+        this.ctx = new CanvasContext(context);
+      } else if (backend === Renderer.Backends.SVG) {
+        if (!(element instanceof window.HTMLDivElement)) {
+          throw new RuntimeError('BadElement', 'SVG context requires an HTMLDivElement.');
+        }
+        this.ctx = new SVGContext(element);
+      } else {
+        throw new RuntimeError('InvalidBackend', `No support for backend: ${backend}`);
+      }
     }
   }
 
   resize(width: number, height: number): this {
-    if (this.backend === Renderer.Backends.CANVAS) {
-      const canvasElement = this.element as HTMLCanvasElement;
-      const devicePixelRatio = window.devicePixelRatio || 1;
-
-      // Scale the canvas size by the device pixel ratio clamping to the maximum
-      // supported size.
-      [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
-
-      // Divide back down by the pixel ratio and convert to integers.
-      width = (width / devicePixelRatio) | 0;
-      height = (height / devicePixelRatio) | 0;
-
-      canvasElement.width = width * devicePixelRatio;
-      canvasElement.height = height * devicePixelRatio;
-      canvasElement.style.width = width + 'px';
-      canvasElement.style.height = height + 'px';
-
-      this.ctx.scale(devicePixelRatio, devicePixelRatio);
-    } else {
-      this.ctx.resize(width, height);
-    }
-
+    this.ctx.resize(width, height);
     return this;
   }
 
   getContext(): RenderContext {
     return this.ctx;
+  }
+}
+
+// eslint-disable-next-line
+export namespace Renderer {
+  export enum Backends {
+    CANVAS = 1,
+    SVG = 2,
+  }
+
+  // End of line types
+  export enum LineEndType {
+    NONE = 1, // No leg
+    UP = 2, // Upward leg
+    DOWN = 3, // Downward leg
   }
 }

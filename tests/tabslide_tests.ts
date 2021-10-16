@@ -7,10 +7,11 @@ import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
+import { RenderContext } from 'rendercontext';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabSlide } from 'tabslide';
 import { TabStave } from 'tabstave';
-import { RenderContext, TieNotes } from 'types/common';
+import { TieNotes } from 'types/common';
 import { Voice } from 'voice';
 
 const TabSlideTests = {

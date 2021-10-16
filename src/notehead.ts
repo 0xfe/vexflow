@@ -6,7 +6,7 @@ import { Flow } from './flow';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
 import { Glyph, GlyphProps } from './glyph';
-import { RenderContext } from './types/common';
+import { RenderContext } from './rendercontext';
 import { BoundingBox } from './boundingbox';
 import { Stave } from './stave';
 import { ElementStyle } from './element';

@@ -7,11 +7,12 @@ import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
+import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { KeyProps, RenderContext } from './types/common';
+import { KeyProps } from './types/common';
 import { Voice } from './voice';
 
 export interface NoteMetrics {

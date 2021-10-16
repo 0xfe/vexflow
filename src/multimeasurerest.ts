@@ -8,10 +8,10 @@ import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
+import { RenderContext } from './rendercontext';
+import { Stave } from './stave';
 import { StaveModifierPosition } from './stavemodifier';
 import { TimeSignature } from './timesignature';
-import { Stave } from './stave';
-import { RenderContext } from './types/common';
 import { isBarline } from 'typeguard';
 
 export interface MultimeasureRestRenderOptions {

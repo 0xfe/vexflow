@@ -5,10 +5,10 @@
 import { Note } from './note';
 import { Clef } from './clef';
 import { Glyph } from './glyph';
-import { RenderContext } from './types/common';
 import { BoundingBox } from './boundingbox';
 import { ClefType } from './clef';
 import { ModifierContext } from './modifiercontext';
+import { RenderContext } from './rendercontext';
 
 /** ClefNote implements clef annotations in measures. */
 export class ClefNote extends Note {

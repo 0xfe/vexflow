@@ -6,9 +6,9 @@ import { Element } from './element';
 import { Factory } from './factory';
 import { FormatOptions, Formatter, FormatterOptions } from './formatter';
 import { Note } from './note';
+import { RenderContext } from './rendercontext';
 import { Stave, StaveOptions } from './stave';
 import { StaveConnector } from './staveconnector';
-import { RenderContext } from './types/common';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 

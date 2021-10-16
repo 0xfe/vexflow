@@ -17,5 +17,6 @@
       "@petaluma": ["fonts/loadDynamic"],
       "@custom": ["fonts/loadDynamic"]
     },
-  }
+  },
+  "exclude": ["./src/fonts/legacy"]
 }

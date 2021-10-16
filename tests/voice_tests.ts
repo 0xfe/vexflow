@@ -89,7 +89,11 @@ function full(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   stave.setContext(ctx).draw();
   voice.draw(ctx);
-  voice.getBoundingBox()?.draw(ctx);
+  const bb = voice.getBoundingBox();
+  if (bb) {
+    ctx.rect(bb.getX(), bb.getY(), bb.getW(), bb.getH());
+  }
+  ctx.stroke();
 
   throws(
     () => voice.addTickable(new StaveNote({ keys: ['c/4'], duration: '2' })),

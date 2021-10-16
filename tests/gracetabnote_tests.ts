@@ -9,9 +9,9 @@ import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { GraceNoteGroup } from 'gracenotegroup';
 import { GraceTabNote } from 'gracetabnote';
+import { RenderContext } from 'rendercontext';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
-import { RenderContext } from 'types/common';
 import { Voice } from 'voice';
 
 const GraceTabNoteTests = {
