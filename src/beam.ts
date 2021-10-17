@@ -929,16 +929,4 @@ export class Beam extends Element {
     this.drawBeamLines(ctx);
     this.restoreStyle();
   }
-
-  /** Set beamWidth render option */
-  setBeamWidth(beamWidth: number): this {
-    this.render_options.beam_width = beamWidth;
-    return this;
-  }
-
-  /** Set partialBeamLength render option */
-  setPartialBeamLength(partialBeamLength: number): this {
-    this.render_options.partial_beam_length = partialBeamLength;
-    return this;
-  }
 }

@@ -467,7 +467,7 @@ function tabBeamsUp(options: TestOptions): void {
 
   const notes = specs.map((struct) => {
     const tabNote = f.TabNote(struct);
-    tabNote.setDrawStem(true);
+    tabNote.render_options.draw_stem = true;
     return tabNote;
   });
 
@@ -556,8 +556,8 @@ function tabBeamsDown(options: TestOptions): void {
 
   const notes = specs.map((struct) => {
     const tabNote = f.TabNote(struct);
-    tabNote.setDrawStem(true);
-    tabNote.setDrawDots(true);
+    tabNote.render_options.draw_stem = true;
+    tabNote.render_options.draw_dots = true;
     return tabNote;
   });
 
@@ -624,8 +624,8 @@ function autoTabBeams(options: TestOptions): void {
 
   const notes = specs.map((struct) => {
     const tabNote = f.TabNote(struct);
-    tabNote.setDrawStem(true);
-    tabNote.setDrawDots(true);
+    tabNote.render_options.draw_stem = true;
+    tabNote.render_options.draw_dots = true;
     return tabNote;
   });
 
@@ -692,8 +692,8 @@ function tabBeamsAutoStem(options: TestOptions): void {
 
   const notes = specs.map((struct) => {
     const tabNote = f.TabNote(struct);
-    tabNote.setDrawStem(true);
-    tabNote.setDrawDots(true);
+    tabNote.render_options.draw_stem = true;
+    tabNote.render_options.draw_dots = true;
     return tabNote;
   });
 

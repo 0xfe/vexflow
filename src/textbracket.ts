@@ -139,30 +139,6 @@ export class TextBracket extends Element {
     return this;
   }
 
-  /** Set lineWidth render option */
-  setLineWidth(lineWidth: number): this {
-    this.render_options.line_width = lineWidth;
-    return this;
-  }
-
-  /** Set showBracket render option */
-  setShowBracket(showBracket: boolean): this {
-    this.render_options.show_bracket = showBracket;
-    return this;
-  }
-
-  /** Set underlineSuperscript render option */
-  setUnderlineSuperscript(underlineSuperscript: boolean): this {
-    this.render_options.underline_superscript = underlineSuperscript;
-    return this;
-  }
-
-  /** Set bracketHeight render option */
-  setBracketHeight(bracketHeight: number): this {
-    this.render_options.bracket_height = bracketHeight;
-    return this;
-  }
-
   // Set the font for the text
   setFont(font: FontInfo): this {
     // We use Object.assign to support partial updates to the font object

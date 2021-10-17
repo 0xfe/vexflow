@@ -61,7 +61,7 @@ function get_semibreve_rest() {
   if (!semibreve_rest) {
     const noteHead = new NoteHead({ duration: 'w', note_type: 'r' });
     semibreve_rest = {
-      glyph_font_scale: noteHead.getGlyphFontScale(),
+      glyph_font_scale: noteHead.render_options.glyph_font_scale,
       glyph_code: noteHead.glyph_code,
       width: noteHead.getWidth(),
     };

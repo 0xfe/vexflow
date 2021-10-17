@@ -133,8 +133,8 @@ export class GraceNoteGroup extends Modifier {
     if (grace_notes.length > 1) {
       const beam = new Beam(grace_notes);
 
-      beam.setBeamWidth(3);
-      beam.setPartialBeamLength(4);
+      beam.render_options.beam_width = 3;
+      beam.render_options.partial_beam_length = 4;
 
       this.beams.push(beam);
     }
@@ -181,8 +181,8 @@ export class GraceNoteGroup extends Modifier {
         last_indices: [0],
       });
 
-      this.slur.setCp2(12);
-      this.slur.setYShift((is_stavenote ? 7 : 5) + this.render_options.slur_y_shift);
+      this.slur.render_options.cp2 = 12;
+      this.slur.render_options.y_shift = (is_stavenote ? 7 : 5) + this.render_options.slur_y_shift;
       this.slur.setContext(ctx).draw();
     }
   }

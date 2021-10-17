@@ -105,13 +105,13 @@ function simple1(options: TestOptions): void {
     }),
   ];
 
-  topOctaves[1].setLineWidth(2);
-  topOctaves[1].setShowBracket(false);
+  topOctaves[1].render_options.line_width = 2;
+  topOctaves[1].render_options.show_bracket = false;
 
-  bottomOctaves[0].setUnderlineSuperscript(false);
+  bottomOctaves[0].render_options.underline_superscript = false;
   bottomOctaves[0].setDashed(false);
 
-  bottomOctaves[1].setBracketHeight(40);
+  bottomOctaves[1].render_options.bracket_height = 40;
   bottomOctaves[1].setDashed(true, [2, 2]);
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);

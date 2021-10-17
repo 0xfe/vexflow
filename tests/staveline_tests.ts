@@ -44,7 +44,7 @@ function simple0(options: TestOptions): void {
     first_indices: [2, 1, 0],
     last_indices: [0, 1, 2],
   });
-  staveLine2.setLineDash([10, 10]);
+  staveLine2.render_options.line_dash = [10, 10];
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -112,31 +112,31 @@ function simple1(options: TestOptions): void {
     options: { text: 'Top' },
   });
 
-  staveLine0.setDrawEndArrow(true);
-  staveLine0.setTextJustification(1);
-  staveLine0.setTextPositionVertical(2);
+  staveLine0.render_options.draw_end_arrow = true;
+  staveLine0.render_options.text_justification = 1;
+  staveLine0.render_options.text_position_vertical = 2;
 
-  staveLine1.setDrawEndArrow(true);
-  staveLine1.setArrowheadLength(30);
-  staveLine1.setLineWidth(5);
-  staveLine1.setTextJustification(2);
-  staveLine1.setTextPositionVertical(2);
+  staveLine1.render_options.draw_end_arrow = true;
+  staveLine1.render_options.arrowhead_length = 30;
+  staveLine1.render_options.line_width = 5;
+  staveLine1.render_options.text_justification = 2;
+  staveLine1.render_options.text_position_vertical = 2;
 
-  staveLine4.setLineWidth(2);
-  staveLine4.setDrawEndArrow(true);
-  staveLine4.setDrawStartArrow(true);
-  staveLine4.setArrowheadAngle(0.5);
-  staveLine4.setArrowheadLength(20);
-  staveLine4.setTextJustification(3);
-  staveLine4.setTextPositionVertical(2);
+  staveLine4.render_options.line_width = 2;
+  staveLine4.render_options.draw_end_arrow = true;
+  staveLine4.render_options.draw_start_arrow = true;
+  staveLine4.render_options.arrowhead_angle = 0.5;
+  staveLine4.render_options.arrowhead_length = 20;
+  staveLine4.render_options.text_justification = 3;
+  staveLine4.render_options.text_position_vertical = 2;
 
-  staveLine2.setDrawStartArrow(true);
-  staveLine2.setLineDash([5, 4]);
+  staveLine2.render_options.draw_start_arrow = true;
+  staveLine2.render_options.line_dash = [5, 4];
 
-  staveLine3.setDrawEndArrow(true);
-  staveLine3.setDrawStartArrow(true);
-  staveLine3.setColor('red');
-  staveLine3.setTextPositionVertical(1);
+  staveLine3.render_options.draw_end_arrow = true;
+  staveLine3.render_options.draw_start_arrow = true;
+  staveLine3.render_options.color = 'red';
+  staveLine3.render_options.text_position_vertical = 1;
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 

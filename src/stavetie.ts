@@ -218,16 +218,4 @@ export class StaveTie extends Element {
     this.renderText(first_x_px, last_x_px);
     return true;
   }
-
-  /** Set cp2 render option */
-  setCp2(cp2: number): this {
-    this.render_options.cp2 = cp2;
-    return this;
-  }
-
-  /** Set yShift render option */
-  setYShift(yShift: number): this {
-    this.render_options.y_shift = yShift;
-    return this;
-  }
 }
