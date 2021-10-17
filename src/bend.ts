@@ -14,13 +14,6 @@ export interface BendPhrase {
   draw_width?: number;
 }
 
-export interface BendRenderOptions {
-  line_width: number;
-  release_width: number;
-  bend_width: number;
-  line_style: string;
-}
-
 /** Bend implements tablature bends. */
 export class Bend extends Modifier {
   static get CATEGORY(): string {
@@ -60,7 +53,12 @@ export class Bend extends Modifier {
   protected release: boolean;
   protected phrase: BendPhrase[];
   protected font: string;
-  protected renderOptions: BendRenderOptions;
+  public render_options: {
+    line_width: number;
+    release_width: number;
+    bend_width: number;
+    line_style: string;
+  };
 
   /**
    * Example of a phrase:
@@ -102,7 +100,7 @@ export class Bend extends Modifier {
     this.x_shift = 0;
     this.release = release;
     this.font = '10pt Arial';
-    this.renderOptions = {
+    this.render_options = {
       line_width: 1.5,
       line_style: '#777777',
       bend_width: 8,
@@ -162,7 +160,7 @@ export class Bend extends Modifier {
         total_width += bend.width;
       } else {
         const additional_width =
-          bend.type === Bend.UP ? this.renderOptions.bend_width : this.renderOptions.release_width;
+          bend.type === Bend.UP ? this.render_options.bend_width : this.render_options.release_width;
 
         bend.width = Math.max(additional_width, measure_text(bend.text)) + 3;
         bend.draw_width = bend.width / 2;
@@ -197,9 +195,9 @@ export class Bend extends Modifier {
 
       ctx.save();
       ctx.beginPath();
-      ctx.setLineWidth(that.renderOptions.line_width);
-      ctx.setStrokeStyle(that.renderOptions.line_style);
-      ctx.setFillStyle(that.renderOptions.line_style);
+      ctx.setLineWidth(that.render_options.line_width);
+      ctx.setStrokeStyle(that.render_options.line_style);
+      ctx.setFillStyle(that.render_options.line_style);
       ctx.moveTo(x, y);
       ctx.quadraticCurveTo(cp_x, cp_y, x + width, height);
       ctx.stroke();
@@ -209,9 +207,9 @@ export class Bend extends Modifier {
     function renderRelease(x: number, y: number, width: number, height: number) {
       ctx.save();
       ctx.beginPath();
-      ctx.setLineWidth(that.renderOptions.line_width);
-      ctx.setStrokeStyle(that.renderOptions.line_style);
-      ctx.setFillStyle(that.renderOptions.line_style);
+      ctx.setLineWidth(that.render_options.line_width);
+      ctx.setStrokeStyle(that.render_options.line_style);
+      ctx.setFillStyle(that.render_options.line_style);
       ctx.moveTo(x, height);
       ctx.quadraticCurveTo(x + width, height, x + width, y);
       ctx.stroke();

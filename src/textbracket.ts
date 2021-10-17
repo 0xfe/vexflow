@@ -41,7 +41,7 @@ export class TextBracket extends Element {
     return 'TextBracket';
   }
 
-  protected renderOptions: {
+  public render_options: {
     dashed: boolean;
     color: string;
     line_width: number;
@@ -106,7 +106,7 @@ export class TextBracket extends Element {
       weight: 'italic',
     };
 
-    this.renderOptions = {
+    this.render_options = {
       dashed: true,
       dash: [5],
       color: 'black',
@@ -124,9 +124,9 @@ export class TextBracket extends Element {
   applyStyle(context: RenderContext): this {
     // Apply style for the octave bracket
     context.setFont(this.font.family, this.font.size, this.font.weight);
-    context.setStrokeStyle(this.renderOptions.color);
-    context.setFillStyle(this.renderOptions.color);
-    context.setLineWidth(this.renderOptions.line_width);
+    context.setStrokeStyle(this.render_options.color);
+    context.setFillStyle(this.render_options.color);
+    context.setLineWidth(this.render_options.line_width);
 
     return this;
   }
@@ -134,32 +134,32 @@ export class TextBracket extends Element {
   // Set whether the bracket line should be `dashed`. You can also
   // optionally set the `dash` pattern by passing in an array of numbers
   setDashed(dashed: boolean, dash?: number[]): this {
-    this.renderOptions.dashed = dashed;
-    if (dash) this.renderOptions.dash = dash;
+    this.render_options.dashed = dashed;
+    if (dash) this.render_options.dash = dash;
     return this;
   }
 
   /** Set lineWidth render option */
   setLineWidth(lineWidth: number): this {
-    this.renderOptions.line_width = lineWidth;
+    this.render_options.line_width = lineWidth;
     return this;
   }
 
   /** Set showBracket render option */
   setShowBracket(showBracket: boolean): this {
-    this.renderOptions.show_bracket = showBracket;
+    this.render_options.show_bracket = showBracket;
     return this;
   }
 
   /** Set underlineSuperscript render option */
   setUnderlineSuperscript(underlineSuperscript: boolean): this {
-    this.renderOptions.underline_superscript = underlineSuperscript;
+    this.render_options.underline_superscript = underlineSuperscript;
     return this;
   }
 
   /** Set bracketHeight render option */
   setBracketHeight(bracketHeight: number): this {
-    this.renderOptions.bracket_height = bracketHeight;
+    this.render_options.bracket_height = bracketHeight;
     return this;
   }
 
@@ -198,7 +198,7 @@ export class TextBracket extends Element {
 
     L('Rendering TextBracket: start:', start, 'stop:', stop, 'y:', y);
 
-    const bracket_height = this.renderOptions.bracket_height * this.position;
+    const bracket_height = this.render_options.bracket_height * this.position;
 
     ctx.save();
     this.applyStyle(ctx);
@@ -236,23 +236,23 @@ export class TextBracket extends Element {
       line_y += super_height / 2.7;
       start_x += main_width + 2;
 
-      if (!this.renderOptions.underline_superscript) {
+      if (!this.render_options.underline_superscript) {
         start_x += super_width;
       }
     }
 
-    if (this.renderOptions.dashed) {
+    if (this.render_options.dashed) {
       // Main line
-      Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y, this.renderOptions.dash);
+      Renderer.drawDashedLine(ctx, start_x, line_y, end_x, line_y, this.render_options.dash);
       // Ending Bracket
-      if (this.renderOptions.show_bracket) {
+      if (this.render_options.show_bracket) {
         Renderer.drawDashedLine(
           ctx,
           end_x,
           line_y + 1 * this.position,
           end_x,
           line_y + bracket_height,
-          this.renderOptions.dash
+          this.render_options.dash
         );
       }
     } else {
@@ -260,7 +260,7 @@ export class TextBracket extends Element {
       ctx.moveTo(start_x, line_y);
       // Main line
       ctx.lineTo(end_x, line_y);
-      if (this.renderOptions.show_bracket) {
+      if (this.render_options.show_bracket) {
         // Ending bracket
         ctx.lineTo(end_x, line_y + bracket_height);
       }

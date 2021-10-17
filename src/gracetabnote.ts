@@ -18,8 +18,8 @@ export class GraceTabNote extends TabNote {
   constructor(noteStruct: TabNoteStruct) {
     super(noteStruct, false);
 
-    this.renderOptions = {
-      ...this.renderOptions,
+    this.render_options = {
+      ...this.render_options,
       // vertical shift from stave line
       y_shift: 0.3,
       // grace glyph scale

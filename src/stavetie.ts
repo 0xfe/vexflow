@@ -13,7 +13,7 @@ export class StaveTie extends Element {
     return 'StaveTie';
   }
 
-  protected renderOptions: {
+  public render_options: {
     cp2: number;
     last_x_shift: number;
     tie_spacing: number;
@@ -49,7 +49,7 @@ export class StaveTie extends Element {
     super();
     this.setNotes(notes);
     this.text = text;
-    this.renderOptions = {
+    this.render_options = {
       cp1: 8, // Curve control point 1
       cp2: 12, // Curve control point 2
       text_shift_x: 0,
@@ -60,7 +60,7 @@ export class StaveTie extends Element {
       font: { family: 'Arial', size: 10, weight: '' },
     };
 
-    this.font = this.renderOptions.font;
+    this.font = this.render_options.font;
   }
 
   setFont(font: FontInfo): this {
@@ -117,17 +117,17 @@ export class StaveTie extends Element {
     }
 
     const ctx = this.checkContext();
-    let cp1 = this.renderOptions.cp1;
-    let cp2 = this.renderOptions.cp2;
+    let cp1 = this.render_options.cp1;
+    let cp2 = this.render_options.cp2;
 
     if (Math.abs(params.last_x_px - params.first_x_px) < 10) {
       cp1 = 2;
       cp2 = 8;
     }
 
-    const first_x_shift = this.renderOptions.first_x_shift;
-    const last_x_shift = this.renderOptions.last_x_shift;
-    const y_shift = this.renderOptions.y_shift * params.direction;
+    const first_x_shift = this.render_options.first_x_shift;
+    const last_x_shift = this.render_options.last_x_shift;
+    const y_shift = this.render_options.y_shift * params.direction;
 
     // setNotes(...) verified that first_indices and last_indices are not undefined.
     // As a result, we use the ! non-null assertion operator here.
@@ -165,7 +165,7 @@ export class StaveTie extends Element {
 
     ctx.save();
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(this.text, center_x + this.renderOptions.text_shift_x, stave.getYForTopText() - 1);
+    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
     ctx.restore();
   }
 
@@ -182,7 +182,7 @@ export class StaveTie extends Element {
     let last_ys;
     let stem_direction = 0;
     if (first_note) {
-      first_x_px = first_note.getTieRightX() + this.renderOptions.tie_spacing;
+      first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
       stem_direction = first_note.getStemDirection();
       first_ys = first_note.getYs();
     } else {
@@ -193,7 +193,7 @@ export class StaveTie extends Element {
     }
 
     if (last_note) {
-      last_x_px = last_note.getTieLeftX() + this.renderOptions.tie_spacing;
+      last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;
       stem_direction = last_note.getStemDirection();
       last_ys = last_note.getYs();
     } else {
@@ -221,13 +221,13 @@ export class StaveTie extends Element {
 
   /** Set cp2 render option */
   setCp2(cp2: number): this {
-    this.renderOptions.cp2 = cp2;
+    this.render_options.cp2 = cp2;
     return this;
   }
 
   /** Set yShift render option */
   setYShift(yShift: number): this {
-    this.renderOptions.y_shift = yShift;
+    this.render_options.y_shift = yShift;
     return this;
   }
 }

@@ -144,8 +144,8 @@ export class TabNote extends StemmableNote {
     this.positions = noteStruct.positions || [];
 
     // Render Options
-    this.renderOptions = {
-      ...this.renderOptions,
+    this.render_options = {
+      ...this.render_options,
       // font size for note heads and rests
       glyph_font_scale: Flow.DEFAULT_TABLATURE_FONT_SCALE,
       // Flag to draw a stem
@@ -193,7 +193,7 @@ export class TabNote extends StemmableNote {
 
   // Determine if the note has a stem
   hasStem(): boolean {
-    if (this.renderOptions.draw_stem) return true;
+    if (this.render_options.draw_stem) return true;
     return false;
   }
 
@@ -226,7 +226,7 @@ export class TabNote extends StemmableNote {
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
       if (this.ghost) fret = '(' + fret + ')';
-      const glyph = Flow.tabToGlyph(fret.toString(), this.renderOptions.scale);
+      const glyph = Flow.tabToGlyph(fret.toString(), this.render_options.scale);
       this.glyphs.push(glyph as GlyphProps);
       this.width = Math.max(glyph.getWidth(), this.width);
     }
@@ -252,7 +252,7 @@ export class TabNote extends StemmableNote {
         const text = '' + glyph.text;
         if (text.toUpperCase() !== 'X') {
           ctx.save();
-          ctx.setRawFont(this.renderOptions.font);
+          ctx.setRawFont(this.render_options.font);
           glyph.width = ctx.measureText(text).width;
           ctx.restore();
           glyph.getWidth = () => glyph.width;
@@ -349,7 +349,7 @@ export class TabNote extends StemmableNote {
       beam,
       glyph,
       stem_direction,
-      renderOptions: { draw_stem, glyph_font_scale },
+      render_options: { draw_stem, glyph_font_scale },
     } = this;
     const context = this.checkContext();
 
@@ -374,7 +374,7 @@ export class TabNote extends StemmableNote {
   drawModifiers(): void {
     this.modifiers.forEach((modifier) => {
       // Only draw the dots if enabled.
-      if (isDot(modifier) && !this.renderOptions.draw_dots) {
+      if (isDot(modifier) && !this.render_options.draw_dots) {
         return;
       }
 
@@ -389,8 +389,8 @@ export class TabNote extends StemmableNote {
     const stem_y = this.getStemY();
     const ctx = this.checkContext();
 
-    const stem_through = this.renderOptions.draw_stem_through_stave;
-    const draw_stem = this.renderOptions.draw_stem;
+    const stem_through = this.render_options.draw_stem_through_stave;
+    const draw_stem = this.render_options.draw_stem;
     if (draw_stem && stem_through) {
       const total_lines = this.checkStave().getNumLines();
       const strings_used = this.positions.map((position) => Number(position.str));
@@ -419,7 +419,7 @@ export class TabNote extends StemmableNote {
     const x = this.getAbsoluteX();
     const ys = this.ys;
     for (let i = 0; i < this.positions.length; ++i) {
-      const y = ys[i] + this.renderOptions.y_shift;
+      const y = ys[i] + this.render_options.y_shift;
       const glyph = this.glyphs[i];
 
       // Center the fret text beneath the notation note head
@@ -430,12 +430,12 @@ export class TabNote extends StemmableNote {
       ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
 
       if (glyph.code) {
-        Glyph.renderGlyph(ctx, tab_x, y, this.renderOptions.glyph_font_scale * this.renderOptions.scale, glyph.code);
+        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
       } else {
         ctx.save();
-        ctx.setRawFont(this.renderOptions.font);
+        ctx.setRawFont(this.render_options.font);
         const text = glyph.text.toString();
-        ctx.fillText(text, tab_x, y + 5 * this.renderOptions.scale);
+        ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();
       }
     }
@@ -450,7 +450,7 @@ export class TabNote extends StemmableNote {
     }
 
     this.setRendered();
-    const render_stem = this.beam == undefined && this.renderOptions.draw_stem;
+    const render_stem = this.beam == undefined && this.render_options.draw_stem;
 
     ctx.openGroup('tabnote', undefined, { pointerBBox: true });
     this.drawPositions();

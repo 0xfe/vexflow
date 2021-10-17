@@ -60,7 +60,7 @@ export class GraceNote extends StaveNote {
 
   // FIXME: move this to more basic class.
   getStaveNoteScale(): number {
-    return this.renderOptions.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
+    return this.render_options.glyph_font_scale / Flow.DEFAULT_NOTATION_FONT_SCALE;
   }
 
   draw(): void {

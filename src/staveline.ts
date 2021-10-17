@@ -3,7 +3,7 @@
 // ## Description
 //
 // This file implements `StaveLine` which are simply lines that connect
-// two notes. This object is highly configurable, see the `renderOptions`.
+// two notes. This object is highly configurable, see the `render_options`.
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
@@ -46,108 +46,6 @@ function drawArrowHead(
   ctx.fill();
 }
 
-// Helper function to draw a line with arrow heads
-function drawArrowLine(
-  ctx: RenderContext,
-  pt1: { x: number; y: number },
-  pt2: { x: number; y: number },
-  config: RenderOptions
-): void {
-  const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
-
-  const x1 = pt1.x;
-  const y1 = pt1.y;
-  const x2 = pt2.x;
-  const y2 = pt2.y;
-
-  // For ends with arrow we actually want to stop before we get to the arrow
-  // so that wide lines won't put a flat end on the arrow.
-  const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-  const ratio = (distance - config.arrowhead_length / 3) / distance;
-  let end_x;
-  let end_y;
-  let start_x;
-  let start_y;
-  if (config.draw_end_arrow || both_arrows) {
-    end_x = Math.round(x1 + (x2 - x1) * ratio);
-    end_y = Math.round(y1 + (y2 - y1) * ratio);
-  } else {
-    end_x = x2;
-    end_y = y2;
-  }
-
-  if (config.draw_start_arrow || both_arrows) {
-    start_x = x1 + (x2 - x1) * (1 - ratio);
-    start_y = y1 + (y2 - y1) * (1 - ratio);
-  } else {
-    start_x = x1;
-    start_y = y1;
-  }
-
-  if (config.color) {
-    ctx.setStrokeStyle(config.color);
-    ctx.setFillStyle(config.color);
-  }
-
-  // Draw the shaft of the arrow
-  ctx.beginPath();
-  ctx.moveTo(start_x, start_y);
-  ctx.lineTo(end_x, end_y);
-  ctx.stroke();
-  ctx.closePath();
-
-  // calculate the angle of the line
-  const line_angle = Math.atan2(y2 - y1, x2 - x1);
-  // h is the line length of a side of the arrow head
-  const h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
-
-  let angle1;
-  let angle2;
-  let top_x;
-  let top_y;
-  let bottom_x;
-  let bottom_y;
-
-  if (config.draw_end_arrow || both_arrows) {
-    angle1 = line_angle + Math.PI + config.arrowhead_angle;
-    top_x = x2 + Math.cos(angle1) * h;
-    top_y = y2 + Math.sin(angle1) * h;
-
-    angle2 = line_angle + Math.PI - config.arrowhead_angle;
-    bottom_x = x2 + Math.cos(angle2) * h;
-    bottom_y = y2 + Math.sin(angle2) * h;
-
-    drawArrowHead(ctx, top_x, top_y, x2, y2, bottom_x, bottom_y);
-  }
-
-  if (config.draw_start_arrow || both_arrows) {
-    angle1 = line_angle + config.arrowhead_angle;
-    top_x = x1 + Math.cos(angle1) * h;
-    top_y = y1 + Math.sin(angle1) * h;
-
-    angle2 = line_angle - config.arrowhead_angle;
-    bottom_x = x1 + Math.cos(angle2) * h;
-    bottom_y = y1 + Math.sin(angle2) * h;
-
-    drawArrowHead(ctx, top_x, top_y, x1, y1, bottom_x, bottom_y);
-  }
-}
-
-interface RenderOptions {
-  padding_left: number;
-  padding_right: number;
-  line_width: number;
-  line_dash?: number[];
-  rounded_end: boolean;
-  color?: string;
-  draw_start_arrow: boolean;
-  draw_end_arrow: boolean;
-  arrowhead_length: number;
-  arrowhead_angle: number;
-  text_position_vertical: number;
-  text_justification: number;
-}
-
 export class StaveLine extends Element {
   static get CATEGORY(): string {
     return 'StaveLine';
@@ -165,7 +63,20 @@ export class StaveLine extends Element {
     RIGHT: 3,
   };
 
-  protected renderOptions: RenderOptions;
+  public render_options: {
+    padding_left: number;
+    padding_right: number;
+    line_width: number;
+    line_dash?: number[];
+    rounded_end: boolean;
+    color?: string;
+    draw_start_arrow: boolean;
+    draw_end_arrow: boolean;
+    arrowhead_length: number;
+    arrowhead_angle: number;
+    text_position_vertical: number;
+    text_justification: number;
+  };
 
   protected text: string;
   protected font: FontInfo;
@@ -202,7 +113,7 @@ export class StaveLine extends Element {
       weight: '',
     };
 
-    this.renderOptions = {
+    this.render_options = {
       // Space to add to the left or the right
       padding_left: 4,
       padding_right: 3,
@@ -267,17 +178,17 @@ export class StaveLine extends Element {
   // Apply the style of the `StaveLine` to the context
   applyLineStyle(): void {
     const ctx = this.checkContext();
-    const renderOptions = this.renderOptions;
+    const render_options = this.render_options;
 
-    if (renderOptions.line_dash) {
-      ctx.setLineDash(renderOptions.line_dash);
+    if (render_options.line_dash) {
+      ctx.setLineDash(render_options.line_dash);
     }
 
-    if (renderOptions.line_width) {
-      ctx.setLineWidth(renderOptions.line_width);
+    if (render_options.line_width) {
+      ctx.setLineWidth(render_options.line_width);
     }
 
-    if (renderOptions.rounded_end) {
+    if (render_options.rounded_end) {
       ctx.setLineCap('round');
     } else {
       ctx.setLineCap('square');
@@ -292,11 +203,93 @@ export class StaveLine extends Element {
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
     }
 
-    const renderOptions = this.renderOptions;
-    const color = renderOptions.color;
+    const render_options = this.render_options;
+    const color = render_options.color;
     if (color) {
       ctx.setStrokeStyle(color);
       ctx.setFillStyle(color);
+    }
+  }
+
+  // Helper function to draw a line with arrow heads
+  protected drawArrowLine(ctx: RenderContext, pt1: { x: number; y: number }, pt2: { x: number; y: number }): void {
+    const both_arrows = this.render_options.draw_start_arrow && this.render_options.draw_end_arrow;
+
+    const x1 = pt1.x;
+    const y1 = pt1.y;
+    const x2 = pt2.x;
+    const y2 = pt2.y;
+
+    // For ends with arrow we actually want to stop before we get to the arrow
+    // so that wide lines won't put a flat end on the arrow.
+    const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    const ratio = (distance - this.render_options.arrowhead_length / 3) / distance;
+    let end_x;
+    let end_y;
+    let start_x;
+    let start_y;
+    if (this.render_options.draw_end_arrow || both_arrows) {
+      end_x = Math.round(x1 + (x2 - x1) * ratio);
+      end_y = Math.round(y1 + (y2 - y1) * ratio);
+    } else {
+      end_x = x2;
+      end_y = y2;
+    }
+
+    if (this.render_options.draw_start_arrow || both_arrows) {
+      start_x = x1 + (x2 - x1) * (1 - ratio);
+      start_y = y1 + (y2 - y1) * (1 - ratio);
+    } else {
+      start_x = x1;
+      start_y = y1;
+    }
+
+    if (this.render_options.color) {
+      ctx.setStrokeStyle(this.render_options.color);
+      ctx.setFillStyle(this.render_options.color);
+    }
+
+    // Draw the shaft of the arrow
+    ctx.beginPath();
+    ctx.moveTo(start_x, start_y);
+    ctx.lineTo(end_x, end_y);
+    ctx.stroke();
+    ctx.closePath();
+
+    // calculate the angle of the line
+    const line_angle = Math.atan2(y2 - y1, x2 - x1);
+    // h is the line length of a side of the arrow head
+    const h = Math.abs(this.render_options.arrowhead_length / Math.cos(this.render_options.arrowhead_angle));
+
+    let angle1;
+    let angle2;
+    let top_x;
+    let top_y;
+    let bottom_x;
+    let bottom_y;
+
+    if (this.render_options.draw_end_arrow || both_arrows) {
+      angle1 = line_angle + Math.PI + this.render_options.arrowhead_angle;
+      top_x = x2 + Math.cos(angle1) * h;
+      top_y = y2 + Math.sin(angle1) * h;
+
+      angle2 = line_angle + Math.PI - this.render_options.arrowhead_angle;
+      bottom_x = x2 + Math.cos(angle2) * h;
+      bottom_y = y2 + Math.sin(angle2) * h;
+
+      drawArrowHead(ctx, top_x, top_y, x2, y2, bottom_x, bottom_y);
+    }
+
+    if (this.render_options.draw_start_arrow || both_arrows) {
+      angle1 = line_angle + this.render_options.arrowhead_angle;
+      top_x = x1 + Math.cos(angle1) * h;
+      top_y = y1 + Math.sin(angle1) * h;
+
+      angle2 = line_angle - this.render_options.arrowhead_angle;
+      bottom_x = x1 + Math.cos(angle2) * h;
+      bottom_y = y1 + Math.sin(angle2) * h;
+
+      drawArrowHead(ctx, top_x, top_y, x1, y1, bottom_x, bottom_y);
     }
   }
 
@@ -307,7 +300,7 @@ export class StaveLine extends Element {
 
     const first_note = this.first_note;
     const last_note = this.last_note;
-    const renderOptions = this.renderOptions;
+    const render_options = this.render_options;
 
     ctx.save();
     this.applyLineStyle();
@@ -324,34 +317,34 @@ export class StaveLine extends Element {
       const upwards_slope = start_position.y > end_position.y;
 
       // Adjust `x` coordinates for modifiers
-      start_position.x += first_note.getMetrics().modRightPx + renderOptions.padding_left;
-      end_position.x -= last_note.getMetrics().modLeftPx + renderOptions.padding_right;
+      start_position.x += first_note.getMetrics().modRightPx + render_options.padding_left;
+      end_position.x -= last_note.getMetrics().modLeftPx + render_options.padding_right;
 
       // Adjust first `x` coordinates for displacements
       const notehead_width = first_note.getGlyph().getWidth();
       const first_displaced = first_note.getKeyProps()[first_index].displaced;
       if (first_displaced && first_note.getStemDirection() === 1) {
-        start_position.x += notehead_width + renderOptions.padding_left;
+        start_position.x += notehead_width + render_options.padding_left;
       }
 
       // Adjust last `x` coordinates for displacements
       const last_displaced = last_note.getKeyProps()[last_index].displaced;
       if (last_displaced && last_note.getStemDirection() === -1) {
-        end_position.x -= notehead_width + renderOptions.padding_right;
+        end_position.x -= notehead_width + render_options.padding_right;
       }
 
       // Adjust y position better if it's not coming from the center of the note
       start_position.y += upwards_slope ? -3 : 1;
       end_position.y += upwards_slope ? 2 : 0;
 
-      drawArrowLine(ctx, start_position, end_position, this.renderOptions);
+      this.drawArrowLine(ctx, start_position, end_position);
     });
 
     ctx.restore();
 
     // Determine the x coordinate where to start the text
     const text_width = ctx.measureText(this.text).width;
-    const justification = renderOptions.text_justification;
+    const justification = render_options.text_justification;
     let x = 0;
     if (justification === StaveLine.TextJustification.LEFT) {
       x = start_position.x;
@@ -365,7 +358,7 @@ export class StaveLine extends Element {
 
     // Determine the y value to start the text
     let y = 0;
-    const vertical_position = renderOptions.text_position_vertical;
+    const vertical_position = render_options.text_position_vertical;
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.checkStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
@@ -383,55 +376,55 @@ export class StaveLine extends Element {
 
   /** Set drawEndArrow render option */
   setDrawEndArrow(drawEndArrow: boolean): this {
-    this.renderOptions.draw_end_arrow = drawEndArrow;
+    this.render_options.draw_end_arrow = drawEndArrow;
     return this;
   }
 
   /** Set drawStartArrow render option */
   setDrawStartArrow(drawStartArrow: boolean): this {
-    this.renderOptions.draw_start_arrow = drawStartArrow;
+    this.render_options.draw_start_arrow = drawStartArrow;
     return this;
   }
 
   /** Set arrowheadAngle render option */
   setArrowheadAngle(arrowheadAngle: number): this {
-    this.renderOptions.arrowhead_angle = arrowheadAngle;
+    this.render_options.arrowhead_angle = arrowheadAngle;
     return this;
   }
 
   /** Set arrowheadLength render option */
   setArrowheadLength(arrowheadLength: number): this {
-    this.renderOptions.arrowhead_length = arrowheadLength;
+    this.render_options.arrowhead_length = arrowheadLength;
     return this;
   }
 
   /** Set textJustification render option */
   setTextJustification(textJustification: number): this {
-    this.renderOptions.text_justification = textJustification;
+    this.render_options.text_justification = textJustification;
     return this;
   }
 
   /** Set textPositionVertical render option */
   setTextPositionVertical(textPositionVertical: number): this {
-    this.renderOptions.text_position_vertical = textPositionVertical;
+    this.render_options.text_position_vertical = textPositionVertical;
     return this;
   }
 
   /** Set lineWidth render option */
   setLineWidth(lineWidth: number): this {
-    this.renderOptions.line_width = lineWidth;
+    this.render_options.line_width = lineWidth;
     return this;
   }
 
   /** Set lineDash render option */
   setLineDash(lineDash: number[]): this {
-    this.renderOptions.line_dash = lineDash;
+    this.render_options.line_dash = lineDash;
     return this;
   }
 
   /** Set color render option */
   setColor(color: string): this {
-    this.renderOptions.color = color;
+    this.render_options.color = color;
     return this;
   }
 }

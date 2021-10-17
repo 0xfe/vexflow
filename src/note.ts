@@ -38,21 +38,6 @@ export interface NoteDuration {
   type: string;
 }
 
-export interface NoteRenderOptions {
-  draw_stem_through_stave?: boolean;
-  draw_dots?: boolean;
-  draw_stem?: boolean;
-  y_shift: number;
-  extend_left?: number;
-  extend_right?: number;
-  glyph_font_scale: number;
-  annotation_spacing: number;
-  glyph_font_size?: number;
-  scale: number;
-  font: string;
-  stroke_px: number;
-}
-
 export interface ParsedNote {
   duration: string;
   type: string;
@@ -93,7 +78,20 @@ export abstract class Note extends Tickable {
   keyProps: KeyProps[];
 
   protected stave?: Stave;
-  protected renderOptions: NoteRenderOptions;
+  public render_options: {
+    draw_stem_through_stave?: boolean;
+    draw_dots?: boolean;
+    draw_stem?: boolean;
+    y_shift: number;
+    extend_left?: number;
+    extend_right?: number;
+    glyph_font_scale: number;
+    annotation_spacing: number;
+    glyph_font_size?: number;
+    scale: number;
+    font: string;
+    stroke_px: number;
+  };
   protected duration: string;
   protected dots: number;
   protected leftDisplacedHeadPx: number;
@@ -291,7 +289,7 @@ export abstract class Note extends Tickable {
     }
 
     // The render surface.
-    this.renderOptions = {
+    this.render_options = {
       annotation_spacing: 5,
       glyph_font_scale: 1,
       stroke_px: 1,
@@ -406,7 +404,7 @@ export abstract class Note extends Tickable {
       if (this.glyph.getMetrics) {
         return this.glyph.getMetrics().width;
       } else if (this.glyph.getWidth) {
-        return this.glyph.getWidth(this.renderOptions.glyph_font_scale);
+        return this.glyph.getWidth(this.render_options.glyph_font_scale);
       }
     }
 
@@ -639,24 +637,24 @@ export abstract class Note extends Tickable {
 
   /** Set drawStem render option */
   setDrawStem(drawStem: boolean): this {
-    this.renderOptions.draw_stem = drawStem;
+    this.render_options.draw_stem = drawStem;
     return this;
   }
 
   /** Set drawDots render option */
   setDrawDots(drawDots: boolean): this {
-    this.renderOptions.draw_dots = drawDots;
+    this.render_options.draw_dots = drawDots;
     return this;
   }
 
   /** Set drawStemThroughStaves render option */
   setDrawStemThroughStaves(drawStemThroughStaves: boolean): this {
-    this.renderOptions.draw_stem_through_stave = drawStemThroughStaves;
+    this.render_options.draw_stem_through_stave = drawStemThroughStaves;
     return this;
   }
 
   /** Get GlyphFontScale render option */
   getGlyphFontScale(): number {
-    return this.renderOptions.glyph_font_scale;
+    return this.render_options.glyph_font_scale;
   }
 }

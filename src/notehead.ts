@@ -144,15 +144,15 @@ export class NoteHead extends Note {
     this.style = noteStruct.style;
     this.slashed = noteStruct.slashed || false;
 
-    this.renderOptions = {
-      ...this.renderOptions,
+    this.render_options = {
+      ...this.render_options,
       // font size for note heads
       glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     };
 
-    this.setWidth(this.glyph.getWidth(this.renderOptions.glyph_font_scale));
+    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }
 
   /** Get the width of the notehead. */
@@ -270,7 +270,7 @@ export class NoteHead extends Note {
 
     // Begin and end positions for head.
     const stem_direction = this.stem_direction;
-    const glyph_font_scale = this.renderOptions.glyph_font_scale;
+    const glyph_font_scale = this.render_options.glyph_font_scale;
 
     if (this.style) {
       this.applyStyle(ctx);

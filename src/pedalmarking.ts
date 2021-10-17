@@ -43,7 +43,7 @@ export class PedalMarking extends Element {
   protected type: number;
   protected custom_depress_text: string;
   protected custom_release_text: string;
-  protected renderOptions: {
+  public render_options: {
     color: string;
     bracket_height: number;
     text_margin_right: number;
@@ -122,7 +122,7 @@ export class PedalMarking extends Element {
       weight: 'italic bold',
     };
 
-    this.renderOptions = {
+    this.render_options = {
       bracket_height: 10,
       text_margin_right: 6,
       bracket_line_width: 1,
@@ -196,16 +196,16 @@ export class PedalMarking extends Element {
             // If we have custom text, use instead of the default "Ped" glyph
             const text_width = ctx.measureText(this.custom_depress_text).width;
             ctx.fillText(this.custom_depress_text, x - text_width / 2, y);
-            x_shift = text_width / 2 + this.renderOptions.text_margin_right;
+            x_shift = text_width / 2 + this.render_options.text_margin_right;
           } else {
             // Render the Ped glyph in position
             drawPedalGlyph('pedal_depress', ctx, x, y, point);
-            x_shift = 20 + this.renderOptions.text_margin_right;
+            x_shift = 20 + this.render_options.text_margin_right;
           }
         } else {
           // Draw start bracket
           ctx.beginPath();
-          ctx.moveTo(x, y - this.renderOptions.bracket_height);
+          ctx.moveTo(x, y - this.render_options.bracket_height);
           ctx.lineTo(x + x_shift, y);
           ctx.stroke();
           ctx.closePath();
@@ -218,7 +218,7 @@ export class PedalMarking extends Element {
         ctx.beginPath();
         ctx.moveTo(prev_x, prev_y);
         ctx.lineTo(x + x_shift, y);
-        ctx.lineTo(x, y - this.renderOptions.bracket_height);
+        ctx.lineTo(x, y - this.render_options.bracket_height);
         ctx.stroke();
         ctx.closePath();
       }
@@ -271,14 +271,14 @@ export class PedalMarking extends Element {
     this.setRendered();
 
     ctx.save();
-    ctx.setStrokeStyle(this.renderOptions.color);
-    ctx.setFillStyle(this.renderOptions.color);
+    ctx.setStrokeStyle(this.render_options.color);
+    ctx.setFillStyle(this.render_options.color);
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
     L('Rendering Pedal Marking');
 
     if (this.type === PedalMarking.type.BRACKET || this.type === PedalMarking.type.MIXED) {
-      ctx.setLineWidth(this.renderOptions.bracket_line_width);
+      ctx.setLineWidth(this.render_options.bracket_line_width);
       this.drawBracketed();
     } else if (this.type === PedalMarking.type.TEXT) {
       this.drawText();

@@ -46,7 +46,7 @@ export class Accidental extends Modifier {
     code: string;
     parenRightPaddingAdjustment: number;
   };
-  protected renderOptions: {
+  public render_options: {
     parenLeftPadding: number;
     stroke_px: number;
     font_scale: number;
@@ -485,7 +485,7 @@ export class Accidental extends Modifier {
     this.type = type;
     this.position = Modifier.Position.LEFT;
 
-    this.renderOptions = {
+    this.render_options = {
       // Font size for glyphs
       font_scale: 38,
 
@@ -507,7 +507,7 @@ export class Accidental extends Modifier {
   }
 
   protected reset(): void {
-    const fontScale = this.renderOptions.font_scale;
+    const fontScale = this.render_options.font_scale;
     this.glyph = new Glyph(this.accidental.code, fontScale);
     this.glyph.setOriginX(1.0);
 
@@ -527,8 +527,8 @@ export class Accidental extends Modifier {
       const parenWidth =
         parenLeft.getMetrics().width +
         parenRight.getMetrics().width +
-        this.renderOptions.parenLeftPadding +
-        this.renderOptions.parenRightPadding;
+        this.render_options.parenLeftPadding +
+        this.render_options.parenRightPadding;
       return this.glyph.getMetrics().width + parenWidth;
     } else {
       return this.glyph.getMetrics().width;
@@ -543,7 +543,7 @@ export class Accidental extends Modifier {
 
     // Accidentals attached to grace notes are rendered smaller.
     if (isGraceNote(note)) {
-      this.renderOptions.font_scale = 25;
+      this.render_options.font_scale = 25;
       this.reset();
     }
     return this;
@@ -552,7 +552,7 @@ export class Accidental extends Modifier {
   /** If called, draws parenthesis around accidental. */
   setAsCautionary(): this {
     this.cautionary = true;
-    this.renderOptions.font_scale = 28;
+    this.render_options.font_scale = 28;
     this.reset();
     return this;
   }
@@ -567,7 +567,7 @@ export class Accidental extends Modifier {
       x_shift,
       y_shift,
       glyph,
-      renderOptions: { parenLeftPadding, parenRightPadding },
+      render_options: { parenLeftPadding, parenRightPadding },
     } = this;
 
     const ctx = this.checkContext();
