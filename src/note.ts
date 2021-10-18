@@ -484,13 +484,14 @@ export abstract class Note extends Tickable {
   }
 
   getStem(): Stem | undefined {
-    return undefined;
+    throw new RuntimeError('NoStem', 'No stem attached to instance');
   }
 
   getBeamCount(): number {
-    return 0;
+    throw new RuntimeError('NoStem', 'No stem attached to instance');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setStemDirection(direction?: number): this {
     throw new RuntimeError('NoStem', 'No stem attached to instance');
   }
