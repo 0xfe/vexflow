@@ -176,7 +176,7 @@ export class Articulation extends Modifier {
   /** Articulation code provided to the constructor. */
   readonly type: string;
 
-  protected render_options: { font_scale: number };
+  public render_options: { font_scale: number };
   // articulation defined calling reset in constructor
   protected articulation!: ArticulationStruct;
   // glyph defined calling reset in constructor

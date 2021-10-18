@@ -74,7 +74,7 @@ export class MultiMeasureRest extends Element {
     return 'MultiMeasureRest';
   }
 
-  protected render_options: Required<MultimeasureRestRenderOptions>;
+  public render_options: Required<MultimeasureRestRenderOptions>;
   protected xs = { left: NaN, right: NaN };
   protected number_of_measures: number;
 

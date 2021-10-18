@@ -43,7 +43,7 @@ export class PedalMarking extends Element {
   protected type: number;
   protected custom_depress_text: string;
   protected custom_release_text: string;
-  protected render_options: {
+  public render_options: {
     color: string;
     bracket_height: number;
     text_margin_right: number;

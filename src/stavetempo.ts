@@ -21,7 +21,7 @@ export class StaveTempo extends StaveModifier {
 
   protected font: FontInfo;
   /** Font size for note. */
-  protected render_options = { glyph_font_scale: 30 };
+  public render_options = { glyph_font_scale: 30 };
   protected tempo: StaveTempoOptions;
   protected shift_x: number;
   protected shift_y: number;

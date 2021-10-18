@@ -25,7 +25,7 @@ export class VibratoBracket extends Element {
 
   protected start?: Note;
   protected stop?: Note;
-  protected render_options: {
+  public render_options: {
     vibrato_width: number;
     wave_height: number;
     wave_girth: number;

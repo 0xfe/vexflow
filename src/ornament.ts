@@ -43,7 +43,7 @@ export class Ornament extends Modifier {
   protected delayed: boolean;
   protected reportedWidth: number;
   protected adjustForStemDirection: boolean;
-  protected render_options: {
+  public render_options: {
     accidentalUpperPadding: number;
     accidentalLowerPadding: number;
     font_scale: number;

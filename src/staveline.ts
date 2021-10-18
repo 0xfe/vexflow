@@ -46,108 +46,6 @@ function drawArrowHead(
   ctx.fill();
 }
 
-// Helper function to draw a line with arrow heads
-function drawArrowLine(
-  ctx: RenderContext,
-  pt1: { x: number; y: number },
-  pt2: { x: number; y: number },
-  config: RenderOptions
-): void {
-  const both_arrows = config.draw_start_arrow && config.draw_end_arrow;
-
-  const x1 = pt1.x;
-  const y1 = pt1.y;
-  const x2 = pt2.x;
-  const y2 = pt2.y;
-
-  // For ends with arrow we actually want to stop before we get to the arrow
-  // so that wide lines won't put a flat end on the arrow.
-  const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-  const ratio = (distance - config.arrowhead_length / 3) / distance;
-  let end_x;
-  let end_y;
-  let start_x;
-  let start_y;
-  if (config.draw_end_arrow || both_arrows) {
-    end_x = Math.round(x1 + (x2 - x1) * ratio);
-    end_y = Math.round(y1 + (y2 - y1) * ratio);
-  } else {
-    end_x = x2;
-    end_y = y2;
-  }
-
-  if (config.draw_start_arrow || both_arrows) {
-    start_x = x1 + (x2 - x1) * (1 - ratio);
-    start_y = y1 + (y2 - y1) * (1 - ratio);
-  } else {
-    start_x = x1;
-    start_y = y1;
-  }
-
-  if (config.color) {
-    ctx.setStrokeStyle(config.color);
-    ctx.setFillStyle(config.color);
-  }
-
-  // Draw the shaft of the arrow
-  ctx.beginPath();
-  ctx.moveTo(start_x, start_y);
-  ctx.lineTo(end_x, end_y);
-  ctx.stroke();
-  ctx.closePath();
-
-  // calculate the angle of the line
-  const line_angle = Math.atan2(y2 - y1, x2 - x1);
-  // h is the line length of a side of the arrow head
-  const h = Math.abs(config.arrowhead_length / Math.cos(config.arrowhead_angle));
-
-  let angle1;
-  let angle2;
-  let top_x;
-  let top_y;
-  let bottom_x;
-  let bottom_y;
-
-  if (config.draw_end_arrow || both_arrows) {
-    angle1 = line_angle + Math.PI + config.arrowhead_angle;
-    top_x = x2 + Math.cos(angle1) * h;
-    top_y = y2 + Math.sin(angle1) * h;
-
-    angle2 = line_angle + Math.PI - config.arrowhead_angle;
-    bottom_x = x2 + Math.cos(angle2) * h;
-    bottom_y = y2 + Math.sin(angle2) * h;
-
-    drawArrowHead(ctx, top_x, top_y, x2, y2, bottom_x, bottom_y);
-  }
-
-  if (config.draw_start_arrow || both_arrows) {
-    angle1 = line_angle + config.arrowhead_angle;
-    top_x = x1 + Math.cos(angle1) * h;
-    top_y = y1 + Math.sin(angle1) * h;
-
-    angle2 = line_angle - config.arrowhead_angle;
-    bottom_x = x1 + Math.cos(angle2) * h;
-    bottom_y = y1 + Math.sin(angle2) * h;
-
-    drawArrowHead(ctx, top_x, top_y, x1, y1, bottom_x, bottom_y);
-  }
-}
-
-interface RenderOptions {
-  padding_left: number;
-  padding_right: number;
-  line_width: number;
-  line_dash?: number[];
-  rounded_end: boolean;
-  color?: string;
-  draw_start_arrow: boolean;
-  draw_end_arrow: boolean;
-  arrowhead_length: number;
-  arrowhead_angle: number;
-  text_position_vertical: number;
-  text_justification: number;
-}
-
 export class StaveLine extends Element {
   static get CATEGORY(): string {
     return 'StaveLine';
@@ -165,7 +63,20 @@ export class StaveLine extends Element {
     RIGHT: 3,
   };
 
-  readonly render_options: RenderOptions;
+  public render_options: {
+    padding_left: number;
+    padding_right: number;
+    line_width: number;
+    line_dash?: number[];
+    rounded_end: boolean;
+    color?: string;
+    draw_start_arrow: boolean;
+    draw_end_arrow: boolean;
+    arrowhead_length: number;
+    arrowhead_angle: number;
+    text_position_vertical: number;
+    text_justification: number;
+  };
 
   protected text: string;
   protected font: FontInfo;
@@ -300,6 +211,88 @@ export class StaveLine extends Element {
     }
   }
 
+  // Helper function to draw a line with arrow heads
+  protected drawArrowLine(ctx: RenderContext, pt1: { x: number; y: number }, pt2: { x: number; y: number }): void {
+    const both_arrows = this.render_options.draw_start_arrow && this.render_options.draw_end_arrow;
+
+    const x1 = pt1.x;
+    const y1 = pt1.y;
+    const x2 = pt2.x;
+    const y2 = pt2.y;
+
+    // For ends with arrow we actually want to stop before we get to the arrow
+    // so that wide lines won't put a flat end on the arrow.
+    const distance = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    const ratio = (distance - this.render_options.arrowhead_length / 3) / distance;
+    let end_x;
+    let end_y;
+    let start_x;
+    let start_y;
+    if (this.render_options.draw_end_arrow || both_arrows) {
+      end_x = Math.round(x1 + (x2 - x1) * ratio);
+      end_y = Math.round(y1 + (y2 - y1) * ratio);
+    } else {
+      end_x = x2;
+      end_y = y2;
+    }
+
+    if (this.render_options.draw_start_arrow || both_arrows) {
+      start_x = x1 + (x2 - x1) * (1 - ratio);
+      start_y = y1 + (y2 - y1) * (1 - ratio);
+    } else {
+      start_x = x1;
+      start_y = y1;
+    }
+
+    if (this.render_options.color) {
+      ctx.setStrokeStyle(this.render_options.color);
+      ctx.setFillStyle(this.render_options.color);
+    }
+
+    // Draw the shaft of the arrow
+    ctx.beginPath();
+    ctx.moveTo(start_x, start_y);
+    ctx.lineTo(end_x, end_y);
+    ctx.stroke();
+    ctx.closePath();
+
+    // calculate the angle of the line
+    const line_angle = Math.atan2(y2 - y1, x2 - x1);
+    // h is the line length of a side of the arrow head
+    const h = Math.abs(this.render_options.arrowhead_length / Math.cos(this.render_options.arrowhead_angle));
+
+    let angle1;
+    let angle2;
+    let top_x;
+    let top_y;
+    let bottom_x;
+    let bottom_y;
+
+    if (this.render_options.draw_end_arrow || both_arrows) {
+      angle1 = line_angle + Math.PI + this.render_options.arrowhead_angle;
+      top_x = x2 + Math.cos(angle1) * h;
+      top_y = y2 + Math.sin(angle1) * h;
+
+      angle2 = line_angle + Math.PI - this.render_options.arrowhead_angle;
+      bottom_x = x2 + Math.cos(angle2) * h;
+      bottom_y = y2 + Math.sin(angle2) * h;
+
+      drawArrowHead(ctx, top_x, top_y, x2, y2, bottom_x, bottom_y);
+    }
+
+    if (this.render_options.draw_start_arrow || both_arrows) {
+      angle1 = line_angle + this.render_options.arrowhead_angle;
+      top_x = x1 + Math.cos(angle1) * h;
+      top_y = y1 + Math.sin(angle1) * h;
+
+      angle2 = line_angle - this.render_options.arrowhead_angle;
+      bottom_x = x1 + Math.cos(angle2) * h;
+      bottom_y = y1 + Math.sin(angle2) * h;
+
+      drawArrowHead(ctx, top_x, top_y, x1, y1, bottom_x, bottom_y);
+    }
+  }
+
   // Renders the `StaveLine` on the context
   draw(): this {
     const ctx = this.checkContext();
@@ -344,7 +337,7 @@ export class StaveLine extends Element {
       start_position.y += upwards_slope ? -3 : 1;
       end_position.y += upwards_slope ? 2 : 0;
 
-      drawArrowLine(ctx, start_position, end_position, this.render_options);
+      this.drawArrowLine(ctx, start_position, end_position);
     });
 
     ctx.restore();

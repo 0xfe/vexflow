@@ -47,7 +47,7 @@ export class Beam extends Element {
     return 'Beam';
   }
 
-  render_options: {
+  public render_options: {
     flat_beam_offset?: number;
     flat_beams: boolean;
     secondary_break_ticks?: number;

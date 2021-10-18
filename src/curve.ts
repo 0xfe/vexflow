@@ -28,7 +28,7 @@ export class Curve extends Element {
     return 'Curve';
   }
 
-  protected readonly render_options: Required<CurveOptions>;
+  public render_options: Required<CurveOptions>;
   protected from: Note;
   protected to: Note;
 

@@ -38,21 +38,6 @@ export interface NoteDuration {
   type: string;
 }
 
-export interface NoteRenderOptions {
-  draw_stem_through_stave?: boolean;
-  draw_dots?: boolean;
-  draw_stem?: boolean;
-  y_shift: number;
-  extend_left?: number;
-  extend_right?: number;
-  glyph_font_scale: number;
-  annotation_spacing: number;
-  glyph_font_size?: number;
-  scale: number;
-  font: string;
-  stroke_px: number;
-}
-
 export interface ParsedNote {
   duration: string;
   type: string;
@@ -93,7 +78,20 @@ export abstract class Note extends Tickable {
   keyProps: KeyProps[];
 
   protected stave?: Stave;
-  render_options: NoteRenderOptions;
+  public render_options: {
+    draw_stem_through_stave?: boolean;
+    draw_dots?: boolean;
+    draw_stem?: boolean;
+    y_shift: number;
+    extend_left?: number;
+    extend_right?: number;
+    glyph_font_scale: number;
+    annotation_spacing: number;
+    glyph_font_size?: number;
+    scale: number;
+    font: string;
+    stroke_px: number;
+  };
   protected duration: string;
   protected dots: number;
   protected leftDisplacedHeadPx: number;

@@ -14,13 +14,6 @@ export interface BendPhrase {
   draw_width?: number;
 }
 
-export interface BendRenderOptions {
-  line_width: number;
-  release_width: number;
-  bend_width: number;
-  line_style: string;
-}
-
 /** Bend implements tablature bends. */
 export class Bend extends Modifier {
   static get CATEGORY(): string {
@@ -60,7 +53,12 @@ export class Bend extends Modifier {
   protected release: boolean;
   protected phrase: BendPhrase[];
   protected font: string;
-  protected render_options: BendRenderOptions;
+  public render_options: {
+    line_width: number;
+    release_width: number;
+    bend_width: number;
+    line_style: string;
+  };
 
   /**
    * Example of a phrase:

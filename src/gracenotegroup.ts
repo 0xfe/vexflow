@@ -39,7 +39,7 @@ export class GraceNoteGroup extends Modifier {
 
   protected preFormatted: boolean = false;
   protected formatter: Formatter;
-  protected render_options: { slur_y_shift: number };
+  public render_options: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
   protected beams: Beam[];
 

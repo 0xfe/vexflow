@@ -13,7 +13,7 @@ export class StaveTie extends Element {
     return 'StaveTie';
   }
 
-  render_options: {
+  public render_options: {
     cp2: number;
     last_x_shift: number;
     tie_spacing: number;

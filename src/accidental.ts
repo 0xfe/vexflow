@@ -46,7 +46,7 @@ export class Accidental extends Modifier {
     code: string;
     parenRightPaddingAdjustment: number;
   };
-  protected render_options: {
+  public render_options: {
     parenLeftPadding: number;
     stroke_px: number;
     font_scale: number;

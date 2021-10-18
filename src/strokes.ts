@@ -35,7 +35,7 @@ export class Stroke extends Modifier {
   protected type: number;
 
   protected note_end?: Note;
-  protected render_options: {
+  public render_options: {
     font_scale: number;
     stroke_px: number;
     stroke_spacing: number;

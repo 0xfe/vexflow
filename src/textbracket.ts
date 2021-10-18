@@ -41,7 +41,7 @@ export class TextBracket extends Element {
     return 'TextBracket';
   }
 
-  render_options: {
+  public render_options: {
     dashed: boolean;
     color: string;
     line_width: number;

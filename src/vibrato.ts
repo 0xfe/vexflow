@@ -20,7 +20,7 @@ export class Vibrato extends Modifier {
     return 'Vibrato';
   }
 
-  protected render_options: VibratoRenderOptions;
+  public render_options: VibratoRenderOptions;
 
   /** Arrange vibratos inside a `ModifierContext`. */
   static format(vibratos: Vibrato[], state: ModifierContextState, context: ModifierContext): boolean {

@@ -29,7 +29,7 @@ export class StaveHairpin extends Element {
   protected hairpin: number;
 
   protected position: number;
-  protected render_options: StaveHairpinRenderOptions;
+  public render_options: StaveHairpinRenderOptions;
 
   // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: Record<string, Note>;
