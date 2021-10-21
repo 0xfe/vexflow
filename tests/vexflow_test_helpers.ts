@@ -28,11 +28,11 @@ export interface TestOptions {
 // Each test case will switch through the available fonts, and then restore the original font when done.
 let originalFontStack: Font[];
 function useTempFontStack(fontName: string): void {
-  originalFontStack = Flow.MUSIC_FONT_STACK;
-  Flow.MUSIC_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+  originalFontStack = Flow.getMusicFontStack();
+  Flow.setMusicFont(...VexFlowTests.FONT_STACKS[fontName]);
 }
 function restoreOriginalFontStack(): void {
-  Flow.MUSIC_FONT_STACK = originalFontStack;
+  Flow.setMusicFontStack(originalFontStack);
 }
 
 // A micro util inspired by jQuery.
@@ -133,10 +133,10 @@ class VexFlowTests {
   /**
    *
    */
-  static FONT_STACKS: Record<string, Font[]> = {
-    Bravura: [MusicFont.Bravura(), MusicFont.Gonville(), MusicFont.Custom()],
-    Gonville: [MusicFont.Gonville(), MusicFont.Bravura(), MusicFont.Custom()],
-    Petaluma: [MusicFont.Petaluma(), MusicFont.Gonville(), MusicFont.Custom()],
+  static FONT_STACKS: Record<string, string[]> = {
+    Bravura: ['Bravura', 'Gonville', 'Custom'],
+    Gonville: ['Gonville', 'Bravura', 'Custom'],
+    Petaluma: ['Petaluma', 'Gonville', 'Custom'],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {

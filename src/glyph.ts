@@ -45,7 +45,6 @@ export interface GlyphProps {
 }
 
 export interface GlyphOptions {
-  fontStack: Font[];
   category?: string;
 }
 
@@ -93,6 +92,8 @@ class GlyphCache {
   protected cache: Map<Font[], Record<string, GlyphCacheEntry>> = new Map();
 
   lookup(fontStack: Font[], code: string, category?: string): GlyphCacheEntry {
+    console.log('LOOKUP: ' + fontStack.toString());
+
     let entries = this.cache.get(fontStack);
     if (entries === undefined) {
       entries = {};
@@ -179,7 +180,7 @@ export class Glyph extends Element {
   topGlyphs: Glyph[] = [];
   botGlyphs: Glyph[] = [];
 
-  protected options: GlyphOptions;
+  protected options: GlyphOptions = {};
   protected originShift: { x: number; y: number };
   protected x_shift: number;
   protected y_shift: number;
@@ -278,11 +279,16 @@ export class Glyph extends Element {
     code: string,
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
-    const params = {
-      fontStack: Tables.MUSIC_FONT_STACK,
-      ...options,
-    };
-    const data = Glyph.cache.lookup(params.fontStack, code, params.category);
+    // Use the optional font parameter if it exists.
+    // Fall back to the current music font stack.
+    // TODO/RONYEH: Should we continue to support the optional font parameter?
+    // Isn't it simpler if we always reference the global font stack instead?
+    const fontStack = Tables.MUSIC_FONT_STACK.slice();
+    if (options?.font) {
+      fontStack.unshift(options?.font);
+    }
+
+    const data = Glyph.cache.lookup(fontStack, code, options?.category);
     const metrics = data.metrics;
     if (data.point != -1) {
       point = data.point;
@@ -363,8 +369,8 @@ export class Glyph extends Element {
     return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
 
-  static getWidth(fontStack: Font[], code: string, point: number, category?: string): number {
-    const data = Glyph.cache.lookup(fontStack, code, category);
+  static getWidth(code: string, point: number, category?: string): number {
+    const data = Glyph.cache.lookup(Tables.MUSIC_FONT_STACK, code, category);
     if (data.point != -1) {
       point = data.point;
     }
@@ -377,22 +383,15 @@ export class Glyph extends Element {
    * @param point
    * @param options
    */
-  constructor(code: string, point: number, options?: { category: string }) {
+  constructor(code: string, point: number, options?: GlyphOptions) {
     super();
 
     this.code = code;
     this.point = point;
-    this.options = {
-      fontStack: this.getMusicFontStack(),
-    };
 
+    this.originShift = { x: 0, y: 0 };
     this.x_shift = 0;
     this.y_shift = 0;
-
-    this.originShift = {
-      x: 0,
-      y: 0,
-    };
 
     if (options) {
       this.setOptions(options);
@@ -437,7 +436,7 @@ export class Glyph extends Element {
   }
 
   reset(): void {
-    const data = Glyph.cache.lookup(this.options.fontStack, this.code, this.options.category);
+    const data = Glyph.cache.lookup(this.getMusicFontStack(), this.code, this.options.category);
     this.metrics = data.metrics;
     // Override point from metrics file
     if (data.point != -1) {

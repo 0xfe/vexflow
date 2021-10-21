@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="output"></div>
+    <!-- The vexflow core build includes no music fonts. -->
+    <script src="../../build/vexflow-core.js"></script>
+    <script type="module">
+      // Vex.Flow.setMusicFont('Petaluma') is an async function that triggers
+      // the loading of the Petaluma font (stored in vexflow-font-petaluma.js).
+      await Vex.Flow.setMusicFont('Petaluma');
+
+      const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
+      const score = factory.EasyScore();
+      const system = factory.System();
+
+      system
+        .addStave({
+          voices: [
+            score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+            score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+          ],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+
+      factory.draw();
+    </script>
+  </body>
+</html>

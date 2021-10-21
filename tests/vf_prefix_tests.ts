@@ -94,6 +94,8 @@ const VFPrefixTests = {
 declare let Vex: any;
 
 function VF_Prefix(): void {
+  // Intentionally use Vex.Flow here so we can verify that the Vex.Flow.* API
+  // is equivalent to using the individual classes in TypeScript.
   const VF = Vex.Flow as unknown as typeof Flow;
   equal(Accidental, VF.Accidental);
   equal(Annotation, VF.Annotation);
@@ -115,6 +117,7 @@ function VF_Prefix(): void {
   equal(Factory, VF.Factory);
   equal(Flow.RESOLUTION, VF.RESOLUTION);
   equal(Font, VF.Font);
+  equal(Fonts, VF.Fonts);
   equal(Formatter, VF.Formatter);
   propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
   equal(Fraction, VF.Fraction);

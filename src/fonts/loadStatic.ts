@@ -1,25 +1,44 @@
+import { Flow } from '../flow';
+import { Font, Fonts } from '../font';
 import Bravura from '../fonts/bravura';
 import Gonville from '../fonts/gonville';
 import Petaluma from '../fonts/petaluma';
 import Custom from '../fonts/custom';
-import { FontDataMetrics } from '../font';
+import { RobotoSlabFont } from './robotoslab_glyphs';
+import { PetalumaScriptFont } from './petalumascript_glyphs';
 
-export function loadBravura(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Bravura.fontData;
-  fontDataMetrics.metrics = Bravura.metrics;
-}
+export function setupFonts(): void {
+  Flow.setMusicFont = (...fontNames: string[]) => {
+    Flow.MUSIC_FONT_STACK = fontNames.map((fontName) => Font.get(fontName));
+  };
 
-export function loadGonville(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Gonville.fontData;
-  fontDataMetrics.metrics = Gonville.metrics;
-}
+  const fontBravura = new Font('Bravura');
+  fontBravura.data = Bravura.data;
+  fontBravura.metrics = Bravura.metrics;
+  Fonts['Bravura'] = fontBravura;
 
-export function loadPetaluma(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Petaluma.fontData;
-  fontDataMetrics.metrics = Petaluma.metrics;
-}
+  const fontGonville = new Font('Gonville');
+  fontGonville.data = Gonville.data;
+  fontGonville.metrics = Gonville.metrics;
+  Fonts['Gonville'] = fontGonville;
 
-export function loadCustom(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Custom.fontData;
-  fontDataMetrics.metrics = Custom.metrics;
+  const fontPetaluma = new Font('Petaluma');
+  fontPetaluma.data = Petaluma.data;
+  fontPetaluma.metrics = Petaluma.metrics;
+  Fonts['Petaluma'] = fontPetaluma;
+
+  const fontCustom = new Font('Custom');
+  fontCustom.data = Custom.data;
+  fontCustom.metrics = Custom.metrics;
+  Fonts['Custom'] = fontCustom;
+
+  const fontRobotoSlab = new Font('Roboto Slab');
+  fontRobotoSlab.data = RobotoSlabFont;
+  fontRobotoSlab.metrics = undefined;
+  Fonts['Roboto Slab'] = fontRobotoSlab;
+
+  const fontPetalumaScript = new Font('PetalumaScript');
+  fontPetalumaScript.data = PetalumaScriptFont;
+  fontPetalumaScript.metrics = undefined;
+  Fonts['PetalumaScript'] = fontPetalumaScript;
 }

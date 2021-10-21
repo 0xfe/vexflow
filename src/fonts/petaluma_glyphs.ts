@@ -1,3 +1,5 @@
+console.log('Petaluma Glyphs');
+
 export const PetalumaFont = {
   glyphs: {
     bracketTop: {

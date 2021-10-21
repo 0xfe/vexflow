@@ -1,3 +1,5 @@
+import { setupFonts } from '@loadFonts';
+
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
@@ -15,7 +17,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, MusicFont } from './font';
+import { Font, Fonts } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -73,6 +75,7 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
+import { RuntimeError } from './util';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
@@ -97,8 +100,8 @@ export const Flow = {
   Element,
   Factory,
   Font,
+  Fonts,
   TextFormatter,
-  Fonts: MusicFont,
   Formatter,
   Fraction,
   FretHandFinger,
@@ -258,3 +261,7 @@ export const Flow = {
     return Tables.durationToTicks(duration);
   },
 };
+
+// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts.
+// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.
+setupFonts();

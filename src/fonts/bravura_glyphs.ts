@@ -1,3 +1,5 @@
+console.log('Bravura Glyphs');
+
 export const BravuraFont = {
   glyphs: {
     bracketTop: {

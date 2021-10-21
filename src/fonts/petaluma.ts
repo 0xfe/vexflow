@@ -1,8 +1,10 @@
 import { PetalumaFont } from './petaluma_glyphs';
 import { PetalumaMetrics } from './petaluma_metrics';
 
+console.log('Petaluma.ts created');
+
 const Petaluma = {
-  fontData: PetalumaFont,
+  data: PetalumaFont,
   metrics: PetalumaMetrics,
 };
 

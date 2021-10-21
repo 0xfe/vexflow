@@ -1,3 +1,5 @@
+console.log('Gonville Glyphs');
+
 export const GonvilleFont = {
   glyphs: {
     bracketTop: {

@@ -144,7 +144,6 @@ module.exports = (grunt) => {
   const watchOptions = {
     watch: true,
     keepalive: true,
-    ignored: /node_modules/,
   };
 
   grunt.initConfig({

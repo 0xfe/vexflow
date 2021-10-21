@@ -150,6 +150,8 @@ export class System extends Element {
       params.stave ??
       this.factory.Stave({ x: this.options.x, y: this.options.y, width: this.options.width, options: staveOptions });
 
+    console.log('Y' + this.options.y);
+
     const p = {
       stave,
       /* voices: [], */

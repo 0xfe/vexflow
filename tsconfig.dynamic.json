@@ -14,10 +14,7 @@
     "moduleResolution": "node",
     "baseUrl": "./src",
     "paths": {
-      "@bravura": ["fonts/loadDynamic"],
-      "@gonville": ["fonts/loadDynamic"],
-      "@petaluma": ["fonts/loadDynamic"],
-      "@custom": ["fonts/loadDynamic"]
+      "@loadFonts": ["fonts/loadDynamic"]
     }
   },
   "exclude": ["./tools/fonts/legacy", "./releases", "./reference"]
