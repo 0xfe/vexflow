@@ -5,7 +5,7 @@
 
 import { Factory } from 'factory';
 import { Flow } from 'flow';
-import { Font, MusicFont } from 'font';
+import { Font } from 'font';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
 
@@ -30,7 +30,7 @@ export interface TestOptions {
 let originalFontStack: Font[];
 function useTempFontStack(fontName: string): void {
   originalFontStack = Flow.MUSIC_FONT_STACK;
-  Flow.MUSIC_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+  Flow.setMusicFont(VexFlowTests.FONT_STACKS[fontName]);
 }
 function restoreOriginalFontStack(): void {
   Flow.MUSIC_FONT_STACK = originalFontStack;
@@ -134,10 +134,10 @@ class VexFlowTests {
   /**
    *
    */
-  static FONT_STACKS: Record<string, Font[]> = {
-    Bravura: [MusicFont.Bravura(), MusicFont.Gonville(), MusicFont.Custom()],
-    Gonville: [MusicFont.Gonville(), MusicFont.Bravura(), MusicFont.Custom()],
-    Petaluma: [MusicFont.Petaluma(), MusicFont.Gonville(), MusicFont.Custom()],
+  static FONT_STACKS: Record<string, string[]> = {
+    Bravura: ['Bravura', 'Gonville', 'Custom'],
+    Gonville: ['Gonville', 'Bravura', 'Custom'],
+    Petaluma: ['Petaluma', 'Gonville', 'Custom'],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {

@@ -3,10 +3,10 @@
 /* eslint-disable key-spacing */
 
 import { ArticulationStruct } from './articulation';
-import { MusicFont } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';
+import { Font } from './font';
 
 // Custom note heads
 const customNoteHeads: Record<string, { code: string }> = {
@@ -331,7 +331,7 @@ export const Tables = {
    * Customize this to choose a different music font.
    * For example: Vex.Tables.MUSIC_FONT_STACK = [Fonts.Petaluma(), Fonts.Custom()];
    */
-  MUSIC_FONT_STACK: [MusicFont.Bravura(), MusicFont.Gonville(), MusicFont.Custom()],
+  MUSIC_FONT_STACK: [] as Font[],
   NOTATION_FONT_SCALE: 39,
   TABLATURE_FONT_SCALE: 39,
 
@@ -818,14 +818,14 @@ export const Tables = {
             // Breve note
             code_head: 'noteheadDoubleWhole',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDoubleWhole', scale);
+              return Glyph.getWidth('noteheadDoubleWhole', scale);
             },
           },
           h: {
             // Breve note harmonic
             code_head: 'unpitchedPercussionClef1',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'unpitchedPercussionClef1', scale);
+              return Glyph.getWidth('unpitchedPercussionClef1', scale);
             },
           },
           m: {
@@ -833,7 +833,7 @@ export const Tables = {
             code_head: 'vexNoteHeadMutedBreve',
             stem_offset: 0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'vexNoteHeadMutedBreve', scale);
+              return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
             },
           },
           r: {
@@ -843,7 +843,7 @@ export const Tables = {
             position: 'B/5',
             dot_shiftY: 0.5,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'restDoubleWhole', scale);
+              return Glyph.getWidth('restDoubleWhole', scale);
             },
           },
           s: {
@@ -872,14 +872,14 @@ export const Tables = {
             // Whole note
             code_head: 'noteheadWhole',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadWhole', scale);
+              return Glyph.getWidth('noteheadWhole', scale);
             },
           },
           h: {
             // Whole note harmonic
             code_head: 'noteheadDiamondWhole',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondWhole', scale);
+              return Glyph.getWidth('noteheadDiamondWhole', scale);
             },
           },
           m: {
@@ -887,7 +887,7 @@ export const Tables = {
             code_head: 'noteheadXWhole',
             stem_offset: -3,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXWhole', scale);
+              return Glyph.getWidth('noteheadXWhole', scale);
             },
           },
           r: {
@@ -897,7 +897,7 @@ export const Tables = {
             position: 'D/5',
             dot_shiftY: 0.5,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'restWhole', scale);
+              return Glyph.getWidth('restWhole', scale);
             },
           },
           s: {
@@ -926,14 +926,14 @@ export const Tables = {
             // Half note
             code_head: 'noteheadHalf',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadHalf', scale);
+              return Glyph.getWidth('noteheadHalf', scale);
             },
           },
           h: {
             // Half note harmonic
             code_head: 'noteheadDiamondHalf',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondHalf', scale);
+              return Glyph.getWidth('noteheadDiamondHalf', scale);
             },
           },
           m: {
@@ -941,7 +941,7 @@ export const Tables = {
             code_head: 'noteheadXHalf',
             stem_offset: -3,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXHalf', scale);
+              return Glyph.getWidth('noteheadXHalf', scale);
             },
           },
           r: {
@@ -952,7 +952,7 @@ export const Tables = {
             position: 'B/4',
             dot_shiftY: -0.5,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'restHalf', scale);
+              return Glyph.getWidth('restHalf', scale);
             },
           },
           s: {
@@ -981,21 +981,21 @@ export const Tables = {
             // Quarter note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Quarter harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Quarter muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1008,7 +1008,7 @@ export const Tables = {
             line_above: 1.5,
             line_below: 1.5,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'restQuarter', scale);
+              return Glyph.getWidth('restQuarter', scale);
             },
           },
           s: {
@@ -1040,21 +1040,21 @@ export const Tables = {
             // Eighth note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Eighth note harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Eighth note muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1068,7 +1068,7 @@ export const Tables = {
             line_above: 1.0,
             line_below: 1.0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'rest8th', scale);
+              return Glyph.getWidth('rest8th', scale);
             },
           },
           s: {
@@ -1100,21 +1100,21 @@ export const Tables = {
             // Sixteenth note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Sixteenth note harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Sixteenth note muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1128,7 +1128,7 @@ export const Tables = {
             line_above: 1.0,
             line_below: 2.0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'rest16th', scale);
+              return Glyph.getWidth('rest16th', scale);
             },
           },
           s: {
@@ -1160,21 +1160,21 @@ export const Tables = {
             // Thirty-second note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Thirty-second harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Thirty-second muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1188,7 +1188,7 @@ export const Tables = {
             line_above: 2.0,
             line_below: 2.0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'rest32nd', scale);
+              return Glyph.getWidth('rest32nd', scale);
             },
           },
           s: {
@@ -1220,21 +1220,21 @@ export const Tables = {
             // Sixty-fourth note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Sixty-fourth harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Sixty-fourth muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1248,7 +1248,7 @@ export const Tables = {
             line_above: 2.0,
             line_below: 3.0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'rest64th', scale);
+              return Glyph.getWidth('rest64th', scale);
             },
           },
           s: {
@@ -1280,21 +1280,21 @@ export const Tables = {
             // Hundred-twenty-eight note
             code_head: 'noteheadBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadBlack', scale);
+              return Glyph.getWidth('noteheadBlack', scale);
             },
           },
           h: {
             // Hundred-twenty-eight harmonic
             code_head: 'noteheadDiamondBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadDiamondBlack', scale);
+              return Glyph.getWidth('noteheadDiamondBlack', scale);
             },
           },
           m: {
             // Hundred-twenty-eight muted
             code_head: 'noteheadXBlack',
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'noteheadXBlack', scale);
+              return Glyph.getWidth('noteheadXBlack', scale);
             },
           },
           r: {
@@ -1308,7 +1308,7 @@ export const Tables = {
             line_above: 3.0,
             line_below: 3.0,
             getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth(Tables.MUSIC_FONT_STACK, 'rest128th', scale);
+              return Glyph.getWidth('rest128th', scale);
             },
           },
           s: {

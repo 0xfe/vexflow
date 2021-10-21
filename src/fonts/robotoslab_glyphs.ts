@@ -1,3 +1,5 @@
+console.log('Roboto Slab Glyphs');
+
 export const RobotoSlabFont = {
   name: 'Roboto Slab',
   smufl: false,

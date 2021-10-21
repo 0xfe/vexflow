@@ -66,8 +66,9 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    this.point = this.musicFont.lookupMetric('digits.point');
-    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
+    const musicFont = this.getMusicFont();
+    this.point = musicFont.lookupMetric('digits.point');
+    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifierPosition.BEGIN);

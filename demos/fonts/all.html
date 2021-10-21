@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="outputBravura"></div>
+    <div id="outputGonville"></div>
+    <div id="outputPetaluma"></div>
+    <!-- The standard vexflow build includes three music fonts. -->
+    <script src="../../build/vexflow.js"></script>
+    <script type="module">
+      console.log('VexFlow BUILD ' + Vex.Flow.BUILD);
+
+      ////////////////////////////////////////////////////////////////////////
+
+      {
+        Vex.Flow.setMusicFont('Bravura');
+        const factory = new Vex.Flow.Factory({
+          renderer: { elementId: 'outputBravura', width: 500, height: 130 },
+        });
+        const score = factory.EasyScore();
+        factory
+          .System()
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+
+      ////////////////////////////////////////////////////////////////////////
+
+      {
+        Vex.Flow.setMusicFont('Gonville');
+        const factory = new Vex.Flow.Factory({
+          renderer: { elementId: 'outputGonville', width: 500, height: 130 },
+        });
+        const score = factory.EasyScore();
+        factory
+          .System()
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+
+      ////////////////////////////////////////////////////////////////////////
+
+      {
+        Vex.Flow.setMusicFont('Petaluma');
+        const factory = new Vex.Flow.Factory({
+          renderer: { elementId: 'outputPetaluma', width: 500, height: 130 },
+        });
+        const score = factory.EasyScore();
+        factory
+          .System()
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+    </script>
+  </body>
+</html>

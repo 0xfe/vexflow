@@ -134,8 +134,10 @@ export abstract class StemmableNote extends Note {
       // the stem appropriately. If there's no custom note head, lookup the standard notehead.
       const glyph = this.getBaseCustomNoteHeadGlyph() || this.getGlyph();
 
+      console.log(Flow.getMusicFont());
+
       // Get the font-specific customizations for the note heads.
-      const offsets = this.musicFont.lookupMetric(`stem.noteHead.${glyph.code_head}`, {
+      const offsets = this.getMusicFont().lookupMetric(`stem.noteHead.${glyph.code_head}`, {
         offsetYBaseStemUp: 0,
         offsetYTopStemUp: 0,
         offsetYBaseStemDown: 0,

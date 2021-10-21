@@ -94,13 +94,13 @@ export class Stave extends Element {
   // This is the sum of the padding that normally goes on left + right of a stave during
   // drawing. Used to size staves correctly with content width.
   static get defaultPadding(): number {
-    const musicFont = Tables.MUSIC_FONT_STACK[0];
+    const musicFont = Flow.getMusicFont();
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
 
   // Right padding, used by system if startX is already determined.
   static get rightPadding(): number {
-    const musicFont = Tables.MUSIC_FONT_STACK[0];
+    const musicFont = Flow.getMusicFont();
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 

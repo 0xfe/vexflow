@@ -296,7 +296,7 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
-    const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+    const padding = this.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
     let y = (
       {

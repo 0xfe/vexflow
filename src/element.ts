@@ -46,7 +46,7 @@ export abstract class Element {
 
   /**
    * Default font for text.
-   * See `Element.musicFont` and `Element.musicFontStack` to customize the font for musical symbols placed on the score.
+   * See `Element.musicFontStack` to customize the font for musical symbols placed on the score.
    */
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
@@ -62,12 +62,9 @@ export abstract class Element {
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
 
+  /** The font stack used to render musical glyphs (e.g., treble clef).*/
   // Initialized by the constructor via this.setMusicFontStack(...).
   protected musicFontStack!: Font[];
-
-  /** The font used to render musical glyphs (e.g., treble clef).*/
-  // Initialized by the constructor via this.setMusicFontStack(...).
-  protected musicFont!: Font;
 
   /** Some elements include text. You can customize the font family, size, weight, and style. */
   protected font?: Required<FontInfo>;
@@ -94,17 +91,24 @@ export abstract class Element {
 
   /**
    * Set the music engraving fonts. The first item is the default.
-   * Other fonts serve as backups, if a glyph is not found in the first font.
+   * Other fonts serve as backups for when a glyph is not found in the first font.
+   *
+   * Note: This method makes a shallow copy of the array, so that future changes to the global
+   * font stack will not affect this element's music font.
+   * TODO/RONYEH: Is this the approach we want to take?
    */
   setMusicFontStack(fontStack: Font[]): this {
-    this.musicFontStack = fontStack;
-    this.musicFont = fontStack[0];
+    this.musicFontStack = fontStack.slice();
     return this;
   }
 
   /** Get music fonts stack. */
   getMusicFontStack(): Font[] {
-    return this.musicFontStack;
+    return this.musicFontStack.slice();
+  }
+
+  getMusicFont(): Font {
+    return this.musicFontStack[0];
   }
 
   /**

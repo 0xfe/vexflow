@@ -1,3 +1,5 @@
+import { setupFonts } from '@loadFonts';
+
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
@@ -15,7 +17,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, MusicFont } from './font';
+import { Font, Fonts } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -73,6 +75,7 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
+import { RuntimeError } from './util';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
@@ -97,8 +100,8 @@ export const Flow = {
   Element,
   Factory,
   Font,
+  Fonts,
   TextFormatter,
-  Fonts: MusicFont,
   Formatter,
   Fraction,
   FretHandFinger,
@@ -161,23 +164,23 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
-  get DEFAULT_FONT_STACK(): Font[] {
-    return Tables.DEFAULT_FONT_STACK;
+  get MUSIC_FONT_STACK(): Font[] {
+    return Tables.MUSIC_FONT_STACK;
   },
-  set DEFAULT_FONT_STACK(value: Font[]) {
-    Tables.DEFAULT_FONT_STACK = value;
+  set MUSIC_FONT_STACK(value: Font[]) {
+    Tables.MUSIC_FONT_STACK = value;
   },
-  get DEFAULT_NOTATION_FONT_SCALE(): number {
-    return Tables.DEFAULT_NOTATION_FONT_SCALE;
+  get NOTATION_FONT_SCALE(): number {
+    return Tables.NOTATION_FONT_SCALE;
   },
-  set DEFAULT_NOTATION_FONT_SCALE(value: number) {
-    Tables.DEFAULT_NOTATION_FONT_SCALE = value;
+  set NOTATION_FONT_SCALE(value: number) {
+    Tables.NOTATION_FONT_SCALE = value;
   },
-  get DEFAULT_TABLATURE_FONT_SCALE(): number {
-    return Tables.DEFAULT_TABLATURE_FONT_SCALE;
+  get TABLATURE_FONT_SCALE(): number {
+    return Tables.TABLATURE_FONT_SCALE;
   },
-  set DEFAULT_TABLATURE_FONT_SCALE(value: number) {
-    Tables.DEFAULT_TABLATURE_FONT_SCALE = value;
+  set TABLATURE_FONT_SCALE(value: number) {
+    Tables.TABLATURE_FONT_SCALE = value;
   },
   get RESOLUTION(): number {
     return Tables.RESOLUTION;
@@ -230,4 +233,26 @@ export const Flow = {
   keySignature(spec: string): { type: string; line: number }[] {
     return Tables.keySignature(spec);
   },
+
+  getMusicFont(): Font {
+    if (Tables.MUSIC_FONT_STACK.length === 0) {
+      throw new RuntimeError('NoFonts', 'The font stack is empty. See: Flow.setMusicFont(...fontNames)');
+    } else {
+      return Tables.MUSIC_FONT_STACK[0];
+    }
+  },
+
+  /**
+   * @param fontNames one or more font names.
+   * Example: setMusicFont('Bravura')
+   * Example: setMusicFont('Bravura', 'Gonville', 'Custom')
+   *
+   * If you are using vexflow.js,      setMusicFont() will be a sync function.
+   * If you are using vexflow-core.js, setMusicFont() will be an async function.
+   */
+  setMusicFont: undefined,
 };
+
+// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts.
+// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.
+setupFonts();

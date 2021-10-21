@@ -22,7 +22,9 @@ export class RepeatNote extends GlyphNote {
     super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
 
     const glyphCode = CODES[type] || 'repeat1Bar';
-    const glyph = new Glyph(glyphCode, this.musicFont.lookupMetric('repeatNote.point', 40), { category: 'repeatNote' });
+    const glyph = new Glyph(glyphCode, this.getMusicFont().lookupMetric('repeatNote.point', 40), {
+      category: 'repeatNote',
+    });
     this.setGlyph(glyph);
   }
 }

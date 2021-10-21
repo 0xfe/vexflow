@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { Font, FontInfo, FontWeight, FontStyle } from './font';
+import { FontInfo, FontWeight, FontStyle } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 

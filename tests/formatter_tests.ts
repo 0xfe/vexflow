@@ -388,10 +388,10 @@ function multiStaves(options: TestOptions): void {
   // Two helper functions to calculate the glyph's width.
   // Should these be static methods in Glyph or Font?
   function glyphPixels(): number {
-    return 96 * (38 / (Flow.MUSIC_FONT_STACK[0].getResolution() * 72));
+    return 96 * (38 / (Flow.getMusicFont().getResolution() * 72));
   }
   function glyphWidth(vexGlyph: string): number {
-    const glyph: FontGlyph = Flow.MUSIC_FONT_STACK[0].getGlyphs()[vexGlyph];
+    const glyph: FontGlyph = Flow.getMusicFont().getGlyphs()[vexGlyph];
     return (glyph.x_max - glyph.x_min) * glyphPixels();
   }
 

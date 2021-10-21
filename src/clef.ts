@@ -123,7 +123,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(this.musicFont.lookupMetric(`clef.${this.size}.width`));
+    this.setWidth(this.getMusicFont().lookupMetric(`clef.${this.size}.width`));
     L('Creating clef:', type);
   }
 
@@ -136,17 +136,20 @@ export class Clef extends StaveModifier {
     } else {
       this.size = size;
     }
-    this.clef.point = this.musicFont.lookupMetric(`clef.${this.size}.point`, 0);
+
+    const musicFont = this.getMusicFont();
+
+    this.clef.point = musicFont.lookupMetric(`clef.${this.size}.point`, 0);
     this.glyph = new Glyph(this.clef.code, this.clef.point, {
       category: `clef.${this.clef.code}.${this.size}`,
     });
 
     // If an annotation, such as 8va, is specified, add it to the Clef object.
     if (annotation !== undefined) {
-      const code = this.musicFont.lookupMetric(`clef.annotations.${annotation}.smuflCode`);
-      const point = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.point`);
-      const line = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.line`);
-      const x_shift = this.musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.shiftX`);
+      const code = musicFont.lookupMetric(`clef.annotations.${annotation}.smuflCode`);
+      const point = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.point`);
+      const line = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.line`);
+      const x_shift = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.shiftX`);
 
       this.annotation = { code, point, line, x_shift };
 
@@ -175,8 +178,9 @@ export class Clef extends StaveModifier {
       const glyph = defined(this.glyph, 'ClefError', "Can't set stave without glyph.");
 
       const numLines = this.stave.getNumLines();
-      const point = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
-      const shiftY = this.musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
+      const musicFont = this.getMusicFont();
+      const point = musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
+      const shiftY = musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
       glyph.setPoint(point);
       glyph.setYShift(shiftY);
     }

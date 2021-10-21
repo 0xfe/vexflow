@@ -1,3 +1,5 @@
+console.log('PetalumaScript Glyphs');
+
 export const PetalumaScriptFont = {
   name: 'PetalumaScript',
   smufl: false,
@@ -859,7 +861,7 @@ export const PetalumaScriptFont = {
       advanceWidth: 308,
     },
   },
-  fontFamily: 'PetalumaScript' /* RONYEH/TODO: This must match perfectly! */,
+  fontFamily: 'PetalumaScript' /* TODO/RONYEH: This must match perfectly! */,
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };

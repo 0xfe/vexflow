@@ -26,7 +26,14 @@ module.exports = (grunt) => {
   // Used for eslint
   const SOURCES = ['./src/*.ts', './src/*.js'];
 
-  function webpackConfig(target, chunkFilename, configFile, moduleEntry, mode, libraryName) {
+  // Switching the mode from 'development' => 'production' will enable minification, etc.
+  // See: https://webpack.js.org/configuration/mode/
+  function webpackConfig(target, chunkFilename, configFile, moduleEntry, mode) {
+    let globalObject = `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`;
+    if (chunkFilename !== undefined) {
+      globalObject = undefined;
+    }
+
     return {
       mode: mode,
       entry: moduleEntry,
@@ -34,7 +41,7 @@ module.exports = (grunt) => {
         path: BUILD_DIR,
         filename: target,
         chunkFilename: chunkFilename,
-        library: libraryName,
+        library: 'Vex',
         libraryTarget: 'umd',
         libraryExport: 'default',
         // Support different ways of loading VexFlow.
@@ -44,7 +51,7 @@ module.exports = (grunt) => {
         //   - `globalThis.Vex` in node JS >= 12
         //   - `this.Vex` in all other environments
         // See: https://webpack.js.org/configuration/output/#outputglobalobject
-        globalObject: `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`,
+        globalObject: globalObject,
         publicPath: 'auto',
       },
       resolve: {
@@ -88,63 +95,86 @@ module.exports = (grunt) => {
   }
 
   const webpackProdStatic = webpackConfig(
-    'vexflow-full-min.js',
-    'vexflow-[name]-min.js',
+    'vexflow.js',
+    undefined /* chunkFileName */,
     'tsconfig.json',
     MODULE_ENTRY_SRC,
-    'production',
-    'Vex'
+    'production'
   );
   const webpackProdDynamic = webpackConfig(
-    'vexflow-core-min.js',
-    'vexflow-font-[name]-min.js',
+    'vexflow-core.js',
+    'vexflow-font-[name].js',
     'tsconfig.dynamic.json',
     MODULE_ENTRY_SRC,
-    'production',
-    'Vex'
+    'production'
+  );
+  const webpackDevStatic = webpackConfig(
+    'vexflow.js',
+    undefined /* chunkFileName */,
+    'tsconfig.json',
+    MODULE_ENTRY_SRC,
+    'development'
+  );
+  const webpackDevDynamic = webpackConfig(
+    'vexflow-core.js',
+    'vexflow-font-[name].js',
+    'tsconfig.dynamic.json',
+    MODULE_ENTRY_SRC,
+    'development'
   );
   const webpackDev = webpackConfig(
     'vexflow-debug.js',
-    'vexflow-[name]-debug.js',
+    undefined /* chunkFileName */,
     'tsconfig.json',
     MODULE_ENTRY_SRC,
-    'development',
-    'Vex'
+    'development'
   );
   const webpackTest = webpackConfig(
     'vexflow-tests.js',
-    'vexflow-[name]-test.js',
+    undefined /* chunkFileName */,
     'tsconfig.json',
     MODULE_ENTRY_TESTS,
-    'development',
-    'Vex' /* Previously VFTests. TODO: Remove this! */
+    'development'
   );
+
+  const watchOptions = {
+    watch: true,
+    keepalive: true,
+  };
 
   grunt.initConfig({
     pkg: packageJSON,
     webpack: {
-      buildStatic: webpackProdStatic,
-      buildDynamic: webpackProdDynamic,
       buildDev: webpackDev,
       buildTest: webpackTest,
+      buildStatic: webpackProdStatic,
+      buildDynamic: webpackProdDynamic,
       watchDev: {
         ...webpackDev,
-        watch: true,
-        keepalive: true,
-        failOnError: false,
+        ...watchOptions,
       },
       watchTest: {
         ...webpackTest,
-        watch: true,
-        keepalive: true,
-        failOnError: false,
+        ...watchOptions,
+      },
+      watchStatic: {
+        ...webpackDevStatic,
+        ...watchOptions,
+      },
+      watchDynamic: {
+        ...webpackDevDynamic,
+        ...watchOptions,
       },
     },
     concurrent: {
       options: {
         logConcurrentOutput: true,
+        indent: false,
       },
-      tasks: ['webpack:watchDev', 'webpack:watchTest'],
+      dev: ['webpack:watchDev', 'webpack:watchTest'],
+      static: ['webpack:watchStatic'],
+      dynamic: ['webpack:watchDynamic'],
+      staticAndDynamic: ['webpack:watchStatic', 'webpack:watchDynamic'],
     },
     eslint: {
       target: SOURCES.concat('./tests'),
@@ -229,40 +259,82 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-concurrent');
+  grunt.loadNpmTasks('grunt-force-task');
 
   // Default tasks that run when you type `grunt`.
-  grunt.registerTask('default', [
-    'clean',
-    'eslint',
-    'webpack:buildStatic',
-    'webpack:buildDynamic',
-    'webpack:buildDev',
-    'webpack:buildTest',
-    'typedoc',
-  ]);
+  grunt.registerTask(
+    'default',
+    'Build VexFlow', //
+    [
+      'clean',
+      'eslint',
+      'webpack:buildDev',
+      'webpack:buildTest',
+      'webpack:buildStatic',
+      'webpack:buildDynamic',
+      'typedoc',
+    ]
+  );
 
-  grunt.registerTask('watch', 'Watch src/ and tests/ concurrently', ['clean', 'eslint', 'concurrent']);
+  // `grunt watch`
+  grunt.registerTask(
+    'watch',
+    'Watch src/ & tests/ for changes. Generate dev builds.', //
+    ['clean', 'force:eslint', 'concurrent:dev']
+  );
 
-  grunt.registerTask('test', 'Run qunit tests.', ['clean', 'webpack:buildDev', 'webpack:buildTest', 'qunit']);
+  // `grunt watch:static`
+  grunt.registerTask(
+    'watch:static',
+    'Watch src/ for changes. Generate dev builds for pre-loaded fonts.', //
+    ['clean', 'force:eslint', 'concurrent:static']
+  );
+
+  // `grunt watch:dynamic`
+  grunt.registerTask(
+    'watch:dynamic',
+    'Watch src/ for changes. Generate dev builds for dynamically loaded fonts.', //
+    ['clean', 'force:eslint', 'concurrent:dynamic']
+  );
+
+  // `grunt watch:staticAndDynamic`
+  grunt.registerTask(
+    'watch:staticAndDynamic',
+    'Watch src/ for changes.', //
+    ['clean', 'force:eslint', 'concurrent:staticAndDynamic']
+  );
+
+  // `grunt test`
+  grunt.registerTask(
+    'test',
+    'Run qunit tests.', //
+    ['clean', 'webpack:buildDev', 'webpack:buildTest', 'qunit']
+  );
+
+  // `grunt reference` will build the current HEAD revision and copy it to reference/
+  // After developing new features or fixing a bug, you can compare the current working tree
+  // against the reference with: `npm run test:reference`. See package.json for details.
+  grunt.registerTask(
+    'reference',
+    'Build to reference/.', //
+    ['default', 'qunit', 'copy:reference']
+  );
 
   // Release current build.
-  grunt.registerTask('stage', 'Stage current bundles to releases/.', () => {
-    grunt.task.run('default');
-    grunt.task.run('qunit');
-    grunt.task.run('copy:release');
-  });
-
-  // Release current build.
-  grunt.registerTask('reference', 'Stage current bundles to reference/.', () => {
-    grunt.task.run('default');
-    grunt.task.run('qunit');
-    grunt.task.run('copy:reference');
-  });
+  grunt.registerTask(
+    'stage',
+    'Build to releases/.', //
+    ['default', 'qunit', 'copy:release']
+  );
 
   grunt.registerTask('alldone', 'Publish VexFlow NPM.', () => {
     grunt.log.ok('NOT YET DONE: Run `npm publish` now to publish NPM.');
   });
 
-  // Increment package version generate releases
-  grunt.registerTask('publish', 'Generate releases.', ['bump', 'stage', 'gitcommit:releases', 'release', 'alldone']);
+  // Increment package version and generate releases. Does NOT automatically publish to NPM.
+  grunt.registerTask(
+    'publish',
+    'Generate releases.', //
+    ['bump', 'stage', 'gitcommit:releases', 'release', 'alldone']
+  );
 };

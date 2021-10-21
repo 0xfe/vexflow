@@ -1,8 +1,3 @@
-import { loadBravura } from '@bravura';
-import { loadCustom } from '@custom';
-import { loadGonville } from '@gonville';
-import { loadPetaluma } from '@petaluma';
-
 import { defined } from './util';
 
 // RONYEH-FONT: Moved from common.d.ts
@@ -31,11 +26,13 @@ export interface FontData {
 }
 
 /** Specified in the `xxx_metrics.ts` files. */
+// eslint-disable-next-line
 export interface FontMetrics extends Record<string, any> {
   name: string;
   smufl: boolean;
   stave?: Record<string, number>;
   accidental?: Record<string, number>;
+  // eslint-disable-next-line
   clef?: Record<string, any>;
   pedalMarking?: Record<string, Record<string, number>>;
   digits?: Record<string, number>;
@@ -44,12 +41,8 @@ export interface FontMetrics extends Record<string, any> {
   tremolo?: Record<string, Record<string, number>>;
   // Not specified in bravura_metrics.ts or gonville_metrics.ts.
   noteHead?: Record<string, Record<string, number>>;
+  // eslint-disable-next-line
   glyphs: Record<string, Record<string, any>>;
-}
-
-export interface FontDataMetrics {
-  fontData?: FontData;
-  metrics?: FontMetrics;
 }
 
 export interface FontGlyph {
@@ -86,7 +79,8 @@ export class Font {
     return 'Font';
   }
 
-  static FONT_HOST_URL = 'https://unpkg.com/vexflow-fonts@1.0.1/';
+  /** Customize this field to specify a different CDN for delivering web fonts. */
+  static FONT_HOST = 'https://unpkg.com/vexflow-fonts@1.0.3/';
 
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
@@ -207,18 +201,18 @@ export class Font {
     const woff2URL = includeWoff2 ? `url(${woffURL}2) format('woff2'), ` : '';
     const woff1URL = `url(${woffURL}) format('woff')`;
     const woffURLs = woff2URL + woff1URL;
-    const font = new FontFace(fontName, woffURLs);
-    await font.load();
-    document.fonts.add(font);
-    return font;
+    const fontFace = new FontFace(fontName, woffURLs);
+    await fontFace.load();
+    document.fonts.add(fontFace);
+    return fontFace;
   }
 
   static async loadRobotoSlab(): Promise<void> {
-    Font.loadWebFont('Roboto Slab', Font.FONT_HOST_URL + 'robotoslab/RobotoSlab-Medium_2.001.woff');
+    Font.loadWebFont('Roboto Slab', Font.FONT_HOST + 'robotoslab/RobotoSlab-Medium_2.001.woff');
   }
 
   static async loadPetalumaScript(): Promise<void> {
-    Font.loadWebFont('PetalumaScript', Font.FONT_HOST_URL + 'petaluma/PetalumaScript_1.10_FS.woff');
+    Font.loadWebFont('PetalumaScript', Font.FONT_HOST + 'petaluma/PetalumaScript_1.10_FS.woff');
   }
 
   /**
@@ -229,41 +223,21 @@ export class Font {
     Font.loadPetalumaScript();
   }
 
+  static get(fontName: string): Font {
+    return Fonts[fontName];
+  }
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Instance Members
 
   protected name: string;
-  protected fontDataMetrics: FontDataMetrics;
 
-  // eslint-disable-next-line
-  constructor(name: string, metrics?: FontMetrics, fontData?: FontData) {
-    this.name = name;
-    this.fontDataMetrics = {};
-    switch (name) {
-      case 'Bravura':
-        loadBravura(this.fontDataMetrics);
-        break;
-      case 'Gonville':
-        loadGonville(this.fontDataMetrics);
-        break;
-      case 'Petaluma':
-        loadPetaluma(this.fontDataMetrics);
-        break;
-      case 'Custom':
-        loadCustom(this.fontDataMetrics);
-        break;
-      case 'RobotoSlab':
-        this.fontDataMetrics.fontData = fontData;
-        this.fontDataMetrics.metrics = undefined;
-        break;
-      case 'PetalumaScript':
-        this.fontDataMetrics.fontData = fontData;
-        this.fontDataMetrics.metrics = undefined;
-        break;
-      default:
-        this.fontDataMetrics.fontData = fontData;
-        this.fontDataMetrics.metrics = metrics;
-    }
+  data?: FontData;
+  metrics?: FontMetrics;
+
+  // Do not call this constructor directly. Use `Font.get(fontName)` instead.
+  constructor(fontName: string) {
+    this.name = fontName;
   }
 
   getName(): string {
@@ -271,12 +245,20 @@ export class Font {
   }
 
   getResolution(): number {
-    return this.getFontData().resolution;
+    return this.getData().resolution;
   }
 
   // eslint-disable-next-line
-  getMetrics(): Record<string, any> {
-    return defined(this.fontDataMetrics.metrics, 'FontError', 'Missing metrics');
+  getMetrics(): FontMetrics {
+    return defined(this.metrics, 'FontError', 'Missing metrics');
+  }
+
+  getData(): FontData {
+    return defined(this.data, 'FontError', 'Missing font data');
+  }
+
+  getGlyphs(): Record<string, FontGlyph> {
+    return this.getData().glyphs;
   }
 
   /**
@@ -288,6 +270,8 @@ export class Font {
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
     // console.log('lookupMetric:', key);
+    console.log('lookupMetric for ' + this.name);
+    console.log(this.metrics);
 
     const keyParts = key.split('.');
 
@@ -309,23 +293,10 @@ export class Font {
     return currObj;
   }
 
-  getFontData(): FontData {
-    return defined(this.fontDataMetrics.fontData, 'FontError', 'Missing font data');
-  }
-
-  getGlyphs(): Record<string, FontGlyph> {
-    return this.getFontData().glyphs;
+  /** For debugging. */
+  toString(): string {
+    return '[' + this.name + ' Font]';
   }
 }
 
-export const MusicFont = {
-  Bravura: () => new Font('Bravura'),
-  Gonville: () => new Font('Gonville'),
-  Petaluma: () => new Font('Petaluma'),
-  Custom: () => new Font('Custom'),
-};
-
-export const TextFont = {
-  RobotoSlab: () => new Font('XXX'),
-  PetalumaScript: () => new Font('XXX'),
-};
+export const Fonts: Record<string, Font> = {};
