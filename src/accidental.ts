@@ -5,7 +5,7 @@
 
 import { log, defined } from './util';
 import { Fraction } from './fraction';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Music } from './music';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
@@ -73,7 +73,7 @@ export class Accidental extends Modifier {
       lineSpace?: number;
     };
 
-    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.DEFAULT_FONT_STACK[0];
     const noteheadAccidentalPadding = musicFont.lookupMetric('accidental.noteheadAccidentalPadding');
     const leftShift = state.left_shift + noteheadAccidentalPadding;
     const accidentalSpacing = musicFont.lookupMetric('accidental.accidentalSpacing');
@@ -277,7 +277,7 @@ export class Accidental extends Modifier {
         // the accidentalsColumnsTable housed in tables.js.
       } else {
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
-          column = Flow.accidentalColumnsTable[groupLength][endCase][groupMember - i];
+          column = Tables.accidentalColumnsTable[groupLength][endCase][groupMember - i];
           lineList[groupMember].column = column;
           totalColumns = totalColumns > column ? totalColumns : column;
         }
@@ -497,7 +497,7 @@ export class Accidental extends Modifier {
       parenRightPadding: 2,
     };
 
-    this.accidental = Flow.accidentalCodes(this.type);
+    this.accidental = Tables.accidentalCodes(this.type);
     defined(this.accidental, 'ArgumentError', `Unknown accidental type: ${type}`);
 
     // Cautionary accidentals have parentheses around them
@@ -512,8 +512,8 @@ export class Accidental extends Modifier {
     this.glyph.setOriginX(1.0);
 
     if (this.cautionary) {
-      this.parenLeft = new Glyph(Flow.accidentalCodes('{').code, fontScale);
-      this.parenRight = new Glyph(Flow.accidentalCodes('}').code, fontScale);
+      this.parenLeft = new Glyph(Tables.accidentalCodes('{').code, fontScale);
+      this.parenRight = new Glyph(Tables.accidentalCodes('}').code, fontScale);
       this.parenLeft.setOriginX(1.0);
       this.parenRight.setOriginX(1.0);
     }

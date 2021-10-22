@@ -3,7 +3,7 @@
 
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { RenderContext } from './rendercontext';
@@ -98,7 +98,7 @@ export class StaveConnector extends Element {
   constructor(top_stave: Stave, bottom_stave: Stave) {
     super();
 
-    this.thickness = Flow.STAVE_LINE_THICKNESS;
+    this.thickness = Tables.STAVE_LINE_THICKNESS;
     this.width = 3;
     this.top_stave = top_stave;
     this.bottom_stave = bottom_stave;

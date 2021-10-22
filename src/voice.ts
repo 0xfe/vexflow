@@ -4,7 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { RuntimeError, defined } from './util';
 import { Element } from './element';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
@@ -82,7 +82,7 @@ export class Voice extends Element {
     this.time = {
       num_beats: 4,
       beat_value: 4,
-      resolution: Flow.RESOLUTION,
+      resolution: Tables.RESOLUTION,
       ...voiceTime,
     };
 

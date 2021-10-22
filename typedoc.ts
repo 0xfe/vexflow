@@ -62,7 +62,6 @@ export * from './src/stringnumber';
 export * from './src/strokes';
 export * from './src/svgcontext';
 export * from './src/system';
-export * from './src/tables';
 export * from './src/tabnote';
 export * from './src/tabslide';
 export * from './src/tabstave';

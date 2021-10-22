@@ -4,7 +4,7 @@
 // This class implements multiple measure rests.
 
 import { defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
@@ -107,9 +107,9 @@ export class MultiMeasureRest extends Element {
       number_line: -0.5,
       number_glyph_point: this.musicFont.lookupMetric('digits.point'), // same as TimeSignature.
       line: 2,
-      spacing_between_lines_px: Flow.STAVE_LINE_DISTANCE, // same as Stave.
+      spacing_between_lines_px: Tables.STAVE_LINE_DISTANCE, // same as Stave.
       serif_thickness: 2,
-      semibreve_rest_glyph_scale: Flow.DEFAULT_NOTATION_FONT_SCALE, // same as NoteHead.
+      semibreve_rest_glyph_scale: Tables.DEFAULT_NOTATION_FONT_SCALE, // same as NoteHead.
       padding_left: 0,
       padding_right: 0,
       line_thickness: 5,

@@ -3,7 +3,7 @@
 
 import { RuntimeError, midLine, log, defined } from './util';
 import { Beam } from './beam';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';
@@ -207,7 +207,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: Tables.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -275,7 +275,7 @@ export class Formatter {
     }
 
     // Start by creating a voice and adding all the notes to it.
-    const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
+    const voice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
     // Then create beams, if requested.
     const beams = options.auto_beam ? Beam.applyAndGetBeams(voice) : [];
@@ -327,10 +327,10 @@ export class Formatter {
     }
 
     // Create a `4/4` voice for `notes`.
-    const notevoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
+    const notevoice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(notes);
 
     // Create a `4/4` voice for `tabnotes`.
-    const tabvoice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(tabnotes);
+    const tabvoice = new Voice(Tables.TIME4_4).setMode(Voice.Mode.SOFT).addTickables(tabnotes);
 
     // Then create beams, if requested.
     const beams = opts.auto_beam ? Beam.applyAndGetBeams(notevoice) : [];
@@ -459,7 +459,7 @@ export class Formatter {
    * @returns the estimated width in pixels
    */
   preCalculateMinTotalWidth(voices: Voice[]): number {
-    const unalignedPadding = Flow.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    const unalignedPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
     // Calculate additional padding based on 3 methods:
     // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
     let unalignedCtxCount = 0;
