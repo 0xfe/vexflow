@@ -145,6 +145,8 @@ function diff_image() {
     return
   fi
 
+  cmp -s $fileA $fileB && echo $name "0" >$diff.pass && return
+
   cp $fileA $diff-a.png
   cp $fileB $diff-b.png
 
