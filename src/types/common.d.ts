@@ -1,5 +1,3 @@
-import { Note } from '../note';
-
 export interface FontInfo {
   family: string;
   size: number;
@@ -50,11 +48,4 @@ export interface TypeProps extends KeyProps {
   code_flag_upstem: string;
   code_flag_downstem: string;
   position: string;
-}
-
-export interface TieNotes {
-  first_note: Note;
-  last_note: Note;
-  first_indices?: number[];
-  last_indices?: number[];
 }
