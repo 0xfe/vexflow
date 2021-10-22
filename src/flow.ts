@@ -162,7 +162,6 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
-  // Accesors to Tables
   get DEFAULT_FONT_STACK(): Font[] {
     return Tables.DEFAULT_FONT_STACK;
   },
