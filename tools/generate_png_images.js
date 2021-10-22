@@ -6,6 +6,9 @@
 
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
+const path = require('path');
+const { exit } = require('process');
+const { spawn } = require('child_process');
 
 const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
 global.window = dom.window;
@@ -25,6 +28,132 @@ if (process.argv.length >= 5) {
     const fontsList = fontsOption.split('=')[1].split(',');
     fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
   }
+}
+
+/**
+ * run tests in parallel.
+ *
+ *  --parallel[=<jobs>]
+ *   <jobs>:
+ *    <jobs> <= 1: limit to a single job
+ *    otherwise: number of fonts to test jobs
+ *
+ * For example:
+ *   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --parallel
+ *   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville --parallel
+ */
+
+const appMain = (onArg) => {
+  if (fontStacksToTest.length <= 1 || process.argv.length < 5) {
+    return false;
+  }
+
+  const pArgv = process.argv;
+  const childArgs = {
+    argv0: pArgv[0],
+    argv: pArgv.slice(1, 4),
+  };
+
+  let jobs = 0;
+  pArgv.slice(4).forEach((str) => {
+    const lStr = str.toLowerCase();
+    if (lStr.startsWith('--parallel')) {
+      const nameVal = str.split('=');
+      if (nameVal.length > 1) {
+        jobs = parseInt(nameVal[1]);
+      } else {
+        jobs = Infinity;
+      }
+    }
+    onArg(lStr);
+  });
+  if (jobs <= 1) {
+    return false;
+  }
+
+  let children = [];
+  let exitCode = 0;
+  const asyncWait = () => {
+    const tChildren = [];
+    children.forEach((child, idx) => {
+      if (child && !child.done) {
+        tChildren.push(child);
+      }
+    });
+
+    if (!tChildren.length) {
+      // process.stdout.write('finish');
+      exit(exitCode);
+    }
+    children = tChildren;
+  };
+
+  const run = (font, id) => {
+    let child;
+    const { argv0, argv } = childArgs;
+    const childArgv = [...argv, `--fonts=${font}`];
+    try {
+      child = spawn(argv0, childArgv);
+      process.stdout.write(`[${id}]:${font}:${childArgv} started\n`);
+      child.stdout.on('data', (data) => {
+        process.stdout.write(data);
+      });
+      child.stderr.on('data', (data) => {
+        process.stderr.write(data);
+      });
+      child.on('close', (code) => {
+        process.stdout.write(`\n[${id}]:${font}: exited with code ${code}\n`);
+        child.done = true;
+        exitCode = code | exitCode;
+        asyncWait(code);
+      });
+    } catch (e) {
+      process.stderr.write(e);
+    }
+    return child;
+  };
+
+  // TODO: limit the number of processes to specified number(jobs).
+  // console.log(jobs);
+  fontStacksToTest.forEach((font, idx) => {
+    children.push(run(font, idx));
+  });
+
+  // FIXME: need timeout detection?
+  // setInterval(wait, 1000);
+  return true;
+};
+
+const compatMode = {
+  mode: null,
+  MODES: {
+    BackCompat: 'BackCompat',
+  },
+  fixFileNames: () => {
+    if (compatMode.mode !== compatMode.MODES.BackCompat) {
+      return;
+    }
+    // see tests/vexflow_test_helpers.ts:runNodeTestHelper():onlyBravura mode.
+    fs.readdirSync(imageDir).forEach((filename) => {
+      var matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
+      if (matches && matches[2]) {
+        const backCompatFileName = `${matches[1]}.${matches[3]}`;
+        fs.renameSync(path.join(imageDir, filename), path.join(imageDir, backCompatFileName));
+        process.stdout.write(`${imageDir}: ${filename} -> ${backCompatFileName}\n`);
+      }
+    });
+  },
+};
+
+if (
+  appMain((lStr) => {
+    if (!lStr.startsWith('--backcompat')) {
+      return;
+    }
+    compatMode.mode = compatMode.MODES.BackCompat;
+  })
+) {
+  return;
 }
 
 // When generating PNG images for the visual regression tests,
@@ -97,3 +226,5 @@ fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
 // Run all tests.
 VFT.run();
+
+compatMode.fixFileNames();
