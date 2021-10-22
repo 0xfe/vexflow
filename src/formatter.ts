@@ -768,7 +768,7 @@ export class Formatter {
       lastContext.getMetrics().notePx -
       lastContext.getMetrics().totalRightPx -
       firstContext.getMetrics().totalLeftPx;
-    const musicFont = Flow.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.DEFAULT_FONT_STACK[0];
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     let targetWidth = adjustedJustifyWidth;
