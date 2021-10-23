@@ -728,6 +728,7 @@ export class Stave extends Element {
     const ctx = this.checkContext();
     this.setRendered();
 
+    ctx.openGroup('stave', this.getAttribute('id'));
     if (!this.formatted) this.format();
 
     const num_lines = this.options.num_lines;
@@ -769,7 +770,7 @@ export class Stave extends Element {
       ctx.fillText('' + this.measure, this.x - text_width / 2, y);
       ctx.restore();
     }
-
+    ctx.closeGroup();
     return this;
   }
 
