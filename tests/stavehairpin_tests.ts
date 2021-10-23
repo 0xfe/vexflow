@@ -4,9 +4,6 @@
 //
 // StaveHairpin Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 // TODO: Incorrect property names in the options object: vo, left_ho, right_ho.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
@@ -92,7 +89,7 @@ const horizontal = createTest((ctx, notes) => {
     vo: 20, // vertical offset
     left_ho: 20, // left horizontal offset
     right_ho: -20, // right horizontal offset
-  });
+  } as unknown as StaveHairpinRenderOptions);
   drawHairpin(notes[3], notes[3], ctx, 2, 4, {
     height: 10,
     y_shift: 0, // vertical offset

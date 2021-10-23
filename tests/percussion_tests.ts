@@ -4,9 +4,6 @@
 //
 // Percussion Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
 // TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
 
 import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
@@ -17,6 +14,7 @@ import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { TickContext } from 'tickcontext';
 import { Tremolo } from 'tremolo';
+import { StemmableNote } from 'stemmablenote';
 
 const PercussionTests = {
   Start(): void {
@@ -127,9 +125,9 @@ const basic0 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '4', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice0.getTickables() });
-  f.Beam({ notes: voice1.getTickables().slice(0, 2) });
-  f.Beam({ notes: voice1.getTickables().slice(3, 6) });
+  f.Beam({ notes: voice0.getTickables() as StemmableNote[] });
+  f.Beam({ notes: voice1.getTickables().slice(0, 2) as StemmableNote[] });
+  f.Beam({ notes: voice1.getTickables().slice(3, 6) as StemmableNote[] });
 });
 
 const basic1 = createSingleMeasureTest((f) => {
@@ -161,7 +159,7 @@ const basic2 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
       f.StaveNote({ keys: ['g/5/x2'], duration: '8' }),
     ]);
-  f.Beam({ notes: voice0.getTickables().slice(1, 8) });
+  f.Beam({ notes: voice0.getTickables().slice(1, 8) as StemmableNote[] });
 
   const voice1 = f
     .Voice()
@@ -174,8 +172,8 @@ const basic2 = createSingleMeasureTest((f) => {
       f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
     ]);
 
-  f.Beam({ notes: voice1.getTickables().slice(0, 2) });
-  f.Beam({ notes: voice1.getTickables().slice(4, 6) });
+  f.Beam({ notes: voice1.getTickables().slice(0, 2) as StemmableNote[] });
+  f.Beam({ notes: voice1.getTickables().slice(4, 6) as StemmableNote[] });
 });
 
 const snare0 = createSingleMeasureTest((f) => {
