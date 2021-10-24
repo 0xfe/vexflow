@@ -304,16 +304,19 @@ export class KeySignature extends StaveModifier {
 
   draw(): void {
     const stave = this.checkStave();
+    const ctx = stave.checkContext();
 
     if (!this.formatted) this.format();
     this.setRendered();
 
+    ctx.openGroup('keysignature', this.getAttribute('id'));
     for (let i = 0; i < this.glyphs.length; i++) {
       const glyph = this.glyphs[i];
       const x = this.x + this.xPositions[i];
       glyph.setStave(stave);
-      glyph.setContext(stave.checkContext());
+      glyph.setContext(ctx);
       glyph.renderToStave(x);
     }
+    ctx.closeGroup();
   }
 }
