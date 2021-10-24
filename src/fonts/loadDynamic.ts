@@ -1,19 +1,18 @@
 import { Flow } from '../flow';
-import { Font, Fonts } from '../font';
-import { PetalumaScriptFont } from './petalumascript_glyphs';
-import { RobotoSlabFont } from './robotoslab_glyphs';
+import { Font } from '../font';
+import { loadTextFonts } from './loadTextFonts';
 
 export function setupFonts(): void {
-  console.log('Setup Fonts in loadDynamic!');
-
   Flow.setMusicFont = async (...fontNames: string[]) => {
-    // Make sure each font is loaded before proceeding.
     for (const fontName of fontNames) {
-      if (!Fonts[fontName]) {
-        Fonts[fontName] = new Font(fontName);
+      const font = Font.get(fontName);
+      if (font.data !== undefined) {
+        // This font has been loaded before.
+        console.log('We have already loaded: ' + fontName);
+        console.log(font.data);
+        continue;
       }
 
-      const font = Fonts[fontName];
       switch (fontName) {
         case 'Bravura': {
           const module = await import(/* webpackChunkName: "bravura" */ '../fonts/bravura');
@@ -39,17 +38,14 @@ export function setupFonts(): void {
           font.metrics = module.default.metrics;
           break;
         }
+        default: {
+          console.log('Unknown music font: ' + fontName);
+        }
       }
     }
 
     Flow.MUSIC_FONT_STACK = fontNames.map((fontName) => Font.get(fontName));
   };
 
-  const fontRobotoSlab = new Font('Roboto Slab');
-  fontRobotoSlab.data = RobotoSlabFont;
-  Fonts['Roboto Slab'] = fontRobotoSlab;
-
-  const fontPetalumaScript = new Font('PetalumaScript');
-  fontPetalumaScript.data = PetalumaScriptFont;
-  Fonts['PetalumaScript'] = fontPetalumaScript;
+  loadTextFonts();
 }

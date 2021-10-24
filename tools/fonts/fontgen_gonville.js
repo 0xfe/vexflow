@@ -1,4 +1,4 @@
-// Creates a new Gonville font using SMuFL key codes
+// Creates a new Gonville font using SMuFL canonical glyph names.
 
 const fs = require('fs');
 const process = require('process');
@@ -12,7 +12,7 @@ function LogError(...args) {
 const args = process.argv.slice(2);
 if (args.length < 1) {
   LogError('Usage: node fontgen_gonville.js [outdir]');
-  LogError('e.g: node fontgen.js /tmp');
+  LogError('  e.g: node fontgen_gonville.js /tmp');
   process.exit(255);
 }
 

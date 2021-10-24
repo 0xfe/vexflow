@@ -48,12 +48,11 @@ const outFile = args[1];
 const font = opentype.loadSync(fontFile);
 
 const fontData = {};
-let code = 32;
 
-// Convert metrics for visible ASCII characters in the
-// font.  This could be adapted to include non-printable characters
+// Convert metrics for visible ASCII characters in the font.
+// This could be adapted to include non-printable characters
 // by using a table.
-for (; code < 127; ++code) {
+for (let code = 32; code < 127; ++code) {
   const ch = String.fromCharCode(code);
   const glyph = font.charToGlyph(ch);
   fontData[ch] = toVFPath(glyph);

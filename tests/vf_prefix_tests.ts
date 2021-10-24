@@ -23,7 +23,7 @@ import { EasyScore } from '../src/easyscore';
 import { Element } from '../src/element';
 import { Factory } from '../src/factory';
 import { Flow } from '../src/flow';
-import { Font, Fonts } from '../src/font';
+import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { Fraction } from '../src/fraction';
 import { FretHandFinger } from '../src/frethandfinger';
@@ -117,7 +117,6 @@ function VF_Prefix(): void {
   equal(Factory, VF.Factory);
   equal(Flow.RESOLUTION, VF.RESOLUTION);
   equal(Font, VF.Font);
-  equal(Fonts, VF.Fonts);
   equal(Formatter, VF.Formatter);
   propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
   equal(Fraction, VF.Fraction);

@@ -1,14 +1,14 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
+// MIT License
 
 import { Font, FontGlyph, FontInfo, FontStyle, FontWeight } from './font';
 import { log } from './util';
 
 export interface TextFormatterInfo extends Record<string, unknown> {
   name?: string;
+  family: string;
   resolution?: number;
   glyphs?: Record<string, FontGlyph>;
-  family: string;
   serifs: boolean;
   monospaced?: boolean;
   italic: boolean;
@@ -41,36 +41,7 @@ const textWidthCache: Record<string, Record<string, number>> = {};
  * Applications may register additional fonts via TextFormatter.registerFont().
  * The metrics for those fonts will be made available to the application.
  */
-const registry: Record<string, TextFormatterInfo> = {
-  'Roboto Slab': {
-    name: 'Roboto Slab',
-    family: RobotoSlabFont.fontFamily,
-    resolution: RobotoSlabFont.resolution,
-    glyphs: RobotoSlabFont.glyphs,
-    serifs: true,
-    monospaced: false,
-    italic: false,
-    bold: false,
-    maxSizeGlyph: 'H',
-    superscriptOffset: 0.66,
-    subscriptOffset: 0.66,
-    description: 'Default text font to pair with the Bravura / Gonville engraving fonts.',
-  },
-  PetalumaScript: {
-    name: 'PetalumaScript',
-    family: PetalumaScriptFont.fontFamily,
-    resolution: PetalumaScriptFont.resolution,
-    glyphs: PetalumaScriptFont.glyphs,
-    serifs: false,
-    monospaced: false,
-    italic: false,
-    bold: false,
-    maxSizeGlyph: 'H',
-    superscriptOffset: 0.66,
-    subscriptOffset: 0.66,
-    description: 'Default text font to pair with the Petaluma engraving font.',
-  },
-};
+const registry: Record<string, TextFormatterInfo> = {};
 
 export class TextFormatter {
   /** To enable logging for this class. Set `Vex.Flow.TextFormatter.DEBUG` to `true`. */
@@ -177,19 +148,18 @@ export class TextFormatter {
   }
 
   /**
-   * Applications may register their own fonts and the metrics, and those metrics
-   * will be available to the application for formatting.
+   * Apps may register their own fonts and metrics, and those metrics
+   * will be available to the app for formatting.
    *
-   * See fontRegistry for format of font metrics.  Metrics can be generated from any
-   * font file using textmetrics_fontgen.js in the tools/smufl directory.
-   * @param fontInfo
+   * Metrics can be generated from any font file using fontgen_text.js in the tools/fonts directory.
+   * @param info
    * @param overwrite
    */
-  static registerFont(fontInfo: TextFormatterInfo, overwrite: boolean = false): void {
-    const fontName = fontInfo.name ?? '';
+  static registerFont(info: TextFormatterInfo, overwrite: boolean = false): void {
+    const fontName = info.name ?? '';
     const currFontInfo = registry[fontName];
     if (typeof currFontInfo === 'undefined' || overwrite) {
-      registry[fontName] = fontInfo;
+      registry[fontName] = info;
     }
   }
 
