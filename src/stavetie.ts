@@ -11,8 +11,8 @@ import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface TieNotes {
-  first_note: Note;
-  last_note: Note;
+  first_note: Note | null;
+  last_note: Note | null;
   first_indices?: number[];
   last_indices?: number[];
 }
