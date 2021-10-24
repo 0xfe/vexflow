@@ -55,7 +55,7 @@ export interface MultimeasureRestRenderOptions {
   serif_thickness?: number;
 }
 
-let semibreve_rest: { glyph_font_scale: number; glyph_code: string; width: number };
+let semibreve_rest: { glyph_font_scale: number; glyph_code: string; width: number } | undefined;
 
 function get_semibreve_rest() {
   if (!semibreve_rest) {
@@ -184,6 +184,11 @@ export class MultiMeasureRest extends Element {
     const n1 = n % 2;
 
     const options = this.render_options;
+
+    // FIXME: TODO: invalidate semibreve_rest at the appropriate time
+    // (e.g., if the system font settings are changed).
+    semibreve_rest = undefined;
+
     const rest = get_semibreve_rest();
     const rest_scale = options.semibreve_rest_glyph_scale;
     const rest_width = rest.width * (rest_scale / rest.glyph_font_scale);
