@@ -3,19 +3,20 @@
 //
 // TabTie Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { ContextBuilder } from 'renderer';
 import { Annotation } from 'annotation';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
+import { Note } from 'note';
 import { RenderContext } from 'rendercontext';
+import { ContextBuilder } from 'renderer';
+import { Stave } from 'stave';
+import { TieNotes } from 'stavetie';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TabTie } from 'tabtie';
-import { TieNotes } from 'stavetie';
 import { Voice } from 'voice';
-import { Stave } from 'stave';
-import { Note } from 'note';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabTieTests = {
   Start(): void {

@@ -4,10 +4,10 @@
 // A formatter for abstract tickable objects, such as notes, chords,
 // tabs, etc.
 
-import { RuntimeError } from './util';
-import { Tickable } from './tickable';
 import { Fraction } from './fraction';
 import { NoteMetrics } from './note';
+import { Tickable } from './tickable';
+import { RuntimeError } from './util';
 
 export interface TickContextMetrics extends NoteMetrics {
   totalLeftPx: number;

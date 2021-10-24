@@ -1,8 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Modifier } from './modifier';
 import { Bend } from './bend';
+import { Modifier } from './modifier';
 import { ModifierContext, ModifierContextState } from './modifiercontext';
 import { RenderContext } from './rendercontext';
 

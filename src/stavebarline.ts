@@ -2,9 +2,9 @@
 //
 // Author Larry Kuhns 2011
 
-import { Tables } from './tables';
-import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Stave } from './stave';
+import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Tables } from './tables';
 
 export enum BarlineType {
   SINGLE = 1,

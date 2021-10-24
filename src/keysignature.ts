@@ -6,11 +6,11 @@
 // This file implements key signatures. A key signature sits on a stave
 // and indicates the notes with implicit accidentals.
 
-import { defined } from './util';
-import { Tables } from './tables';
-import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Tables } from './tables';
+import { defined } from './util';
 
 export class KeySignature extends StaveModifier {
   static get CATEGORY(): string {

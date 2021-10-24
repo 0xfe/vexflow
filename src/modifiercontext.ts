@@ -5,25 +5,25 @@
 // This class implements various types of members to notes (e.g. bends,
 // fingering positions etc.)
 
-import { RuntimeError, log } from './util';
-import { StaveNote } from './stavenote';
+import { Accidental } from './accidental';
+import { Annotation } from './annotation';
+import { Articulation } from './articulation';
+import { Bend } from './bend';
+import { ChordSymbol } from './chordsymbol';
 import { Dot } from './dot';
 import { FretHandFinger } from './frethandfinger';
-import { Accidental } from './accidental';
-import { NoteSubGroup } from './notesubgroup';
 import { GraceNoteGroup } from './gracenotegroup';
-import { Stroke } from './strokes';
-import { StringNumber } from './stringnumber';
-import { Articulation } from './articulation';
-import { Ornament } from './ornament';
-import { Annotation } from './annotation';
-import { ChordSymbol } from './chordsymbol';
-import { Bend } from './bend';
-import { Vibrato } from './vibrato';
 import { Modifier } from './modifier';
-import { TabNote } from './tabnote';
 import { Note } from './note';
+import { NoteSubGroup } from './notesubgroup';
+import { Ornament } from './ornament';
+import { StaveNote } from './stavenote';
+import { StringNumber } from './stringnumber';
+import { Stroke } from './strokes';
+import { TabNote } from './tabnote';
 import { Tickable } from './tickable';
+import { log, RuntimeError } from './util';
+import { Vibrato } from './vibrato';
 
 export interface ModifierContextState {
   right_shift: number;

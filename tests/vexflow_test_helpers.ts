@@ -3,12 +3,13 @@
 //
 // VexFlow Test Support Library
 
+import { Factory } from 'factory';
 import { Flow } from 'flow';
-import { Assert } from './types/qunit';
+import { Font, Fonts } from 'font';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
-import { Factory } from 'factory';
-import { Font, Fonts } from 'font';
+
+import { Assert } from './types/qunit';
 
 /* eslint-disable */
 declare const global: any;
@@ -308,4 +309,4 @@ const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm
 // @ts-ignore
 Flow.Test = VexFlowTests;
 
-export { VexFlowTests, concat, MAJOR_KEYS, MINOR_KEYS };
+export { concat, MAJOR_KEYS, MINOR_KEYS, VexFlowTests };

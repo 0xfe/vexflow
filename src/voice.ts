@@ -2,13 +2,13 @@
 // MIT License
 
 import { BoundingBox } from './boundingbox';
-import { RuntimeError, defined } from './util';
 import { Element } from './element';
-import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
+import { Tables } from './tables';
 import { Tickable } from './tickable';
+import { defined, RuntimeError } from './util';
 
 export interface VoiceTime {
   num_beats: number;

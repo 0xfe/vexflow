@@ -1,22 +1,22 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, midLine, log, defined } from './util';
 import { Beam } from './beam';
-import { Tables } from './tables';
+import { BoundingBox } from './boundingbox';
 import { Fraction } from './fraction';
-import { Voice } from './voice';
-import { StaveConnector } from './staveconnector';
 import { ModifierContext } from './modifiercontext';
 import { RenderContext } from './rendercontext';
-import { TickContext } from './tickcontext';
 import { Stave } from './stave';
+import { StaveConnector } from './staveconnector';
 import { StemmableNote } from './stemmablenote';
-import { Tickable } from './tickable';
-import { TabStave } from './tabstave';
+import { Tables } from './tables';
 import { TabNote } from './tabnote';
-import { BoundingBox } from './boundingbox';
+import { TabStave } from './tabstave';
+import { Tickable } from './tickable';
+import { TickContext } from './tickcontext';
 import { isNote, isStaveNote } from './typeguard';
+import { defined, log, midLine, RuntimeError } from './util';
+import { Voice } from './voice';
 
 interface Distance {
   maxNegativeShiftPx: number;

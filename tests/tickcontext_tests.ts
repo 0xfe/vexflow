@@ -5,6 +5,7 @@
 
 import { Flow } from 'flow';
 import { TickContext } from 'tickcontext';
+
 import { MockTickable } from './mocks';
 
 const TickContextTests = {

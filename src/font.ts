@@ -1,8 +1,9 @@
-import { defined } from './util';
 import { loadBravura } from '@bravura';
+import { loadCustom } from '@custom';
 import { loadGonville } from '@gonville';
 import { loadPetaluma } from '@petaluma';
-import { loadCustom } from '@custom';
+
+import { defined } from './util';
 
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
@@ -115,4 +116,4 @@ const Fonts = {
   Custom: (): Font => new Font('Custom'),
 };
 
-export { Fonts, Font };
+export { Font, Fonts };

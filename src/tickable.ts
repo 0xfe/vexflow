@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Stave } from './stave';
 import { Element } from './element';
-import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { Modifier } from './modifier';
 import { ModifierContext } from './modifiercontext';
+import { Stave } from './stave';
+import { Tables } from './tables';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
 import { defined, RuntimeError } from './util';

@@ -3,12 +3,13 @@
 //
 // ChordSymbol Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
 import { ChordSymbol } from 'chordsymbol';
 import { Formatter } from 'formatter';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ChordSymbolTests = {
   Start(): void {

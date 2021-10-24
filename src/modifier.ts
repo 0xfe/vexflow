@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { defined, RuntimeError } from './util';
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
+import { defined, RuntimeError } from './util';
 
 export enum ModifierPosition {
   CENTER = 0,

@@ -6,10 +6,10 @@
 // VEX modules can take advantage of font metrics in a uniform way.
 //
 
-import { RuntimeError, log } from './util';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 import { FontInfo } from './types/common';
+import { log, RuntimeError } from './util';
 
 export interface TextFontMetrics {
   x_min: number;

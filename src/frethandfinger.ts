@@ -3,12 +3,12 @@
 // Author Larry Kuhns 2013
 // Class to draws string numbers into the notation.
 
-import { RuntimeError } from './util';
-import { Modifier } from './modifier';
-import { FontInfo } from './types/common';
-import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
+import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { StaveNote } from './stavenote';
+import { FontInfo } from './types/common';
+import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {

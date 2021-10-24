@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
-import { Note } from './note';
 import { Glyph } from './glyph';
+import { Note } from './note';
 import { TextNoteStruct } from './textnote';
+import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {

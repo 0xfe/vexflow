@@ -5,12 +5,13 @@
 
 // TODO: In the 'stem' test (aka Grace Note Stem › SVG + Petaluma in flow.html), the Petaluma note heads are not scaled down properly.
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Formatter } from 'formatter';
-import { Factory } from 'factory';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { GraceNote, GraceNoteStruct } from 'gracenote';
 import { Beam } from 'beam';
+import { Factory } from 'factory';
+import { Formatter } from 'formatter';
+import { GraceNote, GraceNoteStruct } from 'gracenote';
+import { StaveNote, StaveNoteStruct } from 'stavenote';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GraceNoteTests = {
   Start(): void {

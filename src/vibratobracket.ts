@@ -2,10 +2,10 @@
 // Author: Balazs Forian-Szabo
 // MIT License
 
-import { log } from './util';
 import { Element } from './element';
-import { Vibrato } from './vibrato';
 import { Note } from './note';
+import { log } from './util';
+import { Vibrato } from './vibrato';
 
 // eslint-disable-next-line
 function L(...args: any[]) {

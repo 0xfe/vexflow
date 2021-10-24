@@ -1,6 +1,6 @@
-import { defined } from './util';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
+import { defined } from './util';
 
 export class TimeSignatureGlyph extends Glyph {
   timeSignature: TimeSignature;

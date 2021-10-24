@@ -2,17 +2,17 @@
 // MIT License
 
 import { Beam } from './beam';
-import { RuntimeError, drawDot, defined } from './util';
-import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
+import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { KeyProps } from './types/common';
+import { defined, drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
 
 export interface NoteMetrics {

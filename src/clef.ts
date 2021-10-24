@@ -2,10 +2,10 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { log, defined } from './util';
-import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { defined, log } from './util';
 
 export interface ClefType {
   point: number;

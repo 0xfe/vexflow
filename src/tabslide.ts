@@ -4,9 +4,9 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
+import { TieNotes } from './stavetie';
 import { TabNote } from './tabnote';
 import { TabTie } from './tabtie';
-import { TieNotes } from './stavetie';
 import { RuntimeError } from './util';
 
 export class TabSlide extends TabTie {
