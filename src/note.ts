@@ -3,7 +3,7 @@
 
 import { Beam } from './beam';
 import { RuntimeError, drawDot, defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -177,7 +177,7 @@ export abstract class Note extends Tickable {
 
     // If specified type is invalid, return undefined
     let type = noteStruct.type;
-    if (type && !Flow.validTypes[type]) {
+    if (type && !Tables.validTypes[type]) {
       return undefined;
     }
 
@@ -197,7 +197,7 @@ export abstract class Note extends Tickable {
     }
 
     // Calculate the tick duration of the note
-    let ticks = Flow.durationToTicks(durationProps.duration);
+    let ticks = Tables.durationToTicks(durationProps.duration);
     if (!ticks) {
       return undefined;
     }
@@ -266,8 +266,8 @@ export abstract class Note extends Tickable {
     this.modifiers = [];
 
     // Get the glyph code for this note from the font.
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
-    this.customGlyphs = this.customTypes.map((t) => Flow.getGlyphProps(this.duration, t));
+    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
+    this.customGlyphs = this.customTypes.map((t) => Tables.getGlyphProps(this.duration, t));
 
     // Note to play for audio players.
     this.playNote = undefined;

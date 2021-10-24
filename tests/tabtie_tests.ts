@@ -12,7 +12,7 @@ import { RenderContext } from 'rendercontext';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TabTie } from 'tabtie';
-import { TieNotes } from 'types/common';
+import { TieNotes } from 'stavetie';
 import { Voice } from 'voice';
 import { Stave } from 'stave';
 import { Note } from 'note';

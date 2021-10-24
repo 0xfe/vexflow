@@ -3,7 +3,7 @@
 // MIT License
 
 import { RuntimeError, log, defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { Glyph } from './glyph';
@@ -173,7 +173,7 @@ export class Ornament extends Modifier {
       accidentalUpperPadding: 3,
     };
 
-    this.ornament = Flow.ornamentCodes(this.type);
+    this.ornament = Tables.ornamentCodes(this.type);
 
     // new ornaments have their origin at the origin, and have more specific
     // metrics.  Legacy ornaments do some
@@ -223,7 +223,7 @@ export class Ornament extends Modifier {
   /** Set the upper accidental for the ornament. */
   setUpperAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
-    this.accidentalUpper = new Glyph(Flow.accidentalCodes(accid).code, scale);
+    this.accidentalUpper = new Glyph(Tables.accidentalCodes(accid).code, scale);
     this.accidentalUpper.setOrigin(0.5, 1.0);
     return this;
   }
@@ -231,7 +231,7 @@ export class Ornament extends Modifier {
   /** Set the lower accidental for the ornament. */
   setLowerAccidental(accid: string): this {
     const scale = this.render_options.font_scale / 1.3;
-    this.accidentalLower = new Glyph(Flow.accidentalCodes(accid).code, scale);
+    this.accidentalLower = new Glyph(Tables.accidentalCodes(accid).code, scale);
     this.accidentalLower.setOrigin(0.5, 1.0);
     return this;
   }

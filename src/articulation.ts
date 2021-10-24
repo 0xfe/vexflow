@@ -3,7 +3,7 @@
 // MIT License
 
 import { RuntimeError, log, defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';
@@ -268,7 +268,7 @@ export class Articulation extends Modifier {
   }
 
   protected reset(): void {
-    this.articulation = Flow.articulationCodes(this.type);
+    this.articulation = Tables.articulationCodes(this.type);
     const articulation = defined(this.articulation, 'ArgumentError', `Articulation not found: ${this.type}`);
     const code = (this.position === ABOVE ? articulation.aboveCode : articulation.belowCode) || articulation.code;
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);

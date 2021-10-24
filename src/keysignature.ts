@@ -7,7 +7,7 @@
 // and indicates the notes with implicit accidentals.
 
 import { defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -104,7 +104,7 @@ export class KeySignature extends StaveModifier {
   // the provided `acc`. If `nextAcc` is also provided, the appropriate
   // spacing will be included in the glyph's position
   convertToGlyph(acc: { type: string; line: number }, nextAcc: { type: string; line: number }): void {
-    const accGlyphData = Flow.accidentalCodes(acc.type);
+    const accGlyphData = Tables.accidentalCodes(acc.type);
     const glyph = new Glyph(accGlyphData.code, this.glyphFontScale);
 
     // Determine spacing between current accidental and the next accidental
@@ -140,7 +140,7 @@ export class KeySignature extends StaveModifier {
 
   convertToCancelAccList(spec: string): { type: string; accList: { type: string; line: number }[] } | undefined {
     // Get the accidental list for the cancelled key signature
-    const cancel_accList = Flow.keySignature(spec);
+    const cancel_accList = Tables.keySignature(spec);
 
     // If the cancelled key has a different accidental type, ie: # vs b
     const different_types =
@@ -276,7 +276,7 @@ export class KeySignature extends StaveModifier {
     this.width = 0;
     this.glyphs = [];
     this.xPositions = [0]; // initialize with initial x position
-    this.accList = Flow.keySignature(defined(this.keySpec));
+    this.accList = Tables.keySignature(defined(this.keySpec));
     const accList = this.accList;
     const firstAccidentalType = accList.length > 0 ? accList[0].type : undefined;
     let cancelAccList;

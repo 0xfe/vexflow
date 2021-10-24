@@ -11,7 +11,7 @@ import { RenderContext } from 'rendercontext';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabSlide } from 'tabslide';
 import { TabStave } from 'tabstave';
-import { TieNotes } from 'types/common';
+import { TieNotes } from 'stavetie';
 import { Voice } from 'voice';
 
 const TabSlideTests = {
