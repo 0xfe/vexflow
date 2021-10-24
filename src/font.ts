@@ -70,6 +70,8 @@ export enum FontStyle {
 // Internal <span></span> element for parsing CSS font shorthand strings.
 let fontParser: HTMLSpanElement;
 
+const Fonts: Record<string, Font> = {};
+
 export class Font {
   //
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +226,12 @@ export class Font {
   }
 
   static get(fontName: string): Font {
-    return Fonts[fontName];
+    let font = Fonts[fontName];
+    if (!font) {
+      font = new Font(fontName);
+      Fonts[fontName] = font;
+    }
+    return font;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,8 +242,9 @@ export class Font {
   data?: FontData;
   metrics?: FontMetrics;
 
-  // Do not call this constructor directly. Use `Font.get(fontName)` instead.
-  constructor(fontName: string) {
+  // Do not call this constructor directly.
+  // Use Font.get(fontName) to get a Font object.
+  private constructor(fontName: string) {
     this.name = fontName;
   }
 
@@ -270,8 +278,6 @@ export class Font {
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
     // console.log('lookupMetric:', key);
-    console.log('lookupMetric for ' + this.name);
-    console.log(this.metrics);
 
     const keyParts = key.split('.');
 
@@ -298,5 +304,3 @@ export class Font {
     return '[' + this.name + ' Font]';
   }
 }
-
-export const Fonts: Record<string, Font> = {};

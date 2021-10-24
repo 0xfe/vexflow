@@ -1,5 +1,11 @@
-// SMuFL codepoints with Gonville backup codes. Add SMuFL codes
-// here and regenerate font file when needed.
+// Key/Value pairs
+//   Key: Canonical glyph names. Almost all of them are SMuFL glyph names.
+//        A few of them are unique to VexFlow (see: `vexAccidentalMicrotonal1` and others).
+//   Value: Legacy VexFlow glyph codes for retrieving glyph outlines from
+//          ../other/gonville.js and ../other/custom.js.
+//          The value is `null` if the glyph doesn't exist in gonville.js or custom.js.
+//
+// Add SMuFL codes here and regenerate the src/fonts/xxxxx_glyphs.ts files when needed.
 module.exports = {
   // staff brackets and dividers (e000-e00f)
   bracketTop: 'v1b',

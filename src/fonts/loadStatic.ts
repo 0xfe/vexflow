@@ -1,44 +1,34 @@
 import { Flow } from '../flow';
-import { Font, Fonts } from '../font';
+import { Font } from '../font';
 import Bravura from '../fonts/bravura';
 import Gonville from '../fonts/gonville';
 import Petaluma from '../fonts/petaluma';
 import Custom from '../fonts/custom';
-import { RobotoSlabFont } from './robotoslab_glyphs';
-import { PetalumaScriptFont } from './petalumascript_glyphs';
+import { loadTextFonts } from './loadTextFonts';
 
 export function setupFonts(): void {
   Flow.setMusicFont = (...fontNames: string[]) => {
     Flow.MUSIC_FONT_STACK = fontNames.map((fontName) => Font.get(fontName));
   };
 
-  const fontBravura = new Font('Bravura');
+  const fontBravura = Font.get('Bravura');
   fontBravura.data = Bravura.data;
   fontBravura.metrics = Bravura.metrics;
-  Fonts['Bravura'] = fontBravura;
 
-  const fontGonville = new Font('Gonville');
+  const fontGonville = Font.get('Gonville');
   fontGonville.data = Gonville.data;
   fontGonville.metrics = Gonville.metrics;
-  Fonts['Gonville'] = fontGonville;
 
-  const fontPetaluma = new Font('Petaluma');
+  const fontPetaluma = Font.get('Petaluma');
   fontPetaluma.data = Petaluma.data;
   fontPetaluma.metrics = Petaluma.metrics;
-  Fonts['Petaluma'] = fontPetaluma;
 
-  const fontCustom = new Font('Custom');
+  const fontCustom = Font.get('Custom');
   fontCustom.data = Custom.data;
   fontCustom.metrics = Custom.metrics;
-  Fonts['Custom'] = fontCustom;
 
-  const fontRobotoSlab = new Font('Roboto Slab');
-  fontRobotoSlab.data = RobotoSlabFont;
-  fontRobotoSlab.metrics = undefined;
-  Fonts['Roboto Slab'] = fontRobotoSlab;
+  // vexflow.js uses the following default font stack:
+  // Flow.setMusicFont('Bravura', 'Custom');
 
-  const fontPetalumaScript = new Font('PetalumaScript');
-  fontPetalumaScript.data = PetalumaScriptFont;
-  fontPetalumaScript.metrics = undefined;
-  Fonts['PetalumaScript'] = fontPetalumaScript;
+  loadTextFonts();
 }

@@ -17,7 +17,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, Fonts } from './font';
+import { Font } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -100,7 +100,6 @@ export const Flow = {
   Element,
   Factory,
   Font,
-  Fonts,
   TextFormatter,
   Formatter,
   Fraction,
@@ -253,6 +252,6 @@ export const Flow = {
   setMusicFont: undefined,
 };
 
-// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts.
-// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.
+// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
+// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
 setupFonts();

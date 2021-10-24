@@ -3,8 +3,8 @@
 
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
-import { Font } from './font';
 import { Flow } from './flow';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { ModifierContext } from './modifiercontext';
 import { RenderContext } from './rendercontext';

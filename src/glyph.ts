@@ -92,8 +92,6 @@ class GlyphCache {
   protected cache: Map<Font[], Record<string, GlyphCacheEntry>> = new Map();
 
   lookup(fontStack: Font[], code: string, category?: string): GlyphCacheEntry {
-    console.log('LOOKUP: ' + fontStack.toString());
-
     let entries = this.cache.get(fontStack);
     if (entries === undefined) {
       entries = {};

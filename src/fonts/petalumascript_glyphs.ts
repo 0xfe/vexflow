@@ -861,7 +861,7 @@ export const PetalumaScriptFont = {
       advanceWidth: 308,
     },
   },
-  fontFamily: 'PetalumaScript' /* TODO/RONYEH: This must match perfectly! */,
+  fontFamily: 'PetalumaScript',
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };
