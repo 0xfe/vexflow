@@ -65,8 +65,8 @@
     "diff:reference": "./tools/visual_regression.sh reference",
     "test": "npm run lint && npm run qunit && npm run generate && npm run diff",
     "test:reference": "npm run lint && npm run qunit && npm run generate:current && npm run generate:reference && npm run diff:reference",
-    "cache:save:reference": "rm -rf ./reference/images && mv ./build/images/reference ./reference/images",
-    "cache:restore:reference": "mv ./reference/images ./build/images/reference",
+    "cache:save:reference": "if [ -d ./build/images/reference ]; then rm -rf ./reference/images && mv ./build/images/reference ./reference/images; fi;",
+    "cache:restore:reference": "if [ -d ./reference/images ]; then mv ./reference/images ./build/images/reference; else npm run generate:reference; fi;",
     "test:reference:cache": "npm run cache:save:reference && npm run lint && npm run qunit && npm run generate:current && npm run cache:restore:reference && npm run diff:reference"
   },
   "homepage": "http://vexflow.com",
