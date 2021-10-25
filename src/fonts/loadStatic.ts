@@ -28,7 +28,7 @@ export function setupFonts(): void {
   fontCustom.metrics = Custom.metrics;
 
   // vexflow.js uses the following default font stack:
-  // Flow.setMusicFont('Bravura', 'Custom');
+  Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
 
   loadTextFonts();
 }

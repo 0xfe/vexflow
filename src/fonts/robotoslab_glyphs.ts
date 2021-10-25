@@ -1,5 +1,3 @@
-console.log('Roboto Slab Glyphs');
-
 export const RobotoSlabFont = {
   spacing: 50,
   glyphs: {

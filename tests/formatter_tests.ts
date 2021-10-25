@@ -296,11 +296,11 @@ function unalignedNoteDurations2(options: TestOptions): void {
 
 function justifyStaveNotes(options: TestOptions): void {
   function glyphPixels(): number {
-    return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
+    return 96 * (38 / (Flow.getMusicFont().getResolution() * 72));
   }
 
   function glyphWidth(vexGlyph: string): number {
-    const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+    const glyph: FontGlyph = Flow.getMusicFont().getGlyphs()[vexGlyph];
     return (glyph.x_max - glyph.x_min) * glyphPixels();
   }
   const f = VexFlowTests.makeFactory(options, 520, 280);

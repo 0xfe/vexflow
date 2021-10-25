@@ -3,6 +3,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
+import { Flow } from './flow';
 import { Glyph, GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';
@@ -208,7 +209,7 @@ export class NoteHead extends Note {
     // For a more natural displaced notehead, we adjust the displacement amount
     // by half the stem width in order to maintain a slight overlap with the stem
     const displacementStemAdjustment = Stem.WIDTH / 2;
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     const fontShift = musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
     const displacedFontShift = musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
 
@@ -283,7 +284,6 @@ export class NoteHead extends Note {
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        font: this.getMusicFont(),
         category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
       });
     }

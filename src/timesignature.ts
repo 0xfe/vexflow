@@ -5,6 +5,7 @@
 // See tables.js for the internal time signatures
 // representation
 
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';

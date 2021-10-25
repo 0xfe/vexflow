@@ -3,6 +3,7 @@
 // MIT License
 
 import { Builder } from './easyscore';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';

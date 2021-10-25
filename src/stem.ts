@@ -6,6 +6,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { Element } from './element';
+import { Flow } from './flow';
 import { Tables } from './tables';
 import { log, RuntimeError } from './util';
 

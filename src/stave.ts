@@ -17,6 +17,7 @@ import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
 import { RuntimeError } from './util';
+import { Flow } from './flow';
 
 export interface StaveLineConfig {
   visible?: boolean;

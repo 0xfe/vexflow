@@ -2,6 +2,7 @@
 // MIT License
 
 import { Element } from './element';
+import { Flow } from './flow';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
@@ -186,7 +187,7 @@ export class PedalMarking extends Element {
       const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
-      const point = this.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Flow.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       if (is_pedal_depressed) {
         // Adjustment for release+depress
@@ -246,7 +247,7 @@ export class PedalMarking extends Element {
       const x = note.getAbsoluteX();
       const y = stave.getYForBottomText(this.line + 3);
 
-      const point = this.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Flow.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       let text_width = 0;
       if (is_pedal_depressed) {

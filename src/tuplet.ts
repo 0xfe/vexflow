@@ -45,6 +45,7 @@
  */
 
 import { Element } from './element';
+import { Flow } from './flow';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
 import { Note } from './note';

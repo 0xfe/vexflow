@@ -7,7 +7,6 @@ import { Font } from './font';
 import { FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
-import { Tables } from './tables';
 import { defined } from './util';
 
 /** Element attributes. */
@@ -62,10 +61,6 @@ export abstract class Element {
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
 
-  /** The font stack used to render musical glyphs (e.g., treble clef).*/
-  // Initialized by the constructor via this.setMusicFontStack(...).
-  protected musicFontStack!: Font[];
-
   /** Some elements include text. You can customize the font family, size, weight, and style. */
   protected font?: Required<FontInfo>;
 
@@ -78,7 +73,6 @@ export abstract class Element {
     };
 
     this.rendered = false;
-    this.setMusicFontStack(Tables.MUSIC_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
@@ -87,28 +81,6 @@ export abstract class Element {
   /** Get element category string. */
   getCategory(): string {
     return (<typeof Element>this.constructor).CATEGORY;
-  }
-
-  /**
-   * Set the music engraving fonts. The first item is the default.
-   * Other fonts serve as backups for when a glyph is not found in the first font.
-   *
-   * Note: This method makes a shallow copy of the array, so that future changes to the global
-   * font stack will not affect this element's music font.
-   * TODO/RONYEH: Is this the approach we want to take?
-   */
-  setMusicFontStack(fontStack: Font[]): this {
-    this.musicFontStack = fontStack.slice();
-    return this;
-  }
-
-  /** Get music fonts stack. */
-  getMusicFontStack(): Font[] {
-    return this.musicFontStack.slice();
-  }
-
-  getMusicFont(): Font {
-    return this.musicFontStack[0];
   }
 
   /**

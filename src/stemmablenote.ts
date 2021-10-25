@@ -4,6 +4,7 @@
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';
@@ -133,8 +134,6 @@ export abstract class StemmableNote extends Note {
       // Lookup the base custom notehead (closest to the base of the stem) to extend or shorten
       // the stem appropriately. If there's no custom note head, lookup the standard notehead.
       const glyph = this.getBaseCustomNoteHeadGlyph() || this.getGlyph();
-
-      console.log(Flow.getMusicFont());
 
       // Get the font-specific customizations for the note heads.
       const offsets = Tables.currentMusicFont().lookupMetric(`stem.noteHead.${glyph.code_head}`, {
