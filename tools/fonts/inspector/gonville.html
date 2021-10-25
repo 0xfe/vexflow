@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<!-- 
+From the vexflow/ folder, run `npx serve` or some other http server.
+Then open http://localhost:5000/demos/fonts/showGlyphs.html in your browser.
+Click a glyph to log some information to the console.
+-->
 <html>
   <head>
     <title>Gonville Glyphs</title>
@@ -61,10 +67,10 @@
 
       var canvas = document.getElementById('glyphs');
       // Retina display trick
-      canvas.height = canvasHeight * 2;
       canvas.width = canvasWidth * 2;
-      canvas.style.height = canvasHeight;
-      canvas.style.width = canvasWidth;
+      canvas.height = canvasHeight * 2;
+      canvas.style.height = canvasHeight + 'px';
+      canvas.style.width = canvasWidth + 'px';
       var ctx = canvas.getContext('2d');
       ctx.scale(2, 2);
 

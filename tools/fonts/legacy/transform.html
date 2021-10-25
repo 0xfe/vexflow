@@ -83,9 +83,9 @@
 
         // Retina display trick
         canvas.height = canvasHeight * 2;
-        canvas.width = 800 * 2;
-        canvas.style.height = canvasHeight;
-        canvas.style.width = 800;
+        canvas.width = 1600;
+        canvas.style.height = canvasHeight + 'px';
+        canvas.style.width = 800 + 'px';
         var ctx = canvas.getContext('2d');
         ctx.scale(2, 2);
 
@@ -313,8 +313,6 @@
         fonts: [GonvilleAll, Microtonal],
         validCodes: validGlyphCodes,
       });
-
-      console.log(combinedFont);
 
       const font = Vex.Flow.Font.get('VexFlowFont');
       font.data = combinedFont;

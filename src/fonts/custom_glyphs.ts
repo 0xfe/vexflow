@@ -1,5 +1,3 @@
-console.log('CustomFont Glyphs');
-
 export const CustomFont = {
   resolution: 1000,
   familyName: 'VexflowCustom',

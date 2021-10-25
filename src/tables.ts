@@ -329,7 +329,7 @@ export const Tables = {
 
   /**
    * Customize this to choose a different music font.
-   * For example: Vex.Tables.MUSIC_FONT_STACK = [Fonts.Petaluma(), Fonts.Custom()];
+   * See: Flow.setMusicFont(...fontNames);
    */
   MUSIC_FONT_STACK: [] as Font[],
   NOTATION_FONT_SCALE: 39,

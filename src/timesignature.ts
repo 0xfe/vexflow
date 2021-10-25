@@ -5,6 +5,7 @@
 // See tables.js for the internal time signatures
 // representation
 
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
@@ -66,7 +67,7 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     this.point = musicFont.lookupMetric('digits.point');
     const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;

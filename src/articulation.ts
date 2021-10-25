@@ -3,6 +3,7 @@
 // MIT License
 
 import { Builder } from './easyscore';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -296,7 +297,7 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
-    const padding = this.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+    const padding = Flow.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
     let y = (
       {

@@ -1,5 +1,3 @@
-console.log('PetalumaScript Glyphs');
-
 export const PetalumaScriptFont = {
   name: 'PetalumaScript',
   smufl: false,

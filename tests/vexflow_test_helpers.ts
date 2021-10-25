@@ -30,7 +30,7 @@ export interface TestOptions {
 let originalFontStack: Font[];
 function useTempFontStack(fontName: string): void {
   originalFontStack = Flow.MUSIC_FONT_STACK;
-  Flow.setMusicFont(VexFlowTests.FONT_STACKS[fontName]);
+  Flow.setMusicFont(...VexFlowTests.FONT_STACKS[fontName]);
 }
 function restoreOriginalFontStack(): void {
   Flow.MUSIC_FONT_STACK = originalFontStack;

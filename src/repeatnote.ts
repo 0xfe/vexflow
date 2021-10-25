@@ -1,5 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GlyphNote } from './glyphnote';
 import { GlyphNoteOptions } from './glyphnote';
@@ -22,7 +23,7 @@ export class RepeatNote extends GlyphNote {
     super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
 
     const glyphCode = CODES[type] || 'repeat1Bar';
-    const glyph = new Glyph(glyphCode, this.getMusicFont().lookupMetric('repeatNote.point', 40), {
+    const glyph = new Glyph(glyphCode, Flow.getMusicFont().lookupMetric('repeatNote.point', 40), {
       category: 'repeatNote',
     });
     this.setGlyph(glyph);

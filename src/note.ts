@@ -2,6 +2,8 @@
 // MIT License
 
 import { Beam } from './beam';
+import { Flow } from './flow';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -14,7 +16,6 @@ import { TickContext } from './tickcontext';
 import { KeyProps } from './types/common';
 import { defined, drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
-import { Font } from './font';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -588,7 +589,7 @@ export abstract class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + this.getMusicFont().lookupMetric('stave.padding');
+      x += this.stave.getNoteStartX() + Flow.getMusicFont().lookupMetric('stave.padding');
     }
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();

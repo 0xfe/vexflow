@@ -6,6 +6,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { Element } from './element';
+import { Flow } from './flow';
 import { Tables } from './tables';
 import { log, RuntimeError } from './util';
 
@@ -170,7 +171,7 @@ export class Stem extends Element {
   }
 
   adjustHeightForFlag(): void {
-    this.renderHeightAdjustment = this.getMusicFont().lookupMetric('stem.heightAdjustmentForFlag', -3);
+    this.renderHeightAdjustment = Flow.getMusicFont().lookupMetric('stem.heightAdjustmentForFlag', -3);
   }
 
   adjustHeightForBeam(): void {

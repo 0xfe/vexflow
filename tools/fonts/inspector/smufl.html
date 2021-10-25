@@ -58,25 +58,25 @@
       // - unicode code point for SMuFL fonts (Bravura and Petaluma).
       // - unicode code point for Gonville font. This is null if the glyph is not available in the Gonville font.
 
-      const response = await fetch('../../tools/fonts/config/glyphnames.json');
+      const response = await fetch('../config/glyphnames.json');
       const glyphNamesSMuFL = await response.json();
 
       // HACK to allow us to import a Node JS module. :-)
       window.module = {};
-      await import('../../tools/fonts/config/valid_codes.js');
+      await import('../config/valid_codes.js');
       const VALID_CODES = window.module.exports;
       window.module = {};
 
       // Load the three OTF files.
-      const bravuraOTF = '../../tools/fonts/@/bravura/Bravura_1.392.otf';
+      const bravuraOTF = '../@/bravura/Bravura_1.392.otf';
       const bravura = new FontFace('Bravura', `url(${bravuraOTF}) format('opentype')`);
       await bravura.load();
       document.fonts.add(bravura);
-      const petalumaOTF = '../../tools/fonts/@/petaluma/Petaluma_1.065.otf';
+      const petalumaOTF = '../@/petaluma/Petaluma_1.065.otf';
       const petaluma = new FontFace('Petaluma', `url(${petalumaOTF}) format('opentype')`);
       await petaluma.load();
       document.fonts.add(petaluma);
-      const gonvilleOTF = '../../tools/fonts/@/gonville/Gonville-18_20200703.otf';
+      const gonvilleOTF = '../@/gonville/Gonville-18_20200703.otf';
       const gonville = new FontFace('Gonville', `url(${gonvilleOTF}) format('opentype')`);
       await gonville.load();
       document.fonts.add(gonville);

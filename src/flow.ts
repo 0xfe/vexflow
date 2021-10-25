@@ -163,11 +163,17 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
+  // Internal ID used as the cache key for GlyphCache.
+  // It is only computed when the MUSIC_FONT_STACK changes.
+  // Comma separated list of font names.
+  MUSIC_FONT_STACK_ID: '',
+
   get MUSIC_FONT_STACK(): Font[] {
-    return Tables.MUSIC_FONT_STACK;
+    return Tables.MUSIC_FONT_STACK.slice();
   },
-  set MUSIC_FONT_STACK(value: Font[]) {
-    Tables.MUSIC_FONT_STACK = value;
+  set MUSIC_FONT_STACK(fonts: Font[]) {
+    Tables.MUSIC_FONT_STACK = fonts.slice();
+    Flow.MUSIC_FONT_STACK_ID = fonts.map((font) => font.getName()).join(',');
   },
   get NOTATION_FONT_SCALE(): number {
     return Tables.NOTATION_FONT_SCALE;
@@ -246,10 +252,12 @@ export const Flow = {
    * Example: setMusicFont('Bravura')
    * Example: setMusicFont('Bravura', 'Gonville', 'Custom')
    *
-   * If you are using vexflow.js,      setMusicFont() will be a sync function.
+   * If you are using vexflow.js,      setMusicFont() will be a sync function. Calling it is optional
+   * because VexFlow defaults to a music font stack of: 'Bravura', 'Gonville', 'Custom'.
+   *
    * If you are using vexflow-core.js, setMusicFont() will be an async function.
    */
-  setMusicFont: undefined,
+  setMusicFont: undefined as unknown as (...fontNames: string[]) => void,
 };
 
 // vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.

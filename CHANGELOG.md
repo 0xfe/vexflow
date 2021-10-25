@@ -5,6 +5,8 @@ Please help test this beta release and [report issues on GitHub](https://github.
 ## Features
 
 - Migrate VexFlow to **TypeScript** with a ES6 target.
+- Improve handling of music fonts and text fonts.
+- Optional lazy loading of music fonts.
 
 ## Breaking
 
@@ -16,7 +18,13 @@ Please help test this beta release and [report issues on GitHub](https://github.
   - Examples:
     - `Accidental.CATEGORY` is now `'Accidental'` instead of `'accidentals'`.
     - `Modifier.CATEGORY` is now `'Modifier'` instead of `'none'`.
-- `ChordSymbol.NO_TEXT_FORMAT` was previously named `ChordSymbol.NOTEXTFORMAT`.
+- **ChordSymbol**
+  - `ChordSymbol.NO_TEXT_FORMAT` was previously named `ChordSymbol.NOTEXTFORMAT`.
+  - `ChordSymbol.metrics` was previously named `ChordSymbol.chordSymbolMetrics`.
+- `StaveNote.LEDGER_LINE_OFFSET` was previously named `StaveNote.DEFAULT_LEDGER_LINE_OFFSET`.
+- **Fonts**
+  - `TextFontMetrics` has been merged into `FontGlyph` due to substantial overlap.
+  - `Flow.NOTATION_FONT_SCALE` was previously named `Flow.DEFAULT_NOTATION_FONT_SCALE`.
 
 # 3.0.9 / 2020-04-21
 

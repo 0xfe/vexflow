@@ -375,7 +375,7 @@ export class ChordSymbol extends Modifier {
    */
   getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
-    if (this.getMusicFont().getName() === 'Petaluma') {
+    if (Flow.getMusicFont().getName() === 'Petaluma') {
       family = 'PetalumaScript, Arial, sans-serif';
     }
     return {

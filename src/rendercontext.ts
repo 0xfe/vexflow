@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2021.
 // MIT License
 
+import { FontInfo } from './font';
+
 export interface TextMeasure {
   width: number;
   height: number;
@@ -12,7 +14,7 @@ export interface GroupAttributes {
 
 export abstract class RenderContext {
   abstract clear(): void;
-  abstract setFont(family: string, size: number, weight?: string): this;
+  abstract setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this;
   abstract setRawFont(font: string): this;
   abstract setFillStyle(style: string): this;
   abstract setBackgroundFillStyle(style: string): this;

@@ -4,6 +4,7 @@
 // This class implements multiple measure rests.
 
 import { Element } from './element';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
 import { RenderContext } from './rendercontext';
@@ -101,7 +102,7 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     this.render_options = {
       use_symbols: false,
       show_number: true,
