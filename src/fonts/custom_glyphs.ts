@@ -1,6 +1,10 @@
 export const CustomFont = {
   resolution: 1000,
+<<<<<<< HEAD
   familyName: 'VexFlowCustom',
+=======
+  fontFamily: 'VexflowCustom',
+>>>>>>> Improve API for Flow and Tables.
   glyphs: {
     noteheadSquareWhite: {
       x_min: 0,

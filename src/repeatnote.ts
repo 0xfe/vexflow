@@ -1,6 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GlyphNote } from './glyphnote';
 import { GlyphNoteOptions } from './glyphnote';

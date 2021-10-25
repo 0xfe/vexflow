@@ -2,7 +2,6 @@
 // Author: Mike Corrigan <corrigan@gmail.com>
 // MIT License
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Modifier } from './modifier';

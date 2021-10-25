@@ -2,7 +2,6 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';

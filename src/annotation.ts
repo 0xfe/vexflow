@@ -2,7 +2,7 @@
 // MIT License
 
 import { Element } from './element';
-import { FontInfo } from './font';
+import { Font, FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
@@ -59,12 +59,12 @@ export class Annotation extends Modifier {
   static VerticalJustify = VerticalJustify;
 
   static VerticalJustifyString: Record<string, number> = {
-    above: Annotation.VerticalJustify.TOP,
-    top: Annotation.VerticalJustify.TOP,
-    below: Annotation.VerticalJustify.BOTTOM,
-    bottom: Annotation.VerticalJustify.BOTTOM,
-    center: Annotation.VerticalJustify.CENTER,
-    centerStem: Annotation.VerticalJustify.CENTER_STEM,
+    above: VerticalJustify.TOP,
+    top: VerticalJustify.TOP,
+    below: VerticalJustify.BOTTOM,
+    bottom: VerticalJustify.BOTTOM,
+    center: VerticalJustify.CENTER,
+    centerStem: VerticalJustify.CENTER_STEM,
   };
 
   /** Arrange annotations within a `ModifierContext` */
@@ -73,15 +73,15 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
-      let testWidth = 0;
+      let textWidth = 0;
       const annotation = annotations[i];
       const textFormatter = TextFormatter.create(annotation.font);
 
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
       const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
-      // Get the string width from the font metrics
-      testWidth = textFormatter.getWidthForText(annotation.text);
-      width = Math.max(width, testWidth);
+      // Get the text width from the font metrics.
+      textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      width = Math.max(width, textWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line += numLines;

@@ -1,4 +1,4 @@
-import { setupFonts } from '@loadFonts';
+import { loadMusicFonts } from '@loadFonts';
 
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
@@ -18,6 +18,7 @@ import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
 import { Font } from './font';
+import { loadTextFonts } from './fonts/loadTextFonts';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -75,7 +76,6 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
-import { RuntimeError } from './util';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
@@ -100,7 +100,6 @@ export const Flow = {
   Element,
   Factory,
   Font,
-  TextFormatter,
   Formatter,
   Fraction,
   FretHandFinger,
@@ -147,6 +146,7 @@ export const Flow = {
   TabTie,
   TextBracket,
   TextDynamics,
+  TextFormatter,
   TextNote,
   TickContext,
   TimeSignature,
@@ -170,6 +170,7 @@ export const Flow = {
    */
   setMusicFontStack(fonts: Font[]): void {
     Tables.MUSIC_FONT_STACK = fonts.slice();
+    Glyph.CURRENT_CACHE_KEY = fonts.map((font) => font.getName()).join(',');
   },
 
   /**
@@ -263,4 +264,6 @@ export const Flow = {
 
 // vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
 // vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
-setupFonts();
+loadMusicFonts();
+// Load the two text fonts that ChordSymbol & Annotation use.
+loadTextFonts();

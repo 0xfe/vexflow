@@ -52,8 +52,7 @@ Click a glyph to log some information to the console.
     <p>For more information visit <a href="http://0xfe.blogspot.com">0xfe.blogspot.com</a>.</p>
     <script>
       Vex.Flow.setMusicFont('Gonville');
-
-      const gonvilleFont = Vex.Flow.Font.get('Gonville');
+      const gonvilleFont = Vex.Flow.Font.load('Gonville');
       const glyphs = gonvilleFont.getGlyphs();
 
       // Calculate the canvas height programmatically based on the number of glyphs.

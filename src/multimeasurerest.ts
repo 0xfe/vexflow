@@ -102,7 +102,7 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
-    const musicFont = Flow.getMusicFont();
+    const musicFont = Tables.currentMusicFont();
     this.render_options = {
       use_symbols: false,
       show_number: true,

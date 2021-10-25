@@ -118,7 +118,7 @@ export class StaveNote extends StemmableNote {
   }
 
   static get minNoteheadPadding(): number {
-    const musicFont = Flow.getMusicFont();
+    const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('glyphs.noteHead.minPadding');
   }
 
