@@ -33,13 +33,13 @@ $ node fontgen_gonville.js ../../src/fonts/
 
 ### Generate Text Metrics for a Text Font
 
-To create text metrics for your own font, first obtain an open-type font (.otf) version of the font file. Then run:
+To create text metrics for your own font, first obtain a font file (e.g., \*.otf). Then run:
 
 ```sh
-$ node textmetrics_fontgen.js myFont.otf myFont_textmetrics.json
+$ node fontgen_text.js MyFont.otf myfont_glyphs.ts
 ```
 
-You can register your metrics using `TextFormatter.registerFont()` and the metrics will be available for your module. See the `chordsymbol.ts` module for examples.
+You can register these metrics using `TextFormatter.registerInfo(...)` and the metrics will be available for your module. See `chordsymbol.ts` for examples.
 
 ## Gonville
 

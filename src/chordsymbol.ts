@@ -112,7 +112,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): number {
-    return Flow.getMusicFont().getResolution();
+    return Tables.currentMusicFont().getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -225,7 +225,7 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static get metrics(): any {
-    return Flow.getMusicFont().getMetrics().glyphs.chordSymbol;
+    return Tables.currentMusicFont().getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
@@ -375,7 +375,7 @@ export class ChordSymbol extends Modifier {
    */
   getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
-    if (Flow.getMusicFont().getName() === 'Petaluma') {
+    if (Tables.currentMusicFont().getName() === 'Petaluma') {
       family = 'PetalumaScript, Arial, sans-serif';
     }
     return {
@@ -387,10 +387,8 @@ export class ChordSymbol extends Modifier {
   }
 
   /**
-   * The font size is specified in points.
-   * Convert to 'pixels'.
+   * The offset is specified in `em`. Scale this value by the font size in pixels.
    */
-
   get superscriptOffset(): number {
     return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPx;
   }
@@ -513,7 +511,7 @@ export class ChordSymbol extends Modifier {
       width: 0,
     };
 
-    // Note: all symbol widths are resolution and font-independent.
+    // Note: symbol widths are resolution and font-independent.
     // We convert to pixel values when we know what the font is.
     if (symbolType === SymbolTypes.GLYPH && typeof params.glyph === 'string') {
       const glyphArgs = ChordSymbol.glyphs[params.glyph];
@@ -524,12 +522,7 @@ export class ChordSymbol extends Modifier {
       // rv.width = rv.glyph.getMetrics().width;
       // don't set yShift here, b/c we need to do it at formatting time after the font is set.
     } else if (symbolType === SymbolTypes.TEXT) {
-      let textWidth = 0;
-      for (let i = 0; i < symbolBlock.text.length; ++i) {
-        // TODO (AaronDavidNewman): Should this calculation be done in pixels or in em???
-        textWidth += this.textFormatter.getWidthForCharacterInEm(symbolBlock.text[i]);
-      }
-      symbolBlock.width = textWidth;
+      symbolBlock.width = this.textFormatter.getWidthForTextInEm(symbolBlock.text);
     } else if (symbolType === SymbolTypes.LINE) {
       symbolBlock.width = params.width;
     }
@@ -675,9 +668,9 @@ export class ChordSymbol extends Modifier {
     let acc = 0;
     let i = 0;
     for (i = 0; i < text.length; ++i) {
-      const metric = this.textFormatter.getMetricForCharacter(text[i]);
-      if (metric) {
-        const yMax = metric.y_max ?? 0;
+      const metrics = this.textFormatter.getGlyphMetrics(text[i]);
+      if (metrics) {
+        const yMax = metrics.y_max ?? 0;
         acc = yMax < acc ? yMax : acc;
       }
     }

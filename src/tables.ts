@@ -328,10 +328,21 @@ export const Tables = {
   RESOLUTION: RESOLUTION,
 
   /**
-   * Customize this to choose a different music font.
-   * See: Flow.setMusicFont(...fontNames);
+   * Customize this by calling Flow.setMusicFont(...fontNames);
    */
   MUSIC_FONT_STACK: [] as Font[],
+
+  /**
+   * @returns the `Font` object at the head of the music font stack.
+   */
+  currentMusicFont(): Font {
+    if (Tables.MUSIC_FONT_STACK.length === 0) {
+      throw new RuntimeError('NoFonts', 'The font stack is empty. Call: Flow.setMusicFont(...fontNames)');
+    } else {
+      return Tables.MUSIC_FONT_STACK[0];
+    }
+  },
+
   NOTATION_FONT_SCALE: 39,
   TABLATURE_FONT_SCALE: 39,
 

@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
-// Text Font Tests
+// Font Tests
 
 import { Bend } from 'bend';
 import { Font, FontStyle, FontWeight } from 'font';
@@ -16,7 +16,9 @@ const FontTests = {
     QUnit.module('Font');
     test('Font Parsing', fontParsing);
     const run = VexFlowTests.runTests;
-    run('Set Font', setFont);
+    run('Set Text Font', setTextFont);
+    // run('Set Music Font', setMusicFont);
+    // TODO / RONYEH.....
   },
 };
 
@@ -46,7 +48,7 @@ function fontParsing(): void {
   equal(sizeInPixels, 24);
 }
 
-function setFont(options: TestOptions): void {
+function setTextFont(options: TestOptions): void {
   const factory = VexFlowTests.makeFactory(options, 400, 200);
   const stave = factory.Stave({ y: 40 });
   const score = factory.EasyScore();

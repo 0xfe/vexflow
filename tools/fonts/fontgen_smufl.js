@@ -1,8 +1,5 @@
-/*
-Convert SMuFL OTF font to Vexflow glyph file.
-
-Usage: node fontgen_smufl.js Bravura_1.392.otf ../../src/fonts/bravura_glyphs.ts
-*/
+// Convert SMuFL OTF font to Vexflow glyph file.
+// Usage: node fontgen_smufl.js Bravura_1.392.otf ../../src/fonts/bravura_glyphs.ts
 
 const fs = require('fs');
 const process = require('process');

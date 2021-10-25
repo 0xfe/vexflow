@@ -760,7 +760,7 @@ export const VexFlowFont = {
   boundingBox: { yMin: -2065.375, xMin: -695.53125, yMax: 1901.578125, xMax: 1159.671875 },
   resolution: 1000,
   descender: -2066,
-  familyName: 'VexFlow-18',
+  fontFamily: 'VexFlow-18',
   lineHeight: 4093,
   underlineThickness: 50,
 };

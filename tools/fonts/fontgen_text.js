@@ -1,20 +1,16 @@
-/*
-Convert text font to Vexflow text font metrics.
-
-Usage: node fontgen_text.js MyFont.otf ../../src/fonts/myfont_glyphs.ts
-*/
+// Convert text font to Vexflow text font metrics.
+// Usage: node fontgen_text.js MyFont.otf ../../src/fonts/myfont_glyphs.ts
 
 const fs = require('fs');
 const process = require('process');
-// eslint-disable-next-line
 const opentype = require('opentype.js');
 
+// eslint-disable-next-line
 function LogError(...args) {
-  // eslint-disable-next-line
   console.error(...args);
 }
 
-// Converte OTF glyph path to Vexflow glyph path
+// Convert OTF glyph path to Vexflow glyph path.
 function toVFPath(glyph) {
   const pointSize = 72;
   const scale = 72 * 20;
@@ -67,7 +63,7 @@ const fileData = {
 };
 
 // Set the variable name to the font family name
-const varName = fileData.fontFamily.replace(/\s+/, '_');
+const varName = fileData.fontFamily.replace(/\s+/g, '') + 'Font';
 
 LogError('Writing to file:', outFile);
-fs.writeFileSync(outFile, `export const ${varName}Font = ${JSON.stringify(fileData, null, 2)};\n`);
+fs.writeFileSync(outFile, `export const ${varName} = ${JSON.stringify(fileData, null, 2)};\n`);

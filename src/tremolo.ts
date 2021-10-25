@@ -2,11 +2,11 @@
 // Author: Mike Corrigan <corrigan@gmail.com>
 // MIT License
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
+import { Tables } from './tables';
 import { isGraceNote } from './typeguard';
 
 /** Tremolo implements tremolo notation. */
@@ -44,7 +44,7 @@ export class Tremolo extends Modifier {
     const scale = gn ? GraceNote.SCALE : 1;
     const category = `tremolo.${gn ? 'grace' : 'default'}`;
 
-    const musicFont = Flow.getMusicFont();
+    const musicFont = Tables.currentMusicFont();
     const y_spacing = musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
     const height = this.num * y_spacing;
     let y = note.getStemExtents().baseY - height;

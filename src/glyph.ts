@@ -92,17 +92,15 @@ class GlyphCache {
   protected cache: Map<string, Record<string, GlyphCacheEntry>> = new Map();
 
   lookup(code: string, category?: string): GlyphCacheEntry {
-    const cacheKey = Flow.MUSIC_FONT_STACK_ID;
-
-    let entries = this.cache.get(cacheKey);
+    let entries = this.cache.get(Glyph.CURRENT_CACHE_KEY);
     if (entries === undefined) {
       entries = {};
-      this.cache.set(cacheKey, entries);
+      this.cache.set(Glyph.CURRENT_CACHE_KEY, entries);
     }
     const key = category ? `${code}%${category}` : code;
     let entry = entries[key];
     if (entry === undefined) {
-      entry = new GlyphCacheEntry(Flow.MUSIC_FONT_STACK, code, category);
+      entry = new GlyphCacheEntry(Flow.getMusicFontStack(), code, category);
       entries[key] = entry;
     }
     return entry;
@@ -112,7 +110,9 @@ class GlyphCache {
 class GlyphOutline {
   private i: number = 0;
 
-  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {}
+  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {
+    // Automatically assign private properties: this.outline, this.originX, this.originY, and this.scale.
+  }
 
   done(): boolean {
     return this.i >= this.outline.length;
@@ -171,6 +171,11 @@ export class Glyph extends Element {
   }
 
   protected static cache = new GlyphCache();
+
+  // The current cache key for GlyphCache above.
+  // Computed whenever the Flow.setMusicFontStack(...) is called.
+  // It is set to a comma separated list of font names.
+  public static CURRENT_CACHE_KEY: string = '';
 
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;

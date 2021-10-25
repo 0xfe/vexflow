@@ -2,10 +2,10 @@
 // Co-author: Benjamin W. Bohl
 // MIT License
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Tables } from './tables';
 import { defined, log } from './util';
 
 export interface ClefType {
@@ -124,7 +124,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(Flow.getMusicFont().lookupMetric(`clef.${this.size}.width`));
+    this.setWidth(Tables.currentMusicFont().lookupMetric(`clef.${this.size}.width`));
     L('Creating clef:', type);
   }
 
@@ -138,7 +138,7 @@ export class Clef extends StaveModifier {
       this.size = size;
     }
 
-    const musicFont = Flow.getMusicFont();
+    const musicFont = Tables.currentMusicFont();
 
     this.clef.point = musicFont.lookupMetric(`clef.${this.size}.point`, 0);
     this.glyph = new Glyph(this.clef.code, this.clef.point, {
@@ -179,7 +179,7 @@ export class Clef extends StaveModifier {
       const glyph = defined(this.glyph, 'ClefError', "Can't set stave without glyph.");
 
       const numLines = this.stave.getNumLines();
-      const musicFont = Flow.getMusicFont();
+      const musicFont = Tables.currentMusicFont();
       const point = musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
       const shiftY = musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
       glyph.setPoint(point);

@@ -209,7 +209,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Flow.getMusicFont().lookupMetric('stave.padding'),
+      stavePadding: Tables.currentMusicFont().lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -461,7 +461,7 @@ export class Formatter {
    * @returns the estimated width in pixels
    */
   preCalculateMinTotalWidth(voices: Voice[]): number {
-    const unalignedPadding = Flow.getMusicFont().lookupMetric('stave.unalignedNotePadding');
+    const unalignedPadding = Tables.currentMusicFont().lookupMetric('stave.unalignedNotePadding');
     // Calculate additional padding based on 3 methods:
     // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
     let unalignedCtxCount = 0;
@@ -770,7 +770,7 @@ export class Formatter {
       lastContext.getMetrics().notePx -
       lastContext.getMetrics().totalRightPx -
       firstContext.getMetrics().totalLeftPx;
-    const musicFont = Flow.getMusicFont();
+    const musicFont = Tables.currentMusicFont();
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     let targetWidth = adjustedJustifyWidth;

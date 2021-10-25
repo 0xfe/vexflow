@@ -589,7 +589,7 @@ export abstract class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + Flow.getMusicFont().lookupMetric('stave.padding');
+      x += this.stave.getNoteStartX() + Tables.currentMusicFont().lookupMetric('stave.padding');
     }
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();

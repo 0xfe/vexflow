@@ -1,4 +1,4 @@
-import { setupFonts } from '@loadFonts';
+import { loadMusicFonts } from '@loadFonts';
 
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
@@ -18,6 +18,7 @@ import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
 import { Font } from './font';
+import { loadTextFonts } from './fonts/loadTextFonts';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -75,7 +76,6 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
-import { RuntimeError } from './util';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
@@ -100,7 +100,6 @@ export const Flow = {
   Element,
   Factory,
   Font,
-  TextFormatter,
   Formatter,
   Fraction,
   FretHandFinger,
@@ -147,6 +146,7 @@ export const Flow = {
   TabTie,
   TextBracket,
   TextDynamics,
+  TextFormatter,
   TextNote,
   TickContext,
   TimeSignature,
@@ -163,18 +163,6 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
-  // Internal ID used as the cache key for GlyphCache.
-  // It is only computed when the MUSIC_FONT_STACK changes.
-  // Comma separated list of font names.
-  MUSIC_FONT_STACK_ID: '',
-
-  get MUSIC_FONT_STACK(): Font[] {
-    return Tables.MUSIC_FONT_STACK.slice();
-  },
-  set MUSIC_FONT_STACK(fonts: Font[]) {
-    Tables.MUSIC_FONT_STACK = fonts.slice();
-    Flow.MUSIC_FONT_STACK_ID = fonts.map((font) => font.getName()).join(',');
-  },
   get NOTATION_FONT_SCALE(): number {
     return Tables.NOTATION_FONT_SCALE;
   },
@@ -239,12 +227,21 @@ export const Flow = {
     return Tables.keySignature(spec);
   },
 
-  getMusicFont(): Font {
-    if (Tables.MUSIC_FONT_STACK.length === 0) {
-      throw new RuntimeError('NoFonts', 'The font stack is empty. See: Flow.setMusicFont(...fontNames)');
-    } else {
-      return Tables.MUSIC_FONT_STACK[0];
-    }
+  /**
+   * Use Flow.setMusicFont(...fontNames).
+   *
+   * @param fonts
+   */
+  setMusicFontStack(fonts: Font[]): void {
+    Tables.MUSIC_FONT_STACK = fonts.slice();
+    Glyph.CURRENT_CACHE_KEY = fonts.map((font) => font.getName()).join(',');
+  },
+
+  /**
+   * @returns a copy of the current music font stack.
+   */
+  getMusicFontStack(): Font[] {
+    return Tables.MUSIC_FONT_STACK.slice();
   },
 
   /**
@@ -252,14 +249,21 @@ export const Flow = {
    * Example: setMusicFont('Bravura')
    * Example: setMusicFont('Bravura', 'Gonville', 'Custom')
    *
-   * If you are using vexflow.js,      setMusicFont() will be a sync function. Calling it is optional
-   * because VexFlow defaults to a music font stack of: 'Bravura', 'Gonville', 'Custom'.
+   * If you are using vexflow.js,      setMusicFont() will be a synchronous function.
+   * Calling it is optional as VexFlow defaults to a music font stack of: 'Bravura', 'Gonville', 'Custom'.
    *
    * If you are using vexflow-core.js, setMusicFont() will be an async function.
    */
-  setMusicFont: undefined as unknown as (...fontNames: string[]) => void,
+  // eslint-disable-next-line
+  setMusicFont: (...fontNames: string[]) => {
+    // The default implementation of `setMusicFont()` is synchronous.
+    // Convert the array of font names into an array of Font objects.
+    Flow.setMusicFontStack(fontNames.map((fontName) => Font.load(fontName)));
+  },
 };
 
 // vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
 // vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
-setupFonts();
+loadMusicFonts();
+// Load the two text fonts that ChordSymbol & Annotation use.
+loadTextFonts();

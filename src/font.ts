@@ -53,7 +53,10 @@ export interface FontGlyph {
   ha: number;
   leftSideBearing?: number;
   advanceWidth?: number;
-  o?: string; // RONYEH-FONT: Made this optional to be compatible with robotoslab_glyphs & petalumascript_glyphs.
+
+  // The o (outline) field is optional, because robotoslab_glyphs.ts & petalumascript_glyphs.ts
+  // do not include glyph outlines. We rely on *.woff files to provide the glyph outlines.
+  o?: string;
   cached_outline?: number[];
 }
 
@@ -95,7 +98,7 @@ export class Font {
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
-  static convertToPxScaleFactor: Record<string, number> = {
+  static convertToPxFrom: Record<string, number> = {
     pt: 4 / 3,
     px: 1,
     em: 16,
@@ -107,21 +110,21 @@ export class Font {
 
   /**
    * @param fontSize The font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
-   * or as a number (the unit is assumed to be 'pt'). See `Font.convertToPxScaleFactor` for the supported
+   * or as a number (the unit is assumed to be 'pt'). See `Font.convertToPxFrom` for the supported
    * units (e.g., pt, em, %).
    * @returns the number of pixels that is equivalent to `fontSize`
    */
   static convertToPixels(fontSize: string | number = Font.SIZE): number {
     if (typeof fontSize === 'number') {
       // Assume the fontSize is specified in pt.
-      return (fontSize * 4) / 3;
+      return fontSize * Font.convertToPxFrom.pt;
     } else {
       const value = parseFloat(fontSize);
       if (isNaN(value)) {
         return 0;
       }
       const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
-      const conversionFactor = Font.convertToPxScaleFactor[unit] ?? 1;
+      const conversionFactor = Font.convertToPxFrom[unit] ?? 1;
       return value * conversionFactor;
     }
   }
@@ -139,6 +142,42 @@ export class Font {
   }
 
   /**
+   * @returns a string of the form `italic bold 16pt Arial`
+   */
+  static toCSSString(fontInfo?: FontInfo): string {
+    if (!fontInfo) {
+      return '';
+    }
+    let styleSection;
+    const style = fontInfo.style;
+    if (style === FontStyle.NORMAL || style === '' || style === undefined) {
+      styleSection = '';
+    } else {
+      styleSection = fontInfo.style + ' ';
+    }
+
+    let weightSection;
+    const weight = fontInfo.weight;
+    if (weight === FontWeight.NORMAL || weight === '' || weight === undefined) {
+      weightSection = '';
+    } else {
+      weightSection = fontInfo.weight + ' ';
+    }
+
+    let sizeSection: string;
+    const size = fontInfo.size;
+    if (typeof size === 'number') {
+      sizeSection = size + 'pt';
+    } else if (size === undefined) {
+      sizeSection = Font.SIZE + 'pt';
+    } else {
+      sizeSection = size;
+    }
+
+    return `${styleSection}${weightSection}${sizeSection} ${fontInfo.family}`;
+  }
+
+  /**
    * @param fontSize a number representing a font size, or a string font size with units.
    * @param scaleFactor multiply the size by this factor.
    * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48)
@@ -153,6 +192,10 @@ export class Font {
     }
   }
 
+  /**
+   * @param fontSize can be a number or a string representing a font size (e.g., '16pt', '1.5em').
+   * @returns just the numeric part of the size (e.g., '16pt' -> 16, '1.5em' -> 1.5).
+   */
   static convertSizeToNumber(fontSize: number | string): number {
     if (typeof fontSize === 'number') {
       return fontSize;
@@ -209,27 +252,46 @@ export class Font {
     return fontFace;
   }
 
-  static async loadRobotoSlab(): Promise<void> {
+  static async loadWebFontRobotoSlab(): Promise<void> {
     Font.loadWebFont('Roboto Slab', Font.FONT_HOST + 'robotoslab/RobotoSlab-Medium_2.001.woff');
   }
 
-  static async loadPetalumaScript(): Promise<void> {
+  static async loadWebFontPetalumaScript(): Promise<void> {
     Font.loadWebFont('PetalumaScript', Font.FONT_HOST + 'petaluma/PetalumaScript_1.10_FS.woff');
   }
 
   /**
-   * See `flow.html` for an example of how to use this method.
+   * Load the two web fonts that are used by ChordSymbol. For example, `flow.html` calls:
+   *   `await Vex.Flow.Font.loadWebFonts();`
+   * Alternatively, you may load web fonts with a stylesheet link (e.g., from Google Fonts),
+   * and a @font-face { font-family: ... } rule in your CSS.
+   * If you do not load either of these fonts, ChordSymbol will fall back to either Times or Arial.
    */
   static async loadWebFonts(): Promise<void> {
-    Font.loadRobotoSlab();
-    Font.loadPetalumaScript();
+    Font.loadWebFontRobotoSlab();
+    Font.loadWebFontPetalumaScript();
   }
 
-  static get(fontName: string): Font {
+  /**
+   * @param fontName
+   * @param data optionally set the Font object's `.data` property.
+   *   This is usually done when setting up a font for the first time.
+   * @param metrics optionally set the Font object's `.metrics` property.
+   *   This is usually done when setting up a font for the first time.
+   * @returns a Font object with the given `fontName`.
+   *   Reuse an existing Font object if a matching one is found.
+   */
+  static load(fontName: string, data?: FontData, metrics?: FontMetrics): Font {
     let font = Fonts[fontName];
     if (!font) {
       font = new Font(fontName);
       Fonts[fontName] = font;
+    }
+    if (data) {
+      font.setData(data);
+    }
+    if (metrics) {
+      font.setMetrics(metrics);
     }
     return font;
   }
@@ -239,11 +301,13 @@ export class Font {
 
   protected name: string;
 
-  data?: FontData;
-  metrics?: FontMetrics;
+  protected data?: FontData;
+  protected metrics?: FontMetrics;
 
-  // Do not call this constructor directly.
-  // Use Font.get(fontName) to get a Font object.
+  /**
+   * Use `Font.load(fontName)` to get a Font object.
+   * Do not call this constructor directly.
+   */
   private constructor(fontName: string) {
     this.name = fontName;
   }
@@ -256,13 +320,29 @@ export class Font {
     return this.getData().resolution;
   }
 
-  // eslint-disable-next-line
+  getData(): FontData {
+    return defined(this.data, 'FontError', 'Missing font data');
+  }
+
   getMetrics(): FontMetrics {
     return defined(this.metrics, 'FontError', 'Missing metrics');
   }
 
-  getData(): FontData {
-    return defined(this.data, 'FontError', 'Missing font data');
+  setData(data: FontData): void {
+    this.data = data;
+  }
+
+  setMetrics(metrics: FontMetrics): void {
+    this.metrics = metrics;
+  }
+
+  setDataAndMetrics(obj: { data: FontData; metrics: FontMetrics }): void {
+    this.data = obj.data;
+    this.metrics = obj.metrics;
+  }
+
+  hasData(): boolean {
+    return this.data !== undefined;
   }
 
   getGlyphs(): Record<string, FontGlyph> {

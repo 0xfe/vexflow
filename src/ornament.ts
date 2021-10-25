@@ -155,7 +155,7 @@ export class Ornament extends Modifier {
    */
   // eslint-disable-next-line
   getMetrics(): any {
-    return Flow.getMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
+    return Tables.currentMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
   /**

@@ -297,7 +297,7 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
-    const padding = Flow.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+    const padding = Tables.currentMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
     let y = (
       {

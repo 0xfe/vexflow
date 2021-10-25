@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
   </head>
-
   <body>
     <div style="text-align: center">
       <div id="qunit"></div>
@@ -47,7 +46,7 @@
 
       let vexURL;
       let testsURL;
-      let isCurrentBuild = false;
+      let isAtLeastVersion4 = true;
 
       // `ver` can also specify a version hosted on unpkg.com:
       //   ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
@@ -56,10 +55,16 @@
         let version = param_ver.split('@')[1];
         vexURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-debug.js`;
         testsURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-tests.js`;
+        if (parseFloat(version) < 4) {
+          isAtLeastVersion4 = false;
+        }
       } else {
         let path = param_ver || 'build';
-        if (path === 'build') {
-          isCurrentBuild = true;
+
+        // TODO / RONYEH: For now, we assume the 'releases' folder is version 3.0.9.
+        // Before we ship 4.0, we'll need to update this to reflect any changes to the releases/ folder.
+        if (path === 'releases') {
+          isAtLeastVersion4 = false;
         }
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
@@ -72,7 +77,7 @@
       srcLink.innerText = 'VexFlow Source' + info;
 
       let loadVexFlow;
-      if (isCurrentBuild) {
+      if (isAtLeastVersion4) {
         // When loading version >= 4.0.0, only load vexflow-tests.js
         loadVexFlow = () => loadScript(testsURL);
       } else {

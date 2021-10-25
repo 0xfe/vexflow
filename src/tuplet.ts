@@ -45,12 +45,12 @@
  */
 
 import { Element } from './element';
-import { Flow } from './flow';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
 import { Note } from './note';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
 import { defined, RuntimeError } from './util';
 
 export interface TupletOptions {
@@ -121,7 +121,7 @@ export class Tuplet extends Element {
 
     this.ratioed =
       this.options.ratioed != undefined ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
-    this.point = Flow.getMusicFont().lookupMetric('digits.tupletPoint');
+    this.point = Tables.currentMusicFont().lookupMetric('digits.tupletPoint');
     this.y_pos = 16;
     this.x_pos = 100;
     this.width = 200;
@@ -353,7 +353,7 @@ export class Tuplet extends Element {
     }
 
     // draw numerator glyphs
-    const shiftY = Flow.getMusicFont().lookupMetric('digits.shiftY', 0);
+    const shiftY = Tables.currentMusicFont().lookupMetric('digits.shiftY', 0);
 
     let x_offset = 0;
     this.numerator_glyphs.forEach((glyph) => {

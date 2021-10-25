@@ -1,6 +1,4 @@
 export const RobotoSlabFont = {
-  name: 'Roboto Slab',
-  smufl: false,
   spacing: 50,
   glyphs: {
     ' ': {

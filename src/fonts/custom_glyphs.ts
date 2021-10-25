@@ -1,6 +1,6 @@
 export const CustomFont = {
   resolution: 1000,
-  familyName: 'VexflowCustom',
+  fontFamily: 'VexflowCustom',
   glyphs: {
     noteheadSquareWhite: {
       x_min: 0,

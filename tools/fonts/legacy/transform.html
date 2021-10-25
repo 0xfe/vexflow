@@ -54,7 +54,7 @@
     <script src="gonville_all.ts"></script>
     <script src="microtonal.ts"></script>
     <script>
-      function combineFonts({ familyName, fonts, validCodes }) {
+      function combineFonts({ fontFamily, fonts, validCodes }) {
         // Merge glyphs from each font together
         const glyphCodeToData = fonts.reduce(
           (glyphCodeToData, font) => Object.assign(glyphCodeToData, font.glyphs),
@@ -70,8 +70,8 @@
         }
         */
 
-        // Return a new font with combined glyph set and new familyName.
-        var newFont = Object.assign({}, GonvilleAll, { glyphs: glyphCodeToData, familyName });
+        // Return a new font with combined glyph set and new fontFamily name.
+        var newFont = Object.assign({}, GonvilleAll, { glyphs: glyphCodeToData, fontFamily });
         delete newFont.original_font_information;
         return newFont;
       }
@@ -309,12 +309,12 @@
       ];
 
       const combinedFont = combineFonts({
-        familyName: 'VexFlowFont',
+        fontFamily: 'VexFlowFont',
         fonts: [GonvilleAll, Microtonal],
         validCodes: validGlyphCodes,
       });
 
-      const font = Vex.Flow.Font.get('VexFlowFont');
+      const font = Vex.Flow.Font.load('VexFlowFont');
       font.data = combinedFont;
       Vex.Flow.setMusicFont('VexFlowFont');
       drawGlyphs(font);

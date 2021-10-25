@@ -44,7 +44,7 @@ const Microtonal = {
   boundingBox: { yMin: -2065.375, xMin: -695.53125, yMax: 1901.578125, xMax: 1159.671875 },
   resolution: 1000,
   descender: -2066,
-  familyName: 'Gonville-18',
+  fontFamily: 'Gonville-18',
   lineHeight: 4093,
   underlineThickness: 50,
 };

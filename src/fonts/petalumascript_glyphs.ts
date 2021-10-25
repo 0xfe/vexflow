@@ -1,6 +1,4 @@
 export const PetalumaScriptFont = {
-  name: 'PetalumaScript',
-  smufl: false,
   spacing: 50,
   glyphs: {
     ' ': {

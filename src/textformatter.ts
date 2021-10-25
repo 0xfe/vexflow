@@ -2,15 +2,14 @@
 //
 
 import { Font, FontGlyph, FontInfo } from './font';
-import { log, RuntimeError } from './util';
+import { log } from './util';
 
 export interface TextFormatterInfo extends Record<string, unknown> {
-  name?: string;
   family: string;
   resolution?: number;
   glyphs?: Record<string, FontGlyph>;
   serifs: boolean;
-  monospaced?: boolean;
+  monospaced: boolean;
   italic: boolean;
   bold: boolean;
   maxSizeGlyph?: string;
@@ -32,13 +31,13 @@ function L(...args: any[]) {
  *   `${family}-${size}-${weight}-${style}`
  * The second level key is the specific text to be measured.
  *
- * The stored value is the measured width in pixels.
- *   textWidth == textWidthCache[widthCacheKey][textToMeasure]
+ * The stored value is the measured width in `em` units.
+ *   textWidth == textWidthCache[cacheKey][textToMeasure]
  */
-const textWidthCache: Record<string, Record<string, number>> = {};
+const textWidthCache: Record<string, Record<string, number | undefined> | undefined> = {};
 
 /**
- * Applications may register additional fonts via TextFormatter.registerFont().
+ * Applications may register additional fonts via `TextFormatter.registerInfo(info)`.
  * The metrics for those fonts will be made available to the application.
  */
 const registry: Record<string, TextFormatterInfo> = {};
@@ -52,61 +51,43 @@ export class TextFormatter {
   }
 
   /**
-   * Web fonts are generally distributed per weight / style (bold, italic).
-   * Return all available families with the attributes that are available for each font.
-   * We assume descriptions are the same for different weights / styles.
+   * Return all registered font families.
    */
   static getFontFamilies(): TextFormatterInfo[] {
-    const retrievedFonts: Record<string, TextFormatterInfo> = {};
-
-    for (const fontName in registry) {
-      const fontInfo = registry[fontName];
-
-      // It is possible for font files to have a different `fontName` (e.g., MyFont-Medium, MyFont-Black),
-      // while sharing the same `family` field. TODO: Verify this comment!
-      const family = fontInfo.family;
-      if (!retrievedFonts[family]) {
-        retrievedFonts[family] = {
-          family: family,
-          description: fontInfo.description,
-          bold: fontInfo.bold,
-          italic: fontInfo.italic,
-          monospaced: fontInfo.monospaced,
-          serifs: fontInfo.serifs,
-          // TODO: Do we need to extract more fields???
-        };
-      } else {
-        // If the family matches one that we have already processed, we just
-        // set the boolean flags for bold / italic / monospaced / serifs.
-        ['bold', 'italic', 'monospaced', 'serifs'].forEach((attr) => {
-          if (fontInfo[attr]) {
-            retrievedFonts[family][attr] = true;
-          }
-        });
-      }
+    const registeredFonts: TextFormatterInfo[] = [];
+    for (const fontFamily in registry) {
+      const formatterInfo = registry[fontFamily];
+      registeredFonts.push({ ...formatterInfo });
     }
-    return Object.values(retrievedFonts);
+    return registeredFonts;
   }
 
   /**
-   * Find the font from the registry that most closely matches the requested font.
+   * Call `TextFormatter.registerInfo(info)` to register font information before using this method.
+   *
+   * This method creates a formatter for the font that most closely matches the requested font.
    * We compare font family, bold, and italic attributes.
-   * This method will always return a fallback font if there are no matches.
+   * This method will return a fallback formatter if there are no matches.
    */
   static create(requestedFont: FontInfo = {}): TextFormatter {
     if (!requestedFont.family) {
       requestedFont.family = Font.SANS_SERIF;
     }
 
+    // TODO: One potential (small) optimization is to cache the TextFormatter object
+    // returned for each font info. We would probably want to clear the cache if
+    // the registry is ever updated.
+
     const candidates: TextFormatterInfo[] = [];
-    // The incoming font family is a string of comma-separated font family names
+    // The incoming font family is a string of comma-separated font family names.
     // (e.g., `PetalumaScript, Arial, sans-serif`).
     const requestedFamilies = requestedFont.family.split(/\s*,\s*/);
     for (const requestedFamily of requestedFamilies) {
-      for (const fontName in registry) {
-        const font = registry[fontName];
-        if (font.family === requestedFamily) {
-          candidates.push(font);
+      for (const fontFamily in registry) {
+        // Support cases where the registry contains 'Roboto Slab Medium',
+        // but the requestedFont.family is 'Roboto Slab'.
+        if (fontFamily.startsWith(requestedFamily)) {
+          candidates.push(registry[fontFamily]);
         }
       }
       if (candidates.length > 0) {
@@ -114,52 +95,62 @@ export class TextFormatter {
       }
     }
 
-    let selectedFont;
+    let formatter;
     if (candidates.length === 0) {
-      // No match, so return a fallback font.
-      selectedFont = new TextFormatter(Object.values(registry)[0]);
+      // No match, so return a fallback text formatter.
+      formatter = new TextFormatter(Object.values(registry)[0]);
     } else if (candidates.length === 1) {
-      selectedFont = new TextFormatter(candidates[0]);
+      formatter = new TextFormatter(candidates[0]);
     } else {
       const bold = Font.isBold(requestedFont.weight);
       const italic = Font.isItalic(requestedFont.style);
       const perfectMatch = candidates.find((f) => f.bold === bold && f.italic === italic);
       if (perfectMatch) {
-        selectedFont = new TextFormatter(perfectMatch);
+        formatter = new TextFormatter(perfectMatch);
       } else {
         const partialMatch = candidates.find((f) => f.italic === italic || f.bold === bold);
         if (partialMatch) {
-          selectedFont = new TextFormatter(partialMatch);
+          formatter = new TextFormatter(partialMatch);
         } else {
-          selectedFont = new TextFormatter(candidates[0]);
+          formatter = new TextFormatter(candidates[0]);
         }
       }
     }
 
-    // TODO: Handle when font size is a string like '16px'???
-    if (typeof requestedFont.size === 'number' && requestedFont.size > 0) {
-      selectedFont.setFontSize(requestedFont.size);
+    const fontSize = requestedFont.size;
+    if (typeof fontSize === 'number' && fontSize > 0) {
+      // We assume the unit is `pt`.
+      formatter.setFontSize(fontSize);
+    } else if (typeof fontSize === 'string') {
+      // e.g., `12pt`, `1em`, `16px`
+      const fontSizeInPx = Font.convertToPixels(fontSize);
+      const fontSizeInPt = fontSizeInPx / Font.convertToPxFrom.pt;
+      formatter.setFontSize(fontSizeInPt);
     }
-    return selectedFont;
+    return formatter;
   }
 
-  static getFontInfoByName(fontName: string): TextFormatterInfo | undefined {
-    return registry[fontName];
+  /**
+   * @param fontFamily used as a key to the font registry.
+   * @returns the same info object that was passed in via `TextFormatter.registerInfo(info)`
+   */
+  static getInfo(fontFamily: string): TextFormatterInfo | undefined {
+    return registry[fontFamily];
   }
 
   /**
    * Apps may register their own fonts and metrics, and those metrics
    * will be available to the app for formatting.
    *
-   * Metrics can be generated from any font file using fontgen_text.js in the tools/fonts directory.
+   * Metrics can be generated from a font file using fontgen_text.js in the tools/fonts directory.
    * @param info
    * @param overwrite
    */
-  static registerFont(info: TextFormatterInfo, overwrite: boolean = false): void {
-    const fontName = info.name ?? '';
-    const currFontInfo = registry[fontName];
-    if (typeof currFontInfo === 'undefined' || overwrite) {
-      registry[fontName] = info;
+  static registerInfo(info: TextFormatterInfo, overwrite: boolean = false): void {
+    const fontFamily = info.family;
+    const currFontInfo = registry[fontFamily];
+    if (currFontInfo === undefined || overwrite) {
+      registry[fontFamily] = info;
     }
   }
 
@@ -169,18 +160,26 @@ export class TextFormatter {
   /** Specified in pt units. */
   protected size: number = 14;
 
-  /**  */
-  protected weight: string = 'normal';
-
-  /**  */
-  protected style: string = 'normal';
-
   /** Font metrics are extracted at 1000 upem (units per em). */
   protected resolution: number = 1000;
 
-  protected name?: string;
-  protected description?: string;
+  /**
+   * For text formatting, we do not require glyph outlines, but instead rely on glyph
+   * bounding box metrics such as:
+   * ```
+   * {
+   *    x_min: 48,
+   *    x_max: 235,
+   *    y_min: -17,
+   *    y_max: 734,
+   *    ha: 751,
+   *    leftSideBearing: 48,
+   *    advanceWidth: 286,
+   *  }
+   * ```
+   */
   protected glyphs: Record<string, FontGlyph> = {};
+  protected description?: string;
   protected serifs: boolean = false;
   protected monospaced: boolean = false;
   protected italic: boolean = false;
@@ -189,28 +188,18 @@ export class TextFormatter {
   protected subscriptOffset: number = 0;
   protected maxSizeGlyph: string = 'H';
 
-  protected widthCacheKey: string = '';
+  // This is an internal key used to index the `textWidthCache`.
+  protected cacheKey: string = '';
 
-  /** The preferred method for returning an instance of this class is via `TextFormatter.create()` */
-  constructor(params: TextFormatterInfo) {
-    if (!params.name) {
-      throw new RuntimeError('BadArgument', 'Font must specify a name.');
-    }
-
-    if (params.glyphs && params.resolution) {
-      TextFormatter.registerFont(params /*, overwrite = false */);
-    }
-
-    const fontInfo = params.glyphs ? params : TextFormatter.getFontInfoByName(params.name);
-    if (fontInfo) {
-      this.updateParams(fontInfo);
-    }
-
-    this.updateWidthCacheKey();
+  /**
+   * Use `TextFormatter.create(...)` to build an instance from information previously
+   * registered via `TextFormatter.registerInfo(info)`.
+   */
+  private constructor(formatterInfo: TextFormatterInfo) {
+    this.updateParams(formatterInfo);
   }
 
   updateParams(params: TextFormatterInfo): void {
-    if (params.name) this.name = params.name;
     if (params.family) this.family = params.family;
     if (params.resolution) this.resolution = params.resolution;
     if (params.glyphs) this.glyphs = params.glyphs;
@@ -221,68 +210,92 @@ export class TextFormatter {
     if (params.maxSizeGlyph) this.maxSizeGlyph = params.maxSizeGlyph;
     if (params.superscriptOffset) this.superscriptOffset = params.superscriptOffset;
     if (params.subscriptOffset) this.subscriptOffset = params.subscriptOffset;
+    this.updateCacheKey();
   }
 
   /** Create a hash with the current font data, so we can cache computed widths. */
-  updateWidthCacheKey(): void {
-    this.widthCacheKey = `${this.family}-${this.size}-${this.weight}-${this.style}`;
+  updateCacheKey(): void {
+    const family = this.family.replace(/\s+/g, '_');
+    const weight = this.bold ? 'bold' : 'normal';
+    const style = this.italic ? 'italic' : 'normal';
+    this.cacheKey = `${family}-${this.size}-${weight}-${style}`;
   }
 
-  getMetricForCharacter(c: string): FontGlyph {
-    if (this.glyphs[c]) {
-      return this.glyphs[c];
+  /**
+   * The glyphs table is indexed by the character (e.g., 'C', '@').
+   * See: robotoslab_glyphs.ts & petalumascript_glyphs.ts.
+   */
+  getGlyphMetrics(character: string): FontGlyph {
+    if (this.glyphs[character]) {
+      return this.glyphs[character];
     } else {
       return this.glyphs[this.maxSizeGlyph];
     }
   }
 
   get maxHeight(): number {
-    const glyph = this.getMetricForCharacter(this.maxSizeGlyph);
-    return (glyph.ha / this.resolution) * this.fontSizeInPx;
-  }
-
-  getWidthForCharacterInPx(c: string): number {
-    const metric = this.getMetricForCharacter(c);
-    if (!metric) {
-      return 0.65 * this.fontSizeInPx;
-    }
-    const advanceWidth = metric.advanceWidth ?? 0;
-    return (advanceWidth / this.resolution) * this.fontSizeInPx;
+    const metrics = this.getGlyphMetrics(this.maxSizeGlyph);
+    return (metrics.ha / this.resolution) * this.fontSizeInPx;
   }
 
   /**
-   * The character's advanceWidth as a fraction of an `em` unit.
-   * A 250 advanceWidth in a 1000 unitsPerEm font returns 0.25.
+   * Retrieve the character's advanceWidth as a fraction of an `em` unit.
+   * For the space character ' ' as defined in the:
+   *   petalumascript_glyphs.ts: 250 advanceWidth in the 1000 unitsPerEm font returns 0.25.
+   *   robotoslab_glyphs.ts:     509 advanceWidth in the 2048 unitsPerEm font returns 0.2485.
    */
   getWidthForCharacterInEm(c: string): number {
-    const advanceWidth = this.getMetricForCharacter(c).advanceWidth ?? 0;
-    return advanceWidth / this.resolution;
+    const metrics = this.getGlyphMetrics(c);
+    if (!metrics) {
+      // An arbitrary number, close to the `em` width of the '#' and '5' characters in PetalumaScript.
+      return 0.65;
+    } else {
+      const advanceWidth = metrics.advanceWidth ?? 0;
+      return advanceWidth / this.resolution;
+    }
   }
 
-  getWidthForText(s: string): number {
-    const key = this.widthCacheKey;
-    if (!textWidthCache[key]) {
-      textWidthCache[key] = {};
+  /**
+   * Retrieve the total width of `text` in `em` units.
+   */
+  getWidthForTextInEm(text: string): number {
+    const key = this.cacheKey;
+    // Get the cache for this specific font family, size, weight, style combination.
+    // The cache contains previously computed widths for different `text` strings.
+    let cachedWidths = textWidthCache[key];
+    if (cachedWidths === undefined) {
+      cachedWidths = {};
+      textWidthCache[key] = cachedWidths;
     }
-    if (!textWidthCache[key][s]) {
-      let width = 0;
-      for (let i = 0; i < s.length; ++i) {
-        width += this.getWidthForCharacterInPx(s[i]);
+
+    let width = cachedWidths[text];
+    if (width === undefined) {
+      width = 0;
+      for (let i = 0; i < text.length; ++i) {
+        width += this.getWidthForCharacterInEm(text[i]);
       }
-      textWidthCache[key][s] = width;
+      cachedWidths[text] = width;
     }
-    return textWidthCache[key][s];
+    return width;
   }
 
-  // The font size is specified in points. Convert to pixels.
+  /** The width of the text (in `em`) is scaled by the font size (in `px`). */
+  getWidthForTextInPx(text: string): number {
+    return this.getWidthForTextInEm(text) * this.fontSizeInPx;
+  }
+
+  /** `this.size` is specified in points. Convert to pixels. */
   get fontSizeInPx(): number {
-    return (this.size * 4) / 3;
+    return this.size * Font.convertToPxFrom.pt;
   }
 
+  /**
+   * @param size in pt.
+   */
   setFontSize(size: number): this {
     this.size = size;
     // The width cache key depends on the current font size.
-    this.updateWidthCacheKey();
+    this.updateCacheKey();
     return this;
   }
 
