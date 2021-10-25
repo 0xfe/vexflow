@@ -202,7 +202,6 @@ export class MultiMeasureRest extends Element {
       },
     };
 
-
     /* 10: normal spacingBetweenLines */
     const spacing = this.hasSymbolSpacing ? options.symbol_spacing : 10;
 
