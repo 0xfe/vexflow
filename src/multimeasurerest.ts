@@ -202,7 +202,9 @@ export class MultiMeasureRest extends Element {
       },
     };
 
-    const spacing = this.hasSymbolSpacing ? options.symbol_spacing : rest_width * 1.35;
+
+    /* 10: normal spacingBetweenLines */
+    const spacing = this.hasSymbolSpacing ? options.symbol_spacing : 10;
 
     const width = n4 * glyphs[2].width + n2 * glyphs[2].width + n1 * glyphs[1].width + (n4 + n2 + n1 - 1) * spacing;
     let x = left + (right - left) * 0.5 - width * 0.5;
