@@ -13,8 +13,8 @@ export function loadMusicFonts(): void {
   // Populate our font "database" with all our music engraving fonts.
   const bravuraFont = Font.load('Bravura', Bravura.data, Bravura.metrics);
   const gonvilleFont = Font.load('Gonville', Gonville.data, Gonville.metrics);
-  Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
   const customFont = Font.load('Custom', Custom.data, Custom.metrics);
+  Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
 
   // vexflow.js uses the following default font stack:
   Flow.setMusicFontStack([bravuraFont, gonvilleFont, customFont]);

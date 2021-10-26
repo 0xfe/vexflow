@@ -3,7 +3,6 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';

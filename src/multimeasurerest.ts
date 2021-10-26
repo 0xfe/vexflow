@@ -4,7 +4,6 @@
 // This class implements multiple measure rests.
 
 import { Element } from './element';
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
 import { RenderContext } from './rendercontext';

@@ -12,7 +12,6 @@
       const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
       const score = factory.EasyScore();
       const system = factory.System();
-
       system
         .addStave({
           voices: [
@@ -22,7 +21,6 @@
         })
         .addClef('treble')
         .addTimeSignature('4/4');
-
       factory.draw();
     </script>
   </body>

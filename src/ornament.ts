@@ -2,7 +2,6 @@
 // Author: Cyril Silverman
 // MIT License
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';

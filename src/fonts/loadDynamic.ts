@@ -5,17 +5,20 @@
 
 import { Flow } from '../flow';
 import { Font } from '../font';
+import { RuntimeError } from '../util';
 
-export function setupMusicFonts(): void {
-  Flow.setMusicFont = async (...fontNames: string[]) => {
-    // Make sure each individual font is loaded before we proceed to call Flow.setMusicFontStack(...).
+export function loadMusicFonts(): void {
+  // Keep the synchronous function around so we can call it later.
+  const setMusicFontSync = Flow.setMusicFont;
+
+  // Replace Flow.setMusicFont(...fontNames) with this async function.
+  // @ts-ignore override with a function that has a different return type.
+  Flow.setMusicFont = async (...fontNames: string[]): Promise<Font | Font[]> => {
+    // Make sure each individual font is loaded before we proceed.
     for (const fontName of fontNames) {
       const font = Font.load(fontName);
+      // Check if the font data has already been loaded.
       if (font.hasData()) {
-        // This font has been loaded before.
-        console.log('We have already loaded: ' + fontName);
-        console.log(font.getData());
-        // TODO/RONYEH REMOVE!
         continue;
       }
 
@@ -41,12 +44,12 @@ export function setupMusicFonts(): void {
           break;
         }
         default: {
-          console.log('Unknown music font: ' + fontName);
+          throw new RuntimeError('UnknownMusicFont', `Music font ${fontName} does not exist.`);
         }
       }
     }
 
-    // Convert an array of font names into an array of Font objects.
-    Flow.setMusicFontStack(fontNames.map((fontName) => Font.load(fontName)));
+    // The fonts are ready! Now it's time to call the synchronous function.
+    return setMusicFontSync(...fontNames);
   };
 }

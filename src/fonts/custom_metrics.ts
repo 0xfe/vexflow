@@ -1,5 +1,5 @@
 export const CustomMetrics = {
-  name: 'Vexflow-Custom',
+  name: 'VexflowCustom',
   smufl: false,
-  glyphs: {}
+  glyphs: {},
 };

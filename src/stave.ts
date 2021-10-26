@@ -18,7 +18,6 @@ import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
 import { Bounds } from './types/common';
 import { RuntimeError } from './util';
-import { Flow } from './flow';
 
 export interface StaveLineConfig {
   visible?: boolean;

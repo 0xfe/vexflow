@@ -11,8 +11,8 @@ export function loadTextFonts() {
     Font.load(fontFamily, fontData);
     // H isn't actually the tallest or the widest.
     // Interestingly, the lowercase b is the tallest.
-    const maxSizeGlyph = 'H';
-    // const maxSizeGlyph = 'b'; // TODO/RONYEH: introduces a visual diff.
+    const maxSizeGlyph = 'H'; // Two lines of lyrics touch each other because we don't allow enough vertical space.
+    // const maxSizeGlyph = 'b'; // RONYEH: introduces a visual diff, but the spacing is better.
     TextFormatter.registerInfo({
       family: fontFamily,
       resolution,

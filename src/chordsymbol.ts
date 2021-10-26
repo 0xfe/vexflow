@@ -10,7 +10,6 @@
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -376,7 +375,13 @@ export class ChordSymbol extends Modifier {
   getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
     if (Tables.currentMusicFont().getName() === 'Petaluma') {
-      family = 'PetalumaScript, Arial, sans-serif';
+      // Fixes Issue #1180
+      // https://github.com/0xfe/vexflow/issues/1180
+      // family = 'PetalumaScript, Arial, sans-serif';
+
+      // RONYEH-FONT: A mismatched font family results in loading Roboto Slab's metrics instead.
+      // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
+      family = 'petalumaScript,Arial';
     }
     return {
       family,

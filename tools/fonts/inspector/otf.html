@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!-- 
+  Build VexFlow by running `grunt`.
+  Once `vexflow-debug.js` has been created, open this file locally in your browser.
+  This inspector uses the FontFace API to load OTF files directly.
+  It is possible that some of the glyphs shown here are NOT included with VexFlow.
+  Click a glyph to log some information to the console.
+
+  TODO: Improve support for the Gonville font. Use https://fontdrop.info/ to inspect
+  the Gonville OTF, and then add more unicode codepoint ranges for any missing glyphs.
+-->
+
+<html>
+  <style>
+    body {
+      color: #ccc;
+      background-color: #222;
+      margin: 20px 20px 100px 20px;
+      font: 16px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial,
+        sans-serif;
+    }
+
+    .choose-font {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .choose-font a {
+      color: #8ab4f8;
+      font: 20px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial,
+        sans-serif;
+    }
+
+    .item {
+      color: #111;
+      background-color: #f3f3f3;
+      min-width: 100px;
+      float: left;
+      display: table;
+      margin: 10px;
+      padding: 0px;
+      line-height: 3.2;
+      font-size: 60px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .item:hover {
+      background-color: #d0eeff;
+      color: #000;
+    }
+
+    .clear {
+      clear: both;
+    }
+  </style>
+  <body>
+    <div class="choose-font">
+      <a id="bravura-link" href="#" onclick="setFont('Bravura'); return false;">Bravura</a> &nbsp;
+      <a id="petaluma-link" href="#" onclick="setFont('Petaluma'); return false;">Petaluma</a> &nbsp;
+      <a id="gonville-link" href="#" onclick="setFont('Gonville'); return false;">Gonville</a>
+    </div>
+    <div class="help">Click a glyph to log information to the developer console.</div>
+    <div id="container"></div>
+    <div class="clear">&nbsp;</div>
+    <script type="module">
+      // TODO: Add more unicode ranges for Gonville.
+      const GonvilleCodePoints = [
+        [0x2b, 0x2e], // + , - .
+        [0x30, 0x39], // numbers 0 to 9
+        [0x66],
+        [0x6d, 0x6e],
+        [0x70],
+        [0x72, 0x73],
+        [0x7a], // z
+        [0xe100, 0xe16a], // lots of stuff
+        [0xe16b, 0xe17d], // rests (rests.M3 to rests.0o)
+        [0xe196, 0xe1a4], // flags for notes (flags.d3 to flags.u10)
+      ];
+
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          let script = document.createElement('script');
+          script.onload = resolve;
+          script.onerror = reject;
+          script.src = url;
+          document.getElementsByTagName('head')[0].appendChild(script);
+        });
+      }
+
+      // Each item is an array with:
+      // - glyph name from the SMuFL specification: https://w3c.github.io/smufl/latest/tables/clefs.html
+      // - unicode code point for SMuFL fonts (Bravura and Petaluma).
+      // - unicode code point for Gonville font. This is null if the glyph is not available in the Gonville font.
+
+      // The Fetch API requires a local server like `npx serve`.
+      // const response = await fetch('../config/glyphnames.json');
+      // const glyphNamesSMuFL = await response.json();
+      //
+      // Instead, let's use loadScript(url) to allow this page to work when opened locally in a browser.
+      await loadScript('../config/glyphnames.js'); // assigns global `glyphNamesSMuFL`
+
+      let validGlyphNames = {};
+      {
+        // This is a hack to allow us to import a Node JS module. :-)
+        window.module = {};
+        await loadScript('../config/valid_codes.js'); // assigns window.module.exports
+        // await import('../config/valid_codes.js'); // await import require a local server like `npx serve`
+        validGlyphNames = window.module.exports; // extract the exported object.
+        delete window.module;
+      }
+
+      // Load the three OTF files.
+      const bravuraOTF = '../@/bravura/Bravura_1.392.otf';
+      const bravura = new FontFace('Bravura', `url(${bravuraOTF}) format('opentype')`);
+      await bravura.load();
+      document.fonts.add(bravura);
+      const petalumaOTF = '../@/petaluma/Petaluma_1.065.otf';
+      const petaluma = new FontFace('Petaluma', `url(${petalumaOTF}) format('opentype')`);
+      await petaluma.load();
+      document.fonts.add(petaluma);
+      const gonvilleOTF = '../@/gonville/Gonville-18_20200703.otf';
+      const gonville = new FontFace('Gonville', `url(${gonvilleOTF}) format('opentype')`);
+      await gonville.load();
+      document.fonts.add(gonville);
+
+      let currentFont = '';
+
+      function updateGlyphTable() {
+        const container = document.getElementById('container');
+        // Clear the container.
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+
+        let numGlyphs = 0;
+        if (currentFont === 'Gonville') {
+          function addGonvilleItem(codePoint) {
+            const glyphInfo = {};
+            glyphInfo.glyphName = 'NAME';
+            glyphInfo.codepointValue = codePoint;
+            glyphInfo.description = 'DESCRIPTION';
+
+            const item = document.createElement('div');
+            item.classList.add('item');
+            item.innerText = String.fromCodePoint(codePoint);
+            item.title = glyphInfo.glyphName + '\n' + glyphInfo.description;
+            item.addEventListener('click', () => {
+              console.log(glyphInfo);
+            });
+            item.addEventListener('mouseover', () => {
+              console.log(glyphInfo.glyphName);
+            });
+            container.appendChild(item);
+            numGlyphs++;
+          }
+
+          for (const range of GonvilleCodePoints) {
+            if (range.length === 1) {
+              addGonvilleItem(range[0]);
+            } else {
+              const from = range[0];
+              const to = range[1];
+              for (let currCodePoint = from; currCodePoint <= to; currCodePoint++) {
+                addGonvilleItem(currCodePoint);
+              }
+            }
+          }
+        } else {
+          // Render all SMUFL glyphs.
+          for (const glyphName in validGlyphNames) {
+            const glyphInfo = glyphNamesSMuFL[glyphName];
+            if (!glyphInfo) {
+              // Skip `vexAccidentalMicrotonal1` and other glyph names that do not exist in SMuFL.
+              console.log('Skipping ' + glyphName);
+              continue;
+            }
+
+            const item = document.createElement('div');
+            item.classList.add('item');
+            const codePointHexString = glyphInfo.codepoint.replace('U+', '0x');
+            const codePoint = parseInt(codePointHexString);
+            glyphInfo.codepointValue = codePoint;
+            item.innerText = String.fromCodePoint(codePoint);
+            item.title = glyphName + '\n' + glyphInfo.description;
+            glyphInfo.glyphName = glyphName;
+            item.addEventListener('click', () => {
+              console.log(glyphInfo);
+            });
+            item.addEventListener('mouseover', () => {
+              console.log(glyphName);
+            });
+            container.appendChild(item);
+
+            numGlyphs++;
+          }
+        }
+        console.log('Rendered ' + numGlyphs + ' ' + currentFont + ' glyphs.');
+      }
+
+      window.setFont = (fontName) => {
+        currentFont = fontName;
+        container.style.fontFamily = fontName;
+        document.querySelectorAll('.choose-font a').forEach((anchor) => {
+          anchor.style.fontWeight = 'normal';
+          anchor.style.fontVariant = 'normal';
+        });
+        document.getElementById(`${fontName.toLowerCase()}-link`).style.fontWeight = 'bold';
+        document.getElementById(`${fontName.toLowerCase()}-link`).style.fontVariant = 'small-caps';
+
+        updateGlyphTable();
+      };
+
+      setFont('Bravura');
+    </script>
+  </body>
+</html>
