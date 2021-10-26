@@ -3,7 +3,6 @@
 
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
-import { Flow } from './flow';
 import { Font } from './font';
 import { Fraction } from './fraction';
 import { ModifierContext } from './modifiercontext';

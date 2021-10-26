@@ -4,7 +4,6 @@
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';

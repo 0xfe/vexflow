@@ -14,7 +14,6 @@ import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
 import { Dot } from './dot';
 import { ElementStyle } from './element';
-import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note, NoteStruct } from './note';

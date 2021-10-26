@@ -2,7 +2,7 @@
 // MIT License
 
 import { Element } from './element';
-import { Font, FontInfo } from './font';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';

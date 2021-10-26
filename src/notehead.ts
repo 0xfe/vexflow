@@ -3,7 +3,6 @@
 
 import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
-import { Flow } from './flow';
 import { Glyph, GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';

@@ -82,7 +82,10 @@ export class Font {
     return 'Font';
   }
 
-  /** Customize this field to specify a different CDN for delivering web fonts. */
+  /**
+   * Customize this field to specify a different CDN for delivering web fonts.
+   * https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.3/
+   */
   static FONT_HOST = 'https://unpkg.com/vexflow-fonts@1.0.3/';
 
   /** Default sans-serif font family. */
@@ -355,7 +358,7 @@ export class Font {
    */
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
-    // console.log('lookupMetric:', key);
+    // console.log('lookupMetric: ', key);
 
     const keyParts = key.split('.');
 
@@ -373,7 +376,7 @@ export class Font {
     }
 
     // After checking every part of the key (i.e., the loop completed), return the most recently retrieved value.
-    // console.log('found:', key, currObj);
+    // console.log('found: ', key, currObj);
     return currObj;
   }
 

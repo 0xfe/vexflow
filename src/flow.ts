@@ -164,6 +164,43 @@ export const Flow = {
   VERSION: '',
 
   /**
+   * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.
+   *
+   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
+   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
+   * 'Bravura', 'Gonville', 'Custom'. This method is synchronous.
+   *
+   * Examples:
+   * ```
+   * Vex.Flow.setMusicFont('Petaluma');
+   * Vex.Flow.setMusicFont('Bravura', 'Gonville');
+   * ```
+   *
+   * **CASE 2**: You are using the lighter weight `vexflow-core.js` to take advantage of lazy loading for fonts.
+   * In this case, you MUST call this method at the beginning, since the default music font stack is empty.
+   * This method is replaced by an async function, so you must use `await` or a Promise to wait for the fonts
+   * to load before proceeding. See `demos/fonts/` for examples. See `src/fonts/async.ts` for implementation details.
+   *
+   * Example:
+   * ```
+   * await Vex.Flow.setMusicFont('Petaluma');
+   * ... (do VexFlow stuff) ...
+   * ```
+   * @returns CASE 1: a `Font` or an array of `Font` objects corresponding to the provided `fontNames`.
+   * @returns CASE 2: Promise<Font[]> that resolves to the same array of `Font` objects as above.
+   */
+  setMusicFont: (...fontNames: string[]): Font | Font[] => {
+    // Convert the array of font names into an array of Font objects.
+    const fonts = fontNames.map((fontName) => Font.load(fontName));
+    Flow.setMusicFontStack(fonts);
+    if (fonts.length === 1) {
+      return fonts[0];
+    } else {
+      return fonts;
+    }
+  },
+
+  /**
    * Use Flow.setMusicFont(...fontNames).
    *
    * @param fonts

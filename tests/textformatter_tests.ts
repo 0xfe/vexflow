@@ -4,7 +4,6 @@
 // TextFormatter Tests
 
 import { TextFormatter } from 'textformatter';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextFormatterTests = {
   Start(): void {
