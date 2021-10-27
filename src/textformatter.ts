@@ -123,7 +123,7 @@ export class TextFormatter {
       formatter.setFontSize(fontSize);
     } else if (typeof fontSize === 'string') {
       // e.g., `12pt`, `1em`, `16px`
-      const fontSizeInPx = Font.convertToPixels(fontSize);
+      const fontSizeInPx = Font.toPixels(fontSize);
       const fontSizeInPt = fontSizeInPx / Font.convertToPxFrom.pt;
       formatter.setFontSize(fontSizeInPt);
     }

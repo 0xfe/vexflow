@@ -120,7 +120,7 @@ export class TextNote extends Note {
     this.text = noteStruct.text || '';
     this.superscript = noteStruct.superscript;
     this.subscript = noteStruct.subscript;
-    this.setFont({ ...this.getDefaultFont(), ...noteStruct.font });
+    this.setFont(noteStruct.font);
     this.line = noteStruct.line || 0;
     this.smooth = noteStruct.smooth || false;
     this.ignore_ticks = noteStruct.ignore_ticks || false;
@@ -164,7 +164,7 @@ export class TextNote extends Note {
         // Width already set.
       } else {
         const ctx = this.checkContext();
-        ctx.setFont(this.font);
+        ctx.setFont(this.textFont);
         this.setWidth(ctx.measureText(this.text).width);
       }
     }
@@ -210,14 +210,14 @@ export class TextNote extends Note {
     } else {
       y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
-      ctx.setFont(this.font);
+      ctx.setFont(this.textFont);
       ctx.fillText(this.text, x, y);
 
       const height = ctx.measureText(this.text).height;
 
-      // We called this.setFont() in the constructor, so we know this.font is available.
+      // We called this.setFont(...) in the constructor, so we know this.textFont is available.
       // eslint-disable-next-line
-      const { family, size, weight, style } = this.font!;
+      const { family, size, weight, style } = this.textFont!;
       // Scale the font size by 1/1.3.
       const smallerFontSize = Font.scaleSize(size, 0.769231);
 

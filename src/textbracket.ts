@@ -106,7 +106,7 @@ export class TextBracket extends Element {
 
     this.line = 1;
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     this.render_options = {
       dashed: true,
@@ -190,9 +190,9 @@ export class TextBracket extends Element {
     // Calculate the y position for the super script
     const super_y = start.y - main_height / 2.5;
 
-    // We called this.setFont() in the constructor, so we know this.font is available.
+    // We called this.resetFont() in the constructor, so we know this.textFont is available.
     // eslint-disable-next-line
-    const { family, size, weight, style } = this.font!;
+    const { family, size, weight, style } = this.textFont!;
     // To draw the superscript, we scale the font size by 1/1.4.
     const smallerFontSize = Font.scaleSize(size, 0.714286);
     ctx.setFont(family, smallerFontSize, weight, style);

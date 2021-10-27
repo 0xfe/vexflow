@@ -40,7 +40,7 @@ export class Volta extends StaveModifier {
     this.x = x;
     this.y_shift = y_shift;
     this.number = number;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setShiftY(y: number): this {
@@ -74,7 +74,7 @@ export class Volta extends StaveModifier {
     // If the beginning of a volta, draw measure number
     if (this.volta === VoltaType.BEGIN || this.volta === VoltaType.BEGIN_END) {
       ctx.save();
-      ctx.setFont(this.font);
+      ctx.setFont(this.textFont);
       ctx.fillText(this.number, this.x + x + 5, top_y + 15);
       ctx.restore();
     }

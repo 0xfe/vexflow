@@ -123,7 +123,7 @@ export class PedalMarking extends Element {
     this.custom_depress_text = '';
     this.custom_release_text = '';
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     this.render_options = {
       bracket_height: 10,
@@ -276,7 +276,7 @@ export class PedalMarking extends Element {
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);
     ctx.setFillStyle(this.render_options.color);
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     L('Rendering Pedal Marking');
 

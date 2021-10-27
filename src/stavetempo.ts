@@ -40,7 +40,7 @@ export class StaveTempo extends StaveModifier {
     this.x = x;
     this.shift_x = 10;
     this.shift_y = shift_y;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setTempo(tempo: StaveTempoOptions): this {
@@ -76,14 +76,14 @@ export class StaveTempo extends StaveModifier {
     ctx.save();
 
     if (name) {
-      ctx.setFont(this.font);
+      ctx.setFont(this.textFont);
       ctx.fillText(name, x, y);
       x += ctx.measureText(name).width;
     }
 
     if (duration && bpm) {
       // Override the weight and style.
-      ctx.setFont({ ...this.font, weight: 'normal', style: 'normal' });
+      ctx.setFont({ ...this.textFont, weight: 'normal', style: 'normal' });
 
       if (name) {
         x += ctx.measureText(' ').width;

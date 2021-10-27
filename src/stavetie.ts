@@ -68,7 +68,7 @@ export class StaveTie extends Element {
       tie_spacing: 0,
     };
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setDirection(direction: number): this {
@@ -167,7 +167,7 @@ export class StaveTie extends Element {
     const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
 
     ctx.save();
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
     ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
     ctx.restore();
   }

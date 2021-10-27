@@ -41,15 +41,16 @@ function setFont(): void {
 
   // Not all elements render text. By default the font is `undefined`.
   const voice = new Voice();
-  equal(voice.getFont(), undefined);
+  equal(voice.getFontInfo(), undefined);
   // But we can set the font for fun.
-  voice.setFont('bold 32pt Arial'); // RONYEH OOPS: BUGGY??
-  console.log(voice.font); // RONYEH OOPS: BUGGY??
+  voice.setFont('bold 32pt Arial');
+  const fontInfo = voice.getFontInfo();
+  equal(fontInfo?.size, '32pt');
 }
 
 function fontParsing(): void {
   const b = new Bend('1/2', true);
-  const bFont = b.getFont();
+  const bFont = b.getFontInfo();
   // Check the default font.
   equal(bFont?.family, Font.SANS_SERIF);
   equal(bFont?.size, Font.SIZE);
@@ -58,18 +59,18 @@ function fontParsing(): void {
 
   const f1 = 'Roboto Slab, serif';
   const t = new TextNote({ duration: '4', font: { family: f1 } });
-  equal(f1, t.getFont()?.family);
+  equal(f1, t.getFontInfo()?.family);
 
   const n1 = new StaveNote({ keys: ['e/5'], duration: '4' });
   const n2 = new StaveNote({ keys: ['c/5'], duration: '4' });
   const tb = new TextBracket({ start: n1, stop: n2 });
-  const f2 = tb.getFont();
+  const f2 = tb.getFontInfo();
   equal(f2?.size, 15);
   equal(f2?.style, FontStyle.ITALIC);
 
   // The line-height /3 is currently ignored.
-  const f3 = Font.parseFont(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
-  const sizeInPixels = Font.convertToPixels(f3.size);
+  const f3 = Font.fromCSSString(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
+  const sizeInPixels = Font.toPixels(f3.size);
   equal(sizeInPixels, 24);
 }
 

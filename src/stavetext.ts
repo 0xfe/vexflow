@@ -46,7 +46,7 @@ export class StaveText extends StaveModifier {
       ...options,
     };
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setStaveText(text: string): this {
@@ -75,7 +75,7 @@ export class StaveText extends StaveModifier {
 
     ctx.save();
     ctx.setLineWidth(2);
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
     const text_width = ctx.measureText('' + this.text).width;
 
     let x;

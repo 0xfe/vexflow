@@ -104,7 +104,7 @@ export class Bend extends Modifier {
     this.text = text;
     this.x_shift = 0;
     this.release = release;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
     this.render_options = {
       line_width: 1.5,
       line_style: '#777777',
@@ -223,7 +223,7 @@ export class Bend extends Modifier {
 
     const renderText = (x: number, text: string) => {
       ctx.save();
-      ctx.setFont(this.font);
+      ctx.setFont(this.textFont);
       const render_x = x - ctx.measureText(text).width / 2;
       ctx.fillText(text, render_x, annotation_y);
       ctx.restore();

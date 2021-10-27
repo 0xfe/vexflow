@@ -116,7 +116,7 @@ export class Stave extends Element {
     this.measure = 0;
     this.clef = 'treble';
     this.endClef = undefined;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     this.options = {
       spacing: 2,
@@ -768,10 +768,10 @@ export class Stave extends Element {
     // Render measure numbers
     if (this.measure > 0) {
       ctx.save();
-      ctx.setFont(this.font);
-      const text_width = ctx.measureText('' + this.measure).width;
+      ctx.setFont(this.textFont);
+      const textWidth = ctx.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;
-      ctx.fillText('' + this.measure, this.x - text_width / 2, y);
+      ctx.fillText('' + this.measure, this.x - textWidth / 2, y);
       ctx.restore();
     }
     ctx.closeGroup();

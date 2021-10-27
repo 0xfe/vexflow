@@ -106,7 +106,7 @@ export class StaveConnector extends Element {
     this.top_stave = top_stave;
     this.bottom_stave = bottom_stave;
     this.type = StaveConnector.type.DOUBLE;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     // 1. Offset Bold Double Left to align with offset Repeat Begin bars
     // 2. Offset BRACE type not to overlap with another StaveConnector
@@ -260,7 +260,7 @@ export class StaveConnector extends Element {
 
     ctx.save();
     ctx.setLineWidth(2);
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     // Add stave connector text
     for (let i = 0; i < this.texts.length; i++) {

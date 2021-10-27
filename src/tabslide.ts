@@ -81,7 +81,7 @@ export class TabSlide extends TabTie {
     this.render_options.cp2 = 14;
     this.render_options.y_shift = 0.5;
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   renderTie(params: {
