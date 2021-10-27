@@ -7,6 +7,12 @@ Please help test this beta release and [report issues on GitHub](https://github.
 - Migrate VexFlow to **TypeScript** with a ES6 target.
 - Improve handling of music fonts and text fonts.
 - Optional lazy loading of music fonts.
+- `setFont(...)` method can be called in these ways:
+  - `setFont(family, size, weight, style)`
+  - `setFont(cssShorthand)`
+    - e.g., `setFont('bold 10pt Arial')`
+  - `setFont(fontInfoObject)`
+    - e.g., `setFont({ family: 'Times', size: 12 })`
 
 ## Breaking
 
@@ -23,8 +29,10 @@ Please help test this beta release and [report issues on GitHub](https://github.
   - `ChordSymbol.metrics` was previously named `ChordSymbol.chordSymbolMetrics`.
 - `StaveNote.LEDGER_LINE_OFFSET` was previously named `StaveNote.DEFAULT_LEDGER_LINE_OFFSET`.
 - **Fonts**
+
   - `TextFontMetrics` has been merged into `FontGlyph` due to substantial overlap.
   - `Flow.NOTATION_FONT_SCALE` was previously named `Flow.DEFAULT_NOTATION_FONT_SCALE`.
+  - `setFont(...)` in `CanvasContext` and `SVGContext` previously took arguments: `family`, `size`, `weight`. The `weight` argument allowed strings like `'italic bold'`. This no longer works, and `'italic'` must now be passed into the `style` argument.
 
 # 3.0.9 / 2020-04-21
 

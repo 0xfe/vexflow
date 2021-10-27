@@ -253,34 +253,23 @@ export class CanvasContext extends RenderContext {
     return this.context2D.strokeStyle;
   }
 
-  setFont(family: string, size: number, weight?: string): this {
-    this.context2D.font = (weight || '') + ' ' + size + 'pt ' + family;
-    this.textHeight = (size * 4) / 3;
+  /**
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   */
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    const fontInfo = Font.validate(f, size, weight, style);
+    this.context2D.font = Font.toCSSString(fontInfo);
+    this.textHeight = Font.toPixels(fontInfo.size);
     return this;
   }
 
   /** Return a string of the form `'italic bold 15pt Arial'` */
   getFont(): string {
-    return this.context2D.font;
-  }
-
-  setRawFont(font: string): this {
-    this.context2D.font = font;
-
-    const fontArray = font.split(' ');
-    const size = Number(fontArray[0].match(/\d+/));
-    // The font size is specified in points, scale it to canvas units.
-    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    this.textHeight = (size * 4) / 3;
-
-    return this;
-  }
-
-  set font(value: string) {
-    this.setRawFont(value);
-  }
-
-  get font(): string {
     return this.context2D.font;
   }
 }

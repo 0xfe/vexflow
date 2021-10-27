@@ -14,8 +14,6 @@ export interface GroupAttributes {
 
 export abstract class RenderContext {
   abstract clear(): void;
-  abstract setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this;
-  abstract setRawFont(font: string): this;
   abstract setFillStyle(style: string): this;
   abstract setBackgroundFillStyle(style: string): this;
   abstract setStrokeStyle(style: string): this;
@@ -55,10 +53,29 @@ export abstract class RenderContext {
   // eslint-disable-next-line
   abstract add(child: any): void;
   abstract measureText(text: string): TextMeasure;
-  abstract set font(value: string);
-  abstract get font(): string;
+
   abstract set fillStyle(style: string | CanvasGradient | CanvasPattern);
   abstract get fillStyle(): string | CanvasGradient | CanvasPattern;
+
   abstract set strokeStyle(style: string | CanvasGradient | CanvasPattern);
   abstract get strokeStyle(): string | CanvasGradient | CanvasPattern;
+
+  abstract setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this;
+  abstract getFont(): string;
+
+  set font(f: string) {
+    this.setFont(f);
+  }
+  get font(): string {
+    return this.getFont();
+  }
+
+  /**
+   * This is kept for backwards compatibility with 3.0.9.
+   * @deprecated use `setFont(...)` instead since it now supports CSS font shorthand.
+   */
+  setRawFont(f: string): this {
+    this.setFont(f);
+    return this;
+  }
 }

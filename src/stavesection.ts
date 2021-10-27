@@ -29,7 +29,7 @@ export class StaveSection extends StaveModifier {
     this.x = x;
     this.shift_x = 0;
     this.shift_y = shift_y;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setStaveSection(section: string): this {
@@ -53,10 +53,10 @@ export class StaveSection extends StaveModifier {
 
     ctx.save();
     ctx.setLineWidth(2);
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
-    const text_width = ctx.measureText('' + this.section).width;
-    let width = text_width + 6; // add left & right padding
+    const textWidth = ctx.measureText('' + this.section).width;
+    let width = textWidth + 6; // add left & right padding
     if (width < 18) width = 18;
     const height = 20;
     //  Seems to be a good default y
@@ -66,7 +66,7 @@ export class StaveSection extends StaveModifier {
     ctx.setLineWidth(2);
     ctx.rect(x, y, width, height);
     ctx.stroke();
-    x += (width - text_width) / 2;
+    x += (width - textWidth) / 2;
     ctx.fillText('' + this.section, x, y + 16);
     ctx.restore();
     return this;

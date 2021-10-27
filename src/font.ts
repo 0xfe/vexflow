@@ -116,7 +116,7 @@ export class Font {
    * units (e.g., pt, em, %).
    * @returns the number of pixels that is equivalent to `fontSize`
    */
-  static convertToPixels(fontSize: string | number = Font.SIZE): number {
+  static toPixels(fontSize: string | number = Font.SIZE): number {
     if (typeof fontSize === 'number') {
       // Assume the fontSize is specified in pt.
       return fontSize * Font.convertToPxFrom.pt;
@@ -132,51 +132,110 @@ export class Font {
   }
 
   /**
-   * @param fontShorthand a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   * @param f
+   * @param size
+   * @param weight
+   * @param style
+   * @returns the `size` field will include the units (e.g., '12pt', '16px').
    */
-  static parseFont(fontShorthand: string): FontInfo {
+  static validate(
+    f?: string | FontInfo,
+    size?: string | number,
+    weight?: string | number,
+    style?: string
+  ): Required<FontInfo> {
+    // If f is a string but all other arguments are undefined, we assume that
+    // f is CSS font shorthand (e.g., 'italic bold 10pt Arial').
+    if (typeof f === 'string' && size === undefined && weight === undefined && style === undefined) {
+      return Font.fromCSSString(f);
+    }
+
+    let family: string | undefined;
+    if (typeof f === 'object') {
+      // f is a FontInfo object, so we extract its fields.
+      family = f.family;
+      size = f.size;
+      weight = f.weight;
+      style = f.style;
+    } else {
+      // f is a string representing the font family name or undefined.
+      family = f;
+    }
+
+    family = family ?? Font.SANS_SERIF;
+    size = size ?? Font.SIZE + 'pt';
+    weight = weight ?? FontWeight.NORMAL;
+    style = style ?? FontStyle.NORMAL;
+
+    // If size is a number, we assume the unit is `pt`.
+    if (typeof size === 'number') {
+      size = `${size}pt`;
+    }
+
+    // If weight is a number (e.g., 900), turn it into a string representation of that number.
+    if (typeof weight === 'number') {
+      weight = weight.toString();
+    }
+
+    // At this point, `family`, `size`, `weight`, and `style` are all strings.
+    return { family, size, weight, style };
+  }
+
+  /**
+   * @param cssFontShorthand a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   */
+  static fromCSSString(cssFontShorthand: string): Required<FontInfo> {
+    // Let the browser parse this string for us.
+    // First, create a span element.
+    // Then, set its style.font and extract it back out.
     if (!fontParser) {
       fontParser = document.createElement('span');
     }
-    fontParser.style.font = fontShorthand;
+    fontParser.style.font = cssFontShorthand;
     const { fontFamily, fontSize, fontWeight, fontStyle } = fontParser.style;
     return { family: fontFamily, size: fontSize, weight: fontWeight, style: fontStyle };
   }
 
   /**
-   * @returns a string of the form `italic bold 16pt Arial`
+   * @returns a CSS font shorthand string of the form `italic bold 16pt Arial`.
    */
   static toCSSString(fontInfo?: FontInfo): string {
     if (!fontInfo) {
       return '';
     }
-    let styleSection;
-    const style = fontInfo.style;
-    if (style === FontStyle.NORMAL || style === '' || style === undefined) {
-      styleSection = '';
+
+    let style: string;
+    const st = fontInfo.style;
+    if (st === FontStyle.NORMAL || st === '' || st === undefined) {
+      style = ''; // no space! Omit the style section.
     } else {
-      styleSection = fontInfo.style + ' ';
+      style = st.trim() + ' ';
     }
 
-    let weightSection;
-    const weight = fontInfo.weight;
-    if (weight === FontWeight.NORMAL || weight === '' || weight === undefined) {
-      weightSection = '';
+    let weight: string;
+    const wt = fontInfo.weight;
+    if (wt === FontWeight.NORMAL || wt === '' || wt === undefined) {
+      weight = ''; // no space! Omit the weight section.
+    } else if (typeof wt === 'number') {
+      weight = wt + ' ';
     } else {
-      weightSection = fontInfo.weight + ' ';
+      weight = wt.trim() + ' ';
     }
 
-    let sizeSection: string;
-    const size = fontInfo.size;
-    if (typeof size === 'number') {
-      sizeSection = size + 'pt';
-    } else if (size === undefined) {
-      sizeSection = Font.SIZE + 'pt';
+    let size: string;
+    const sz = fontInfo.size;
+    if (sz === undefined) {
+      size = Font.SIZE + 'pt ';
+    } else if (typeof sz === 'number') {
+      size = sz + 'pt ';
     } else {
-      sizeSection = size;
+      // size is already a string.
+      size = sz.trim() + ' ';
     }
 
-    return `${styleSection}${weightSection}${sizeSection} ${fontInfo.family}`;
+    const family: string = fontInfo.family ?? Font.SANS_SERIF;
+
+    return `${style}${weight}${size}${family}`;
   }
 
   /**

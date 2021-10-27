@@ -128,7 +128,7 @@ export class FretHandFinger extends Modifier {
     this.y_shift = 0;
     this.x_offset = 0; // Horizontal offset from default
     this.y_offset = 0; // Vertical offset from default
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setFretHandFinger(finger: string): this {
@@ -179,7 +179,7 @@ export class FretHandFinger extends Modifier {
     }
 
     ctx.save();
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
     ctx.fillText('' + this.finger, dot_x, dot_y);
     ctx.restore();
   }

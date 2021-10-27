@@ -258,9 +258,9 @@ export class ChordSymbol extends Modifier {
     const reportedWidths = [];
 
     for (const symbol of symbols) {
-      // symbol.font was initialized by the constructor via this.setFont().
+      // symbol.textFont was initialized by the constructor via this.resetFont().
       // eslint-disable-next-line
-      const fontSize = Font.convertSizeToNumber(symbol.font!.size);
+      const fontSize = Font.convertSizeToNumber(symbol.textFont!.size);
       const fontAdj = Font.scaleSize(fontSize, 0.05);
       const glyphAdj = fontAdj * 2;
       let lineSpaces = 1;
@@ -365,14 +365,15 @@ export class ChordSymbol extends Modifier {
 
   constructor() {
     super();
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   /**
+   * Default text font.
    * Choose a font family that works well with the current music engraving font.
-   * Overrides `Element.getDefaultFont()`.
+   * @override `Element.TEXT_FONT`.
    */
-  getDefaultFont(): Required<FontInfo> {
+  static get TEXT_FONT(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
     if (Tables.currentMusicFont().getName() === 'Petaluma') {
       // Fixes Issue #1180
@@ -613,26 +614,26 @@ export class ChordSymbol extends Modifier {
   }
 
   /**
-   * @param f a string that specifies the font family, or a `FontInfo` options object.
-   * If the first argument is a `FontInfo`, the other arguments below are ignored.
+   * Set the chord symbol's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   *
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
    * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
-   * @param weight is inserted into the font-weight attribute (e.g., font-weight="bold")
-   * @param style is inserted into the font-style attribute (e.g., font-style="italic")
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   *
+   * @override See: Element.
    */
-  setFont(
-    f: string | FontInfo = Font.SANS_SERIF,
-    size: string | number = Font.SIZE,
-    weight: string | number = FontWeight.NORMAL,
-    style: string = FontStyle.NORMAL
-  ): this {
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
     super.setFont(f, size, weight, style);
-    this.textFormatter = TextFormatter.create(this.font);
+    this.textFormatter = TextFormatter.create(this.textFont);
     return this;
   }
 
   /** Just change the font size, while keeping everything else the same. */
   setFontSize(size: number): this {
-    this.setFont({ ...this.font, size });
+    this.setFont({ ...this.textFont, size });
     return this;
   }
 
@@ -696,7 +697,7 @@ export class ChordSymbol extends Modifier {
     ctx.openGroup(classString, this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     let y: number;
 
@@ -754,8 +755,8 @@ export class ChordSymbol extends Modifier {
       if (symbol.symbolType === SymbolTypes.TEXT) {
         if (isSuper || isSub) {
           ctx.save();
-          if (this.font) {
-            const { family, size, weight, style } = this.font;
+          if (this.textFont) {
+            const { family, size, weight, style } = this.textFont;
             const smallerFontSize = Font.scaleSize(size, ChordSymbol.superSubRatio);
             ctx.setFont(family, smallerFontSize, weight, style);
           }

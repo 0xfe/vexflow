@@ -75,7 +75,7 @@ export class Annotation extends Modifier {
     for (let i = 0; i < annotations.length; ++i) {
       let textWidth = 0;
       const annotation = annotations[i];
-      const textFormatter = TextFormatter.create(annotation.font);
+      const textFormatter = TextFormatter.create(annotation.textFont);
 
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
       const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
@@ -110,7 +110,7 @@ export class Annotation extends Modifier {
     this.text = text;
     this.justification = Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     // The default width is calculated from the text.
     this.setWidth(Tables.textWidth(text));
@@ -153,7 +153,7 @@ export class Annotation extends Modifier {
     ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     const text_width = ctx.measureText(this.text).width;
 

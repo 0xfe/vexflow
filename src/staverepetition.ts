@@ -46,7 +46,7 @@ export class Repetition extends StaveModifier {
     this.x_shift = 0;
     this.y_shift = y_shift;
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setShiftX(x: number): this {
@@ -119,7 +119,7 @@ export class Repetition extends StaveModifier {
     const ctx = stave.checkContext();
 
     ctx.save();
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     // Default to right symbol
     let text_x = 0 + this.x_shift;

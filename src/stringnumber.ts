@@ -135,7 +135,7 @@ export class StringNumber extends Modifier {
     this.dashed = true; // true - draw dashed extension  false - no extension
     this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
   }
 
   setLineEndType(leg: number): this {
@@ -218,7 +218,7 @@ export class StringNumber extends Modifier {
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
     ctx.setLineWidth(1.5);
     ctx.stroke();
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 

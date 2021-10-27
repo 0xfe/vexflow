@@ -109,7 +109,7 @@ export class StaveLine extends Element {
     this.setNotes(notes);
 
     this.text = '';
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     this.render_options = {
       // Space to add to the left or the right
@@ -190,7 +190,7 @@ export class StaveLine extends Element {
   // Apply the text styling to the context
   applyFontStyle(): void {
     const ctx = this.checkContext();
-    ctx.setFont(this.font);
+    ctx.setFont(this.textFont);
 
     const render_options = this.render_options;
     const color = render_options.color;

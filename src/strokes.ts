@@ -99,7 +99,7 @@ export class Stroke extends Modifier {
       stroke_spacing: 10,
     };
 
-    this.setFont(this.getDefaultFont());
+    this.resetFont();
 
     this.setXShift(0);
     this.setWidth(10);
@@ -243,7 +243,7 @@ export class Stroke extends Modifier {
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {
       ctx.save();
-      ctx.setFont(this.font);
+      ctx.setFont(this.textFont);
       ctx.fillText('R', x + text_shift_x, text_y);
       ctx.restore();
     }
