@@ -301,7 +301,6 @@ export class Font {
   // Instance Members
 
   protected name: string;
-
   protected data?: FontData;
   protected metrics?: FontMetrics;
 
@@ -315,10 +314,6 @@ export class Font {
 
   getName(): string {
     return this.name;
-  }
-
-  getResolution(): number {
-    return this.getData().resolution;
   }
 
   getData(): FontData {
@@ -344,6 +339,10 @@ export class Font {
 
   hasData(): boolean {
     return this.data !== undefined;
+  }
+
+  getResolution(): number {
+    return this.getData().resolution;
   }
 
   getGlyphs(): Record<string, FontGlyph> {

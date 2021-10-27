@@ -53,7 +53,6 @@ export abstract class RenderContext {
   // eslint-disable-next-line
   abstract add(child: any): void;
   abstract measureText(text: string): TextMeasure;
-
   abstract set fillStyle(style: string | CanvasGradient | CanvasPattern);
   abstract get fillStyle(): string | CanvasGradient | CanvasPattern;
 

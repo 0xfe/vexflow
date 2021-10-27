@@ -102,9 +102,9 @@ export abstract class Element {
    */
   setFont(
     f: string | FontInfo = Font.SANS_SERIF,
-    size: string | number = 10,
-    weight: string | number = 'normal',
-    style: string = 'normal'
+    size: string | number = Font.SIZE,
+    weight: string | number = FontWeight.NORMAL,
+    style: string = FontStyle.NORMAL
   ): this {
     if (typeof f === 'string') {
       this.font = { family: f, size, weight, style };

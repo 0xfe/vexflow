@@ -157,7 +157,7 @@ export class TextFormatter {
   /** Font family. */
   protected family: string = '';
 
-  /** Specified in pt units. */
+  /** Specified in `pt` units. */
   protected size: number = 14;
 
   /** Font metrics are extracted at 1000 upem (units per em). */
@@ -216,9 +216,11 @@ export class TextFormatter {
   /** Create a hash with the current font data, so we can cache computed widths. */
   updateCacheKey(): void {
     const family = this.family.replace(/\s+/g, '_');
-    const weight = this.bold ? 'bold' : 'normal';
-    const style = this.italic ? 'italic' : 'normal';
-    this.cacheKey = `${family}-${this.size}-${weight}-${style}`;
+    const size = this.size;
+    const weight = this.bold ? FontWeight.BOLD : FontWeight.NORMAL;
+    const style = this.italic ? FontStyle.ITALIC : FontStyle.NORMAL;
+    // Use the same key format as SVGContext.
+    this.cacheKey = `${family}%${size}%${weight}%${style}`;
   }
 
   /**
