@@ -2,7 +2,7 @@
 // MIT License
 
 import { RuntimeError, log, defined } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
 import { Glyph, GlyphProps } from './glyph';
@@ -49,17 +49,17 @@ function drawSlashNoteHead(
   stem_direction: number,
   staveSpace: number
 ) {
-  const width = Flow.SLASH_NOTEHEAD_WIDTH;
+  const width = Tables.SLASH_NOTEHEAD_WIDTH;
   ctx.save();
-  ctx.setLineWidth(Flow.STEM_WIDTH);
+  ctx.setLineWidth(Tables.STEM_WIDTH);
 
   let fill = false;
 
-  if (Flow.durationToNumber(duration) > 2) {
+  if (Tables.durationToNumber(duration) > 2) {
     fill = true;
   }
 
-  if (!fill) x -= (Flow.STEM_WIDTH / 2) * stem_direction;
+  if (!fill) x -= (Tables.STEM_WIDTH / 2) * stem_direction;
 
   ctx.beginPath();
   ctx.moveTo(x, y + staveSpace);
@@ -75,7 +75,7 @@ function drawSlashNoteHead(
     ctx.stroke();
   }
 
-  if (Flow.durationToFraction(duration).equals(0.5)) {
+  if (Tables.durationToFraction(duration).equals(0.5)) {
     const breve_lines = [-3, -1, width + 1, width + 3];
     for (let i = 0; i < breve_lines.length; i++) {
       ctx.beginPath();
@@ -129,7 +129,7 @@ export class NoteHead extends Note {
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Flow.getGlyphProps(this.duration, this.noteType);
+    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
     defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
     this.glyph_code = this.glyph.code_head;
@@ -147,7 +147,7 @@ export class NoteHead extends Note {
     this.render_options = {
       ...this.render_options,
       // font size for note heads
-      glyph_font_scale: noteStruct.glyph_font_scale || Flow.DEFAULT_NOTATION_FONT_SCALE,
+      glyph_font_scale: noteStruct.glyph_font_scale || Tables.DEFAULT_NOTATION_FONT_SCALE,
       // number of stroke px to the left and right of head
       stroke_px: 3,
     };

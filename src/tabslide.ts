@@ -6,7 +6,7 @@
 
 import { TabNote } from './tabnote';
 import { TabTie } from './tabtie';
-import { TieNotes } from './types/common';
+import { TieNotes } from './stavetie';
 import { RuntimeError } from './util';
 
 export class TabSlide extends TabTie {

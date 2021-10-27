@@ -9,7 +9,7 @@
 // purposes, such as diagrams.
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { FontInfo } from './types/common';
@@ -362,7 +362,7 @@ export class StaveLine extends Element {
     if (vertical_position === StaveLine.TextVerticalPosition.TOP) {
       y = first_note.checkStave().getYForTopText();
     } else if (vertical_position === StaveLine.TextVerticalPosition.BOTTOM) {
-      y = first_note.checkStave().getYForBottomText(Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = first_note.checkStave().getYForBottomText(Tables.TEXT_HEIGHT_OFFSET_HACK);
     }
 
     // Draw the text

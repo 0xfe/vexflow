@@ -9,7 +9,7 @@
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
 import { log } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Glyph } from './glyph';
 import { TextFont } from './textfont';
 import { Modifier } from './modifier';
@@ -135,7 +135,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): number {
-    return Flow.DEFAULT_FONT_STACK[0].getResolution();
+    return Tables.DEFAULT_FONT_STACK[0].getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -252,15 +252,15 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static get chordSymbolMetrics(): any {
-    return Flow.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
+    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
-    return Flow.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
+    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
   }
 
   static get upperKerningText(): string[] {
-    return Flow.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
+    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
   }
 
   /**
@@ -691,7 +691,7 @@ export class ChordSymbol extends Modifier {
 
     if (this.vertical === VerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin is bottom-right.
-      y = stave.getYForBottomText(this.text_line + Flow.TEXT_HEIGHT_OFFSET_HACK);
+      y = stave.getYForBottomText(this.text_line + Tables.TEXT_HEIGHT_OFFSET_HACK);
       if (hasStem) {
         const stem_ext = note.checkStem().getExtents();
         const spacing = stave.getSpacingBetweenLines();

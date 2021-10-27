@@ -6,7 +6,7 @@
 
 import { RuntimeError, log } from './util';
 import { Element } from './element';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { BoundingBox } from './boundingbox';
 
 // To enable logging for this class. Set `Vex.Flow.Stem.DEBUG` to `true`.
@@ -48,10 +48,10 @@ export class Stem extends Element {
 
   // Theme
   static get WIDTH(): number {
-    return Flow.STEM_WIDTH;
+    return Tables.STEM_WIDTH;
   }
   static get HEIGHT(): number {
-    return Flow.STEM_HEIGHT;
+    return Tables.STEM_HEIGHT;
   }
 
   protected hide: boolean;

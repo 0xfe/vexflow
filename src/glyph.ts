@@ -9,7 +9,7 @@ import { RenderContext } from './rendercontext';
 import { TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Flow } from './flow';
+import { Tables } from './tables';
 
 export interface DurationCode {
   common: TypeProps;
@@ -279,7 +279,7 @@ export class Glyph extends Element {
     options?: { font?: Font; category: string }
   ): GlyphMetrics {
     const params = {
-      fontStack: Flow.DEFAULT_FONT_STACK,
+      fontStack: Tables.DEFAULT_FONT_STACK,
       ...options,
     };
     const data = Glyph.cache.lookup(params.fontStack, code, params.category);

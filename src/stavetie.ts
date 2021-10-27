@@ -6,7 +6,15 @@
 
 import { RuntimeError } from './util';
 import { Element } from './element';
-import { FontInfo, TieNotes } from './types/common';
+import { FontInfo } from './types/common';
+import { Note } from './note';
+
+export interface TieNotes {
+  first_note: Note;
+  last_note: Note;
+  first_indices?: number[];
+  last_indices?: number[];
+}
 
 export class StaveTie extends Element {
   static get CATEGORY(): string {

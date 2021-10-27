@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
@@ -89,7 +89,7 @@ export class StaveTempo extends StaveModifier {
         x += ctx.measureText('(').width;
       }
 
-      const code = Flow.getGlyphProps(duration);
+      const code = Tables.getGlyphProps(duration);
 
       x += 3 * scale;
       Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);

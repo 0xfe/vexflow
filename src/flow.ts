@@ -79,8 +79,6 @@ import { Voice } from './voice';
 import { Volta } from './stavevolta';
 
 export const Flow = {
-  ...Tables,
-
   Accidental,
   Annotation,
   Articulation,
@@ -163,4 +161,74 @@ export const Flow = {
   // BUILD and VERSION are set by webpack. See: Gruntfile.js.
   BUILD: '',
   VERSION: '',
+
+  get DEFAULT_FONT_STACK(): Font[] {
+    return Tables.DEFAULT_FONT_STACK;
+  },
+  set DEFAULT_FONT_STACK(value: Font[]) {
+    Tables.DEFAULT_FONT_STACK = value;
+  },
+  get DEFAULT_NOTATION_FONT_SCALE(): number {
+    return Tables.DEFAULT_NOTATION_FONT_SCALE;
+  },
+  set DEFAULT_NOTATION_FONT_SCALE(value: number) {
+    Tables.DEFAULT_NOTATION_FONT_SCALE = value;
+  },
+  get DEFAULT_TABLATURE_FONT_SCALE(): number {
+    return Tables.DEFAULT_TABLATURE_FONT_SCALE;
+  },
+  set DEFAULT_TABLATURE_FONT_SCALE(value: number) {
+    Tables.DEFAULT_TABLATURE_FONT_SCALE = value;
+  },
+  get RESOLUTION(): number {
+    return Tables.RESOLUTION;
+  },
+  set RESOLUTION(value: number) {
+    Tables.RESOLUTION = value;
+  },
+  get SLASH_NOTEHEAD_WIDTH(): number {
+    return Tables.SLASH_NOTEHEAD_WIDTH;
+  },
+  set SLASH_NOTEHEAD_WIDTH(value: number) {
+    Tables.SLASH_NOTEHEAD_WIDTH = value;
+  },
+  get STAVE_LINE_DISTANCE(): number {
+    return Tables.STAVE_LINE_DISTANCE;
+  },
+  set STAVE_LINE_DISTANCE(value: number) {
+    Tables.STAVE_LINE_DISTANCE = value;
+  },
+  get STAVE_LINE_THICKNESS(): number {
+    return Tables.STAVE_LINE_THICKNESS;
+  },
+  set STAVE_LINE_THICKNESS(value: number) {
+    Tables.STAVE_LINE_THICKNESS = value;
+  },
+  get STEM_HEIGHT(): number {
+    return Tables.STEM_HEIGHT;
+  },
+  set STEM_HEIGHT(value: number) {
+    Tables.STEM_HEIGHT = value;
+  },
+  get STEM_WIDTH(): number {
+    return Tables.STEM_HEIGHT;
+  },
+  set STEM_WIDTH(value: number) {
+    Tables.STEM_WIDTH = value;
+  },
+  get TIME4_4(): { num_beats: number; beat_value: number; resolution: number } {
+    return Tables.TIME4_4;
+  },
+  set TIME4_4(value: { num_beats: number; beat_value: number; resolution: number }) {
+    Tables.TIME4_4 = value;
+  },
+  get accidentalMap(): Record<string, { code: string; parenRightPaddingAdjustment: number }> {
+    return Tables.accidentalMap;
+  },
+  get unicode(): Record<string, string> {
+    return Tables.unicode;
+  },
+  keySignature(spec: string): { type: string; line: number }[] {
+    return Tables.keySignature(spec);
+  },
 };

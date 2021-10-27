@@ -2,7 +2,7 @@
 // MIT License
 
 import { RuntimeError } from './util';
-import { Flow } from './flow';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 
@@ -147,7 +147,7 @@ export class Bend extends Modifier {
       if (ctxThat) {
         text_width = ctxThat.measureText(text).width;
       } else {
-        text_width = Flow.textWidth(text);
+        text_width = Tables.textWidth(text);
       }
 
       return text_width;
