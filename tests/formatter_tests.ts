@@ -8,7 +8,7 @@ import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
 import { Tables } from 'tables';
-import { FontGlyph } from 'font';
+import { FontGlyph, FontWeight } from 'font';
 import { Formatter } from 'formatter';
 import { Note } from 'note';
 import { Registry } from 'registry';
@@ -712,7 +712,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times' /* RONYEH: Font.SERIF */, 12, 'normal')
+            .setFont('Times' /* RONYEH: Font.SERIF */, 12, FontWeight.NORMAL)
         );
       }
       notes.push(note);

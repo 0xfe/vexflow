@@ -1,35 +1,44 @@
-const { JSDOM } = require('jsdom');
+// node fonts.js > output.html
+//
+// This demo shows how to use node-canvas to load a font (woff / otf).
+// It does not currently use VexFlow.
+// TODO: Check if the text fonts (PetalumaScript & Roboto Slab) are automatically
+// picked up by VexFlow's ChordSymbol.
+// Note: JSDOM uses node-canvas internally. https://www.npmjs.com/package/canvas
+
 const { registerFont, createCanvas } = require('canvas');
-registerFont('../../tools/woff/bravura/Bravura_1.392.woff', { family: 'Bravura' });
-registerFont('../../tools/woff/petaluma/Petaluma_1.065.woff', { family: 'Petaluma' });
-registerFont('../../tools/woff/petaluma/PetalumaScript_1.10.woff', { family: 'PetalumaScript' });
+const { JSDOM } = require('jsdom');
 
-const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
-global.window = dom.window;
-global.document = dom.window.document;
-// global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
-// global.HTMLDivElement = dom.window.HTMLDivElement;
+const fontsDir = '../../tools/fonts/@/';
+registerFont(fontsDir + 'bravura/Bravura_1.392.woff', { family: 'Bravura' });
+registerFont(fontsDir + 'petaluma/Petaluma_1.065.woff', { family: 'Petaluma' });
+registerFont(fontsDir + 'petaluma/PetalumaScript_1.10.woff', { family: 'PetalumaScript' });
+registerFont(fontsDir + 'robotoslab/RobotoSlab-Medium_2.001.otf', { family: 'Roboto Slab' });
 
-// const canvas1 = createCanvas(500, 500);
-// const ctx1 = canvas1.getContext('2d');
-
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-document.body.appendChild(canvas);
-
-console.log(document.fonts);
-return;
-
+// Unicode code points.
 const fClef = 0xe062;
 const gClef = 0xe050;
 
-ctx.font = '128px PetalumaScript';
-ctx.fillText(String.fromCharCode(gClef), 20, 220);
-console.log(`<!DOCTYPE html><html><body><img src="${canvas.toDataURL()}"></body></html>`);
+function canvas1() {
+  const canvas = createCanvas(850, 400);
+  const ctx = canvas.getContext('2d');
+  ctx.font = '100px Bravura';
+  ctx.fillText(String.fromCharCode(gClef, 0x20, fClef), 20, 220);
+  return canvas;
+}
 
-// const d = document.createElement('div');
-// console.log(d instanceof window.HTMLDivElement);
-// const c = document.createElement('canvas');
-// console.log(c instanceof window.HTMLCanvasElement);
-// const s = document.createElement('span');
-// console.log(s instanceof window.HTMLSpanElement);
+function canvas2() {
+  const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
+  const canvas = dom.window.document.createElement('canvas');
+  canvas.width = 850;
+  canvas.height = 400;
+  const ctx = canvas.getContext('2d');
+  ctx.font = '100px PetalumaScript';
+  ctx.fillText('Hello PetalumaScript', 20, 220);
+  return canvas;
+}
+
+console.log(
+  `<!DOCTYPE html><html><head><style>img { border: 1px solid #666; }</style></head><body>` +
+    `<img src="${canvas1().toDataURL()}"><br><img src="${canvas2().toDataURL()}"></body></html>`
+);

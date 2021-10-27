@@ -60,10 +60,10 @@ class MeasureTextCache {
 
     const family = attributes['font-family'];
     const size = attributes['font-size'];
-    const style = attributes['font-style'];
     const weight = attributes['font-weight'];
+    const style = attributes['font-style'];
 
-    const key = `${family}%${size}%${style}%${weight}`;
+    const key = `${family}%${size}%${weight}%${style}`;
     let entry = entries[key];
     if (entry === undefined) {
       entry = this.measureImpl(text, svg, attributes);
@@ -90,15 +90,13 @@ class MeasureTextCache {
     const bbox = txt.getBBox();
     svg.removeChild(txt);
 
-    // Remove the trailing 'pt' from the font size and scale to convert from points
-    // to canvas units.
+    const fontSizeInPt: string = attributes['font-size'];
+
+    // Remove the trailing 'pt' from the font size and scale to convert from points to canvas pixel units.
     // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    const fontSize = attributes['font-size'];
-    const height = (fontSize.substring(0, fontSize.length - 2) * 4) / 3;
-    return {
-      width: bbox.width,
-      height: height,
-    };
+    const height = Font.convertToPixels(fontSizeInPt);
+
+    return { width: bbox.width, height: height };
   }
 }
 
@@ -119,7 +117,11 @@ export class SVGContext extends RenderContext {
   shadow_attributes: Attributes;
   state: Attributes;
   state_stack: State[];
+
+  // Always points to the current group.
+  // Calls to add() or openGroup() will append the new element to `this.parent`.
   parent: SVGGElement;
+  // The stack of groups.
   groups: SVGGElement[];
 
   fontString: string = '';
@@ -129,14 +131,13 @@ export class SVGContext extends RenderContext {
     super();
     this.element = element;
 
+    // Create a SVG element and add it to the container element.
     const svg = this.create('svg');
-    // Add it to the canvas:
     this.element.appendChild(svg);
-
-    // Point to it:
     this.svg = svg;
-    this.groups = [this.svg]; // Create the group stack
+
     this.parent = this.svg;
+    this.groups = [this.svg];
 
     this.path = '';
     this.pen = { x: NaN, y: NaN };
@@ -144,17 +145,17 @@ export class SVGContext extends RenderContext {
     this.state = {
       scale: { x: 1, y: 1 },
       'font-family': Font.SANS_SERIF,
-      'font-size': '10pt',
-      'font-weight': 'normal',
-      'font-style': 'normal',
+      'font-size': Font.SIZE + 'pt',
+      'font-weight': FontWeight.NORMAL,
+      'font-style': FontStyle.NORMAL,
     };
 
     const defaultAttributes = {
       'stroke-dasharray': 'none',
       'font-family': Font.SANS_SERIF,
-      'font-size': '10pt',
-      'font-weight': 'normal',
-      'font-style': 'normal',
+      'font-size': Font.SIZE + 'pt',
+      'font-weight': FontWeight.NORMAL,
+      'font-style': FontStyle.NORMAL,
     };
 
     this.attributes = {
@@ -234,16 +235,16 @@ export class SVGContext extends RenderContext {
       family = f.family;
       size = f.size ?? Font.SIZE;
       weight = f.weight ?? FontWeight.NORMAL;
-      style = f.style ?? 'normal';
+      style = f.style ?? FontStyle.NORMAL;
     }
 
     // Backwards compatibility with 3.0.9.
     // If weight is specified, but style is not, we have to search weight for 'bold' and 'italic'.
     // Weight might be a number (200, 400, etc...) so we first
     // test its type to be sure we have access to String methods.
-    if (typeof weight === 'string' && weight !== 'normal' && style === 'normal') {
-      weight = weight.includes('bold') ? 'bold' : 'normal';
-      style = weight.includes('italic') ? 'italic' : 'normal';
+    if (typeof weight === 'string' && weight !== FontWeight.NORMAL && style === FontStyle.NORMAL) {
+      weight = weight.includes('bold') ? FontWeight.BOLD : FontWeight.NORMAL;
+      style = weight.includes('italic') ? FontStyle.ITALIC : FontStyle.NORMAL;
     }
 
     // Backwards compatibility with 3.0.9.
@@ -680,6 +681,7 @@ export class SVGContext extends RenderContext {
     this.setRawFont(value);
   }
 
+  /** Return a string of the form `` */
   get font(): string {
     return this.fontString;
   }

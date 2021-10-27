@@ -40,7 +40,7 @@ export abstract class RenderContext {
     radius: number,
     startAngle: number,
     endAngle: number,
-    antiClockwise: boolean
+    counterclockwise: boolean
   ): this;
   // eslint-disable-next-line
   abstract fill(attributes?: any): this;
@@ -54,9 +54,7 @@ export abstract class RenderContext {
   abstract closeGroup(): void;
   // eslint-disable-next-line
   abstract add(child: any): void;
-
   abstract measureText(text: string): TextMeasure;
-
   abstract set font(value: string);
   abstract get font(): string;
   abstract set fillStyle(style: string | CanvasGradient | CanvasPattern);

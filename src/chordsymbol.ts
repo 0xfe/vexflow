@@ -379,7 +379,7 @@ export class ChordSymbol extends Modifier {
       // https://github.com/0xfe/vexflow/issues/1180
       // family = 'PetalumaScript, Arial, sans-serif';
 
-      // RONYEH-FONT: A mismatched font family results in loading Roboto Slab's metrics instead.
+      // RONYEH: A mismatched font family results in loading Roboto Slab's metrics instead.
       // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
       family = 'petalumaScript,Arial';
     }
@@ -621,9 +621,9 @@ export class ChordSymbol extends Modifier {
    */
   setFont(
     f: string | FontInfo = Font.SANS_SERIF,
-    size: string | number = 10,
-    weight: string | number = 'normal',
-    style: string = 'normal'
+    size: string | number = Font.SIZE,
+    weight: string | number = FontWeight.NORMAL,
+    style: string = FontStyle.NORMAL
   ): this {
     super.setFont(f, size, weight, style);
     this.textFormatter = TextFormatter.create(this.font);

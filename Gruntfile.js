@@ -29,7 +29,16 @@ module.exports = (grunt) => {
   // Switching the mode from 'development' => 'production' will enable minification, etc.
   // See: https://webpack.js.org/configuration/mode/
   function webpackConfig(target, chunkFilename, configFile, moduleEntry, mode) {
+    // Support different ways of loading VexFlow.
+    // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
+    // VexFlow is exported as root["Vex"], and can be accessed via:
+    //   - `window.Vex` in browsers
+    //   - `globalThis.Vex` in node JS >= 12
+    //   - `this.Vex` in all other environments
+    // See: https://webpack.js.org/configuration/output/#outputglobalobject
     let globalObject = `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`;
+    // However, the globalObject approach currently breaks the lazy loading of fonts.
+    // Unset the globalObject if we are doing lazy loading with webpack.
     if (chunkFilename !== undefined) {
       globalObject = undefined;
     }
@@ -44,13 +53,6 @@ module.exports = (grunt) => {
         library: 'Vex',
         libraryTarget: 'umd',
         libraryExport: 'default',
-        // Support different ways of loading VexFlow.
-        // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
-        // VexFlow is exported as root["Vex"], and can be accessed via:
-        //   - `window.Vex` in browsers
-        //   - `globalThis.Vex` in node JS >= 12
-        //   - `this.Vex` in all other environments
-        // See: https://webpack.js.org/configuration/output/#outputglobalobject
         globalObject: globalObject,
         publicPath: 'auto',
       },

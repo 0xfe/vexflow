@@ -95,7 +95,7 @@ export class Font {
   /** Default serif font family. */
   static SERIF: string = 'Times New Roman, serif';
 
-  /** Default font size. */
+  /** Default font size in `pt`. */
   static SIZE: number = 10;
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
@@ -302,7 +302,6 @@ export class Font {
   // Instance Members
 
   protected name: string;
-
   protected data?: FontData;
   protected metrics?: FontMetrics;
 
@@ -316,10 +315,6 @@ export class Font {
 
   getName(): string {
     return this.name;
-  }
-
-  getResolution(): number {
-    return this.getData().resolution;
   }
 
   getData(): FontData {
@@ -345,6 +340,10 @@ export class Font {
 
   hasData(): boolean {
     return this.data !== undefined;
+  }
+
+  getResolution(): number {
+    return this.getData().resolution;
   }
 
   getGlyphs(): Record<string, FontGlyph> {

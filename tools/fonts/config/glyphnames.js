@@ -1,7 +1,7 @@
-// This file is a hack to support loading tools/fonts/inspector/index.html in a local browser.
-// All we do is prepend `window.glyphNamesSMuFL = ` to the glyphnames.json file to make this
-// object available as a global variable named: `glyphNamesSMuFL`.
-window.glyphNamesSMuFL = {
+// This file is a hack to support loading `tools/fonts/inspector/otf.html` in a local browser.
+// We prepend `window.SMuFLGlyphInfo = ` to the `glyphnames.json` file to make this
+// object available as a global variable named: `SMuFLGlyphInfo`.
+window.SMuFLGlyphInfo = {
   '4stringTabClef': {
     codepoint: 'U+E06E',
     description: '4-string tab clef',

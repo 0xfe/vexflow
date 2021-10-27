@@ -339,7 +339,8 @@ export class Factory {
       options: {},
       ...params,
     };
-    // TODO: Factory.Annotation has a different default font from new Annotation()...
+
+    // RONYEH: Factory.Annotation has a different default font from new Annotation()...
     const font = {
       family: 'Times' /* RONYEH: Font.SERIF */,
       size: 14,
