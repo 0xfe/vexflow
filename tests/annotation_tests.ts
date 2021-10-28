@@ -76,7 +76,8 @@ function lyrics(options: TestOptions): void {
       const verse = Math.floor(ix / 3);
       const noteGroupID = 'n' + (ix % 3);
       const noteGroup = registry.getElementById(noteGroupID) as Tickable;
-      noteGroup.addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize), verse);
+      noteGroup.addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
+      // noteGroup.addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize), verse); // RONYEH
     });
 
     // Second row doesn't have any lyrics.
@@ -279,7 +280,8 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)
-      .setFont(Font.SANS_SERIF, FONT_SIZE)
+      .setFont('Arial', FONT_SIZE)
+      // .setFont(Font.SANS_SERIF, FONT_SIZE) // RONYEH
       .setJustification(hJustification)
       .setVerticalJustification(vJustification);
 
@@ -307,7 +309,8 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)
-      .setFont(Font.SANS_SERIF, FONT_SIZE)
+      .setFont('Arial', FONT_SIZE)
+      // .setFont(Font.SANS_SERIF, FONT_SIZE) // RONYEH
       .setJustification(hJustification)
       .setVerticalJustification(vJustification);
 

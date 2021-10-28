@@ -75,7 +75,8 @@ function simple1(options: TestOptions): void {
       options: {
         position: 'top',
         superscript: 'superscript',
-        font: { family: 'Arial', size: 15, weight: 'normal', style: 'normal' },
+        font: { family: 'Arial', size: 15, weight: '', style: '' }, // BUG: Using weight='' is discouraged. However, we interpret '' as 'normal'.
+        // font: { family: 'Arial', size: 15, weight: 'normal', style: 'normal' }, // RONYEH weight and style can be left undefined, in which case they will fall back to the default defined in textbracket.ts.
       },
     }),
   ];

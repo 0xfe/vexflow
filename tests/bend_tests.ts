@@ -39,7 +39,8 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont('10pt ' + Font.SANS_SERIF);
+  ctx.setRawFont(' 10pt Arial');
+  // ctx.font = '10pt Arial'; // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -133,6 +134,8 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
   ctx.setRawFont('10pt Arial');
+  // ctx.font = Font.SIZE + 'pt ' + Font.SANS_SERIF; // RONYEH
+
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -184,7 +187,8 @@ function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void 
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont('10pt Arial');
+  ctx.setRawFont(' 10pt Arial');
+  // ctx.font = '10pt ' + Font.SANS_SERIF; // RONYEH We can use some constatns defined in Font.
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const phrase1 = [

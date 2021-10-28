@@ -133,6 +133,7 @@ class VexFlowTests {
   /**
    *
    */
+  // RONYEH: Fonts are now specified by font name.
   static FONT_STACKS: Record<string, string[]> = {
     Bravura: ['Bravura', 'Gonville', 'Custom'],
     Gonville: ['Gonville', 'Bravura', 'Custom'],
@@ -275,7 +276,8 @@ class VexFlowTests {
    */
   static plotLegendForNoteWidth(ctx: RenderContext, x: number, y: number): void {
     ctx.save();
-    ctx.setFont(Font.SANS_SERIF, 8);
+    ctx.setFont('Arial', 8, '');
+    // ctx.setFont(Font.SANS_SERIF, 8); // RONYEH
 
     const spacing = 12;
     let lastY = y;

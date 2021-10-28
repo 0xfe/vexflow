@@ -90,7 +90,8 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.3, 1.3);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
-  ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size);
+  ctx.setFont('Arial', VexFlowTests.Font.size, '');
+  // ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size); // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [

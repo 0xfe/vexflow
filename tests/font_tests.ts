@@ -22,8 +22,7 @@ const FontTests = {
     const run = VexFlowTests.runTests;
     run('Set Text Font to Georgia', setTextFontToGeorgia);
     run('Force Petaluma Music Font', setMusicFontToPetaluma);
-    run('XXX', somethingElse);
-    // RONYEH.....
+    // RONYEH MORE TESTS.....
   },
 };
 
@@ -46,6 +45,10 @@ function setFont(): void {
   voice.setFont('bold 32pt Arial');
   const fontInfo = voice.getFontInfo();
   equal(fontInfo?.size, '32pt');
+
+  // TODO: Call setFont() with some arguments undefined.
+
+  // TODO: Call setFont() with weight and style as empty strings. '' should be equivalent to 'normal'.
 }
 
 function fontParsing(): void {
@@ -118,38 +121,16 @@ function setMusicFontToPetaluma(options: TestOptions): void {
   const stave = factory.Stave({ y: 40 });
   const score = factory.EasyScore();
 
-  const voice1 = score.voice([
+  const voice = score.voice([
     factory.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' }),
     factory.StaveNote({ keys: ['d/4', 'f/4'], stem_direction: -1, duration: 'q' }),
     factory.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: 'q' }),
   ]);
 
   const formatter = factory.Formatter();
-  formatter.joinVoices([voice1]).formatToStave([voice1], stave);
+  formatter.joinVoices([voice]).formatToStave([voice], stave);
 
   factory.draw();
-
-  // TODO UNSET THE FONT
-  ok(true);
-}
-
-function somethingElse(options: TestOptions): void {
-  const factory = VexFlowTests.makeFactory(options, 400, 200);
-  const stave = factory.Stave({ y: 40 });
-  const score = factory.EasyScore();
-
-  const voice1 = score.voice([
-    factory.StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' }),
-    factory.StaveNote({ keys: ['d/4', 'f/4'], stem_direction: -1, duration: 'q' }),
-    factory.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: 'q' }),
-  ]);
-
-  const formatter = factory.Formatter();
-  formatter.joinVoices([voice1]).formatToStave([voice1], stave);
-
-  factory.draw();
-
-  // RONYEH DO WE HAVE TO UNSET THE FONT???
 
   ok(true);
 }

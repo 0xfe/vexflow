@@ -15,7 +15,7 @@ import { isCategory, isGraceNote, isGraceNoteGroup, isStaveNote } from './typegu
 import { defined, log } from './util';
 import { Voice } from './voice';
 
-type Line = {
+export type Line = {
   column: number;
   line: number;
   flatLine: boolean;

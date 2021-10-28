@@ -382,7 +382,8 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont(Font.SANS_SERIF, 10, 'bold');
+  ctx.setFont('sans-serif', 10, 'bold');
+  // ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD); // RONYEH
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);

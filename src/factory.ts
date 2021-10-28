@@ -42,7 +42,6 @@ import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextBracket } from './textbracket';
 import { TextDynamics } from './textdynamics';
-import { TextFont } from './textfont';
 import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
@@ -162,7 +161,7 @@ export class Factory {
       }
     }
 
-    this.context = Renderer.buildContext(elementId as string, backend, width, height, background);
+    this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
   getContext(): RenderContext {

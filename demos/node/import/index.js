@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-import Vex from '../../../build/vexflow-debug.js';
+import Vex from '../../../build/vexflow.module.js';
 
 // If you copy vexflow-debug.js to this folder and then update the import as follows:
 //     import Vex from './vexflow-debug.js';
