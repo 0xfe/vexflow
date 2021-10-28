@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
-import { FontInfo, FontWeight, FontStyle } from './font';
 
 export class StaveSection extends StaveModifier {
   static get CATEGORY(): string {

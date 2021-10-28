@@ -7,16 +7,17 @@ import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
-import { Tables } from 'tables';
-import { FontGlyph, FontWeight } from 'font';
+import { FontGlyph } from 'font';
+// import { FontGlyph, FontWeight } from 'font'; // RONYEH
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { Note } from 'note';
 import { Registry } from 'registry';
 import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
+import { Tables } from 'tables';
 import { Voice, VoiceTime } from 'voice';
-import { Font } from 'font';
 
 import { MockTickable } from './mocks';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
@@ -712,7 +713,8 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times' /* RONYEH: Font.SERIF */, 12, FontWeight.NORMAL)
+            .setFont('Times', 12, 'normal')
+          // .setFont(Font.SERIF, 12, FontWeight.NORMAL) // RONYEH
         );
       }
       notes.push(note);

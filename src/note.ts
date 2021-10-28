@@ -559,10 +559,8 @@ export abstract class Note extends Tickable {
       this.leftDisplacedHeadPx - // subtract left displaced head
       this.rightDisplacedHeadPx; // subtract right displaced head
 
+    // NOTE: If you change this, remember to update MockTickable.getMetrics() in the tests/ directory.
     return {
-      // ----------
-      // NOTE: If you change this, remember to update MockTickable in the tests/ directory.
-      // --------------
       width,
       glyphWidth,
       notePx,

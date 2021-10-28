@@ -62,9 +62,11 @@
 
       function chooseFont(fontName) {
         document.getElementById('title').innerText = 'Glyph Inspector – ' + fontName;
-        const font = Vex.Flow.setMusicFont(fontName);
 
-        // const font = Vex.Flow.setMusicFont('Custom');
+        // OLD WAY:
+        // const glyphs = Vex.Flow.Fonts.Gonville().getGlyphs();
+
+        const font = Vex.Flow.setMusicFont(fontName);
         const glyphs = font.getGlyphs();
 
         // Calculate the canvas height programmatically based on the number of glyphs.

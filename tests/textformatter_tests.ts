@@ -33,7 +33,7 @@ function basic(): void {
 
   // eslint-disable-next-line
   // @ts-ignore direct access to protected variable .cacheKey
-  equal(formatterForRobotoSlab.cacheKey, 'Roboto_Slab-75-normal-normal');
+  equal(formatterForRobotoSlab.cacheKey, 'Roboto_Slab%75%normal%normal');
 }
 
 export { TextFormatterTests };

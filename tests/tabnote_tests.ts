@@ -4,6 +4,7 @@
 // TabNote Tests
 
 import { Flow } from 'flow';
+// import { Font, FontWeight } from 'font'; // RONYEH
 import { Formatter } from 'formatter';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
@@ -12,7 +13,6 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { Voice, VoiceMode } from 'voice';
-import { Font } from 'font';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -383,7 +383,8 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont(Font.SANS_SERIF, 10, 'bold');
+  ctx.setFont('sans-serif', 10, 'bold');
+  // ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD); // RONYEH
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);

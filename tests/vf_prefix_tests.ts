@@ -90,6 +90,9 @@ const VFPrefixTests = {
   },
 };
 
+// eslint-disable-next-line
+declare let Vex: any;
+
 function VF_Prefix(): void {
   const VF = Vex.Flow as unknown as typeof Flow;
   equal(Accidental, VF.Accidental);
@@ -159,7 +162,7 @@ function VF_Prefix(): void {
   equal(TabTie, VF.TabTie);
   equal(TextBracket, VF.TextBracket);
   equal(TextDynamics, VF.TextDynamics);
-  equal(TextFormatter, VF.TextFormatter);
+  equal(TextFormatter, VF.TextFormatter); // RONYEH: Renamed TextFont to TextFormatter.
   equal(TextNote, VF.TextNote);
   equal(TickContext, VF.TickContext);
   equal(TimeSignature, VF.TimeSignature);

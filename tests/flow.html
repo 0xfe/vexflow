@@ -4,13 +4,14 @@
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+    <meta charset="UTF-8" />
   </head>
   <body>
     <div style="text-align: center">
       <div id="qunit"></div>
       <div id="qunit-fixture"></div>
       <div>
-        <h2>[ <a href="http://vexflow.com">Home</a> ] [ <a href="http://github.com/0xfe/vexflow">GitHub</a> ]</h2>
+        <h2>[ <a href="http://vexflow.com">Home</a> ] [ <a href="https://github.com/0xfe/vexflow">GitHub</a> ]</h2>
         <h3>
           See the: <a id="vex-src" target="_blank"></a>. Don't forget to run the
           <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!
@@ -20,64 +21,60 @@
       <div id="vexflow_testoutput"></div>
       <p>&nbsp;</p>
       <p class="vf-footer">
-        [ <a href="http://vexflow.com">home</a> ] [ <a href="http://github.com/0xfe/vexflow">github</a> ] [
-        <a href="http://0xfe.muthanna.com">0xfe</a> ]
+        [ <a href="https://vexflow.com">Home</a> ] [ <a href="https://github.com/0xfe/vexflow">GitHub</a> ] [
+        <a href="https://muthanna.com/">0xfe</a> ]
       </p>
     </div>
     <script type="module">
       function loadScript(url) {
         return new Promise((resolve, reject) => {
-          let script = document.createElement('script');
+          const script = document.createElement('script');
           script.onload = resolve;
           script.onerror = reject;
           script.src = url;
-          // The utf-8 charset is required for the measureText cache,
-          // since the index contains weird unicode characters.
-          script.charset = 'utf-8';
           document.getElementsByTagName('head')[0].appendChild(script);
         });
       }
 
       // Support a query param to choose which VexFlow version to load.
       // ver=(build|reference|releases|etc...)
-      // If omitted, ver defaults to 'build'.
-      let params = new URLSearchParams(window.location.search);
-      let param_ver = params.get('ver');
+      // If omitted, `ver` defaults to 'build'.
+      // `ver` can also specify a version hosted on unpkg.com:
+      // ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
+      // See: https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
+      const params = new URLSearchParams(window.location.search);
+      const ver = params.get('ver') ?? 'build';
 
       let vexURL;
       let testsURL;
-      let isAtLeastVersion4 = true;
+      let isVersionFourOrNewer = true;
 
-      // `ver` can also specify a version hosted on unpkg.com:
-      //   ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
-      // https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
-      if (param_ver && param_ver.includes('unpkg')) {
-        let version = param_ver.split('@')[1];
+      if (ver.includes('unpkg')) {
+        const version = ver.split('@')[1];
         vexURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-debug.js`;
         testsURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-tests.js`;
         if (parseFloat(version) < 4) {
-          isAtLeastVersion4 = false;
+          isVersionFourOrNewer = false;
         }
       } else {
-        let path = param_ver || 'build';
+        const path = ver;
 
         // RONYEH: For now, we assume the 'releases' folder is version 3.0.9.
         // Before we ship 4.0, we'll need to update this to reflect any changes to the releases/ folder.
         if (path === 'releases') {
-          isAtLeastVersion4 = false;
+          isVersionFourOrNewer = false;
         }
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
       }
 
-      // Display which VexFlow version we loaded, if the `ver` param was specified.
-      let info = param_ver !== null ? ` [${param_ver}]` : '';
+      // Display which VexFlow version we loaded.
       const srcLink = document.getElementById('vex-src');
       srcLink.href = vexURL;
-      srcLink.innerText = 'VexFlow Source' + info;
+      srcLink.innerText = `VexFlow Source [${ver}]`;
 
       let loadVexFlow;
-      if (isAtLeastVersion4) {
+      if (isVersionFourOrNewer) {
         // When loading version >= 4.0.0, only load vexflow-tests.js
         loadVexFlow = () => loadScript(testsURL);
       } else {
@@ -86,7 +83,14 @@
       }
 
       await loadVexFlow();
-      await Vex.Flow.Font.loadWebFonts();
+
+      // Version < 4.0.0 does not have support for preloading web fonts.
+      if (Vex.Flow.Font.loadWebFonts) {
+        await Vex.Flow.Font.loadWebFonts();
+        // Optional: view the loaded fonts.
+        // await document.fonts.ready;
+        // document.fonts.forEach((fontFace) => console.log(fontFace));
+      }
 
       // Load qunit.js as late as possible to avoid a race condition!
       // The QUnit module drop down box doesn't appear if Vex.Flow.Test.run() runs too late.
@@ -96,10 +100,6 @@
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
       Vex.Flow.Test.run();
-
-      // Optional: view the loaded fonts.
-      // await document.fonts.ready;
-      // document.fonts.forEach((fontFace) => console.log(fontFace));
     </script>
   </body>
 </html>

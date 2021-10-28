@@ -112,7 +112,8 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 140);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = '10pt Arial';
+  ctx.font = ' 10pt Arial';
+  // ctx.font = '10pt Arial'; // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph();
   stave.getModifiers()[2].setStyle(FS('blue'));
   stave.setContext(ctx).draw();

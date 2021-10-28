@@ -8,7 +8,7 @@
 // See `tests/tabnote_tests.ts` for usage examples.
 
 import { Dot } from './dot';
-import { Font } from './font';
+// import { Font } from './font'; // RONYEH
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { Stave } from './stave';
@@ -160,7 +160,8 @@ export class TabNote extends StemmableNote {
       // normal glyph scale
       scale: 1.0,
       // default tablature font
-      font: `10pt ${Font.SANS_SERIF}`,
+      font: `10pt Arial`,
+      // font: `${Font.SIZE}pt ${Font.SANS_SERIF}`, // RONYEH
     };
 
     this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
@@ -253,7 +254,7 @@ export class TabNote extends StemmableNote {
         const text = '' + glyph.text;
         if (text.toUpperCase() !== 'X') {
           ctx.save();
-          ctx.setRawFont(this.render_options.font);
+          ctx.setFont(this.render_options.font);
           glyph.width = ctx.measureText(text).width;
           ctx.restore();
           glyph.getWidth = () => glyph.width;
@@ -434,7 +435,7 @@ export class TabNote extends StemmableNote {
         Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
       } else {
         ctx.save();
-        ctx.setRawFont(this.render_options.font);
+        ctx.setFont(this.render_options.font);
         const text = glyph.text.toString();
         ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();

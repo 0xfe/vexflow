@@ -8,7 +8,7 @@
 //
 // See `tests/gracetabnote_tests.ts` for usage examples.
 
-import { Font } from './font';
+// import { Font } from './font'; // RONYEH
 import { TabNote, TabNoteStruct } from './tabnote';
 
 export class GraceTabNote extends TabNote {
@@ -26,7 +26,8 @@ export class GraceTabNote extends TabNote {
       // grace glyph scale
       scale: 0.6,
       // grace tablature font
-      font: `7.5pt ${Font.SANS_SERIF}`,
+      font: `7.5pt Arial`,
+      // font: `7.5pt ${Font.SANS_SERIF}`, // RONYEH
     };
 
     this.updateWidth();

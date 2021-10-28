@@ -21,14 +21,14 @@ module.exports = (grunt) => {
   const BANNER =
     `VexFlow ${packageJSON.version}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
     `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
-    `http://www.vexflow.com   http://github.com/0xfe/vexflow`;
+    `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
   // Used for eslint
   const SOURCES = ['./src/*.ts', './src/*.js'];
 
   // Switching the mode from 'development' => 'production' will enable minification, etc.
   // See: https://webpack.js.org/configuration/mode/
-  function webpackConfig(target, chunkFilename, configFile, moduleEntry, mode) {
+  function webpackConfig(outputFile, chunkFilename, tsconfig, moduleEntry, mode) {
     // Support different ways of loading VexFlow.
     // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
     // VexFlow is exported as root["Vex"], and can be accessed via:
@@ -48,17 +48,19 @@ module.exports = (grunt) => {
       entry: moduleEntry,
       output: {
         path: BUILD_DIR,
-        filename: target,
+        filename: outputFile,
         chunkFilename: chunkFilename,
-        library: 'Vex',
-        libraryTarget: 'umd',
-        libraryExport: 'default',
+        library: {
+          name: 'Vex',
+          type: 'umd',
+          export: 'default',
+        },
         globalObject: globalObject,
         publicPath: 'auto',
       },
       resolve: {
         extensions: ['.ts', '.js', '.json'],
-        plugins: [new TsconfigPathsPlugin({ configFile: configFile })],
+        plugins: [new TsconfigPathsPlugin({ configFile: tsconfig })],
       },
       devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
       module: {
@@ -70,7 +72,7 @@ module.exports = (grunt) => {
               {
                 loader: 'ts-loader',
                 options: {
-                  configFile: configFile,
+                  configFile: tsconfig,
                 },
               },
             ],
@@ -186,6 +188,19 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
+      // copy the vexflow.js production build to vexflow.module.js
+      module: {
+        src: path.join(BUILD_DIR, 'vexflow.js'),
+        dest: path.join(BUILD_DIR, 'vexflow.module.js'),
+        options: {
+          process: function (content, srcpath) {
+            // Insert the export line BEFORE the source map comment.
+            const srcMapLinePrefix = '//# sourceMappingURL';
+            const exportVex = 'export default Vex;\n';
+            return content.replace(srcMapLinePrefix, exportVex + srcMapLinePrefix);
+          },
+        },
+      },
       release: {
         files: [
           {
@@ -274,6 +289,7 @@ module.exports = (grunt) => {
       'webpack:buildTest',
       'webpack:buildStatic',
       'webpack:buildDynamic',
+      'copy:module',
       'typedoc',
     ]
   );

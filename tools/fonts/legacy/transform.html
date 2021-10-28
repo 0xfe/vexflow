@@ -79,6 +79,7 @@
       function drawGlyphs(font) {
         const canvas = document.getElementById('glyphs');
         const glyphs = font.getGlyphs();
+
         const canvasHeight = ((Object.keys(glyphs).length + 1) / (800 / (60 * 2))) * 60;
 
         // Retina display trick
@@ -317,6 +318,7 @@
       const font = Vex.Flow.Font.load('VexFlowFont');
       font.data = combinedFont;
       Vex.Flow.setMusicFont('VexFlowFont');
+
       drawGlyphs(font);
       populateTextArea(generateFontString(combinedFont));
     </script>

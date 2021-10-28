@@ -167,6 +167,13 @@ export class Font {
     weight = weight ?? FontWeight.NORMAL;
     style = style ?? FontStyle.NORMAL;
 
+    if (weight === '') {
+      weight = FontWeight.NORMAL;
+    }
+    if (style === '') {
+      style = FontStyle.NORMAL;
+    }
+
     // If size is a number, we assume the unit is `pt`.
     if (typeof size === 'number') {
       size = `${size}pt`;

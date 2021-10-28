@@ -3,10 +3,10 @@
 /* eslint-disable key-spacing */
 
 import { ArticulationStruct } from './articulation';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';
-import { Font } from './font';
 
 // Custom note heads
 const customNoteHeads: Record<string, { code: string }> = {
