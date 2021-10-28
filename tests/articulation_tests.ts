@@ -30,24 +30,38 @@ const ArticulationTests = {
     run('TabNote Articulation', tabNotes, { sym1: 'a.', sym2: 'a.' });
   },
 };
-
-function drawArticulations(options: TestOptions, contextBuilder: ContextBuilder): void {
+// Helper function for creating StaveNotes.
+function drawArticulations(options: TestOptions): void {
   const sym1 = options.params.sym1;
   const sym2 = options.params.sym2;
-
+  const width = 125 - Stave.defaultPadding;
+  const f = VexFlowTests.makeFactory(options, 675, 195);
+  const ctx = f.getContext();
   expect(0);
-
-  // Get the rendering context
-  const ctx = contextBuilder(options.elementId, 625, 195);
+  let x = 10;
+  const y = 30;
+  const score = f.EasyScore();
+  const formatAndDrawToWidth = (x: number, y: number, width: number, notes: StaveNote[], barline: number) => {
+    const voices = [score.voice(notes, { time: '4/4' })];
+    const formatter = f.Formatter();
+    voices.forEach((v) => formatter.joinVoices([v]));
+    const nwidth = Math.max(formatter.preCalculateMinTotalWidth(voices), width);
+    formatter.format(voices, nwidth);
+    const stave = f
+      .Stave({ x, y, width: nwidth + Stave.defaultPadding })
+      .setEndBarType(barline)
+      .setContext(ctx)
+      .draw();
+    voices.forEach((voice) => voice.draw(ctx, stave));
+    return stave.getWidth();
+  };
 
   // bar 1
-  const staveBar1 = new Stave(10, 30, 125);
-  staveBar1.setContext(ctx).draw();
   const notesBar1 = [
-    new StaveNote({ keys: ['a/3'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/3'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
   ];
   notesBar1[0].addArticulation(0, new Articulation(sym1).setPosition(4));
   notesBar1[1].addArticulation(0, new Articulation(sym1).setPosition(4));
@@ -55,18 +69,14 @@ function drawArticulations(options: TestOptions, contextBuilder: ContextBuilder)
   notesBar1[3].addArticulation(0, new Articulation(sym1).setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+  x += formatAndDrawToWidth(x, y, width, notesBar1, Barline.type.NONE);
 
   // bar 2 - juxtaposing second bar next to first bar
-  const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 125);
-  staveBar2.setEndBarType(Barline.type.DOUBLE);
-  staveBar2.setContext(ctx).draw();
-
   const notesBar2 = [
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
   notesBar2[0].addArticulation(0, new Articulation(sym1).setPosition(3));
   notesBar2[1].addArticulation(0, new Articulation(sym1).setPosition(3));
@@ -74,17 +84,14 @@ function drawArticulations(options: TestOptions, contextBuilder: ContextBuilder)
   notesBar2[3].addArticulation(0, new Articulation(sym1).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+  x += formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.DOUBLE);
 
   // bar 3 - juxtaposing second bar next to first bar
-  const staveBar3 = new Stave(staveBar2.getWidth() + staveBar2.getX(), staveBar2.getY(), 125);
-  staveBar3.setContext(ctx).draw();
-
   const notesBar3 = [
-    new StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
   ];
   notesBar3[0].addArticulation(0, new Articulation(sym2).setPosition(4));
   notesBar3[1].addArticulation(0, new Articulation(sym2).setPosition(4));
@@ -92,17 +99,13 @@ function drawArticulations(options: TestOptions, contextBuilder: ContextBuilder)
   notesBar3[3].addArticulation(0, new Articulation(sym2).setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+  x += formatAndDrawToWidth(x, y, width, notesBar3, Barline.type.NONE);
   // bar 4 - juxtaposing second bar next to first bar
-  const staveBar4 = new Stave(staveBar3.getWidth() + staveBar3.getX(), staveBar3.getY(), 125);
-  staveBar4.setEndBarType(BarlineType.END);
-  staveBar4.setContext(ctx).draw();
-
   const notesBar4 = [
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
   notesBar4[0].addArticulation(0, new Articulation(sym2).setPosition(3));
   notesBar4[1].addArticulation(0, new Articulation(sym2).setPosition(3));
@@ -110,45 +113,54 @@ function drawArticulations(options: TestOptions, contextBuilder: ContextBuilder)
   notesBar4[3].addArticulation(0, new Articulation(sym2).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+  formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END);
 }
 
-function drawFermata(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawFermata(options: TestOptions): void {
   const sym1 = options.params.sym1;
   const sym2 = options.params.sym2;
+  const f = VexFlowTests.makeFactory(options, 400, 195);
+  const ctx = f.getContext();
+  const score = f.EasyScore();
+  const width = 150 - Stave.defaultPadding;
+  let x = 50;
+  const y = 30;
+
+  const formatAndDrawToWidth = (x: number, y: number, width: number, notes: StaveNote[], barline: number) => {
+    const voices = [score.voice(notes, { time: '4/4' })];
+    const formatter = f.Formatter();
+    voices.forEach((v) => formatter.joinVoices([v]));
+    const nwidth = Math.max(formatter.preCalculateMinTotalWidth(voices), width);
+    formatter.format(voices, nwidth);
+    const stave = f
+      .Stave({ x, y, width: nwidth + Stave.defaultPadding })
+      .setEndBarType(barline)
+      .setContext(ctx)
+      .draw();
+    voices.forEach((voice) => voice.draw(ctx, stave));
+    return stave.getWidth();
+  };
 
   expect(0);
 
-  // Get the rendering context
-  const ctx = contextBuilder(options.elementId, 400, 200);
-
-  // bar 1
-  const staveBar1 = new Stave(50, 30, 150);
-  staveBar1.setContext(ctx).draw();
   const notesBar1 = [
-    new StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
   ];
   notesBar1[0].addArticulation(0, new Articulation(sym1).setPosition(3));
   notesBar1[1].addArticulation(0, new Articulation(sym1).setPosition(3));
   notesBar1[2].addArticulation(0, new Articulation(sym2).setPosition(4));
   notesBar1[3].addArticulation(0, new Articulation(sym2).setPosition(4));
-
-  // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
+  x += formatAndDrawToWidth(x, y, width, notesBar1, Barline.type.NONE);
 
   // bar 2 - juxtaposing second bar next to first bar
-  const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 150);
-  staveBar2.setEndBarType(Barline.type.DOUBLE);
-  staveBar2.setContext(ctx).draw();
-
   const notesBar2 = [
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
   notesBar2[0].addArticulation(0, new Articulation(sym1).setPosition(3));
   notesBar2[1].addArticulation(0, new Articulation(sym1).setPosition(3));
@@ -156,35 +168,63 @@ function drawFermata(options: TestOptions, contextBuilder: ContextBuilder): void
   notesBar2[3].addArticulation(0, new Articulation(sym2).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
+  formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.DOUBLE);
 }
 
-function drawArticulations2(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawArticulations2(options: TestOptions): void {
   expect(0);
+  const scale = 0.8;
+  let x = 10;
+  const y = 30;
+  const width = 350 - Stave.defaultPadding;
+  const f = VexFlowTests.makeFactory(options, 1000, 195);
+  const ctx = f.getContext();
+  ctx.scale(scale, scale);
+  const score = f.EasyScore();
+
+  const formatAndDrawToWidth = (
+    x: number,
+    y: number,
+    width: number,
+    notes: StaveNote[],
+    barline: number,
+    beams: Beam[]
+  ) => {
+    const voices = [score.voice(notes, { time: '4/4' })];
+    const formatter = f.Formatter();
+    voices.forEach((v) => formatter.joinVoices([v]));
+    const nwidth = Math.max(formatter.preCalculateMinTotalWidth(voices), width);
+    formatter.format(voices, nwidth);
+    const stave = f
+      .Stave({ x: x, y: y, width: nwidth + Stave.defaultPadding })
+      .setEndBarType(barline)
+      .setContext(ctx)
+      .draw();
+    voices.forEach((voice) => voice.draw(ctx, stave));
+    beams.forEach((beam) => beam.setContext(ctx).draw());
+    return stave.getWidth();
+  };
 
   // Get the rendering context
-  const ctx = contextBuilder(options.elementId, 1000, 200);
 
   // bar 1
-  const staveBar1 = new Stave(10, 30, 350);
-  staveBar1.setContext(ctx).draw();
   const notesBar1 = [
-    new StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['d/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['e/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['g/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['b/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/5'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['f/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['g/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['b/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['c/6'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['d/6'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['d/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['e/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['g/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['b/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['f/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['g/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['b/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/6'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['d/6'], duration: '16', stem_direction: -1 }),
   ];
   let i;
   for (i = 0; i < 16; i++) {
@@ -195,35 +235,32 @@ function drawArticulations2(options: TestOptions, contextBuilder: ContextBuilder
       notesBar1[i].addArticulation(0, new Articulation('a@u').setPosition(4));
     }
   }
-
   const beam1 = new Beam(notesBar1.slice(0, 8));
   const beam2 = new Beam(notesBar1.slice(8, 16));
+  x += formatAndDrawToWidth(x, y, width, notesBar1, Barline.type.NONE, [beam1, beam2]);
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar1, notesBar1);
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
   // bar 2 - juxtaposing second bar next to first bar
-  const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 350);
-  staveBar2.setContext(ctx).draw();
   const notesBar2 = [
-    new StaveNote({ keys: ['f/3'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['g/3'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/3'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['b/3'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['d/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['e/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }),
-    new StaveNote({ keys: ['g/4'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/4'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['b/4'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['f/5'], duration: '16', stem_direction: -1 }),
-    new StaveNote({ keys: ['g/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['f/3'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['g/3'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/3'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['b/3'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['c/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['d/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['e/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '16', stem_direction: 1 }),
+    f.StaveNote({ keys: ['g/4'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['b/4'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['d/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['e/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['f/5'], duration: '16', stem_direction: -1 }),
+    f.StaveNote({ keys: ['g/5'], duration: '16', stem_direction: -1 }),
   ];
   for (i = 0; i < 16; i++) {
     notesBar2[i].addArticulation(0, new Articulation('a-').setPosition(3));
@@ -233,36 +270,25 @@ function drawArticulations2(options: TestOptions, contextBuilder: ContextBuilder
       notesBar2[i].addArticulation(0, new Articulation('a@u').setPosition(4));
     }
   }
-
   const beam3 = new Beam(notesBar2.slice(0, 8));
   const beam4 = new Beam(notesBar2.slice(8, 16));
-
-  // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
-  beam3.setContext(ctx).draw();
-  beam4.setContext(ctx).draw();
+  x += formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.NONE, [beam3, beam4]);
 
   // bar 3 - juxtaposing second bar next to first bar
-  const staveBar3 = new Stave(staveBar2.getWidth() + staveBar2.getX(), staveBar2.getY(), 75);
-  staveBar3.setContext(ctx).draw();
-
-  const notesBar3 = [new StaveNote({ keys: ['c/4'], duration: 'w', stem_direction: 1 })];
+  const notesBar3 = [f.StaveNote({ keys: ['c/4'], duration: 'w', stem_direction: 1 })];
   notesBar3[0].addArticulation(0, new Articulation('a-').setPosition(3));
   notesBar3[0].addArticulation(0, new Articulation('a>').setPosition(3));
   notesBar3[0].addArticulation(0, new Articulation('a@a').setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar3, notesBar3);
+  x += formatAndDrawToWidth(x, y, width, notesBar3, Barline.type.NONE, []);
   // bar 4 - juxtaposing second bar next to first bar
-  const staveBar4 = new Stave(staveBar3.getWidth() + staveBar3.getX(), staveBar3.getY(), 150);
-  staveBar4.setEndBarType(Barline.type.END);
-  staveBar4.setContext(ctx).draw();
 
   const notesBar4 = [
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
-    new StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
+    f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
   for (i = 0; i < 4; i++) {
     let position1 = 3;
@@ -273,7 +299,7 @@ function drawArticulations2(options: TestOptions, contextBuilder: ContextBuilder
   }
 
   // Helper function to justify and draw a 4/4 voice
-  Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
+  x += formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END, []);
 }
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {

@@ -286,31 +286,38 @@ function basic(options: TestOptions): void {
 }
 
 function cautionary(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 800, 240);
-  const stave = f.Stave({ x: 0, y: 10, width: 780 });
-  const score = f.EasyScore();
+  const staveCount = 12;
+  const scale = 0.85;
+  const staveWidth = 840;
+  let i = 0;
+  let j = 0;
+  const f = VexFlowTests.makeFactory(options, staveWidth + 10, 175 * staveCount + 10);
+  f.getContext().scale(scale, scale);
 
   const accids = Object.keys(Flow.accidentalMap).filter((accid) => accid !== '{' && accid !== '}');
-
-  const notes = accids.map((accidType: string) =>
-    f
-      .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
-      .addAccidental(0, f.Accidental({ type: accidType }))
-  );
-
-  const voice = score.voice(notes, { time: accids.length + '/4' });
-
-  voice.getTickables().forEach((tickable) => {
-    tickable
-      .getModifiers()
-      .filter((modifier) => modifier.getAttribute('type') === Accidental.CATEGORY)
-      .forEach((accid) => (accid as Accidental).setAsCautionary());
-  });
-
-  f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-  f.draw();
-
+  const mod = Math.round(accids.length / staveCount);
+  for (i = 0; i < staveCount; ++i) {
+    const stave = f.Stave({ x: 0, y: 10 + 200 * i, width: staveWidth / scale });
+    const score = f.EasyScore();
+    const rowMap = [];
+    for (j = 0; j < mod && j + i * staveCount < accids.length; ++j) {
+      rowMap.push(accids[j + i * staveCount]);
+    }
+    const notes = rowMap.map((accidType: string) =>
+      f
+        .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
+        .addAccidental(0, f.Accidental({ type: accidType }))
+    );
+    const voice = score.voice(notes, { time: rowMap.length + '/4' });
+    voice.getTickables().forEach((tickable) => {
+      tickable
+        .getModifiers()
+        .filter((modifier) => modifier.getAttribute('type') === Accidental.CATEGORY)
+        .forEach((accid) => (accid as Accidental).setAsCautionary());
+    });
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
+  }
   ok(true, 'Must successfully render cautionary accidentals');
 }
 

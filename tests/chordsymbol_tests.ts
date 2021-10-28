@@ -7,6 +7,7 @@ import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
 import { ChordSymbol } from 'chordsymbol';
 import { Formatter } from 'formatter';
+import { Factory } from 'factory';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 
@@ -29,8 +30,8 @@ const superscript = { symbolModifier: ChordSymbol.symbolModifiers.SUPERSCRIPT };
 const subscript = { symbolModifier: ChordSymbol.symbolModifiers.SUBSCRIPT };
 
 // Helper function for creating StaveNotes.
-const note = (keys: string[], duration: string, chordSymbol: ChordSymbol) =>
-  new StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
+const note = (factory: Factory, keys: string[], duration: string, chordSymbol: ChordSymbol) =>
+  factory.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
 
 function fontSize(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 750, 580);
@@ -40,14 +41,17 @@ function fontSize(options: TestOptions): void {
   ctx.strokeStyle = '#221';
 
   function draw(chords: ChordSymbol[], y: number) {
-    const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+    const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble');
     const notes = [
-      note(['c/4'], 'q', chords[0]),
-      note(['c/4'], 'q', chords[1]),
-      note(['c/4'], 'q', chords[2]),
-      note(['c/4'], 'q', chords[3]),
+      note(f, ['c/4'], 'q', chords[0]),
+      note(f, ['c/4'], 'q', chords[1]),
+      note(f, ['c/4'], 'q', chords[2]),
+      note(f, ['c/4'], 'q', chords[3]),
     ];
-    Formatter.FormatAndDraw(ctx, stave, notes);
+    const score = f.EasyScore();
+    const voice = score.voice(notes, { time: '4/4' });
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
   }
 
   let chords = [];
@@ -135,15 +139,18 @@ function kern(options: TestOptions): void {
   ctx.strokeStyle = '#221';
 
   function draw(chords: ChordSymbol[], y: number) {
-    const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+    const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      note(['C/4'], 'q', chords[0]),
-      note(['C/4'], 'q', chords[1]),
-      note(['C/4'], 'q', chords[2]),
-      note(['C/4'], 'q', chords[3]),
+      note(f, ['C/4'], 'q', chords[0]),
+      note(f, ['C/4'], 'q', chords[1]),
+      note(f, ['C/4'], 'q', chords[2]),
+      note(f, ['C/4'], 'q', chords[3]),
     ];
-    Formatter.FormatAndDraw(ctx, stave, notes);
+    const score = f.EasyScore();
+    const voice = score.voice(notes, { time: '4/4' });
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
   }
 
   let chords = [
@@ -189,12 +196,15 @@ function top(options: TestOptions): void {
   ctx.strokeStyle = '#221';
 
   function draw(c1: ChordSymbol, c2: ChordSymbol, y: number) {
-    const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+    const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble').setContext(ctx).draw();
     const notes = [
-      note(['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new Accidental('b')),
-      note(['c/4', 'e/4', 'b/4'], 'h', c2),
+      note(f, ['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new Accidental('b')),
+      note(f, ['c/4', 'e/4', 'b/4'], 'h', c2),
     ];
-    Formatter.FormatAndDraw(ctx, stave, notes);
+    const score = f.EasyScore();
+    const voice = score.voice(notes, { time: '4/4' });
+    f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+    f.draw();
   }
 
   let chord1 = f
@@ -242,8 +252,8 @@ function topJustify(options: TestOptions): void {
     const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      note(['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new Accidental('b')),
-      note(['c/4', 'e/4', 'B/4'], 'h', chord2),
+      note(f, ['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new Accidental('b')),
+      note(f, ['c/4', 'e/4', 'B/4'], 'h', chord2),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
@@ -292,10 +302,10 @@ function bottom(options: TestOptions): void {
     const stave = new Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      note(['c/4', 'f/4', 'a/4'], 'q', chords[0]),
-      note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
-      note(['c/4', 'e/4', 'g/4'], 'q', chords[2]),
-      note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
+      note(f, ['c/4', 'f/4', 'a/4'], 'q', chords[0]),
+      note(f, ['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
+      note(f, ['c/4', 'e/4', 'g/4'], 'q', chords[2]),
+      note(f, ['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }

@@ -7,6 +7,8 @@
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { KeySignature } from 'keysignature';
+import { Glyph } from 'glyph';
+import { Tables } from 'tables';
 import { Stave } from 'stave';
 
 const ClefKeySignatureTests = {
@@ -21,6 +23,14 @@ const ClefKeySignatureTests = {
 };
 
 function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const minPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('glyphs.noteHead.minPadding');
+  const accidentalCount = 28; // total number in all the keys
+  const glyphScale = 39; // default font scale
+  const clefPadding = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', glyphScale) * 2; // widest clef
+  const sharpWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalSharp', glyphScale);
+  const flatWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalFlat', glyphScale);
+  const sharpTestWidth = accidentalCount * (sharpWidth + minPadding) + clefPadding + Stave.defaultPadding;
+  const flatTestWidth = accidentalCount * (flatWidth + minPadding) + clefPadding + Stave.defaultPadding;
   const clefs = [
     'treble',
     'soprano',
@@ -35,7 +45,11 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
     'percussion',
   ];
 
-  const ctx = contextBuilder(options.elementId, 400, 20 + 80 * 2 * clefs.length);
+  const ctx = contextBuilder(
+    options.elementId,
+    Math.max(sharpTestWidth, flatTestWidth) + Stave.defaultPadding + clefPadding + 100,
+    20 + 80 * 2 * clefs.length
+  );
   const staves = [];
   const keys = options.params.majorKeys ? MAJOR_KEYS : MINOR_KEYS;
 
@@ -47,9 +61,9 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
   const yOffsetForFlatStaves = 10 + 80 * clefs.length;
   for (i = 0; i < clefs.length; i++) {
     // Render all the sharps first, then all the flats:
-    staves[i] = new Stave(10, 10 + 80 * i, 390);
+    staves[i] = new Stave(10, 10 + 80 * i, flatTestWidth);
     staves[i].addClef(clefs[i]);
-    staves[i + clefs.length] = new Stave(10, yOffsetForFlatStaves + 10 + 80 * i, 390);
+    staves[i + clefs.length] = new Stave(10, yOffsetForFlatStaves + 10 + 80 * i, sharpTestWidth);
     staves[i + clefs.length].addClef(clefs[i]);
 
     for (flat = 0; flat < 8; flat++) {
@@ -72,11 +86,24 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 400);
-  const stave1 = new Stave(10, 10, 370);
-  const stave2 = new Stave(10, 90, 370);
-  const stave3 = new Stave(10, 170, 370);
-  const stave4 = new Stave(10, 260, 370);
+  const minPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('glyphs.noteHead.minPadding');
+  const accidentalCount = 28; // total number in all the keys
+  const glyphScale = 39; // default font scale
+  const clefPadding = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', glyphScale) * 2; // widest clef
+  const sharpWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalSharp', glyphScale);
+  const flatWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalFlat', glyphScale);
+  const sharpTestWidth = accidentalCount * (sharpWidth + minPadding) + clefPadding + Stave.defaultPadding;
+  const flatTestWidth = accidentalCount * (flatWidth + minPadding) + clefPadding + Stave.defaultPadding;
+
+  const ctx = contextBuilder(
+    options.elementId,
+    Math.max(sharpTestWidth, flatTestWidth) + Stave.defaultPadding + clefPadding + 100,
+    400
+  );
+  const stave1 = new Stave(10, 10, flatTestWidth);
+  const stave2 = new Stave(10, 90, flatTestWidth);
+  const stave3 = new Stave(10, 170, sharpTestWidth);
+  const stave4 = new Stave(10, 260, sharpTestWidth);
   const keys = MAJOR_KEYS;
 
   stave1.addClef('treble');
