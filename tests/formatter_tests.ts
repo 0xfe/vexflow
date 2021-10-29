@@ -24,9 +24,6 @@ const FormatterTests = {
     test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
-    run('Proportional Formatting - No Tuning', proportional, { debug: true, iterations: 0 });
-    run('Proportional Formatting - No Justification', proportional, { justify: false, debug: true, iterations: 0 });
-    run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
     run('Whitespace and justify', rightJustify);
     run('Notehead padding', noteHeadPadding);
     run('Justification and alignment with accidentals', accidentalJustification);
@@ -42,6 +39,9 @@ const FormatterTests = {
     run('Tight', tightNotes1);
     run('Tight 2', tightNotes2);
     run('Annotations', annotations);
+    run('Proportional Formatting - No Tuning', proportional, { debug: true, iterations: 0 });
+    run('Proportional Formatting - No Justification', proportional, { justify: false, debug: true, iterations: 0 });
+    run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
   },
 };
 
