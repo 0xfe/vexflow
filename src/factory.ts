@@ -612,9 +612,6 @@ export class Factory {
     return textBracket;
   }
 
-  // TODO: SystemOptions make all properties optional.
-  // eslint-disable-next-line
-  // @ts-ignore
   System(params: SystemOptions = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);
