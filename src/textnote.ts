@@ -25,7 +25,7 @@ export interface TextNoteStruct extends NoteStruct {
 /**
  * `TextNote` is a notation element that is positioned in time. Generally
  * meant for objects that sit above/below the staff and inline with each other.
- * `TextNote` has to be assigned to a `Stave` before rendering by means of `SetStave`.
+ * `TextNote` has to be assigned to a `Stave` before rendering by means of `setStave`.
  * Examples of this would be such as dynamics, lyrics, chord changes, etc.
  */
 export class TextNote extends Note {
@@ -182,7 +182,7 @@ export class TextNote extends Note {
 
   /**
    * Renders the TextNote.
-   * `TextNote` has to be assigned to a `Stave` before rendering by means of `SetStave`.
+   * `TextNote` has to be assigned to a `Stave` before rendering by means of `setStave`.
    */
   draw(): void {
     const ctx = this.checkContext();
