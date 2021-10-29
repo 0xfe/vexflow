@@ -7,6 +7,8 @@
 import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
+import { Glyph } from 'glyph';
+import { Tables } from 'tables';
 import { KeySignature } from 'keysignature';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
@@ -25,6 +27,16 @@ const KeySignatureTests = {
     run('End key with clef test', endKeyWithClef);
     run('Key Signature Change test', changeKey);
   },
+};
+
+const fontWidths = () => {
+  const glyphScale = 39; // default font scale
+  const musicStack = Tables.DEFAULT_FONT_STACK;
+  const sharpWidth = Glyph.getWidth(musicStack, 'accidentalSharp', glyphScale) + 1;
+  const flatWidth = Glyph.getWidth(musicStack, 'accidentalFlat', glyphScale) + 1;
+  const naturalWidth = Glyph.getWidth(musicStack, 'accidentalNatural', glyphScale) + 2;
+  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale) * 2; // widest clef
+  return { sharpWidth, flatWidth, naturalWidth, clefWidth };
 };
 
 function parser(): void {
@@ -57,9 +69,16 @@ function parser(): void {
 }
 
 function majorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 240);
-  const stave1 = new Stave(10, 10, 350);
-  const stave2 = new Stave(10, 90, 350);
+  const w = fontWidths();
+  const accidentalCount = 28; // total number in all the keys
+  const casePadding = 10; // hard-coded in staveModifier
+  const testCases = 7; // all keys, but includes key of C
+  const sharpTestWidth = accidentalCount * w.sharpWidth + casePadding * testCases + Stave.defaultPadding;
+  const flatTestWidth = accidentalCount * w.flatWidth + casePadding * testCases + Stave.defaultPadding;
+
+  const ctx = contextBuilder(options.elementId, Math.max(sharpTestWidth, flatTestWidth) + 100, 240);
+  const stave1 = new Stave(10, 10, flatTestWidth);
+  const stave2 = new Stave(10, 90, sharpTestWidth);
   const keys = MAJOR_KEYS;
 
   let keySig = null;
@@ -82,12 +101,27 @@ function majorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 function majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 780, 500);
-  ctx.scale(0.9, 0.9);
-  const stave1 = new Stave(10, 10, 750).addClef('treble');
-  const stave2 = new Stave(10, 90, 750).addClef('treble');
-  const stave3 = new Stave(10, 170, 750).addClef('treble');
-  const stave4 = new Stave(10, 250, 750).addClef('treble');
+  const scale = 0.9;
+  const w = fontWidths();
+  const flatPadding = 18;
+  const sharpPadding = 20;
+  const flatTestCases = 8;
+  const sharpTestCases = 7;
+  const sharpTestWidth =
+    28 * w.sharpWidth + 21 * w.naturalWidth + sharpPadding * sharpTestCases + Stave.defaultPadding + w.clefWidth;
+  const flatTestWidth =
+    28 * w.flatWidth + 28 * w.naturalWidth + flatPadding * flatTestCases + Stave.defaultPadding + w.clefWidth;
+  const eFlatTestWidth =
+    28 * w.flatWidth + 32 * w.naturalWidth + flatPadding * flatTestCases + Stave.defaultPadding + w.clefWidth;
+  const eSharpTestWidth =
+    28 * w.sharpWidth + 28 * w.naturalWidth + sharpPadding * sharpTestCases + Stave.defaultPadding + w.clefWidth;
+  const maxWidth = Math.max(Math.max(sharpTestWidth, flatTestWidth, Math.max(eSharpTestWidth, eFlatTestWidth)));
+  const ctx = contextBuilder(options.elementId, maxWidth + 100, 500);
+  ctx.scale(scale, scale);
+  const stave1 = new Stave(10, 10, flatTestWidth).addClef('treble');
+  const stave2 = new Stave(10, 90, sharpTestWidth).addClef('treble');
+  const stave3 = new Stave(10, 170, eFlatTestWidth).addClef('treble');
+  const stave4 = new Stave(10, 250, eSharpTestWidth).addClef('treble');
   const keys = MAJOR_KEYS;
 
   let keySig = null;
@@ -96,28 +130,28 @@ function majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder)
   for (i = 0; i < 8; ++i) {
     keySig = new KeySignature(keys[i]);
     keySig.cancelKey('Cb');
-    keySig.setPadding(18);
+    keySig.setPadding(flatPadding);
     keySig.addToStave(stave1);
   }
 
   for (n = 8; n < keys.length; ++n) {
     keySig = new KeySignature(keys[n]);
     keySig.cancelKey('C#');
-    keySig.setPadding(20);
+    keySig.setPadding(sharpPadding);
     keySig.addToStave(stave2);
   }
 
   for (i = 0; i < 8; ++i) {
     keySig = new KeySignature(keys[i]);
     keySig.cancelKey('E');
-    keySig.setPadding(18);
+    keySig.setPadding(flatPadding);
     keySig.addToStave(stave3);
   }
 
   for (n = 8; n < keys.length; ++n) {
     keySig = new KeySignature(keys[n]);
     keySig.cancelKey('Ab');
-    keySig.setPadding(20);
+    keySig.setPadding(sharpPadding);
     keySig.addToStave(stave4);
   }
 
@@ -134,23 +168,37 @@ function majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder)
 }
 
 function keysCanceledForEachClef(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 600, 380);
-  ctx.scale(0.8, 0.8);
+  const scale = 0.8;
+  const w = fontWidths();
+  const keyPadding = 10;
   const keys = ['C#', 'Cb'];
+  const flatsKey = [7, 14];
+  const sharpsKey = [14, 7];
+  const natsKey = [7, 7];
+  const max = 21 * Math.max(w.sharpWidth, w.flatWidth) * 2 + keyPadding * 6 + Stave.defaultPadding + w.clefWidth;
+  const ctx = contextBuilder(options.elementId, max + 100, 380);
+  ctx.scale(scale, scale);
 
   const x = 20;
   let y = 20;
   let tx = x;
   ['bass', 'tenor', 'soprano', 'mezzo-soprano', 'baritone-f'].forEach(function (clef) {
-    keys.forEach((key) => {
-      const cancelKey = key === keys[0] ? keys[1] : keys[0];
-      const stave = new Stave(tx, y, 350);
+    keys.forEach((key, keyIx) => {
+      const cancelKey = keys[(keyIx + 1) % 2];
+      const width =
+        flatsKey[keyIx] * w.flatWidth +
+        natsKey[keyIx] * w.naturalWidth +
+        sharpsKey[keyIx] * w.sharpWidth +
+        keyPadding * 3 +
+        w.clefWidth +
+        Stave.defaultPadding;
+      const stave = new Stave(tx, y, width);
       stave.setClef(clef);
       stave.addKeySignature(cancelKey);
       stave.addKeySignature(key, cancelKey);
       stave.addKeySignature(key);
       stave.setContext(ctx).draw();
-      tx += 350;
+      tx += width;
     });
     tx = x;
     y += 80;
@@ -212,9 +260,16 @@ function majorKeysAltered(options: TestOptions, contextBuilder: ContextBuilder):
 }
 
 function minorKeys(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 240);
-  const stave1 = new Stave(10, 10, 350);
-  const stave2 = new Stave(10, 90, 350);
+  const accidentalCount = 28; // total number in all the keys
+  const w = fontWidths();
+  const casePadding = 10; // hard-coded in staveModifier
+  const testCases = 7; // all keys, but includes key of C
+  const sharpTestWidth = accidentalCount * w.sharpWidth + casePadding * testCases + Stave.defaultPadding;
+  const flatTestWidth = accidentalCount * w.flatWidth + casePadding * testCases + Stave.defaultPadding;
+
+  const ctx = contextBuilder(options.elementId, Math.max(sharpTestWidth, flatTestWidth) + 100, 240);
+  const stave1 = new Stave(10, 10, flatTestWidth);
+  const stave2 = new Stave(10, 90, sharpTestWidth);
   const keys = MINOR_KEYS;
 
   let keySig = null;
@@ -257,9 +312,16 @@ function endKeyWithClef(options: TestOptions, contextBuilder: ContextBuilder): v
 }
 
 function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 240);
-  const stave1 = new Stave(10, 10, 350);
-  const stave2 = new Stave(10, 90, 350);
+  const w = fontWidths();
+  const accidentalCount = 28; // total number in all the keys
+  const casePadding = 10; // hard-coded in staveModifier
+  const testCases = 7; // all keys, but includes key of C
+  const sharpTestWidth = accidentalCount * w.sharpWidth + casePadding * testCases + Stave.defaultPadding;
+  const flatTestWidth = accidentalCount * w.flatWidth + casePadding * testCases + Stave.defaultPadding;
+
+  const ctx = contextBuilder(options.elementId, Math.max(sharpTestWidth, flatTestWidth) + 100, 240);
+  const stave1 = new Stave(10, 10, flatTestWidth);
+  const stave2 = new Stave(10, 90, sharpTestWidth);
   const keys = MAJOR_KEYS;
 
   for (let i = 0; i < 8; ++i) {
