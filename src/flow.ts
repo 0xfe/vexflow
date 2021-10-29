@@ -211,7 +211,7 @@ export const Flow = {
     Tables.STEM_HEIGHT = value;
   },
   get STEM_WIDTH(): number {
-    return Tables.STEM_HEIGHT;
+    return Tables.STEM_WIDTH;
   },
   set STEM_WIDTH(value: number) {
     Tables.STEM_WIDTH = value;
