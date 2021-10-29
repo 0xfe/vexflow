@@ -6,11 +6,11 @@
 // This class implements hairpins between notes.
 // Hairpins can be either crescendo or decrescendo.
 
-import { RuntimeError } from './util';
 import { Element } from './element';
 import { Modifier } from './modifier';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { RuntimeError } from './util';
 
 export interface StaveHairpinRenderOptions {
   right_shift_ticks: number;

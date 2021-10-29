@@ -8,10 +8,10 @@
 // type in VexFlow. This object would most likely be formatted in a Voice
 // with `TextNotes` - which are used to represent other dynamics markings.
 
-import { log } from './util';
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';
 import { TickContext } from './tickcontext';
+import { log } from './util';
 
 export interface CrescendoParams {
   reverse: boolean;

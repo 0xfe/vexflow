@@ -3,17 +3,17 @@
 // @author Mohit Cheppudira
 // @author Greg Ristow (modifications)
 
-import { log, defined } from './util';
 import { Fraction } from './fraction';
-import { Tables } from './tables';
-import { Music } from './music';
-import { Modifier } from './modifier';
 import { Glyph } from './glyph';
+import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { Voice } from './voice';
+import { Music } from './music';
 import { Note } from './note';
+import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { isCategory, isGraceNote, isGraceNoteGroup, isStaveNote } from './typeguard';
+import { defined, log } from './util';
+import { Voice } from './voice';
 
 type Line = {
   column: number;

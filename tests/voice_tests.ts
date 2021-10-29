@@ -3,7 +3,6 @@
 //
 // Voice Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { ContextBuilder } from 'renderer';
@@ -11,7 +10,9 @@ import { Stave } from 'stave';
 import { Barline } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { Voice } from 'voice';
+
 import { MockTickable } from './mocks';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VoiceTests = {
   Start(): void {

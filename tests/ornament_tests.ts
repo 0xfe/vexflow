@@ -6,17 +6,18 @@
 
 // TODO: Formatting for Jazz Ornaments is incorrect. The last note + ornament bleeds into the next measure.
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { ContextBuilder } from 'renderer';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
 import { Glyph } from 'glyph';
 import { Tables } from 'tables';
 import { Formatter } from 'formatter';
 import { Ornament } from 'ornament';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { Voice, VoiceMode } from 'voice';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const OrnamentTests = {
   Start(): void {

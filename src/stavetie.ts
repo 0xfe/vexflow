@@ -4,10 +4,10 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { RuntimeError } from './util';
 import { Element } from './element';
-import { FontInfo } from './types/common';
 import { Note } from './note';
+import { FontInfo } from './types/common';
+import { RuntimeError } from './util';
 
 export interface TieNotes {
   first_note: Note;

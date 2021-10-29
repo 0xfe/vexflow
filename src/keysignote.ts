@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Mark Meeus 2019
 
-import { Note } from './note';
 import { KeySignature } from './keysignature';
 import { ModifierContext } from './modifiercontext';
+import { Note } from './note';
 
 export class KeySigNote extends Note {
   static get CATEGORY(): string {

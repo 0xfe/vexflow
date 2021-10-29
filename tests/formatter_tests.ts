@@ -3,7 +3,6 @@
 //
 // Formatter Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
@@ -16,7 +15,9 @@ import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { Voice, VoiceTime } from 'voice';
+
 import { MockTickable } from './mocks';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FormatterTests = {
   Start(): void {

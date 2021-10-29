@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { RuntimeError } from './util';
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { Tables } from './tables';
+import { RuntimeError } from './util';
 
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash?: boolean;

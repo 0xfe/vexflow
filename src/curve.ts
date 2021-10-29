@@ -3,9 +3,9 @@
 //
 // This class implements curves (for slurs)
 
-import { RuntimeError } from './util';
 import { Element } from './element';
 import { Note } from './note';
+import { RuntimeError } from './util';
 
 export interface CurveOptions {
   /** Two control points for the bezier curves. */

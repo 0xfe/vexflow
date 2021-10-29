@@ -5,8 +5,8 @@
 // codebase.
 //
 
-import { log, RuntimeError } from './util';
 import { Flow } from './flow';
+import { log, RuntimeError } from './util';
 
 export const Vex = {
   Flow: Flow,

@@ -7,12 +7,12 @@
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
-import { RuntimeError } from './util';
 import { Element } from './element';
-import { Tables } from './tables';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
+import { Tables } from './tables';
 import { FontInfo } from './types/common';
+import { RuntimeError } from './util';
 
 export interface StaveLineNotes {
   first_note: StaveNote;

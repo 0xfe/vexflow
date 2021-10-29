@@ -1,8 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
 import { Tables } from './tables';
+import { RuntimeError } from './util';
 
 /** `Tuning` implements varies types of tunings for tablature. */
 export class Tuning {

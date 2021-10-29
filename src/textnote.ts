@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
-import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
+import { Note, NoteStruct } from './note';
 import { FontInfo } from './types/common';
+import { RuntimeError } from './util';
 
 export enum Justification {
   LEFT = 1,
@@ -25,6 +25,7 @@ export interface TextNoteStruct extends NoteStruct {
 /**
  * `TextNote` is a notation element that is positioned in time. Generally
  * meant for objects that sit above/below the staff and inline with each other.
+ * `TextNote` has to be assigned to a `Stave` before rendering by means of `SetStave`.
  * Examples of this would be such as dynamics, lyrics, chord changes, etc.
  */
 export class TextNote extends Note {
@@ -179,7 +180,10 @@ export class TextNote extends Note {
     this.setPreFormatted(true);
   }
 
-  /** Renders the TextNote. */
+  /**
+   * Renders the TextNote.
+   * `TextNote` has to be assigned to a `Stave` before rendering by means of `SetStave`.
+   */
   draw(): void {
     const ctx = this.checkContext();
     const stave = this.checkStave();

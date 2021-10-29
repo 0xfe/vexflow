@@ -1,17 +1,18 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
-import { Tables } from './tables';
+import { isStaveNote, isTabNote } from 'typeguard';
+
 import { Element } from './element';
 import { Fraction } from './fraction';
-import { Tuplet } from './tuplet';
+import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stem } from './stem';
-import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
+import { Tuplet } from './tuplet';
+import { RuntimeError } from './util';
 import { Voice } from './voice';
-import { isStaveNote, isTabNote } from 'typeguard';
 
 function calculateStemDirection(notes: StemmableNote[]) {
   let lineSum = 0;

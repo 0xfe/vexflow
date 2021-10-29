@@ -2,8 +2,8 @@
 // MIT License
 // @author Gregory Ristow (2015)
 
-import { RuntimeError, normalizeAngle, prefix } from './util';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
+import { normalizeAngle, prefix, RuntimeError } from './util';
 
 // eslint-disable-next-line
 type Attributes = { [key: string]: any };

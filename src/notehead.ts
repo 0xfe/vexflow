@@ -1,15 +1,15 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
-import { Tables } from './tables';
-import { Note, NoteStruct } from './note';
-import { Stem } from './stem';
-import { Glyph, GlyphProps } from './glyph';
-import { RenderContext } from './rendercontext';
 import { BoundingBox } from './boundingbox';
-import { Stave } from './stave';
 import { ElementStyle } from './element';
+import { Glyph, GlyphProps } from './glyph';
+import { Note, NoteStruct } from './note';
+import { RenderContext } from './rendercontext';
+import { Stave } from './stave';
+import { Stem } from './stem';
+import { Tables } from './tables';
+import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {

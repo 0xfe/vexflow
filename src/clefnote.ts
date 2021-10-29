@@ -2,12 +2,12 @@
 // Author Taehoon Moon 2014
 // MIT License
 
-import { Note } from './note';
-import { Clef } from './clef';
-import { Glyph } from './glyph';
 import { BoundingBox } from './boundingbox';
+import { Clef } from './clef';
 import { ClefType } from './clef';
+import { Glyph } from './glyph';
 import { ModifierContext } from './modifiercontext';
+import { Note } from './note';
 import { RenderContext } from './rendercontext';
 
 /** ClefNote implements clef annotations in measures. */

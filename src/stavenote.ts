@@ -9,21 +9,21 @@
 //
 // See `tests/stavenote_tests.ts` for usage examples.
 
-import { RuntimeError, log, midLine, warn, defined } from './util';
-import { Tables } from './tables';
-import { BoundingBox } from './boundingbox';
-import { Stem } from './stem';
-import { NoteHead } from './notehead';
-import { StemmableNote } from './stemmablenote';
-import { StemOptions } from './stem';
-import { Modifier } from './modifier';
-import { Dot } from './dot';
-import { Beam } from './beam';
-import { ElementStyle } from './element';
-import { Stave } from './stave';
-import { Note, NoteStruct } from './note';
-import { ModifierContextState } from './modifiercontext';
 import { Accidental } from './accidental';
+import { Beam } from './beam';
+import { BoundingBox } from './boundingbox';
+import { Dot } from './dot';
+import { ElementStyle } from './element';
+import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
+import { Note, NoteStruct } from './note';
+import { NoteHead } from './notehead';
+import { Stave } from './stave';
+import { Stem } from './stem';
+import { StemOptions } from './stem';
+import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
+import { defined, log, midLine, RuntimeError, warn } from './util';
 
 export interface StaveNoteHeadBounds {
   y_top: number;

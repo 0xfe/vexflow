@@ -17,8 +17,8 @@
 // the registry. This allows fast look up of elements by attributes like id, type,
 // and class.
 
-import { RuntimeError } from './util';
 import { Element } from './element';
+import { RuntimeError } from './util';
 
 // Indexes are represented as maps of maps of maps. This allows
 // for both multi-labeling (e.g., an element can have multiple classes)

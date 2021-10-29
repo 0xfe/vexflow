@@ -2,16 +2,16 @@
 // Author: Larry Kuhns.
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
-import { Tables } from './tables';
-import { Modifier } from './modifier';
+import { Builder } from './easyscore';
 import { Glyph } from './glyph';
-import { Stem } from './stem';
+import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
-import { ModifierContextState } from './modifiercontext';
-import { Builder } from './easyscore';
+import { Stem } from './stem';
+import { Tables } from './tables';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
   code?: string;

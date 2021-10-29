@@ -1,9 +1,6 @@
-import { Tables } from './tables';
-
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
-import { Barline } from './stavebarline';
 import { BarNote } from './barnote';
 import { Beam } from './beam';
 import { Bend } from './bend';
@@ -42,23 +39,26 @@ import { Ornament } from './ornament';
 import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
-import { Renderer } from './renderer';
 import { RenderContext } from './rendercontext';
+import { Renderer } from './renderer';
 import { RepeatNote } from './repeatnote';
-import { Repetition } from './staverepetition';
 import { Stave } from './stave';
+import { Barline } from './stavebarline';
 import { StaveConnector } from './staveconnector';
 import { StaveHairpin } from './stavehairpin';
 import { StaveLine } from './staveline';
 import { StaveModifier } from './stavemodifier';
 import { StaveNote } from './stavenote';
+import { Repetition } from './staverepetition';
 import { StaveTempo } from './stavetempo';
 import { StaveText } from './stavetext';
 import { StaveTie } from './stavetie';
+import { Volta } from './stavevolta';
 import { Stem } from './stem';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
 import { System } from './system';
+import { Tables } from './tables';
 import { TabNote } from './tabnote';
 import { TabSlide } from './tabslide';
 import { TabStave } from './tabstave';
@@ -76,7 +76,6 @@ import { Tuplet } from './tuplet';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
-import { Volta } from './stavevolta';
 
 export const Flow = {
   Accidental,
@@ -211,7 +210,7 @@ export const Flow = {
     Tables.STEM_HEIGHT = value;
   },
   get STEM_WIDTH(): number {
-    return Tables.STEM_HEIGHT;
+    return Tables.STEM_WIDTH;
   },
   set STEM_WIDTH(value: number) {
     Tables.STEM_WIDTH = value;
