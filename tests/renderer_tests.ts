@@ -12,6 +12,7 @@ import { Renderer } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { SVGContext } from 'svgcontext';
+
 import { RuntimeError } from '../src/util';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

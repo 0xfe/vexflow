@@ -8,6 +8,7 @@
 import { Factory } from 'factory';
 import { StaveNote } from 'stavenote';
 import { Tickable } from 'tickable';
+
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const PedalMarkingTests = {
