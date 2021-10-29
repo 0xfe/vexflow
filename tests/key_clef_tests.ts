@@ -22,15 +22,22 @@ const ClefKeySignatureTests = {
   },
 };
 
-function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const minPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('glyphs.noteHead.minPadding');
-  const accidentalCount = 28; // total number in all the keys
+const fontWidths = () => {
   const glyphScale = 39; // default font scale
-  const clefPadding = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', glyphScale) * 2; // widest clef
-  const sharpWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalSharp', glyphScale);
-  const flatWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalFlat', glyphScale);
-  const sharpTestWidth = accidentalCount * (sharpWidth + minPadding) + clefPadding + Stave.defaultPadding;
-  const flatTestWidth = accidentalCount * (flatWidth + minPadding) + clefPadding + Stave.defaultPadding;
+  const musicStack = Tables.DEFAULT_FONT_STACK;
+  const sharpWidth = Glyph.getWidth(musicStack, 'accidentalSharp', glyphScale) + 1;
+  const flatWidth = Glyph.getWidth(musicStack, 'accidentalFlat', glyphScale) + 1;
+  const ksPadding = 10; // hard-coded in keysignature.ts
+  const naturalWidth = Glyph.getWidth(musicStack, 'accidentalNatural', glyphScale) + 2;
+  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale); // widest clef
+  return { sharpWidth, flatWidth, naturalWidth, clefWidth, ksPadding };
+};
+
+function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const w = fontWidths();
+  const accidentalCount = 28; // total number in all the keys
+  const sharpTestWidth = accidentalCount * w.sharpWidth + w.clefWidth + Stave.defaultPadding + 6 * w.ksPadding;
+  const flatTestWidth = accidentalCount * w.flatWidth + w.clefWidth + Stave.defaultPadding + 6 * w.ksPadding;
   const clefs = [
     'treble',
     'soprano',
@@ -47,7 +54,7 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const ctx = contextBuilder(
     options.elementId,
-    Math.max(sharpTestWidth, flatTestWidth) + Stave.defaultPadding + clefPadding + 100,
+    Math.max(sharpTestWidth, flatTestWidth) + 100,
     20 + 80 * 2 * clefs.length
   );
   const staves = [];
@@ -86,20 +93,12 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const minPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('glyphs.noteHead.minPadding');
+  const w = fontWidths();
   const accidentalCount = 28; // total number in all the keys
-  const glyphScale = 39; // default font scale
-  const clefPadding = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', glyphScale) * 2; // widest clef
-  const sharpWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalSharp', glyphScale);
-  const flatWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'accidentalFlat', glyphScale);
-  const sharpTestWidth = accidentalCount * (sharpWidth + minPadding) + clefPadding + Stave.defaultPadding;
-  const flatTestWidth = accidentalCount * (flatWidth + minPadding) + clefPadding + Stave.defaultPadding;
+  const sharpTestWidth = accidentalCount * w.sharpWidth + w.clefWidth + Stave.defaultPadding + 7 * w.ksPadding;
+  const flatTestWidth = accidentalCount * w.flatWidth + w.clefWidth + Stave.defaultPadding + 7 * w.ksPadding;
 
-  const ctx = contextBuilder(
-    options.elementId,
-    Math.max(sharpTestWidth, flatTestWidth) + Stave.defaultPadding + clefPadding + 100,
-    400
-  );
+  const ctx = contextBuilder(options.elementId, Math.max(sharpTestWidth, flatTestWidth) + 100, 400);
   const stave1 = new Stave(10, 10, flatTestWidth);
   const stave2 = new Stave(10, 90, flatTestWidth);
   const stave3 = new Stave(10, 170, sharpTestWidth);

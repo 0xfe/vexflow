@@ -35,8 +35,9 @@ const NoteHeadTests = {
 function setContextStyle(ctx: RenderContext): void {
   // TODO: scale() method in SVGContext and CanvasContext should work similarly!
   // The final scale should be 1.8.
-  ctx.scale(0.9, 0.9);
-  ctx.scale(2.0, 2.0);
+  // ctx.scale(0.9, 0.9);
+  // ctx.scale(2.0, 2.0);
+  ctx.scale(1.8, 1.8);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
   ctx.font = '10pt Arial';
@@ -164,9 +165,10 @@ function drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): v
 }
 
 function basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 350, 250);
+  const ctx = contextBuilder(options.elementId, 450, 250);
   setContextStyle(ctx);
 
+  // 250 is 450/1.8
   const stave = new Stave(10, 0, 250).addClef('treble');
   stave.setContext(ctx).draw();
 

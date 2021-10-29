@@ -107,6 +107,7 @@ function majorKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder)
   const sharpPadding = 20;
   const flatTestCases = 8;
   const sharpTestCases = 7;
+  // magic numbers are the numbers of that symbol that appear in the test case
   const sharpTestWidth =
     28 * w.sharpWidth + 21 * w.naturalWidth + sharpPadding * sharpTestCases + Stave.defaultPadding + w.clefWidth;
   const flatTestWidth =

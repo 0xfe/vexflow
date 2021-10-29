@@ -10,6 +10,8 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { ContextBuilder } from 'renderer';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
+import { Glyph } from 'glyph';
+import { Tables } from 'tables';
 import { Formatter } from 'formatter';
 import { Ornament } from 'ornament';
 import { Stave } from 'stave';
@@ -230,6 +232,8 @@ function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: Cont
 }
 
 function jazzOrnaments(options: TestOptions): void {
+  const clefWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', 38); // widest clef
+
   // Helper function.
   function draw(modifiers: Ornament[], keys: string[], x: number, width: number, y: number, stemDirection?: number) {
     // Helper function to create a StaveNote.
@@ -263,8 +267,8 @@ function jazzOrnaments(options: TestOptions): void {
       beat_value: 4,
     }).setMode(VoiceMode.SOFT);
     voice.addTickables(notes);
-    const formatter = new Formatter({ softmaxFactor: 2 }).joinVoices([voice]);
-    formatter.format([voice], width);
+    const formatter = new Formatter().joinVoices([voice]);
+    formatter.format([voice], width - Stave.defaultPadding - clefWidth);
     stave.setContext(ctx).draw();
     voice.draw(ctx, stave);
   }
@@ -279,7 +283,7 @@ function jazzOrnaments(options: TestOptions): void {
 
   const xStart = 10;
   const width = 300;
-  const yStart = 10;
+  const yStart = 50;
   const staffHeight = 70;
 
   let curX = xStart;
