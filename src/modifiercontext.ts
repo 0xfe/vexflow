@@ -46,7 +46,7 @@ function L(...args: any[]) {
 }
 
 export class ModifierContext {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   state: ModifierContextState;
 

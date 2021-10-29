@@ -20,7 +20,7 @@ function L(...args: any[]) {
  */
 export class BarNote extends Note {
   /** To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'BarNote';

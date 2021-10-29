@@ -1,8 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { isStaveNote, isTabNote } from 'typeguard';
-
 import { Element } from './element';
 import { Fraction } from './fraction';
 import { Note } from './note';
@@ -11,6 +9,7 @@ import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { Tuplet } from './tuplet';
+import { isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
