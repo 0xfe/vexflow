@@ -523,12 +523,12 @@ function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 function displacements(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 700, 140);
+  const ctx = contextBuilder(options.elementId, 700, 155);
   ctx.scale(0.9, 0.9);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
 
-  const stave = new Stave(10, 10, 650);
+  const stave = new Stave(10, 10, 675);
   stave.setContext(ctx);
   stave.draw();
 
