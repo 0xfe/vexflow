@@ -4,12 +4,12 @@
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
-import { RuntimeError } from './util';
-import { Tables } from './tables';
-import { Stem, StemOptions } from './stem';
 import { Glyph } from './glyph';
-import { Note, NoteStruct } from './note';
 import { GlyphProps } from './glyph';
+import { Note, NoteStruct } from './note';
+import { Stem, StemOptions } from './stem';
+import { Tables } from './tables';
+import { RuntimeError } from './util';
 
 export abstract class StemmableNote extends Note {
   static get CATEGORY(): string {

@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
-import { Tables } from './tables';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { Tables } from './tables';
+import { RuntimeError } from './util';
 
 export interface BendPhrase {
   x?: number;

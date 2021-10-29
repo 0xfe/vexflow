@@ -3,15 +3,16 @@
 //
 // Bend Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
 import { Formatter } from 'formatter';
 import { ModifierContext } from 'modifiercontext';
+import { Note } from 'note';
+import { ContextBuilder } from 'renderer';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
-import { Note } from 'note';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BendTests = {
   Start(): void {

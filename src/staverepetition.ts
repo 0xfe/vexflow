@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
-import { FontInfo } from './types/common';
 import { Stave } from './stave';
+import { StaveModifier } from './stavemodifier';
+import { FontInfo } from './types/common';
 
 export class Repetition extends StaveModifier {
   static get CATEGORY(): string {

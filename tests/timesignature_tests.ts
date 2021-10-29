@@ -3,11 +3,12 @@
 //
 // TimeSignature Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
 import { Stave, StaveLineConfig } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { TimeSignature } from 'timesignature';
-import { ContextBuilder } from 'renderer';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TimeSignatureTests = {
   Start(): void {

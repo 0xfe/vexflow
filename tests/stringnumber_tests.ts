@@ -3,10 +3,11 @@
 //
 // StringNumber Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Renderer } from 'renderer';
 import { BarlineType } from 'stavebarline';
 import { Stroke } from 'strokes';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StringNumberTests = {
   Start(): void {

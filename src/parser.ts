@@ -2,7 +2,7 @@
 //
 // A generic text parsing class for VexFlow.
 
-import { RuntimeError, log } from './util';
+import { log, RuntimeError } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.Parser.DEBUG` to `true`.
 // eslint-disable-next-line

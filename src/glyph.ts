@@ -1,15 +1,15 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { defined, RuntimeError } from './util';
-import { Element } from './element';
-import { BoundingBoxComputation } from './boundingboxcomputation';
 import { BoundingBox } from './boundingbox';
+import { BoundingBoxComputation } from './boundingboxcomputation';
+import { Element } from './element';
 import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
-import { TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
+import { TypeProps } from './types/common';
+import { defined, RuntimeError } from './util';
 
 export interface DurationCode {
   common: TypeProps;

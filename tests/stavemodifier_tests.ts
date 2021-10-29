@@ -3,11 +3,12 @@
 //
 // StaveModifier Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
-import { ContextBuilder } from 'renderer';
 import { StaveModifierPosition } from 'stavemodifier';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveModifierTests = {
   Start(): void {

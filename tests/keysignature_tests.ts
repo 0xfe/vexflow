@@ -4,12 +4,13 @@
 // Key Signature Tests
 //
 
-import { VexFlowTests, TestOptions, MAJOR_KEYS, MINOR_KEYS } from './vexflow_test_helpers';
-import { ContextBuilder } from 'renderer';
 import { Flow } from 'flow';
 import { KeySignature } from 'keysignature';
+import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
+
+import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const KeySignatureTests = {
   Start(): void {

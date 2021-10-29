@@ -3,13 +3,14 @@
 //
 // GlyphNote Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { ChordSymbol } from 'chordsymbol';
 import { Glyph } from 'glyph';
+import { Note } from 'note';
 import { Registry } from 'registry';
 import { StaveConnector } from 'staveconnector';
-import { Note } from 'note';
 import { Voice } from 'voice';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GlyphNoteTests = {
   Start(): void {

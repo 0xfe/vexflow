@@ -3,11 +3,12 @@
 //
 // Bach Demo
 
-import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Factory } from 'factory';
 import { Registry } from 'registry';
 import { BarlineType } from 'stavebarline';
 import { StaveNote } from 'stavenote';
+
+import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BachDemoTests = {
   Start(): void {

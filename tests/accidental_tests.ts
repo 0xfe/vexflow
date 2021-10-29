@@ -3,23 +3,24 @@
 //
 // Accidental Tests
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
-import { Flow } from 'flow';
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
+import { Factory } from 'factory';
+import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { Modifier } from 'modifier';
 import { ModifierContext } from 'modifiercontext';
+import { Note } from 'note';
 import { RenderContext } from 'rendercontext';
 import { Stave } from 'stave';
 import { StaveNote, StaveNoteStruct } from 'stavenote';
 import { Stem } from 'stem';
 import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
-import { Voice } from 'voice';
-import { Factory } from 'factory';
 import { isCategory } from 'typeguard';
-import { Note } from 'note';
+import { Voice } from 'voice';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AccidentalTests = {
   Start(): void {

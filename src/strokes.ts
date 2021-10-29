@@ -5,13 +5,13 @@
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
-import { RuntimeError } from './util';
-import { Modifier } from './modifier';
 import { Glyph } from './glyph';
-import { Note } from './note';
-import { FontInfo } from './types/common';
+import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { Note } from './note';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
+import { FontInfo } from './types/common';
+import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
   static get CATEGORY(): string {

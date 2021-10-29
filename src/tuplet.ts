@@ -44,13 +44,13 @@
  * }
  */
 
-import { RuntimeError, defined } from './util';
 import { Element } from './element';
 import { Formatter } from './formatter';
 import { Glyph } from './glyph';
-import { Stem } from './stem';
 import { Note } from './note';
+import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
+import { defined, RuntimeError } from './util';
 
 export interface TupletOptions {
   beats_occupied?: number;

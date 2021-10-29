@@ -8,14 +8,15 @@
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
-import { log } from './util';
-import { Tables } from './tables';
-import { Glyph } from './glyph';
-import { TextFont } from './textfont';
-import { Modifier } from './modifier';
-import { FontInfo } from './types/common';
-import { StemmableNote } from './stemmablenote';
 import { ModifierContextState } from 'modifiercontext';
+
+import { Glyph } from './glyph';
+import { Modifier } from './modifier';
+import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
+import { TextFont } from './textfont';
+import { FontInfo } from './types/common';
+import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
 // eslint-disable-next-line

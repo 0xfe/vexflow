@@ -3,10 +3,10 @@
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
 
-import { defined } from './util';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
+import { defined } from './util';
 
 export interface LayoutMetrics {
   xMin: number;

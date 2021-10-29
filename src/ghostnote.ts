@@ -2,11 +2,11 @@
 //
 // ## Description
 
-import { RuntimeError } from './util';
-import { StemmableNote } from './stemmablenote';
-import { Stave } from './stave';
-import { NoteStruct } from './note';
 import { ModifierContext } from './modifiercontext';
+import { NoteStruct } from './note';
+import { Stave } from './stave';
+import { StemmableNote } from './stemmablenote';
+import { RuntimeError } from './util';
 
 const ERROR_MSG = 'Ghost note must have valid initialization data to identify duration.';
 
