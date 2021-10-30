@@ -1,111 +1,114 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
+    <link rel="stylesheet" href="index.css" type="text/css" media="screen" />
+    <!-- VexFlow Sources -->
+    <script src="../../build/vexflow-debug.js"></script>
+    <script src="framestack.js"></script>
+    <script src="tests.js"></script>
 
-<head>
-  <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
-  <link rel="stylesheet" href="index.css" type="text/css" media="screen" />
-  <!-- VexFlow Sources -->
-  <script src="../../build/vexflow-debug.js"></script>
-  <script src="framestack.js"></script>
-  <script src="tests.js"></script>
-
-  <script>
-    function defer(fn) {
-      setTimeout(fn, 0);
-    }
-
-    function message(text, enabled = false) {
-      const button = document.querySelector('#go');
-      if (!enabled) {
-        button.setAttribute('disabled', true);
-      } else {
-        button.removeAttribute('disabled');
+    <script>
+      function defer(fn) {
+        setTimeout(fn, 0);
       }
 
-      button.innerHTML = text;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const iterations = 100;
-      VF.Registry.enableDefaultRegistry();
-
-      let frameStacks = []
-      Object.keys(Tests).forEach(t => {
-        const test = Tests[t];
-        console.log("Running", t, test.options)
-
-        const frameStack = new FrameStack(t, iterations, {
-          prefix: `test-${t}-`,
-          ...test.options,
-        });
-
-        // Run asynchronously so we don't block the UI thread
-        defer(() => {
-          message("Running " + t)
-          for (let i = 0; i < iterations; i++) {
-            test.fn(frameStack.get(i), i, { ...test.options });
-          }
-        });
-
-        // Install after building frames, so that reflows occur correctly
-        frameStack.install();
-        frameStacks.push(frameStack);
-      });
-
-      let running = false;
-      const button = document.querySelector('#go');
-      button.addEventListener('click', () => {
-        frameStacks.forEach(f => {
-          if (running) {
-            f.stop();
-          } else {
-            f.start();
-          }
-        });
-
-        running = !running;
-        if (running) {
-          button.innerHTML = 'STOP';
+      function message(text, enabled = false) {
+        const button = document.querySelector('#go');
+        if (!enabled) {
+          button.setAttribute('disabled', true);
         } else {
-          button.innerHTML = 'START';
+          button.removeAttribute('disabled');
         }
+
+        button.innerHTML = text;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const iterations = 100;
+        VF.Registry.enableDefaultRegistry();
+
+        let frameStacks = [];
+        Object.keys(Tests).forEach((t) => {
+          const test = Tests[t];
+          console.log('Running', t, test.options);
+
+          const frameStack = new FrameStack(t, iterations, {
+            prefix: `test-${t}-`,
+            ...test.options,
+          });
+
+          // Run asynchronously so we don't block the UI thread
+          defer(() => {
+            message('Running ' + t);
+            for (let i = 0; i < iterations; i++) {
+              test.fn(frameStack.get(i), i, { ...test.options });
+            }
+          });
+
+          // Install after building frames, so that reflows occur correctly
+          frameStack.install();
+          frameStacks.push(frameStack);
+        });
+
+        let running = false;
+        const button = document.querySelector('#go');
+        button.addEventListener('click', () => {
+          frameStacks.forEach((f) => {
+            if (running) {
+              f.stop();
+            } else {
+              f.start();
+            }
+          });
+
+          running = !running;
+          if (running) {
+            button.innerHTML = 'STOP';
+          } else {
+            button.innerHTML = 'START';
+          }
+        });
+
+        defer(() => {
+          message('START', true);
+        });
       });
+    </script>
+  </head>
 
-      defer(() => { message("START", true); });
+  <body>
+    <div style="text-align: center">
+      <div>
+        <h1>Formatter Debugging</h1>
 
-    });
-  </script>
-</head>
-
-<body>
-  <div style="text-align: center;">
-    <div>
-      <h1>
-        Formatter Debugging
-      </h1>
-
-      <div id="container"
-        style="width: 100%; height: 80%; text-align: center; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-        <br>
-        <div id="tuplets" style="position: relative;">
-        </div>
-        <div id="subgroup" style="position: relative;">
-        </div>
-        <div id="multistave" style="position: relative;">
+        <div
+          id="container"
+          style="
+            width: 100%;
+            height: 80%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+          "
+        >
+          <br />
+          <div id="tuplets" style="position: relative"></div>
+          <div id="subgroup" style="position: relative"></div>
+          <div id="multistave" style="position: relative"></div>
         </div>
       </div>
+
+      <p style="position: fixed; bottom: 0; right: 1em">
+        [ <a href="https://vexflow.com">home</a> ] [ <a href="https://github.com/0xfe/vexflow">github</a> ] [
+        <a href="https://muthanna.com/">0xfe</a> ]
+      </p>
     </div>
 
-    <p style="position: fixed; bottom: 0; right: 1em;">
-      [ <a href="http://vexflow.com">home</a> ]
-      [ <a href="http://github.com/0xfe/vexflow">github</a> ]
-      [ <a href="http://0xfe.muthanna.com">0xfe</a> ]
-    </p>
-  </div>
-
-  <div style="position: fixed; top: 1rem; right: 1rem; text-align: center;">
-    <button id="go" style="background: #9e9; border: 0; padding: 1rem; font-size: 1.2rem;" disabled>RUNNING...</button>
-  </div>
-</body>
-
+    <div style="position: fixed; top: 1rem; right: 1rem; text-align: center">
+      <button id="go" style="background: #9e9; border: 0; padding: 1rem; font-size: 1.2rem" disabled>RUNNING...</button>
+    </div>
+  </body>
 </html>
