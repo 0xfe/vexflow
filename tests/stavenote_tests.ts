@@ -3,15 +3,9 @@
 //
 // StaveNote Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Stroke constructor's second argument should be optional.
-// TODO: ElementStyle's lineWidth is declared as a number, but we pass in a string '3'. Should we also allow string?
 // TODO: In StaveNote.preFormat() line 929, should noteHeadPadding default to StaveNote.minNoteheadPadding?
 //       The bounding box of a note changes slightly when we add a ModifierContext (even if we add zero modifiers).
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Accidental } from 'accidental';
 import { Annotation } from 'annotation';
 import { Articulation } from 'articulation';
@@ -21,6 +15,7 @@ import { Formatter } from 'formatter';
 import { Fraction } from 'fraction';
 import { FretHandFinger } from 'frethandfinger';
 import { Modifier, ModifierPosition } from 'modifier';
+import { ModifierContext } from 'modifiercontext';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
@@ -29,7 +24,8 @@ import { Stem } from 'stem';
 import { StringNumber } from 'stringnumber';
 import { Stroke } from 'strokes';
 import { TickContext } from 'tickcontext';
-import { ModifierContext } from 'modifiercontext';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveNoteTests = {
   Start(): void {
@@ -799,7 +795,7 @@ function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBui
 function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 400, 160);
   const stave = new Stave(10, 10, 380);
-  stave.setStyle({ strokeStyle: '#EEAAEE', lineWidth: '3' });
+  stave.setStyle({ strokeStyle: '#EEAAEE', lineWidth: 3 });
   stave.setContext(ctx);
   stave.draw();
 

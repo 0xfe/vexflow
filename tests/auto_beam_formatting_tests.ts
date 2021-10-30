@@ -3,19 +3,16 @@
 //
 // Auto Beaming Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Beam has a "private readonly stem_direction" without an accessor.
 // TODO: Beam.generateBeams(voice.getTickables() as StemmableNote[], ...) requires a cast to StemmableNote[].
 //       Is there a cleaner way to handle this?
 
-import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';
+import { EasyScore } from 'easyscore';
 import { Fraction } from 'fraction';
 import { Stem } from 'stem';
 import { StemmableNote } from 'stemmablenote';
-import { EasyScore } from 'easyscore';
+
+import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AutoBeamFormattingTests = {
   Start(): void {
@@ -114,12 +111,12 @@ function evenGroupStemDirections(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  equal(beams[0].stem_direction, Stem.UP);
-  equal(beams[1].stem_direction, Stem.UP);
-  equal(beams[2].stem_direction, Stem.UP);
-  equal(beams[3].stem_direction, Stem.UP);
-  equal(beams[4].stem_direction, Stem.DOWN);
-  equal(beams[5].stem_direction, Stem.DOWN);
+  equal(beams[0].getStemDirection(), Stem.UP);
+  equal(beams[1].getStemDirection(), Stem.UP);
+  equal(beams[2].getStemDirection(), Stem.UP);
+  equal(beams[3].getStemDirection(), Stem.UP);
+  equal(beams[4].getStemDirection(), Stem.DOWN);
+  equal(beams[5].getStemDirection(), Stem.DOWN);
 
   ok(true, 'Auto Beaming Applicator Test');
 }
@@ -136,10 +133,10 @@ function oddGroupStemDirections(options: TestOptions): void {
   const groups = [new Fraction(3, 8)];
   const beams = Beam.applyAndGetBeams(voice, undefined, groups);
 
-  equal(beams[0].stem_direction, Stem.DOWN, 'Notes are equidistant from middle line');
-  equal(beams[1].stem_direction, Stem.DOWN);
-  equal(beams[2].stem_direction, Stem.UP);
-  equal(beams[3].stem_direction, Stem.DOWN, 'Notes are equidistant from middle line');
+  equal(beams[0].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
+  equal(beams[1].getStemDirection(), Stem.DOWN);
+  equal(beams[2].getStemDirection(), Stem.UP);
+  equal(beams[3].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 

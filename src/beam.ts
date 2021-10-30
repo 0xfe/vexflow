@@ -75,6 +75,11 @@ export class Beam extends Element {
   private beam_count: number;
   private unbeamable?: boolean;
 
+  /** Get the direction of the beam */
+  getStemDirection(): number {
+    return this.stem_direction;
+  }
+
   /**
    * Get the default beam groups for a provided time signature.
    * Attempt to guess if the time signature is not found in table.

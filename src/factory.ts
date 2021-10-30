@@ -518,8 +518,8 @@ export class Factory {
   }
 
   StaveTie(params: {
-    from: Note;
-    to: Note;
+    from: Note | null;
+    to: Note | null;
     first_indices?: number[];
     last_indices?: number[];
     text?: string;
@@ -564,8 +564,8 @@ export class Factory {
   }
 
   VibratoBracket(params: {
-    from: Note;
-    to: Note;
+    from: Note | null;
+    to: Note | null;
     options: {
       harsh?: boolean;
       line?: number;
@@ -612,9 +612,6 @@ export class Factory {
     return textBracket;
   }
 
-  // TODO: SystemOptions make all properties optional.
-  // eslint-disable-next-line
-  // @ts-ignore
   System(params: SystemOptions = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);

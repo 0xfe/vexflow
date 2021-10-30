@@ -38,11 +38,11 @@ export class VibratoBracket extends Element {
    * An undefined value for the start or stop note indicates that the vibrato
    * is drawn from the beginning or until the end of the stave accordingly.
    */
-  constructor(bracket_data: { stop?: Note; start?: Note }) {
+  constructor(bracket_data: { stop?: Note | null; start?: Note | null }) {
     super();
 
-    this.start = bracket_data.start;
-    this.stop = bracket_data.stop;
+    if (bracket_data.start) this.start = bracket_data.start;
+    if (bracket_data.stop) this.stop = bracket_data.stop;
 
     this.line = 1;
 

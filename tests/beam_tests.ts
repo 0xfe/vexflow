@@ -3,19 +3,16 @@
 //
 // Beam Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: Beam has a "private readonly stem_direction" without an accessor.
 // TODO: Factory.Beam()'s 'notes' argument is a StemmableNote[], but we only have access to Tickable[].
 
-import { VexFlowTests, TestOptions, concat } from './vexflow_test_helpers';
 import { Beam } from 'beam';
-import { Stem } from 'stem';
-import { Voice } from 'voice';
-import { StemmableNote } from 'stemmablenote';
 import { StaveNoteStruct } from 'stavenote';
+import { Stem } from 'stem';
+import { StemmableNote } from 'stemmablenote';
 import { TabNoteStruct } from 'tabnote';
+import { Voice } from 'voice';
+
+import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BeamTests = {
   Start(): void {
@@ -208,12 +205,12 @@ function autoStem(options: TestOptions): void {
   const UP = Stem.UP;
   const DOWN = Stem.DOWN;
 
-  equal(beams[0].stem_direction, UP);
-  equal(beams[1].stem_direction, UP);
-  equal(beams[2].stem_direction, UP);
-  equal(beams[3].stem_direction, UP);
-  equal(beams[4].stem_direction, DOWN);
-  equal(beams[5].stem_direction, DOWN);
+  equal(beams[0].getStemDirection(), UP);
+  equal(beams[1].getStemDirection(), UP);
+  equal(beams[2].getStemDirection(), UP);
+  equal(beams[3].getStemDirection(), UP);
+  equal(beams[4].getStemDirection(), DOWN);
+  equal(beams[5].getStemDirection(), DOWN);
 
   f.draw();
 
@@ -237,13 +234,13 @@ function mixed(options: TestOptions): void {
     [0, 4],
     [4, 8],
     [8, 12],
-  ].forEach((range) => f.Beam({ notes: voice1.getTickables().slice(range[0], range[1]) }));
+  ].forEach((range) => f.Beam({ notes: voice1.getTickables().slice(range[0], range[1]) as StemmableNote[] }));
 
   [
     [0, 4],
     [4, 8],
     [8, 12],
-  ].forEach((range) => f.Beam({ notes: voice2.getTickables().slice(range[0], range[1]) }));
+  ].forEach((range) => f.Beam({ notes: voice2.getTickables().slice(range[0], range[1]) as StemmableNote[] }));
 
   f.Formatter().joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
@@ -271,8 +268,8 @@ function mixed2(options: TestOptions): void {
     { time: '31/64' }
   );
 
-  f.Beam({ notes: voice.getTickables().slice(0, 12) });
-  f.Beam({ notes: voice2.getTickables().slice(0, 12) });
+  f.Beam({ notes: voice.getTickables().slice(0, 12) as StemmableNote[] });
+  f.Beam({ notes: voice2.getTickables().slice(0, 12) as StemmableNote[] });
 
   f.Formatter().joinVoices([voice, voice2]).formatToStave([voice, voice2], stave);
 
@@ -315,7 +312,7 @@ function partial(options: TestOptions): void {
     { time: '89/64' }
   );
 
-  const notes = voice.getTickables();
+  const notes = voice.getTickables() as StemmableNote[];
   f.Beam({ notes: notes.slice(0, 3) });
   f.Beam({ notes: notes.slice(3, 9) });
   f.Beam({ notes: notes.slice(9, 13) });
@@ -335,7 +332,7 @@ function tradeoffs(options: TestOptions): void {
 
   const voice = score.voice(score.notes('a4/8, b4/8, c4/8, d4/8, g4/8, a4/8, b4/8, c4/8', { stem: 'up' }));
 
-  const notes = voice.getTickables();
+  const notes = voice.getTickables() as StemmableNote[];
   f.Beam({ notes: notes.slice(0, 4) });
   f.Beam({ notes: notes.slice(4, 8) });
 
@@ -355,7 +352,7 @@ function insane(options: TestOptions): void {
     score.notes('g4/8, g5/8, c4/8, b5/8, g4/8[stem="down"], a5[stem="down"], b4[stem="down"], c4/8', { stem: 'up' })
   );
 
-  const notes = voice.getTickables();
+  const notes = voice.getTickables() as StemmableNote[];
   f.Beam({ notes: notes.slice(0, 4) });
   f.Beam({ notes: notes.slice(4, 7) });
 
@@ -394,7 +391,7 @@ function outlier(options: TestOptions): void {
     )
   );
 
-  const notes = voice.getTickables();
+  const notes = voice.getTickables() as StemmableNote[];
   f.Beam({ notes: notes.slice(0, 4) });
   f.Beam({ notes: notes.slice(4, 8) });
 

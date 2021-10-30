@@ -3,18 +3,13 @@
 //
 // StaveTie Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: "to: null" and "from: null" do not match the declared types in the factory.StaveTie(params) method.
-//       Change null => undefined?
-
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { BuilderOptions } from 'easyscore';
 import { Factory } from 'factory';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 import { Stem } from 'stem';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveTieTests = {
   Start(): void {

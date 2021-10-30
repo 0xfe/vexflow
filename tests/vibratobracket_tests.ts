@@ -4,17 +4,13 @@
 //
 // VibratoBracket Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: "to: null" and "from: null" do not match the declared types in the factory.VibratoBracket(params) method.
-//       Should we omit the to: null / from: null? Set them to undefined? Update the declared types to accept null?
 // TODO: It's annoying to have to cast "as Note" or "as Note[]". Could we add a method to Voice to get the tickables as Note[]? Voice.getTickables() vs Voice.getNotes()?
 
-import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 import { Factory } from 'factory';
-import { Tickable } from 'tickable';
 import { Note } from 'note';
+import { Tickable } from 'tickable';
+
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VibratoBracketTests = {
   Start(): void {
