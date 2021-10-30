@@ -230,4 +230,13 @@ export const Flow = {
   keySignature(spec: string): { type: string; line: number }[] {
     return Tables.keySignature(spec);
   },
+  clefProperties(clef: string): { line_shift: number } {
+    return Tables.clefProperties(clef);
+  },
+  keyProperties(key: string, clef?: string, params?: any): any {
+    return Tables.keyProperties(key, clef, params);
+  },
+  durationToTicks(duration: string): number {
+    return Tables.durationToTicks(duration);
+  },
 };
