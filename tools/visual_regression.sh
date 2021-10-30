@@ -145,6 +145,9 @@ function diff_image() {
     return
   fi
 
+  # If the two files are byte-for-byte identical, skip the image comparison below.
+  cmp -s $fileA $fileB && echo $name "0" >$diff.pass && return
+
   cp $fileA $diff-a.png
   cp $fileB $diff-b.png
 
