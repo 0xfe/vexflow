@@ -8,7 +8,6 @@ import { Renderer } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
 import { Stroke } from 'strokes';
-import { Tables } from 'tables';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -269,8 +268,7 @@ function multi(options: TestOptions): void {
 function drawAccidentals(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 750);
   const glyphScale = 39; // default font scale
-  const musicStack = Tables.DEFAULT_FONT_STACK;
-  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale); // widest clef
+  const clefWidth = Glyph.getWidth('gClef', glyphScale); // widest clef
 
   const notes = [
     f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),

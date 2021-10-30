@@ -10,7 +10,7 @@ import { Flow } from 'flow';
 import { Formatter } from 'formatter';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
-import { Barline, BarlineType } from 'stavebarline';
+import { Barline } from 'stavebarline';
 import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
@@ -301,7 +301,7 @@ function drawArticulations2(options: TestOptions): void {
   }
 
   // Helper function to justify and draw a 4/4 voice
-  x += formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END, []);
+  formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END, []);
 }
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {

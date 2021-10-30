@@ -50,8 +50,8 @@ export class StaveHairpin extends Element {
    *
    *  {
    *   height: px,
-   *   y_shift: px, //vertical offset
-   *   left_shift_ticks: 0, //left horizontal offset expressed in ticks
+   *   y_shift: px,         // vertical offset
+   *   left_shift_ticks: 0, // left horizontal offset expressed in ticks
    *   right_shift_ticks: 0 // right horizontal offset expressed in ticks
    *  }
    *

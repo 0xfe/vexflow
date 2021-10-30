@@ -10,7 +10,6 @@ import { KeySignature } from 'keysignature';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
-import { Tables } from 'tables';
 
 import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -32,11 +31,10 @@ const KeySignatureTests = {
 
 const fontWidths = () => {
   const glyphScale = 39; // default font scale
-  const musicStack = Tables.DEFAULT_FONT_STACK;
-  const sharpWidth = Glyph.getWidth(musicStack, 'accidentalSharp', glyphScale) + 1;
-  const flatWidth = Glyph.getWidth(musicStack, 'accidentalFlat', glyphScale) + 1;
-  const naturalWidth = Glyph.getWidth(musicStack, 'accidentalNatural', glyphScale) + 2;
-  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale) * 2; // widest clef
+  const sharpWidth = Glyph.getWidth('accidentalSharp', glyphScale) + 1;
+  const flatWidth = Glyph.getWidth('accidentalFlat', glyphScale) + 1;
+  const naturalWidth = Glyph.getWidth('accidentalNatural', glyphScale) + 2;
+  const clefWidth = Glyph.getWidth('gClef', glyphScale) * 2; // widest clef
   return { sharpWidth, flatWidth, naturalWidth, clefWidth };
 };
 

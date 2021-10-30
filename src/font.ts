@@ -321,12 +321,19 @@ export class Font {
    * @param includeWoff2 If true, we assume that a woff2 file is in
    * the same folder as the woff file, and will append a `2` to the url.
    */
+  // Support distributions of the typescript compiler that do not yet include the FontFace API declarations.
+  // eslint-disable-next-line
+  // @ts-ignore
   static async loadWebFont(fontName: string, woffURL: string, includeWoff2: boolean = true): Promise<FontFace> {
     const woff2URL = includeWoff2 ? `url(${woffURL}2) format('woff2'), ` : '';
     const woff1URL = `url(${woffURL}) format('woff')`;
     const woffURLs = woff2URL + woff1URL;
+    // eslint-disable-next-line
+    // @ts-ignore
     const fontFace = new FontFace(fontName, woffURLs);
     await fontFace.load();
+    // eslint-disable-next-line
+    // @ts-ignore
     document.fonts.add(fontFace);
     return fontFace;
   }
@@ -338,6 +345,9 @@ export class Font {
    * and a @font-face { font-family: ... } rule in your CSS.
    * If you do not load either of these fonts, ChordSymbol will fall back to Times or Arial,
    * depending on the current music engraving font.
+   *
+   * You can customize `Font.WEB_FONT_HOST` and `Font.WEB_FONT_FILES` to load different fonts
+   * for your app.
    */
   static async loadWebFonts(): Promise<void> {
     const host = Font.WEB_FONT_HOST;

@@ -80,6 +80,7 @@ function random(options: TestOptions): void {
     canvasOrDivElement(options);
   }
 
+  // eslint-disable-next-line
   const element: any = document.getElementById(options.elementId);
   const colorForElementType = useElementIDString ? '#CCCCCC' /* light gray */ : '#0074d9'; /* blue */
   const lineStyleForWhichAPI = useRendererAPI ? 'solid' : 'dashed';
