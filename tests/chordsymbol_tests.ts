@@ -5,8 +5,8 @@
 
 import { Accidental } from 'accidental';
 import { ChordSymbol } from 'chordsymbol';
-import { Formatter } from 'formatter';
 import { Factory } from 'factory';
+import { Formatter } from 'formatter';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
 

@@ -4,11 +4,11 @@
 // Clef Key Signature Tests
 //
 
+import { Glyph } from 'glyph';
 import { KeySignature } from 'keysignature';
 import { ContextBuilder } from 'renderer';
-import { Tables } from 'tables';
-import { Glyph } from 'glyph';
 import { Stave } from 'stave';
+import { Tables } from 'tables';
 
 import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

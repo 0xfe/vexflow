@@ -8,13 +8,13 @@
 
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
-import { Glyph } from 'glyph';
-import { Tables } from 'tables';
 import { Formatter } from 'formatter';
+import { Glyph } from 'glyph';
 import { Ornament } from 'ornament';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { StaveNote } from 'stavenote';
+import { Tables } from 'tables';
 import { Voice, VoiceMode } from 'voice';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';

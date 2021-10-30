@@ -6,11 +6,11 @@
 
 import { Flow } from 'flow';
 import { Glyph } from 'glyph';
-import { Tables } from 'tables';
 import { KeySignature } from 'keysignature';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
+import { Tables } from 'tables';
 
 import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

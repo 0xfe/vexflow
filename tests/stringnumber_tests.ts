@@ -3,12 +3,12 @@
 //
 // StringNumber Tests
 
-import { Renderer } from 'renderer';
-import { Tables } from 'tables';
 import { Glyph } from 'glyph';
+import { Renderer } from 'renderer';
+import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
 import { Stroke } from 'strokes';
-import { Stave } from 'stave';
+import { Tables } from 'tables';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -271,7 +271,6 @@ function drawAccidentals(options: TestOptions): void {
   const glyphScale = 39; // default font scale
   const musicStack = Tables.DEFAULT_FONT_STACK;
   const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale); // widest clef
-  const score = f.EasyScore();
 
   const notes = [
     f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5', 'e/5', 'g/5'], stem_direction: 1, duration: '4' }),
