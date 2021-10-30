@@ -233,6 +233,7 @@ export const Flow = {
   clefProperties(clef: string): { line_shift: number } {
     return Tables.clefProperties(clef);
   },
+  // eslint-disable-next-line
   keyProperties(key: string, clef?: string, params?: any): any {
     return Tables.keyProperties(key, clef, params);
   },
