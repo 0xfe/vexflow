@@ -24,12 +24,11 @@ const ClefKeySignatureTests = {
 
 const fontWidths = () => {
   const glyphScale = 39; // default font scale
-  const musicStack = Tables.DEFAULT_FONT_STACK;
-  const sharpWidth = Glyph.getWidth(musicStack, 'accidentalSharp', glyphScale) + 1;
-  const flatWidth = Glyph.getWidth(musicStack, 'accidentalFlat', glyphScale) + 1;
+  const sharpWidth = Glyph.getWidth('accidentalSharp', glyphScale) + 1;
+  const flatWidth = Glyph.getWidth('accidentalFlat', glyphScale) + 1;
   const ksPadding = 10; // hard-coded in keysignature.ts
-  const naturalWidth = Glyph.getWidth(musicStack, 'accidentalNatural', glyphScale) + 2;
-  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale); // widest clef
+  const naturalWidth = Glyph.getWidth('accidentalNatural', glyphScale) + 2;
+  const clefWidth = Glyph.getWidth('gClef', glyphScale); // widest clef
   return { sharpWidth, flatWidth, naturalWidth, clefWidth, ksPadding };
 };
 

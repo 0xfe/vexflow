@@ -7,7 +7,6 @@
 import { Element } from './element';
 import { FontInfo } from './font';
 import { Note } from './note';
-import { Stave } from './stave';
 import { RuntimeError } from './util';
 
 export interface TieNotes {
@@ -165,11 +164,12 @@ export class StaveTie extends Element {
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= ctx.measureText(this.text).width / 2;
     const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
-
-    ctx.save();
-    ctx.setFont(this.textFont);
-    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
-    ctx.restore();
+    if (stave) {
+      ctx.save();
+      ctx.setFont(this.textFont);
+      ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
+      ctx.restore();
+    }
   }
 
   draw(): boolean {
@@ -179,19 +179,20 @@ export class StaveTie extends Element {
     const first_note = this.notes.first_note;
     const last_note = this.notes.last_note;
 
-    let first_x_px;
-    let last_x_px;
-    let first_ys;
-    let last_ys;
+    // Provide some default values so the compiler doesn't complain.
+    let first_x_px = 0;
+    let last_x_px = 0;
+    let first_ys: number[] = [0];
+    let last_ys: number[] = [0];
     let stem_direction = 0;
     if (first_note) {
       first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
       stem_direction = first_note.getStemDirection();
       first_ys = first_note.getYs();
-    } else {
-      const stave = (last_note as Note).checkStave();
+    } else if (last_note) {
+      const stave = last_note.checkStave();
       first_x_px = stave.getTieStartX();
-      first_ys = (last_note as Note).getYs();
+      first_ys = last_note.getYs();
       this.notes.first_indices = this.notes.last_indices;
     }
 
@@ -199,10 +200,10 @@ export class StaveTie extends Element {
       last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;
       stem_direction = last_note.getStemDirection();
       last_ys = last_note.getYs();
-    } else {
-      const stave = (first_note as Note).checkStave();
+    } else if (first_note) {
+      const stave = first_note.checkStave();
       last_x_px = stave.getTieEndX();
-      last_ys = (first_note as Note).getYs();
+      last_ys = first_note.getYs();
       this.notes.last_indices = this.notes.first_indices;
     }
 
