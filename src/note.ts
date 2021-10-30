@@ -2,6 +2,7 @@
 // MIT License
 
 import { Beam } from './beam';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -118,7 +119,7 @@ export abstract class Note extends Tickable {
 
     const xWidth = xEnd - xStart;
     ctx.save();
-    ctx.setFont('Arial', 8, '');
+    ctx.setFont(Font.SANS_SERIF, 8);
     ctx.fillText(Math.round(xWidth) + 'px', xStart + note.getXShift(), yPos);
 
     const y = yPos + 7;
@@ -558,10 +559,8 @@ export abstract class Note extends Tickable {
       this.leftDisplacedHeadPx - // subtract left displaced head
       this.rightDisplacedHeadPx; // subtract right displaced head
 
+    // NOTE: If you change this, remember to update MockTickable.getMetrics() in the tests/ directory.
     return {
-      // ----------
-      // NOTE: If you change this, remember to update MockTickable in the tests/ directory.
-      // --------------
       width,
       glyphWidth,
       notePx,
@@ -587,7 +586,7 @@ export abstract class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
+      x += this.stave.getNoteStartX() + Tables.currentMusicFont().lookupMetric('stave.padding');
     }
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();

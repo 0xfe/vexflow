@@ -3,7 +3,7 @@
 /* eslint-disable key-spacing */
 
 import { ArticulationStruct } from './articulation';
-import { Fonts } from './font';
+import { Font, Fonts } from './font';
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';
@@ -332,6 +332,18 @@ export const Tables = {
    * For example: Vex.Flow.DEFAULT_FONT_STACK = [Fonts.Petaluma(), Fonts.Custom()];
    */
   DEFAULT_FONT_STACK: [Fonts.Bravura(), Fonts.Gonville(), Fonts.Custom()],
+
+  /**
+   * @returns the `Font` object at the head of the music font stack.
+   */
+  currentMusicFont(): Font {
+    if (Tables.DEFAULT_FONT_STACK.length === 0) {
+      throw new RuntimeError('NoFonts', 'The font stack is empty. Call: Flow.setMusicFont(...fontNames)');
+    } else {
+      return Tables.DEFAULT_FONT_STACK[0];
+    }
+  },
+
   DEFAULT_NOTATION_FONT_SCALE: 39,
   DEFAULT_TABLATURE_FONT_SCALE: 39,
   SLASH_NOTEHEAD_WIDTH: 15,

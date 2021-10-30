@@ -5,8 +5,8 @@
 
 // TODO: The .addStroke(0, new Stroke(...)) in the tab test case shows a NO GLYPH for the Petaluma font.
 // TODO: Changing ctx.font seems to have no effect in the tab test case. Should it?
-//       Annotation sets its own font via this.setFont('Arial', 10).
-//       TabNote sets its own font via font: '10pt Arial'.
+//       Annotation sets its own font.
+//       TabNote sets its own font.
 //       Is there a way to set all the text fonts in one go?
 
 import { Annotation } from 'annotation';
@@ -112,7 +112,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 140);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = ' 10pt Arial';
+  ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph();
   stave.getModifiers()[2].setStyle(FS('blue'));
   stave.setContext(ctx).draw();
