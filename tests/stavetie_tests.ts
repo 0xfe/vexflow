@@ -23,8 +23,10 @@ const StaveTieTests = {
     run('Simple StaveTie', simple);
     run('Chord StaveTie', chord);
     run('Stem Up StaveTie', stemUp);
-    run('No End Note', noEndNote);
-    run('No Start Note', noStartNote);
+    run('No End Note With Clef', noEndNote1);
+    run('No End Note', noEndNote2);
+    run('No Start Note With Clef', noStartNote1);
+    run('No Start Note', noStartNote2);
     run('Set Direction Down', setDirectionDown);
     run('Set Direction Up', setDirectionUp);
   },
@@ -77,7 +79,7 @@ const stemUp = createTest(['(d4 e4 f4)/2, (cn4 f#4 a4)', { stem: 'up' }], (f, no
   });
 });
 
-const noEndNote = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes, stave) => {
+const noEndNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes, stave) => {
   stave.addEndClef('treble');
   f.StaveTie({
     from: notes[1],
@@ -88,8 +90,28 @@ const noEndNote = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (
   });
 });
 
-const noStartNote = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes, stave) => {
+const noEndNote2 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes) => {
+  f.StaveTie({
+    from: notes[1],
+    to: null,
+    first_indices: [2],
+    last_indices: [2],
+    text: 'slow.',
+  });
+});
+
+const noStartNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes, stave) => {
   stave.addClef('treble');
+  f.StaveTie({
+    from: null,
+    to: notes[0],
+    first_indices: [2],
+    last_indices: [2],
+    text: 'H',
+  });
+});
+
+const noStartNote2 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes) => {
   f.StaveTie({
     from: null,
     to: notes[0],
