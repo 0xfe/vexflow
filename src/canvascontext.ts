@@ -1,5 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
@@ -7,9 +8,10 @@ import { warn } from './util';
  * A rendering context for the Canvas backend (CanvasRenderingContext2D).
  */
 export class CanvasContext extends RenderContext {
-  vexFlowCanvasContext: CanvasRenderingContext2D;
+  context2D: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement | { width: number; height: number };
-  background_fillStyle?: string;
+
+  /** Height of one line of text (in pixels). */
   textHeight: number = 0;
 
   static get WIDTH(): number {
@@ -24,7 +26,11 @@ export class CanvasContext extends RenderContext {
     return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size.
   }
 
-  static SanitizeCanvasDims(width: number, height: number): [number, number] {
+  /**
+   * Ensure that width and height do not exceed the browser limit.
+   * @returns array of [width, height] clamped to the browser limit.
+   */
+  static sanitizeCanvasDims(width: number, height: number): [number, number] {
     const limit = this.CANVAS_BROWSER_SIZE_LIMIT;
     if (Math.max(width, height) > limit) {
       warn('Canvas dimensions exceed browser limit. Cropping to ' + limit);
@@ -38,14 +44,9 @@ export class CanvasContext extends RenderContext {
     return [width, height];
   }
 
-  /**
-   * @param context
-   */
   constructor(context: CanvasRenderingContext2D) {
     super();
-
-    // Use a name that is unlikely to clash with a canvas context property.
-    this.vexFlowCanvasContext = context;
+    this.context2D = context;
     if (!context.canvas) {
       this.canvas = {
         width: CanvasContext.WIDTH,
@@ -56,8 +57,11 @@ export class CanvasContext extends RenderContext {
     }
   }
 
+  /**
+   * Set all pixels to transparent black rgba(0,0,0,0).
+   */
   clear(): void {
-    this.vexFlowCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   // eslint-disable-next-line
@@ -74,51 +78,25 @@ export class CanvasContext extends RenderContext {
     // Containers not implemented.
   }
 
-  setFont(family: string, size: number, weight?: string): this {
-    this.vexFlowCanvasContext.font = (weight || '') + ' ' + size + 'pt ' + family;
-    this.textHeight = (size * 4) / 3;
-    return this;
-  }
-
-  setRawFont(font: string): this {
-    this.vexFlowCanvasContext.font = font;
-
-    const fontArray = font.split(' ');
-    const size = Number(fontArray[0].match(/\d+/));
-    // The font size is specified in points, scale it to canvas units.
-    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    this.textHeight = (size * 4) / 3;
-
-    return this;
-  }
-
   setFillStyle(style: string): this {
-    this.vexFlowCanvasContext.fillStyle = style;
+    this.context2D.fillStyle = style;
     return this;
   }
 
-  // TODO: What is this method supposed to do?
-  // The SVGContext version doesn't do much...
-  // It only fills the area behind some tab number annotations.
+  /** CanvasContext ignores `setBackgroundFillStyle()`. */
+  // eslint-disable-next-line
   setBackgroundFillStyle(style: string): this {
-    /*
-    // Should it fill the entire canvas rect? For example:
-    const oldFillStyle = this.vexFlowCanvasContext.fillStyle;
-    this.vexFlowCanvasContext.fillStyle = style;
-    this.vexFlowCanvasContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.vexFlowCanvasContext.fillStyle = oldFillStyle;
-    */
-    this.background_fillStyle = style;
+    // DO NOTHING
     return this;
   }
 
   setStrokeStyle(style: string): this {
-    this.vexFlowCanvasContext.strokeStyle = style;
+    this.context2D.strokeStyle = style;
     return this;
   }
 
   setShadowColor(color: string): this {
-    this.vexFlowCanvasContext.shadowColor = color;
+    this.context2D.shadowColor = color;
     return this;
   }
 
@@ -127,39 +105,38 @@ export class CanvasContext extends RenderContext {
     // transform, so we have to do it manually. We assume uniform scaling
     // (though allow for rotation) because the blur can only be scaled
     // uniformly anyway.
-    const t = this.vexFlowCanvasContext.getTransform();
+    const t = this.context2D.getTransform();
     const scale = Math.sqrt(t.a * t.a + t.b * t.b + t.c * t.c + t.d * t.d);
-    this.vexFlowCanvasContext.shadowBlur = scale * blur;
+    this.context2D.shadowBlur = scale * blur;
     return this;
   }
 
   setLineWidth(width: number): this {
-    this.vexFlowCanvasContext.lineWidth = width;
+    this.context2D.lineWidth = width;
     return this;
   }
 
   setLineCap(capType: CanvasLineCap): this {
-    this.vexFlowCanvasContext.lineCap = capType;
+    this.context2D.lineCap = capType;
     return this;
   }
 
   setLineDash(dash: number[]): this {
-    this.vexFlowCanvasContext.setLineDash(dash);
+    this.context2D.setLineDash(dash);
     return this;
   }
 
   scale(x: number, y: number): this {
-    this.vexFlowCanvasContext.scale(x, y);
+    this.context2D.scale(x, y);
     return this;
   }
 
   resize(width: number, height: number): this {
-    const canvasElement = this.vexFlowCanvasContext.canvas;
+    const canvasElement = this.context2D.canvas;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // Scale the canvas size by the device pixel ratio clamping to the maximum
-    // supported size.
-    [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
+    // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
+    [width, height] = CanvasContext.sanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
 
     // Divide back down by the pixel ratio and convert to integers.
     width = (width / devicePixelRatio) | 0;
@@ -174,67 +151,70 @@ export class CanvasContext extends RenderContext {
   }
 
   rect(x: number, y: number, width: number, height: number): this {
-    this.vexFlowCanvasContext.rect(x, y, width, height);
+    this.context2D.rect(x, y, width, height);
     return this;
   }
 
   fillRect(x: number, y: number, width: number, height: number): this {
-    this.vexFlowCanvasContext.fillRect(x, y, width, height);
+    this.context2D.fillRect(x, y, width, height);
     return this;
   }
 
+  /**
+   * Set the pixels in a rectangular area to transparent black rgba(0,0,0,0).
+   */
   clearRect(x: number, y: number, width: number, height: number): this {
-    this.vexFlowCanvasContext.clearRect(x, y, width, height);
+    this.context2D.clearRect(x, y, width, height);
     return this;
   }
 
   beginPath(): this {
-    this.vexFlowCanvasContext.beginPath();
+    this.context2D.beginPath();
     return this;
   }
 
   moveTo(x: number, y: number): this {
-    this.vexFlowCanvasContext.moveTo(x, y);
+    this.context2D.moveTo(x, y);
     return this;
   }
 
   lineTo(x: number, y: number): this {
-    this.vexFlowCanvasContext.lineTo(x, y);
+    this.context2D.lineTo(x, y);
     return this;
   }
 
   bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this {
-    this.vexFlowCanvasContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    this.context2D.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
     return this;
   }
 
   quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): this {
-    this.vexFlowCanvasContext.quadraticCurveTo(cpx, cpy, x, y);
+    this.context2D.quadraticCurveTo(cpx, cpy, x, y);
     return this;
   }
 
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this {
-    this.vexFlowCanvasContext.arc(x, y, radius, startAngle, endAngle, counterclockwise);
+    this.context2D.arc(x, y, radius, startAngle, endAngle, counterclockwise);
     return this;
   }
 
   fill(): this {
-    this.vexFlowCanvasContext.fill();
+    this.context2D.fill();
     return this;
   }
 
   stroke(): this {
-    this.vexFlowCanvasContext.stroke();
+    this.context2D.stroke();
     return this;
   }
 
   closePath(): this {
-    this.vexFlowCanvasContext.closePath();
+    this.context2D.closePath();
     return this;
   }
 
   measureText(text: string): TextMeasure {
-    const metrics = this.vexFlowCanvasContext.measureText(text);
+    const metrics = this.context2D.measureText(text);
     return {
       width: metrics.width,
       height: this.textHeight,
@@ -242,17 +222,56 @@ export class CanvasContext extends RenderContext {
   }
 
   fillText(text: string, x: number, y: number): this {
-    this.vexFlowCanvasContext.fillText(text, x, y);
+    this.context2D.fillText(text, x, y);
     return this;
   }
 
   save(): this {
-    this.vexFlowCanvasContext.save();
+    this.context2D.save();
     return this;
   }
 
   restore(): this {
-    this.vexFlowCanvasContext.restore();
+    this.context2D.restore();
+    return this;
+  }
+
+  set fillStyle(style: string | CanvasGradient | CanvasPattern) {
+    this.context2D.fillStyle = style;
+  }
+
+  get fillStyle(): string | CanvasGradient | CanvasPattern {
+    return this.context2D.fillStyle;
+  }
+
+  set strokeStyle(style: string | CanvasGradient | CanvasPattern) {
+    this.context2D.strokeStyle = style;
+  }
+
+  get strokeStyle(): string | CanvasGradient | CanvasPattern {
+    return this.context2D.strokeStyle;
+  }
+
+  setFont(family: string, size: number, weight?: string): this {
+    this.context2D.font = (weight || '') + ' ' + size + 'pt ' + family;
+    this.textHeight = (size * 4) / 3;
+    return this;
+  }
+
+  /** Return a string of the form `'italic bold 15pt Arial'` */
+  getFont(): string {
+    return this.context2D.font;
+  }
+
+  setRawFont(font: string): this {
+    this.context2D.font = font;
+
+    const fontArray = font.split(' ');
+    const size = Number(fontArray[0].match(/\d+/));
+    // The font size is specified in points, scale it to canvas units.
+    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
+    this.textHeight = (size * 4) / 3;
+
     return this;
   }
 
@@ -261,22 +280,6 @@ export class CanvasContext extends RenderContext {
   }
 
   get font(): string {
-    return this.vexFlowCanvasContext.font;
-  }
-
-  set fillStyle(style: string | CanvasGradient | CanvasPattern) {
-    this.vexFlowCanvasContext.fillStyle = style;
-  }
-
-  get fillStyle(): string | CanvasGradient | CanvasPattern {
-    return this.vexFlowCanvasContext.fillStyle;
-  }
-
-  set strokeStyle(style: string | CanvasGradient | CanvasPattern) {
-    this.vexFlowCanvasContext.strokeStyle = style;
-  }
-
-  get strokeStyle(): string | CanvasGradient | CanvasPattern {
-    return this.vexFlowCanvasContext.strokeStyle;
+    return this.context2D.font;
   }
 }
