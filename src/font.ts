@@ -82,12 +82,6 @@ export class Font {
     return 'Font';
   }
 
-  /**
-   * Customize this field to specify a different CDN for delivering web fonts.
-   * https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.3/
-   */
-  static FONT_HOST = 'https://unpkg.com/vexflow-fonts@1.0.3/';
-
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
 
@@ -304,6 +298,23 @@ export class Font {
   }
 
   /**
+   * Customize this field to specify a different CDN for delivering web fonts.
+   * Alternative: https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.3/
+   * Or you can use your own host.
+   */
+  static WEB_FONT_HOST = 'https://unpkg.com/vexflow-fonts@1.0.3/';
+
+  /**
+   * These font files will be loaded from the CDN specified by `Font.WEB_FONT_HOST` when
+   * `await Font.loadWebFonts()` is called. Customize this field to specify a different
+   * set of fonts to load. See: `Font.loadWebFonts()`.
+   */
+  static WEB_FONT_FILES: Record<string /* fontName */, string /* fontPath */> = {
+    'Roboto Slab': 'robotoslab/RobotoSlab-Medium_2.001.woff',
+    PetalumaScript: 'petaluma/PetalumaScript_1.10_FS.woff',
+  };
+
+  /**
    * @param fontName
    * @param woffURL The absolute or relative URL to the woff file.
    * @param includeWoff2 If true, we assume that a woff2 file is in
@@ -319,24 +330,21 @@ export class Font {
     return fontFace;
   }
 
-  static async loadWebFontRobotoSlab(): Promise<void> {
-    Font.loadWebFont('Roboto Slab', Font.FONT_HOST + 'robotoslab/RobotoSlab-Medium_2.001.woff');
-  }
-
-  static async loadWebFontPetalumaScript(): Promise<void> {
-    Font.loadWebFont('PetalumaScript', Font.FONT_HOST + 'petaluma/PetalumaScript_1.10_FS.woff');
-  }
-
   /**
-   * Load the two web fonts that are used by ChordSymbol. For example, `flow.html` calls:
+   * Load the web fonts that are used by ChordSymbol. For example, `flow.html` calls:
    *   `await Vex.Flow.Font.loadWebFonts();`
    * Alternatively, you may load web fonts with a stylesheet link (e.g., from Google Fonts),
    * and a @font-face { font-family: ... } rule in your CSS.
-   * If you do not load either of these fonts, ChordSymbol will fall back to either Times or Arial.
+   * If you do not load either of these fonts, ChordSymbol will fall back to Times or Arial,
+   * depending on the current music engraving font.
    */
   static async loadWebFonts(): Promise<void> {
-    Font.loadWebFontRobotoSlab();
-    Font.loadWebFontPetalumaScript();
+    const host = Font.WEB_FONT_HOST;
+    const files = Font.WEB_FONT_FILES;
+    for (const fontName in files) {
+      const fontPath = files[fontName];
+      Font.loadWebFont(fontName, host + fontPath);
+    }
   }
 
   /**
@@ -423,8 +431,6 @@ export class Font {
    */
   // eslint-disable-next-line
   lookupMetric(key: string, defaultValue?: Record<string, any> | number): any {
-    // console.log('lookupMetric: ', key);
-
     const keyParts = key.split('.');
 
     // Start with the top level font metrics object, and keep looking deeper into the object (via each part of the period-delimited key).
@@ -441,7 +447,6 @@ export class Font {
     }
 
     // After checking every part of the key (i.e., the loop completed), return the most recently retrieved value.
-    // console.log('found: ', key, currObj);
     return currObj;
   }
 
