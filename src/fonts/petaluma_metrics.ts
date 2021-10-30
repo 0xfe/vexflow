@@ -117,7 +117,7 @@ export const PetalumaMetrics = {
       spacing: 5,
       offsetYStemUp: -5,
       offsetYStemDown: 5,
-      offsetXStemUp: 11,
+      offsetXStemUp: 13,
       offsetXStemDown: 1,
     },
     grace: {
@@ -125,7 +125,7 @@ export const PetalumaMetrics = {
       spacing: 4,
       offsetYStemUp: -5,
       offsetYStemDown: 5,
-      offsetXStemUp: 7,
+      offsetXStemUp: 8,
       offsetXStemDown: 1,
     },
   },
@@ -302,31 +302,13 @@ export const PetalumaMetrics = {
       minPadding: 2,
       standard: {
         noteheadBlackStemUp: {
-          shiftX: 1.625,
-          point: 34,
-        },
-        noteheadBlackStemDown: {
-          point: 34,
+          shiftX: 0.5
         },
         noteheadHalfStemUp: {
-          shiftX: 1.725,
-          point: 34,
-        },
-        noteheadHalfStemDown: {
-          point: 34,
+          shiftX: 0.725
         },
         noteheadWholeStemUp: {
-          shiftX: 1,
-          point: 34,
-        },
-        noteheadWholeStemDown: {
-          point: 34,
-        },
-        restQuarterStemUp: {
-          point: 35,
-        },
-        restQuarterStemDown: {
-          point: 35,
+          shiftX: 1
         },
       },
       custom: {

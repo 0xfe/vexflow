@@ -92,20 +92,20 @@ export const GonvilleMetrics = {
 
   tremolo: {
     default: {
-      point: 40,
+      point: 25,
       spacing: 4,
-      offsetYStemUp: -9,
-      offsetYStemDown: -21,
-      offsetXStemUp: 6,
-      offsetXStemDown: -2,
+      offsetYStemUp: -17,
+      offsetYStemDown: -2,
+      offsetXStemUp: 9,
+      offsetXStemDown: -0.5,
     },
     grace: {
-      point: 30,
+      point: 15,
       spacing: 4,
-      offsetYStemUp: -9,
-      offsetYStemDown: -21,
-      offsetXStemUp: 6,
-      offsetXStemDown: -2,
+      offsetYStemUp: -17,
+      offsetYStemDown: -2,
+      offsetXStemUp: 6.5,
+      offsetXStemDown: -0.5,
     },
   },
 
