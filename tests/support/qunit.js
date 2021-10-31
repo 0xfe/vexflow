@@ -1268,7 +1268,7 @@ QUnit.assert = Assert.prototype = {
 				popped = true;
 				resumeProcessing();
 			} else {
-				test.pushFailure( "Called the callback returned from `assert.async` more than once",
+				test.pushFailure( "Called the callback returned from 'assert.async` more than once",
 					sourceFromStacktrace( 2 ) );
 			}
 		};

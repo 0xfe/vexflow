@@ -6,10 +6,9 @@
 
 // TODO: It's annoying to have to cast "as Note" or "as Note[]". Could we add a method to Voice to get the tickables as Note[]? Voice.getTickables() vs Voice.getNotes()?
 
-import { Factory } from 'factory';
-import { Note } from 'note';
-import { Tickable } from 'tickable';
-
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { Tickable } from '../src/tickable';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VibratoBracketTests = {

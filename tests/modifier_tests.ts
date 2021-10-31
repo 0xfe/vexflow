@@ -3,8 +3,8 @@
 //
 // ModifierContext Tests
 
-import { Modifier } from 'modifier';
-import { ModifierContext } from 'modifiercontext';
+import { Modifier } from '../src/modifier';
+import { ModifierContext } from '../src/modifiercontext';
 
 const ModifierContextTests = {
   Start(): void {

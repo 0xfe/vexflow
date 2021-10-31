@@ -3,7 +3,7 @@
 //
 // Tuning Tests
 
-import { Tuning } from 'tuning';
+import { Tuning } from '../src/tuning';
 
 const TuningTests = {
   Start(): void {

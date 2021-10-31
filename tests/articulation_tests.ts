@@ -3,19 +3,18 @@
 //
 // Articulation Tests
 
-import { Articulation } from 'articulation';
-import { Beam } from 'beam';
-import { Flow } from 'flow';
-import { Font } from 'font';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { Barline, BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-import { TabNote } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Voice } from 'voice';
-
+import { Articulation } from '../src/articulation';
+import { Beam } from '../src/beam';
+import { Flow } from '../src/flow';
+import { Font } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { Barline } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
+import { TabNote } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Voice } from '../src/voice';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ArticulationTests = {
@@ -301,7 +300,7 @@ function drawArticulations2(options: TestOptions): void {
   }
 
   // Helper function to justify and draw a 4/4 voice
-  x += formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END, []);
+  formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END, []);
 }
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {

@@ -3,10 +3,9 @@
 //
 // BoundingBoxComputation Tests
 
-import { BoundingBoxComputation } from 'boundingboxcomputation';
-import { Glyph, OutlineCode } from 'glyph';
-import { RenderContext } from 'rendercontext';
-
+import { BoundingBoxComputation } from '../src/boundingboxcomputation';
+import { Glyph, OutlineCode } from '../src/glyph';
+import { RenderContext } from '../src/rendercontext';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BoundingBoxComputationTests = {

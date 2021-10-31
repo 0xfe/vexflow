@@ -8,10 +8,9 @@
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
-import { ModifierContextState } from 'modifiercontext';
-
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
+import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFont } from './textfont';

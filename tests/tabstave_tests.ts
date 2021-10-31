@@ -3,9 +3,8 @@
 //
 // TabStave Tests
 
-import { ContextBuilder } from 'renderer';
-import { TabStave } from 'tabstave';
-
+import { ContextBuilder } from '../src/renderer';
+import { TabStave } from '../src/tabstave';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabStaveTests = {

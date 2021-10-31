@@ -5,12 +5,11 @@
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { Stem } from 'stem';
-
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
+import { Stem } from './stem';
 import { isStaveNote, isStemmableNote } from './typeguard';
 import { FontInfo } from './types/common';
 import { RuntimeError } from './util';

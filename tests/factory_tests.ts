@@ -3,9 +3,8 @@
 //
 // Factory Tests
 
-import { Factory } from 'factory';
-import { Barline } from 'stavebarline';
-
+import { Factory } from '../src/factory';
+import { Barline } from '../src/stavebarline';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FactoryTests = {
