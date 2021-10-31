@@ -51,7 +51,7 @@ function renderHairpin(ctx: RenderContext, params: CrescendoParams) {
 }
 
 export class Crescendo extends Note {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Crescendo category string. */
   static get CATEGORY(): string {

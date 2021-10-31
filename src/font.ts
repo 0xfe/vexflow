@@ -31,6 +31,12 @@ export interface FontGlyph {
 }
 
 class Font {
+  /** Default sans-serif font family. */
+  static SANS_SERIF: string = 'Arial, sans-serif';
+
+  /** Default serif font family. */
+  static SERIF: string = 'Times New Roman, serif';
+
   protected name: string;
   protected fontDataMetrics: FontDataMetrics;
 

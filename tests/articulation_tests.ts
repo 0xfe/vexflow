@@ -6,6 +6,7 @@
 import { Articulation } from 'articulation';
 import { Beam } from 'beam';
 import { Flow } from 'flow';
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
@@ -305,7 +306,7 @@ function drawArticulations2(options: TestOptions): void {
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-  ctx.font = '10pt Arial';
+  ctx.font = '10pt ' + Font.SANS_SERIF;
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();
