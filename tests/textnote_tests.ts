@@ -3,14 +3,14 @@
 //
 // Text Note Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 // import { Font } from 'font'; // RONYEH
 import { Note } from 'note';
 import { Stave } from 'stave';
 import { TextNote } from 'textnote';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextNoteTests = {
   Start(): void {

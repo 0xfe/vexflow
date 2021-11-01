@@ -1,7 +1,10 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
 import { Font } from '../font';
 import { TextFormatter } from '../textformatter';
-import { RobotoSlabFont } from './robotoslab_glyphs';
 import { PetalumaScriptFont } from './petalumascript_glyphs';
+import { RobotoSlabFont } from './robotoslab_glyphs';
 
 export function loadTextFonts() {
   // Roboto Slab
@@ -24,7 +27,7 @@ export function loadTextFonts() {
       superscriptOffset: 0.66,
       subscriptOffset: 0.66,
       serifs: true,
-      description: 'Default text font to pair with the Bravura / Gonville engraving fonts.',
+      description: 'Text font to pair with the Bravura / Gonville music fonts.',
     });
   }
 
@@ -47,7 +50,7 @@ export function loadTextFonts() {
       superscriptOffset: 0.66,
       subscriptOffset: 0.66,
       serifs: false,
-      description: 'Default text font to pair with the Petaluma engraving font.',
+      description: 'Ttext font to pair with the Petaluma music font.',
     });
   }
 }

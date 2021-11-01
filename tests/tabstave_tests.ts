@@ -3,10 +3,10 @@
 //
 // TabStave Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { ContextBuilder } from 'renderer';
 import { TabStave } from 'tabstave';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabStaveTests = {
   Start(): void {

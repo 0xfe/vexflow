@@ -3,10 +3,10 @@
 //
 // Tremolo Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Barline } from 'stavebarline';
 import { Tremolo } from 'tremolo';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TremoloTests = {
   Start(): void {

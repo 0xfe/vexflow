@@ -4,12 +4,12 @@
 // Clef Key Signature Tests
 //
 
+import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Glyph } from 'glyph';
 import { KeySignature } from 'keysignature';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
-
-import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ClefKeySignatureTests = {
   Start(): void {

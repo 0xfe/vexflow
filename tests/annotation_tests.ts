@@ -7,6 +7,8 @@
 //       Did a previous version of the API accept a number as the fourth argument?
 //       We removed the fourth argument from all of our test cases.
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
@@ -22,8 +24,6 @@ import { TabStave } from 'tabstave';
 import { Tickable } from 'tickable';
 import { Vibrato } from 'vibrato';
 import { Voice } from 'voice';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AnnotationTests = {
   Start(): void {

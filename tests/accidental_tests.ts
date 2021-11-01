@@ -3,6 +3,8 @@
 //
 // Accidental Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Accidental } from 'accidental';
 import { Beam } from 'beam';
 import { Factory } from 'factory';
@@ -19,8 +21,6 @@ import { TickContext } from 'tickcontext';
 import { TimeSigNote } from 'timesignote';
 import { isCategory } from 'typeguard';
 import { Voice } from 'voice';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AccidentalTests = {
   Start(): void {

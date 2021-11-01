@@ -1,9 +1,18 @@
 {
   "name": "vexflow",
   "version": "3.0.9",
-  "description": "A JavaScript library for rendering music notation and guitar tablature",
-  "browser": "build/vexflow.js",
+  "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "main": "build/vexflow.js",
+  "browser": "build/vexflow.js",
+  "exports": {
+    ".": "./build/vexflow.js",
+    "./core": "./build/vexflow-core.js",
+    "./core-plus-bravura": "./build/vexflow-core-plus-bravura.js",
+    "./core-plus-petaluma": "./build/vexflow-core-plus-petaluma.js",
+    "./core-plus-gonville": "./build/vexflow-core-plus-gonville.js",
+    "./debug": "./build/vexflow-debug.js",
+    "./debug-plus-tests": "./build/vexflow-debug-plus-tests.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -54,7 +63,7 @@
     "ts-loader": "^9.2.6",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typedoc": "^0.22.6",
-    "typescript": "^4.4.4",
+    "typescript": "^4.5.0-beta",
     "webpack": "^5.59.1",
     "webpack-inject-plugin": "^1.5.5"
   },

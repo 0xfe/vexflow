@@ -1,5 +1,3 @@
-import { loadMusicFonts } from '@loadFonts';
-
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
@@ -18,7 +16,6 @@ import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
 import { Font } from './font';
-import { loadTextFonts } from './fonts/loadTextFonts';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -179,7 +176,7 @@ export const Flow = {
    * **CASE 2**: You are using the lighter weight `vexflow-core.js` to take advantage of lazy loading for fonts.
    * In this case, you MUST call this method at the beginning, since the default music font stack is empty.
    * This method is replaced by an async function, so you must use `await` or a Promise to wait for the fonts
-   * to load before proceeding. See `demos/fonts/` for examples. See `loadDynamic.ts` for implementation details.
+   * to load before proceeding. See `demos/fonts/` for examples. See `src/fonts/async.ts` for implementation details.
    *
    * Example:
    * ```
@@ -291,9 +288,3 @@ export const Flow = {
     return Tables.durationToTicks(duration);
   },
 };
-
-// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
-// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
-loadMusicFonts();
-// Load the two text fonts that ChordSymbol & Annotation use.
-loadTextFonts();

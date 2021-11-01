@@ -304,13 +304,13 @@ export const PetalumaMetrics = {
       minPadding: 2,
       standard: {
         noteheadBlackStemUp: {
-          shiftX: 0.5
+          shiftX: 0.5,
         },
         noteheadHalfStemUp: {
-          shiftX: 0.725
+          shiftX: 0.725,
         },
         noteheadWholeStemUp: {
-          shiftX: 1
+          shiftX: 1,
         },
       },
       custom: {

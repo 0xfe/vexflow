@@ -3,6 +3,8 @@
 //
 // Font Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Bend } from 'bend';
 import { CanvasContext } from 'canvascontext';
 import { Flow } from 'flow';
@@ -11,8 +13,6 @@ import { StaveNote } from 'stavenote';
 import { TextBracket } from 'textbracket';
 import { TextNote } from 'textnote';
 import { Voice } from 'voice';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FontTests = {
   Start(): void {

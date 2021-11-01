@@ -47,6 +47,7 @@
 
       let vexURL;
       let testsURL;
+      let vexPlusTestsURL;
       let isVersionFourOrNewer = true;
 
       if (ver.includes('unpkg')) {
@@ -66,6 +67,7 @@
         }
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
+        vexPlusTestsURL = '../' + path + '/vexflow-debug-plus-tests.js';
       }
 
       // Display which VexFlow version we loaded.
@@ -75,10 +77,10 @@
 
       let loadVexFlow;
       if (isVersionFourOrNewer) {
-        // When loading version >= 4.0.0, only load vexflow-tests.js
-        loadVexFlow = () => loadScript(testsURL);
+        // When loading version >= 4.0.0, only load vexflow-debug-plus-tests.js
+        loadVexFlow = () => loadScript(vexPlusTestsURL);
       } else {
-        // When loading versions <= 3.0.9, load both vexflow-debug.js and vexflow-tests.js
+        // When loading versions <= 3.0.9, load vexflow-debug.js and then vexflow-tests.js
         loadVexFlow = () => loadScript(vexURL).then(() => loadScript(testsURL));
       }
 

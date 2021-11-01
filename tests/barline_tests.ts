@@ -3,9 +3,9 @@
 //
 // Barline Tests
 
-import { Barline, BarlineType } from 'stavebarline';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Barline, BarlineType } from 'stavebarline';
 
 const BarlineTests = {
   Start(): void {

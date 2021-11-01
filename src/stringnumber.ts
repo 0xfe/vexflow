@@ -1,7 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 

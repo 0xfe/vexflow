@@ -4,14 +4,14 @@
 // Key Signature Tests
 //
 
+import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from 'flow';
 import { Glyph } from 'glyph';
 import { KeySignature } from 'keysignature';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
 import { BarlineType } from 'stavebarline';
-
-import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const KeySignatureTests = {
   Start(): void {

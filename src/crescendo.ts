@@ -1,7 +1,5 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
-//
 // This file implements the `Crescendo` object which draws crescendos and
 // decrescendo dynamics markings. A `Crescendo` is initialized with a
 // duration and formatted as part of a `Voice` like any other `Note`

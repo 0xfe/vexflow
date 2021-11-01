@@ -5,11 +5,11 @@
 
 // TODO: Fix Error => Type 'Tickable' is not assignable to type 'StaveNote'.
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Factory } from 'factory';
 import { StaveNote } from 'stavenote';
 import { Tickable } from 'tickable';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const PedalMarkingTests = {
   Start(): void {

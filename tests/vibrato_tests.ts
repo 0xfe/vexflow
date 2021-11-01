@@ -3,6 +3,8 @@
 //
 // Vibrato Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Bend } from 'bend';
 // import { Font } from 'font'; // RONYEH
 import { Formatter } from 'formatter';
@@ -10,8 +12,6 @@ import { ContextBuilder } from 'renderer';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Vibrato } from 'vibrato';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VibratoTests = {
   Start(): void {

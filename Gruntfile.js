@@ -7,181 +7,208 @@ const InjectPlugin = require('webpack-inject-plugin').default;
 const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
+const BASE_DIR = __dirname;
+const BUILD_DIR = path.join(BASE_DIR, 'build');
+const RELEASES_DIR = path.join(BASE_DIR, 'releases');
+const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
+const VEXFLOW_JS_FILE = path.join(BUILD_DIR, 'vexflow.js');
+const VEXFLOW_MODULE_JS_FILE = path.join(BUILD_DIR, 'vexflow.module.js');
+
+// Wonderful global variables that will be set below.
+let PACKAGE_JSON;
+let VEXFLOW_VERSION;
+let BANNER;
+let GIT_COMMIT_HASH;
+
+// Switching the mode from 'development' => 'production' will enable minification, etc.
+// See: https://webpack.js.org/configuration/mode/
+function webpackConfig(outputFile, chunkFilename, moduleEntry, mode) {
+  // Support different ways of loading VexFlow.
+  // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
+  // VexFlow is exported as root["Vex"], and can be accessed via:
+  //   - `window.Vex` in browsers
+  //   - `globalThis.Vex` in node JS >= 12
+  //   - `this.Vex` in all other environments
+  // See: https://webpack.js.org/configuration/output/#outputglobalobject
+  let globalObject = `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`;
+  // However, the globalObject approach currently breaks the lazy loading of fonts.
+  // Unset the globalObject if we are doing lazy loading with webpack.
+  if (chunkFilename !== undefined) {
+    globalObject = undefined;
+  }
+
+  return {
+    mode: mode,
+    entry: moduleEntry,
+    output: {
+      path: BUILD_DIR,
+      filename: outputFile,
+      chunkFilename: chunkFilename,
+      library: {
+        name: 'Vex',
+        type: 'umd',
+        export: 'default',
+      },
+      globalObject: globalObject,
+      publicPath: 'auto',
+    },
+    resolve: {
+      extensions: ['.ts', '.js', '.json'],
+      plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
+    },
+    devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
+    module: {
+      rules: [
+        {
+          test: /(\.ts$|\.js$)/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'ts-loader',
+              options: { configFile: 'tsconfig.json' },
+            },
+          ],
+        },
+      ],
+    },
+    plugins: [
+      // Add VERSION and BUILD properties to Vex.Flow.
+      new InjectPlugin(function () {
+        return `import{Flow}from'flow';Flow.VERSION="${VEXFLOW_VERSION}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
+      }),
+      // Add a banner at the top of the file.
+      new webpack.BannerPlugin(BANNER),
+    ],
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          // Tell webpack 5 to NOT extract the banner into a separate file.
+          extractComments: false,
+        }),
+      ],
+    },
+  };
+}
+
 module.exports = (grunt) => {
-  const BASE_DIR = __dirname;
-  const BUILD_DIR = path.join(BASE_DIR, 'build');
-  const RELEASE_DIR = path.join(BASE_DIR, 'releases');
-  const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-  const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
-  const MODULE_ENTRY_TESTS = path.join(BASE_DIR, 'tests/run.ts');
+  // Each output file is associated with a particular module entry file.
+  // Also see: package.json's `exports` field for how we map import paths
+  // to different build files in the published npm package.
+  const MODULE_ENTRIES = {
+    vexflow: 'allFonts.ts',
+    vexflow_core: 'zeroFonts.ts',
+    vexflow_core_plus_bravura: 'withBravura.ts',
+    vexflow_core_plus_gonville: 'withGonville.ts',
+    vexflow_core_plus_petaluma: 'withPetaluma.ts',
+    vexflow_debug: 'debug.ts',
+    vexflow_debug_plus_tests: 'debugWithTests.ts',
+  };
+  // Turn the file names into full paths.
+  // For example: vexflow_core_plus_bravura => vexflow/src/entry/withPetaluma.ts
+  for (const [moduleName, entryFileName] of Object.entries(MODULE_ENTRIES)) {
+    const fullPath = path.join(BASE_DIR, 'src/entry/', entryFileName);
+    MODULE_ENTRIES[moduleName] = fullPath;
+  }
 
   // Get current build information from git and package.json.
-  const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
-  const packageJSON = grunt.file.readJSON('package.json');
-  const BANNER =
-    `VexFlow ${packageJSON.version}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
+  GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+  PACKAGE_JSON = grunt.file.readJSON('package.json');
+  VEXFLOW_VERSION = PACKAGE_JSON.version;
+  BANNER =
+    `VexFlow ${VEXFLOW_VERSION}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
     `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
     `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
-  // Used for eslint
-  const SOURCES = ['./src/*.ts', './src/*.js'];
-
-  // Switching the mode from 'development' => 'production' will enable minification, etc.
-  // See: https://webpack.js.org/configuration/mode/
-  function webpackConfig(outputFile, chunkFilename, tsconfig, moduleEntry, mode) {
-    // Support different ways of loading VexFlow.
-    // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
-    // VexFlow is exported as root["Vex"], and can be accessed via:
-    //   - `window.Vex` in browsers
-    //   - `globalThis.Vex` in node JS >= 12
-    //   - `this.Vex` in all other environments
-    // See: https://webpack.js.org/configuration/output/#outputglobalobject
-    let globalObject = `typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this`;
-    // However, the globalObject approach currently breaks the lazy loading of fonts.
-    // Unset the globalObject if we are doing lazy loading with webpack.
-    if (chunkFilename !== undefined) {
-      globalObject = undefined;
-    }
-
-    return {
-      mode: mode,
-      entry: moduleEntry,
-      output: {
-        path: BUILD_DIR,
-        filename: outputFile,
-        chunkFilename: chunkFilename,
-        library: {
-          name: 'Vex',
-          type: 'umd',
-          export: 'default',
-        },
-        globalObject: globalObject,
-        publicPath: 'auto',
-      },
-      resolve: {
-        extensions: ['.ts', '.js', '.json'],
-        plugins: [new TsconfigPathsPlugin({ configFile: tsconfig })],
-      },
-      devtool: process.env.VEX_GENMAP || mode === 'production' ? 'source-map' : false,
-      module: {
-        rules: [
-          {
-            test: /(\.ts$|\.js$)/,
-            exclude: /node_modules/,
-            use: [
-              {
-                loader: 'ts-loader',
-                options: {
-                  configFile: tsconfig,
-                },
-              },
-            ],
-          },
-        ],
-      },
-      plugins: [
-        // Add VERSION and BUILD properties to Vex.Flow.
-        new InjectPlugin(function () {
-          return `import{Flow}from'flow';Flow.VERSION="${packageJSON.version}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
-        }),
-        // Add a banner at the top of the file.
-        new webpack.BannerPlugin(BANNER),
-      ],
-      optimization: {
-        minimizer: [
-          new TerserPlugin({
-            // Tell webpack 5 to NOT extract the banner into a separate file.
-            extractComments: false,
-          }),
-        ],
-      },
-    };
-  }
-
-  const webpackProdStatic = webpackConfig(
+  // We need a different webpack config for each build target.
+  const webpackConfigProdAllFonts = webpackConfig(
     'vexflow.js',
     undefined /* chunkFileName */,
-    'tsconfig.json',
-    MODULE_ENTRY_SRC,
+    MODULE_ENTRIES.vexflow,
     'production'
   );
-  const webpackProdDynamic = webpackConfig(
+  const webpackConfigProdNoFonts = webpackConfig(
     'vexflow-core.js',
     'vexflow-font-[name].js',
-    'tsconfig.dynamic.json',
-    MODULE_ENTRY_SRC,
+    MODULE_ENTRIES.vexflow_core,
     'production'
   );
-  const webpackDevStatic = webpackConfig(
-    'vexflow.js',
-    undefined /* chunkFileName */,
-    'tsconfig.json',
-    MODULE_ENTRY_SRC,
-    'development'
-  );
-  const webpackDevDynamic = webpackConfig(
-    'vexflow-core.js',
+  const webpackConfigProdBravuraOnly = webpackConfig(
+    'vexflow-core-plus-bravura.js',
     'vexflow-font-[name].js',
-    'tsconfig.dynamic.json',
-    MODULE_ENTRY_SRC,
-    'development'
+    MODULE_ENTRIES.vexflow_core_plus_bravura,
+    'production'
   );
-  const webpackDev = webpackConfig(
+  const webpackConfigProdGonvilleOnly = webpackConfig(
+    'vexflow-core-plus-gonville.js',
+    'vexflow-font-[name].js',
+    MODULE_ENTRIES.vexflow_core_plus_gonville,
+    'production'
+  );
+  const webpackConfigProdPetalumaOnly = webpackConfig(
+    'vexflow-core-plus-petaluma.js',
+    'vexflow-font-[name].js',
+    MODULE_ENTRIES.vexflow_core_plus_petaluma,
+    'production'
+  );
+  // The webpack configs below specify 'development' mode, which disables code minification.
+  const webpackConfigDebug = webpackConfig(
     'vexflow-debug.js',
     undefined /* chunkFileName */,
-    'tsconfig.json',
-    MODULE_ENTRY_SRC,
+    MODULE_ENTRIES.vexflow_debug,
     'development'
   );
-  const webpackTest = webpackConfig(
-    'vexflow-tests.js',
+  const webpackConfigDebugWatch = {
+    ...webpackConfigDebug,
+    watch: true,
+    keepalive: true,
+  };
+  const webpackConfigDebugPlusTests = webpackConfig(
+    'vexflow-debug-plus-tests.js',
     undefined /* chunkFileName */,
-    'tsconfig.json',
-    MODULE_ENTRY_TESTS,
+    MODULE_ENTRIES.vexflow_debug_plus_tests,
     'development'
   );
-
-  const watchOptions = {
+  const webpackConfigDebugPlusTestsWatch = {
+    ...webpackConfigDebugPlusTests,
+    watch: true,
+    keepalive: true,
+  };
+  const webpackConfigDebugNoFonts = webpackConfig(
+    'vexflow-core.js',
+    'vexflow-font-[name].js',
+    MODULE_ENTRIES.vexflow_core,
+    'development'
+  );
+  const webpackConfigDebugNoFontsWatch = {
+    ...webpackConfigDebugNoFonts,
     watch: true,
     keepalive: true,
   };
 
   grunt.initConfig({
-    pkg: packageJSON,
+    pkg: PACKAGE_JSON,
     webpack: {
-      buildDev: webpackDev,
-      buildTest: webpackTest,
-      buildStatic: webpackProdStatic,
-      buildDynamic: webpackProdDynamic,
-      watchDev: {
-        ...webpackDev,
-        ...watchOptions,
-      },
-      watchTest: {
-        ...webpackTest,
-        ...watchOptions,
-      },
-      watchStatic: {
-        ...webpackDevStatic,
-        ...watchOptions,
-      },
-      watchDynamic: {
-        ...webpackDevDynamic,
-        ...watchOptions,
-      },
+      buildProdAllFonts: webpackConfigProdAllFonts,
+      buildProdNoFonts: webpackConfigProdNoFonts,
+      buildProdBravuraOnly: webpackConfigProdBravuraOnly,
+      buildProdGonvilleOnly: webpackConfigProdGonvilleOnly,
+      buildProdPetalumaOnly: webpackConfigProdPetalumaOnly,
+      buildDebug: webpackConfigDebug,
+      buildDebugPlusTests: webpackConfigDebugPlusTests,
+      watchDebug: webpackConfigDebugWatch,
+      watchDebugPlusTests: webpackConfigDebugPlusTestsWatch,
+      watchDebugNoFonts: webpackConfigDebugNoFontsWatch,
     },
     concurrent: {
       options: {
         logConcurrentOutput: true,
         indent: false,
       },
-      dev: ['webpack:watchDev', 'webpack:watchTest'],
-      static: ['webpack:watchStatic'],
-      dynamic: ['webpack:watchDynamic'],
-      staticAndDynamic: ['webpack:watchStatic', 'webpack:watchDynamic'],
+      debug: ['webpack:watchDebug', 'webpack:watchDebugPlusTests'],
+      core: ['webpack:watchDebugNoFonts'],
     },
     eslint: {
-      target: SOURCES.concat('./tests'),
+      target: ['./src', './tests'],
       options: { fix: true },
     },
     qunit: {
@@ -190,8 +217,8 @@ module.exports = (grunt) => {
     copy: {
       // copy the vexflow.js production build to vexflow.module.js
       module: {
-        src: path.join(BUILD_DIR, 'vexflow.js'),
-        dest: path.join(BUILD_DIR, 'vexflow.module.js'),
+        src: VEXFLOW_JS_FILE,
+        dest: VEXFLOW_MODULE_JS_FILE,
         options: {
           process: function (content, srcpath) {
             // Insert the export line BEFORE the source map comment.
@@ -205,7 +232,7 @@ module.exports = (grunt) => {
         files: [
           {
             expand: true,
-            dest: RELEASE_DIR,
+            dest: RELEASES_DIR,
             cwd: BUILD_DIR,
             src: ['*.js', 'docs/**', '*.map'],
           },
@@ -241,7 +268,7 @@ module.exports = (grunt) => {
         },
         files: [
           {
-            src: [`${RELEASE_DIR}/*.js`, `${RELEASE_DIR}/*.map`],
+            src: [`${RELEASES_DIR}/*.js`, `${RELEASES_DIR}/*.map`],
             expand: true,
           },
         ],
@@ -279,54 +306,46 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-force-task');
 
   // Default tasks that run when you type `grunt`.
+  // This might take a while...... :-)
   grunt.registerTask(
     'default',
     'Build VexFlow', //
     [
       'clean',
       'eslint',
-      'webpack:buildDev',
-      'webpack:buildTest',
-      'webpack:buildStatic',
-      'webpack:buildDynamic',
+      'webpack:buildDebug',
+      'webpack:buildDebugPlusTests',
+      'webpack:buildProdAllFonts',
+      'webpack:buildProdNoFonts',
+      'webpack:buildProdBravuraOnly',
+      'webpack:buildProdGonvilleOnly',
+      'webpack:buildProdPetalumaOnly',
       'copy:module',
       'typedoc',
+      // TODO: delete build/types/typedoc.d.ts
+      // TODO: delete build/types/src/entry/*.d.ts
     ]
   );
 
   // `grunt watch`
   grunt.registerTask(
     'watch',
-    'Watch src/ & tests/ for changes. Generate dev builds.', //
-    ['clean', 'force:eslint', 'concurrent:dev']
+    'Watch src/ & tests/ for changes. Generate dev builds (vexflow-debug.js / vexflow-debug-plus-tests.js).', //
+    ['clean', 'force:eslint', 'concurrent:debug']
   );
 
-  // `grunt watch:static`
+  // `grunt watch:core`
   grunt.registerTask(
-    'watch:static',
-    'Watch src/ for changes. Generate dev builds for pre-loaded fonts.', //
-    ['clean', 'force:eslint', 'concurrent:static']
-  );
-
-  // `grunt watch:dynamic`
-  grunt.registerTask(
-    'watch:dynamic',
-    'Watch src/ for changes. Generate dev builds for dynamically loaded fonts.', //
-    ['clean', 'force:eslint', 'concurrent:dynamic']
-  );
-
-  // `grunt watch:staticAndDynamic`
-  grunt.registerTask(
-    'watch:staticAndDynamic',
-    'Watch src/ for changes.', //
-    ['clean', 'force:eslint', 'concurrent:staticAndDynamic']
+    'watch:core',
+    'Watch src/ for changes. Generate non-minified vexflow-core.js and fonts.', //
+    ['clean', 'force:eslint', 'concurrent:core']
   );
 
   // `grunt test`
   grunt.registerTask(
     'test',
     'Run qunit tests.', //
-    ['clean', 'webpack:buildDev', 'webpack:buildTest', 'qunit']
+    ['clean', 'webpack:buildDebugPlusTests', 'qunit']
   );
 
   // `grunt reference` will build the current HEAD revision and copy it to reference/

@@ -3,13 +3,14 @@
 //
 // Formatter Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
-import { FontGlyph } from 'font';
+import { Font, FontGlyph } from 'font';
 // import { FontGlyph, FontWeight } from 'font'; // RONYEH
-import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { Note } from 'note';
 import { Registry } from 'registry';
@@ -20,7 +21,6 @@ import { Tables } from 'tables';
 import { Voice, VoiceTime } from 'voice';
 
 import { MockTickable } from './mocks';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FormatterTests = {
   Start(): void {

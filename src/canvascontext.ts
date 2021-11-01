@@ -6,10 +6,15 @@ import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
 /**
- * A rendering context for the Canvas backend (CanvasRenderingContext2D).
+ * A rendering context for the Canvas backend. This class serves as a proxy for the
+ * underlying CanvasRenderingContext2D object, part of the browser's API.
  */
 export class CanvasContext extends RenderContext {
+  /**  The 2D rendering context from the Canvas API. Forward method calls to this object. */
   context2D: CanvasRenderingContext2D;
+  /**
+   * The HTMLCanvasElement that is associated with the above context.
+   * If there was no associated <canvas> element, just store the default WIDTH / HEIGHT. */
   canvas: HTMLCanvasElement | { width: number; height: number };
 
   /** Height of one line of text (in pixels). */
