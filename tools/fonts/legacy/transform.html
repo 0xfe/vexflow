@@ -315,9 +315,13 @@
         validCodes: validGlyphCodes,
       });
 
-      const font = Vex.Flow.Font.load('VexFlowFont');
-      font.data = combinedFont;
+      // Version 4.0.0
+      const font = Vex.Flow.Font.load('VexFlowFont', combinedFont);
       Vex.Flow.setMusicFont('VexFlowFont');
+
+      // Version 3.0.9
+      // const font = new Vex.Flow.Font('VexFlowFont', {} /* metrics */, combinedFont /* fontData */);
+      // Vex.Flow.DEFAULT_FONT_STACK = [font];
 
       drawGlyphs(font);
       populateTextArea(generateFontString(combinedFont));

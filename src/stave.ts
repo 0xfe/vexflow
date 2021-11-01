@@ -199,7 +199,7 @@ export class Stave extends Element {
   }
 
   getTieEndX(): number {
-    return this.x + this.width;
+    return this.end_x;
   }
 
   getX(): number {

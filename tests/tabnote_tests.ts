@@ -5,6 +5,7 @@
 
 import { Flow } from 'flow';
 // import { Font, FontWeight } from 'font'; // RONYEH
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
