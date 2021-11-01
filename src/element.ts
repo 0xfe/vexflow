@@ -89,33 +89,42 @@ export abstract class Element {
 
   /**
    * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
-   * @param f is 1) a `FontInfo` object or
-   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
-   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param font is 1) a `FontInfo` object or
+   *                2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *                3) a string representing the font family (at least one of `size`, `weight`, or `style` must also be provided).
    * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
    * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
    * @param style is a string (e.g., 'italic', 'normal').
    * If no arguments are provided, then the font is set to the default font.
    * Each Element subclass may specify its own default by overriding the static `TEXT_FONT` property.
    */
-  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+  setFont(font?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
     // Allow subclasses to override `TEXT_FONT`.
-    const defaultTextFont = (<typeof Element>this.constructor).TEXT_FONT;
-    const sizeWeightStyleUndefined = size === undefined && weight === undefined && style === undefined;
-    if (typeof f === 'object' || (f === undefined && sizeWeightStyleUndefined)) {
-      // `f` is case 1) a FontInfo object, or all arguments are undefined.
-      // Do not check `arguments.length === 0`, to allow the extreme edge case:
-      // setFont(undefined, undefined, undefined, undefined).
-      this.textFont = { ...defaultTextFont, ...f };
-    } else if (typeof f === 'string' && sizeWeightStyleUndefined) {
-      // `f` is case 2) CSS font shorthand.
-      this.textFont = Font.fromCSSString(f);
+    const defaultTextFont: Required<FontInfo> = (<typeof Element>this.constructor).TEXT_FONT;
+
+    const fontIsObject = typeof font === 'object';
+    const fontIsString = typeof font === 'string';
+    const fontIsUndefined = font === undefined;
+    const sizeWeightStyleAreUndefined = size === undefined && weight === undefined && style === undefined;
+
+    if (fontIsObject) {
+      // `font` is case 1) a FontInfo object
+      this.textFont = { ...defaultTextFont, ...font };
+    } else if (fontIsString && sizeWeightStyleAreUndefined) {
+      // `font` is case 2) CSS font shorthand.
+      this.textFont = Font.fromCSSString(font);
+    } else if (fontIsUndefined && sizeWeightStyleAreUndefined) {
+      // All arguments are undefined. Do not check for `arguments.length === 0`,
+      // which fails on the edge case: `setFont(undefined)`.
+      // TODO: See if we can remove this case entirely without introducing a visual diff.
+      // The else case below seems like it should be equivalent to this case.
+      this.textFont = { ...defaultTextFont };
     } else {
-      // `f` is case 3) a font family string (e.g., 'Times New Roman')
+      // `font` is case 3) a font family string (e.g., 'Times New Roman')
       // or it is undefined while one or more of the other arguments is provided.
       // Following CSS conventions, any unspecified params are reset to the default.
       this.textFont = Font.validate(
-        f ?? defaultTextFont.family,
+        font ?? defaultTextFont.family,
         size ?? defaultTextFont.size,
         weight ?? defaultTextFont.weight,
         style ?? defaultTextFont.style
