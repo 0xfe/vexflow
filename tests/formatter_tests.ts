@@ -16,7 +16,6 @@ import { StaveConnector } from '../src/staveconnector';
 import { StaveNote } from '../src/stavenote';
 import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FormatterTests = {
   Start(): void {

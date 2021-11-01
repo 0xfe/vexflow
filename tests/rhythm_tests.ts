@@ -3,6 +3,8 @@
 //
 // Rhythm Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Formatter } from '../src/formatter';
@@ -10,7 +12,6 @@ import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
 import { StaveNote } from '../src/stavenote';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const RhythmTests = {
   Start(): void {

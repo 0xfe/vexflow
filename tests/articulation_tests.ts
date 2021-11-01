@@ -3,6 +3,8 @@
 //
 // Articulation Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Flow } from '../src/flow';
@@ -15,7 +17,6 @@ import { StaveNote } from '../src/stavenote';
 import { TabNote } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { Voice } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ArticulationTests = {
   Start(): void {

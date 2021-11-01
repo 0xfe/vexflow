@@ -6,10 +6,11 @@
 
 // TODO: Incorrect property names in the options object: vo, left_ho, right_ho.
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { RenderContext } from '../src/rendercontext';
 import { StaveHairpin, StaveHairpinRenderOptions } from '../src/stavehairpin';
 import { StaveNote } from '../src/stavenote';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveHairpinTests = {
   Start(): void {

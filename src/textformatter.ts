@@ -46,10 +46,6 @@ export class TextFormatter {
   /** To enable logging for this class. Set `Vex.Flow.TextFormatter.DEBUG` to `true`. */
   static DEBUG: boolean = false;
 
-  static get CATEGORY(): string {
-    return 'TextFormatter';
-  }
-
   /**
    * Return all registered font families.
    */

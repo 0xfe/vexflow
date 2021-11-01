@@ -1,5 +1,3 @@
-import { loadMusicFonts } from '@loadFonts';
-
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
@@ -18,7 +16,6 @@ import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
 import { Font } from './font';
-import { loadTextFonts } from './fonts/loadTextFonts';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -298,9 +295,3 @@ export const Flow = {
     return Tables.durationToTicks(duration);
   },
 };
-
-// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
-// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
-loadMusicFonts();
-// Load the two text fonts that ChordSymbol & Annotation use.
-loadTextFonts();

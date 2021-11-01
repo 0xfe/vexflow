@@ -11,7 +11,6 @@ import { Barline } from '../src/stavebarline';
 import { StaveNote } from '../src/stavenote';
 import { Voice } from '../src/voice';
 import { MockTickable } from './mocks';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VoiceTests = {
   Start(): void {

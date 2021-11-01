@@ -78,10 +78,6 @@ export class Font {
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Static Members
 
-  static get CATEGORY(): string {
-    return 'Font';
-  }
-
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
 
@@ -355,6 +351,10 @@ export class Font {
       const fontPath = files[fontName];
       Font.loadWebFont(fontName, host + fontPath);
     }
+  }
+
+  static loadTextFonts(): void {
+    //
   }
 
   /**

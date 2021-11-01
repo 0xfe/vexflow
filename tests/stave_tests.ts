@@ -6,6 +6,8 @@
 // TODO: Like Stave.setTempo(t: StaveTempoOptions, ...), Stave.setText(...) could declare an interface called StaveTextOptions.
 //       This helps developers because they can use the named type in their code for type checking.
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
 import { Clef } from '../src/clef';
@@ -22,7 +24,6 @@ import { StaveTempoOptions } from '../src/stavetempo';
 import { VoltaType } from '../src/stavevolta';
 import { Justification } from '../src/textnote';
 import { TimeSignature } from '../src/timesignature';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveTests = {
   Start(): void {

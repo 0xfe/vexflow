@@ -3,8 +3,7 @@
 // MIT License
 
 import { BoundingBox } from './boundingbox';
-import { Font } from './font';
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
 import { defined } from './util';

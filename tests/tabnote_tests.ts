@@ -3,6 +3,8 @@
 //
 // TabNote Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
@@ -13,7 +15,6 @@ import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { TickContext } from '../src/tickcontext';
 import { Voice, VoiceMode } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabNoteTests = {
   Start(): void {

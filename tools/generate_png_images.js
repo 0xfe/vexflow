@@ -209,7 +209,7 @@ if (scriptDir.includes('releases')) {
   // THE NEW WAY loads a single JS file.
   // See: https://github.com/0xfe/vexflow/pull/1074
   // Load from the build/ or reference/ folder.
-  global.Vex = require(`${scriptDir}/vexflow-tests.js`);
+  global.Vex = require(`${scriptDir}/vexflow-debug-plus-tests.js`);
   global.Vex.Flow.Test.shims = { fs };
 }
 

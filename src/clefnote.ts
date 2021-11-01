@@ -3,8 +3,7 @@
 // MIT License
 
 import { BoundingBox } from './boundingbox';
-import { Clef } from './clef';
-import { ClefType } from './clef';
+import { Clef, ClefType } from './clef';
 import { Glyph } from './glyph';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';

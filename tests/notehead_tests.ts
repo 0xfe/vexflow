@@ -10,6 +10,8 @@
 // TODO: The middle C note head is missing a ledger line. Should it automatically draw one? In older versions of VexFlow, there is a ledger line.
 //       See: https://www.vexflow.com/tests/?module=NoteHead
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { NoteHead } from '../src/notehead';
@@ -19,7 +21,6 @@ import { Stave } from '../src/stave';
 import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 import { TickContext } from '../src/tickcontext';
 import { Voice } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const NoteHeadTests = {
   Start(): void {

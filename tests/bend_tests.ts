@@ -3,6 +3,8 @@
 //
 // Bend Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Bend, BendPhrase } from '../src/bend';
 import { Formatter } from '../src/formatter';
 import { ModifierContext } from '../src/modifiercontext';
@@ -11,7 +13,6 @@ import { ContextBuilder } from '../src/renderer';
 import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { TickContext } from '../src/tickcontext';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BendTests = {
   Start(): void {

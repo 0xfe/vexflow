@@ -3,6 +3,8 @@
 //
 // GraceTabNote Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { GraceNoteGroup } from '../src/gracenotegroup';
@@ -12,7 +14,6 @@ import { ContextBuilder } from '../src/renderer';
 import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { Voice } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GraceTabNoteTests = {
   Start(): void {
