@@ -2,7 +2,8 @@
   "name": "vexflow",
   "version": "3.0.9",
   "description": "A JavaScript library for rendering music notation and guitar tablature",
-  "main": "src/index.ts",
+  "browser": "build/vexflow.js",
+  "main": "build/vexflow.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -10,7 +11,7 @@
   "author": {
     "name": "Mohit Muthanna Cheppudira",
     "email": "mohit@muthanna.com",
-    "url": "http://muthanna.com"
+    "url": "https://muthanna.com/"
   },
   "license": "MIT",
   "bugs": {
@@ -37,6 +38,7 @@
     "grunt-contrib-qunit": "^5.1.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^24.0.0",
+    "grunt-force-task": "^3.0.0",
     "grunt-git": "^1.1.1",
     "grunt-release": "^0.14.0",
     "grunt-typedoc": "^0.2.4",
@@ -70,7 +72,7 @@
     "cache:restore:reference": "if [ -d ./reference/images ]; then mv ./reference/images ./build/images/reference; else npm run generate:reference; fi;",
     "test:reference:cache": "npm run cache:save:reference && npm run lint && npm run qunit && npm run generate:current && npm run cache:restore:reference && npm run diff:reference"
   },
-  "homepage": "http://vexflow.com",
+  "homepage": "https://vexflow.com/",
   "keywords": [
     "music",
     "notation",

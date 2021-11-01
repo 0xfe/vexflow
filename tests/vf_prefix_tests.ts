@@ -90,6 +90,9 @@ const VFPrefixTests = {
   },
 };
 
+// eslint-disable-next-line
+declare let Vex: any;
+
 function VF_Prefix(): void {
   const VF = Vex.Flow as unknown as typeof Flow;
   equal(Accidental, VF.Accidental);
