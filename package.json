@@ -14,6 +14,9 @@
     "url": "https://muthanna.com/"
   },
   "license": "MIT",
+  "files": [
+    "build"
+  ],
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
   },
@@ -76,6 +79,7 @@
   "keywords": [
     "music",
     "notation",
+    "piano",
     "guitar",
     "tablature"
   ]
