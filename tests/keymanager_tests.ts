@@ -6,7 +6,7 @@
 // TODO: KeyManager.getAccidental(key) specifies that the return value's .accidental property is string | undefined.
 //       However, we check it against null.
 
-import { KeyManager } from 'keymanager';
+import { KeyManager } from '../src/keymanager';
 
 const KeyManagerTests = {
   Start(): void {

@@ -3,13 +3,12 @@
 //
 // Vibrato Tests
 
-import { Bend } from 'bend';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Vibrato } from 'vibrato';
-
+import { Bend } from '../src/bend';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Vibrato } from '../src/vibrato';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const VibratoTests = {

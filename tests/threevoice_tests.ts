@@ -3,12 +3,11 @@
 //
 // Three Voices Tests - Three voices in single staff.
 
-import { Beam } from 'beam';
-import { BuilderOptions } from 'easyscore';
-import { Factory } from 'factory';
-import { Note } from 'note';
-import { Voice } from 'voice';
-
+import { Beam } from '../src/beam';
+import { BuilderOptions } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { Voice } from '../src/voice';
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const ThreeVoicesTests = {

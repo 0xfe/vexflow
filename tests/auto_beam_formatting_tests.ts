@@ -6,12 +6,11 @@
 // TODO: Beam.generateBeams(voice.getTickables() as StemmableNote[], ...) requires a cast to StemmableNote[].
 //       Is there a cleaner way to handle this?
 
-import { Beam } from 'beam';
-import { EasyScore } from 'easyscore';
-import { Fraction } from 'fraction';
-import { Stem } from 'stem';
-import { StemmableNote } from 'stemmablenote';
-
+import { Beam } from '../src/beam';
+import { EasyScore } from '../src/easyscore';
+import { Fraction } from '../src/fraction';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AutoBeamFormattingTests = {

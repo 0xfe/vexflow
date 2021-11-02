@@ -3,14 +3,13 @@
 //
 // Voice Tests
 
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-import { Voice } from 'voice';
-
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { Barline } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
+import { Voice } from '../src/voice';
 import { MockTickable } from './mocks';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

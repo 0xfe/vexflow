@@ -3,7 +3,7 @@
 //
 // Bounding Box Tests
 
-import { BoundingBox } from 'boundingbox';
+import { BoundingBox } from '../src/boundingbox';
 
 const BoundingBoxTests = {
   Start(): void {

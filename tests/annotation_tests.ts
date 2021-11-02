@@ -7,21 +7,20 @@
 //       Did a previous version of the API accept a number as the fourth argument?
 //       We removed the fourth argument from all of our test cases.
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { Registry } from 'registry';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Tickable } from 'tickable';
-import { Vibrato } from 'vibrato';
-import { Voice } from 'voice';
-
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { Registry } from '../src/registry';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Tickable } from '../src/tickable';
+import { Vibrato } from '../src/vibrato';
+import { Voice } from '../src/voice';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const AnnotationTests = {

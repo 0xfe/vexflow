@@ -3,14 +3,13 @@
 //
 // Rhythm Tests
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const RhythmTests = {

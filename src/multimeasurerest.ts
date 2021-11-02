@@ -3,8 +3,6 @@
 //
 // This class implements multiple measure rests.
 
-import { isBarline } from 'typeguard';
-
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
@@ -13,6 +11,7 @@ import { Stave } from './stave';
 import { StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
+import { isBarline } from './typeguard';
 import { defined } from './util';
 
 export interface MultimeasureRestRenderOptions {

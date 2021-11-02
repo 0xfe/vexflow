@@ -3,19 +3,18 @@
 //
 // Formatter Tests
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { Flow } from 'flow';
-import { FontGlyph } from 'font';
-import { Formatter } from 'formatter';
-import { Note } from 'note';
-import { Registry } from 'registry';
-import { Stave } from 'stave';
-import { StaveConnector } from 'staveconnector';
-import { StaveNote } from 'stavenote';
-import { Voice, VoiceTime } from 'voice';
-
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Flow } from '../src/flow';
+import { FontGlyph } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { Stave } from '../src/stave';
+import { StaveConnector } from '../src/staveconnector';
+import { StaveNote } from '../src/stavenote';
+import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

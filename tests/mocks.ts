@@ -3,12 +3,12 @@
 //
 // TickContext Mocks
 
-import { Fraction } from 'fraction';
-import { NoteMetrics } from 'note';
-import { Stave } from 'stave';
-import { Tickable } from 'tickable';
-import { TickContext } from 'tickcontext';
-import { Voice } from 'voice';
+import { Fraction } from '../src/fraction';
+import { NoteMetrics } from '../src/note';
+import { Stave } from '../src/stave';
+import { Tickable } from '../src/tickable';
+import { TickContext } from '../src/tickcontext';
+import { Voice } from '../src/voice';
 
 class MockTickable extends Tickable {
   tickContext?: TickContext;

@@ -5,13 +5,12 @@
 
 // TODO: Factory.Beam()'s 'notes' argument is a StemmableNote[], but we only have access to Tickable[].
 
-import { Beam } from 'beam';
-import { StaveNoteStruct } from 'stavenote';
-import { Stem } from 'stem';
-import { StemmableNote } from 'stemmablenote';
-import { TabNoteStruct } from 'tabnote';
-import { Voice } from 'voice';
-
+import { Beam } from '../src/beam';
+import { StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
+import { TabNoteStruct } from '../src/tabnote';
+import { Voice } from '../src/voice';
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const BeamTests = {

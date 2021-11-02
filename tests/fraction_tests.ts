@@ -3,7 +3,7 @@
 //
 // Fraction Tests
 
-import { Fraction } from 'fraction';
+import { Fraction } from '../src/fraction';
 
 const FractionTests = {
   Start(): void {

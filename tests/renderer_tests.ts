@@ -4,15 +4,14 @@
 //
 // Renderer Tests
 
-import { CanvasContext } from 'canvascontext';
-import { Factory, FactoryOptions } from 'factory';
-import { Formatter } from 'formatter';
-import { RenderContext } from 'rendercontext';
-import { Renderer } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-import { SVGContext } from 'svgcontext';
-
+import { CanvasContext } from '../src/canvascontext';
+import { Factory, FactoryOptions } from '../src/factory';
+import { Formatter } from '../src/formatter';
+import { RenderContext } from '../src/rendercontext';
+import { Renderer } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
+import { SVGContext } from '../src/svgcontext';
 import { RuntimeError } from '../src/util';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -80,6 +79,7 @@ function random(options: TestOptions): void {
     canvasOrDivElement(options);
   }
 
+  // eslint-disable-next-line
   const element: any = document.getElementById(options.elementId);
   const colorForElementType = useElementIDString ? '#CCCCCC' /* light gray */ : '#0074d9'; /* blue */
   const lineStyleForWhichAPI = useRendererAPI ? 'solid' : 'dashed';

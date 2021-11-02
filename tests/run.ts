@@ -1,5 +1,4 @@
-import { Vex } from 'vex';
-
+import { Vex } from '../src/vex';
 import { AccidentalTests } from './accidental_tests';
 import { AnnotationTests } from './annotation_tests';
 import { ArticulationTests } from './articulation_tests';

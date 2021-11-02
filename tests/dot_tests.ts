@@ -3,15 +3,14 @@
 //
 // Dot Tests
 
-import { Beam } from 'beam';
-import { ModifierContext } from 'modifiercontext';
-import { Note } from 'note';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-import { TickContext } from 'tickcontext';
-
+import { Beam } from '../src/beam';
+import { ModifierContext } from '../src/modifiercontext';
+import { Note } from '../src/note';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
+import { TickContext } from '../src/tickcontext';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const DotTests = {

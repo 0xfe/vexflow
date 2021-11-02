@@ -7,8 +7,6 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { isDot } from 'typeguard';
-
 import { Dot } from './dot';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -17,6 +15,7 @@ import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { isDot } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface TabNotePosition {

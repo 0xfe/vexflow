@@ -3,9 +3,8 @@
 //
 // TickContext Tests
 
-import { Flow } from 'flow';
-import { TickContext } from 'tickcontext';
-
+import { Flow } from '../src/flow';
+import { TickContext } from '../src/tickcontext';
 import { MockTickable } from './mocks';
 
 const TickContextTests = {

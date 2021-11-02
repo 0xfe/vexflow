@@ -3,11 +3,11 @@
 //
 // Registry Tests
 
-import { EasyScore } from 'easyscore';
-import { Element } from 'element';
-import { Factory } from 'factory';
-import { Registry } from 'registry';
-import { StaveNote } from 'stavenote';
+import { EasyScore } from '../src/easyscore';
+import { Element } from '../src/element';
+import { Factory } from '../src/factory';
+import { Registry } from '../src/registry';
+import { StaveNote } from '../src/stavenote';
 
 const RegistryTests = {
   Start(): void {
