@@ -30,12 +30,43 @@ export interface FontGlyph {
   cached_outline?: number[];
 }
 
+export enum FontWeight {
+  NORMAL = 'normal',
+  BOLD = 'bold',
+}
+
+export enum FontStyle {
+  NORMAL = 'normal',
+  ITALIC = 'italic',
+}
+
 class Font {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Static Members
+
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
 
   /** Default serif font family. */
   static SERIF: string = 'Times New Roman, serif';
+
+  /** Default font size in `pt`. */
+  static SIZE: number = 10;
+
+  // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
+  /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
+  static convertToPxFrom: Record<string, number> = {
+    pt: 4 / 3,
+    px: 1,
+    em: 16,
+    '%': 4 / 25,
+    in: 96,
+    mm: 96 / 25.4,
+    cm: 96 / 2.54,
+  };
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Instance Members
 
   protected name: string;
   protected fontDataMetrics: FontDataMetrics;
