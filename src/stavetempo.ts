@@ -1,11 +1,12 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2021.
+// MIT License
 // Author Radosaw Eichler 2012
 
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 
 export interface StaveTempoOptions {
   bpm?: number;
@@ -18,6 +19,13 @@ export class StaveTempo extends StaveModifier {
   static get CATEGORY(): string {
     return 'StaveTempo';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'Times' /* RONYEH: Font.SERIF */,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
 
   protected font: FontInfo;
   /** Font size for note. */
@@ -75,12 +83,18 @@ export class StaveTempo extends StaveModifier {
     ctx.save();
 
     if (name) {
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(font.family, font.size, font.weight);
       ctx.fillText(name, x, y);
       x += ctx.measureText(name).width;
     }
 
     if (duration && bpm) {
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(font.family, font.size, 'normal');
 
       if (name) {

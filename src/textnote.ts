@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export enum Justification {
@@ -32,6 +32,13 @@ export class TextNote extends Note {
   static get CATEGORY(): string {
     return 'TextNote';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 12,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
 
   protected text: string;
   protected superscript?: string;
@@ -164,6 +171,9 @@ export class TextNote extends Note {
         // Width already set.
       } else {
         const ctx = this.checkContext();
+        // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+        // eslint-disable-next-line
+        // @ts-ignore
         ctx.setFont(this.font.family, this.font.size, this.font.weight);
         this.setWidth(ctx.measureText(this.text).width);
       }
@@ -210,6 +220,9 @@ export class TextNote extends Note {
     } else {
       y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText(this.text, x, y);
 
@@ -217,12 +230,18 @@ export class TextNote extends Note {
 
       // Write superscript
       if (this.superscript) {
+        // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+        // eslint-disable-next-line
+        // @ts-ignore
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
         ctx.fillText(this.superscript, x + this.width + 2, y - height / 2.2);
       }
 
       // Write subscript
       if (this.subscript) {
+        // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+        // eslint-disable-next-line
+        // @ts-ignore
         ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
         ctx.fillText(this.subscript, x + this.width + 2, y + height / 2.2 - 1);
       }

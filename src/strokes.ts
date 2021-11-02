@@ -1,16 +1,15 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
@@ -26,6 +25,13 @@ export class Stroke extends Modifier {
     RASQUEDO_DOWN: 5,
     RASQUEDO_UP: 6,
     ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
+  };
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
 
   protected options: {
@@ -245,6 +251,9 @@ export class Stroke extends Modifier {
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {
       ctx.save();
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       ctx.fillText('R', x + text_shift_x, text_y);
       ctx.restore();

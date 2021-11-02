@@ -8,10 +8,10 @@
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
 import { Element } from './element';
+import { FontInfo } from './font';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineNotes {
@@ -50,6 +50,9 @@ export class StaveLine extends Element {
   static get CATEGORY(): string {
     return 'StaveLine';
   }
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   // Text Positioning
   static readonly TextVerticalPosition = {
@@ -200,6 +203,9 @@ export class StaveLine extends Element {
     const ctx = this.checkContext();
 
     if (this.font) {
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
     }
 

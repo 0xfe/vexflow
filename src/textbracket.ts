@@ -1,18 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Cyril Silverman
 //
-// ## Description
-//
-// This file implement `TextBrackets` which extend between two notes.
+// This file implements `TextBrackets` which extend between two notes.
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
 
 import { Element } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
 export interface TextBracketParams {
@@ -35,11 +33,18 @@ export enum TextBracketPosition {
 }
 
 export class TextBracket extends Element {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'TextBracket';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: 15,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.ITALIC,
+  };
 
   public render_options: {
     dashed: boolean;
@@ -123,6 +128,9 @@ export class TextBracket extends Element {
   // Apply the text backet styling to the provided `context`
   applyStyle(context: RenderContext): this {
     // Apply style for the octave bracket
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     context.setFont(this.font.family, this.font.size, this.font.weight);
     context.setStrokeStyle(this.render_options.color);
     context.setFillStyle(this.render_options.color);
@@ -191,6 +199,9 @@ export class TextBracket extends Element {
     const super_y = start.y - main_height / 2.5;
 
     // Draw the superscript
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 

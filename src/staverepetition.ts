@@ -1,15 +1,22 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
-import { FontInfo } from './types/common';
 
 export class Repetition extends StaveModifier {
   static get CATEGORY(): string {
     return 'Repetition';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'Times' /* RONYEH: Font.SERIF */,
+    size: 12,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
 
   static readonly type = {
     NONE: 1, // no coda or segno
@@ -117,6 +124,9 @@ export class Repetition extends StaveModifier {
     const ctx = stave.checkContext();
 
     ctx.save();
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Default to right symbol
     let text_x = 0 + this.x_shift;

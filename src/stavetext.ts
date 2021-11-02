@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class StaveText extends StaveModifier {
@@ -12,14 +12,22 @@ export class StaveText extends StaveModifier {
     return 'StaveText';
   }
 
-  protected text: string;
-  protected shift_x?: number;
-  protected shift_y?: number;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'Times' /* RONYEH: Font.SERIF*/,
+    size: 16,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
+
   protected options: {
     shift_x: number;
     shift_y: number;
     justification: number;
   };
+
+  protected text: string;
+  protected shift_x?: number;
+  protected shift_y?: number;
   protected font: FontInfo;
 
   constructor(
@@ -77,6 +85,9 @@ export class StaveText extends StaveModifier {
 
     ctx.save();
     ctx.setLineWidth(2);
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText('' + this.text).width;
 

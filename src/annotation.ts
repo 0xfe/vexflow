@@ -1,12 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Element } from './element';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFont } from './textfont';
-import { FontInfo } from './types/common';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -36,12 +37,14 @@ enum VerticalJustify {
  */
 export class Annotation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Annotations category string. */
   static get CATEGORY(): string {
     return 'Annotation';
   }
+
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /** Text annotations can be positioned and justified relative to the note. */
   static Justify = Justify;
@@ -161,6 +164,9 @@ export class Annotation extends Modifier {
     ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const text_width = ctx.measureText(this.text).width;
 

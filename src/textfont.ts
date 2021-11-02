@@ -6,9 +6,9 @@
 // VEX modules can take advantage of font metrics in a uniform way.
 //
 
+import { FontInfo } from './font';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
-import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
 export interface TextFontMetrics {
@@ -196,7 +196,7 @@ export class TextFont {
     } else if (candidates.length === 1) {
       selectedFont = new TextFont(candidates[0]);
     } else {
-      const bold = TextFont.fontWeightToBold(fd.weight);
+      const bold = TextFont.fontWeightToBold(fd.weight as string); // RONYEH
       const italic = TextFont.fontStyleToItalic(fd.style);
       const perfect = candidates.find((font) => font.bold === bold && font.italic === italic);
       if (perfect) {

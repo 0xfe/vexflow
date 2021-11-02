@@ -7,8 +7,8 @@
   },
   "plugins": ["@typescript-eslint", "prettier", "simple-import-sort"],
   "rules": {
-    "no-console": 1, // Means warning
-    "prettier/prettier": 2, // Means error
+    "no-console": "warn",
+    "prettier/prettier": "warn",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },

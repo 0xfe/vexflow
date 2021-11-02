@@ -4,6 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -15,7 +16,7 @@ import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
-import { Bounds, FontInfo } from './types/common';
+import { Bounds } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -63,6 +64,13 @@ export class Stave extends Element {
   static get CATEGORY(): string {
     return 'Stave';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF*/,
+    size: 8,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
 
   protected start_x: number;
   protected clef: string;
@@ -764,6 +772,9 @@ export class Stave extends Element {
     // Render measure numbers
     if (this.measure > 0) {
       ctx.save();
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       ctx.setFont(this.font.family, this.font.size, this.font.weight);
       const text_width = ctx.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;

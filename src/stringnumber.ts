@@ -1,23 +1,29 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
 import { Stem } from './stem';
 import { isStaveNote, isStemmableNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
     return 'StringNumber';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
 
   protected radius: number;
   protected last_note?: Note;
@@ -216,6 +222,9 @@ export class StringNumber extends Modifier {
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
     ctx.setLineWidth(1.5);
     ctx.stroke();
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);

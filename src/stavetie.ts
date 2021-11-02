@@ -1,13 +1,13 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2021.
+// MIT License
 //
-// ## Description
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { Element } from './element';
+import { FontInfo } from './font';
 import { Note } from './note';
 import { Stave } from './stave';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface TieNotes {
@@ -21,6 +21,9 @@ export class StaveTie extends Element {
   static get CATEGORY(): string {
     return 'StaveTie';
   }
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   public render_options: {
     cp2: number;
@@ -173,6 +176,9 @@ export class StaveTie extends Element {
     const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
 
     ctx.save();
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     ctx.fillText(this.text, center_x + this.render_options.text_shift_x, (stave as Stave).getYForTopText() - 1);
     ctx.restore();

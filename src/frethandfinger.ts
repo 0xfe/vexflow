@@ -4,16 +4,23 @@
 // Class to draws string numbers into the notation.
 
 import { Builder } from './easyscore';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
     return 'FretHandFinger';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    size: 9,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
 
   // Arrange fingerings inside a ModifierContext.
   static format(nums: FretHandFinger[], state: ModifierContextState): boolean {
@@ -177,6 +184,9 @@ export class FretHandFinger extends Modifier {
     }
 
     ctx.save();
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     ctx.fillText('' + this.finger, dot_x, dot_y);
     ctx.restore();

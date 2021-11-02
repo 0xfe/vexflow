@@ -8,13 +8,13 @@
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFont } from './textfont';
-import { FontInfo } from './types/common';
 import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -276,6 +276,9 @@ export class ChordSymbol extends Modifier {
 
     for (let i = 0; i < instances.length; ++i) {
       const instance = instances[i];
+      // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+      // eslint-disable-next-line
+      // @ts-ignore
       const fontAdj = instance.font.size / 20;
       const glyphAdj = fontAdj * 2;
       let lineSpaces = 1;
@@ -384,6 +387,30 @@ export class ChordSymbol extends Modifier {
       weight: '',
     };
     this.textFont = TextFont.getTextFontFromVexFontData(this.font);
+  }
+
+  /**
+   * Default text font.
+   * Choose a font family that works well with the current music engraving font.
+   * @override `Element.TEXT_FONT`.
+   */
+  static get TEXT_FONT(): Required<FontInfo> {
+    let family = 'Roboto Slab, Times, serif';
+    if (Tables.currentMusicFont().getName() === 'Petaluma') {
+      // Fixes Issue #1180
+      // https://github.com/0xfe/vexflow/issues/1180
+      // family = 'PetalumaScript, Arial, sans-serif';
+
+      // RONYEH: A mismatched font family results in loading Roboto Slab's metrics instead.
+      // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
+      family = 'petalumaScript,Arial';
+    }
+    return {
+      family,
+      size: 12,
+      weight: FontWeight.NORMAL,
+      style: FontStyle.NORMAL,
+    };
   }
 
   // ### pointsToPixels
@@ -680,6 +707,9 @@ export class ChordSymbol extends Modifier {
     ctx.openGroup(classString, this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
     let y: number;
@@ -738,6 +768,9 @@ export class ChordSymbol extends Modifier {
       if (symbol.symbolType === SymbolTypes.TEXT) {
         if (sp || sub) {
           ctx.save();
+          // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+          // eslint-disable-next-line
+          // @ts-ignore
           ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
         }
         // TODO???

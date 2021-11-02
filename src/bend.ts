@@ -1,6 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Element } from './element';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Tables } from './tables';
@@ -27,6 +29,9 @@ export class Bend extends Modifier {
   static get DOWN(): number {
     return 1;
   }
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   // Arrange bends in `ModifierContext`
   static format(bends: Bend[], state: ModifierContextState): boolean {

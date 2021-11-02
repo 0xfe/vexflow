@@ -12,6 +12,7 @@ import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
 import { EasyScore, EasyScoreOptions } from './easyscore';
 import { Element } from './element';
+import { FontInfo } from './font';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
@@ -46,7 +47,6 @@ import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
 import { Tuplet, TupletOptions } from './tuplet';
-import { FontInfo } from './types/common';
 import { defined, log, RuntimeError } from './util';
 import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
@@ -75,14 +75,14 @@ function L(...args: any[]) {
 }
 
 /**
- * Factory implements a high level API around VexFlow. It will eventually
- * become the canonical way to use VexFlow.
- *
- * *This API is currently DRAFT*
+ * Factory implements a high level API around VexFlow.
  */
 export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /**
    * Static simplified function to access constructor without providing FactoryOptions

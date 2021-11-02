@@ -96,7 +96,7 @@ function drawSlashNoteHead(
  */
 export class NoteHead extends Note {
   /** To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'NoteHead';

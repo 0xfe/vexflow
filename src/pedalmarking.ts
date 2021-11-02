@@ -2,10 +2,10 @@
 // MIT License
 
 import { Element } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -33,11 +33,18 @@ function drawPedalGlyph(name: string, context: RenderContext, x: number, y: numb
  */
 export class PedalMarking extends Element {
   /** To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'PedalMarking';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SERIF,
+    size: 12,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
+  };
 
   protected line: number;
   protected type: number;
@@ -273,6 +280,9 @@ export class PedalMarking extends Element {
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);
     ctx.setFillStyle(this.render_options.color);
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
 
     L('Rendering Pedal Marking');

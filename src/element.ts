@@ -3,7 +3,7 @@
 // MIT License
 
 import { BoundingBox } from './boundingbox';
-import { Font } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
 import { Tables } from './tables';
@@ -42,6 +42,17 @@ export abstract class Element {
   protected static newID(): string {
     return `auto${Element.ID++}`;
   }
+
+  /**
+   * Default font for text. This is not related to music engraving. Instead, see `Flow.setMusicFont(...fontNames)`
+   * to customize the font for musical symbols placed on the score.
+   */
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: Font.SIZE,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
 
   private context?: RenderContext;
   protected rendered: boolean;

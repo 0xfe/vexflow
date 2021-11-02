@@ -2,11 +2,11 @@
 // MIT License
 
 import { Element } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
@@ -34,6 +34,13 @@ export class StaveConnector extends Element {
   static get CATEGORY(): string {
     return 'StaveConnector';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'Times' /* RONYEH: Font.SERIF */,
+    size: 16,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
 
   protected thickness: number;
   protected width: number;
@@ -260,6 +267,9 @@ export class StaveConnector extends Element {
 
     ctx.save();
     ctx.setLineWidth(2);
+    // TEMPORARILY DISABLE. Will be fixed in RONYEH's FONTS PR.
+    // eslint-disable-next-line
+    // @ts-ignore
     ctx.setFont(this.font.family, this.font.size, this.font.weight);
     // Add stave connector text
     for (let i = 0; i < this.texts.length; i++) {

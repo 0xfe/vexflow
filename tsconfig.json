@@ -20,5 +20,5 @@
       "@custom": ["fonts/loadStatic"]
     }
   },
-  "exclude": ["./tools/fonts/legacy", "./releases", "./reference"]
+  "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
 }

@@ -92,7 +92,7 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
 }
 
 export class StaveNote extends StemmableNote {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'StaveNote';
