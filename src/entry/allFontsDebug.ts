@@ -1,8 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-
-// The _allFonts.ts entry point will be output as `vexflow.js`
-// It will statically include all music engraving fonts. See: loadStatic.ts.
+//
+// allFontsDebug.ts is the entry point for the build output file: `vexflow-debug.js`.
+// It statically bundles all the music engraving fonts.
 
 import { Vex } from '../vex';
 

@@ -3,7 +3,7 @@
 //
 // Support Dynamic Importing of Music Fonts
 //
-// withPetaluma.ts is the entry point for `vexflow-with-petaluma.js`.
+// withPetaluma.ts is the entry point for `vexflow-core-with-petaluma.js`.
 // This version includes only Petaluma.
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading other music fonts (e.g., Bravura) on the fly.

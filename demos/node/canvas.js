@@ -4,6 +4,7 @@
 
 const { createCanvas } = require('canvas');
 const Vex = require('../../build/vexflow-debug');
+
 const VF = Vex.Flow;
 
 const canvas = createCanvas(500, 500);

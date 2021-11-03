@@ -4,15 +4,7 @@
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "main": "build/vexflow.js",
   "browser": "build/vexflow.js",
-  "exports": {
-    ".": "./build/vexflow.js",
-    "./core": "./build/vexflow-core.js",
-    "./core-plus-bravura": "./build/vexflow-core-plus-bravura.js",
-    "./core-plus-petaluma": "./build/vexflow-core-plus-petaluma.js",
-    "./core-plus-gonville": "./build/vexflow-core-plus-gonville.js",
-    "./debug": "./build/vexflow-debug.js",
-    "./debug-plus-tests": "./build/vexflow-debug-plus-tests.js"
-  },
+  "types": "build/types/src/vex.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"

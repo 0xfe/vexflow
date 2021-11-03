@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <!-- 
+  Use async/await to load fonts dynamically.
+  For example: await Vex.Flow.setMusicFont('Bravura')
+  Open the developer console to verify that only vexflow-core.js is loaded when this page is first shown.
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Choose one of the fonts below:</p>
+    <div>
+      <a href="#" onclick="chooseFont('Bravura')">Bravura</a> &nbsp;
+      <a href="#" onclick="chooseFont('Gonville')">Gonville</a> &nbsp;
+      <a href="#" onclick="chooseFont('Petaluma')">Petaluma</a> &nbsp;
+    </div>
+    <div id="output"></div>
+    <!-- The vexflow core build includes no music fonts. -->
+    <script src="../../build/vexflow-core.js"></script>
+    <script type="module">
+      async function chooseFont(fontName) {
+        const container = document.getElementById('output');
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+
+        // Vex.Flow.setMusicFont(fontName) is an async function that triggers
+        // the loading of the font stored in vexflow-font-${fontName}.js.
+        // Choose between:
+        //   await Vex.Flow.setMusicFont('Bravura')
+        //   await Vex.Flow.setMusicFont('Gonville')
+        //   await Vex.Flow.setMusicFont('Petaluma')
+        await Vex.Flow.setMusicFont(fontName);
+
+        renderScore();
+      }
+
+      function renderScore() {
+        const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
+        const score = factory.EasyScore();
+        const system = factory.System();
+        system
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+      window.chooseFont = chooseFont;
+    </script>
+  </body>
+</html>

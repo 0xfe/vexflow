@@ -29,8 +29,8 @@ learn how to use VexFlow. Also learn to use the simpler EasyScore API in the [Us
 
 The releases are served via [unpkg.com](http://unpkg.com).
 
-* Debug version: https://unpkg.com/vexflow/releases/vexflow-debug.js
-* Minified version: https://unpkg.com/vexflow/releases/vexflow-min.js
+- Debug version: https://unpkg.com/vexflow/releases/vexflow-debug.js
+- Minified version: https://unpkg.com/vexflow/releases/vexflow-min.js
 
 ### Using EasyScore
 
@@ -40,18 +40,21 @@ The EasyScore API is a quick way to create simple music notation in VexFlow. See
 import Vex from 'vexflow';
 
 const vf = new Vex.Flow.Factory({
-  renderer: {elementId: 'boo', width: 500, height: 200}
+  renderer: { elementId: 'boo', width: 500, height: 200 },
 });
 
 const score = vf.EasyScore();
 const system = vf.System();
 
-system.addStave({
-  voices: [
-    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
-    score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))
-  ]
-}).addClef('treble').addTimeSignature('4/4');
+system
+  .addStave({
+    voices: [
+      score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+      score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+    ],
+  })
+  .addClef('treble')
+  .addTimeSignature('4/4');
 
 vf.draw();
 ```
@@ -68,19 +71,19 @@ import Vex from 'vexflow';
 const VF = Vex.Flow;
 
 // Create an SVG renderer and attach it to the DIV element named "vf".
-const div = document.getElementById("vf")
+const div = document.getElementById('vf');
 const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
 // Configure the rendering context.
 renderer.resize(500, 500);
 const context = renderer.getContext();
-context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+context.setFont('Arial', 10).setBackgroundFillStyle('#eed');
 
 // Create a stave of width 400 at position 10, 40 on the canvas.
 const stave = new VF.Stave(10, 40, 400);
 
 // Add a clef and time signature.
-stave.addClef("treble").addTimeSignature("4/4");
+stave.addClef('treble').addTimeSignature('4/4');
 
 // Connect it to the rendering context and draw!
 stave.setContext(context).draw();
@@ -119,5 +122,5 @@ THE SOFTWARE.
 
 ## Links
 
-* [VexFlow Home](http://vexflow.com)
-* [Me](http://muthanna.com)
+- [VexFlow Home](https://vexflow.com)
+- [Me](https://muthanna.com)

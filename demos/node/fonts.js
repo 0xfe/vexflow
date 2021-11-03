@@ -6,6 +6,8 @@
 // picked up by VexFlow's ChordSymbol.
 // Note: JSDOM uses node-canvas internally. https://www.npmjs.com/package/canvas
 
+/* eslint-disable no-console */
+
 const { registerFont, createCanvas } = require('canvas');
 const { JSDOM } = require('jsdom');
 

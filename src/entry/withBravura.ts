@@ -3,7 +3,7 @@
 //
 // Support Dynamic Importing of Music Fonts
 //
-// withBravura.ts is the entry point for `vexflow-with-bravura.js`.
+// withBravura.ts is the entry point for `vexflow-core-with-bravura.js`.
 // This version includes only Bravura.
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading other music fonts (e.g., Petaluma) on the fly.
