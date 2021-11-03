@@ -3,7 +3,7 @@
 //
 // Support Dynamic Importing of Music Fonts
 //
-// withGonville.ts is the entry point for `vexflow-with-gonville.js`.
+// withGonville.ts is the entry point for `vexflow-core-with-gonville.js`.
 // This version includes only Gonville.
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading other music fonts (e.g., Bravura) on the fly.

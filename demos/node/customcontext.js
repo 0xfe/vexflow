@@ -1,7 +1,9 @@
 // node customcontext.js
+
 /* eslint-disable no-console */
 
 const Vex = require('../../build/vexflow-debug');
+
 const VF = Vex.Flow;
 
 // A custom Vex.Flow.RenderContext implementation.

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
+<!-- 
+  vexflow-core-with-bravura.js bundles the Bravura music font. 
+  There is no need to call Vex.Flow.setMusicFont(...).
+-->
 <html>
   <body>
     <div id="output"></div>
-    <!-- The vexflow core build includes no music fonts. -->
-    <script src="../../build/vexflow-core.js"></script>
+    <script src="../../build/vexflow-core-with-bravura.js"></script>
     <script type="module">
-      // Vex.Flow.setMusicFont('Gonville') is an async function that triggers
-      // the loading of the Gonville font (stored in vexflow-font-gonville.js).
-      await Vex.Flow.setMusicFont('Gonville');
-
       const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
       const score = factory.EasyScore();
       const system = factory.System();
