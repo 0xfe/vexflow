@@ -329,3 +329,4 @@ const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm
 Flow.Test = VexFlowTests;
 
 export { concat, MAJOR_KEYS, MINOR_KEYS, VexFlowTests };
+export default VexFlowTests;

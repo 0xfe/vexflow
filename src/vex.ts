@@ -5,7 +5,7 @@
 import { Flow } from './flow';
 import { log, RuntimeError } from './util';
 
-export const Vex = {
+const Vex = {
   Flow: Flow,
 
   // eslint-disable-next-line
@@ -80,3 +80,5 @@ export const Vex = {
     return err.stack;
   },
 };
+
+export default Vex;

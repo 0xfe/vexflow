@@ -9,6 +9,7 @@ import { setupAsyncFontLoader } from './async';
 import { Bravura } from './bravura';
 
 export function loadMusicFonts(): void {
+  // RONYEH: remove this.
   console.log('bundleBravura');
 
   const font = Font.load('Bravura', Bravura.data, Bravura.metrics);

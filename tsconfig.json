@@ -14,9 +14,6 @@
     "moduleResolution": "node",
     "baseUrl": "./src",
     "lib": ["dom", "es2017"]
-    "paths": {
-      "@loadFonts": ["fonts/loadStatic"]
-    }
   },
   "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
 }

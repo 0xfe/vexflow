@@ -18,6 +18,13 @@ import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
 import { RuntimeError } from './util';
 
+export interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface StaveLineConfig {
   visible?: boolean;
 }

@@ -12,9 +12,22 @@ import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { KeyProps } from './types/common';
 import { defined, drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
+
+export interface KeyProps {
+  stem_down_x_offset: number;
+  stem_up_x_offset: number;
+  key: string;
+  octave: number;
+  line: number;
+  int_value: number;
+  accidental: string;
+  code: string;
+  stroke: number;
+  shift_right: number;
+  displaced: boolean;
+}
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
