@@ -5,12 +5,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Crescendo } from 'crescendo';
-import { Flow } from 'flow';
-// import { Font } from 'font'; // RONYEH
-import { Note } from 'note';
-import { Stave } from 'stave';
-import { TextNote } from 'textnote';
+import { Crescendo } from '../src/crescendo';
+import { Flow } from '../src/flow';
+import { Note } from '../src/note';
+import { Stave } from '../src/stave';
+import { TextNote } from '../src/textnote';
 
 const TextNoteTests = {
   Start(): void {
@@ -140,7 +139,7 @@ function superscriptAndSubscript(options: TestOptions): void {
     const textNote = note as TextNote;
     // textNote.font = { family: 'Serif', size: 15, weight: '' }; // 3.0.9 API was not consistent. Usually .font is a string.
     textNote.setFont({ family: 'Serif', size: 15 }); // In 4.0.0, use setFont(fontInfo) instead.
-    // textNote.setFont({ family: Font.SERIF, size: 15 }); // RONYEH
+    // textNote.setFont({ family: Font.SERIF, size: 15 }); // RONYEH Instead of specifying 'Serif', you can use the constant.
     textNote.setLine(13);
     textNote.setJustification(TextNote.Justification.LEFT);
   });

@@ -3,12 +3,11 @@
 //
 // VexFlow Test Support Library
 
-import { Factory } from 'factory';
-import { Flow } from 'flow';
-import { Font } from 'font';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder, Renderer } from 'renderer';
-
+import { Factory } from '../src/factory';
+import { Flow } from '../src/flow';
+import { Font } from '../src/font';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder, Renderer } from '../src/renderer';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */

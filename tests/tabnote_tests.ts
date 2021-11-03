@@ -5,16 +5,15 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Flow } from 'flow';
-// import { Font, FontWeight } from 'font'; // RONYEH
-import { Formatter } from 'formatter';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { TickContext } from 'tickcontext';
-import { Voice, VoiceMode } from 'voice';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { TickContext } from '../src/tickcontext';
+import { Voice, VoiceMode } from '../src/voice';
 
 const TabNoteTests = {
   Start(): void {

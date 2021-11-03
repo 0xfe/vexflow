@@ -8,14 +8,14 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from 'factory';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
-import { TickContext } from 'tickcontext';
-import { Tremolo } from 'tremolo';
+import { Factory } from '../src/factory';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { StemmableNote } from '../src/stemmablenote';
+import { TickContext } from '../src/tickcontext';
+import { Tremolo } from '../src/tremolo';
 
 const PercussionTests = {
   Start(): void {

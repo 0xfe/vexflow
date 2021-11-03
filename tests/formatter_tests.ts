@@ -5,21 +5,18 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { Flow } from 'flow';
-import { Font, FontGlyph } from 'font';
-// import { FontGlyph, FontWeight } from 'font'; // RONYEH
-import { Formatter } from 'formatter';
-import { Note } from 'note';
-import { Registry } from 'registry';
-import { Stave } from 'stave';
-import { StaveConnector } from 'staveconnector';
-import { StaveNote } from 'stavenote';
-import { Tables } from 'tables';
-import { Voice, VoiceTime } from 'voice';
-
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Flow } from '../src/flow';
+import { Font, FontGlyph } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { Stave } from '../src/stave';
+import { StaveConnector } from '../src/staveconnector';
+import { StaveNote } from '../src/stavenote';
+import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 
 const FormatterTests = {
@@ -59,8 +56,8 @@ function glyphWidth(glyphName: string): number {
   //   NOTATION_FONT_SCALE: 39,
   //   TABLATURE_FONT_SCALE: 39,
 
-  const glyph: FontGlyph = Tables.currentMusicFont().getGlyphs()[glyphName];
-  const widthInEm = (glyph.x_max - glyph.x_min) / Tables.currentMusicFont().getResolution();
+  const glyph: FontGlyph = Flow.currentMusicFont().getGlyphs()[glyphName];
+  const widthInEm = (glyph.x_max - glyph.x_min) / Flow.currentMusicFont().getResolution();
   return widthInEm * 38 * Font.convertToPxFrom.pt;
 }
 

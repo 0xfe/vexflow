@@ -5,15 +5,15 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { TieNotes } from 'stavetie';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabSlide } from 'tabslide';
-import { TabStave } from 'tabstave';
-import { Voice } from 'voice';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { TieNotes } from '../src/stavetie';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabSlide } from '../src/tabslide';
+import { TabStave } from '../src/tabstave';
+import { Voice } from '../src/voice';
 
 const TabSlideTests = {
   Start(): void {

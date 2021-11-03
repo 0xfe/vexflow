@@ -5,12 +5,12 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { ChordSymbol } from 'chordsymbol';
-import { Glyph } from 'glyph';
-import { Note } from 'note';
-import { Registry } from 'registry';
-import { StaveConnector } from 'staveconnector';
-import { Voice } from 'voice';
+import { ChordSymbol } from '../src/chordsymbol';
+import { Glyph } from '../src/glyph';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { StaveConnector } from '../src/staveconnector';
+import { Voice } from '../src/voice';
 
 const GlyphNoteTests = {
   Start(): void {

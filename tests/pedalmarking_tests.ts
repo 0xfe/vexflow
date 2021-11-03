@@ -7,9 +7,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
-import { Tickable } from 'tickable';
+import { Factory } from '../src/factory';
+import { StaveNote } from '../src/stavenote';
+import { Tickable } from '../src/tickable';
 
 const PedalMarkingTests = {
   Start(): void {

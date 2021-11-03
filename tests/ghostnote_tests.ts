@@ -5,10 +5,10 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { EasyScore } from 'easyscore';
-import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
+import { EasyScore } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { StaveNote } from '../src/stavenote';
+import { StemmableNote } from '../src/stemmablenote';
 
 const GhostNoteTests = {
   Start(): void {

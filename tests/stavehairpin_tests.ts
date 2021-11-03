@@ -8,9 +8,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { RenderContext } from 'rendercontext';
-import { StaveHairpin, StaveHairpinRenderOptions } from 'stavehairpin';
-import { StaveNote } from 'stavenote';
+import { RenderContext } from '../src/rendercontext';
+import { StaveHairpin, StaveHairpinRenderOptions } from '../src/stavehairpin';
+import { StaveNote } from '../src/stavenote';
 
 const StaveHairpinTests = {
   Start(): void {

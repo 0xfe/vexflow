@@ -6,11 +6,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { BarNote } from 'barnote';
-import { Factory } from 'factory';
-import { Note } from 'note';
-import { BarlineType } from 'stavebarline';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
+import { BarNote } from '../src/barnote';
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { BarlineType } from '../src/stavebarline';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const NoteSubGroupTests = {
   Start(): void {

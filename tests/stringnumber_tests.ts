@@ -5,11 +5,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Glyph } from 'glyph';
-import { Renderer } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { Stroke } from 'strokes';
+import { Glyph } from '../src/glyph';
+import { Renderer } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { Stroke } from '../src/strokes';
 
 const StringNumberTests = {
   Start(): void {

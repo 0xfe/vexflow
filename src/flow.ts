@@ -214,6 +214,13 @@ export const Flow = {
     return Tables.MUSIC_FONT_STACK.slice();
   },
 
+  /**
+   * @returns the `Font` object at the head of the music font stack.
+   */
+  currentMusicFont(): Font {
+    return Tables.currentMusicFont();
+  },
+
   get NOTATION_FONT_SCALE(): number {
     return Tables.NOTATION_FONT_SCALE;
   },

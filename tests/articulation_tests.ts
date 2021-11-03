@@ -5,18 +5,18 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Articulation } from 'articulation';
-import { Beam } from 'beam';
-import { Flow } from 'flow';
-// import { Font } from 'font'; // RONYEH
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { Barline } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-import { TabNote } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Voice } from 'voice';
+import { Articulation } from '../src/articulation';
+import { Beam } from '../src/beam';
+import { Flow } from '../src/flow';
+import { Font } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { Barline } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
+import { TabNote } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Voice } from '../src/voice';
 
 const ArticulationTests = {
   Start(): void {
@@ -306,8 +306,7 @@ function drawArticulations2(options: TestOptions): void {
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-  ctx.font = '10pt Arial';
-  // ctx.font = '10pt ' + Font.SANS_SERIF; // RONYEH
+  ctx.font = '10pt ' + Font.SANS_SERIF;
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();

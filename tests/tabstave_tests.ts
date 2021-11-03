@@ -5,8 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { ContextBuilder } from 'renderer';
-import { TabStave } from 'tabstave';
+import { ContextBuilder } from '../src/renderer';
+import { TabStave } from '../src/tabstave';
 
 const TabStaveTests = {
   Start(): void {

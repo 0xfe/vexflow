@@ -3,8 +3,8 @@
 //
 // Music Tests
 
-import { KeyManager } from 'keymanager';
-import { Music } from 'music';
+import { KeyManager } from '../src/keymanager';
+import { Music } from '../src/music';
 
 const MusicTests = {
   Start(): void {

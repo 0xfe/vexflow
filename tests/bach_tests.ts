@@ -5,10 +5,10 @@
 
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from 'factory';
-import { Registry } from 'registry';
-import { BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
+import { Factory } from '../src/factory';
+import { Registry } from '../src/registry';
+import { BarlineType } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
 
 const BachDemoTests = {
   Start(): void {

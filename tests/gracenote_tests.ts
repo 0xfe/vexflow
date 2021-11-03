@@ -7,11 +7,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Beam } from 'beam';
-import { Factory } from 'factory';
-import { Formatter } from 'formatter';
-import { GraceNote, GraceNoteStruct } from 'gracenote';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
+import { Beam } from '../src/beam';
+import { Factory } from '../src/factory';
+import { Formatter } from '../src/formatter';
+import { GraceNote, GraceNoteStruct } from '../src/gracenote';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const GraceNoteTests = {
   Start(): void {

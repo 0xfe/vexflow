@@ -5,11 +5,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { GraceNote, GraceNoteStruct } from 'gracenote';
-import { Barline } from 'stavebarline';
-import { Stroke } from 'strokes';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { GraceNote, GraceNoteStruct } from '../src/gracenote';
+import { Barline } from '../src/stavebarline';
+import { Stroke } from '../src/strokes';
 
 const StrokesTests = {
   Start(): void {

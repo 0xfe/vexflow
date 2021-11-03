@@ -8,15 +8,15 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Accidental } from 'accidental';
-import { Beam } from 'beam';
-import { Formatter } from 'formatter';
-import { Glyph } from 'glyph';
-import { Ornament } from 'ornament';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-import { Voice, VoiceMode } from 'voice';
+import { Accidental } from '../src/accidental';
+import { Beam } from '../src/beam';
+import { Formatter } from '../src/formatter';
+import { Glyph } from '../src/glyph';
+import { Ornament } from '../src/ornament';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
+import { Voice, VoiceMode } from '../src/voice';
 
 const OrnamentTests = {
   Start(): void {

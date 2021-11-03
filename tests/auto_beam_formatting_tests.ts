@@ -8,11 +8,11 @@
 
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Beam } from 'beam';
-import { EasyScore } from 'easyscore';
-import { Fraction } from 'fraction';
-import { Stem } from 'stem';
-import { StemmableNote } from 'stemmablenote';
+import { Beam } from '../src/beam';
+import { EasyScore } from '../src/easyscore';
+import { Fraction } from '../src/fraction';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
 
 const AutoBeamFormattingTests = {
   Start(): void {

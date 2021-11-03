@@ -5,9 +5,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Formatter } from 'formatter';
-import { Stem } from 'stem';
-import { Tuplet } from 'tuplet';
+import { Formatter } from '../src/formatter';
+import { Stem } from '../src/stem';
+import { Tuplet } from '../src/tuplet';
 
 const TupletTests = {
   Start(): void {

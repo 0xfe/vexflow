@@ -11,21 +11,21 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Annotation } from 'annotation';
-import { Articulation } from 'articulation';
-import { Bend } from 'bend';
-import { ElementStyle } from 'element';
-import { Formatter } from 'formatter';
-import { KeySignature } from 'keysignature';
-import { NoteSubGroup } from 'notesubgroup';
-import { Ornament } from 'ornament';
-import { ContextBuilder } from 'renderer';
-import { StaveModifierPosition } from 'stavemodifier';
-import { StaveNote } from 'stavenote';
-import { Stroke } from 'strokes';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { TimeSignature } from 'timesignature';
+import { Annotation } from '../src/annotation';
+import { Articulation } from '../src/articulation';
+import { Bend } from '../src/bend';
+import { ElementStyle } from '../src/element';
+import { Formatter } from '../src/formatter';
+import { KeySignature } from '../src/keysignature';
+import { NoteSubGroup } from '../src/notesubgroup';
+import { Ornament } from '../src/ornament';
+import { ContextBuilder } from '../src/renderer';
+import { StaveModifierPosition } from '../src/stavemodifier';
+import { StaveNote } from '../src/stavenote';
+import { Stroke } from '../src/strokes';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { TimeSignature } from '../src/timesignature';
 
 const StyleTests = {
   Start(): void {
@@ -112,8 +112,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 140);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = ' 10pt Arial';
-  // ctx.font = '10pt Arial'; // RONYEH
+  ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph();
   stave.getModifiers()[2].setStyle(FS('blue'));
   stave.setContext(ctx).draw();

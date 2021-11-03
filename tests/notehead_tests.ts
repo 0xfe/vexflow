@@ -12,15 +12,15 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { NoteHead } from 'notehead';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { TickContext } from 'tickcontext';
-import { Voice } from 'voice';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { NoteHead } from '../src/notehead';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { TickContext } from '../src/tickcontext';
+import { Voice } from '../src/voice';
 
 const NoteHeadTests = {
   Start(): void {

@@ -5,9 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Flow } from 'flow';
-// import { Font } from 'font'; // RONYEH
-import { MultimeasureRestRenderOptions } from 'multimeasurerest';
+import { Flow } from '../src/flow';
+import { MultimeasureRestRenderOptions } from '../src/multimeasurerest';
 
 const MultiMeasureRestTests = {
   Start(): void {

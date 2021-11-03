@@ -5,8 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from 'factory';
-import { Barline } from 'stavebarline';
+import { Factory } from '../src/factory';
+import { Barline } from '../src/stavebarline';
 
 const FactoryTests = {
   Start(): void {

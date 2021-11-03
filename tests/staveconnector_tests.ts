@@ -7,12 +7,12 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Flow } from 'flow';
-import { Modifier } from 'modifier';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { StaveConnector } from 'staveconnector';
+import { Flow } from '../src/flow';
+import { Modifier } from '../src/modifier';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { StaveConnector } from '../src/staveconnector';
 
 const StaveConnectorTests = {
   Start(): void {

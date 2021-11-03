@@ -5,15 +5,14 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Bend, BendPhrase } from 'bend';
-// import { Font } from 'font'; // RONYEH
-import { Formatter } from 'formatter';
-import { ModifierContext } from 'modifiercontext';
-import { Note } from 'note';
-import { ContextBuilder } from 'renderer';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { TickContext } from 'tickcontext';
+import { Bend, BendPhrase } from '../src/bend';
+import { Formatter } from '../src/formatter';
+import { ModifierContext } from '../src/modifiercontext';
+import { Note } from '../src/note';
+import { ContextBuilder } from '../src/renderer';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { TickContext } from '../src/tickcontext';
 
 const BendTests = {
   Start(): void {
