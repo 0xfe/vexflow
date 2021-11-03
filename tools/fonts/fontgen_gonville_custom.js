@@ -36,7 +36,7 @@ const gonvilleOutput = {
 
 const customOutput = {
   resolution: 1000,
-  fontFamily: 'VexflowCustom',
+  fontFamily: 'VexFlowCustom',
   glyphs: {},
 };
 

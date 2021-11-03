@@ -10,13 +10,15 @@ export const PetalumaMetrics = {
     padding: 15,
     endPaddingMax: 15,
     endPaddingMin: 7,
-    unalignedNotePadding: 12
+    unalignedNotePadding: 12,
   },
+
   accidental: {
     noteheadAccidentalPadding: 1,
     leftPadding: 2,
     accidentalSpacing: 3,
   },
+
   clef: {
     default: {
       point: 32,
@@ -302,13 +304,13 @@ export const PetalumaMetrics = {
       minPadding: 2,
       standard: {
         noteheadBlackStemUp: {
-          shiftX: 0.5
+          shiftX: 0.5,
         },
         noteheadHalfStemUp: {
-          shiftX: 0.725
+          shiftX: 0.725,
         },
         noteheadWholeStemUp: {
-          shiftX: 1
+          shiftX: 1,
         },
       },
       custom: {

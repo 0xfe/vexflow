@@ -1,6 +1,4 @@
-export const PetalumaScriptTextMetrics = {
-  name: 'petalumaScript',
-  smufl: false,
+export const PetalumaScriptFont = {
   spacing: 50,
   glyphs: {
     ' ': {
@@ -859,7 +857,7 @@ export const PetalumaScriptTextMetrics = {
       advanceWidth: 308,
     },
   },
-  fontFamily: 'Petaluma Script',
+  fontFamily: 'PetalumaScript',
   resolution: 1000,
   generatedOn: '2020-06-14T18:33:25.407Z',
 };
