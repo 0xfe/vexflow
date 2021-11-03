@@ -10,13 +10,15 @@ export const BravuraMetrics = {
     padding: 12,
     endPaddingMax: 10,
     endPaddingMin: 5,
-    unalignedNotePadding: 10
+    unalignedNotePadding: 10,
   },
+
   accidental: {
     noteheadAccidentalPadding: 1,
     leftPadding: 2,
     accidentalSpacing: 3,
   },
+
   clef: {
     default: {
       point: 32,
@@ -80,6 +82,7 @@ export const BravuraMetrics = {
       '4': { point: 23, shiftY: -12 },
     },
   },
+
   pedalMarking: {
     up: {
       point: 40,
@@ -127,6 +130,9 @@ export const BravuraMetrics = {
       offsetXStemDown: 1,
     },
   },
+
+  // noteHead: {
+  // },
 
   stem: {
     heightAdjustmentForFlag: -3,

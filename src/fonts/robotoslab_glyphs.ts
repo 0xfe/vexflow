@@ -1,6 +1,4 @@
-export const RobotoSlabTextMetrics = {
-  name: 'Roboto Slab',
-  smufl: false,
+export const RobotoSlabFont = {
   spacing: 50,
   glyphs: {
     ' ': {
