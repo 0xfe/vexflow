@@ -4,7 +4,7 @@
 // allFontsDebug.ts is the entry point for the build output file: `vexflow-debug.js`.
 // It statically bundles all the music engraving fonts.
 
-import { Vex } from '../vex';
+import Vex from '../vex';
 
 import { setupTestRunner } from '../../tests/run';
 import { loadMusicFonts } from '../fonts/bundleAll';
@@ -14,6 +14,7 @@ loadMusicFonts();
 loadTextFonts();
 setupTestRunner();
 
-console.log('VexFlow: All Fonts DEBUG + TESTS');
+// RONYEH: remove this.
+console.log('VexFlow Entry: All Fonts DEBUG + TESTS');
 
 export default Vex;

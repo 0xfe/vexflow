@@ -16,8 +16,14 @@ import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
-import { Bounds } from './types/common';
 import { RuntimeError } from './util';
+
+export interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
 
 export interface StaveLineConfig {
   visible?: boolean;

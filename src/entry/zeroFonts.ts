@@ -8,7 +8,7 @@
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading music fonts (e.g., Bravura, Petaluma, Gonville) on the fly.
 
-import { Vex } from '../vex';
+import Vex from '../vex';
 
 import { setupAsyncFontLoader } from '../fonts/async';
 import { loadTextFonts } from '../fonts/textfonts';
@@ -21,6 +21,7 @@ setupAsyncFontLoader();
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
-console.log('VexFlow Core: No Fonts');
+// RONYEH: remove this.
+console.log('VexFlow Entry: Core / No Fonts');
 
 export default Vex;

@@ -83,5 +83,3 @@ export * from './src/vex';
 export * from './src/vibrato';
 export * from './src/vibratobracket';
 export * from './src/voice';
-
-export * from './src/types/common';

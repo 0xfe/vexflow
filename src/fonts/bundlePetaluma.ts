@@ -9,6 +9,7 @@ import { setupAsyncFontLoader } from './async';
 import { Petaluma } from './petaluma';
 
 export function loadMusicFonts(): void {
+  // RONYEH: remove this.
   console.log('bundlePetaluma');
 
   const font = Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
