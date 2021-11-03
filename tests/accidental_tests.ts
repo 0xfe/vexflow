@@ -8,6 +8,7 @@ import { Beam } from '../src/beam';
 import { Factory } from '../src/factory';
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
+import { GraceNote } from '../src/gracenote';
 import { Modifier } from '../src/modifier';
 import { ModifierContext } from '../src/modifiercontext';
 import { Note } from '../src/note';
@@ -747,9 +748,9 @@ function automaticAccidentals0(options: TestOptions): void {
     { keys: ['cb/4', 'cb/5'], duration: '4' },
     { keys: ['cb/4', 'cb/5'], duration: '4' },
     { keys: ['c/4', 'c/5'], duration: '4' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
-  const gracenotes = [{ keys: ['d#/4'], duration: '16', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes = [{ keys: ['d#/4'], duration: '16', slash: true }].map(f.GraceNote.bind(f)) as GraceNote[];
   notes[0].addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0);
 
   const voice = f
@@ -780,7 +781,7 @@ function automaticAccidentals1(options: TestOptions): void {
     { keys: ['a/4'], duration: '4' },
     { keys: ['b/4'], duration: '4' },
     { keys: ['c/5'], duration: '4' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
@@ -806,7 +807,7 @@ function automaticAccidentals2(options: TestOptions): void {
     { keys: ['f#/5'], duration: '4' },
     { keys: ['g#/5'], duration: '4' },
     { keys: ['a/5'], duration: '4' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes);
 
@@ -851,7 +852,7 @@ function automaticAccidentalsMultiVoiceInline(options: TestOptions): void {
     { keys: ['a/4'], duration: '4', stem_direction: -1 },
     { keys: ['b/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const notes1 = [
     { keys: ['c/5'], duration: '4' },
@@ -862,7 +863,7 @@ function automaticAccidentalsMultiVoiceInline(options: TestOptions): void {
     { keys: ['a/5'], duration: '4' },
     { keys: ['b/5'], duration: '4' },
     { keys: ['c/6'], duration: '4' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 
@@ -909,7 +910,7 @@ function automaticAccidentalsMultiVoiceOffset(options: TestOptions): void {
     { keys: ['a/4'], duration: '4', stem_direction: -1 },
     { keys: ['b/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const notes1 = [
     { keys: ['c/5'], duration: '8' },
@@ -921,7 +922,7 @@ function automaticAccidentalsMultiVoiceOffset(options: TestOptions): void {
     { keys: ['a/5'], duration: '4' },
     { keys: ['b/5'], duration: '4' },
     { keys: ['c/6'], duration: '4' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 
@@ -969,7 +970,7 @@ function automaticAccidentalsCornerCases1(options: TestOptions): void {
     { keys: ['cb/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 
@@ -1015,7 +1016,7 @@ function automaticAccidentalsCornerCases2(options: TestOptions): void {
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 
@@ -1061,7 +1062,7 @@ function automaticAccidentalsCornerCases3(options: TestOptions): void {
     { keys: ['cb/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 
@@ -1107,7 +1108,7 @@ function automaticAccidentalsCornerCases4(options: TestOptions): void {
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
     { keys: ['c/4'], duration: '4', stem_direction: -1 },
     { keys: ['c/5'], duration: '4', stem_direction: -1 },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as StaveNote[];
 
   const voice0 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes0);
 

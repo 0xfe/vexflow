@@ -4,6 +4,7 @@
 // Tuplet Tests
 
 import { Formatter } from '../src/formatter';
+import { StaveNote } from '../src/stavenote';
 import { Stem } from '../src/stem';
 import { Tuplet } from '../src/tuplet';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
@@ -54,7 +55,7 @@ function simple(options: TestOptions): void {
     { keys: ['g/4'], duration: '8' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Tuplet({ notes: notes.slice(0, 3) });
   f.Tuplet({ notes: notes.slice(3, 6) });
@@ -89,7 +90,7 @@ function beamed(options: TestOptions): void {
     { keys: ['g/4'], duration: '8' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({ notes: notes.slice(0, 3) });
   f.Beam({ notes: notes.slice(3, 10) });
@@ -122,7 +123,7 @@ function ratio(options: TestOptions): void {
     { keys: ['g/4'], duration: '8' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({
     notes: notes.slice(3, 6),
@@ -165,7 +166,7 @@ function bottom(options: TestOptions): void {
     { keys: ['b/4'], duration: '8' },
   ]
     .map(setStemDown)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({
     notes: notes.slice(3, 6),
@@ -206,7 +207,7 @@ function bottomRatio(options: TestOptions): void {
     { keys: ['b/4'], duration: '8' },
   ]
     .map(setStemDown)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({
     notes: notes.slice(3, 6),
@@ -262,7 +263,7 @@ function awkward(options: TestOptions): void {
     { keys: ['e/4'], duration: '8' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({ notes: notes.slice(0, 12) });
   f.Tuplet({
@@ -312,14 +313,14 @@ function complex(options: TestOptions): void {
     { keys: ['a/4'], duration: '8' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   notes1[0].addDotToAll();
 
   const notes2 = [{ keys: ['c/4'] }, { keys: ['c/4'] }, { keys: ['c/4'] }, { keys: ['c/4'] }]
     .map(setDurationToQuarterNote)
     .map(setStemDown)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({ notes: notes1.slice(0, 3) });
   f.Beam({ notes: notes1.slice(5, 9) });
@@ -369,7 +370,7 @@ function mixedTop(options: TestOptions): void {
     { keys: ['c/6'], stem_direction: -1 },
   ]
     .map(setDurationToQuarterNote)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Tuplet({
     notes: notes.slice(0, 2),
@@ -414,7 +415,7 @@ function mixedBottom(options: TestOptions): void {
     { keys: ['c/4'], stem_direction: -1 },
   ]
     .map(setDurationToQuarterNote)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Tuplet({
     notes: notes.slice(0, 2),
@@ -462,7 +463,7 @@ function nested(options: TestOptions): void {
     { keys: ['b/4'], duration: '2' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({
     notes: notes.slice(2, 7),
@@ -509,7 +510,7 @@ function single(options: TestOptions): void {
     { keys: ['b/4'], duration: '4' },
   ]
     .map(setStemUp)
-    .map(f.StaveNote.bind(f));
+    .map(f.StaveNote.bind(f)) as StaveNote[];
 
   f.Beam({
     notes: notes.slice(1, 4),

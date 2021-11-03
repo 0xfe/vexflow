@@ -36,11 +36,11 @@ function basic(options: TestOptions): void {
     { keys: ['f/4'], duration: '32' },
     { keys: ['g/4'], duration: '32' },
     { keys: ['a/4'], duration: '32' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
-  const gracenotes1 = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f));
+  const gracenotes1 = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f)) as GraceNote[];
 
-  const gracenotes2 = [{ keys: ['b/4'], duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes2 = [{ keys: ['b/4'], duration: '8', slash: true }].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes3 = [
     { keys: ['e/4'], duration: '8' },
@@ -48,13 +48,13 @@ function basic(options: TestOptions): void {
     { keys: ['e/4', 'g/4'], duration: '8' },
     { keys: ['a/4'], duration: '32' },
     { keys: ['b/4'], duration: '32' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes4 = [
     { keys: ['g/4'], duration: '8' },
     { keys: ['g/4'], duration: '16' },
     { keys: ['g/4'], duration: '16' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   gracenotes[1].addAccidental(0, f.Accidental({ type: '##' }));
   gracenotes3[3].addAccidental(0, f.Accidental({ type: 'bb' }));
@@ -97,11 +97,11 @@ function basicSlurred(options: TestOptions): void {
     { keys: ['f/4'], duration: '32' },
     { keys: ['g/4'], duration: '32' },
     { keys: ['a/4'], duration: '32' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
-  const gracenotes1 = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f));
+  const gracenotes1 = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f)) as GraceNote[];
 
-  const gracenotes2 = [{ keys: ['b/4'], duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes2 = [{ keys: ['b/4'], duration: '8', slash: true }].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes3 = [
     { keys: ['e/4'], duration: '8' },
@@ -109,13 +109,13 @@ function basicSlurred(options: TestOptions): void {
     { keys: ['e/4', 'g/4'], duration: '8' },
     { keys: ['a/4'], duration: '32' },
     { keys: ['b/4'], duration: '32' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes4 = [
     { keys: ['a/4'], duration: '8' },
     { keys: ['a/4'], duration: '16' },
     { keys: ['a/4'], duration: '16' },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   gracenotes0[1].addAccidental(0, f.Accidental({ type: '#' }));
   gracenotes3[3].addAccidental(0, f.Accidental({ type: 'b' }));
@@ -275,7 +275,7 @@ function slash(options: TestOptions): void {
       { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
       { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
       { keys: ['e/4', 'a/4'], stem_direction, duration, slash: true },
-    ].map(f.GraceNote.bind(f));
+    ].map(f.GraceNote.bind(f)) as GraceNote[];
 
     const notesToBeam = [];
     notesToBeam.push([gns[0], gns[1], gns[2]]);
@@ -322,7 +322,7 @@ function slashWithBeams(options: TestOptions): void {
 
         { keys: ['b/4', 'f/5'], stem_direction, duration, slash: true },
         { keys: ['e/4', 'a/4'], stem_direction, duration, slash: false },
-      ].map(f.GraceNote.bind(f));
+      ].map(f.GraceNote.bind(f)) as GraceNote[];
 
       graceNotesToBeam.push([graceNotes[0], graceNotes[1]]);
       graceNotesToBeam.push([graceNotes[2], graceNotes[3]]);
@@ -361,7 +361,7 @@ function multipleVoices(options: TestOptions): void {
     { keys: ['d/5'], stem_direction: 1, duration: '16' },
     { keys: ['f/5'], stem_direction: 1, duration: '16' },
     { keys: ['e/5'], stem_direction: 1, duration: '16' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as GraceNote[];
 
   const notes2 = [
     { keys: ['f/4'], stem_direction: -1, duration: '16' },
@@ -372,22 +372,26 @@ function multipleVoices(options: TestOptions): void {
     { keys: ['d/4'], stem_direction: -1, duration: '16' },
     { keys: ['f/4'], stem_direction: -1, duration: '16' },
     { keys: ['e/4'], stem_direction: -1, duration: '16' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as GraceNote[];
 
-  const gracenotes1 = [{ keys: ['b/4'], stem_direction: 1, duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes1 = [{ keys: ['b/4'], stem_direction: 1, duration: '8', slash: true }].map(
+    f.GraceNote.bind(f)
+  ) as GraceNote[];
 
-  const gracenotes2 = [{ keys: ['f/4'], stem_direction: -1, duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes2 = [{ keys: ['f/4'], stem_direction: -1, duration: '8', slash: true }].map(
+    f.GraceNote.bind(f)
+  ) as GraceNote[];
 
   const gracenotes3 = [
     { keys: ['f/4'], duration: '32', stem_direction: -1 },
     { keys: ['e/4'], duration: '32', stem_direction: -1 },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes4 = [
     { keys: ['f/5'], duration: '32', stem_direction: 1 },
     { keys: ['e/5'], duration: '32', stem_direction: 1 },
     { keys: ['e/5'], duration: '8', stem_direction: 1 },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   gracenotes2[0].setStemDirection(-1);
   gracenotes2[0].addAccidental(0, f.Accidental({ type: '#' }));
@@ -426,7 +430,7 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
     { keys: ['d/5'], stem_direction: 1, duration: '16' },
     { keys: ['f/5'], stem_direction: 1, duration: '16' },
     { keys: ['e/5'], stem_direction: 1, duration: '16' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as GraceNote[];
 
   const notes2 = [
     { keys: ['f/4'], stem_direction: -1, duration: '16' },
@@ -437,22 +441,26 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
     { keys: ['d/4'], stem_direction: -1, duration: '16' },
     { keys: ['f/4'], stem_direction: -1, duration: '16' },
     { keys: ['e/4'], stem_direction: -1, duration: '16' },
-  ].map(f.StaveNote.bind(f));
+  ].map(f.StaveNote.bind(f)) as GraceNote[];
 
-  const gracenotes1 = [{ keys: ['b/4'], stem_direction: 1, duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes1 = [{ keys: ['b/4'], stem_direction: 1, duration: '8', slash: true }].map(
+    f.GraceNote.bind(f)
+  ) as GraceNote[];
 
-  const gracenotes2 = [{ keys: ['f/4'], stem_direction: -1, duration: '8', slash: true }].map(f.GraceNote.bind(f));
+  const gracenotes2 = [{ keys: ['f/4'], stem_direction: -1, duration: '8', slash: true }].map(
+    f.GraceNote.bind(f)
+  ) as GraceNote[];
 
   const gracenotes3 = [
     { keys: ['f/4'], duration: '32', stem_direction: -1 },
     { keys: ['e/4'], duration: '32', stem_direction: -1 },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   const gracenotes4 = [
     { keys: ['f/5'], duration: '32', stem_direction: 1 },
     { keys: ['e/5'], duration: '32', stem_direction: 1 },
     { keys: ['e/5'], duration: '8', stem_direction: 1 },
-  ].map(f.GraceNote.bind(f));
+  ].map(f.GraceNote.bind(f)) as GraceNote[];
 
   gracenotes2[0].setStemDirection(-1);
   gracenotes2[0].addAccidental(0, f.Accidental({ type: '#' }));
