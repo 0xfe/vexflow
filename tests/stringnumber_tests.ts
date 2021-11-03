@@ -10,7 +10,6 @@ import { Renderer } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
 import { Stroke } from '../src/strokes';
-import { Tables } from '../src/tables';
 
 const StringNumberTests = {
   Start(): void {

@@ -4,6 +4,8 @@
 //
 // Renderer Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { CanvasContext } from '../src/canvascontext';
 import { Factory, FactoryOptions } from '../src/factory';
 import { Formatter } from '../src/formatter';

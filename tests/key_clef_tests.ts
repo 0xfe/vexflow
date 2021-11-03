@@ -10,7 +10,6 @@ import { Glyph } from '../src/glyph';
 import { KeySignature } from '../src/keysignature';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
-import { Tables } from '../src/tables';
 
 const ClefKeySignatureTests = {
   Start(): void {

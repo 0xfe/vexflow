@@ -16,7 +16,6 @@ import { Ornament } from '../src/ornament';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
-import { Tables } from '../src/tables';
 import { Voice, VoiceMode } from '../src/voice';
 
 const OrnamentTests = {

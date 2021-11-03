@@ -12,7 +12,6 @@ import { KeySignature } from '../src/keysignature';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
-import { Tables } from '../src/tables';
 
 const KeySignatureTests = {
   Start(): void {

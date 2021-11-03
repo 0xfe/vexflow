@@ -3,6 +3,8 @@
 //
 // Voice Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { ContextBuilder } from '../src/renderer';

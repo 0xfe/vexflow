@@ -3,6 +3,8 @@
 //
 // Formatter Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
@@ -54,8 +56,8 @@ function glyphWidth(glyphName: string): number {
   //   NOTATION_FONT_SCALE: 39,
   //   TABLATURE_FONT_SCALE: 39,
 
-  const glyph: FontGlyph = Tables.currentMusicFont().getGlyphs()[glyphName];
-  const widthInEm = (glyph.x_max - glyph.x_min) / Tables.currentMusicFont().getResolution();
+  const glyph: FontGlyph = Flow.currentMusicFont().getGlyphs()[glyphName];
+  const widthInEm = (glyph.x_max - glyph.x_min) / Flow.currentMusicFont().getResolution();
   return widthInEm * 38 * Font.convertToPxFrom.pt;
 }
 
