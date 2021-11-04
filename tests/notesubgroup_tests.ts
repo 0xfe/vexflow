@@ -4,12 +4,13 @@
 //
 // NoteSubGroup Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { BarNote } from '../src/barnote';
 import { Factory } from '../src/factory';
 import { Note } from '../src/note';
 import { BarlineType } from '../src/stavebarline';
 import { StaveNote, StaveNoteStruct } from '../src/stavenote';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const NoteSubGroupTests = {
   Start(): void {

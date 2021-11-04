@@ -3,12 +3,13 @@
 //
 // StaveTie Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { BuilderOptions } from '../src/easyscore';
 import { Factory } from '../src/factory';
 import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
 import { Stem } from '../src/stem';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveTieTests = {
   Start(): void {

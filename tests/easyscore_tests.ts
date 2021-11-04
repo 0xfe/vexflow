@@ -3,6 +3,8 @@
 //
 // EasyScore Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Articulation } from '../src/articulation';
 import { EasyScore } from '../src/easyscore';
 import { FretHandFinger } from '../src/frethandfinger';
@@ -10,7 +12,6 @@ import { Modifier } from '../src/modifier';
 import { StaveConnector } from '../src/staveconnector';
 import { Stem } from '../src/stem';
 import { Tuplet } from '../src/tuplet';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const EasyScoreTests = {
   Start(): void {
