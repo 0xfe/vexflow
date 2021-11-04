@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { BoundingBox } from './boundingbox';
+import { BoundingBox, Bounds } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { FontInfo, FontStyle, FontWeight } from './font';
@@ -17,13 +17,6 @@ import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
 import { isBarline } from './typeguard';
 import { RuntimeError } from './util';
-
-export interface Bounds {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
 
 export interface StaveLineConfig {
   visible?: boolean;
