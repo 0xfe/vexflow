@@ -47,7 +47,7 @@ export interface Result {
 
 // Represents a mixed array containing Result and/or Result[].
 // The grouping is determined by the structure of the Grammar.
-type GroupedResults = (Result | Result[])[];
+export type GroupedResults = (Result | Result[])[];
 
 // Converts parser results into an easy to reference list that can be
 // used in triggers. This function returns:

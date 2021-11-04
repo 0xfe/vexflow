@@ -35,14 +35,14 @@ export interface ChordSymbolBlock {
   glyph?: Glyph;
 }
 
-export enum HorizontalJustify {
+export enum ChordSymbolHorizontalJustify {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
   CENTER_STEM = 4,
 }
 
-export enum VerticalJustify {
+export enum ChordSymbolVerticalJustify {
   TOP = 1,
   BOTTOM = 2,
 }
@@ -71,22 +71,22 @@ export class ChordSymbol extends Modifier {
   }
 
   // Chord symbols can be positioned and justified relative to the note.
-  static readonly horizontalJustify = HorizontalJustify;
+  static readonly HorizontalJustify = ChordSymbolHorizontalJustify;
 
-  static readonly horizontalJustifyString: Record<string, HorizontalJustify> = {
-    left: HorizontalJustify.LEFT,
-    right: HorizontalJustify.RIGHT,
-    center: HorizontalJustify.CENTER,
-    centerStem: HorizontalJustify.CENTER_STEM,
+  static readonly HorizontalJustifyString: Record<string, ChordSymbolHorizontalJustify> = {
+    left: ChordSymbolHorizontalJustify.LEFT,
+    right: ChordSymbolHorizontalJustify.RIGHT,
+    center: ChordSymbolHorizontalJustify.CENTER,
+    centerStem: ChordSymbolHorizontalJustify.CENTER_STEM,
   };
 
-  static readonly verticalJustify = VerticalJustify;
+  static readonly VerticalJustify = ChordSymbolVerticalJustify;
 
-  static readonly verticalJustifyString: Record<string, VerticalJustify> = {
-    top: VerticalJustify.TOP,
-    above: VerticalJustify.TOP,
-    below: VerticalJustify.BOTTOM,
-    bottom: VerticalJustify.BOTTOM,
+  static readonly VerticalJustifyString: Record<string, ChordSymbolVerticalJustify> = {
+    top: ChordSymbolVerticalJustify.TOP,
+    above: ChordSymbolVerticalJustify.TOP,
+    below: ChordSymbolVerticalJustify.BOTTOM,
+    bottom: ChordSymbolVerticalJustify.BOTTOM,
   };
 
   static get superSubRatio(): number {
@@ -330,7 +330,7 @@ export class ChordSymbol extends Modifier {
       symbol.updateKerningAdjustments();
       symbol.updateOverBarAdjustments();
 
-      if (symbol.getVertical() === VerticalJustify.TOP) {
+      if (symbol.getVertical() === ChordSymbolVerticalJustify.TOP) {
         symbol.setTextLine(state.top_text_line);
         state.top_text_line += lineSpaces;
       } else {
@@ -355,8 +355,8 @@ export class ChordSymbol extends Modifier {
   protected static noFormat: boolean = false;
 
   protected symbolBlocks: ChordSymbolBlock[] = [];
-  protected horizontal: number = HorizontalJustify.LEFT;
-  protected vertical: number = VerticalJustify.TOP;
+  protected horizontal: number = ChordSymbolHorizontalJustify.LEFT;
+  protected vertical: number = ChordSymbolVerticalJustify.TOP;
   protected useKerning: boolean = true;
   protected reportWidth: boolean = true;
 
@@ -643,8 +643,8 @@ export class ChordSymbol extends Modifier {
   }
 
   /** Set vertical position of text (above or below stave). */
-  setVertical(vj: VerticalJustify | string | number): this {
-    this.vertical = typeof vj === 'string' ? ChordSymbol.verticalJustifyString[vj] : vj;
+  setVertical(vj: ChordSymbolVerticalJustify | string | number): this {
+    this.vertical = typeof vj === 'string' ? ChordSymbol.VerticalJustifyString[vj] : vj;
     return this;
   }
 
@@ -653,8 +653,8 @@ export class ChordSymbol extends Modifier {
   }
 
   /** Set horizontal justification. */
-  setHorizontal(hj: HorizontalJustify | string | number): this {
-    this.horizontal = typeof hj === 'string' ? ChordSymbol.horizontalJustifyString[hj] : hj;
+  setHorizontal(hj: ChordSymbolHorizontalJustify | string | number): this {
+    this.horizontal = typeof hj === 'string' ? ChordSymbol.HorizontalJustifyString[hj] : hj;
     return this;
   }
 
@@ -706,7 +706,7 @@ export class ChordSymbol extends Modifier {
     const hasStem = note.hasStem();
     const stave = note.checkStave();
 
-    if (this.vertical === VerticalJustify.BOTTOM) {
+    if (this.vertical === ChordSymbolVerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin is bottom-right.
       y = stave.getYForBottomText(this.text_line + Tables.TEXT_HEIGHT_OFFSET_HACK);
       if (hasStem) {
@@ -726,11 +726,11 @@ export class ChordSymbol extends Modifier {
     }
 
     let x = start.x;
-    if (this.horizontal === HorizontalJustify.LEFT) {
+    if (this.horizontal === ChordSymbolHorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.horizontal === HorizontalJustify.RIGHT) {
+    } else if (this.horizontal === ChordSymbolHorizontalJustify.RIGHT) {
       x = start.x + this.getWidth();
-    } else if (this.horizontal === HorizontalJustify.CENTER) {
+    } else if (this.horizontal === ChordSymbolHorizontalJustify.CENTER) {
       x = start.x - this.getWidth() / 2;
     } else {
       // HorizontalJustify.CENTER_STEM

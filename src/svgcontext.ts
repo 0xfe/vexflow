@@ -7,7 +7,7 @@ import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { normalizeAngle, prefix, RuntimeError } from './util';
 
 // eslint-disable-next-line
-type Attributes = Record<string, any>;
+export type Attributes = Record<string, any>;
 
 /** For a particular element type (e.g., rect), we will not apply certain presentation attributes. */
 const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Attributes /* ignored attributes */> = {
@@ -38,7 +38,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const TWO_PI = 2 * Math.PI;
 
-interface State {
+export interface State {
   state: Attributes;
   attributes: Attributes;
   shadow_attributes: Attributes;

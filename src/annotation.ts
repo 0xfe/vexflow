@@ -15,14 +15,14 @@ function L(...args: any[]) {
   if (Annotation.DEBUG) log('Vex.Flow.Annotation', args);
 }
 
-enum Justify {
+export enum AnnotationHorizontalJustify {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
   CENTER_STEM = 4,
 }
 
-enum VerticalJustify {
+export enum AnnotationVerticalJustify {
   TOP = 1,
   CENTER = 2,
   BOTTOM = 3,
@@ -47,24 +47,24 @@ export class Annotation extends Modifier {
   static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /** Text annotations can be positioned and justified relative to the note. */
-  static Justify = Justify;
+  static HorizontalJustify = AnnotationHorizontalJustify;
 
-  static JustifyString: Record<string, number> = {
-    left: Justify.LEFT,
-    right: Justify.RIGHT,
-    center: Justify.CENTER,
-    centerStem: Justify.CENTER_STEM,
+  static HorizontalJustifyString: Record<string, number> = {
+    left: AnnotationHorizontalJustify.LEFT,
+    right: AnnotationHorizontalJustify.RIGHT,
+    center: AnnotationHorizontalJustify.CENTER,
+    centerStem: AnnotationHorizontalJustify.CENTER_STEM,
   };
 
-  static VerticalJustify = VerticalJustify;
+  static VerticalJustify = AnnotationVerticalJustify;
 
   static VerticalJustifyString: Record<string, number> = {
-    above: VerticalJustify.TOP,
-    top: VerticalJustify.TOP,
-    below: VerticalJustify.BOTTOM,
-    bottom: VerticalJustify.BOTTOM,
-    center: VerticalJustify.CENTER,
-    centerStem: VerticalJustify.CENTER_STEM,
+    above: AnnotationVerticalJustify.TOP,
+    top: AnnotationVerticalJustify.TOP,
+    below: AnnotationVerticalJustify.BOTTOM,
+    bottom: AnnotationVerticalJustify.BOTTOM,
+    center: AnnotationVerticalJustify.CENTER,
+    centerStem: AnnotationVerticalJustify.CENTER_STEM,
   };
 
   /** Arrange annotations within a `ModifierContext` */
@@ -95,8 +95,8 @@ export class Annotation extends Modifier {
     return true;
   }
 
-  protected justification: Justify;
-  protected vert_justification: VerticalJustify;
+  protected justification: AnnotationHorizontalJustify;
+  protected vert_justification: AnnotationVerticalJustify;
   protected text: string;
 
   /**
@@ -108,7 +108,7 @@ export class Annotation extends Modifier {
     super();
 
     this.text = text;
-    this.justification = Justify.CENTER;
+    this.justification = AnnotationHorizontalJustify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
     this.resetFont();
 
@@ -120,7 +120,7 @@ export class Annotation extends Modifier {
    * Set vertical position of text (above or below stave).
    * @param just value in `Annotation.VerticalJustify`.
    */
-  setVerticalJustification(just: string | VerticalJustify): this {
+  setVerticalJustification(just: string | AnnotationVerticalJustify): this {
     this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
@@ -128,7 +128,7 @@ export class Annotation extends Modifier {
   /**
    * Get horizontal justification.
    */
-  getJustification(): Justify {
+  getJustification(): AnnotationHorizontalJustify {
     return this.justification;
   }
 
@@ -136,8 +136,8 @@ export class Annotation extends Modifier {
    * Set horizontal justification.
    * @param justification value in `Annotation.Justify`.
    */
-  setJustification(just: string | Justify): this {
-    this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
+  setJustification(just: string | AnnotationHorizontalJustify): this {
+    this.justification = typeof just === 'string' ? Annotation.HorizontalJustifyString[just] : just;
     return this;
   }
 
@@ -165,11 +165,11 @@ export class Annotation extends Modifier {
     let x;
     let y;
 
-    if (this.justification === Annotation.Justify.LEFT) {
+    if (this.justification === Annotation.HorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.justification === Annotation.Justify.RIGHT) {
+    } else if (this.justification === Annotation.HorizontalJustify.RIGHT) {
       x = start.x - text_width;
-    } else if (this.justification === Annotation.Justify.CENTER) {
+    } else if (this.justification === Annotation.HorizontalJustify.CENTER) {
       x = start.x - text_width / 2;
     } /* CENTER_STEM */ else {
       x = (note as StemmableNote).getStemX() - text_width / 2;

@@ -12,7 +12,7 @@
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    // "baseUrl": "./src",
     "lib": ["dom", "es2017"]
   },
   "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
