@@ -12,7 +12,4 @@ import { loadTextFonts } from '../fonts/textfonts';
 loadMusicFonts();
 loadTextFonts();
 
-// RONYEH: remove this.
-console.log('VexFlow Entry: All Fonts DEBUG');
-
 export default Vex;

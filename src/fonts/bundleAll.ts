@@ -11,9 +11,6 @@ import { Gonville } from './gonville';
 import { Petaluma } from './petaluma';
 
 export function loadMusicFonts(): void {
-  // RONYEH: remove this.
-  console.log('bundleAll');
-
   // Populate our font "database" with all our music fonts.
   const bravuraFont = Font.load('Bravura', Bravura.data, Bravura.metrics);
   const gonvilleFont = Font.load('Gonville', Gonville.data, Gonville.metrics);

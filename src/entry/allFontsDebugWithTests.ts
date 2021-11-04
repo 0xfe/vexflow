@@ -14,7 +14,4 @@ loadMusicFonts();
 loadTextFonts();
 setupTestRunner();
 
-// RONYEH: remove this.
-console.log('VexFlow Entry: All Fonts DEBUG + TESTS');
-
 export default Vex;

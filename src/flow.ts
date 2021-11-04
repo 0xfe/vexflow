@@ -156,9 +156,9 @@ export const Flow = {
   Voice,
   Volta,
 
-  // BUILD and VERSION are set by webpack. See: Gruntfile.js.
-  BUILD: '',
-  VERSION: '',
+  // VERSION and BUILD are set by webpack string-replace-loader. See: Gruntfile.js.
+  VERSION: '_VEX_VERSION_',
+  BUILD: '_VEX_BUILD_',
 
   /**
    * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.

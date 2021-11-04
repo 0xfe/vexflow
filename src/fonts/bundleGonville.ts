@@ -9,9 +9,6 @@ import { setupAsyncFontLoader } from './async';
 import { Gonville } from './gonville';
 
 export function loadMusicFonts(): void {
-  // RONYEH: remove this.
-  console.log('bundleGonville');
-
   const font = Font.load('Gonville', Gonville.data, Gonville.metrics);
   // Other music fonts will be loaded dynamically, when `Flow.setMusicFont(fontName)` is called.
   setupAsyncFontLoader();

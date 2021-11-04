@@ -3,7 +3,7 @@
 //
 // TextFormatter Tests
 
-import { TextFormatter } from 'textformatter';
+import { TextFormatter } from '../src/textformatter';
 
 const TextFormatterTests = {
   Start(): void {

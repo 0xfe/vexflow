@@ -9,9 +9,6 @@ import { setupAsyncFontLoader } from './async';
 import { Bravura } from './bravura';
 
 export function loadMusicFonts(): void {
-  // RONYEH: remove this.
-  console.log('bundleBravura');
-
   const font = Font.load('Bravura', Bravura.data, Bravura.metrics);
   // Other music fonts will be loaded dynamically, when `Flow.setMusicFont(fontName)` is called.
   setupAsyncFontLoader();

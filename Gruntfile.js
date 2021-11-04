@@ -3,9 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
-const InjectPlugin = require('webpack-inject-plugin').default;
 const TerserPlugin = require('terser-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 // Output file names.
 const VEX = 'vexflow.js';
@@ -91,12 +89,22 @@ function getConfig(outputFile, moduleEntry, useCodeSplitting = false, mode = PRO
       publicPath: 'auto',
     },
     resolve: {
-      extensions: ['.ts', '.js', '.json'],
-      plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
+      extensions: ['.ts', '...'],
     },
     devtool: process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? 'source-map' : false,
     module: {
       rules: [
+        {
+          // Add VERSION and BUILD properties to Vex.Flow.
+          test: /flow\.ts$/,
+          loader: 'string-replace-loader',
+          options: {
+            multiple: [
+              { search: '_VEX_BUILD_', replace: GIT_COMMIT_HASH },
+              { search: '_VEX_VERSION_', replace: VEXFLOW_VERSION },
+            ],
+          },
+        },
         {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,
@@ -110,10 +118,6 @@ function getConfig(outputFile, moduleEntry, useCodeSplitting = false, mode = PRO
       ],
     },
     plugins: [
-      // Add VERSION and BUILD properties to Vex.Flow.
-      new InjectPlugin(function () {
-        return `import{Flow}from'flow';Flow.VERSION="${VEXFLOW_VERSION}";Flow.BUILD="${GIT_COMMIT_HASH}";`;
-      }),
       // Add a banner at the top of the file.
       new webpack.BannerPlugin(BANNER),
     ],

@@ -11,9 +11,6 @@ import { RuntimeError } from '../util';
  * supports dynamic font loading.
  */
 export function setupAsyncFontLoader() {
-  // RONYEH: remove this.
-  console.log('setupAsyncFontLoader');
-
   // Keep the synchronous function around so we can call it later.
   const setMusicFontSync = Flow.setMusicFont;
 

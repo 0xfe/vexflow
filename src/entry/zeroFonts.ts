@@ -21,7 +21,4 @@ setupAsyncFontLoader();
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
-// RONYEH: remove this.
-console.log('VexFlow Entry: Core / No Fonts');
-
 export default Vex;

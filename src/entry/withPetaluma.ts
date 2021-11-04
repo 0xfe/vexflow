@@ -18,7 +18,4 @@ loadMusicFonts();
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
-// RONYEH: remove this.
-console.log('VexFlow Entry: Only Petaluma');
-
 export default Vex;
