@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- 
+  Instead of async/await, you can use Promise style chains.
+  For example: Vex.Flow.setMusicFont(...).then(onFulfilledCallback) 
+-->
+<html>
+  <body>
+    <div id="output"></div>
+    <!-- The vexflow core build includes no music fonts. -->
+    <script src="../../build/vexflow-core.js"></script>
+    <script>
+      // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
+      // the loading of the fonts (stored in vexflow-font-xxxx.js).
+      // It returns a Promise that resolves to the loaded music font(s).
+      Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
+
+      function onFontsLoaded(musicFonts) {
+        console.log('Successfully loaded this music font stack:');
+        const [bravura, gonville, petaluma, custom] = musicFonts;
+        console.log(bravura, gonville, petaluma, custom);
+
+        const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
+        const score = factory.EasyScore();
+        const system = factory.System();
+        system
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+    </script>
+  </body>
+</html>

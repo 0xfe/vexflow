@@ -6,4 +6,5 @@
 /* eslint-disable no-console */
 
 const Vex = require('../../build/vexflow-debug');
+
 console.log(Vex);

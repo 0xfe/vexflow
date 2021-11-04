@@ -2,16 +2,12 @@
 
 /* eslint-disable no-console */
 
-import Vex from '../../../build/vexflow-debug.js';
+import Vex from '../../../build/vexflow.module.js';
 
-// If you copy vexflow-debug.js to this folder and then update the import as follows:
-//     import Vex from './vexflow-debug.js';
-// It will fail with error:
-//     SyntaxError: The requested module './vexflow-debug.js' does not provide an export named 'default'
-// This is because this folder includes a package.json which indicates that all JS files should be treated as ES6 modules.
-// To fix this, append the following to the end of vexflow-debug.js:
+// This folder includes a package.json which indicates that all JS files should be treated as ES6 modules.
+// Thus, we need to use vexflow.module.js which ends in the line:
 //     export default Vex;
-// However, doing so will make vexflow-debug.js incompatible with classic <script src="..."></script> tags.
+// However, vexflow.module.js is incompatible with classic <script src="..."></script> tags.
 
 // console.log(this);       // this === undefined
 // console.log(window);     // ReferenceError: window is not defined

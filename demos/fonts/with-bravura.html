@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- 
+  vexflow-core-with-bravura.js bundles the Bravura music font. 
+  There is no need to call Vex.Flow.setMusicFont(...).
+-->
+<html>
+  <body>
+    <div id="output"></div>
+    <script src="../../build/vexflow-core-with-bravura.js"></script>
+    <script type="module">
+      const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
+      const score = factory.EasyScore();
+      const system = factory.System();
+      system
+        .addStave({
+          voices: [
+            score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+            score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+          ],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+      factory.draw();
+    </script>
+  </body>
+</html>
