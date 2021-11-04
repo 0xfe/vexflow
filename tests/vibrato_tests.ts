@@ -6,7 +6,6 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Bend } from '../src/bend';
-import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { ContextBuilder } from '../src/renderer';
 import { TabNote, TabNoteStruct } from '../src/tabnote';

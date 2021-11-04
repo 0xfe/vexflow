@@ -3,7 +3,6 @@
 //
 // StaveLine Tests
 
-import { Font } from '../src/font';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveLineTests = {

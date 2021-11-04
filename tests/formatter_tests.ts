@@ -9,7 +9,7 @@ import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
 import { Flow } from '../src/flow';
-import { FontGlyph } from '../src/font';
+import { Font, FontGlyph } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { Note } from '../src/note';
 import { Registry } from '../src/registry';

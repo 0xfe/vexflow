@@ -6,7 +6,6 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { RenderContext } from '../src/rendercontext';
 import { ContextBuilder } from '../src/renderer';
