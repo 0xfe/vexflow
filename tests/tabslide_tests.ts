@@ -3,6 +3,8 @@
 //
 // TabSlide Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { RenderContext } from '../src/rendercontext';
@@ -12,7 +14,6 @@ import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabSlide } from '../src/tabslide';
 import { TabStave } from '../src/tabstave';
 import { Voice } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabSlideTests = {
   Start(): void {

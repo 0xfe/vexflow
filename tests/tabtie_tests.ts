@@ -3,6 +3,8 @@
 //
 // TabTie Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from '../src/annotation';
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
@@ -15,7 +17,6 @@ import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { TabTie } from '../src/tabtie';
 import { Voice } from '../src/voice';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TabTieTests = {
   Start(): void {

@@ -9,6 +9,8 @@
 //       TabNote sets its own font.
 //       Is there a way to set all the text fonts in one go?
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Annotation } from '../src/annotation';
 import { Articulation } from '../src/articulation';
 import { Bend } from '../src/bend';
@@ -24,7 +26,6 @@ import { Stroke } from '../src/strokes';
 import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { TimeSignature } from '../src/timesignature';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StyleTests = {
   Start(): void {
