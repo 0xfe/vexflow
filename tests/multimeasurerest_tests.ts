@@ -3,9 +3,10 @@
 //
 // MultiMeasureRest Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { MultimeasureRestRenderOptions } from '../src/multimeasurerest';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const MultiMeasureRestTests = {
   Start(): void {

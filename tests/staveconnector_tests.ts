@@ -5,13 +5,14 @@
 
 // TODO: Should we change StaveConnector.type => StaveConnectorType? We are inconsistent with this.
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { Modifier } from '../src/modifier';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
 import { StaveConnector } from '../src/staveconnector';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const StaveConnectorTests = {
   Start(): void {

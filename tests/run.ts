@@ -1,4 +1,7 @@
 import { Vex } from '../src/vex';
+
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { AccidentalTests } from './accidental_tests';
 import { AnnotationTests } from './annotation_tests';
 import { ArticulationTests } from './articulation_tests';
@@ -60,7 +63,6 @@ import { TremoloTests } from './tremolo_tests';
 import { TuningTests } from './tuning_tests';
 import { TupletTests } from './tuplet_tests';
 import { TypeGuardTests } from './typeguard_tests';
-import { VexFlowTests } from './vexflow_test_helpers';
 import { VFPrefixTests } from './vf_prefix_tests';
 import { VibratoTests } from './vibrato_tests';
 import { VibratoBracketTests } from './vibratobracket_tests';

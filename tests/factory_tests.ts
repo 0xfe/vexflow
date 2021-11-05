@@ -3,9 +3,10 @@
 //
 // Factory Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { Factory } from '../src/factory';
 import { Barline } from '../src/stavebarline';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FactoryTests = {
   Start(): void {

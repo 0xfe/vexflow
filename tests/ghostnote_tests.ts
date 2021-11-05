@@ -3,11 +3,12 @@
 //
 // GhostNote Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { EasyScore } from '../src/easyscore';
 import { Factory } from '../src/factory';
 import { StaveNote } from '../src/stavenote';
 import { StemmableNote } from '../src/stemmablenote';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const GhostNoteTests = {
   Start(): void {

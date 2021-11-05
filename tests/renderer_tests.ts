@@ -4,6 +4,8 @@
 //
 // Renderer Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
 import { CanvasContext } from '../src/canvascontext';
 import { Factory, FactoryOptions } from '../src/factory';
 import { Formatter } from '../src/formatter';
@@ -13,7 +15,6 @@ import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
 import { SVGContext } from '../src/svgcontext';
 import { RuntimeError } from '../src/util';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 // TODO: Should FactoryOptions.renderer.elementId also accept a canvas | div?
 
