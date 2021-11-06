@@ -14,12 +14,29 @@ function isRenderContext(obj: any): obj is RenderContext {
   return obj.setShadowBlur !== undefined;
 }
 
+export enum RendererBackends {
+  CANVAS = 1,
+  SVG = 2,
+}
+
+// End of line types
+export enum RendererLineEndType {
+  NONE = 1, // No leg
+  UP = 2, // Upward leg
+  DOWN = 3, // Downward leg
+}
+
 /**
  * Support Canvas & SVG rendering contexts.
  */
 export class Renderer {
-  protected ctx: RenderContext;
+  static Backends = RendererBackends;
 
+  static LineEndType = RendererLineEndType;
+
+  // Used by vexflow_test_helpers.ts
+  // Should this be private?
+  // Can we do this in a cleaner way?
   static lastContext?: RenderContext = undefined;
 
   static buildContext(
@@ -87,6 +104,8 @@ export class Renderer {
     context.stroke();
   }
 
+  protected ctx: RenderContext;
+
   /**
    * @param canvasId can be:
    *   - a string element ID (of a canvas or div element)
@@ -148,20 +167,5 @@ export class Renderer {
 
   getContext(): RenderContext {
     return this.ctx;
-  }
-}
-
-// eslint-disable-next-line
-export namespace Renderer {
-  export enum Backends {
-    CANVAS = 1,
-    SVG = 2,
-  }
-
-  // End of line types
-  export enum LineEndType {
-    NONE = 1, // No leg
-    UP = 2, // Upward leg
-    DOWN = 3, // Downward leg
   }
 }

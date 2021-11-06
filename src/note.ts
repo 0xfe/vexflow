@@ -530,6 +530,12 @@ export abstract class Note extends Tickable {
     // Backwards compatibility with 3.0.9.
     if (typeof index === 'string') {
       index = parseInt(index);
+      // eslint-disable-next-line
+      console.warn(
+        'Note.addModifier(modifier: Modifier, index?: number) ' +
+          'expected a number for `index`, but received a string. ' +
+          'Please provide a number for the `index` argument.'
+      );
     }
 
     // Legacy versions of VexFlow had the two parameters swapped.
