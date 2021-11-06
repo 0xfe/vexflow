@@ -79,6 +79,10 @@ const Vex = {
     const err = new Error();
     return err.stack;
   },
+
+  // Backwards compatability with 3.0.9.
+  RERR: RuntimeError,
+  RuntimeError: RuntimeError,
 };
 
 export default Vex;

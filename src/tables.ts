@@ -52,6 +52,39 @@ const durations: Record<string, number> = {
   256: RESOLUTION / 256,
 };
 
+const keySignatures: Record<string, { acc?: string; num: number }> = {
+  C: { num: 0 },
+  Am: { num: 0 },
+  F: { acc: 'b', num: 1 },
+  Dm: { acc: 'b', num: 1 },
+  Bb: { acc: 'b', num: 2 },
+  Gm: { acc: 'b', num: 2 },
+  Eb: { acc: 'b', num: 3 },
+  Cm: { acc: 'b', num: 3 },
+  Ab: { acc: 'b', num: 4 },
+  Fm: { acc: 'b', num: 4 },
+  Db: { acc: 'b', num: 5 },
+  Bbm: { acc: 'b', num: 5 },
+  Gb: { acc: 'b', num: 6 },
+  Ebm: { acc: 'b', num: 6 },
+  Cb: { acc: 'b', num: 7 },
+  Abm: { acc: 'b', num: 7 },
+  G: { acc: '#', num: 1 },
+  Em: { acc: '#', num: 1 },
+  D: { acc: '#', num: 2 },
+  Bm: { acc: '#', num: 2 },
+  A: { acc: '#', num: 3 },
+  'F#m': { acc: '#', num: 3 },
+  E: { acc: '#', num: 4 },
+  'C#m': { acc: '#', num: 4 },
+  B: { acc: '#', num: 5 },
+  'G#m': { acc: '#', num: 5 },
+  'F#': { acc: '#', num: 6 },
+  'D#m': { acc: '#', num: 6 },
+  'C#': { acc: '#', num: 7 },
+  'A#m': { acc: '#', num: 7 },
+};
+
 const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: number }> = {
   '#': { code: 'accidentalSharp', parenRightPaddingAdjustment: -1 },
   '##': { code: 'accidentalDoubleSharp', parenRightPaddingAdjustment: -1 },
@@ -682,39 +715,7 @@ export const Tables = {
   },
 
   keySignature(spec: string): { type: string; line: number }[] {
-    const keySpecs: Record<string, { acc?: string; num: number }> = {
-      C: { num: 0 },
-      Am: { num: 0 },
-      F: { acc: 'b', num: 1 },
-      Dm: { acc: 'b', num: 1 },
-      Bb: { acc: 'b', num: 2 },
-      Gm: { acc: 'b', num: 2 },
-      Eb: { acc: 'b', num: 3 },
-      Cm: { acc: 'b', num: 3 },
-      Ab: { acc: 'b', num: 4 },
-      Fm: { acc: 'b', num: 4 },
-      Db: { acc: 'b', num: 5 },
-      Bbm: { acc: 'b', num: 5 },
-      Gb: { acc: 'b', num: 6 },
-      Ebm: { acc: 'b', num: 6 },
-      Cb: { acc: 'b', num: 7 },
-      Abm: { acc: 'b', num: 7 },
-      G: { acc: '#', num: 1 },
-      Em: { acc: '#', num: 1 },
-      D: { acc: '#', num: 2 },
-      Bm: { acc: '#', num: 2 },
-      A: { acc: '#', num: 3 },
-      'F#m': { acc: '#', num: 3 },
-      E: { acc: '#', num: 4 },
-      'C#m': { acc: '#', num: 4 },
-      B: { acc: '#', num: 5 },
-      'G#m': { acc: '#', num: 5 },
-      'F#': { acc: '#', num: 6 },
-      'D#m': { acc: '#', num: 6 },
-      'C#': { acc: '#', num: 7 },
-      'A#m': { acc: '#', num: 7 },
-    };
-    const keySpec = keySpecs[spec];
+    const keySpec = keySignatures[spec];
 
     if (!keySpec) {
       throw new RuntimeError('BadKeySignature', `Bad key signature spec: '${spec}'`);
@@ -738,6 +739,14 @@ export const Tables = {
     }
 
     return acc_list;
+  },
+
+  getKeySignatures(): Record<string, { acc?: string; num: number }> {
+    return keySignatures;
+  },
+
+  hasKeySignature(spec: string): boolean {
+    return spec in keySignatures;
   },
 
   unicode: {

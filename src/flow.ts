@@ -284,6 +284,12 @@ export const Flow = {
   keySignature(spec: string): { type: string; line: number }[] {
     return Tables.keySignature(spec);
   },
+  hasKeySignature(spec: string): boolean {
+    return Tables.hasKeySignature(spec);
+  },
+  getKeySignatures(): Record<string, { acc?: string; num: number }> {
+    return Tables.getKeySignatures();
+  },
   clefProperties(clef: string): { line_shift: number } {
     return Tables.clefProperties(clef);
   },

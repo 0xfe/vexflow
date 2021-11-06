@@ -527,6 +527,11 @@ export abstract class Note extends Tickable {
    * @returns this
    */
   addModifier(modifier: Modifier, index: number = 0): this {
+    // Backwards compatibility with 3.0.9.
+    if (typeof index === 'string') {
+      index = parseInt(index);
+    }
+
     // Legacy versions of VexFlow had the two parameters swapped.
     // We check here and throw an error if the argument types are not correct.
     if (typeof modifier !== 'object' || typeof index !== 'number') {

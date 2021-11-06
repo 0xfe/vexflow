@@ -9,6 +9,10 @@ export class RuntimeError extends Error {
   constructor(code: string, message: string = '') {
     super('[RuntimeError] ' + code + ': ' + message);
     this.code = code;
+    // Keep a debugger; statement here.
+    // This should be removed from the production build, but will stay in the development builds.
+    // eslint-disable-next-line
+    debugger;
   }
 }
 

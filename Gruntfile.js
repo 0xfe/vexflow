@@ -151,6 +151,14 @@ module.exports = (grunt) => {
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, MODULE_ENTRIES.VEX_DEBUG_TESTS, false, DEVELOPMENT_MODE);
   const debugNoFonts = getConfig(VEX_CORE, MODULE_ENTRIES.VEX_CORE, true, DEVELOPMENT_MODE);
 
+  const watch = {
+    watch: true,
+    watchOptions: {
+      aggregateTimeout: 800 /* ms */,
+      ignored: ['**/node_modules'],
+    },
+  };
+
   grunt.initConfig({
     pkg: PACKAGE_JSON,
     webpack: {
@@ -159,21 +167,30 @@ module.exports = (grunt) => {
       buildProdBravuraOnly: prodBravuraOnly,
       buildProdGonvilleOnly: prodGonvilleOnly,
       buildProdPetalumaOnly: prodPetalumaOnly,
+
       buildDebug: debugAllFonts,
       buildDebugPlusTests: debugAllFontsWithTests,
       buildDebugNoFonts: debugNoFonts,
-      watchDebug: { ...debugAllFonts, watch: true, keepalive: true },
-      watchDebugPlusTests: { ...debugAllFontsWithTests, watch: true, keepalive: true },
-      watchDebugNoFonts: { ...debugNoFonts, watch: true, keepalive: true },
+
+      watchProdAllFonts: { ...prodAllFonts, ...watch },
+      watchProdNoFonts: { ...prodNoFonts, ...watch },
+      watchProdBravuraOnly: { ...prodBravuraOnly, ...watch },
+      watchProdGonvilleOnly: { ...prodGonvilleOnly, ...watch },
+      watchProdPetalumaOnly: { ...prodPetalumaOnly, ...watch },
+
+      watchDebug: { ...debugAllFonts, ...watch },
+      watchDebugPlusTests: { ...debugAllFontsWithTests, ...watch },
+      watchDebugNoFonts: { ...debugNoFonts, ...watch },
     },
     concurrent: {
       options: {
         logConcurrentOutput: true,
-        indent: false,
+        indent: true,
       },
       debug: ['webpack:watchDebug', 'webpack:watchDebugPlusTests'],
-      core: ['webpack:watchDebugNoFonts'],
+      production: ['webpack:watchProdAllFonts', 'webpack:watchProdNoFonts'],
     },
+
     eslint: {
       target: ['./src', './tests'],
       options: { fix: true },
@@ -302,11 +319,11 @@ module.exports = (grunt) => {
     ['clean:build', 'force:eslint', 'concurrent:debug']
   );
 
-  // `grunt watch:core`
+  // `grunt watch`
   grunt.registerTask(
-    'watch:core',
-    `Watch src/ for changes. Generate dev builds of ${VEX_CORE} and fonts.`, //
-    ['clean:build', 'force:eslint', 'concurrent:core']
+    'watchProduction',
+    `Watch src/ & tests/ for changes. Generate production builds (vexflow.js and vexflow-core.js).`, //
+    ['clean:build', 'force:eslint', 'concurrent:production']
   );
 
   // `grunt test`
