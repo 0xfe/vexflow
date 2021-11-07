@@ -77,88 +77,88 @@ import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
 
-export const Flow = {
-  Accidental,
-  Annotation,
-  Articulation,
-  Barline,
-  BarNote,
-  Beam,
-  Bend,
-  BoundingBox,
-  BoundingBoxComputation,
-  ChordSymbol,
-  Clef,
-  ClefNote,
-  Crescendo,
-  Curve,
-  Dot,
-  EasyScore,
-  Element,
-  Factory,
-  Font,
-  Formatter,
-  Fraction,
-  FretHandFinger,
-  GhostNote,
-  Glyph,
-  GlyphNote,
-  GraceNote,
-  GraceNoteGroup,
-  GraceTabNote,
-  KeyManager,
-  KeySignature,
-  KeySigNote,
-  Modifier,
-  ModifierContext,
-  MultiMeasureRest,
-  Music,
-  Note,
-  NoteHead,
-  NoteSubGroup,
-  Ornament,
-  Parser,
-  PedalMarking,
-  Registry,
-  RenderContext,
-  Renderer,
-  RepeatNote,
-  Repetition,
-  Stave,
-  StaveConnector,
-  StaveHairpin,
-  StaveLine,
-  StaveModifier,
-  StaveNote,
-  StaveTempo,
-  StaveText,
-  StaveTie,
-  Stem,
-  StringNumber,
-  Stroke,
-  System,
-  TabNote,
-  TabSlide,
-  TabStave,
-  TabTie,
-  TextBracket,
-  TextDynamics,
-  TextFormatter,
-  TextNote,
-  TickContext,
-  TimeSignature,
-  TimeSigNote,
-  Tremolo,
-  Tuning,
-  Tuplet,
-  Vibrato,
-  VibratoBracket,
-  Voice,
-  Volta,
+export class Flow {
+  static Accidental = Accidental;
+  static Annotation = Annotation;
+  static Articulation = Articulation;
+  static Barline = Barline;
+  static BarNote = BarNote;
+  static Beam = Beam;
+  static Bend = Bend;
+  static BoundingBox = BoundingBox;
+  static BoundingBoxComputation = BoundingBoxComputation;
+  static ChordSymbol = ChordSymbol;
+  static Clef = Clef;
+  static ClefNote = ClefNote;
+  static Crescendo = Crescendo;
+  static Curve = Curve;
+  static Dot = Dot;
+  static EasyScore = EasyScore;
+  static Element = Element;
+  static Factory = Factory;
+  static Font = Font;
+  static Formatter = Formatter;
+  static Fraction = Fraction;
+  static FretHandFinger = FretHandFinger;
+  static GhostNote = GhostNote;
+  static Glyph = Glyph;
+  static GlyphNote = GlyphNote;
+  static GraceNote = GraceNote;
+  static GraceNoteGroup = GraceNoteGroup;
+  static GraceTabNote = GraceTabNote;
+  static KeyManager = KeyManager;
+  static KeySignature = KeySignature;
+  static KeySigNote = KeySigNote;
+  static Modifier = Modifier;
+  static ModifierContext = ModifierContext;
+  static MultiMeasureRest = MultiMeasureRest;
+  static Music = Music;
+  static Note = Note;
+  static NoteHead = NoteHead;
+  static NoteSubGroup = NoteSubGroup;
+  static Ornament = Ornament;
+  static Parser = Parser;
+  static PedalMarking = PedalMarking;
+  static Registry = Registry;
+  static RenderContext = RenderContext;
+  static Renderer = Renderer;
+  static RepeatNote = RepeatNote;
+  static Repetition = Repetition;
+  static Stave = Stave;
+  static StaveConnector = StaveConnector;
+  static StaveHairpin = StaveHairpin;
+  static StaveLine = StaveLine;
+  static StaveModifier = StaveModifier;
+  static StaveNote = StaveNote;
+  static StaveTempo = StaveTempo;
+  static StaveText = StaveText;
+  static StaveTie = StaveTie;
+  static Stem = Stem;
+  static StringNumber = StringNumber;
+  static Stroke = Stroke;
+  static System = System;
+  static TabNote = TabNote;
+  static TabSlide = TabSlide;
+  static TabStave = TabStave;
+  static TabTie = TabTie;
+  static TextBracket = TextBracket;
+  static TextDynamics = TextDynamics;
+  static TextFormatter = TextFormatter;
+  static TextNote = TextNote;
+  static TickContext = TickContext;
+  static TimeSignature = TimeSignature;
+  static TimeSigNote = TimeSigNote;
+  static Tremolo = Tremolo;
+  static Tuning = Tuning;
+  static Tuplet = Tuplet;
+  static Vibrato = Vibrato;
+  static VibratoBracket = VibratoBracket;
+  static Voice = Voice;
+  static Volta = Volta;
 
   // VERSION and BUILD are set by webpack string-replace-loader. See: Gruntfile.js.
-  VERSION: '_VEX_VERSION_',
-  BUILD: '_VEX_BUILD_',
+  static VERSION: string = '_VEX_VERSION_';
+  static BUILD: string = '_VEX_BUILD_';
 
   /**
    * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.
@@ -186,7 +186,8 @@ export const Flow = {
    * @returns CASE 1: a `Font` or an array of `Font` objects corresponding to the provided `fontNames`.
    * @returns CASE 2: Promise<Font[]> that resolves to the same array of `Font` objects as above.
    */
-  setMusicFont: (...fontNames: string[]): Font | Font[] => {
+  static setMusicFont(...fontNames: string[]): Font | Font[] {
+    console.log('sync Flow.setMusicFont()');
     // Convert the array of font names into an array of Font objects.
     const fonts = fontNames.map((fontName) => Font.load(fontName));
     Flow.setMusicFontStack(fonts);
@@ -195,109 +196,109 @@ export const Flow = {
     } else {
       return fonts;
     }
-  },
+  }
 
   /**
    * Use Flow.setMusicFont(...fontNames).
    *
    * @param fonts
    */
-  setMusicFontStack(fonts: Font[]): void {
+  static setMusicFontStack(fonts: Font[]): void {
     Tables.MUSIC_FONT_STACK = fonts.slice();
     Glyph.CURRENT_CACHE_KEY = fonts.map((font) => font.getName()).join(',');
-  },
+  }
 
   /**
    * @returns a copy of the current music font stack.
    */
-  getMusicFontStack(): Font[] {
+  static getMusicFontStack(): Font[] {
     return Tables.MUSIC_FONT_STACK.slice();
-  },
+  }
 
   /**
    * @returns the `Font` object at the head of the music font stack.
    */
-  currentMusicFont(): Font {
+  static currentMusicFont(): Font {
     return Tables.currentMusicFont();
-  },
+  }
 
-  get NOTATION_FONT_SCALE(): number {
+  static get NOTATION_FONT_SCALE(): number {
     return Tables.NOTATION_FONT_SCALE;
-  },
-  set NOTATION_FONT_SCALE(value: number) {
+  }
+  static set NOTATION_FONT_SCALE(value: number) {
     Tables.NOTATION_FONT_SCALE = value;
-  },
-  get TABLATURE_FONT_SCALE(): number {
+  }
+  static get TABLATURE_FONT_SCALE(): number {
     return Tables.TABLATURE_FONT_SCALE;
-  },
-  set TABLATURE_FONT_SCALE(value: number) {
+  }
+  static set TABLATURE_FONT_SCALE(value: number) {
     Tables.TABLATURE_FONT_SCALE = value;
-  },
-  get RESOLUTION(): number {
+  }
+  static get RESOLUTION(): number {
     return Tables.RESOLUTION;
-  },
-  set RESOLUTION(value: number) {
+  }
+  static set RESOLUTION(value: number) {
     Tables.RESOLUTION = value;
-  },
-  get SLASH_NOTEHEAD_WIDTH(): number {
+  }
+  static get SLASH_NOTEHEAD_WIDTH(): number {
     return Tables.SLASH_NOTEHEAD_WIDTH;
-  },
-  set SLASH_NOTEHEAD_WIDTH(value: number) {
+  }
+  static set SLASH_NOTEHEAD_WIDTH(value: number) {
     Tables.SLASH_NOTEHEAD_WIDTH = value;
-  },
-  get STAVE_LINE_DISTANCE(): number {
+  }
+  static get STAVE_LINE_DISTANCE(): number {
     return Tables.STAVE_LINE_DISTANCE;
-  },
-  set STAVE_LINE_DISTANCE(value: number) {
+  }
+  static set STAVE_LINE_DISTANCE(value: number) {
     Tables.STAVE_LINE_DISTANCE = value;
-  },
+  }
   get STAVE_LINE_THICKNESS(): number {
     return Tables.STAVE_LINE_THICKNESS;
-  },
-  set STAVE_LINE_THICKNESS(value: number) {
+  }
+  static set STAVE_LINE_THICKNESS(value: number) {
     Tables.STAVE_LINE_THICKNESS = value;
-  },
-  get STEM_HEIGHT(): number {
+  }
+  static get STEM_HEIGHT(): number {
     return Tables.STEM_HEIGHT;
-  },
-  set STEM_HEIGHT(value: number) {
+  }
+  static set STEM_HEIGHT(value: number) {
     Tables.STEM_HEIGHT = value;
-  },
-  get STEM_WIDTH(): number {
+  }
+  static get STEM_WIDTH(): number {
     return Tables.STEM_WIDTH;
-  },
-  set STEM_WIDTH(value: number) {
+  }
+  static set STEM_WIDTH(value: number) {
     Tables.STEM_WIDTH = value;
-  },
-  get TIME4_4(): { num_beats: number; beat_value: number; resolution: number } {
+  }
+  static get TIME4_4(): { num_beats: number; beat_value: number; resolution: number } {
     return Tables.TIME4_4;
-  },
-  set TIME4_4(value: { num_beats: number; beat_value: number; resolution: number }) {
+  }
+  static set TIME4_4(value: { num_beats: number; beat_value: number; resolution: number }) {
     Tables.TIME4_4 = value;
-  },
-  get accidentalMap(): Record<string, { code: string; parenRightPaddingAdjustment: number }> {
+  }
+  static get accidentalMap(): Record<string, { code: string; parenRightPaddingAdjustment: number }> {
     return Tables.accidentalMap;
-  },
-  get unicode(): Record<string, string> {
+  }
+  static get unicode(): Record<string, string> {
     return Tables.unicode;
-  },
-  keySignature(spec: string): { type: string; line: number }[] {
+  }
+  static keySignature(spec: string): { type: string; line: number }[] {
     return Tables.keySignature(spec);
-  },
-  hasKeySignature(spec: string): boolean {
+  }
+  static hasKeySignature(spec: string): boolean {
     return Tables.hasKeySignature(spec);
-  },
-  getKeySignatures(): Record<string, { acc?: string; num: number }> {
+  }
+  static getKeySignatures(): Record<string, { acc?: string; num: number }> {
     return Tables.getKeySignatures();
-  },
-  clefProperties(clef: string): { line_shift: number } {
+  }
+  static clefProperties(clef: string): { line_shift: number } {
     return Tables.clefProperties(clef);
-  },
+  }
   // eslint-disable-next-line
-  keyProperties(key: string, clef?: string, params?: any): any {
+  static keyProperties(key: string, clef?: string, params?: any): any {
     return Tables.keyProperties(key, clef, params);
-  },
-  durationToTicks(duration: string): number {
+  }
+  static durationToTicks(duration: string): number {
     return Tables.durationToTicks(duration);
-  },
-};
+  }
+}

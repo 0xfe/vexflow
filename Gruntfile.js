@@ -6,8 +6,8 @@ const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // Output file names.
+// Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow.js';
-const VEX_MODULE = 'vexflow.module.js'; // Same as vexflow.js, except for the `export default Vex;` at the end.
 const VEX_CORE = 'vexflow-core.js';
 const VEX_CORE_BRAVURA = 'vexflow-core-with-bravura.js';
 const VEX_CORE_GONVILLE = 'vexflow-core-with-gonville.js';
@@ -21,13 +21,11 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-const TYPES_DIR = path.join(BUILD_DIR, 'types');
 
 // Each output file above is associated with a particular module entry file.
 // The module entry files are in `src/entry/`.
 const MODULE_ENTRIES = {
   VEX: 'allFonts.ts',
-  // VEX_MODULE: 'allFonts.ts', // For now, we just copy the vexflow.js file (see COPY_VEX_MODULE below).
   VEX_CORE: 'zeroFonts.ts',
   VEX_CORE_BRAVURA: 'withBravura.ts',
   VEX_CORE_GONVILLE: 'withGonville.ts',
@@ -151,10 +149,11 @@ module.exports = (grunt) => {
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, MODULE_ENTRIES.VEX_DEBUG_TESTS, false, DEVELOPMENT_MODE);
   const debugNoFonts = getConfig(VEX_CORE, MODULE_ENTRIES.VEX_CORE, true, DEVELOPMENT_MODE);
 
+  // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
   const watch = {
     watch: true,
     watchOptions: {
-      aggregateTimeout: 800 /* ms */,
+      aggregateTimeout: 600 /* ms */,
       ignored: ['**/node_modules'],
     },
   };
@@ -187,8 +186,16 @@ module.exports = (grunt) => {
         logConcurrentOutput: true,
         indent: true,
       },
-      debug: ['webpack:watchDebug', 'webpack:watchDebugPlusTests'],
-      production: ['webpack:watchProdAllFonts', 'webpack:watchProdNoFonts'],
+      debug: [
+        // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
+        'webpack:watchDebug',
+        // 'webpack:watchDebugPlusTests',
+      ],
+      production: [
+        // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
+        'webpack:watchProdAllFonts',
+        // 'webpack:watchProdNoFonts',
+      ],
     },
 
     eslint: {
@@ -199,15 +206,24 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
-      // COPY_VEX_MODULE: Copy the vexflow.js to vexflow.module.js and replace the last line.
+      // Modules: For now, we just copy the vexflow****.js to the esm/ folder and add exports at the bottom.
       module: {
-        src: path.join(BUILD_DIR, VEX),
-        dest: path.join(BUILD_DIR, VEX_MODULE),
+        expand: true,
+        cwd: BUILD_DIR,
+        src: ['*.js'],
+        dest: path.join(BUILD_DIR, 'esm/'),
+        flatten: true,
         options: {
           process: (content) => {
-            const sourceMapping = '//# sourceMappingURL=vexflow.js.map';
-            const exportVex = 'export default Vex;';
-            return content.replace(sourceMapping, exportVex);
+            const exports = `
+const Vex = globalThis['Vex'];
+const Flow = Vex.Flow;
+const  { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice } = Vex.Flow;
+export { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice };
+export { Vex, Flow };
+export default Vex;`;
+            // Replace the last line with our magic exports. :-)
+            return content.replace(/\/\/# sourceMappingURL=.*js\.map$/, exports);
           },
         },
       },
@@ -215,9 +231,9 @@ module.exports = (grunt) => {
         files: [
           {
             expand: true,
-            dest: RELEASES_DIR,
             cwd: BUILD_DIR,
             src: ['*.js', 'docs/**', '*.map'],
+            dest: RELEASES_DIR,
           },
         ],
       },
@@ -225,9 +241,9 @@ module.exports = (grunt) => {
         files: [
           {
             expand: true,
-            dest: REFERENCE_DIR,
             cwd: BUILD_DIR,
             src: ['*.js', 'docs/**', '*.map'],
+            dest: REFERENCE_DIR,
           },
         ],
       },
@@ -241,7 +257,7 @@ module.exports = (grunt) => {
           excludePrivate: true,
           // exclude: ['./src/entry/*.ts'],
         },
-        src: ['./typedoc.ts'],
+        src: ['./src/index.ts'],
       },
     },
     gitcommit: {
@@ -276,7 +292,6 @@ module.exports = (grunt) => {
     },
     clean: {
       build: { src: [BUILD_DIR] },
-      types: { src: [path.join(TYPES_DIR, 'typedoc.d.ts'), path.join(TYPES_DIR, 'src', 'entry')] },
     },
   });
 
@@ -308,7 +323,6 @@ module.exports = (grunt) => {
       'webpack:buildProdPetalumaOnly',
       'copy:module',
       'typedoc',
-      'clean:types',
     ]
   );
 
@@ -316,21 +330,36 @@ module.exports = (grunt) => {
   grunt.registerTask(
     'watch',
     `Watch src/ & tests/ for changes. Generate dev builds ${VEX_DEBUG} & ${VEX_DEBUG_TESTS}.`, //
-    ['clean:build', 'force:eslint', 'concurrent:debug']
+    [
+      // While developing, you can speed up builds by temporarily commenting out the `eslint` task.
+      'clean:build',
+      'force:eslint',
+      'concurrent:debug',
+    ]
   );
 
-  // `grunt watch`
+  // `grunt watchProduction`
   grunt.registerTask(
     'watchProduction',
     `Watch src/ & tests/ for changes. Generate production builds (vexflow.js and vexflow-core.js).`, //
-    ['clean:build', 'force:eslint', 'concurrent:production']
+    [
+      // While developing, you can speed up builds by temporarily commenting out the `eslint` task.
+      'clean:build',
+      'force:eslint',
+      'concurrent:production',
+    ]
   );
 
   // `grunt test`
   grunt.registerTask(
     'test',
     'Run qunit tests.', //
-    ['clean:build', 'webpack:buildDebugPlusTests', 'qunit']
+    [
+      //
+      'clean:build',
+      'webpack:buildDebugPlusTests',
+      'qunit',
+    ]
   );
 
   // `grunt reference` will build the current HEAD revision and copy it to reference/

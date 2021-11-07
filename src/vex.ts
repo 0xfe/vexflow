@@ -1,26 +1,24 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // Utility methods used by the rest of the VexFlow codebase.
 
 import { Flow } from './flow';
 import { log, RuntimeError } from './util';
 
-const Vex = {
-  Flow: Flow,
+export class Vex {
+  static Flow = Flow;
 
-  // eslint-disable-next-line
-  forEach: (a: any[], fn: any) => {
-    for (let i = 0; i < a.length; i++) {
-      fn(a[i], i);
-    }
-  },
+  // Users of `Vex.forEach(a, fn)` should use `Array.prototype.forEach()` instead.
+  // static forEach<T>(arr: T[], callbackFn: (value: T, index: number, array: T[]) => void) {
+  //   arr.forEach(callbackFn);
+  // }
 
   /**
    * Take `arr` and return a new list consisting of the sorted, unique,
    * contents of arr. Does not modify `arr`.
    */
   // eslint-disable-next-line
-  SortAndUnique: (arr: any[], cmp: any, eq: any) => {
+  static sortAndUnique(arr: any[], cmp: any, eq: any): any[] {
     if (arr.length > 1) {
       const newArr = [];
       let last;
@@ -37,11 +35,11 @@ const Vex = {
     } else {
       return arr;
     }
-  },
+  }
 
   /** Check if array `arr` contains `obj`. */
   // eslint-disable-next-line
-  Contains: (arr: any[], obj: any) => {
+  static contains(arr: any[], obj: any): boolean {
     let i = arr.length;
     while (i--) {
       if (arr[i] === obj) {
@@ -49,40 +47,40 @@ const Vex = {
       }
     }
     return false;
-  },
+  }
 
   // Get the 2D Canvas context from DOM element `canvas_sel`.
-  getCanvasContext: (canvas_sel: string): RenderingContext => {
-    if (!canvas_sel) {
-      throw new RuntimeError('BadArgument', 'Invalid canvas selector: ' + canvas_sel);
+  static getCanvasContext(canvasSelector: string): RenderingContext {
+    if (!canvasSelector) {
+      throw new RuntimeError('BadArgument', 'Invalid canvas selector: ' + canvasSelector);
     }
 
-    const canvas = document.getElementById(canvas_sel) as HTMLCanvasElement;
+    const canvas = document.getElementById(canvasSelector) as HTMLCanvasElement;
     if (!(canvas && canvas.getContext)) {
       throw new RuntimeError('UnsupportedBrowserError', 'This browser does not support HTML5 Canvas');
     }
 
     return canvas.getContext('2d') as RenderingContext;
-  },
+  }
 
   /** Benchmark. Run function `f` once and report time elapsed shifted by `s` milliseconds. */
   // eslint-disable-next-line
-  BM: (s: any, f: any) => {
+  static benchmark(s: any, f: any): void {
     const start_time = new Date().getTime();
     f();
     const elapsed = new Date().getTime() - start_time;
     log(s, elapsed + 'ms');
-  },
+  }
 
   // Get stack trace.
-  StackTrace: (): string | undefined => {
+  static stackTrace(): string | undefined {
     const err = new Error();
     return err.stack;
-  },
+  }
 
   // Backwards compatability with 3.0.9.
-  RERR: RuntimeError,
-  RuntimeError: RuntimeError,
-};
+  static RERR: RuntimeError;
 
-export default Vex;
+  // Backwards compatability with 3.0.9.
+  static RuntimeError: RuntimeError;
+}

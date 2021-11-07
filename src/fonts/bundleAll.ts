@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // vexflow.js statically bundles & preloads all of our music engraving fonts.

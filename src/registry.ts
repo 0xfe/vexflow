@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // @author Mohit Cheppudira
 //
 // ## Description
@@ -33,7 +33,7 @@ class Index {
   }
 }
 
-interface RegistryUpdate {
+export interface RegistryUpdate {
   id: string;
   name: string;
   value: string | undefined;

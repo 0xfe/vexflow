@@ -11,8 +11,11 @@ import { ContextBuilder, Renderer } from '../src/renderer';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
-declare const global: any;
 declare const $: any;
+declare let global: any;
+if (typeof global === 'undefined') {
+  global = window ?? globalThis ?? this;
+}
 /* eslint-enable */
 
 export interface TestOptions {

@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Support Dynamic Importing of Music Engraving Fonts
@@ -7,8 +7,6 @@
 // It will not load any music fonts by default.
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading music fonts (e.g., Bravura, Petaluma, Gonville) on the fly.
-
-import Vex from '../vex';
 
 import { setupAsyncFontLoader } from '../fonts/async';
 import { loadTextFonts } from '../fonts/textfonts';
@@ -21,4 +19,6 @@ setupAsyncFontLoader();
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
-export default Vex;
+console.log('entry/zeroFonts');
+
+export * from '../index';

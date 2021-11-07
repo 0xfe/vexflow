@@ -2,9 +2,37 @@
   "name": "vexflow",
   "version": "3.0.9",
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
+  "exports": {
+    ".": {
+      "types": "./build/src/entry/allFonts.d.ts",
+      "require": "./build/vexflow.js",
+      "import": "./build/esm/vexflow.js"
+    },
+    "./core": {
+      "types": "./build/src/entry/zeroFonts.d.ts",
+      "require": "./build/vexflow-core.js",
+      "import": "./build/esm/vexflow-core.js"
+    },
+    "./withBravura": {
+      "types": "./build/src/entry/withBravura.d.ts",
+      "require": "./build/vexflow-core-with-bravura.js",
+      "import": "./build/esm/vexflow-core-with-bravura.js"
+    },
+    "./withGonville": {
+      "types": "./build/src/entry/withGonville.d.ts",
+      "require": "./build/vexflow-core-with-gonville.js",
+      "import": "./build/esm/vexflow-core-with-gonville.js"
+    },
+    "./withPetaluma": {
+      "types": "./build/src/entry/withPetaluma.d.ts",
+      "require": "./build/vexflow-core-with-petaluma.js",
+      "import": "./build/esm/vexflow-core-with-petaluma.js"
+    }
+  },
   "main": "build/vexflow.js",
+  "module": "build/esm/vexflow.js",
+  "types": "build/src/index.d.ts",
   "browser": "build/vexflow.js",
-  "types": "build/types/src/vex.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"

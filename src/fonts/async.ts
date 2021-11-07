@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 // @author Ron B. Yeh
 
@@ -18,6 +18,8 @@ export function setupAsyncFontLoader() {
   // eslint-disable-next-line
   // @ts-ignore override with a function that has a different return type.
   Flow.setMusicFont = async (...fontNames: string[]): Promise<Font | Font[]> => {
+    console.log('async Flow.setMusicFont()');
+
     // Make sure each individual font is loaded before we proceed.
     for (const fontName of fontNames) {
       const font = Font.load(fontName);

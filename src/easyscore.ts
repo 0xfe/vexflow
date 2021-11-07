@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { Accidental } from './accidental';
@@ -209,7 +209,7 @@ export class EasyScoreGrammar implements Grammar {
   }
 }
 
-interface NotePiece {
+export interface NotePiece {
   key: string;
   accid?: string | null;
   octave?: string;

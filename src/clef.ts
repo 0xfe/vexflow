@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna Cheppudira 2013.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna Cheppudira 2013.
 // Co-author: Benjamin W. Bohl
 // MIT License
 

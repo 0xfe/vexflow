@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
 import { FontInfo, FontStyle, FontWeight } from './font';
