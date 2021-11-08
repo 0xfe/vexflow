@@ -141,10 +141,13 @@ module.exports = (grunt) => {
     'development'
   );
 
-  const watchOptions = {
+  // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
+  const watch = {
     watch: true,
-    keepalive: true,
-    ignored: /node_modules/,
+    watchOptions: {
+      aggregateTimeout: 600 /* ms */,
+      ignored: ['**/node_modules'],
+    },
   };
 
   grunt.initConfig({
@@ -156,19 +159,19 @@ module.exports = (grunt) => {
       buildDynamic: webpackProdDynamic,
       watchDev: {
         ...webpackDev,
-        ...watchOptions,
+        ...watch,
       },
       watchTest: {
         ...webpackTest,
-        ...watchOptions,
+        ...watch,
       },
       watchStatic: {
         ...webpackDevStatic,
-        ...watchOptions,
+        ...watch,
       },
       watchDynamic: {
         ...webpackDevDynamic,
-        ...watchOptions,
+        ...watch,
       },
     },
     concurrent: {
