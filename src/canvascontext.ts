@@ -147,7 +147,7 @@ export class CanvasContext extends RenderContext {
 
     // The canvas could be an instance of either HTMLCanvasElement or an OffscreenCanvas.
     // Only HTMLCanvasElement has a style attribute.
-    if (canvas instanceof HTMLCanvasElement) {
+    if (canvas instanceof window.HTMLCanvasElement) {
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
     }
