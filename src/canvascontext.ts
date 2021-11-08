@@ -9,7 +9,7 @@ import { warn } from './util';
  */
 export class CanvasContext extends RenderContext {
   context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-  canvas: HTMLCanvasElement | { width: number; height: number };
+  canvas: HTMLCanvasElement | OffscreenCanvas | { width: number; height: number };
 
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
