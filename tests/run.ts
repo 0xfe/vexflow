@@ -32,6 +32,7 @@ import { MultiMeasureRestTests } from './multimeasurerest_tests';
 import { MusicTests } from './music_tests';
 import { NoteHeadTests } from './notehead_tests';
 import { NoteSubGroupTests } from './notesubgroup_tests';
+import { OffscreenCanvasTests } from './offscreencanvas_tests';
 import { OrnamentTests } from './ornament_tests';
 import { ParserTests } from './parser_tests';
 import { PedalMarkingTests } from './pedalmarking_tests';
@@ -99,6 +100,7 @@ VexFlowTests.run = function () {
   MusicTests.Start();
   NoteHeadTests.Start();
   NoteSubGroupTests.Start();
+  OffscreenCanvasTests.Start();
   OrnamentTests.Start();
   ParserTests.Start();
   PedalMarkingTests.Start();
