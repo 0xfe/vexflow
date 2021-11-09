@@ -183,43 +183,20 @@ export class Flow {
    * await Vex.Flow.setMusicFont('Petaluma');
    * ... (do VexFlow stuff) ...
    * ```
-   * @returns CASE 1: a `Font` or an array of `Font` objects corresponding to the provided `fontNames`.
-   * @returns CASE 2: Promise<Font[]> that resolves to the same array of `Font` objects as above.
+   * @returns CASE 1: an array of Font objects corresponding to the provided `fontNames`.
+   * @returns CASE 2: Promise<Font[]> that resolves to the same array of Font objects as above.
    */
-  static setMusicFont(...fontNames: string[]): Font | Font[] {
-    console.log('sync Flow.setMusicFont()');
+  static setMusicFont(...fontNames: string[]): Font[] {
     // Convert the array of font names into an array of Font objects.
     const fonts = fontNames.map((fontName) => Font.load(fontName));
-    Flow.setMusicFontStack(fonts);
-    if (fonts.length === 1) {
-      return fonts[0];
-    } else {
-      return fonts;
-    }
+    Tables.MUSIC_FONT_STACK = fonts;
+    Glyph.CURRENT_CACHE_KEY = fontNames.join(',');
+    return fonts;
   }
 
-  /**
-   * Use Flow.setMusicFont(...fontNames).
-   *
-   * @param fonts
-   */
-  static setMusicFontStack(fonts: Font[]): void {
-    Tables.MUSIC_FONT_STACK = fonts.slice();
-    Glyph.CURRENT_CACHE_KEY = fonts.map((font) => font.getName()).join(',');
-  }
-
-  /**
-   * @returns a copy of the current music font stack.
-   */
-  static getMusicFontStack(): Font[] {
-    return Tables.MUSIC_FONT_STACK.slice();
-  }
-
-  /**
-   * @returns the `Font` object at the head of the music font stack.
-   */
-  static currentMusicFont(): Font {
-    return Tables.currentMusicFont();
+  static getMusicFont(): string[] {
+    const fonts = Tables.MUSIC_FONT_STACK;
+    return fonts.map((font) => font.getName());
   }
 
   static get NOTATION_FONT_SCALE(): number {
@@ -252,7 +229,7 @@ export class Flow {
   static set STAVE_LINE_DISTANCE(value: number) {
     Tables.STAVE_LINE_DISTANCE = value;
   }
-  get STAVE_LINE_THICKNESS(): number {
+  static get STAVE_LINE_THICKNESS(): number {
     return Tables.STAVE_LINE_THICKNESS;
   }
   static set STAVE_LINE_THICKNESS(value: number) {

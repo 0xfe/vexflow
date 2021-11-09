@@ -4,12 +4,12 @@
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Element } from './element';
-import { Flow } from './flow';
 import { Font, FontGlyph } from './font';
 import { KeyProps } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { Tables } from './tables';
 import { defined, RuntimeError } from './util';
 
 export interface TypeProps extends KeyProps {
@@ -123,7 +123,8 @@ class GlyphCache {
     const key = category ? `${code}%${category}` : code;
     let entry = entries[key];
     if (entry === undefined) {
-      entry = new GlyphCacheEntry(Flow.getMusicFontStack(), code, category);
+      const musicFontStack = Tables.MUSIC_FONT_STACK.slice();
+      entry = new GlyphCacheEntry(musicFontStack, code, category);
       entries[key] = entry;
     }
     return entry;
@@ -196,25 +197,9 @@ export class Glyph extends Element {
   protected static cache = new GlyphCache();
 
   // The current cache key for GlyphCache above.
-  // Computed whenever the Flow.setMusicFontStack(...) is called.
+  // Computed whenever the Flow.setMusicFont(...) is called.
   // It is set to a comma separated list of font names.
   public static CURRENT_CACHE_KEY: string = '';
-
-  bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
-  code: string;
-  // metrics is initialised in the constructor by either setOptions or reset
-  // eslint-disable-next-line
-  metrics!: GlyphMetrics;
-  topGlyphs: Glyph[] = [];
-  botGlyphs: Glyph[] = [];
-
-  protected options: GlyphOptions = {};
-  protected originShift: { x: number; y: number };
-  protected x_shift: number;
-  protected y_shift: number;
-  scale: number = 1;
-  protected point: number;
-  protected stave?: Stave;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // Static methods for loading and rendering glyphs.
@@ -396,6 +381,25 @@ export class Glyph extends Element {
     const scale = (point * 72) / (data.metrics.font.getResolution() * 100);
     return data.bbox.getW() * scale;
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Instance Variables
+
+  bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
+  code: string;
+  // metrics is initialized in the constructor by reset() or setOptions() which calls reset().
+  // eslint-disable-next-line
+  metrics!: GlyphMetrics;
+  topGlyphs: Glyph[] = [];
+  botGlyphs: Glyph[] = [];
+
+  protected options: GlyphOptions = {};
+  protected originShift: { x: number; y: number };
+  protected x_shift: number;
+  protected y_shift: number;
+  scale: number = 1;
+  protected point: number;
+  protected stave?: Stave;
 
   /**
    * @param code

@@ -114,13 +114,8 @@ export class TextFormatter {
     }
 
     const fontSize = requestedFont.size;
-    if (typeof fontSize === 'number' && fontSize > 0) {
-      // We assume the unit is `pt`.
-      formatter.setFontSize(fontSize);
-    } else if (typeof fontSize === 'string') {
-      // e.g., `12pt`, `1em`, `16px`
-      const fontSizeInPx = Font.toPixels(fontSize);
-      const fontSizeInPt = fontSizeInPx / Font.convertToPxFrom.pt;
+    if (typeof fontSize !== 'undefined') {
+      const fontSizeInPt = Font.convertSizeToPointValue(fontSize);
       formatter.setFontSize(fontSizeInPt);
     }
     return formatter;
@@ -284,7 +279,7 @@ export class TextFormatter {
 
   /** `this.size` is specified in points. Convert to pixels. */
   get fontSizeInPx(): number {
-    return this.size * Font.convertToPxFrom.pt;
+    return this.size * Font.scaleToPxFrom.pt;
   }
 
   /**

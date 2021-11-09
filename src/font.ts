@@ -89,7 +89,7 @@ export class Font {
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
-  static convertToPxFrom: Record<string, number> = {
+  static scaleToPxFrom: Record<string, number> = {
     pt: 4 / 3,
     px: 1,
     em: 16,
@@ -100,22 +100,43 @@ export class Font {
   };
 
   /**
-   * @param fontSize The font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
-   * or as a number (the unit is assumed to be 'pt'). See `Font.convertToPxFrom` for the supported
+   * @param fontSize a font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
+   * or as a number (the unit is assumed to be 'pt'). See `Font.scaleToPxFrom` for the supported
    * units (e.g., pt, em, %).
    * @returns the number of pixels that is equivalent to `fontSize`
    */
-  static toPixels(fontSize: string | number = Font.SIZE): number {
+  static convertSizeToPixelValue(fontSize: string | number = Font.SIZE): number {
     if (typeof fontSize === 'number') {
-      // Assume the fontSize is specified in pt.
-      return fontSize * Font.convertToPxFrom.pt;
+      // Assume the numeric fontSize is specified in pt.
+      return fontSize * Font.scaleToPxFrom.pt;
     } else {
       const value = parseFloat(fontSize);
       if (isNaN(value)) {
         return 0;
       }
-      const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
-      const conversionFactor = Font.convertToPxFrom[unit] ?? 1;
+      const unit = fontSize.replace(/[\d.\s]/g, '').toLowerCase(); // Extract the unit by removing all numbers, dots, spaces.
+      const conversionFactor = Font.scaleToPxFrom[unit] ?? 1;
+      return value * conversionFactor;
+    }
+  }
+
+  /**
+   * @param fontSize a font size to convert. Can be specified as a CSS length string (e.g., '16pt', '1em')
+   * or as a number (the unit is assumed to be 'pt'). See `Font.scaleToPxFrom` for the supported
+   * units (e.g., pt, em, %).
+   * @returns the number of points that is equivalent to `fontSize`
+   */
+  static convertSizeToPointValue(fontSize: string | number = Font.SIZE): number {
+    if (typeof fontSize === 'number') {
+      // Assume the numeric fontSize is specified in pt.
+      return fontSize;
+    } else {
+      const value = parseFloat(fontSize);
+      if (isNaN(value)) {
+        return 0;
+      }
+      const unit = fontSize.replace(/[\d.\s]/g, '').toLowerCase(); // Extract the unit by removing all numbers, dots, spaces.
+      const conversionFactor = (Font.scaleToPxFrom[unit] ?? 1) / Font.scaleToPxFrom.pt;
       return value * conversionFactor;
     }
   }
@@ -246,18 +267,6 @@ export class Font {
       const value = parseFloat(fontSize);
       const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
       return `${value * scaleFactor}${unit}` as T;
-    }
-  }
-
-  /**
-   * @param fontSize can be a number or a string representing a font size (e.g., '16pt', '1.5em').
-   * @returns just the numeric part of the size (e.g., '16pt' -> 16, '1.5em' -> 1.5).
-   */
-  static convertSizeToNumber(fontSize: number | string): number {
-    if (typeof fontSize === 'number') {
-      return fontSize;
-    } else {
-      return parseFloat(fontSize);
     }
   }
 

@@ -5,17 +5,18 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Font, FontGlyph, Glyph } from '../src';
 import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
 import { Flow } from '../src/flow';
-import { Font, FontGlyph } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { Note } from '../src/note';
 import { Registry } from '../src/registry';
 import { Stave } from '../src/stave';
 import { StaveConnector } from '../src/staveconnector';
 import { StaveNote } from '../src/stavenote';
+import { Tables } from '../src/tables';
 import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 
@@ -46,19 +47,19 @@ const FormatterTests = {
   },
 };
 
-// Helper function to calculate the glyph's width.
-// Should it be a static method in Glyph or Font?
-function glyphWidth(glyphName: string): number {
+/** Calculate the glyph's width in the current music font. */
+// How is this different from Glyph.getWidth()? The numbers don't match up.
+function getGlyphWidth(glyphName: string): number {
   // `38` seems to be the `font_scale` specified in many classes, such as
   // Accidental, Articulation, Ornament, Strokes. Does this mean `38pt`???
   //
   // However, tables.ts specifies:
   //   NOTATION_FONT_SCALE: 39,
   //   TABLATURE_FONT_SCALE: 39,
-
-  const glyph: FontGlyph = Flow.currentMusicFont().getGlyphs()[glyphName];
-  const widthInEm = (glyph.x_max - glyph.x_min) / Flow.currentMusicFont().getResolution();
-  return widthInEm * 38 * Font.convertToPxFrom.pt;
+  const musicFont = Tables.currentMusicFont();
+  const glyph: FontGlyph = musicFont.getGlyphs()[glyphName];
+  const widthInEm = (glyph.x_max - glyph.x_min) / musicFont.getResolution();
+  return widthInEm * 38 * Font.scaleToPxFrom.pt;
 }
 
 function buildTickContexts(): void {
@@ -106,6 +107,7 @@ function buildTickContexts(): void {
     'Second note of voice 2 is to the right of the second note of voice 1'
   );
 }
+
 function rightJustify(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 1200, 300);
   const getTickables = (time: VoiceTime, n: number, duration: string): Voice => {
@@ -326,7 +328,7 @@ function justifyStaveNotes(options: TestOptions): void {
 
     f.Formatter()
       .joinVoices(voices)
-      .format(voices, width - (Stave.defaultPadding + glyphWidth('gClef')));
+      .format(voices, width - (Stave.defaultPadding + getGlyphWidth('gClef')));
 
     // Show the the width of notes via a horizontal line with red, green, yellow, blue, gray indicators.
     voices[0].getTickables().forEach((note) => Note.plotMetrics(ctx, note, y + 140)); // Bottom line.
@@ -420,7 +422,7 @@ function multiStaves(options: TestOptions): void {
   ];
 
   const staveYs = [20, 130, 250];
-  let staveWidth = width + glyphWidth('gClef') + glyphWidth('timeSig8') + Stave.defaultPadding;
+  let staveWidth = width + getGlyphWidth('gClef') + getGlyphWidth('timeSig8') + Stave.defaultPadding;
   let staves = [
     f.Stave({ y: staveYs[0], width: staveWidth }).addClef('treble').addTimeSignature('6/8'),
     f.Stave({ y: staveYs[1], width: staveWidth }).addClef('treble').addTimeSignature('6/8'),

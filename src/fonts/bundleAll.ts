@@ -12,10 +12,10 @@ import { Petaluma } from './petaluma';
 
 export function loadMusicFonts(): void {
   // Populate our font "database" with all our music fonts.
-  const bravuraFont = Font.load('Bravura', Bravura.data, Bravura.metrics);
-  const gonvilleFont = Font.load('Gonville', Gonville.data, Gonville.metrics);
-  const customFont = Font.load('Custom', Custom.data, Custom.metrics);
+  Font.load('Bravura', Bravura.data, Bravura.metrics);
+  Font.load('Gonville', Gonville.data, Gonville.metrics);
+  Font.load('Custom', Custom.data, Custom.metrics);
   Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
 
-  Flow.setMusicFontStack([bravuraFont, gonvilleFont, customFont]);
+  Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
 }

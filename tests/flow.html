@@ -103,20 +103,14 @@
       }
 
       // Load qunit.js as late as possible to avoid a race condition!
-      // The QUnit module drop down box doesn't appear if Vex.Flow.Test.run() runs too late.
+      // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
       await loadScript('support/qunit.js');
 
       // Show only failed tests.
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
 
-      if (VF.Test.run) {
-        // 4.0.0 and newer.
-        VF.Test.run();
-      } else if (VF.Test.runTests) {
-        // 3.0.9 and older.
-        VF.Test.runTests();
-      }
+      VF.Test.run();
     </script>
   </body>
 </html>

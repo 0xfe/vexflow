@@ -269,7 +269,7 @@ export class CanvasContext extends RenderContext {
   setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
     const fontInfo = Font.validate(f, size, weight, style);
     this.context2D.font = Font.toCSSString(fontInfo);
-    this.textHeight = Font.toPixels(fontInfo.size);
+    this.textHeight = Font.convertSizeToPixelValue(fontInfo.size);
     return this;
   }
 

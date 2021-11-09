@@ -95,7 +95,7 @@ class MeasureTextCache {
 
     // Remove the trailing 'pt' from the font size and scale to convert from points to canvas pixel units.
     // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    const height = Font.toPixels(fontSizeInPt);
+    const height = Font.convertSizeToPixelValue(fontSizeInPt);
 
     return { width: bbox.width, height: height };
   }

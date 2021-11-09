@@ -8,6 +8,7 @@ import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { RenderContext } from '../src/rendercontext';
 import { ContextBuilder, Renderer } from '../src/renderer';
+import * as TestModule from './';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
@@ -29,13 +30,13 @@ export interface TestOptions {
 }
 
 // Each test case will switch through the available fonts, and then restore the original font when done.
-let originalFontStack: Font[];
+let originalFontNames: string[];
 function useTempFontStack(fontName: string): void {
-  originalFontStack = Flow.getMusicFontStack();
+  originalFontNames = Flow.getMusicFont();
   Flow.setMusicFont(...VexFlowTests.FONT_STACKS[fontName]);
 }
 function restoreOriginalFontStack(): void {
-  Flow.setMusicFontStack(originalFontStack);
+  Flow.setMusicFont(...originalFontNames);
 }
 
 // A micro util inspired by jQuery.
@@ -111,17 +112,16 @@ const NODE_TEST_CONFIG = {
   fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
 };
 
-/**
- *
- */
-class VexFlowTests {
+export class VexFlowTests {
+  // flow.html calls this to invoke all the tests.
+  static run(): void {
+    loadedTests.forEach((test) => test.Start());
+  }
+
   // See: generate_png_images.js
   // Provides access to Node JS fs & process.
   // eslint-disable-next-line
   static shims: any;
-
-  // Defined in run.ts
-  static run: () => void;
 
   static RUN_CANVAS_TESTS = true;
   static RUN_SVG_TESTS = true;
@@ -134,9 +134,8 @@ class VexFlowTests {
   static Font = { size: 10 };
 
   /**
-   *
+   * Each font stack is a prioritized list of font names.
    */
-  // RONYEH: Fonts are now specified by font name.
   static FONT_STACKS: Record<string, string[]> = {
     Bravura: ['Bravura', 'Gonville', 'Custom'],
     Gonville: ['Gonville', 'Bravura', 'Custom'],
@@ -319,11 +318,44 @@ global.almostEqual = (value: number, expectedValue: number, errorMargin: number)
  * Used with array.reduce(...) to flatten arrays of arrays in the tests.
  */
 // eslint-disable-next-line
-const concat = (a: any[], b: any[]): any[] => a.concat(b);
+export const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
 /** Used in KeySignature and ClefKeySignature Tests. */
-const MAJOR_KEYS = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
-const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'];
+export const MAJOR_KEYS = [
+  //
+  'C',
+  'F',
+  'Bb',
+  'Eb',
+  'Ab',
+  'Db',
+  'Gb',
+  'Cb',
+  'G',
+  'D',
+  'A',
+  'E',
+  'B',
+  'F#',
+  'C#',
+];
+export const MINOR_KEYS = [
+  'Am',
+  'Dm',
+  'Gm',
+  'Cm',
+  'Fm',
+  'Bbm',
+  'Ebm',
+  'Abm',
+  'Em',
+  'Bm',
+  'F#m',
+  'C#m',
+  'G#m',
+  'D#m',
+  'A#m',
+];
 
 // We no longer provide a global.VF in tests.
 // Everything can be accessed via Vex.Flow.* and Vex.Flow.Test.* or by importing the class directly.
@@ -331,5 +363,12 @@ const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm
 // @ts-ignore
 Flow.Test = VexFlowTests;
 
-export { concat, MAJOR_KEYS, MINOR_KEYS, VexFlowTests };
-export default VexFlowTests;
+// eslint-disable-next-line
+const loadedTests: any[] = [];
+export function loadTests(tests: typeof TestModule): void {
+  for (const testName in tests) {
+    // eslint-disable-next-line
+    // @ts-ignore
+    loadedTests.push(tests[testName]);
+  }
+}

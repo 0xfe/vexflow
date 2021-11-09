@@ -63,9 +63,9 @@ export abstract class Element {
   /**
    * Some elements include text.
    * The `textFont` property contains information required to style the text (i.e., font family, size, weight, and style).
-   * It starts as `undefined`, and must be set using `setFont()` or `resetFont()`.
+   * It is undefined by default, and can be set using `setFont(...)` or `resetFont()`.
    */
-  protected textFont?: Required<FontInfo> = undefined;
+  protected textFont?: Required<FontInfo>;
 
   constructor() {
     this.attrs = {
@@ -119,9 +119,10 @@ export abstract class Element {
       // The else case below seems like it should be equivalent to this case.
       this.textFont = { ...defaultTextFont };
     } else {
-      // `font` is case 3) a font family string (e.g., 'Times New Roman')
-      // or it is undefined while one or more of the other arguments is provided.
-      // Following CSS conventions, any unspecified params are reset to the default.
+      // `font` is case 3) a font family string (e.g., 'Times New Roman').
+      // The other parameters represent the size, weight, and style.
+      // It is okay for `font` to be undefined while one or more of the other arguments is provided.
+      // Following CSS conventions, unspecified params are reset to the default.
       this.textFont = Font.validate(
         font ?? defaultTextFont.family,
         size ?? defaultTextFont.size,
@@ -141,12 +142,31 @@ export abstract class Element {
   }
 
   getFont(): string {
+    if (!this.textFont) {
+      this.resetFont();
+    }
     return Font.toCSSString(this.textFont);
   }
 
-  /** Return a copy of the FontInfo object, or undefined if `setFont()` has never been called. */
-  getFontInfo(): Required<FontInfo> | undefined {
-    return this.textFont ? { ...this.textFont } : undefined;
+  /** Return a copy of the current FontInfo object. */
+  getFontInfo(): Required<FontInfo> {
+    if (!this.textFont) {
+      this.resetFont();
+    }
+    // We can cast to Required<FontInfo> here, because
+    // we just called resetFont() above to ensure this.textFont is set.
+    return { ...this.textFont } as Required<FontInfo>;
+  }
+
+  /**
+   * @returns the font size in `pt`.
+   */
+  getFontSizeInPoints(): number {
+    return Font.convertSizeToPointValue(this.textFont?.size);
+  }
+
+  getFontSizeInPixels(): number {
+    return Font.convertSizeToPixelValue(this.textFont?.size);
   }
 
   set font(f: string) {
@@ -155,6 +175,45 @@ export abstract class Element {
 
   get font(): string {
     return Font.toCSSString(this.textFont);
+  }
+
+  /** Change the font size, while keeping everything else the same. */
+  setFontSize(size?: string | number): this {
+    const currFont = this.getFontInfo();
+    if (currFont !== undefined) {
+      this.setFont(currFont.family, size, currFont.weight, currFont.style);
+    } else {
+      this.setFont(undefined, size);
+    }
+    return this;
+  }
+
+  getFontSize(): string | number {
+    return this.fontSize;
+  }
+
+  /**
+   * The size is 1) a string of the form '10pt' or '16px', compatible with the CSS font-size property.
+   *          or 2) a number, which is interpreted as a point size (i.e. 12 == '12pt').
+   */
+  set fontSize(size: string | number) {
+    this.setFontSize(size);
+  }
+
+  /**
+   * Inspired by the CSS font-size property.
+   */
+  get fontSize(): string | number {
+    if (!this.textFont) {
+      this.resetFont();
+    }
+    // this.textFont was set by this.resetFont();
+    // eslint-disable-next-line
+    return this.textFont!.size;
+  }
+
+  get fontSizeInPoints(): number {
+    return this.getFontSizeInPoints();
   }
 
   /** Set the draw style of a stemmable note. */

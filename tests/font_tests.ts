@@ -5,6 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Accidental, Element, PedalMarking } from '../src';
 import { Bend } from '../src/bend';
 import { CanvasContext } from '../src/canvascontext';
 import { Flow } from '../src/flow';
@@ -17,12 +18,12 @@ import { Voice } from '../src/voice';
 const FontTests = {
   Start(): void {
     QUnit.module('Font');
-    test('setFont Method', setFont);
-    test('Font Parsing', fontParsing);
+    test('setFont', setFont);
+    test('Parsing', fontParsing);
+    test('Sizes', fontSizes);
     const run = VexFlowTests.runTests;
     run('Set Text Font to Georgia', setTextFontToGeorgia);
-    run('Force Petaluma Music Font', setMusicFontToPetaluma);
-    // RONYEH MORE TESTS.....
+    run('Set Music Font to Petaluma', setMusicFontToPetaluma);
   },
 };
 
@@ -38,17 +39,30 @@ function setFont(): void {
   ctx.setFont('PetalumaScript', '100px', 'bold');
   equal(ctx.font, 'bold 100px PetalumaScript');
 
-  // Not all elements render text. By default the font is `undefined`.
   const voice = new Voice();
-  equal(voice.getFontInfo(), undefined);
-  // But we can set the font for fun.
+  // Many elements do not override the default Element.TEXT_FONT.
+  propEqual(voice.getFontInfo(), Element.TEXT_FONT);
   voice.setFont('bold 32pt Arial');
   const fontInfo = voice.getFontInfo();
   equal(fontInfo?.size, '32pt');
 
-  // TODO: Call setFont() with some arguments undefined.
-
-  // TODO: Call setFont() with weight and style as empty strings. '' should be equivalent to 'normal'.
+  const flat = new Accidental('b');
+  // eslint-disable-next-line
+  // @ts-ignore access a protected member for testing purposes.
+  equal(flat.textFont, undefined); // The internal instance variable .textFont is undefined by default.
+  // Add italic to the default font as defined in Element.TEXT_FONT (since Accidental does not override TEXT_FONT).
+  flat.setFont(undefined, undefined, undefined, FontStyle.ITALIC);
+  equal(flat.getFont(), 'italic 10pt Arial, sans-serif');
+  // Anything that is not set will be reset to the defaults.
+  flat.setFont(undefined, undefined, FontWeight.BOLD, undefined);
+  equal(flat.getFont(), 'bold 10pt Arial, sans-serif');
+  flat.setFont(undefined, undefined, FontWeight.BOLD, FontStyle.ITALIC);
+  equal(flat.getFont(), 'italic bold 10pt Arial, sans-serif');
+  flat.setFont(undefined, undefined, FontWeight.BOLD, 'oblique');
+  equal(flat.getFont(), 'oblique bold 10pt Arial, sans-serif');
+  // '' is equivalent to 'normal'. Neither will be included in the CSS font string.
+  flat.setFont(undefined, undefined, 'normal', '');
+  equal(flat.getFont(), '10pt Arial, sans-serif');
 }
 
 function fontParsing(): void {
@@ -73,8 +87,33 @@ function fontParsing(): void {
 
   // The line-height /3 is currently ignored.
   const f3 = Font.fromCSSString(`bold 1.5em/3 "Lucida Sans Typewriter", "Lucida Console", Consolas, monospace`);
-  const sizeInPixels = Font.toPixels(f3.size);
-  equal(sizeInPixels, 24);
+  const f3SizeInPx = Font.convertSizeToPixelValue(f3.size);
+  equal(f3SizeInPx, 24);
+}
+
+function fontSizes(): void {
+  {
+    const size = '17px';
+    const sizeInEm = Font.convertSizeToPixelValue(size) / Font.scaleToPxFrom.em;
+    equal(sizeInEm, 1.0625);
+  }
+
+  {
+    const size = '2em';
+    const sizeInPx = Font.convertSizeToPixelValue(size);
+    equal(sizeInPx, 32);
+  }
+
+  {
+    const pedal = new PedalMarking([]);
+    equal(pedal.getFont(), 'italic bold 12pt Times New Roman, serif');
+    equal(pedal.getFontSizeInPoints(), 12);
+    equal(pedal.getFontSizeInPixels(), 16);
+    const doubledSize = Font.scaleSize(pedal.getFontSizeInPoints(), 2); // Double the font size.
+    equal(doubledSize, 24);
+
+    equal(Font.scaleSize('1.5em', 3), '4.5em');
+  }
 }
 
 function setTextFontToGeorgia(options: TestOptions): void {

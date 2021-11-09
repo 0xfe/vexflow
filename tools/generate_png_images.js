@@ -124,6 +124,8 @@ const appMain = (onArg) => {
   return true;
 };
 
+// Produce filenames that match version 3.0.9.
+// Remove the .Bravura from the filename.
 const compatMode = {
   mode: null,
   MODES: {
@@ -135,7 +137,7 @@ const compatMode = {
     }
     // see tests/vexflow_test_helpers.ts:runNodeTestHelper():onlyBravura mode.
     fs.readdirSync(imageDir).forEach((filename) => {
-      var matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
+      const matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
       if (matches && matches[2]) {
         const backCompatFileName = `${matches[1]}.${matches[3]}`;
         fs.renameSync(path.join(imageDir, filename), path.join(imageDir, backCompatFileName));
@@ -232,6 +234,6 @@ VFT.NODE_FONT_STACKS = fontStacksToTest;
 fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
 // Run all tests.
-VFT.run();
+VFT.runTests();
 
 compatMode.fixFileNames();

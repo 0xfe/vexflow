@@ -258,9 +258,7 @@ export class ChordSymbol extends Modifier {
     const reportedWidths = [];
 
     for (const symbol of symbols) {
-      // symbol.textFont was initialized by the constructor via this.resetFont().
-      // eslint-disable-next-line
-      const fontSize = Font.convertSizeToNumber(symbol.textFont!.size);
+      const fontSize = Font.convertSizeToPointValue(symbol.textFont?.size);
       const fontAdj = Font.scaleSize(fontSize, 0.05);
       const glyphAdj = fontAdj * 2;
       let lineSpaces = 1;
@@ -628,12 +626,6 @@ export class ChordSymbol extends Modifier {
   setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
     super.setFont(f, size, weight, style);
     this.textFormatter = TextFormatter.create(this.textFont);
-    return this;
-  }
-
-  /** Just change the font size, while keeping everything else the same. */
-  setFontSize(size: number): this {
-    this.setFont({ ...this.textFont, size });
     return this;
   }
 

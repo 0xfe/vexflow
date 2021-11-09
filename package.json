@@ -4,27 +4,27 @@
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "exports": {
     ".": {
-      "types": "./build/src/entry/allFonts.d.ts",
+      "types": "./build/src/entry/vexflow.d.ts",
       "require": "./build/vexflow.js",
       "import": "./build/esm/vexflow.js"
     },
     "./core": {
-      "types": "./build/src/entry/zeroFonts.d.ts",
+      "types": "./build/src/entry/vexflow-core.d.ts",
       "require": "./build/vexflow-core.js",
       "import": "./build/esm/vexflow-core.js"
     },
-    "./withBravura": {
-      "types": "./build/src/entry/withBravura.d.ts",
+    "./core-with-bravura": {
+      "types": "./build/src/entry/vexflow-core-with-bravura.d.ts",
       "require": "./build/vexflow-core-with-bravura.js",
       "import": "./build/esm/vexflow-core-with-bravura.js"
     },
-    "./withGonville": {
-      "types": "./build/src/entry/withGonville.d.ts",
+    "./core-with-gonville": {
+      "types": "./build/src/entry/vexflow-core-with-gonville.d.ts",
       "require": "./build/vexflow-core-with-gonville.js",
       "import": "./build/esm/vexflow-core-with-gonville.js"
     },
-    "./withPetaluma": {
-      "types": "./build/src/entry/withPetaluma.d.ts",
+    "./core-with-petaluma": {
+      "types": "./build/src/entry/vexflow-core-with-petaluma.d.ts",
       "require": "./build/vexflow-core-with-petaluma.js",
       "import": "./build/esm/vexflow-core-with-petaluma.js"
     }

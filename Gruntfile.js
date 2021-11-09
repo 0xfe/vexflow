@@ -5,40 +5,21 @@ const webpack = require('webpack');
 const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 
-// Output file names.
+// A module entry file `src/entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
-const VEX = 'vexflow.js';
-const VEX_CORE = 'vexflow-core.js';
-const VEX_CORE_BRAVURA = 'vexflow-core-with-bravura.js';
-const VEX_CORE_GONVILLE = 'vexflow-core-with-gonville.js';
-const VEX_CORE_PETALUMA = 'vexflow-core-with-petaluma.js';
-const VEX_DEBUG = 'vexflow-debug.js';
-const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests.js';
-const VEX_FONT_CHUNK = 'vexflow-font-[name].js'; // Fonts for dynamic import. See: webpackChunkName in async.ts
+const VEX = 'vexflow';
+const VEX_CORE = 'vexflow-core';
+const VEX_CORE_BRAVURA = 'vexflow-core-with-bravura';
+const VEX_CORE_GONVILLE = 'vexflow-core-with-gonville';
+const VEX_CORE_PETALUMA = 'vexflow-core-with-petaluma';
+const VEX_DEBUG = 'vexflow-debug';
+const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
-
-// Each output file above is associated with a particular module entry file.
-// The module entry files are in `src/entry/`.
-const MODULE_ENTRIES = {
-  VEX: 'allFonts.ts',
-  VEX_CORE: 'zeroFonts.ts',
-  VEX_CORE_BRAVURA: 'withBravura.ts',
-  VEX_CORE_GONVILLE: 'withGonville.ts',
-  VEX_CORE_PETALUMA: 'withPetaluma.ts',
-  VEX_DEBUG: 'allFontsDebug.ts',
-  VEX_DEBUG_TESTS: 'allFontsDebugWithTests.ts',
-};
-
-// Turn the module entry file names into full paths.
-// For example: MODULE_ENTRIES[VEX_CORE_PETALUMA] => vexflow/src/entry/withPetaluma.ts
-for (const [moduleName, entryFileName] of Object.entries(MODULE_ENTRIES)) {
-  MODULE_ENTRIES[moduleName] = path.join(BASE_DIR, 'src/entry/', entryFileName);
-}
 
 // Global variables that will be set below.
 let PACKAGE_JSON;
@@ -54,7 +35,11 @@ const DEVELOPMENT_MODE = 'development';
 /**
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
  */
-function getConfig(outputFile, moduleEntry, useCodeSplitting = false, mode = PRODUCTION_MODE) {
+function getConfig(file, useCodeSplitting = false, mode = PRODUCTION_MODE) {
+  // The module entry is a full path to a typescript file stored in vexflow/src/entry/.
+  const entry = path.join(BASE_DIR, 'src/entry/', file + '.ts');
+  const outputFilename = file + '.js';
+
   // Support different ways of loading VexFlow.
   // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
   // VexFlow is exported as root["Vex"], and can be accessed via:
@@ -68,16 +53,17 @@ function getConfig(outputFile, moduleEntry, useCodeSplitting = false, mode = PRO
   let chunkFilename = undefined;
   if (useCodeSplitting) {
     globalObject = undefined;
-    chunkFilename = VEX_FONT_CHUNK;
+    // Font files for dynamic import. See: webpackChunkName in async.ts
+    chunkFilename = 'vexflow-font-[name].js';
   }
 
   return {
     mode: mode,
-    entry: moduleEntry,
+    entry: entry,
     output: {
       path: BUILD_DIR,
-      filename: outputFile,
-      chunkFilename,
+      filename: outputFilename,
+      chunkFilename: chunkFilename,
       library: {
         name: 'Vex',
         type: 'umd',
@@ -139,15 +125,15 @@ module.exports = (grunt) => {
     `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
   // We need a different webpack config for each build target.
-  const prodAllFonts = getConfig(VEX, MODULE_ENTRIES.VEX, false);
-  const prodNoFonts = getConfig(VEX_CORE, MODULE_ENTRIES.VEX_CORE, true);
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, MODULE_ENTRIES.VEX_CORE_BRAVURA, true);
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, MODULE_ENTRIES.VEX_CORE_GONVILLE, true);
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, MODULE_ENTRIES.VEX_CORE_PETALUMA, true);
+  const prodAllFonts = getConfig(VEX, false);
+  const prodNoFonts = getConfig(VEX_CORE, true);
+  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, true);
+  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, true);
+  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, true);
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
-  const debugAllFonts = getConfig(VEX_DEBUG, MODULE_ENTRIES.VEX_DEBUG, false, DEVELOPMENT_MODE);
-  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, MODULE_ENTRIES.VEX_DEBUG_TESTS, false, DEVELOPMENT_MODE);
-  const debugNoFonts = getConfig(VEX_CORE, MODULE_ENTRIES.VEX_CORE, true, DEVELOPMENT_MODE);
+  const debugAllFonts = getConfig(VEX_DEBUG, false, DEVELOPMENT_MODE);
+  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, false, DEVELOPMENT_MODE);
+  const debugNoFonts = getConfig(VEX_CORE, true, DEVELOPMENT_MODE);
 
   // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
   const watch = {
@@ -189,12 +175,12 @@ module.exports = (grunt) => {
       debug: [
         // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
         'webpack:watchDebug',
-        // 'webpack:watchDebugPlusTests',
+        'webpack:watchDebugPlusTests',
       ],
       production: [
         // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
         'webpack:watchProdAllFonts',
-        // 'webpack:watchProdNoFonts',
+        'webpack:watchProdNoFonts',
       ],
     },
 
@@ -255,7 +241,6 @@ export default Vex;`;
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
-          // exclude: ['./src/entry/*.ts'],
         },
         src: ['./src/index.ts'],
       },

@@ -3,7 +3,7 @@
 //
 // Support Dynamic Importing of Music Engraving Fonts
 //
-// zeroFonts.ts is the entry point for `vexflow-core.js`.
+// vexflow-core.ts is the entry point for output file vexflow-core.js.
 // It will not load any music fonts by default.
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading music fonts (e.g., Bravura, Petaluma, Gonville) on the fly.
@@ -19,6 +19,4 @@ setupAsyncFontLoader();
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
-console.log('entry/zeroFonts');
-
-export * from '../index';
+export * from '../';
