@@ -55,6 +55,7 @@ function basic(): void {
   tF_n.divide(2);
   ok(tF_n.equals(2), 'Fraction: 4 / 2 equals 2');
 
+  // Lowest common multiple.
   equal(Fraction.LCMM([]), 0);
   equal(Fraction.LCMM([17]), 17);
   equal(Fraction.LCMM([2, 5]), 10);
@@ -62,6 +63,13 @@ function basic(): void {
   equal(Fraction.LCMM([2, 4, 6]), 12);
   equal(Fraction.LCMM([2, 3, 4, 5]), 60);
   equal(Fraction.LCMM([12, 15, 10, 75]), 300);
+
+  // Greatest common divisor.
+  equal(Fraction.GCD(0, 0), 0);
+  equal(Fraction.GCD(0, 99), 99);
+  equal(Fraction.GCD(77, 0), 77);
+  equal(Fraction.GCD(42, 14), 14);
+  equal(Fraction.GCD(15, 10), 5);
 }
 
 function withOtherFractions(): void {
