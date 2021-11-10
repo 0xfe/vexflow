@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // Author: Raffaele Viglianti, 2012 http://itisnotsound.wordpress.com/
@@ -50,8 +50,8 @@ export class StaveHairpin extends Element {
    *
    *  {
    *   height: px,
-   *   y_shift: px, //vertical offset
-   *   left_shift_ticks: 0, //left horizontal offset expressed in ticks
+   *   y_shift: px,         // vertical offset
+   *   left_shift_ticks: 0, // left horizontal offset expressed in ticks
    *   right_shift_ticks: 0 // right horizontal offset expressed in ticks
    *  }
    *
