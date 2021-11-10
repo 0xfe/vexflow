@@ -351,9 +351,6 @@ const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: n
   accidentalWilsonMinus: { code: 'accidentalWilsonMinus', parenRightPaddingAdjustment: -1 },
 };
 
-// eslint-disable-next-line
-let duration_codes: Record<string, any>;
-
 export const Tables = {
   STEM_WIDTH: 1.5,
   STEM_HEIGHT: 35,
@@ -818,536 +815,14 @@ export const Tables = {
 
   // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
   // eslint-disable-next-line
-  getGlyphProps(duration: string, type?: string): any {
-    duration_codes = duration_codes || {
-      '1/2': {
-        common: {
-          stem: false,
-          stem_offset: 0,
-          flag: false,
-          stem_up_extension: -Tables.STEM_HEIGHT,
-          stem_down_extension: -Tables.STEM_HEIGHT,
-          tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
-          tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Breve note
-            code_head: 'noteheadDoubleWhole',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDoubleWhole', scale);
-            },
-          },
-          h: {
-            // Breve note harmonic
-            code_head: 'unpitchedPercussionClef1',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('unpitchedPercussionClef1', scale);
-            },
-          },
-          m: {
-            // Breve note muted -
-            code_head: 'vexNoteHeadMutedBreve',
-            stem_offset: 0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
-            },
-          },
-          r: {
-            // Breve rest
-            code_head: 'restDoubleWhole',
-            rest: true,
-            position: 'B/5',
-            dot_shiftY: 0.5,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('restDoubleWhole', scale);
-            },
-          },
-          s: {
-            // Breve note slash -
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      1: {
-        common: {
-          stem: false,
-          stem_offset: 0,
-          flag: false,
-          stem_up_extension: -Tables.STEM_HEIGHT,
-          stem_down_extension: -Tables.STEM_HEIGHT,
-          tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
-          tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Whole note
-            code_head: 'noteheadWhole',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadWhole', scale);
-            },
-          },
-          h: {
-            // Whole note harmonic
-            code_head: 'noteheadDiamondWhole',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondWhole', scale);
-            },
-          },
-          m: {
-            // Whole note muted
-            code_head: 'noteheadXWhole',
-            stem_offset: -3,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXWhole', scale);
-            },
-          },
-          r: {
-            // Whole rest
-            code_head: 'restWhole',
-            rest: true,
-            position: 'D/5',
-            dot_shiftY: 0.5,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('restWhole', scale);
-            },
-          },
-          s: {
-            // Whole note slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      2: {
-        common: {
-          stem: true,
-          stem_offset: 0,
-          flag: false,
-          stem_up_extension: 0,
-          stem_down_extension: 0,
-          tabnote_stem_up_extension: 0,
-          tabnote_stem_down_extension: 0,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Half note
-            code_head: 'noteheadHalf',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadHalf', scale);
-            },
-          },
-          h: {
-            // Half note harmonic
-            code_head: 'noteheadDiamondHalf',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondHalf', scale);
-            },
-          },
-          m: {
-            // Half note muted
-            code_head: 'noteheadXHalf',
-            stem_offset: -3,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXHalf', scale);
-            },
-          },
-          r: {
-            // Half rest
-            code_head: 'restHalf',
-            stem: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -0.5,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('restHalf', scale);
-            },
-          },
-          s: {
-            // Half note slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      4: {
-        common: {
-          stem: true,
-          stem_offset: 0,
-          flag: false,
-          stem_up_extension: 0,
-          stem_down_extension: 0,
-          tabnote_stem_up_extension: 0,
-          tabnote_stem_down_extension: 0,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Quarter note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Quarter harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Quarter muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Quarter rest
-            code_head: 'restQuarter',
-            stem: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -0.5,
-            line_above: 1.5,
-            line_below: 1.5,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('restQuarter', scale);
-            },
-          },
-          s: {
-            // Quarter slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      8: {
-        common: {
-          stem: true,
-          stem_offset: 0,
-          flag: true,
-          beam_count: 1,
-          code_flag_upstem: 'flag8thUp',
-          code_flag_downstem: 'flag8thDown',
-          stem_up_extension: 0,
-          stem_down_extension: 0,
-          tabnote_stem_up_extension: 0,
-          tabnote_stem_down_extension: 0,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Eighth note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Eighth note harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Eighth note muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Eighth rest
-            code_head: 'rest8th',
-            stem: false,
-            flag: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -0.5,
-            line_above: 1.0,
-            line_below: 1.0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('rest8th', scale);
-            },
-          },
-          s: {
-            // Eight slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      16: {
-        common: {
-          beam_count: 2,
-          stem: true,
-          stem_offset: 0,
-          flag: true,
-          code_flag_upstem: 'flag16thUp',
-          code_flag_downstem: 'flag16thDown',
-          stem_up_extension: 0,
-          stem_down_extension: 0,
-          tabnote_stem_up_extension: 0,
-          tabnote_stem_down_extension: 0,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Sixteenth note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Sixteenth note harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Sixteenth note muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Sixteenth rest
-            code_head: 'rest16th',
-            stem: false,
-            flag: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -0.5,
-            line_above: 1.0,
-            line_below: 2.0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('rest16th', scale);
-            },
-          },
-          s: {
-            // Sixteenth slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      32: {
-        common: {
-          beam_count: 3,
-          stem: true,
-          stem_offset: 0,
-          flag: true,
-          code_flag_upstem: 'flag32ndUp',
-          code_flag_downstem: 'flag32ndDown',
-          stem_up_extension: 9,
-          stem_down_extension: 9,
-          tabnote_stem_up_extension: 8,
-          tabnote_stem_down_extension: 5,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Thirty-second note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Thirty-second harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Thirty-second muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Thirty-second rest
-            code_head: 'rest32nd',
-            stem: false,
-            flag: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -1.5,
-            line_above: 2.0,
-            line_below: 2.0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('rest32nd', scale);
-            },
-          },
-          s: {
-            // Thirty-second slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      64: {
-        common: {
-          beam_count: 4,
-          stem: true,
-          stem_offset: 0,
-          flag: true,
-          code_flag_upstem: 'flag64thUp',
-          code_flag_downstem: 'flag64thDown',
-          stem_up_extension: 13,
-          stem_down_extension: 13,
-          tabnote_stem_up_extension: 12,
-          tabnote_stem_down_extension: 9,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Sixty-fourth note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Sixty-fourth harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Sixty-fourth muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Sixty-fourth rest
-            code_head: 'rest64th',
-            stem: false,
-            flag: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -1.5,
-            line_above: 2.0,
-            line_below: 3.0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('rest64th', scale);
-            },
-          },
-          s: {
-            // Sixty-fourth slash
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-      128: {
-        common: {
-          beam_count: 5,
-          stem: true,
-          stem_offset: 0,
-          flag: true,
-          code_flag_upstem: 'flag128thUp',
-          code_flag_downstem: 'flag128thDown',
-          stem_up_extension: 22,
-          stem_down_extension: 22,
-          tabnote_stem_up_extension: 21,
-          tabnote_stem_down_extension: 18,
-          dot_shiftY: 0,
-          line_above: 0,
-          line_below: 0,
-        },
-        type: {
-          n: {
-            // Hundred-twenty-eight note
-            code_head: 'noteheadBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadBlack', scale);
-            },
-          },
-          h: {
-            // Hundred-twenty-eight harmonic
-            code_head: 'noteheadDiamondBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadDiamondBlack', scale);
-            },
-          },
-          m: {
-            // Hundred-twenty-eight muted
-            code_head: 'noteheadXBlack',
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('noteheadXBlack', scale);
-            },
-          },
-          r: {
-            // Hundred-twenty-eight rest
-            code_head: 'rest128th',
-            stem: false,
-            flag: false,
-            rest: true,
-            position: 'B/4',
-            dot_shiftY: -2.5,
-            line_above: 3.0,
-            line_below: 3.0,
-            getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-              return Glyph.getWidth('rest128th', scale);
-            },
-          },
-          s: {
-            // Hundred-twenty-eight rest
-            // Drawn with canvas primitives
-            getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-            position: 'B/4',
-          },
-        },
-      },
-    };
-
+  getGlyphProps(duration: string, type?: string): any | undefined {
     duration = Tables.sanitizeDuration(duration);
     type = type || 'n'; // default type is a regular note
 
     // Lookup duration for default glyph head code
     const code = duration_codes[duration];
     if (code === undefined) {
-      return;
+      return undefined;
     }
 
     // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
@@ -1358,9 +833,9 @@ export const Tables = {
       // Try and get it from the custom list of note heads
       const customGlyphTypeProperties = customNoteHeads[type.toUpperCase()];
 
-      // If not, then return with nothing
+      // If not, then return with nothing.
       if (customGlyphTypeProperties === undefined) {
-        return;
+        return undefined;
       }
 
       // Otherwise set it as the code_head value
@@ -1387,5 +862,540 @@ export const Tables = {
     num_beats: 4,
     beat_value: 4,
     resolution: RESOLUTION,
+  },
+};
+
+// 1/2, 1, 2, 4, 8, 16, 32, 64, 128
+// NOTE: There is no 256 here! However, there are other mentions of 256 in this file.
+// For example, in durations has a 256 key, and sanitizeDuration() can return 256.
+// The sanitizeDuration() bit may need to be removed by 0xfe.
+// eslint-disable-next-line
+let duration_codes: Record<string, any> = {
+  '1/2': {
+    common: {
+      stem: false,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: -Tables.STEM_HEIGHT,
+      stem_down_extension: -Tables.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Breve note
+        code_head: 'noteheadDoubleWhole',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDoubleWhole', scale);
+        },
+      },
+      h: {
+        // Breve note harmonic
+        code_head: 'unpitchedPercussionClef1',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('unpitchedPercussionClef1', scale);
+        },
+      },
+      m: {
+        // Breve note muted
+        code_head: 'vexNoteHeadMutedBreve',
+        stem_offset: 0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
+        },
+      },
+      r: {
+        // Breve rest
+        code_head: 'restDoubleWhole',
+        rest: true,
+        position: 'B/5',
+        dot_shiftY: 0.5,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('restDoubleWhole', scale);
+        },
+      },
+      s: {
+        // Breve note slash -
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  1: {
+    common: {
+      stem: false,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: -Tables.STEM_HEIGHT,
+      stem_down_extension: -Tables.STEM_HEIGHT,
+      tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
+      tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Whole note
+        code_head: 'noteheadWhole',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadWhole', scale);
+        },
+      },
+      h: {
+        // Whole note harmonic
+        code_head: 'noteheadDiamondWhole',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondWhole', scale);
+        },
+      },
+      m: {
+        // Whole note muted
+        code_head: 'noteheadXWhole',
+        stem_offset: -3,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXWhole', scale);
+        },
+      },
+      r: {
+        // Whole rest
+        code_head: 'restWhole',
+        rest: true,
+        position: 'D/5',
+        dot_shiftY: 0.5,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('restWhole', scale);
+        },
+      },
+      s: {
+        // Whole note slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  2: {
+    common: {
+      stem: true,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Half note
+        code_head: 'noteheadHalf',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadHalf', scale);
+        },
+      },
+      h: {
+        // Half note harmonic
+        code_head: 'noteheadDiamondHalf',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondHalf', scale);
+        },
+      },
+      m: {
+        // Half note muted
+        code_head: 'noteheadXHalf',
+        stem_offset: -3,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXHalf', scale);
+        },
+      },
+      r: {
+        // Half rest
+        code_head: 'restHalf',
+        stem: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -0.5,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('restHalf', scale);
+        },
+      },
+      s: {
+        // Half note slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  4: {
+    common: {
+      stem: true,
+      stem_offset: 0,
+      flag: false,
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Quarter note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Quarter harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Quarter muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Quarter rest
+        code_head: 'restQuarter',
+        stem: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -0.5,
+        line_above: 1.5,
+        line_below: 1.5,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('restQuarter', scale);
+        },
+      },
+      s: {
+        // Quarter slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  8: {
+    common: {
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      beam_count: 1,
+      code_flag_upstem: 'flag8thUp',
+      code_flag_downstem: 'flag8thDown',
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Eighth note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Eighth note harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Eighth note muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Eighth rest
+        code_head: 'rest8th',
+        stem: false,
+        flag: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -0.5,
+        line_above: 1.0,
+        line_below: 1.0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('rest8th', scale);
+        },
+      },
+      s: {
+        // Eight slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  16: {
+    common: {
+      beam_count: 2,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: 'flag16thUp',
+      code_flag_downstem: 'flag16thDown',
+      stem_up_extension: 0,
+      stem_down_extension: 0,
+      tabnote_stem_up_extension: 0,
+      tabnote_stem_down_extension: 0,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Sixteenth note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Sixteenth note harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Sixteenth note muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Sixteenth rest
+        code_head: 'rest16th',
+        stem: false,
+        flag: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -0.5,
+        line_above: 1.0,
+        line_below: 2.0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('rest16th', scale);
+        },
+      },
+      s: {
+        // Sixteenth slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  32: {
+    common: {
+      beam_count: 3,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: 'flag32ndUp',
+      code_flag_downstem: 'flag32ndDown',
+      stem_up_extension: 9,
+      stem_down_extension: 9,
+      tabnote_stem_up_extension: 8,
+      tabnote_stem_down_extension: 5,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Thirty-second note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Thirty-second harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Thirty-second muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Thirty-second rest
+        code_head: 'rest32nd',
+        stem: false,
+        flag: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -1.5,
+        line_above: 2.0,
+        line_below: 2.0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('rest32nd', scale);
+        },
+      },
+      s: {
+        // Thirty-second slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  64: {
+    common: {
+      beam_count: 4,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: 'flag64thUp',
+      code_flag_downstem: 'flag64thDown',
+      stem_up_extension: 13,
+      stem_down_extension: 13,
+      tabnote_stem_up_extension: 12,
+      tabnote_stem_down_extension: 9,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Sixty-fourth note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Sixty-fourth harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Sixty-fourth muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Sixty-fourth rest
+        code_head: 'rest64th',
+        stem: false,
+        flag: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -1.5,
+        line_above: 2.0,
+        line_below: 3.0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('rest64th', scale);
+        },
+      },
+      s: {
+        // Sixty-fourth slash
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
+  },
+
+  128: {
+    common: {
+      beam_count: 5,
+      stem: true,
+      stem_offset: 0,
+      flag: true,
+      code_flag_upstem: 'flag128thUp',
+      code_flag_downstem: 'flag128thDown',
+      stem_up_extension: 22,
+      stem_down_extension: 22,
+      tabnote_stem_up_extension: 21,
+      tabnote_stem_down_extension: 18,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    type: {
+      n: {
+        // Hundred-twenty-eight note
+        code_head: 'noteheadBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadBlack', scale);
+        },
+      },
+      h: {
+        // Hundred-twenty-eight harmonic
+        code_head: 'noteheadDiamondBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadDiamondBlack', scale);
+        },
+      },
+      m: {
+        // Hundred-twenty-eight muted
+        code_head: 'noteheadXBlack',
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('noteheadXBlack', scale);
+        },
+      },
+      r: {
+        // Hundred-twenty-eight rest
+        code_head: 'rest128th',
+        stem: false,
+        flag: false,
+        rest: true,
+        position: 'B/4',
+        dot_shiftY: -2.5,
+        line_above: 3.0,
+        line_below: 3.0,
+        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+          return Glyph.getWidth('rest128th', scale);
+        },
+      },
+      s: {
+        // Hundred-twenty-eight rest
+        // Drawn with canvas primitives
+        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+        position: 'B/4',
+      },
+    },
   },
 };

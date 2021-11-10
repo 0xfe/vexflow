@@ -58,21 +58,29 @@ export class TextBracket extends Element {
 
   protected readonly text: string;
   protected readonly superscript: string;
-  protected readonly position: TextBracketPosition;
 
   protected line: number;
-  protected start: Note;
-  protected stop: Note;
 
-  /**
-   * @deprecated
-   */
-  static get Positions(): typeof TextBracketPosition {
-    L('Positions is deprecated, use TextBracketPosition instead.');
+  readonly position: TextBracketPosition;
+  readonly start: Note;
+  readonly stop: Note;
+
+  static get Position(): typeof TextBracketPosition {
     return TextBracketPosition;
   }
 
-  static get Position(): typeof TextBracketPosition {
+  static get PositionString(): Record<string, number> {
+    return {
+      top: TextBracketPosition.TOP,
+      bottom: TextBracketPosition.BOTTOM,
+    };
+  }
+
+  /**
+   * @deprecated Use `TextBracket.Position` instead.
+   */
+  static get Positions(): typeof TextBracketPosition {
+    L('Positions is deprecated, use TextBracketPosition instead.');
     return TextBracketPosition;
   }
 
@@ -82,13 +90,6 @@ export class TextBracket extends Element {
   static get PositionsString(): Record<string, number> {
     L('PositionsString is deprecated, use PositionString instead.');
     return TextBracket.PositionString;
-  }
-
-  static get PositionString(): Record<string, number> {
-    return {
-      top: TextBracketPosition.TOP,
-      bottom: TextBracketPosition.BOTTOM,
-    };
   }
 
   constructor({ start, stop, text = '', superscript = '', position = TextBracketPosition.TOP }: TextBracketParams) {

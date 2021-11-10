@@ -31,7 +31,7 @@ export class TimeSigNote extends Note {
   }
 
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

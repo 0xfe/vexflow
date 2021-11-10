@@ -113,7 +113,7 @@ export class StringNumber extends Modifier {
     return true;
   }
 
-  protected radius: number;
+  public radius: number;
   protected last_note?: Note;
   protected string_number: string;
   protected x_offset: number;

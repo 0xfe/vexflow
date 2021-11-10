@@ -102,7 +102,7 @@ export class Crescendo extends Note {
 
   // Preformat the note
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

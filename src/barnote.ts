@@ -76,7 +76,7 @@ export class BarNote extends Note {
 
   /** Overridden to ignore. */
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

@@ -290,9 +290,7 @@ function stemExtensionPitch(): void {
 
 function setStemDirectionDisplacement(): void {
   function getDisplacements(note: StaveNote) {
-    // eslint-disable-next-line
-    // @ts-ignore direct access to protected variable .note_heads
-    return note.note_heads.map((notehead) => notehead.isDisplaced());
+    return note.noteHeads.map((noteHead) => noteHead.isDisplaced());
   }
 
   const stemUpDisplacements = [false, true, false];

@@ -86,7 +86,6 @@ export class StaveConnector extends Element {
     none: StaveConnector.type.NONE,
   };
 
-  protected thickness: number;
   protected width: number;
   protected texts: {
     content: string;
@@ -94,9 +93,12 @@ export class StaveConnector extends Element {
   }[];
 
   protected type: number;
+
+  readonly top_stave: Stave;
+  readonly bottom_stave: Stave;
+  readonly thickness: number;
+
   protected x_shift: number;
-  protected top_stave: Stave;
-  protected bottom_stave: Stave;
 
   constructor(top_stave: Stave, bottom_stave: Stave) {
     super();
@@ -140,7 +142,6 @@ export class StaveConnector extends Element {
     return this;
   }
 
-  /** Set connector x shift. */
   setXShift(x_shift: number): this {
     if (typeof x_shift !== 'number') {
       throw new RuntimeError('InvalidType', 'x_shift must be a Number');
@@ -148,6 +149,10 @@ export class StaveConnector extends Element {
 
     this.x_shift = x_shift;
     return this;
+  }
+
+  getXShift(): number {
+    return this.x_shift;
   }
 
   /** Render connector and associated text. */

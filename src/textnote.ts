@@ -177,7 +177,7 @@ export class TextNote extends Note {
 
     // We reposition to the center of the note head
     this.rightDisplacedHeadPx = tickContext.getMetrics().glyphPx / 2;
-    this.setPreFormatted(true);
+    this.preFormatted = true;
   }
 
   /**

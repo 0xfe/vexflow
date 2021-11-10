@@ -29,7 +29,7 @@ export class KeySigNote extends Note {
   }
 
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     this.keySignature.setStave(this.checkStave());
     this.setWidth(this.keySignature.getWidth());
     return this;

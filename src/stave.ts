@@ -71,9 +71,10 @@ export class Stave extends Element {
     style: FontStyle.NORMAL,
   };
 
+  readonly options: Required<StaveOptions>;
+
   protected start_x: number;
   protected clef: string;
-  protected options: Required<StaveOptions>;
   protected endClef?: string;
 
   protected x: number;

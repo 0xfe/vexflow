@@ -319,7 +319,7 @@ export class TabNote extends StemmableNote {
     if (this.preFormatted) return;
     if (this.modifierContext) this.modifierContext.preFormat();
     // width is already set during init()
-    this.setPreFormatted(true);
+    this.preFormatted = true;
   }
 
   // Get the x position for the stem

@@ -84,40 +84,12 @@ export interface NoteStruct {
  * array of them. All notes also have a rendering context and belong to a stave.
  */
 export abstract class Note extends Tickable {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATIC MEMBERS
+
   static get CATEGORY(): string {
     return 'Note';
   }
-
-  keys: string[];
-  keyProps: KeyProps[];
-
-  protected stave?: Stave;
-  public render_options: {
-    draw_stem_through_stave?: boolean;
-    draw_dots?: boolean;
-    draw_stem?: boolean;
-    y_shift: number;
-    extend_left?: number;
-    extend_right?: number;
-    glyph_font_scale: number;
-    annotation_spacing: number;
-    glyph_font_size?: number;
-    scale: number;
-    font: string;
-    stroke_px: number;
-  };
-  protected duration: string;
-  protected dots: number;
-  protected leftDisplacedHeadPx: number;
-  protected rightDisplacedHeadPx: number;
-  protected noteType: string;
-  protected customGlyphs: GlyphProps[];
-  protected ys: number[];
-  // eslint-disable-next-line
-  protected glyph?: any;
-  protected customTypes: string[];
-  protected playNote?: Note;
-  protected beam?: Beam;
 
   /** Debug helper. Displays various note metrics for the given note. */
   static plotMetrics(ctx: RenderContext, note: Tickable, yPos: number): void {
@@ -240,6 +212,40 @@ export abstract class Note extends Tickable {
     };
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // INSTANCE MEMBERS
+
+  // eslint-disable-next-line
+  glyph?: any;
+  keys: string[];
+  keyProps: KeyProps[];
+
+  protected stave?: Stave;
+  public render_options: {
+    draw_stem_through_stave?: boolean;
+    draw_dots?: boolean;
+    draw_stem?: boolean;
+    y_shift: number;
+    extend_left?: number;
+    extend_right?: number;
+    glyph_font_scale: number;
+    annotation_spacing: number;
+    glyph_font_size?: number;
+    scale: number;
+    font: string;
+    stroke_px: number;
+  };
+  protected duration: string;
+  protected dots: number;
+  protected leftDisplacedHeadPx: number;
+  protected rightDisplacedHeadPx: number;
+  protected noteType: string;
+  protected customGlyphs: GlyphProps[];
+  protected ys: number[];
+  protected customTypes: string[];
+  protected playNote?: Note;
+  protected beam?: Beam;
+
   /**
    * Every note is a tickable, i.e., it can be mutated by the `Formatter` class for
    * positioning and layout.
@@ -294,7 +300,6 @@ export abstract class Note extends Tickable {
     this.leftDisplacedHeadPx = 0; // Extra room on left for displaced note head
     this.rightDisplacedHeadPx = 0; // Extra room on right for displaced note head
     this.x_shift = 0; // X shift from tick context X
-    this.preFormatted = false; // Is this note preFormatted?
     this.ys = []; // list of y coordinates for each note
     // we need to hold on to these for ties and beams.
 
@@ -345,7 +350,7 @@ export abstract class Note extends Tickable {
     stroke.setNote(this);
     stroke.setIndex(index);
     this.modifiers.push(stroke);
-    this.setPreFormatted(false);
+    this.preFormatted = false;
     return this;
   }
 
@@ -463,7 +468,7 @@ export abstract class Note extends Tickable {
   /** Attach this note to `voice`. */
   setVoice(voice: Voice): this {
     this.voice = voice;
-    this.setPreFormatted(false);
+    this.preFormatted = false;
     return this;
   }
 
@@ -475,7 +480,7 @@ export abstract class Note extends Tickable {
   /** Set the `TickContext` for this note. */
   setTickContext(tc: TickContext): this {
     this.tickContext = tc;
-    this.setPreFormatted(false);
+    this.preFormatted = false;
     return this;
   }
 
@@ -549,7 +554,7 @@ export abstract class Note extends Tickable {
     modifier.setNote(this);
     modifier.setIndex(index);
     this.modifiers.push(modifier);
-    this.setPreFormatted(false);
+    this.preFormatted = false;
     return this;
   }
 
