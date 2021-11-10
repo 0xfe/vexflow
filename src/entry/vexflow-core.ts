@@ -8,6 +8,7 @@
 // It also overrides the `Flow.setMusicFont(...)` function to be async,
 // loading music fonts (e.g., Bravura, Petaluma, Gonville) on the fly.
 
+import { Vex } from '../';
 import { setupAsyncFontLoader } from '../fonts/async';
 import { loadTextFonts } from '../fonts/textfonts';
 
@@ -20,3 +21,4 @@ setupAsyncFontLoader();
 loadTextFonts();
 
 export * from '../';
+export default Vex;

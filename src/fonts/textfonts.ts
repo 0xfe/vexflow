@@ -50,7 +50,7 @@ export function loadTextFonts() {
       superscriptOffset: 0.66,
       subscriptOffset: 0.66,
       serifs: false,
-      description: 'Ttext font to pair with the Petaluma music font.',
+      description: 'Text font to pair with the Petaluma music font.',
     });
   }
 }

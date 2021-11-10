@@ -192,8 +192,15 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
+      modulePackageJSON: {
+        expand: true,
+        cwd: BASE_DIR,
+        src: ['tools/esm/package.json'],
+        dest: path.join(BUILD_DIR, 'esm/'),
+        flatten: true,
+      },
       // Modules: For now, we just copy the vexflow****.js to the esm/ folder and add exports at the bottom.
-      module: {
+      moduleJSFiles: {
         expand: true,
         cwd: BUILD_DIR,
         src: ['*.js'],
@@ -211,8 +218,8 @@ const  { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox,
 export { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice };
 export { Vex, Flow };
 export default Vex;`;
-            // Replace the last line with our magic exports. :-)
-            return content.replace(/\/\/# sourceMappingURL=.*js\.map$/, exports);
+            // Append our magic exports. :-)
+            return content + exports;
           },
         },
       },
@@ -309,7 +316,8 @@ export default Vex;`;
       'webpack:buildProdBravuraOnly',
       'webpack:buildProdGonvilleOnly',
       'webpack:buildProdPetalumaOnly',
-      'copy:module',
+      'copy:moduleJSFiles',
+      'copy:modulePackageJSON',
       'typedoc',
     ]
   );

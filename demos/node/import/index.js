@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-import { Vex } from '../../../build/vexflow.js';
+import { Vex } from '../../../build/esm/vexflow.js';
 
 // This folder includes a package.json which indicates that all JS files should be treated as ES6 modules.
 // Thus, we need to use vexflow.module.js which ends in the line:
@@ -16,4 +16,4 @@ import { Vex } from '../../../build/vexflow.js';
 // console.log(globalThis); // success! globalThis is the Node JS global object.
 // console.log(globalThis === global); // true
 
-// console.log('VexFlow BUILD: ' + Vex.Flow.BUILD);
+console.log('VexFlow BUILD: ' + Vex.Flow.BUILD);
