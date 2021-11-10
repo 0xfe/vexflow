@@ -47,9 +47,9 @@ function setFont(): void {
 
   const voice = new Voice();
   // Many elements do not override the default Element.TEXT_FONT.
-  propEqual(voice.getFontInfo(), Element.TEXT_FONT);
+  propEqual(voice.fontInfo, Element.TEXT_FONT);
   voice.setFont('bold 32pt Arial');
-  const fontInfo = voice.getFontInfo();
+  const fontInfo = voice.fontInfo;
   equal(fontInfo?.size, '32pt');
 
   const flat = new Accidental('b');
@@ -73,7 +73,7 @@ function setFont(): void {
 
 function fontParsing(): void {
   const b = new Bend('1/2', true);
-  const bFont = b.getFontInfo();
+  const bFont = b.fontInfo;
   // Check the default font.
   equal(bFont?.family, Font.SANS_SERIF);
   equal(bFont?.size, Font.SIZE);
@@ -82,12 +82,12 @@ function fontParsing(): void {
 
   const f1 = 'Roboto Slab, serif';
   const t = new TextNote({ duration: '4', font: { family: f1 } });
-  equal(f1, t.getFontInfo()?.family);
+  equal(f1, t.fontInfo.family);
 
   const n1 = new StaveNote({ keys: ['e/5'], duration: '4' });
   const n2 = new StaveNote({ keys: ['c/5'], duration: '4' });
   const tb = new TextBracket({ start: n1, stop: n2 });
-  const f2 = tb.getFontInfo();
+  const f2 = tb.fontInfo;
   equal(f2?.size, 15);
   equal(f2?.style, FontStyle.ITALIC);
 
@@ -113,10 +113,12 @@ function fontSizes(): void {
   {
     const pedal = new PedalMarking([]);
     equal(pedal.getFont(), 'italic bold 12pt Times New Roman, serif');
-    equal(pedal.getFontSizeInPoints(), 12);
-    equal(pedal.getFontSizeInPixels(), 16);
-    const doubledSize = Font.scaleSize(pedal.getFontSizeInPoints(), 2); // Double the font size.
-    equal(doubledSize, 24);
+    equal(pedal.fontSizeInPoints, 12);
+    equal(pedal.fontSizeInPixels, 16);
+    const doubledSizePx = pedal.fontSizeInPixels * 2; // Double the font size.
+    equal(doubledSizePx, 32);
+    const doubledSizePt = Font.scaleSize(pedal.fontSizeInPoints, 2); // Double the font size.
+    equal(doubledSizePt, 24);
 
     equal(Font.scaleSize('1.5em', 3), '4.5em');
   }

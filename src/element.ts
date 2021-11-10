@@ -86,136 +86,6 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /**
-   * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
-   * @param font is 1) a `FontInfo` object or
-   *                2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
-   *                3) a string representing the font family (at least one of `size`, `weight`, or `style` must also be provided).
-   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
-   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
-   * @param style is a string (e.g., 'italic', 'normal').
-   * If no arguments are provided, then the font is set to the default font.
-   * Each Element subclass may specify its own default by overriding the static `TEXT_FONT` property.
-   */
-  setFont(font?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
-    // Allow subclasses to override `TEXT_FONT`.
-    const defaultTextFont: Required<FontInfo> = (<typeof Element>this.constructor).TEXT_FONT;
-
-    const fontIsObject = typeof font === 'object';
-    const fontIsString = typeof font === 'string';
-    const fontIsUndefined = font === undefined;
-    const sizeWeightStyleAreUndefined = size === undefined && weight === undefined && style === undefined;
-
-    if (fontIsObject) {
-      // `font` is case 1) a FontInfo object
-      this.textFont = { ...defaultTextFont, ...font };
-    } else if (fontIsString && sizeWeightStyleAreUndefined) {
-      // `font` is case 2) CSS font shorthand.
-      this.textFont = Font.fromCSSString(font);
-    } else if (fontIsUndefined && sizeWeightStyleAreUndefined) {
-      // All arguments are undefined. Do not check for `arguments.length === 0`,
-      // which fails on the edge case: `setFont(undefined)`.
-      // TODO: See if we can remove this case entirely without introducing a visual diff.
-      // The else case below seems like it should be equivalent to this case.
-      this.textFont = { ...defaultTextFont };
-    } else {
-      // `font` is case 3) a font family string (e.g., 'Times New Roman').
-      // The other parameters represent the size, weight, and style.
-      // It is okay for `font` to be undefined while one or more of the other arguments is provided.
-      // Following CSS conventions, unspecified params are reset to the default.
-      this.textFont = Font.validate(
-        font ?? defaultTextFont.family,
-        size ?? defaultTextFont.size,
-        weight ?? defaultTextFont.weight,
-        style ?? defaultTextFont.style
-      );
-    }
-    return this;
-  }
-
-  /**
-   * Reset the text font to the style indicated by the static `TEXT_FONT` property.
-   * Subclasses can call this to initialize `textFont` for the first time.
-   */
-  resetFont(): void {
-    this.setFont();
-  }
-
-  getFont(): string {
-    if (!this.textFont) {
-      this.resetFont();
-    }
-    return Font.toCSSString(this.textFont);
-  }
-
-  /** Return a copy of the current FontInfo object. */
-  getFontInfo(): Required<FontInfo> {
-    if (!this.textFont) {
-      this.resetFont();
-    }
-    // We can cast to Required<FontInfo> here, because
-    // we just called resetFont() above to ensure this.textFont is set.
-    return { ...this.textFont } as Required<FontInfo>;
-  }
-
-  /**
-   * @returns the font size in `pt`.
-   */
-  getFontSizeInPoints(): number {
-    return Font.convertSizeToPointValue(this.textFont?.size);
-  }
-
-  getFontSizeInPixels(): number {
-    return Font.convertSizeToPixelValue(this.textFont?.size);
-  }
-
-  set font(f: string) {
-    this.setFont(f);
-  }
-
-  get font(): string {
-    return Font.toCSSString(this.textFont);
-  }
-
-  /** Change the font size, while keeping everything else the same. */
-  setFontSize(size?: string | number): this {
-    const currFont = this.getFontInfo();
-    if (currFont !== undefined) {
-      this.setFont(currFont.family, size, currFont.weight, currFont.style);
-    } else {
-      this.setFont(undefined, size);
-    }
-    return this;
-  }
-
-  getFontSize(): string | number {
-    return this.fontSize;
-  }
-
-  /**
-   * The size is 1) a string of the form '10pt' or '16px', compatible with the CSS font-size property.
-   *          or 2) a number, which is interpreted as a point size (i.e. 12 == '12pt').
-   */
-  set fontSize(size: string | number) {
-    this.setFontSize(size);
-  }
-
-  /**
-   * Inspired by the CSS font-size property.
-   */
-  get fontSize(): string | number {
-    if (!this.textFont) {
-      this.resetFont();
-    }
-    // this.textFont was set by this.resetFont();
-    // eslint-disable-next-line
-    return this.textFont!.size;
-  }
-
-  get fontSizeInPoints(): number {
-    return this.getFontSizeInPoints();
-  }
-
   /** Set the draw style of a stemmable note. */
   setStyle(style: ElementStyle): this {
     this.style = style;
@@ -354,5 +224,169 @@ export abstract class Element {
   /** Validate and return the context. */
   checkContext(): RenderContext {
     return defined(this.context, 'NoContext', 'No rendering context attached to instance.');
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Font Handling
+
+  /**
+   * Provide a CSS compatible font string (e.g., 'bold 16px Arial').
+   */
+  set font(f: string) {
+    this.setFont(f);
+  }
+
+  /** Returns the CSS compatible font string. */
+  get font(): string {
+    return Font.toCSSString(this.textFont);
+  }
+
+  /**
+   * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   * @param font is 1) a `FontInfo` object or
+   *                2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *                3) a string representing the font family (at least one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   * If no arguments are provided, then the font is set to the default font.
+   * Each Element subclass may specify its own default by overriding the static `TEXT_FONT` property.
+   */
+  setFont(font?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    // Allow subclasses to override `TEXT_FONT`.
+    const defaultTextFont: Required<FontInfo> = (<typeof Element>this.constructor).TEXT_FONT;
+
+    const fontIsObject = typeof font === 'object';
+    const fontIsString = typeof font === 'string';
+    const fontIsUndefined = font === undefined;
+    const sizeWeightStyleAreUndefined = size === undefined && weight === undefined && style === undefined;
+
+    if (fontIsObject) {
+      // `font` is case 1) a FontInfo object
+      this.textFont = { ...defaultTextFont, ...font };
+    } else if (fontIsString && sizeWeightStyleAreUndefined) {
+      // `font` is case 2) CSS font shorthand.
+      this.textFont = Font.fromCSSString(font);
+    } else if (fontIsUndefined && sizeWeightStyleAreUndefined) {
+      // All arguments are undefined. Do not check for `arguments.length === 0`,
+      // which fails on the edge case: `setFont(undefined)`.
+      // TODO: See if we can remove this case entirely without introducing a visual diff.
+      // The else case below seems like it should be equivalent to this case.
+      this.textFont = { ...defaultTextFont };
+    } else {
+      // `font` is case 3) a font family string (e.g., 'Times New Roman').
+      // The other parameters represent the size, weight, and style.
+      // It is okay for `font` to be undefined while one or more of the other arguments is provided.
+      // Following CSS conventions, unspecified params are reset to the default.
+      this.textFont = Font.validate(
+        font ?? defaultTextFont.family,
+        size ?? defaultTextFont.size,
+        weight ?? defaultTextFont.weight,
+        style ?? defaultTextFont.style
+      );
+    }
+    return this;
+  }
+
+  getFont(): string {
+    if (!this.textFont) {
+      this.resetFont();
+    }
+    return Font.toCSSString(this.textFont);
+  }
+
+  /**
+   * Reset the text font to the style indicated by the static `TEXT_FONT` property.
+   * Subclasses can call this to initialize `textFont` for the first time.
+   */
+  resetFont(): void {
+    this.setFont();
+  }
+
+  /** Return a copy of the current FontInfo object. */
+  get fontInfo(): Required<FontInfo> {
+    if (!this.textFont) {
+      this.resetFont();
+    }
+    // We can cast to Required<FontInfo> here, because
+    // we just called resetFont() above to ensure this.textFont is set.
+    return { ...this.textFont } as Required<FontInfo>;
+  }
+
+  set fontInfo(fontInfo: FontInfo) {
+    this.setFont(fontInfo);
+  }
+
+  /** Change the font size, while keeping everything else the same. */
+  setFontSize(size?: string | number): this {
+    const fontInfo = this.fontInfo;
+    this.setFont(fontInfo.family, size, fontInfo.weight, fontInfo.style);
+    return this;
+  }
+
+  /**
+   * @returns a CSS font-size string (e.g., '18pt', '12px', '1em').
+   * See Element.fontSizeInPixels or Element.fontSizeInPoints if you need to get a number for calculation purposes.
+   */
+  getFontSize(): string {
+    return this.fontSize;
+  }
+
+  /**
+   * The size is 1) a string of the form '10pt' or '16px', compatible with the CSS font-size property.
+   *          or 2) a number, which is interpreted as a point size (i.e. 12 == '12pt').
+   */
+  set fontSize(size: string | number) {
+    this.setFontSize(size);
+  }
+
+  /**
+   * @returns a CSS font-size string (e.g., '18pt', '12px', '1em').
+   */
+  get fontSize(): string {
+    let size = this.fontInfo.size;
+    if (typeof size === 'number') {
+      size = `${size}pt`;
+    }
+    return size;
+  }
+
+  /**
+   * @returns the font size in `pt`.
+   */
+  get fontSizeInPoints(): number {
+    return Font.convertSizeToPointValue(this.fontSize);
+  }
+
+  /**
+   * @returns the font size in `px`.
+   */
+  get fontSizeInPixels(): number {
+    return Font.convertSizeToPixelValue(this.fontSize);
+  }
+
+  /**
+   * @returns a CSS font-style string (e.g., 'italic').
+   */
+  get fontStyle(): string {
+    return this.fontInfo.style;
+  }
+
+  set fontStyle(style: string) {
+    const fontInfo = this.fontInfo;
+    this.setFont(fontInfo.family, fontInfo.size, fontInfo.weight, style);
+  }
+
+  /**
+   * @returns a CSS font-weight string (e.g., 'bold').
+   * As in CSS, font-weight is always returned as a string, even if it was set as a number.
+   */
+  get fontWeight(): string {
+    return this.fontInfo.weight + '';
+  }
+
+  set fontWeight(weight: string | number) {
+    const fontInfo = this.fontInfo;
+    this.setFont(fontInfo.family, fontInfo.size, weight, fontInfo.style);
   }
 }

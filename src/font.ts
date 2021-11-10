@@ -258,7 +258,9 @@ export class Font {
   /**
    * @param fontSize a number representing a font size, or a string font size with units.
    * @param scaleFactor multiply the size by this factor.
-   * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48)
+   * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48).
+   * If the fontSize argument was a number, the return value will be a number.
+   * If the fontSize argument was a string, the return value will be a string.
    */
   static scaleSize<T extends number | string>(fontSize: T, scaleFactor: number): T {
     if (typeof fontSize === 'number') {

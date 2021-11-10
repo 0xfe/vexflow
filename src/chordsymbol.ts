@@ -279,7 +279,7 @@ export class ChordSymbol extends Modifier {
 
         // If there is a symbol-specific offset, add it but consider font
         // size since font and glyphs will be interspersed.
-        const fontSize = symbol.textFormatter.fontSizeInPx;
+        const fontSize = symbol.textFormatter.fontSizeInPixels;
         const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
           block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
@@ -394,11 +394,11 @@ export class ChordSymbol extends Modifier {
    * The offset is specified in `em`. Scale this value by the font size in pixels.
    */
   get superscriptOffset(): number {
-    return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPx;
+    return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPixels;
   }
 
   get subscriptOffset(): number {
-    return ChordSymbol.subscriptOffset * this.textFormatter.fontSizeInPx;
+    return ChordSymbol.subscriptOffset * this.textFormatter.fontSizeInPixels;
   }
 
   setReportWidth(value: boolean): this {
@@ -421,7 +421,7 @@ export class ChordSymbol extends Modifier {
     }
     const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
-    const yoff = 0.25 * this.textFormatter.fontSizeInPx;
+    const yoff = 0.25 * this.textFormatter.fontSizeInPixels;
     let symIndex = 0;
     for (symIndex === 0; symIndex < barIndex; ++symIndex) {
       const symbol = this.symbolBlocks[symIndex];
@@ -480,7 +480,7 @@ export class ChordSymbol extends Modifier {
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.fontSizeInPx;
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.fontSizeInPixels;
     // TODO: adjust kern for font size.
     // Where should this constant live?
     if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {

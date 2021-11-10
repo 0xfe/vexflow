@@ -32,13 +32,20 @@ let GIT_COMMIT_HASH;
 const PRODUCTION_MODE = 'production';
 const DEVELOPMENT_MODE = 'development';
 
+const CODE_SPLITTING = 'split';
+const SINGLE_BUNDLE = 'single';
+
 /**
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
  */
-function getConfig(file, useCodeSplitting = false, mode = PRODUCTION_MODE) {
+function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE) {
   // The module entry is a full path to a typescript file stored in vexflow/src/entry/.
   const entry = path.join(BASE_DIR, 'src/entry/', file + '.ts');
   const outputFilename = file + '.js';
+
+  // TODO: Explore passing multiple entry points to the entry field instead of running multiple webpack tasks
+  // with different configurations via multiple calls to getConfig(...).
+  // See: https://webpack.js.org/configuration/entry-context/#entry
 
   // Support different ways of loading VexFlow.
   // The `globalObject` string is assigned to `root` in line 15 of vexflow-debug.js.
@@ -51,8 +58,7 @@ function getConfig(file, useCodeSplitting = false, mode = PRODUCTION_MODE) {
   // However, the globalObject approach currently breaks the lazy loading of fonts.
   // Unset the globalObject if we are doing lazy loading / code splitting with webpack.
   let chunkFilename = undefined;
-  if (useCodeSplitting) {
-    globalObject = undefined;
+  if (bundleStrategy === CODE_SPLITTING) {
     // Font files for dynamic import. See: webpackChunkName in async.ts
     chunkFilename = 'vexflow-font-[name].js';
   }
@@ -125,15 +131,15 @@ module.exports = (grunt) => {
     `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
   // We need a different webpack config for each build target.
-  const prodAllFonts = getConfig(VEX, false);
-  const prodNoFonts = getConfig(VEX_CORE, true);
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, true);
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, true);
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, true);
+  const prodAllFonts = getConfig(VEX, SINGLE_BUNDLE);
+  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING);
+  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING);
+  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING);
+  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING);
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
-  const debugAllFonts = getConfig(VEX_DEBUG, false, DEVELOPMENT_MODE);
-  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, false, DEVELOPMENT_MODE);
-  const debugNoFonts = getConfig(VEX_CORE, true, DEVELOPMENT_MODE);
+  const debugAllFonts = getConfig(VEX_DEBUG, SINGLE_BUNDLE, DEVELOPMENT_MODE);
+  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, SINGLE_BUNDLE, DEVELOPMENT_MODE);
+  const debugNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, DEVELOPMENT_MODE);
 
   // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
   const watch = {

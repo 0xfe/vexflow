@@ -228,7 +228,7 @@ export class TextFormatter {
 
   get maxHeight(): number {
     const metrics = this.getGlyphMetrics(this.maxSizeGlyph);
-    return (metrics.ha / this.resolution) * this.fontSizeInPx;
+    return (metrics.ha / this.resolution) * this.fontSizeInPixels;
   }
 
   /**
@@ -274,12 +274,7 @@ export class TextFormatter {
 
   /** The width of the text (in `em`) is scaled by the font size (in `px`). */
   getWidthForTextInPx(text: string): number {
-    return this.getWidthForTextInEm(text) * this.fontSizeInPx;
-  }
-
-  /** `this.size` is specified in points. Convert to pixels. */
-  get fontSizeInPx(): number {
-    return this.size * Font.scaleToPxFrom.pt;
+    return this.getWidthForTextInEm(text) * this.fontSizeInPixels;
   }
 
   /**
@@ -290,6 +285,11 @@ export class TextFormatter {
     // The width cache key depends on the current font size.
     this.updateCacheKey();
     return this;
+  }
+
+  /** `this.size` is specified in points. Convert to pixels. */
+  get fontSizeInPixels(): number {
+    return this.size * Font.scaleToPxFrom.pt;
   }
 
   getResolution(): number {
