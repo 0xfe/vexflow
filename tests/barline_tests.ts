@@ -64,4 +64,5 @@ function style(options: TestOptions): void {
   ok(true, 'Style');
 }
 
+VexFlowTests.register(BarlineTests);
 export { BarlineTests };

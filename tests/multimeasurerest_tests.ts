@@ -166,4 +166,5 @@ function staveWithModifiers(options: TestOptions): void {
   ok(true, 'Stave with modifiers Test');
 }
 
+VexFlowTests.register(MultiMeasureRestTests);
 export { MultiMeasureRestTests };

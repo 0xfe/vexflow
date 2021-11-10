@@ -220,4 +220,5 @@ function autoRestThreeVoices2(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(ThreeVoicesTests);
 export { ThreeVoicesTests };

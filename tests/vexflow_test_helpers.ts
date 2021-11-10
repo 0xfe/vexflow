@@ -3,12 +3,7 @@
 //
 // VexFlow Test Support Library
 
-import { Factory } from '../src/factory';
-import { Flow } from '../src/flow';
-import { Font } from '../src/font';
-import { RenderContext } from '../src/rendercontext';
-import { ContextBuilder, Renderer } from '../src/renderer';
-import * as TestModule from './';
+import { ContextBuilder, Factory, Flow, RenderContext, Renderer } from '../src/';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
@@ -112,10 +107,21 @@ const NODE_TEST_CONFIG = {
   fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
 };
 
+interface Test {
+  Start(): void;
+}
+
 export class VexFlowTests {
+  static tests: Test[] = [];
+
+  // Call this at the end of a `tests/xxxx_tests.ts` file to register the module.
+  static register(test: Test): void {
+    VexFlowTests.tests.push(test);
+  }
+
   // flow.html calls this to invoke all the tests.
   static run(): void {
-    loadedTests.forEach((test) => test.Start());
+    VexFlowTests.tests.forEach((test) => test.Start());
   }
 
   // See: generate_png_images.js
@@ -237,6 +243,9 @@ export class VexFlowTests {
   /** Run QUnit.test(...) for each font. */
   // eslint-disable-next-line
   static runWithParams({ fontStacks, testFunc, name, params, backend, tagName, testType, helper }: any): void {
+    if (name === undefined) {
+      throw new Error('Test name is undefined.');
+    }
     const testTypeLowerCase = testType.toLowerCase();
     fontStacks.forEach((fontStackName: string) => {
       QUnit.test(name, (assert: Assert) => {
@@ -307,13 +316,6 @@ export class VexFlowTests {
   }
 }
 
-/** Currently unused. */
-/*
-global.almostEqual = (value: number, expectedValue: number, errorMargin: number): boolean => {
-  return global.equal(Math.abs(value - expectedValue) < errorMargin, true);
-};
-*/
-
 /**
  * Used with array.reduce(...) to flatten arrays of arrays in the tests.
  */
@@ -357,18 +359,9 @@ export const MINOR_KEYS = [
   'A#m',
 ];
 
-// We no longer provide a global.VF in tests.
-// Everything can be accessed via Vex.Flow.* and Vex.Flow.Test.* or by importing the class directly.
+// VexFlow classes can be accessed via Vex.Flow.* or by directly importing a library class.
+// Tests can be accessed via Vex.Flow.Test.* or by directly importing a test class.
+// Here we set Vex.Flow.Test = VexFlowTests.
 // eslint-disable-next-line
 // @ts-ignore
 Flow.Test = VexFlowTests;
-
-// eslint-disable-next-line
-const loadedTests: any[] = [];
-export function loadTests(tests: typeof TestModule): void {
-  for (const testName in tests) {
-    // eslint-disable-next-line
-    // @ts-ignore
-    loadedTests.push(tests[testName]);
-  }
-}

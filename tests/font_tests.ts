@@ -5,15 +5,21 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Accidental, Element, PedalMarking } from '../src';
-import { Bend } from '../src/bend';
-import { CanvasContext } from '../src/canvascontext';
-import { Flow } from '../src/flow';
-import { Font, FontStyle, FontWeight } from '../src/font';
-import { StaveNote } from '../src/stavenote';
-import { TextBracket } from '../src/textbracket';
-import { TextNote } from '../src/textnote';
-import { Voice } from '../src/voice';
+import {
+  Accidental,
+  Bend,
+  CanvasContext,
+  Element,
+  Flow,
+  Font,
+  FontStyle,
+  FontWeight,
+  PedalMarking,
+  StaveNote,
+  TextBracket,
+  TextNote,
+  Voice,
+} from '../src';
 
 const FontTests = {
   Start(): void {
@@ -174,4 +180,5 @@ function setMusicFontToPetaluma(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(FontTests);
 export { FontTests };

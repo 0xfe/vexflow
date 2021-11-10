@@ -277,4 +277,5 @@ function textDynamics(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(TextNoteTests);
 export { TextNoteTests };

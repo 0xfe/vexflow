@@ -61,4 +61,5 @@ function drawTab(options: TestOptions): void {
   expect(1);
 }
 
+VexFlowTests.register(FactoryTests);
 export { FactoryTests };

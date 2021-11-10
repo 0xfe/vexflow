@@ -1,11 +1,10 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
 // This file implements notes for standard notation. This consists of one or
 // more `NoteHeads`, an optional stem, and an optional flag.
 //
-// *Throughout these comments, a "note" refers to the entire `StaveNote`,
-// and a "key" refers to a specific pitch/notehead within a note.*
+// Throughout these comments, a "note" refers to the entire `StaveNote`,
+// and a "key" refers to a specific pitch/notehead within a note.
 //
 // See `tests/stavenote_tests.ts` for usage examples.
 

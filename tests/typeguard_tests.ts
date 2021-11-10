@@ -7,6 +7,8 @@
 // eslint-disable-next-line
 // @ts-nocheck to support ES5 style class declaration in the fakeES5() test case.
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { StaveNote } from '../src/stavenote';
 import { StemmableNote } from '../src/stemmablenote';
 import { TabNote } from '../src/tabnote';
@@ -134,4 +136,5 @@ function edgeCaseES5vsES6(): void {
   ok(xInstance instanceof Z, 'es6: x IS an instanceof Z');
 }
 
+VexFlowTests.register(TypeGuardTests);
 export { TypeGuardTests };

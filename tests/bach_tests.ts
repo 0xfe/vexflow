@@ -5,10 +5,7 @@
 
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from '../src/factory';
-import { Registry } from '../src/registry';
-import { BarlineType } from '../src/stavebarline';
-import { StaveNote } from '../src/stavenote';
+import { BarlineType, Factory, Registry, StaveNote } from '../src/';
 
 const BachDemoTests = {
   Start(): void {
@@ -434,4 +431,5 @@ function minuet1(options: TestOptions): void {
   ok(true, 'Bach Minuet 1');
 }
 
+VexFlowTests.register(BachDemoTests);
 export { BachDemoTests };

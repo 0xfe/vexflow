@@ -180,4 +180,5 @@ function slideDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   multiTest(options, TabSlide.createSlideDown);
 }
 
+VexFlowTests.register(TabSlideTests);
 export { TabSlideTests };

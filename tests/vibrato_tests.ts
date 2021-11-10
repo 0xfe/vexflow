@@ -121,4 +121,5 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Vibrato with Bend');
 }
 
+VexFlowTests.register(VibratoTests);
 export { VibratoTests };

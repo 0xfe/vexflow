@@ -5,9 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { BoundingBoxComputation } from '../src/boundingboxcomputation';
-import { Glyph, OutlineCode } from '../src/glyph';
-import { RenderContext } from '../src/rendercontext';
+import { BoundingBoxComputation, Glyph, OutlineCode, RenderContext } from '../src/';
 
 const BoundingBoxComputationTests = {
   Start(): void {
@@ -243,4 +241,5 @@ function cubic(options: TestOptions): void {
   ok(Math.abs(bbox.getH() - box[3]) < 0.01, `Bad H: ${bbox.getH()}`);
 }
 
+VexFlowTests.register(BoundingBoxComputationTests);
 export { BoundingBoxComputationTests };

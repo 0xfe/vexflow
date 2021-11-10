@@ -3,8 +3,9 @@
 //
 // ModifierContext Tests
 
-import { Modifier } from '../src/modifier';
-import { ModifierContext } from '../src/modifiercontext';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { Modifier, ModifierContext } from '../src/';
 
 const ModifierContextTests = {
   Start(): void {
@@ -31,4 +32,5 @@ function management(): void {
   equal(modifiers.length, 2, 'Added two modifiers');
 }
 
+VexFlowTests.register(ModifierContextTests);
 export { ModifierContextTests };

@@ -201,6 +201,9 @@ module.exports = (grunt) => {
         flatten: true,
         options: {
           process: (content) => {
+            // We take a JS file that sets globalThis.Vex, and turn it into a ES module.
+            // To do this, we extract all the classes from Vex.Flow, and re-export them.
+            // We also export Vex both as a named export and as a default export.
             const exports = `
 const Vex = globalThis['Vex'];
 const Flow = Vex.Flow;
@@ -353,24 +356,41 @@ export default Vex;`;
   grunt.registerTask(
     'reference',
     'Build to reference/.', //
-    ['default', 'qunit', 'copy:reference']
+    [
+      //
+      'default',
+      'qunit',
+      'copy:reference',
+    ]
   );
 
   // Release current build.
   grunt.registerTask(
     'stage',
     'Build to releases/.', //
-    ['default', 'qunit', 'copy:release']
+    [
+      //
+      'default',
+      'qunit',
+      'copy:release',
+    ]
   );
-
-  grunt.registerTask('alldone', 'Publish VexFlow NPM.', () => {
-    grunt.log.ok('NOT YET DONE: Run `npm publish` now to publish NPM.');
-  });
 
   // Increment package version and generate releases. Does NOT automatically publish to NPM.
   grunt.registerTask(
     'publish',
     'Generate releases.', //
-    ['bump', 'stage', 'gitcommit:releases', 'release', 'alldone']
+    [
+      //
+      'bump',
+      'stage',
+      'gitcommit:releases',
+      'release',
+      'alldone',
+    ]
   );
+
+  grunt.registerTask('alldone', 'Publish VexFlow NPM.', () => {
+    grunt.log.ok('NOT YET DONE: Run `npm publish` now to publish NPM.');
+  });
 };

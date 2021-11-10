@@ -129,4 +129,5 @@ const height = createTest((ctx, notes) => {
   });
 });
 
+VexFlowTests.register(StaveHairpinTests);
 export { StaveHairpinTests };

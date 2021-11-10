@@ -5,7 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Font, FontGlyph, Glyph } from '../src';
+import { Font, FontGlyph } from '../src';
 import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
@@ -754,4 +754,5 @@ function annotations(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(FormatterTests);
 export { FormatterTests };

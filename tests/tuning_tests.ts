@@ -3,6 +3,8 @@
 //
 // Tuning Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Tuning } from '../src/tuning';
 
 const TuningTests = {
@@ -80,4 +82,5 @@ function noteForFret(): void {
   equal(tuning.getNoteForFret(0, 6), 'E/3', 'Low E string');
 }
 
+VexFlowTests.register(TuningTests);
 export { TuningTests };

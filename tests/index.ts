@@ -1,6 +1,8 @@
-// Add a new line below
-// See: vexflow-debug-with-tests.ts
-// See: vexflow_test_helpers.ts => VexFlowTests.run().
+// vexflow-debug-with-tests.ts includes this module via:
+//   export * from '../../tests';
+// To add a new test class, add an export * statement to this file for that class.
+// The test file needs to call VexFlowTests.register(...).
+// In vexflow_test_helpers.ts: VexFlowTests.run() will run all registered tests.
 export * from './accidental_tests';
 export * from './annotation_tests';
 export * from './articulation_tests';

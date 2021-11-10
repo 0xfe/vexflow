@@ -121,4 +121,5 @@ function simple1(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(TextBracketTests);
 export { TextBracketTests };

@@ -1111,4 +1111,5 @@ function centerAlignedMultiVoice(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StaveNoteTests);
 export { StaveNoteTests };

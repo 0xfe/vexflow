@@ -3,6 +3,8 @@
 //
 // TextFormatter Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { TextFormatter } from '../src/textformatter';
 
 const TextFormatterTests = {
@@ -36,4 +38,5 @@ function basic(): void {
   equal(formatterForRobotoSlab.cacheKey, 'Roboto_Slab%75%normal%normal');
 }
 
+VexFlowTests.register(TextFormatterTests);
 export { TextFormatterTests };

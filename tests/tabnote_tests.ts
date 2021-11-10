@@ -523,4 +523,5 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
   ok(true, 'TabNotes successfully drawn');
 }
 
+VexFlowTests.register(TabNoteTests);
 export { TabNoteTests };

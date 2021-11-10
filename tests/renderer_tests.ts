@@ -180,4 +180,5 @@ function passRenderContext(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(RendererTests);
 export { RendererTests };

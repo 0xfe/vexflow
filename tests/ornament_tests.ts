@@ -391,4 +391,5 @@ function jazzOrnaments(options: TestOptions): void {
   draw(mods, ['e/4'], curX, width, curY);
 }
 
+VexFlowTests.register(OrnamentTests);
 export { OrnamentTests };

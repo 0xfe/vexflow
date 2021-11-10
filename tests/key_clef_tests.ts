@@ -6,10 +6,7 @@
 
 import { MAJOR_KEYS, MINOR_KEYS, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Glyph } from '../src/glyph';
-import { KeySignature } from '../src/keysignature';
-import { ContextBuilder } from '../src/renderer';
-import { Stave } from '../src/stave';
+import { ContextBuilder, Glyph, KeySignature, Stave } from '../src';
 
 const ClefKeySignatureTests = {
   Start(): void {
@@ -131,4 +128,5 @@ function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(ClefKeySignatureTests);
 export { ClefKeySignatureTests };

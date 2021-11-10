@@ -3,7 +3,9 @@
 //
 // Bounding Box Tests
 
-import { BoundingBox } from '../src/boundingbox';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { BoundingBox } from '../src/';
 
 const BoundingBoxTests = {
   Start(): void {
@@ -60,4 +62,5 @@ function merging(): void {
   });
 }
 
+VexFlowTests.register(BoundingBoxTests);
 export { BoundingBoxTests };

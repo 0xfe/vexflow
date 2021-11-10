@@ -63,4 +63,5 @@ const withoutStartNote = createTest('c4/4, c4, c4, c4', (factory, notes) => {
   });
 });
 
+VexFlowTests.register(VibratoBracketTests);
 export { VibratoBracketTests };

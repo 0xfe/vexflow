@@ -342,4 +342,5 @@ function drawAccidentals(options: TestOptions): void {
   ok(true, 'String Number');
 }
 
+VexFlowTests.register(StringNumberTests);
 export { StringNumberTests };

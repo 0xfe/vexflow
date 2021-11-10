@@ -31,4 +31,5 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(TabStaveTests);
 export { TabStaveTests };

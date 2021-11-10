@@ -791,4 +791,5 @@ function complexWithArticulation(options: TestOptions): void {
   ok(true, 'Complex beam articulations');
 }
 
+VexFlowTests.register(BeamTests);
 export { BeamTests };

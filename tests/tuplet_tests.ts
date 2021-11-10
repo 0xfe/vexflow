@@ -570,4 +570,5 @@ function single(options: TestOptions): void {
   ok(true, 'Nested Tuplets');
 }
 
+VexFlowTests.register(TupletTests);
 export { TupletTests };

@@ -370,4 +370,5 @@ function changeKey(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(KeySignatureTests);
 export { KeySignatureTests };

@@ -236,4 +236,5 @@ function continuous(options: TestOptions, contextBuilder: ContextBuilder): void 
   ok(true, 'Continuous Hammeron');
 }
 
+VexFlowTests.register(TabTieTests);
 export { TabTieTests };

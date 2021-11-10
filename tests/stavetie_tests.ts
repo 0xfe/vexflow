@@ -136,4 +136,5 @@ const setDirectionUp = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' 
   });
 });
 
+VexFlowTests.register(StaveTieTests);
 export { StaveTieTests };

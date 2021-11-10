@@ -3,6 +3,8 @@
 //
 // TickContext Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Flow } from '../src/flow';
 import { TickContext } from '../src/tickcontext';
 import { MockTickable } from './mocks';
@@ -46,4 +48,5 @@ function tracking(): void {
   equal(tc.getWidth(), 30);
 }
 
+VexFlowTests.register(TickContextTests);
 export { TickContextTests };

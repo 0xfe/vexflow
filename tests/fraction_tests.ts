@@ -3,6 +3,8 @@
 //
 // Fraction Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Fraction } from '../src/fraction';
 
 const FractionTests = {
@@ -86,4 +88,5 @@ function withOtherFractions(): void {
   ok(e.equals(f_1_2), '1/8 + 1/4 + 1/8 == 1/2');
 }
 
+VexFlowTests.register(FractionTests);
 export { FractionTests };

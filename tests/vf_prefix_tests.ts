@@ -5,6 +5,8 @@
 //
 // VexFlow classes are available under the global Vex.Flow.* namespace.
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Accidental } from '../src/accidental';
 import { Annotation } from '../src/annotation';
 import { Articulation } from '../src/articulation';
@@ -178,4 +180,5 @@ function VF_Prefix(): void {
   equal(Volta, VF.Volta);
 }
 
+VexFlowTests.register(VFPrefixTests);
 export { VFPrefixTests };

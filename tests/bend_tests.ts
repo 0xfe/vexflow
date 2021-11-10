@@ -265,4 +265,5 @@ function whackoBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ok(true, 'Whacko Bend & Release');
 }
 
+VexFlowTests.register(BendTests);
 export { BendTests };
