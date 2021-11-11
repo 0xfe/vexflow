@@ -1,3 +1,6 @@
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
 import { Vex } from './vex';
 
 export * from './accidental';
