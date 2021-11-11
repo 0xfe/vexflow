@@ -28,7 +28,7 @@ import { GraceTabNote } from './gracetabnote';
 import { KeyManager } from './keymanager';
 import { KeySignature } from './keysignature';
 import { KeySigNote } from './keysignote';
-import { Modifier } from './modifier';
+import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContext } from './modifiercontext';
 import { MultiMeasureRest } from './multimeasurerest';
 import { Music } from './music';
@@ -43,7 +43,7 @@ import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
 import { RepeatNote } from './repeatnote';
 import { Stave } from './stave';
-import { Barline } from './stavebarline';
+import { Barline, BarlineType } from './stavebarline';
 import { StaveConnector } from './staveconnector';
 import { StaveHairpin } from './stavehairpin';
 import { StaveLine } from './staveline';
@@ -155,6 +155,11 @@ export class Flow {
   static VibratoBracket = VibratoBracket;
   static Voice = Voice;
   static Volta = Volta;
+
+  // enums need to be exported too!
+  static BarlineType = BarlineType;
+  static ModifierPosition = ModifierPosition;
+  // ... more to come ...
 
   // VERSION and BUILD are set by webpack string-replace-loader. See: Gruntfile.js.
   static VERSION: string = '_VEX_VERSION_';

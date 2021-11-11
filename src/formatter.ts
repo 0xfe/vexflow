@@ -1025,4 +1025,8 @@ export class Formatter {
     L('Formatting voices to width: ', justifyWidth);
     return this.format(voices, justifyWidth, options);
   }
+
+  getTickContext(tick: number): TickContext | undefined {
+    return this.tickContexts?.map[tick];
+  }
 }

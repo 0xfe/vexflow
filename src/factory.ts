@@ -507,8 +507,8 @@ export class Factory {
   }
 
   StaveTie(params: {
-    from: Note | null;
-    to: Note | null;
+    from?: Note | null;
+    to?: Note | null;
     first_indices?: number[];
     last_indices?: number[];
     text?: string;

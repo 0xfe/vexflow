@@ -8,9 +8,12 @@ import { FontInfo } from './font';
 import { Note } from './note';
 import { RuntimeError } from './util';
 
+// For backwards compatibility with 3.0.9, first_note and/or last_note can be undefined or null.
+// We prefer undefined instead of null.
+// However, some of our test cases used to pass in null, so maybe there is client code relying on it.
 export interface TieNotes {
-  first_note: Note | null;
-  last_note: Note | null;
+  first_note?: Note | null;
+  last_note?: Note | null;
   first_indices?: number[];
   last_indices?: number[];
 }

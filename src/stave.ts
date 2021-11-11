@@ -432,7 +432,7 @@ export class Stave extends Element {
   }
 
   // Bar Line functions
-  setBegBarType(type: number): this {
+  setBegBarType(type: number | BarlineType): this {
     // Only valid bar types at beginning of stave is none, single or begin repeat
     const { SINGLE, REPEAT_BEGIN, NONE } = BarlineType;
     if (type === SINGLE || type === REPEAT_BEGIN || type === NONE) {
@@ -442,7 +442,7 @@ export class Stave extends Element {
     return this;
   }
 
-  setEndBarType(type: number): this {
+  setEndBarType(type: number | BarlineType): this {
     // Repeat end not valid at end of stave
     if (type !== BarlineType.REPEAT_BEGIN) {
       (this.modifiers[1] as Barline).setType(type);

@@ -4,7 +4,6 @@
 
 const Vex = require('../../build/vexflow-debug');
 const { JSDOM } = require('jsdom');
-const fs = require('fs');
 
 const VF = Vex.Flow;
 
