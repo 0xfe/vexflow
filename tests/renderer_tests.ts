@@ -6,15 +6,19 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { CanvasContext } from '../src/canvascontext';
-import { Factory, FactoryOptions } from '../src/factory';
-import { Formatter } from '../src/formatter';
-import { RenderContext } from '../src/rendercontext';
-import { Renderer } from '../src/renderer';
-import { Stave } from '../src/stave';
-import { StaveNote } from '../src/stavenote';
-import { SVGContext } from '../src/svgcontext';
-import { RuntimeError } from '../src/util';
+import {
+  CanvasContext,
+  Factory,
+  FactoryOptions,
+  Formatter,
+  isHTMLCanvas,
+  RenderContext,
+  Renderer,
+  RuntimeError,
+  Stave,
+  StaveNote,
+  SVGContext,
+} from '../src/';
 
 // TODO: Should FactoryOptions.renderer.elementId also accept a canvas | div?
 
@@ -164,7 +168,7 @@ function canvasOrDivElement(options: TestOptions): void {
 function passRenderContext(options: TestOptions): void {
   let context: RenderContext;
   const element = document.getElementById(options.elementId) as HTMLCanvasElement | HTMLDivElement;
-  if (element instanceof window.HTMLCanvasElement) {
+  if (isHTMLCanvas(element)) {
     const ctx = element.getContext('2d');
     if (!ctx) {
       throw new RuntimeError(`Couldn't get context from element "${options.elementId}"`);

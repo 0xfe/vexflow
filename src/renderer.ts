@@ -4,15 +4,11 @@
 import { CanvasContext } from './canvascontext';
 import { RenderContext } from './rendercontext';
 import { SVGContext } from './svgcontext';
+import { isHTMLCanvas, isHTMLDiv } from './typeguard';
 import { RuntimeError } from './util';
 
 // A ContextBuilder is either Renderer.getSVGContext or Renderer.getCanvasContext.
 export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.getCanvasContext;
-
-// eslint-disable-next-line
-function isRenderContext(obj: any): obj is RenderContext {
-  return obj.setShadowBlur !== undefined;
-}
 
 export enum RendererBackends {
   CANVAS = 1,
@@ -116,7 +112,7 @@ export class Renderer {
   constructor(context: RenderContext);
   constructor(canvas: string | HTMLCanvasElement | HTMLDivElement, backend: number);
   constructor(arg0: string | HTMLCanvasElement | HTMLDivElement | RenderContext, arg1?: number) {
-    if (isRenderContext(arg0)) {
+    if (arg0 instanceof RenderContext) {
       // The user has provided what looks like a RenderContext, let's just use it.
       // TODO(tommadams): RenderContext is an interface, can we introduce a context base class
       // to make this check more robust?
@@ -131,7 +127,7 @@ export class Renderer {
       let element: HTMLElement;
       if (typeof arg0 == 'string') {
         const maybeElement = document.getElementById(arg0);
-        if (maybeElement == null) {
+        if (!maybeElement) {
           throw new RuntimeError('BadElementId', `Can't find element with ID "${maybeElement}"`);
         }
         element = maybeElement;
@@ -141,8 +137,8 @@ export class Renderer {
 
       // Verify backend and create context
       if (backend === Renderer.Backends.CANVAS) {
-        if (!(element instanceof window.HTMLCanvasElement)) {
-          throw new RuntimeError('BadElement', 'CANVAS context requires an HTMLCanvasElement');
+        if (!isHTMLCanvas(element)) {
+          throw new RuntimeError('BadElement', 'CANVAS context requires an HTMLCanvasElement.');
         }
         const context = element.getContext('2d');
         if (!context) {
@@ -150,7 +146,7 @@ export class Renderer {
         }
         this.ctx = new CanvasContext(context);
       } else if (backend === Renderer.Backends.SVG) {
-        if (!(element instanceof window.HTMLDivElement)) {
+        if (!isHTMLDiv(element)) {
           throw new RuntimeError('BadElement', 'SVG context requires an HTMLDivElement.');
         }
         this.ctx = new SVGContext(element);

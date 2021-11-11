@@ -4,10 +4,11 @@
 
 import { Vex } from '../../../build/esm/vexflow.js';
 
-// This folder includes a package.json which indicates that all JS files should be treated as ES6 modules.
-// Thus, we need to use vexflow.module.js which ends in the line:
+// This folder includes a package.json which indicates that all JS files should be treated as ES modules.
+// Thus, we need to use build/esm/vexflow.js which ends in the lines:
+//     export { Vex };
 //     export default Vex;
-// However, vexflow.module.js is incompatible with classic <script src="..."></script> tags.
+// However, the ES module version of vexflow.js is NOT compatible with classic <script src="..."></script> tags.
 
 // console.log(this);       // this === undefined
 // console.log(window);     // ReferenceError: window is not defined

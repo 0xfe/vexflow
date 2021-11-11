@@ -64,7 +64,12 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   if (bundleStrategy === CODE_SPLITTING) {
     // Font files for dynamic import. See: webpackChunkName in async.ts
     chunkFilename = 'vexflow-font-[name].js';
-    publicPath = './';
+
+    // See: https://webpack.js.org/guides/public-path/
+    // publicPath needs more testing! :-(
+    // In some tests, this needs to be './' to work, but in others it needs to be 'auto' to work.
+    // publicPath = './';
+    publicPath = 'auto';
   }
 
   return {

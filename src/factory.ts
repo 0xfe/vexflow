@@ -46,6 +46,7 @@ import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
 import { Tuplet, TupletOptions } from './tuplet';
+import { isHTMLCanvas } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
@@ -154,7 +155,11 @@ export class Factory {
     let backend = this.options.renderer.backend;
     if (backend === undefined) {
       const elem = document.getElementById(elementId);
-      if (elem instanceof window.HTMLCanvasElement) {
+      // We use a custom type check here, because node-canvas mimics canvas,
+      // but is not an instance of window.HTMLCanvasElement.
+      // In fact, `window` might be undefined here.
+      // See: https://www.npmjs.com/package/canvas
+      if (isHTMLCanvas(elem)) {
         backend = Renderer.Backends.CANVAS;
       } else {
         backend = Renderer.Backends.SVG;

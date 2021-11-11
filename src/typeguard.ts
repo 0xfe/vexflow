@@ -11,6 +11,33 @@ import { StaveNote } from './stavenote';
 import { StemmableNote } from './stemmablenote';
 import { TabNote } from './tabnote';
 
+// eslint-disable-next-line
+export const isHTMLCanvas = (element: any): element is HTMLCanvasElement => {
+  if (!element) return false;
+
+  const globalObject = typeof window !== 'undefined' ? window : globalThis;
+  return (
+    // It's either an instance of the HTMLCanvasElement class,
+    (typeof globalObject.HTMLCanvasElement === 'function' && element instanceof globalObject.HTMLCanvasElement) ||
+    // OR it's pretending to be a <canvas> element. Good enough!
+    // Do not rely on .tagName, because node-canvas doesn't provide a tagName.
+    (typeof element.getContext === 'function' && typeof element.toDataURL === 'function')
+  );
+};
+
+// eslint-disable-next-line
+export function isHTMLDiv(element: any): element is HTMLDivElement {
+  if (!element) return false;
+
+  const globalObject = typeof window !== 'undefined' ? window : globalThis;
+  return (
+    // It's either an instance of the HTMLDivElement class.
+    (typeof globalObject.HTMLDivElement === 'function' && element instanceof globalObject.HTMLDivElement) ||
+    // OR it's pretending to be a <div>. See: svgcontext.ts.
+    (typeof element.appendChild === 'function' && typeof element.style === 'object')
+  );
+}
+
 // Helper functions for checking an object's type, via `instanceof` and `obj.constructor.CATEGORY`.
 export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);
 export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, StemmableNote);

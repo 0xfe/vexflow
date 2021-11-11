@@ -13,7 +13,7 @@
       // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
       // the loading of the fonts (stored in vexflow-font-xxxx.js).
       // It returns a Promise that resolves to the loaded music font(s).
-      // Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
+      Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
 
       function onFontsLoaded(musicFonts) {
         console.log('Successfully loaded this music font stack:');
