@@ -58,12 +58,8 @@ export interface GlyphProps {
   tabnote_stem_down_extension: number;
   tabnote_stem_up_extension: number;
   beam_count: number;
-  duration_codes: Record<string, DurationCode>;
-  validTypes: Record<string, string>;
   shift_y: number;
-
   getWidth(a?: number): number;
-
   getMetrics(): GlyphMetrics;
 }
 

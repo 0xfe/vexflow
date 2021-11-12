@@ -8,37 +8,12 @@ import { Fraction } from './fraction';
 import { Glyph } from './glyph';
 import { RuntimeError } from './util';
 
-// Custom note heads
-const customNoteHeads: Record<string, { code: string }> = {
-  /* Diamond */
-  D0: { code: 'noteheadDiamondWhole' },
-  D1: { code: 'noteheadDiamondHalf' },
-  D2: { code: 'noteheadDiamondBlack' },
-  D3: { code: 'noteheadDiamondBlack' },
-
-  /* Triangle */
-  T0: { code: 'noteheadTriangleUpWhole' },
-  T1: { code: 'noteheadTriangleUpHalf' },
-  T2: { code: 'noteheadTriangleUpBlack' },
-  T3: { code: 'noteheadTriangleUpBlack' },
-
-  /* Cross */
-  X0: { code: 'noteheadXWhole' },
-  X1: { code: 'noteheadXHalf' },
-  X2: { code: 'noteheadXBlack' },
-  X3: { code: 'noteheadCircleX' },
-
-  /* Square */
-  S1: { code: 'noteheadSquareWhite' },
-  S2: { code: 'noteheadSquareBlack' },
-
-  /* Rectangle */
-  R1: { code: 'vexNoteHeadRectWhite' }, // no smufl code
-  R2: { code: 'vexNoteHeadRectBlack' }, // no smufl code
-};
-
 const RESOLUTION = 16384;
 
+/**
+ * Map duration numbers to 'ticks', the unit of duration used throughout VexFlow.
+ * For example, a quarter note is 4, so it maps to RESOLUTION / 4 = 4096 ticks.
+ */
 const durations: Record<string, number> = {
   '1/2': RESOLUTION * 2,
   1: RESOLUTION / 1,
@@ -50,6 +25,17 @@ const durations: Record<string, number> = {
   64: RESOLUTION / 64,
   128: RESOLUTION / 128,
   256: RESOLUTION / 256,
+};
+
+const durationAliases: Record<string, string> = {
+  w: '1',
+  h: '2',
+  q: '4',
+
+  // This is the default duration used to render bars (BarNote). Bars no longer
+  // consume ticks, so this should be a no-op.
+  // TODO(0xfe): This needs to be cleaned up.
+  b: '256',
 };
 
 const keySignatures: Record<string, { acc?: string; num: number }> = {
@@ -83,6 +69,120 @@ const keySignatures: Record<string, { acc?: string; num: number }> = {
   'D#m': { acc: '#', num: 6 },
   'C#': { acc: '#', num: 7 },
   'A#m': { acc: '#', num: 7 },
+};
+
+const clefs: Record<string, { line_shift: number }> = {
+  treble: { line_shift: 0 },
+  bass: { line_shift: 6 },
+  tenor: { line_shift: 4 },
+  alto: { line_shift: 3 },
+  soprano: { line_shift: 1 },
+  percussion: { line_shift: 0 },
+  'mezzo-soprano': { line_shift: 2 },
+  'baritone-c': { line_shift: 5 },
+  'baritone-f': { line_shift: 5 },
+  subbass: { line_shift: 7 },
+  french: { line_shift: -1 },
+};
+
+const notesInfo: Record<
+  string,
+  {
+    index: number;
+    int_val?: number;
+    accidental?: string;
+    rest?: boolean;
+    octave?: number;
+    code?: string;
+    shift_right?: number;
+  }
+> = {
+  C: { index: 0, int_val: 0 },
+  CN: { index: 0, int_val: 0, accidental: 'n' },
+  'C#': { index: 0, int_val: 1, accidental: '#' },
+  'C##': { index: 0, int_val: 2, accidental: '##' },
+  CB: { index: 0, int_val: 11, accidental: 'b' },
+  CBB: { index: 0, int_val: 10, accidental: 'bb' },
+  D: { index: 1, int_val: 2 },
+  DN: { index: 1, int_val: 2, accidental: 'n' },
+  'D#': { index: 1, int_val: 3, accidental: '#' },
+  'D##': { index: 1, int_val: 4, accidental: '##' },
+  DB: { index: 1, int_val: 1, accidental: 'b' },
+  DBB: { index: 1, int_val: 0, accidental: 'bb' },
+  E: { index: 2, int_val: 4 },
+  EN: { index: 2, int_val: 4, accidental: 'n' },
+  'E#': { index: 2, int_val: 5, accidental: '#' },
+  'E##': { index: 2, int_val: 6, accidental: '##' },
+  EB: { index: 2, int_val: 3, accidental: 'b' },
+  EBB: { index: 2, int_val: 2, accidental: 'bb' },
+  F: { index: 3, int_val: 5 },
+  FN: { index: 3, int_val: 5, accidental: 'n' },
+  'F#': { index: 3, int_val: 6, accidental: '#' },
+  'F##': { index: 3, int_val: 7, accidental: '##' },
+  FB: { index: 3, int_val: 4, accidental: 'b' },
+  FBB: { index: 3, int_val: 3, accidental: 'bb' },
+  G: { index: 4, int_val: 7 },
+  GN: { index: 4, int_val: 7, accidental: 'n' },
+  'G#': { index: 4, int_val: 8, accidental: '#' },
+  'G##': { index: 4, int_val: 9, accidental: '##' },
+  GB: { index: 4, int_val: 6, accidental: 'b' },
+  GBB: { index: 4, int_val: 5, accidental: 'bb' },
+  A: { index: 5, int_val: 9 },
+  AN: { index: 5, int_val: 9, accidental: 'n' },
+  'A#': { index: 5, int_val: 10, accidental: '#' },
+  'A##': { index: 5, int_val: 11, accidental: '##' },
+  AB: { index: 5, int_val: 8, accidental: 'b' },
+  ABB: { index: 5, int_val: 7, accidental: 'bb' },
+  B: { index: 6, int_val: 11 },
+  BN: { index: 6, int_val: 11, accidental: 'n' },
+  'B#': { index: 6, int_val: 12, accidental: '#' },
+  'B##': { index: 6, int_val: 13, accidental: '##' },
+  BB: { index: 6, int_val: 10, accidental: 'b' },
+  BBB: { index: 6, int_val: 9, accidental: 'bb' },
+  R: { index: 6, rest: true }, // Rest
+  X: {
+    index: 6,
+    accidental: '',
+    octave: 4,
+    code: 'noteheadXBlack',
+    shift_right: 5.5,
+  },
+};
+
+const validNoteTypes: Record<string, { name: string }> = {
+  n: { name: 'note' },
+  r: { name: 'rest' },
+  h: { name: 'harmonic' },
+  m: { name: 'muted' },
+  s: { name: 'slash' },
+};
+
+const customNoteHeads: Record<string, { code: string }> = {
+  /* Diamond */
+  D0: { code: 'noteheadDiamondWhole' },
+  D1: { code: 'noteheadDiamondHalf' },
+  D2: { code: 'noteheadDiamondBlack' },
+  D3: { code: 'noteheadDiamondBlack' },
+
+  /* Triangle */
+  T0: { code: 'noteheadTriangleUpWhole' },
+  T1: { code: 'noteheadTriangleUpHalf' },
+  T2: { code: 'noteheadTriangleUpBlack' },
+  T3: { code: 'noteheadTriangleUpBlack' },
+
+  /* Cross */
+  X0: { code: 'noteheadXWhole' },
+  X1: { code: 'noteheadXHalf' },
+  X2: { code: 'noteheadXBlack' },
+  X3: { code: 'noteheadCircleX' },
+
+  /* Square */
+  S1: { code: 'noteheadSquareWhite' },
+  S2: { code: 'noteheadSquareBlack' },
+
+  /* Rectangle */
+  R1: { code: 'vexNoteHeadRectWhite' }, // no smufl code
+  R2: { code: 'vexNoteHeadRectBlack' }, // no smufl code
 };
 
 const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: number }> = {
@@ -351,33 +451,130 @@ const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: n
   accidentalWilsonMinus: { code: 'accidentalWilsonMinus', parenRightPaddingAdjustment: -1 },
 };
 
-export const Tables = {
-  STEM_WIDTH: 1.5,
-  STEM_HEIGHT: 35,
-  STAVE_LINE_THICKNESS: 1,
-  RESOLUTION: RESOLUTION,
+// Helps determine the layout of accidentals.
+const accidentalColumns: Record<number, { [name: string]: number[] }> = {
+  1: {
+    a: [1],
+    b: [1],
+  },
+  2: {
+    a: [1, 2],
+  },
+  3: {
+    a: [1, 3, 2],
+    b: [1, 2, 1],
+    second_on_bottom: [1, 2, 3],
+  },
+  4: {
+    a: [1, 3, 4, 2],
+    b: [1, 2, 3, 1],
+    spaced_out_tetrachord: [1, 2, 1, 2],
+  },
+  5: {
+    a: [1, 3, 5, 4, 2],
+    b: [1, 2, 4, 3, 1],
+    spaced_out_pentachord: [1, 2, 3, 2, 1],
+    very_spaced_out_pentachord: [1, 2, 1, 2, 1],
+  },
+  6: {
+    a: [1, 3, 5, 6, 4, 2],
+    b: [1, 2, 4, 5, 3, 1],
+    spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
+    very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
+  },
+};
+
+const articulations: Record<string, ArticulationStruct> = {
+  'a.': { code: 'augmentationDot', between_lines: true }, // Staccato
+  av: {
+    aboveCode: 'articStaccatissimoAbove',
+    belowCode: 'articStaccatissimoBelow',
+    between_lines: true,
+  }, // Staccatissimo
+  'a>': {
+    aboveCode: 'articAccentAbove',
+    belowCode: 'articAccentBelow',
+    between_lines: true,
+  }, // Accent
+  'a-': {
+    aboveCode: 'articTenutoAbove',
+    belowCode: 'articTenutoBelow',
+    between_lines: true,
+  }, // Tenuto
+  'a^': {
+    aboveCode: 'articMarcatoAbove',
+    belowCode: 'articMarcatoBelow',
+    between_lines: false,
+  }, // Marcato
+  'a+': { code: 'pluckedLeftHandPizzicato', between_lines: false }, // Left hand pizzicato
+  ao: {
+    aboveCode: 'pluckedSnapPizzicatoAbove',
+    belowCode: 'pluckedSnapPizzicatoBelow',
+    between_lines: false,
+  }, // Snap pizzicato
+  ah: { code: 'stringsHarmonic', between_lines: false }, // Natural harmonic or open note
+  'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false }, // Fermata
+  'a@a': { code: 'fermataAbove', between_lines: false }, // Fermata above staff
+  'a@u': { code: 'fermataBelow', between_lines: false }, // Fermata below staff
+  'a|': { code: 'stringsUpBow', between_lines: false }, // Bow up - up stroke
+  am: { code: 'stringsDownBow', between_lines: false }, // Bow down - down stroke
+  'a,': { code: 'pictChokeCymbal', between_lines: false }, // Choked
+};
+
+const ornaments: Record<string, { code: string }> = {
+  mordent: { code: 'ornamentShortTrill' },
+  mordent_inverted: { code: 'ornamentMordent' },
+  turn: { code: 'ornamentTurn' },
+  turn_inverted: { code: 'ornamentTurnSlash' },
+  tr: { code: 'ornamentTrill' },
+  upprall: { code: 'ornamentPrecompSlideTrillDAnglebert' },
+  downprall: { code: 'ornamentPrecompDoubleCadenceUpperPrefix' },
+  prallup: { code: 'ornamentPrecompTrillSuffixDandrieu' },
+  pralldown: { code: 'ornamentPrecompTrillLowerSuffix' },
+  upmordent: { code: 'ornamentPrecompSlideTrillBach' },
+  downmordent: { code: 'ornamentPrecompDoubleCadenceUpperPrefixTurn' },
+  lineprall: { code: 'ornamentPrecompAppoggTrill' },
+  prallprall: { code: 'ornamentTremblement' },
+  scoop: { code: 'brassScoop' },
+  doit: { code: 'brassDoitMedium' },
+  fall: { code: 'brassFallLipShort' },
+  doitLong: { code: 'brassLiftMedium' },
+  fallLong: { code: 'brassFallRoughMedium' },
+  bend: { code: 'brassBend' },
+  plungerClosed: { code: 'brassMuteClosed' },
+  plungerOpen: { code: 'brassMuteOpen' },
+  flip: { code: 'brassFlip' },
+  jazzTurn: { code: 'brassJazzTurn' },
+  smear: { code: 'brassSmear' },
+};
+
+export class Tables {
+  static STEM_WIDTH = 1.5;
+  static STEM_HEIGHT = 35;
+  static STAVE_LINE_THICKNESS = 1;
+  static RESOLUTION = RESOLUTION;
 
   /**
    * Customize this by calling Flow.setMusicFont(...fontNames);
    */
-  MUSIC_FONT_STACK: [] as Font[],
+  static MUSIC_FONT_STACK: Font[] = [];
 
   /**
    * @returns the `Font` object at the head of the music font stack.
    */
-  currentMusicFont(): Font {
+  static currentMusicFont(): Font {
     if (Tables.MUSIC_FONT_STACK.length === 0) {
       throw new RuntimeError('NoFonts', 'The font stack is empty. Call: Flow.setMusicFont(...fontNames).');
     } else {
       return Tables.MUSIC_FONT_STACK[0];
     }
-  },
+  }
 
-  NOTATION_FONT_SCALE: 39,
-  TABLATURE_FONT_SCALE: 39,
+  static NOTATION_FONT_SCALE = 39;
+  static TABLATURE_FONT_SCALE = 39;
 
-  SLASH_NOTEHEAD_WIDTH: 15,
-  STAVE_LINE_DISTANCE: 10,
+  static SLASH_NOTEHEAD_WIDTH = 15;
+  static STAVE_LINE_DISTANCE = 10;
 
   // HACK:
   // Since text origins are positioned at the baseline, we must
@@ -386,121 +583,43 @@ export const Tables = {
   //
   // This will be deprecated in the future. This is a temporary solution until
   // we have more robust text metrics.
-  TEXT_HEIGHT_OFFSET_HACK: 1,
+  static TEXT_HEIGHT_OFFSET_HACK = 1;
 
-  clefProperties: (clef: string): { line_shift: number } => {
-    const values: Record<string, { line_shift: number }> = {
-      treble: { line_shift: 0 },
-      bass: { line_shift: 6 },
-      tenor: { line_shift: 4 },
-      alto: { line_shift: 3 },
-      soprano: { line_shift: 1 },
-      percussion: { line_shift: 0 },
-      'mezzo-soprano': { line_shift: 2 },
-      'baritone-c': { line_shift: 5 },
-      'baritone-f': { line_shift: 5 },
-      subbass: { line_shift: 7 },
-      french: { line_shift: -1 },
-    };
-    if (!clef) throw new RuntimeError('BadArgument', 'Invalid clef: ' + clef);
+  static clefProperties(clef: string): { line_shift: number } {
+    if (!clef || !(clef in clefs)) throw new RuntimeError('BadArgument', 'Invalid clef: ' + clef);
+    return clefs[clef];
+  }
 
-    const props = values[clef];
-    if (!props) throw new RuntimeError('BadArgument', 'Invalid clef: ' + clef);
-
-    return props;
-  },
-
-  /*
-  Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-
-  The last argument, params, is a struct the currently can contain one option,
-  octave_shift for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
-  */
+  /**
+   * Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
+   *
+   * The last argument, params, is
+   */
   // eslint-disable-next-line
-  keyProperties(key: string, clef?: string, params?: any): any {
-    const noteValues: Record<
-      string,
-      {
-        index: number;
-        int_val?: number;
-        accidental?: string;
-        rest?: boolean;
-        octave?: number;
-        code?: string;
-        shift_right?: number;
-      }
-    > = {
-      C: { index: 0, int_val: 0 },
-      CN: { index: 0, int_val: 0, accidental: 'n' },
-      'C#': { index: 0, int_val: 1, accidental: '#' },
-      'C##': { index: 0, int_val: 2, accidental: '##' },
-      CB: { index: 0, int_val: 11, accidental: 'b' },
-      CBB: { index: 0, int_val: 10, accidental: 'bb' },
-      D: { index: 1, int_val: 2 },
-      DN: { index: 1, int_val: 2, accidental: 'n' },
-      'D#': { index: 1, int_val: 3, accidental: '#' },
-      'D##': { index: 1, int_val: 4, accidental: '##' },
-      DB: { index: 1, int_val: 1, accidental: 'b' },
-      DBB: { index: 1, int_val: 0, accidental: 'bb' },
-      E: { index: 2, int_val: 4 },
-      EN: { index: 2, int_val: 4, accidental: 'n' },
-      'E#': { index: 2, int_val: 5, accidental: '#' },
-      'E##': { index: 2, int_val: 6, accidental: '##' },
-      EB: { index: 2, int_val: 3, accidental: 'b' },
-      EBB: { index: 2, int_val: 2, accidental: 'bb' },
-      F: { index: 3, int_val: 5 },
-      FN: { index: 3, int_val: 5, accidental: 'n' },
-      'F#': { index: 3, int_val: 6, accidental: '#' },
-      'F##': { index: 3, int_val: 7, accidental: '##' },
-      FB: { index: 3, int_val: 4, accidental: 'b' },
-      FBB: { index: 3, int_val: 3, accidental: 'bb' },
-      G: { index: 4, int_val: 7 },
-      GN: { index: 4, int_val: 7, accidental: 'n' },
-      'G#': { index: 4, int_val: 8, accidental: '#' },
-      'G##': { index: 4, int_val: 9, accidental: '##' },
-      GB: { index: 4, int_val: 6, accidental: 'b' },
-      GBB: { index: 4, int_val: 5, accidental: 'bb' },
-      A: { index: 5, int_val: 9 },
-      AN: { index: 5, int_val: 9, accidental: 'n' },
-      'A#': { index: 5, int_val: 10, accidental: '#' },
-      'A##': { index: 5, int_val: 11, accidental: '##' },
-      AB: { index: 5, int_val: 8, accidental: 'b' },
-      ABB: { index: 5, int_val: 7, accidental: 'bb' },
-      B: { index: 6, int_val: 11 },
-      BN: { index: 6, int_val: 11, accidental: 'n' },
-      'B#': { index: 6, int_val: 12, accidental: '#' },
-      'B##': { index: 6, int_val: 13, accidental: '##' },
-      BB: { index: 6, int_val: 10, accidental: 'b' },
-      BBB: { index: 6, int_val: 9, accidental: 'bb' },
-      R: { index: 6, rest: true }, // Rest
-      X: {
-        index: 6,
-        accidental: '',
-        octave: 4,
-        code: 'noteheadXBlack',
-        shift_right: 5.5,
-      },
-    };
-
-    if (clef === undefined) {
-      clef = 'treble';
-    }
-
+  /**
+   *
+   * @param keyOctaveGlyph a string in the format "key/octave" (e.g., "c/5") or "key/octave/custom-note-head-code" (e.g., "g/5/t3").
+   * @param clef
+   * @param params a struct with one option, `octave_shift` for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
+   * @returns
+   */
+  static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
     let options = { octave_shift: 0 };
-
     if (typeof params === 'object') {
       options = { ...options, ...params };
     }
 
-    const pieces = key.split('/');
-
+    const pieces = keyOctaveGlyph.split('/');
     if (pieces.length < 2) {
-      throw new RuntimeError('BadArguments', `Key must have note + octave and an optional glyph: ${key}`);
+      throw new RuntimeError(
+        'BadArguments',
+        `First argument must be note/octave or note/octave/glyph-code: ${keyOctaveGlyph}`
+      );
     }
 
-    const k = pieces[0].toUpperCase();
-    const value = noteValues[k];
-    if (!value) throw new RuntimeError('BadArguments', 'Invalid key name: ' + k);
+    const key = pieces[0].toUpperCase();
+    const value = notesInfo[key];
+    if (!value) throw new RuntimeError('BadArguments', 'Invalid key name: ' + key);
     if (value.octave) pieces[1] = value.octave.toString();
 
     let octave = parseInt(pieces[1], 10);
@@ -508,8 +627,8 @@ export const Tables = {
     // Octave_shift is the shift to compensate for clef 8va/8vb.
     octave += -1 * options.octave_shift;
 
-    const base_index = octave * 7 - 4 * 7;
-    let line = (base_index + value.index) / 2;
+    const baseIndex = octave * 7 - 4 * 7;
+    let line = (baseIndex + value.index) / 2;
     line += Tables.clefProperties(clef).line_shift;
 
     let stroke = 0;
@@ -520,17 +639,17 @@ export const Tables = {
     // Integer value for note arithmetic.
     const int_value = typeof value.int_val !== 'undefined' ? octave * 12 + value.int_val : undefined;
 
-    /* Check if the user specified a glyph. */
+    // If the user specified a glyph, overwrite the glyph code.
     const code = value.code;
     const shift_right = value.shift_right;
-    let extraProps = {};
+    let customNoteHeadProps = {};
     if (pieces.length > 2 && pieces[2]) {
-      const glyph_name = pieces[2].toUpperCase();
-      extraProps = customNoteHeads[glyph_name] || {};
+      const glyphName = pieces[2].toUpperCase();
+      customNoteHeadProps = customNoteHeads[glyphName] || {};
     }
 
     return {
-      key: k,
+      key,
       octave,
       line,
       int_value,
@@ -539,11 +658,15 @@ export const Tables = {
       stroke,
       shift_right,
       displaced: false,
-      ...extraProps,
+      ...customNoteHeadProps,
     };
-  },
+  }
 
-  integerToNote(integer?: number): string {
+  static integerToNote(integer?: number): string {
+    if (typeof integer === 'undefined' || integer < 0 || integer > 11) {
+      throw new RuntimeError('BadArguments', `integerToNote() requires an integer in the range [0, 11]: ${integer}`);
+    }
+
     const table: Record<number, string> = {
       0: 'C',
       1: 'C#',
@@ -559,23 +682,18 @@ export const Tables = {
       11: 'B',
     };
 
-    if (typeof integer === 'undefined') {
-      throw new RuntimeError('BadArguments', 'Undefined integer for integerToNote');
-    }
-
-    if (integer < -2) {
-      throw new RuntimeError('BadArguments', `integerToNote requires integer > -2: ${integer}`);
-    }
-
     const noteValue = table[integer];
     if (!noteValue) {
       throw new RuntimeError('BadArguments', `Unknown note value for integer: ${integer}`);
     }
 
     return noteValue;
-  },
+  }
 
-  tabToGlyph(fret: string, scale = 1.0): { text: string; code?: string; getWidth: () => number; shift_y: number } {
+  static tabToGlyph(
+    fret: string,
+    scale: number = 1.0
+  ): { text: string; code?: string; getWidth: () => number; shift_y: number } {
     let glyph = undefined;
     let width = 0;
     let shift_y = 0;
@@ -597,121 +715,31 @@ export const Tables = {
       getWidth: () => width * scale,
       shift_y,
     };
-  },
+  }
 
-  textWidth(text: string): number {
+  // Used by annotation.ts and bend.ts. Clearly this implementation only works for the default font size.
+  // TODO: The actual width depends on the font family, size, weight, style.
+  static textWidth(text: string): number {
     return 7 * text.toString().length;
-  },
+  }
 
-  articulationCodes(artic: string): ArticulationStruct {
-    const articulations: Record<string, ArticulationStruct> = {
-      'a.': { code: 'augmentationDot', between_lines: true }, // Staccato
-      av: {
-        aboveCode: 'articStaccatissimoAbove',
-        belowCode: 'articStaccatissimoBelow',
-        between_lines: true,
-      }, // Staccatissimo
-      'a>': {
-        aboveCode: 'articAccentAbove',
-        belowCode: 'articAccentBelow',
-        between_lines: true,
-      }, // Accent
-      'a-': {
-        aboveCode: 'articTenutoAbove',
-        belowCode: 'articTenutoBelow',
-        between_lines: true,
-      }, // Tenuto
-      'a^': {
-        aboveCode: 'articMarcatoAbove',
-        belowCode: 'articMarcatoBelow',
-        between_lines: false,
-      }, // Marcato
-      'a+': { code: 'pluckedLeftHandPizzicato', between_lines: false }, // Left hand pizzicato
-      ao: {
-        aboveCode: 'pluckedSnapPizzicatoAbove',
-        belowCode: 'pluckedSnapPizzicatoBelow',
-        between_lines: false,
-      }, // Snap pizzicato
-      ah: { code: 'stringsHarmonic', between_lines: false }, // Natural harmonic or open note
-      'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false }, // Fermata
-      'a@a': { code: 'fermataAbove', between_lines: false }, // Fermata above staff
-      'a@u': { code: 'fermataBelow', between_lines: false }, // Fermata below staff
-      'a|': { code: 'stringsUpBow', between_lines: false }, // Bow up - up stroke
-      am: { code: 'stringsDownBow', between_lines: false }, // Bow down - down stroke
-      'a,': { code: 'pictChokeCymbal', between_lines: false }, // Choked
-    };
+  static articulationCodes(artic: string): ArticulationStruct {
     return articulations[artic];
-  },
+  }
 
-  accidentalMap: accidentals,
+  static accidentalMap = accidentals;
 
-  accidentalCodes(acc: string): { code: string; parenRightPaddingAdjustment: number } {
+  static accidentalCodes(acc: string): { code: string; parenRightPaddingAdjustment: number } {
     return accidentals[acc];
-  },
+  }
 
-  accidentalColumnsTable: {
-    1: {
-      a: [1],
-      b: [1],
-    },
-    2: {
-      a: [1, 2],
-    },
-    3: {
-      a: [1, 3, 2],
-      b: [1, 2, 1],
-      second_on_bottom: [1, 2, 3],
-    },
-    4: {
-      a: [1, 3, 4, 2],
-      b: [1, 2, 3, 1],
-      spaced_out_tetrachord: [1, 2, 1, 2],
-    },
-    5: {
-      a: [1, 3, 5, 4, 2],
-      b: [1, 2, 4, 3, 1],
-      spaced_out_pentachord: [1, 2, 3, 2, 1],
-      very_spaced_out_pentachord: [1, 2, 1, 2, 1],
-    },
-    6: {
-      a: [1, 3, 5, 6, 4, 2],
-      b: [1, 2, 4, 5, 3, 1],
-      spaced_out_hexachord: [1, 3, 2, 1, 3, 2],
-      very_spaced_out_hexachord: [1, 2, 1, 2, 1, 2],
-    },
-  } as Record<number, { [name: string]: number[] }>,
+  static accidentalColumnsTable = accidentalColumns;
 
-  ornamentCodes(acc: string): { code: string } {
-    const ornaments: Record<string, { code: string }> = {
-      mordent: { code: 'ornamentShortTrill' },
-      mordent_inverted: { code: 'ornamentMordent' },
-      turn: { code: 'ornamentTurn' },
-      turn_inverted: { code: 'ornamentTurnSlash' },
-      tr: { code: 'ornamentTrill' },
-      upprall: { code: 'ornamentPrecompSlideTrillDAnglebert' },
-      downprall: { code: 'ornamentPrecompDoubleCadenceUpperPrefix' },
-      prallup: { code: 'ornamentPrecompTrillSuffixDandrieu' },
-      pralldown: { code: 'ornamentPrecompTrillLowerSuffix' },
-      upmordent: { code: 'ornamentPrecompSlideTrillBach' },
-      downmordent: { code: 'ornamentPrecompDoubleCadenceUpperPrefixTurn' },
-      lineprall: { code: 'ornamentPrecompAppoggTrill' },
-      prallprall: { code: 'ornamentTremblement' },
-      scoop: { code: 'brassScoop' },
-      doit: { code: 'brassDoitMedium' },
-      fall: { code: 'brassFallLipShort' },
-      doitLong: { code: 'brassLiftMedium' },
-      fallLong: { code: 'brassFallRoughMedium' },
-      bend: { code: 'brassBend' },
-      plungerClosed: { code: 'brassMuteClosed' },
-      plungerOpen: { code: 'brassMuteOpen' },
-      flip: { code: 'brassFlip' },
-      jazzTurn: { code: 'brassJazzTurn' },
-      smear: { code: 'brassSmear' },
-    };
+  static ornamentCodes(acc: string): { code: string } {
     return ornaments[acc];
-  },
+  }
 
-  keySignature(spec: string): { type: string; line: number }[] {
+  static keySignature(spec: string): { type: string; line: number }[] {
     const keySpec = keySignatures[spec];
 
     if (!keySpec) {
@@ -736,17 +764,17 @@ export const Tables = {
     }
 
     return acc_list;
-  },
+  }
 
-  getKeySignatures(): Record<string, { acc?: string; num: number }> {
+  static getKeySignatures(): Record<string, { acc?: string; num: number }> {
     return keySignatures;
-  },
+  }
 
-  hasKeySignature(spec: string): boolean {
+  static hasKeySignature(spec: string): boolean {
     return spec in keySignatures;
-  },
+  }
 
-  unicode: {
+  static unicode = {
     // ♯ accidental sharp
     sharp: String.fromCharCode(0x266f),
     // ♭ accidental flat
@@ -761,66 +789,53 @@ export const Tables = {
     degrees: String.fromCharCode(0x00b0),
     // ○ diminished
     circle: String.fromCharCode(0x25cb),
-  },
+  };
 
-  // Used to convert duration aliases to the number based duration.
-  // If the input isn't an alias, simply return the input.
-  //
-  // example: 'q' -> '4', '8' -> '8'
-  sanitizeDuration(duration: string): string {
-    const durationAliases: Record<string, string> = {
-      w: '1',
-      h: '2',
-      q: '4',
-
-      // This is the default duration used to render bars (BarNote). Bars no longer
-      // consume ticks, so this should be a no-op.
-      //
-      // TODO(0xfe): This needs to be cleaned up.
-      b: '256',
-    };
-    const alias = durationAliases[duration];
-    if (alias !== undefined) {
-      duration = alias;
+  /**
+   * Convert duration aliases to the number based duration.
+   * If the input isn't an alias, simply return the input.
+   * @param duration
+   * @returns Example: 'q' -> '4', '8' -> '8'
+   */
+  static sanitizeDuration(duration: string): string {
+    const durationNumber: string = durationAliases[duration];
+    if (durationNumber !== undefined) {
+      duration = durationNumber;
     }
-
     if (durations[duration] === undefined) {
       throw new RuntimeError('BadArguments', `The provided duration is not valid: ${duration}`);
     }
-
     return duration;
-  },
+  }
 
-  // Convert the `duration` to an fraction
-  durationToFraction(duration: string): Fraction {
+  /** Convert the `duration` to a fraction. */
+  static durationToFraction(duration: string): Fraction {
     return new Fraction().parse(Tables.sanitizeDuration(duration));
-  },
+  }
 
-  // Convert the `duration` to an number
-  durationToNumber(duration: string): number {
+  /** Convert the `duration` to a number. */
+  static durationToNumber(duration: string): number {
     return Tables.durationToFraction(duration).value();
-  },
+  }
 
-  // Convert the `duration` to total ticks
-  durationToTicks(duration: string): number {
+  /* Convert the `duration` to total ticks. */
+  static durationToTicks(duration: string): number {
     duration = Tables.sanitizeDuration(duration);
-
     const ticks = durations[duration];
     if (ticks === undefined) {
       throw new RuntimeError('InvalidDuration');
     }
-
     return ticks;
-  },
+  }
 
   // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
+  // The default type is a regular note ('n').
   // eslint-disable-next-line
-  getGlyphProps(duration: string, type?: string): any | undefined {
+  static getGlyphProps(duration: string, type: string = 'n'): any | undefined {
     duration = Tables.sanitizeDuration(duration);
-    type = type || 'n'; // default type is a regular note
 
     // Lookup duration for default glyph head code
-    const code = duration_codes[duration];
+    const code = durationCodes[duration];
     if (code === undefined) {
       return undefined;
     }
@@ -845,32 +860,35 @@ export const Tables = {
       };
     }
 
-    // Merge duration props for 'duration' with the note head properties.
-    return { ...code.common, ...glyphTypeProperties };
-  },
+    const code_head = glyphTypeProperties.code_head;
 
-  validTypes: {
-    n: { name: 'note' },
-    r: { name: 'rest' },
-    h: { name: 'harmonic' },
-    m: { name: 'muted' },
-    s: { name: 'slash' },
-  } as Record<string, Record<string, string>>,
+    // The default implementation of getWidth() calls Glyph.getWidth(code_head, scale).
+    // This can be overridden by an individual glyph type (see slash noteheads below: Tables.SLASH_NOTEHEAD_WIDTH).
+    const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number | undefined => {
+      return Glyph.getWidth(code_head, scale);
+    };
+
+    // Merge duration props for 'duration' with the note head properties.
+    return { ...code.common, getWidth: getWidth, ...glyphTypeProperties };
+  }
+
+  /* The list of valid note types. Used by note.ts during parseNoteStruct(). */
+  static validTypes = validNoteTypes;
 
   // Default time signature.
-  TIME4_4: {
+  static TIME4_4 = {
     num_beats: 4,
     beat_value: 4,
     resolution: RESOLUTION,
-  },
-};
+  };
+}
 
 // 1/2, 1, 2, 4, 8, 16, 32, 64, 128
 // NOTE: There is no 256 here! However, there are other mentions of 256 in this file.
 // For example, in durations has a 256 key, and sanitizeDuration() can return 256.
 // The sanitizeDuration() bit may need to be removed by 0xfe.
 // eslint-disable-next-line
-let duration_codes: Record<string, any> = {
+const durationCodes: Record<string, any> = {
   '1/2': {
     common: {
       stem: false,
@@ -888,24 +906,24 @@ let duration_codes: Record<string, any> = {
       n: {
         // Breve note
         code_head: 'noteheadDoubleWhole',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDoubleWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDoubleWhole', scale);
+        // },
       },
       h: {
         // Breve note harmonic
         code_head: 'unpitchedPercussionClef1',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('unpitchedPercussionClef1', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('unpitchedPercussionClef1', scale);
+        // },
       },
       m: {
         // Breve note muted
         code_head: 'vexNoteHeadMutedBreve',
         stem_offset: 0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
+        // },
       },
       r: {
         // Breve rest
@@ -913,9 +931,9 @@ let duration_codes: Record<string, any> = {
         rest: true,
         position: 'B/5',
         dot_shiftY: 0.5,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('restDoubleWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('restDoubleWhole', scale);
+        // },
       },
       s: {
         // Breve note slash -
@@ -943,24 +961,24 @@ let duration_codes: Record<string, any> = {
       n: {
         // Whole note
         code_head: 'noteheadWhole',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadWhole', scale);
+        // },
       },
       h: {
         // Whole note harmonic
         code_head: 'noteheadDiamondWhole',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondWhole', scale);
+        // },
       },
       m: {
         // Whole note muted
         code_head: 'noteheadXWhole',
         stem_offset: -3,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXWhole', scale);
+        // },
       },
       r: {
         // Whole rest
@@ -968,9 +986,9 @@ let duration_codes: Record<string, any> = {
         rest: true,
         position: 'D/5',
         dot_shiftY: 0.5,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('restWhole', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('restWhole', scale);
+        // },
       },
       s: {
         // Whole note slash
@@ -998,24 +1016,24 @@ let duration_codes: Record<string, any> = {
       n: {
         // Half note
         code_head: 'noteheadHalf',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadHalf', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadHalf', scale);
+        // },
       },
       h: {
         // Half note harmonic
         code_head: 'noteheadDiamondHalf',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondHalf', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondHalf', scale);
+        // },
       },
       m: {
         // Half note muted
         code_head: 'noteheadXHalf',
         stem_offset: -3,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXHalf', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXHalf', scale);
+        // },
       },
       r: {
         // Half rest
@@ -1024,9 +1042,9 @@ let duration_codes: Record<string, any> = {
         rest: true,
         position: 'B/4',
         dot_shiftY: -0.5,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('restHalf', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('restHalf', scale);
+        // },
       },
       s: {
         // Half note slash
@@ -1054,23 +1072,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Quarter note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Quarter harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Quarter muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Quarter rest
@@ -1081,9 +1099,9 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -0.5,
         line_above: 1.5,
         line_below: 1.5,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('restQuarter', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('restQuarter', scale);
+        // },
       },
       s: {
         // Quarter slash
@@ -1114,23 +1132,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Eighth note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Eighth note harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Eighth note muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Eighth rest
@@ -1142,12 +1160,12 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -0.5,
         line_above: 1.0,
         line_below: 1.0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('rest8th', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('rest8th', scale);
+        // },
       },
       s: {
-        // Eight slash
+        // Eighth slash
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
@@ -1175,23 +1193,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Sixteenth note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Sixteenth note harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Sixteenth note muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Sixteenth rest
@@ -1203,9 +1221,9 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -0.5,
         line_above: 1.0,
         line_below: 2.0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('rest16th', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('rest16th', scale);
+        // },
       },
       s: {
         // Sixteenth slash
@@ -1236,23 +1254,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Thirty-second note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Thirty-second harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Thirty-second muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Thirty-second rest
@@ -1264,9 +1282,9 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -1.5,
         line_above: 2.0,
         line_below: 2.0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('rest32nd', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('rest32nd', scale);
+        // },
       },
       s: {
         // Thirty-second slash
@@ -1297,23 +1315,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Sixty-fourth note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Sixty-fourth harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Sixty-fourth muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Sixty-fourth rest
@@ -1325,9 +1343,9 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -1.5,
         line_above: 2.0,
         line_below: 3.0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('rest64th', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('rest64th', scale);
+        // },
       },
       s: {
         // Sixty-fourth slash
@@ -1358,23 +1376,23 @@ let duration_codes: Record<string, any> = {
       n: {
         // Hundred-twenty-eight note
         code_head: 'noteheadBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadBlack', scale);
+        // },
       },
       h: {
         // Hundred-twenty-eight harmonic
         code_head: 'noteheadDiamondBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadDiamondBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
+        // },
       },
       m: {
         // Hundred-twenty-eight muted
         code_head: 'noteheadXBlack',
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('noteheadXBlack', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('noteheadXBlack', scale);
+        // },
       },
       r: {
         // Hundred-twenty-eight rest
@@ -1386,12 +1404,12 @@ let duration_codes: Record<string, any> = {
         dot_shiftY: -2.5,
         line_above: 3.0,
         line_below: 3.0,
-        getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-          return Glyph.getWidth('rest128th', scale);
-        },
+        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+        //   return Glyph.getWidth('rest128th', scale);
+        // },
       },
       s: {
-        // Hundred-twenty-eight rest
+        // Hundred-twenty-eight slash
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',

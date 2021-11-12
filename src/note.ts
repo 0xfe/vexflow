@@ -161,7 +161,7 @@ export abstract class Note extends Tickable {
       return undefined;
     }
 
-    // If specified type is invalid, return undefined
+    // If specified type is invalid, return undefined.
     let type = noteStruct.type;
     if (type && !Tables.validTypes[type]) {
       return undefined;

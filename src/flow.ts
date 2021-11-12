@@ -255,9 +255,6 @@ export class Flow {
   static get TIME4_4(): { num_beats: number; beat_value: number; resolution: number } {
     return Tables.TIME4_4;
   }
-  static set TIME4_4(value: { num_beats: number; beat_value: number; resolution: number }) {
-    Tables.TIME4_4 = value;
-  }
   static get accidentalMap(): Record<string, { code: string; parenRightPaddingAdjustment: number }> {
     return Tables.accidentalMap;
   }

@@ -177,7 +177,7 @@ export class Accidental extends Modifier {
     // need 2.5 lines of clearance above or below).
     //
     // Classic layouts and exception patterns are found in the 'tables.js'
-    // in 'Vex.Flow.accidentalColumnsTable'
+    // in 'Tables.accidentalColumnsTable'
     //
     // Beyond 6 vertical accidentals, default to the parallel ascending lines approach,
     // using as few columns as possible for the verticle structure.
@@ -252,7 +252,7 @@ export class Accidental extends Modifier {
 
       let groupMember;
       let column;
-      // If the group contains more than seven members, use ascending parallel lines
+      // If the group contains seven members or more, use ascending parallel lines
       // of accidentals, using as few columns as possible while avoiding collisions.
       if (groupLength >= 7) {
         // First, determine how many columns to use:
@@ -274,10 +274,9 @@ export class Accidental extends Modifier {
           lineList[groupMember].column = column;
           totalColumns = totalColumns > column ? totalColumns : column;
         }
-
-        // Otherwise, if the group contains fewer than seven members, use the layouts from
-        // the accidentalsColumnsTable housed in tables.js.
       } else {
+        // If the group contains fewer than seven members, use the layouts from
+        // the Tables.accidentalColumnsTable (See: tables.ts).
         for (groupMember = i; groupMember <= groupEnd; groupMember++) {
           column = Tables.accidentalColumnsTable[groupLength][endCase][groupMember - i];
           lineList[groupMember].column = column;
