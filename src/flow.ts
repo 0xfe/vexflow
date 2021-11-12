@@ -96,6 +96,13 @@ export class Flow {
   static EasyScore = EasyScore;
   static Element = Element;
   static Factory = Factory;
+  static get Flow() {
+    // This (circular reference) provides a handy shortcut for importing VexFlow via `require()`.
+    // For example:
+    // const Vex = require('vexflow');
+    // const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
+    return Flow;
+  }
   static Font = Font;
   static Formatter = Formatter;
   static Fraction = Fraction;

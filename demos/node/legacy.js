@@ -1,10 +1,16 @@
 // node legacy.js
 //
-// Older versions of Node JS (e.g. v11.15.0) do not support globalThis.
-// This demonstrates that VexFlow can be imported even if globalThis is not available.
+// This demonstrates that VexFlow can be imported even with older versions of Node JS (e.g. v11.15.0).
+// Those older versions do not support `globalThis`, but provide `global` and `this` as the global object.
 
 /* eslint-disable no-console */
 
 const Vex = require('../../build/vexflow-debug');
 
-console.log(Vex);
+const { Flow, Stave, StaveNote } = Vex.Flow;
+
+console.log(Flow.BUILD);
+
+console.log(Stave);
+
+console.log(StaveNote);
