@@ -8,8 +8,8 @@ import { warn } from './util';
  * A rendering context for the Canvas backend (CanvasRenderingContext2D).
  */
 export class CanvasContext extends RenderContext {
-  context2D: CanvasRenderingContext2D;
-  canvas: HTMLCanvasElement | { width: number; height: number };
+  context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  canvas: HTMLCanvasElement | OffscreenCanvas | { width: number; height: number };
 
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
@@ -44,7 +44,7 @@ export class CanvasContext extends RenderContext {
     return [width, height];
   }
 
-  constructor(context: CanvasRenderingContext2D) {
+  constructor(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
     super();
     this.context2D = context;
     if (!context.canvas) {
@@ -132,7 +132,7 @@ export class CanvasContext extends RenderContext {
   }
 
   resize(width: number, height: number): this {
-    const canvasElement = this.context2D.canvas;
+    const canvas = this.context2D.canvas;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
     // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
@@ -142,10 +142,15 @@ export class CanvasContext extends RenderContext {
     width = (width / devicePixelRatio) | 0;
     height = (height / devicePixelRatio) | 0;
 
-    canvasElement.width = width * devicePixelRatio;
-    canvasElement.height = height * devicePixelRatio;
-    canvasElement.style.width = width + 'px';
-    canvasElement.style.height = height + 'px';
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
+
+    // The canvas could be an instance of either HTMLCanvasElement or an OffscreenCanvas.
+    // Only HTMLCanvasElement has a style attribute.
+    if (canvas instanceof window.HTMLCanvasElement) {
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+    }
 
     return this.scale(devicePixelRatio, devicePixelRatio);
   }
