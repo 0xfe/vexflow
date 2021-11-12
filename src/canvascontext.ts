@@ -1,6 +1,7 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { globalObject, isHTMLCanvas } from '.';
 import { Font, FontInfo } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
@@ -141,7 +142,7 @@ export class CanvasContext extends RenderContext {
 
   resize(width: number, height: number): this {
     const canvas = this.context2D.canvas;
-    const devicePixelRatio = window.devicePixelRatio || 1;
+    const devicePixelRatio = globalObject().devicePixelRatio || 1;
 
     // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
     [width, height] = CanvasContext.sanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
@@ -155,7 +156,7 @@ export class CanvasContext extends RenderContext {
 
     // The canvas could be an instance of either HTMLCanvasElement or an OffscreenCanvas.
     // Only HTMLCanvasElement has a style attribute.
-    if (canvas instanceof window.HTMLCanvasElement) {
+    if (isHTMLCanvas(canvas)) {
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
     }

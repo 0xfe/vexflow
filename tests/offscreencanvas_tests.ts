@@ -8,11 +8,12 @@ import { Formatter } from '../src/formatter';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
 import { StaveNote } from '../src/stavenote';
+import { globalObject } from '../src/util';
 
 const OffscreenCanvasTests = {
   Start(): void {
     // At the time of writing, OffscreenCanvas is still an experimental technology.
-    if (window.OffscreenCanvas === undefined) {
+    if (globalObject().OffscreenCanvas === undefined) {
       return;
     }
 

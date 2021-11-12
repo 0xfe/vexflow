@@ -2,6 +2,8 @@
 // Run: `node pdf.js`
 // Saves a PDF in `score.pdf`.
 
+/* eslint-disable no-console */
+
 const Vex = require('../../build/vexflow-debug');
 const { JSDOM } = require('jsdom');
 const { jsPDF } = require('jspdf');
@@ -40,7 +42,7 @@ const notes = [
   new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'q' }),
 ];
 
-// Helper function to justify and draw a 4/4 voice
+// Helper function to justify and draw a 4/4 voice.
 Formatter.FormatAndDraw(context, stave, notes);
 
 const doc = new jsPDF();
