@@ -4,15 +4,20 @@
     <div id="outputBravura"></div>
     <div id="outputGonville"></div>
     <div id="outputPetaluma"></div>
-    <!-- The standard vexflow build includes three music fonts. -->
+    <!--
+        The standard VexFlow library (build/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
+        It statically bundles all the music fonts, and selects Bravura as its default.
+        For this demo we include build/vexflow-debug.js, which is the non-minified version of vexflow.js.
+        The build/*.js files are compatible with <script> tags.
+        The build/esm/*.js files are compatible with ESM import statements.
+    -->
     <script src="../../build/vexflow-debug.js"></script>
     <script>
       console.log(Vex);
       console.log('VexFlow BUILD ' + Vex.Flow.BUILD);
 
-      ////////////////////////////////////////////////////////////////////////
-
       {
+        // Calling setMusicFont() here is optional, since Bravura is the default font.
         Vex.Flow.setMusicFont('Bravura');
         const factory = new Vex.Flow.Factory({
           renderer: { elementId: 'outputBravura', width: 500, height: 130 },
@@ -31,9 +36,12 @@
         factory.draw();
       }
 
-      ////////////////////////////////////////////////////////////////////////
-
       {
+        // We call setMusicFont() here to change the engraving font to Gonville.
+        // The easiest way to change music fonts is to instantiate a new `Factory` for each font you want to use on the same webpage.
+        // If you change fonts between different voices / staves, but use the same Factory, it won't do what you expect.
+        // That's because a single Factory has particular ordering for drawing all of its internal members.
+        // See `Factory.draw()` in factory.ts for more details.
         Vex.Flow.setMusicFont('Gonville');
         const factory = new Vex.Flow.Factory({
           renderer: { elementId: 'outputGonville', width: 500, height: 130 },
@@ -51,8 +59,6 @@
           .addTimeSignature('4/4');
         factory.draw();
       }
-
-      ////////////////////////////////////////////////////////////////////////
 
       {
         Vex.Flow.setMusicFont('Petaluma');

@@ -6,13 +6,19 @@
 <html>
   <body>
     <div id="output"></div>
-    <!-- The vexflow core build includes no music fonts. -->
+    <!--
+        The vexflow core build includes no music fonts.
+        You can use the async Flow.setMusicFont(...) method to load the music fonts dynamically.
+    -->
     <script src="../../build/vexflow-core.js"></script>
     <script>
       console.log(Vex);
       // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
       // the loading of the fonts (stored in vexflow-font-xxxx.js).
       // It returns a Promise that resolves to the loaded music font(s).
+      // Notice here that Flow.setMusicFont(...) takes a variable number of font family strings.
+      // The first argument is the primary music engraving font.
+      // The others are fallbacks, in case a glyph is not found in the first music font.
       Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
 
       function onFontsLoaded(musicFonts) {
