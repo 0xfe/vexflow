@@ -4,7 +4,20 @@
   For example: Vex.Flow.setMusicFont(...).then(onFulfilledCallback) 
 -->
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+    </style>
+  </head>
   <body>
+    <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
+    <p>This page calls Flow.setMusicFont(...).then(...) with a onFontsLoaded callback.</p>
     <div id="output"></div>
     <!--
         The vexflow core build includes no music fonts.
@@ -12,7 +25,6 @@
     -->
     <script src="../../build/vexflow-core.js"></script>
     <script>
-      console.log(Vex);
       // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
       // the loading of the fonts (stored in vexflow-font-xxxx.js).
       // It returns a Promise that resolves to the loaded music font(s).
@@ -21,10 +33,13 @@
       // The others are fallbacks, in case a glyph is not found in the first music font.
       Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
 
+      // If you only specify one font, fewer bundles will be loaded.
+      // See your browser's developer tools > network tab for details.
+      // Vex.Flow.setMusicFont('Gonville').then(onFontsLoaded);
+
       function onFontsLoaded(musicFonts) {
         console.log('Successfully loaded this music font stack:');
-        const [bravura, gonville, petaluma, custom] = musicFonts;
-        console.log(bravura, gonville, petaluma, custom);
+        console.log(...musicFonts);
 
         const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
         const score = factory.EasyScore();

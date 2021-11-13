@@ -4,7 +4,22 @@
   There is no need to call Vex.Flow.setMusicFont(...).
 -->
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+    </style>
+  </head>
   <body>
+    <p>
+      This page uses vexflow-core-with-bravura.js, which statically bundles only the Bravura font. You do not need to
+      call Flow.setMusicFont(...) because VexFlow will default to using Bravura.
+    </p>
     <div id="output"></div>
     <script src="../../build/vexflow-core-with-bravura.js"></script>
     <script type="module">

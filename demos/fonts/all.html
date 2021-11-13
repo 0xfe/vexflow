@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+    </style>
+  </head>
   <body>
+    <p>This demo renders three staves, each with a different music engraving font.</p>
+    <h3>Bravura</h3>
     <div id="outputBravura"></div>
+    <h3>Gonville</h3>
     <div id="outputGonville"></div>
+    <h3>Petaluma</h3>
     <div id="outputPetaluma"></div>
+    <p>View the source code for more information.</p>
     <!--
         The standard VexFlow library (build/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
         It statically bundles all the music fonts, and selects Bravura as its default.
