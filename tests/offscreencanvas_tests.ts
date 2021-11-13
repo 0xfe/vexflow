@@ -3,6 +3,8 @@
 //
 // OffscreenCanvas Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { CanvasContext } from '../src/canvascontext';
 import { Formatter } from '../src/formatter';
 import { Stave } from '../src/stave';
@@ -58,4 +60,5 @@ function simpleTest(): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(OffscreenCanvasTests);
 export { OffscreenCanvasTests };

@@ -34,6 +34,7 @@ export * from './multimeasurerest_tests';
 export * from './music_tests';
 export * from './notehead_tests';
 export * from './notesubgroup_tests';
+export * from './offscreencanvas_tests';
 export * from './ornament_tests';
 export * from './parser_tests';
 export * from './pedalmarking_tests';
