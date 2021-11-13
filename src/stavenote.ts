@@ -98,6 +98,9 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
 }
 
 export class StaveNote extends StemmableNote {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATIC MEMBERS
+
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
@@ -126,9 +129,6 @@ export class StaveNote extends StemmableNote {
     const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('glyphs.noteHead.minPadding');
   }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Static Members
 
   /** Format notes inside a ModifierContext. */
   static format(notes: StaveNote[], state: ModifierContextState): boolean {
@@ -369,7 +369,7 @@ export class StaveNote extends StemmableNote {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Instance Members
+  // INSTANCE MEMBERS
 
   minLine: number = 0;
   maxLine: number = 0;

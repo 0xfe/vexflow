@@ -591,18 +591,12 @@ export class Tables {
   }
 
   /**
-   * Take a note in the format "Key/Octave" (e.g., "C/5") and return properties.
-   *
-   * The last argument, params, is
-   */
-  // eslint-disable-next-line
-  /**
-   *
    * @param keyOctaveGlyph a string in the format "key/octave" (e.g., "c/5") or "key/octave/custom-note-head-code" (e.g., "g/5/t3").
    * @param clef
    * @param params a struct with one option, `octave_shift` for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
-   * @returns
+   * @returns properties for the specified note.
    */
+  // eslint-disable-next-line
   static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
     let options = { octave_shift: 0 };
     if (typeof params === 'object') {

@@ -186,6 +186,9 @@ class GlyphOutline {
 }
 
 export class Glyph extends Element {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATIC MEMBERS
+
   static get CATEGORY(): string {
     return 'Glyph';
   }
@@ -196,9 +199,6 @@ export class Glyph extends Element {
   // Computed whenever the Flow.setMusicFont(...) is called.
   // It is set to a comma separated list of font names.
   public static CURRENT_CACHE_KEY: string = '';
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Static methods for loading and rendering glyphs.
 
   /**
    * Pass a key of the form `glyphs.{category}.{code}.{key}` to Font.lookupMetric(). If the initial lookup fails,
@@ -379,7 +379,7 @@ export class Glyph extends Element {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Instance Variables
+  // INSTANCE MEMBERS
 
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;

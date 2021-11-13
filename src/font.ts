@@ -76,7 +76,7 @@ const Fonts: Record<string, Font> = {};
 
 export class Font {
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Static Members
+  // STATIC MEMBERS
 
   /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
@@ -393,7 +393,7 @@ export class Font {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Instance Members
+  // INSTANCE MEMBERS
 
   protected name: string;
   protected data?: FontData;
