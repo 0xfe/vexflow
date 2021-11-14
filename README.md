@@ -1,6 +1,7 @@
 # VexFlow 4 (beta)
 
 A JavaScript / TypeScript library for rendering music notation.
+
 Copyright (c) 2010 Mohit Muthanna Cheppudira
 
 ## Sponsor this Project
@@ -36,10 +37,17 @@ $ npm install vexflow
 
 ### Using the HTML `script` Tag
 
-The releases are served via [unpkg.com](https://unpkg.com).
+Releases are served via CDN:
 
-- Debug version: https://unpkg.com/vexflow/releases/vexflow-debug.js
-- Minified version: https://unpkg.com/vexflow/releases/vexflow-min.js
+**unpkg**
+
+- Minified: https://unpkg.com/vexflow@4.0.0/build/vexflow.js
+- Debug: https://unpkg.com/vexflow@4.0.0/build/vexflow-debug.js
+
+**jsdelivr**
+
+- Minified: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.js
+- Debug: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
 
 ### Using EasyScore
 
