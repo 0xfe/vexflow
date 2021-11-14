@@ -18,6 +18,7 @@ const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
+const DOCS_DIR = path.join(BASE_DIR, 'docs');
 const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
@@ -244,7 +245,7 @@ export default Vex;`;
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', '*.map'],
             dest: RELEASES_DIR,
           },
         ],
@@ -254,8 +255,18 @@ export default Vex;`;
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', '*.map'],
             dest: REFERENCE_DIR,
+          },
+        ],
+      },
+      typedoc: {
+        files: [
+          {
+            expand: true,
+            cwd: BUILD_DIR,
+            src: ['apidocs/**'],
+            dest: DOCS_DIR,
           },
         ],
       },
@@ -263,10 +274,11 @@ export default Vex;`;
     typedoc: {
       build: {
         options: {
-          out: 'build/docs',
+          out: 'build/apidocs',
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
+          disableSources: true,
         },
         src: ['./src/index.ts'],
       },
@@ -335,6 +347,7 @@ export default Vex;`;
       'copy:moduleJSFiles',
       'copy:modulePackageJSON',
       'typedoc',
+      'copy:typedoc',
     ]
   );
 
