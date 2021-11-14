@@ -117,4 +117,5 @@ const dotted = createTest((f: Factory, score: EasyScore) => {
   f.Beam({ notes: notes2.slice(7, 9) });
 });
 
+VexFlowTests.register(GhostNoteTests);
 export { GhostNoteTests };

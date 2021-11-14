@@ -1,20 +1,21 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// Author: @AaronDavidNewman
+// Author: Aaron (@AaronDavidNewman)
 //
-// This implements chord symbols as modifiers that can be attached to notes.
-// Chord symbols can contain multiple 'blocks' which can contain
-// text or glyphs with various positioning options.
+// This implements chord symbols above/below a chord.
+// Chord symbols are modifiers that can be attached to notes.
+// They can contain multiple 'blocks' which represent text or
+// glyphs with various positioning options.
 //
 // See `tests/chordsymbol_tests.ts` for usage examples.
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFont } from './textfont';
-import { FontInfo } from './types/common';
+import { TextFormatter } from './textformatter';
 import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -34,14 +35,14 @@ export interface ChordSymbolBlock {
   glyph?: Glyph;
 }
 
-export enum HorizontalJustify {
+export enum ChordSymbolHorizontalJustify {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
   CENTER_STEM = 4,
 }
 
-export enum VerticalJustify {
+export enum ChordSymbolVerticalJustify {
   TOP = 1,
   BOTTOM = 2,
 }
@@ -69,37 +70,27 @@ export class ChordSymbol extends Modifier {
     return 'ChordSymbol';
   }
 
-  protected symbolBlocks: ChordSymbolBlock[];
-  protected horizontal: number;
-  protected vertical: number;
-  protected useKerning: boolean;
-  protected reportWidth: boolean;
-  protected font: FontInfo;
-  protected textFont: TextFont;
-  /** Currently unused. */
-  protected static noFormat: boolean = false;
-
   // Chord symbols can be positioned and justified relative to the note.
-  static readonly horizontalJustify = HorizontalJustify;
+  static readonly HorizontalJustify = ChordSymbolHorizontalJustify;
 
-  static readonly horizontalJustifyString: Record<string, HorizontalJustify> = {
-    left: HorizontalJustify.LEFT,
-    right: HorizontalJustify.RIGHT,
-    center: HorizontalJustify.CENTER,
-    centerStem: HorizontalJustify.CENTER_STEM,
+  static readonly HorizontalJustifyString: Record<string, ChordSymbolHorizontalJustify> = {
+    left: ChordSymbolHorizontalJustify.LEFT,
+    right: ChordSymbolHorizontalJustify.RIGHT,
+    center: ChordSymbolHorizontalJustify.CENTER,
+    centerStem: ChordSymbolHorizontalJustify.CENTER_STEM,
   };
 
-  static readonly verticalJustify = VerticalJustify;
+  static readonly VerticalJustify = ChordSymbolVerticalJustify;
 
-  static readonly verticalJustifyString: Record<string, VerticalJustify> = {
-    top: VerticalJustify.TOP,
-    above: VerticalJustify.TOP,
-    below: VerticalJustify.BOTTOM,
-    bottom: VerticalJustify.BOTTOM,
+  static readonly VerticalJustifyString: Record<string, ChordSymbolVerticalJustify> = {
+    top: ChordSymbolVerticalJustify.TOP,
+    above: ChordSymbolVerticalJustify.TOP,
+    below: ChordSymbolVerticalJustify.BOTTOM,
+    bottom: ChordSymbolVerticalJustify.BOTTOM,
   };
 
   static get superSubRatio(): number {
-    return ChordSymbol.chordSymbolMetrics.global.superSubRatio;
+    return ChordSymbol.metrics.global.superSubRatio;
   }
 
   /** Currently unused: Globally turn off text formatting, if the built-in formatting does not work for your font. */
@@ -113,37 +104,18 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static getMetricForGlyph(glyphCode: string): any {
-    if (ChordSymbol.chordSymbolMetrics[glyphCode]) {
-      return ChordSymbol.chordSymbolMetrics[glyphCode];
+    if (ChordSymbol.metrics[glyphCode]) {
+      return ChordSymbol.metrics[glyphCode];
     }
     return undefined;
   }
 
-  getYOffsetForText(text: string): number {
-    let acc = 0;
-    let ix = 0;
-    const resolution = this.textFont.resolution;
-    for (ix = 0; ix < text.length; ++ix) {
-      const metric = this.textFont.getMetricForCharacter(text[ix]);
-
-      if (metric) {
-        acc = metric.y_max < acc ? metric.y_max : acc;
-      }
-    }
-
-    return ix > 0 ? -1 * (acc / resolution) : 0;
-  }
-
   static get engravingFontResolution(): number {
-    return Tables.DEFAULT_FONT_STACK[0].getResolution();
+    return Tables.currentMusicFont().getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
-    return ChordSymbol.chordSymbolMetrics.global.spacing / ChordSymbol.engravingFontResolution;
-  }
-
-  getWidthForCharacter(c: string): number {
-    return this.textFont.getMetricForCharacter(c).advanceWidth / this.textFont.resolution;
+    return ChordSymbol.metrics.global.spacing / ChordSymbol.engravingFontResolution;
   }
 
   static getWidthForGlyph(glyph: Glyph): number {
@@ -171,15 +143,15 @@ export class ChordSymbol extends Modifier {
   }
 
   static get superscriptOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.superscriptOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.superscriptOffset / ChordSymbol.engravingFontResolution;
   }
 
   static get subscriptOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.subscriptOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.subscriptOffset / ChordSymbol.engravingFontResolution;
   }
 
   static get kerningOffset(): number {
-    return ChordSymbol.chordSymbolMetrics.global.kerningOffset / ChordSymbol.engravingFontResolution;
+    return ChordSymbol.metrics.global.kerningOffset / ChordSymbol.engravingFontResolution;
   }
 
   // Glyph data
@@ -251,42 +223,53 @@ export class ChordSymbol extends Modifier {
   static readonly symbolModifiers = SymbolModifiers;
 
   // eslint-disable-next-line
-  static get chordSymbolMetrics(): any {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
+  static get metrics(): any {
+    return Tables.currentMusicFont().getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.lowerKerningText;
+    // For example, see: `bravura_metrics.ts`
+    // BravuraMetrics.glyphs.chordSymbol.global.lowerKerningText, which returns an array of letters.
+    // ['D', 'F', 'P', 'T', 'V', 'Y']
+    return ChordSymbol.metrics.global.lowerKerningText;
   }
 
   static get upperKerningText(): string[] {
-    return Tables.DEFAULT_FONT_STACK[0].getMetrics().glyphs.chordSymbol.global.upperKerningText;
+    return ChordSymbol.metrics.global.upperKerningText;
+  }
+
+  static isSuperscript(block: ChordSymbolBlock): boolean {
+    return block.symbolModifier !== undefined && block.symbolModifier === SymbolModifiers.SUPERSCRIPT;
+  }
+
+  static isSubscript(block: ChordSymbolBlock): boolean {
+    return block.symbolModifier !== undefined && block.symbolModifier === SymbolModifiers.SUBSCRIPT;
   }
 
   /**
    * Estimate the width of the whole chord symbol, based on the sum of the widths of the individual blocks.
    * Estimate how many lines above/below the staff we need.
    */
-  static format(instances: ChordSymbol[], state: ModifierContextState): boolean {
-    if (!instances || instances.length === 0) return false;
+  static format(symbols: ChordSymbol[], state: ModifierContextState): boolean {
+    if (!symbols || symbols.length === 0) return false;
 
     let width = 0;
     let nonSuperWidth = 0;
     const reportedWidths = [];
 
-    for (let i = 0; i < instances.length; ++i) {
-      const instance = instances[i];
-      const fontAdj = instance.font.size / 20;
+    for (const symbol of symbols) {
+      const fontSize = Font.convertSizeToPointValue(symbol.textFont?.size);
+      const fontAdj = Font.scaleSize(fontSize, 0.05);
       const glyphAdj = fontAdj * 2;
       let lineSpaces = 1;
       let vAlign = false;
 
-      for (let j = 0; j < instance.symbolBlocks.length; ++j) {
-        const symbol = instance.symbolBlocks[j];
-        const sup = instance.isSuperscript(symbol);
-        const sub = instance.isSubscript(symbol);
-        const subAdj = sup || sub ? ChordSymbol.superSubRatio : 1;
-        const adj = symbol.symbolType === SymbolTypes.GLYPH ? glyphAdj * subAdj : fontAdj * subAdj;
+      for (let j = 0; j < symbol.symbolBlocks.length; ++j) {
+        const block = symbol.symbolBlocks[j];
+        const sup = ChordSymbol.isSuperscript(block);
+        const sub = ChordSymbol.isSubscript(block);
+        const superSubScale = sup || sub ? ChordSymbol.superSubRatio : 1;
+        const adj = block.symbolType === SymbolTypes.GLYPH ? glyphAdj * superSubScale : fontAdj * superSubScale;
 
         // If there are super/subscripts, they extend beyond the line so
         // assume they take up 2 lines
@@ -295,62 +278,64 @@ export class ChordSymbol extends Modifier {
         }
 
         // If there is a symbol-specific offset, add it but consider font
-        // size since font and glyphs will be interspersed
-        if (symbol.symbolType === SymbolTypes.GLYPH && symbol.glyph !== undefined) {
-          symbol.yShift += ChordSymbol.getYShiftForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
-          symbol.xShift += ChordSymbol.getXShiftForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
-          symbol.glyph.scale = symbol.glyph.scale * adj;
-          symbol.width = ChordSymbol.getWidthForGlyph(symbol.glyph) * instance.pointsToPixels * subAdj;
-        } else if (symbol.symbolType === SymbolTypes.TEXT) {
-          symbol.width = symbol.width * instance.textFont.pointsToPixels * subAdj;
-          symbol.yShift += instance.getYOffsetForText(symbol.text) * adj;
+        // size since font and glyphs will be interspersed.
+        const fontSize = symbol.textFormatter.fontSizeInPixels;
+        const superSubFontSize = fontSize * superSubScale;
+        if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
+          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
+          block.yShift += ChordSymbol.getYShiftForGlyph(block.glyph) * superSubFontSize;
+          block.xShift += ChordSymbol.getXShiftForGlyph(block.glyph) * superSubFontSize;
+          block.glyph.scale = block.glyph.scale * adj;
+        } else if (block.symbolType === SymbolTypes.TEXT) {
+          block.width = block.width * superSubFontSize;
+          block.yShift += symbol.getYOffsetForText(block.text) * adj;
         }
 
         if (
-          symbol.symbolType === SymbolTypes.GLYPH &&
-          symbol.glyph !== undefined &&
-          symbol.glyph.code === ChordSymbol.glyphs.over.code
+          block.symbolType === SymbolTypes.GLYPH &&
+          block.glyph !== undefined &&
+          block.glyph.code === ChordSymbol.glyphs.over.code
         ) {
           lineSpaces = 2;
         }
-        symbol.width += ChordSymbol.spacingBetweenBlocks * instance.pointsToPixels * subAdj;
+        block.width += ChordSymbol.spacingBetweenBlocks * fontSize * superSubScale;
 
         // If a subscript immediately  follows a superscript block, try to
         // overlay them.
         if (sup && j > 0) {
-          const prev = instance.symbolBlocks[j - 1];
-          if (!instance.isSuperscript(prev)) {
+          const prev = symbol.symbolBlocks[j - 1];
+          if (!ChordSymbol.isSuperscript(prev)) {
             nonSuperWidth = width;
           }
         }
         if (sub && nonSuperWidth > 0) {
           vAlign = true;
           // slide the symbol over so it lines up with superscript
-          symbol.xShift = symbol.xShift + (nonSuperWidth - width);
+          block.xShift = block.xShift + (nonSuperWidth - width);
           width = nonSuperWidth;
           nonSuperWidth = 0;
           // If we have vertically lined up, turn kerning off.
-          instance.setEnableKerning(false);
+          symbol.setEnableKerning(false);
         }
         if (!sup && !sub) {
           nonSuperWidth = 0;
         }
-        symbol.vAlign = vAlign;
-        width += symbol.width;
+        block.vAlign = vAlign;
+        width += block.width;
       }
 
       // make kerning adjustments after computing super/subscripts
-      instance.updateKerningAdjustments();
-      instance.updateOverBarAdjustments();
+      symbol.updateKerningAdjustments();
+      symbol.updateOverBarAdjustments();
 
-      if (instance.getVertical() === VerticalJustify.TOP) {
-        instance.setTextLine(state.top_text_line);
+      if (symbol.getVertical() === ChordSymbolVerticalJustify.TOP) {
+        symbol.setTextLine(state.top_text_line);
         state.top_text_line += lineSpaces;
       } else {
-        instance.setTextLine(state.text_line + 1);
+        symbol.setTextLine(state.text_line + 1);
         state.text_line += lineSpaces + 1;
       }
-      if (instance.getReportWidth()) {
+      if (symbol.getReportWidth()) {
         reportedWidths.push(width);
       } else {
         reportedWidths.push(0);
@@ -364,40 +349,56 @@ export class ChordSymbol extends Modifier {
     return true;
   }
 
+  /** Currently unused. */
+  protected static noFormat: boolean = false;
+
+  protected symbolBlocks: ChordSymbolBlock[] = [];
+  protected horizontal: number = ChordSymbolHorizontalJustify.LEFT;
+  protected vertical: number = ChordSymbolVerticalJustify.TOP;
+  protected useKerning: boolean = true;
+  protected reportWidth: boolean = true;
+
+  // Initialized by the constructor via this.setFont().
+  protected textFormatter!: TextFormatter;
+
   constructor() {
     super();
-    this.symbolBlocks = [];
-    this.horizontal = HorizontalJustify.LEFT;
-    this.vertical = VerticalJustify.TOP;
-    this.useKerning = true;
-    this.reportWidth = true;
+    this.resetFont();
+  }
 
-    let fontFamily = 'Arial';
-    if (this.musicFont.getName() === 'Petaluma') {
-      fontFamily = 'petalumaScript,Arial';
-    } else {
-      fontFamily = 'Roboto Slab,Times';
+  /**
+   * Default text font.
+   * Choose a font family that works well with the current music engraving font.
+   * @override `Element.TEXT_FONT`.
+   */
+  static get TEXT_FONT(): Required<FontInfo> {
+    let family = 'Roboto Slab, Times, serif';
+    if (Tables.currentMusicFont().getName() === 'Petaluma') {
+      // Fixes Issue #1180
+      // https://github.com/0xfe/vexflow/issues/1180
+      // family = 'PetalumaScript, Arial, sans-serif';
+
+      // RONYEH: A mismatched font family results in loading Roboto Slab's metrics instead.
+      // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
+      family = 'petalumaScript,Arial';
     }
-    this.font = {
-      family: fontFamily,
+    return {
+      family,
       size: 12,
-      weight: '',
+      weight: FontWeight.NORMAL,
+      style: FontStyle.NORMAL,
     };
-    this.textFont = TextFont.getTextFontFromVexFontData(this.font);
   }
 
-  // ### pointsToPixels
-  // The font size is specified in points, convert to 'pixels' in the svg space
-  get pointsToPixels(): number {
-    return this.textFont.pointsToPixels;
-  }
-
+  /**
+   * The offset is specified in `em`. Scale this value by the font size in pixels.
+   */
   get superscriptOffset(): number {
-    return ChordSymbol.superscriptOffset * this.pointsToPixels;
+    return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPixels;
   }
 
   get subscriptOffset(): number {
-    return ChordSymbol.subscriptOffset * this.pointsToPixels;
+    return ChordSymbol.subscriptOffset * this.textFormatter.fontSizeInPixels;
   }
 
   setReportWidth(value: boolean): this {
@@ -420,7 +421,7 @@ export class ChordSymbol extends Modifier {
     }
     const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
-    const yoff = 0.25 * this.pointsToPixels;
+    const yoff = 0.25 * this.textFormatter.fontSizeInPixels;
     let symIndex = 0;
     for (symIndex === 0; symIndex < barIndex; ++symIndex) {
       const symbol = this.symbolBlocks[symIndex];
@@ -479,7 +480,7 @@ export class ChordSymbol extends Modifier {
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.pointsToPixels;
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.fontSizeInPixels;
     // TODO: adjust kern for font size.
     // Where should this constant live?
     if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {
@@ -514,7 +515,7 @@ export class ChordSymbol extends Modifier {
       width: 0,
     };
 
-    // Note: all symbol widths are resolution and font-independent.
+    // Note: symbol widths are resolution and font-independent.
     // We convert to pixel values when we know what the font is.
     if (symbolType === SymbolTypes.GLYPH && typeof params.glyph === 'string') {
       const glyphArgs = ChordSymbol.glyphs[params.glyph];
@@ -525,11 +526,7 @@ export class ChordSymbol extends Modifier {
       // rv.width = rv.glyph.getMetrics().width;
       // don't set yShift here, b/c we need to do it at formatting time after the font is set.
     } else if (symbolType === SymbolTypes.TEXT) {
-      let textWidth = 0;
-      for (let i = 0; i < symbolBlock.text.length; ++i) {
-        textWidth += this.getWidthForCharacter(symbolBlock.text[i]);
-      }
-      symbolBlock.width = textWidth;
+      symbolBlock.width = this.textFormatter.getWidthForTextInEm(symbolBlock.text);
     } else if (symbolType === SymbolTypes.LINE) {
       symbolBlock.width = params.width;
     }
@@ -614,16 +611,21 @@ export class ChordSymbol extends Modifier {
     return this.addSymbolBlock({ ...params, symbolType, width });
   }
 
-  // Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`.
-  setFont(family: string, size: number, weight: string): this {
-    this.font = { family, size, weight };
-    this.textFont = TextFont.getTextFontFromVexFontData(this.font);
-    return this;
-  }
-
-  setFontSize(size: number): this {
-    this.font.size = size;
-    this.textFont.setFontSize(size);
+  /**
+   * Set the chord symbol's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   *
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   *
+   * @override See: Element.
+   */
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    super.setFont(f, size, weight, style);
+    this.textFormatter = TextFormatter.create(this.textFont);
     return this;
   }
 
@@ -633,8 +635,8 @@ export class ChordSymbol extends Modifier {
   }
 
   /** Set vertical position of text (above or below stave). */
-  setVertical(vj: VerticalJustify | string | number): this {
-    this.vertical = typeof vj === 'string' ? ChordSymbol.verticalJustifyString[vj] : vj;
+  setVertical(vj: ChordSymbolVerticalJustify | string | number): this {
+    this.vertical = typeof vj === 'string' ? ChordSymbol.VerticalJustifyString[vj] : vj;
     return this;
   }
 
@@ -643,8 +645,8 @@ export class ChordSymbol extends Modifier {
   }
 
   /** Set horizontal justification. */
-  setHorizontal(hj: HorizontalJustify | string | number): this {
-    this.horizontal = typeof hj === 'string' ? ChordSymbol.horizontalJustifyString[hj] : hj;
+  setHorizontal(hj: ChordSymbolHorizontalJustify | string | number): this {
+    this.horizontal = typeof hj === 'string' ? ChordSymbol.HorizontalJustifyString[hj] : hj;
     return this;
   }
 
@@ -660,12 +662,19 @@ export class ChordSymbol extends Modifier {
     return width;
   }
 
-  isSuperscript(symbol: ChordSymbolBlock): boolean {
-    return symbol.symbolModifier !== undefined && symbol.symbolModifier === SymbolModifiers.SUPERSCRIPT;
-  }
+  getYOffsetForText(text: string): number {
+    let acc = 0;
+    let i = 0;
+    for (i = 0; i < text.length; ++i) {
+      const metrics = this.textFormatter.getGlyphMetrics(text[i]);
+      if (metrics) {
+        const yMax = metrics.y_max ?? 0;
+        acc = yMax < acc ? yMax : acc;
+      }
+    }
 
-  isSubscript(symbol: ChordSymbolBlock): boolean {
-    return symbol.symbolModifier !== undefined && symbol.symbolModifier === SymbolModifiers.SUBSCRIPT;
+    const resolution = this.textFormatter.getResolution();
+    return i > 0 ? -1 * (acc / resolution) : 0;
   }
 
   /** Render text and glyphs above/below the note. */
@@ -680,7 +689,7 @@ export class ChordSymbol extends Modifier {
     ctx.openGroup(classString, this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
 
     let y: number;
 
@@ -689,7 +698,7 @@ export class ChordSymbol extends Modifier {
     const hasStem = note.hasStem();
     const stave = note.checkStave();
 
-    if (this.vertical === VerticalJustify.BOTTOM) {
+    if (this.vertical === ChordSymbolVerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin is bottom-right.
       y = stave.getYForBottomText(this.text_line + Tables.TEXT_HEIGHT_OFFSET_HACK);
       if (hasStem) {
@@ -709,36 +718,40 @@ export class ChordSymbol extends Modifier {
     }
 
     let x = start.x;
-    if (this.horizontal === HorizontalJustify.LEFT) {
+    if (this.horizontal === ChordSymbolHorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.horizontal === HorizontalJustify.RIGHT) {
+    } else if (this.horizontal === ChordSymbolHorizontalJustify.RIGHT) {
       x = start.x + this.getWidth();
-    } else if (this.horizontal === HorizontalJustify.CENTER) {
+    } else if (this.horizontal === ChordSymbolHorizontalJustify.CENTER) {
       x = start.x - this.getWidth() / 2;
     } else {
       // HorizontalJustify.CENTER_STEM
       x = note.getStemX() - this.getWidth() / 2;
     }
-    L('Rendering ChordSymbol: ', this.textFont, x, y);
+    L('Rendering ChordSymbol: ', this.textFormatter, x, y);
 
     this.symbolBlocks.forEach((symbol) => {
-      const sp = this.isSuperscript(symbol);
-      const sub = this.isSubscript(symbol);
+      const isSuper = ChordSymbol.isSuperscript(symbol);
+      const isSub = ChordSymbol.isSubscript(symbol);
       let curY = y;
       L('shift was ', symbol.xShift, symbol.yShift);
       L('curY pre sub ', curY);
-      if (sp) {
+      if (isSuper) {
         curY += this.superscriptOffset;
       }
-      if (sub) {
+      if (isSub) {
         curY += this.subscriptOffset;
       }
       L('curY sup/sub ', curY);
 
       if (symbol.symbolType === SymbolTypes.TEXT) {
-        if (sp || sub) {
+        if (isSuper || isSub) {
           ctx.save();
-          ctx.setFont(this.font.family, this.font.size * ChordSymbol.superSubRatio, this.font.weight);
+          if (this.textFont) {
+            const { family, size, weight, style } = this.textFont;
+            const smallerFontSize = Font.scaleSize(size, ChordSymbol.superSubRatio);
+            ctx.setFont(family, smallerFontSize, weight, style);
+          }
         }
         // TODO???
         // We estimate the text width, fill it in with the empirical value so the formatting is even.
@@ -748,7 +761,7 @@ export class ChordSymbol extends Modifier {
         L('Rendering Text: ', symbol.text, x + symbol.xShift, curY + symbol.yShift);
 
         ctx.fillText(symbol.text, x + symbol.xShift, curY + symbol.yShift);
-        if (sp || sub) {
+        if (isSuper || isSub) {
           ctx.restore();
         }
       } else if (symbol.symbolType === SymbolTypes.GLYPH && symbol.glyph) {

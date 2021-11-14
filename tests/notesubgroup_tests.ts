@@ -203,4 +203,5 @@ function multiStaff(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(NoteSubGroupTests);
 export { NoteSubGroupTests };

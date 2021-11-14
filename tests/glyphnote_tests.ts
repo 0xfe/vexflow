@@ -142,4 +142,5 @@ function repeatNote(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(GlyphNoteTests);
 export { GlyphNoteTests };

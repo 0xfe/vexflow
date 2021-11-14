@@ -90,4 +90,5 @@ const customTest2 = createTest((factory, notes0, notes1) => {
   return pedal;
 });
 
+VexFlowTests.register(PedalMarkingTests);
 export { PedalMarkingTests };

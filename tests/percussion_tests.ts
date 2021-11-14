@@ -224,4 +224,5 @@ const snare3 = createSingleMeasureTest((factory) => {
     ]);
 });
 
+VexFlowTests.register(PercussionTests);
 export { PercussionTests };

@@ -116,4 +116,5 @@ function change(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(TimeSignatureTests);
 export { TimeSignatureTests };

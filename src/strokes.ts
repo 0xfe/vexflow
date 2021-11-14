@@ -1,16 +1,15 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `Stroke` class which renders chord strokes
 // that can be arpeggiated, brushed, rasquedo, etc.
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
@@ -28,19 +27,12 @@ export class Stroke extends Modifier {
     ARPEGGIO_DIRECTIONLESS: 7, // Arpeggiated chord without upwards or downwards arrow
   };
 
-  protected options: {
-    all_voices: boolean;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
-  protected all_voices: boolean;
-  protected type: number;
-
-  protected note_end?: Note;
-  public render_options: {
-    font_scale: number;
-    stroke_px: number;
-    stroke_spacing: number;
-  };
-  protected font: FontInfo;
 
   // Arrange strokes inside `ModifierContext`
   static format(strokes: Stroke[], state: ModifierContextState): boolean {
@@ -79,6 +71,16 @@ export class Stroke extends Modifier {
     return true;
   }
 
+  protected options: { all_voices: boolean };
+  protected all_voices: boolean;
+  protected type: number;
+  protected note_end?: Note;
+  public render_options: {
+    font_scale: number;
+    stroke_px: number;
+    stroke_spacing: number;
+  };
+
   constructor(type: number, options?: { all_voices: boolean }) {
     super();
 
@@ -97,11 +99,7 @@ export class Stroke extends Modifier {
       stroke_spacing: 10,
     };
 
-    this.font = {
-      family: 'serif',
-      size: 10,
-      weight: 'bold italic',
-    };
+    this.resetFont();
 
     this.setXShift(0);
     this.setWidth(10);
@@ -245,7 +243,7 @@ export class Stroke extends Modifier {
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {
       ctx.save();
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.setFont(this.textFont);
       ctx.fillText('R', x + text_shift_x, text_y);
       ctx.restore();
     }

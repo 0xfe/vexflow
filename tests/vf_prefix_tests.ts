@@ -5,6 +5,8 @@
 //
 // VexFlow classes are available under the global Vex.Flow.* namespace.
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Accidental } from '../src/accidental';
 import { Annotation } from '../src/annotation';
 import { Articulation } from '../src/articulation';
@@ -23,7 +25,7 @@ import { EasyScore } from '../src/easyscore';
 import { Element } from '../src/element';
 import { Factory } from '../src/factory';
 import { Flow } from '../src/flow';
-import { Font, Fonts } from '../src/font';
+import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { Fraction } from '../src/fraction';
 import { FretHandFinger } from '../src/frethandfinger';
@@ -71,7 +73,7 @@ import { TabStave } from '../src/tabstave';
 import { TabTie } from '../src/tabtie';
 import { TextBracket } from '../src/textbracket';
 import { TextDynamics } from '../src/textdynamics';
-import { TextFont } from '../src/textfont';
+import { TextFormatter } from '../src/textformatter';
 import { TextNote } from '../src/textnote';
 import { TickContext } from '../src/tickcontext';
 import { TimeSignature } from '../src/timesignature';
@@ -94,6 +96,8 @@ const VFPrefixTests = {
 declare let Vex: any;
 
 function VF_Prefix(): void {
+  // Intentionally use Vex.Flow here so we can verify that the Vex.Flow.* API
+  // is equivalent to using the individual classes in TypeScript.
   const VF = Vex.Flow as unknown as typeof Flow;
   equal(Accidental, VF.Accidental);
   equal(Annotation, VF.Annotation);
@@ -115,7 +119,6 @@ function VF_Prefix(): void {
   equal(Factory, VF.Factory);
   equal(Flow.RESOLUTION, VF.RESOLUTION);
   equal(Font, VF.Font);
-  equal(Fonts, VF.Fonts);
   equal(Formatter, VF.Formatter);
   propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
   equal(Fraction, VF.Fraction);
@@ -163,7 +166,7 @@ function VF_Prefix(): void {
   equal(TabTie, VF.TabTie);
   equal(TextBracket, VF.TextBracket);
   equal(TextDynamics, VF.TextDynamics);
-  equal(TextFont, VF.TextFont);
+  equal(TextFormatter, VF.TextFormatter); // RONYEH: Renamed TextFont to TextFormatter.
   equal(TextNote, VF.TextNote);
   equal(TickContext, VF.TickContext);
   equal(TimeSignature, VF.TimeSignature);
@@ -177,4 +180,5 @@ function VF_Prefix(): void {
   equal(Volta, VF.Volta);
 }
 
+VexFlowTests.register(VFPrefixTests);
 export { VFPrefixTests };

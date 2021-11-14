@@ -33,7 +33,7 @@ class Index {
   }
 }
 
-interface RegistryUpdate {
+export interface RegistryUpdate {
   id: string;
   name: string;
   value: string | undefined;

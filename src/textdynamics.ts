@@ -112,7 +112,7 @@ export class TextDynamics extends Note {
 
     // Store the width of the text
     this.setWidth(total_width);
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

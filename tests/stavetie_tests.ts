@@ -78,7 +78,6 @@ const noEndNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], 
   stave.addEndClef('treble');
   f.StaveTie({
     from: notes[1],
-    to: null,
     first_indices: [2],
     last_indices: [2],
     text: 'slow.',
@@ -88,7 +87,6 @@ const noEndNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], 
 const noEndNote2 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes) => {
   f.StaveTie({
     from: notes[1],
-    to: null,
     first_indices: [2],
     last_indices: [2],
     text: 'slow.',
@@ -98,7 +96,6 @@ const noEndNote2 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], 
 const noStartNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes, stave) => {
   stave.addClef('treble');
   f.StaveTie({
-    from: null,
     to: notes[0],
     first_indices: [2],
     last_indices: [2],
@@ -108,7 +105,6 @@ const noStartNote1 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }]
 
 const noStartNote2 = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' }], (f, notes) => {
   f.StaveTie({
-    from: null,
     to: notes[0],
     first_indices: [2],
     last_indices: [2],
@@ -136,4 +132,5 @@ const setDirectionUp = createTest(['(cb4 e#4 a4)/2, (d4 e4 f4)', { stem: 'down' 
   });
 });
 
+VexFlowTests.register(StaveTieTests);
 export { StaveTieTests };

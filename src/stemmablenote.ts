@@ -243,7 +243,6 @@ export abstract class StemmableNote extends Note {
   postFormat(): this {
     this.beam?.postFormat();
     this.postFormatted = true;
-
     return this;
   }
 

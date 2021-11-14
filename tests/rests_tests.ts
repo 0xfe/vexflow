@@ -377,4 +377,5 @@ function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void 
   ok(true, 'Strokes Test Multi Voice');
 }
 
+VexFlowTests.register(RestsTests);
 export { RestsTests };

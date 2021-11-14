@@ -12,7 +12,6 @@ import { KeySignature } from '../src/keysignature';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
-import { Tables } from '../src/tables';
 
 const KeySignatureTests = {
   Start(): void {
@@ -32,11 +31,10 @@ const KeySignatureTests = {
 
 const fontWidths = () => {
   const glyphScale = 39; // default font scale
-  const musicStack = Tables.DEFAULT_FONT_STACK;
-  const sharpWidth = Glyph.getWidth(musicStack, 'accidentalSharp', glyphScale) + 1;
-  const flatWidth = Glyph.getWidth(musicStack, 'accidentalFlat', glyphScale) + 1;
-  const naturalWidth = Glyph.getWidth(musicStack, 'accidentalNatural', glyphScale) + 2;
-  const clefWidth = Glyph.getWidth(musicStack, 'gClef', glyphScale) * 2; // widest clef
+  const sharpWidth = Glyph.getWidth('accidentalSharp', glyphScale) + 1;
+  const flatWidth = Glyph.getWidth('accidentalFlat', glyphScale) + 1;
+  const naturalWidth = Glyph.getWidth('accidentalNatural', glyphScale) + 2;
+  const clefWidth = Glyph.getWidth('gClef', glyphScale) * 2; // widest clef
   return { sharpWidth, flatWidth, naturalWidth, clefWidth };
 };
 
@@ -372,4 +370,5 @@ function changeKey(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(KeySignatureTests);
 export { KeySignatureTests };

@@ -3,6 +3,8 @@
 //
 // Parser Tests
 
+import { VexFlowTests } from './vexflow_test_helpers';
+
 import { Grammar, Parser, Result, RuleFunction } from '../src/parser';
 
 const ParserTests = {
@@ -157,4 +159,5 @@ function microscore(): void {
   fails(parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
 }
 
+VexFlowTests.register(ParserTests);
 export { ParserTests };

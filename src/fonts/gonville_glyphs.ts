@@ -890,7 +890,7 @@ export const GonvilleFont = {
     font_sub_family_name: '18',
   },
   descender: -2066,
-  familyName: 'Gonville-18',
+  fontFamily: 'Gonville-18',
   lineHeight: 4093,
   underlineThickness: 50,
 };

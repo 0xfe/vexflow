@@ -101,15 +101,16 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
+    const musicFont = Tables.currentMusicFont();
     this.render_options = {
       use_symbols: false,
       show_number: true,
       number_line: -0.5,
-      number_glyph_point: this.musicFont.lookupMetric('digits.point'), // same as TimeSignature.
+      number_glyph_point: musicFont.lookupMetric('digits.point'), // same as TimeSignature.
       line: 2,
       spacing_between_lines_px: Tables.STAVE_LINE_DISTANCE, // same as Stave.
       serif_thickness: 2,
-      semibreve_rest_glyph_scale: Tables.DEFAULT_NOTATION_FONT_SCALE, // same as NoteHead.
+      semibreve_rest_glyph_scale: Tables.NOTATION_FONT_SCALE, // same as NoteHead.
       padding_left: 0,
       padding_right: 0,
       line_thickness: 5,
@@ -117,7 +118,7 @@ export class MultiMeasureRest extends Element {
       ...options,
     };
 
-    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
+    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.render_options.number_line += fontLineShift;
   }
 

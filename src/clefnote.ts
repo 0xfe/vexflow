@@ -66,9 +66,8 @@ export class ClefNote extends Note {
     return this;
   }
 
-  /** Set preformatted. */
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

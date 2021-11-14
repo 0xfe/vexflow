@@ -480,4 +480,5 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
   ok(true, 'Seventeenth Test');
 }
 
+VexFlowTests.register(GraceNoteTests);
 export { GraceNoteTests };

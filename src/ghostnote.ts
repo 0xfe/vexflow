@@ -56,7 +56,7 @@ export class GhostNote extends StemmableNote {
   }
 
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

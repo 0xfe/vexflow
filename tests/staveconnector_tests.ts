@@ -461,4 +461,5 @@ function drawCombined(options: TestOptions, contextBuilder: ContextBuilder): voi
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveConnectorTests);
 export { StaveConnectorTests };

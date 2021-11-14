@@ -1,15 +1,38 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Element } from './element';
 import { Font, FontGlyph } from './font';
+import { KeyProps } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { TypeProps } from './types/common';
 import { defined, RuntimeError } from './util';
+
+export interface TypeProps extends KeyProps {
+  getWidth(scale?: number): number;
+
+  code: string;
+  code_head: string;
+  stem: boolean;
+  rest: boolean;
+  flag: boolean;
+  stem_offset: number;
+  stem_up_extension: number;
+  stem_down_extension: number;
+  tabnote_stem_up_extension: number;
+  tabnote_stem_down_extension: number;
+  dot_shiftY: number;
+  line_above: number;
+  line_below: number;
+  beam_count: number;
+  code_flag_upstem: string;
+  code_flag_downstem: string;
+  position: string;
+}
 
 export interface DurationCode {
   common: TypeProps;
@@ -35,17 +58,12 @@ export interface GlyphProps {
   tabnote_stem_down_extension: number;
   tabnote_stem_up_extension: number;
   beam_count: number;
-  duration_codes: Record<string, DurationCode>;
-  validTypes: Record<string, string>;
   shift_y: number;
-
   getWidth(a?: number): number;
-
   getMetrics(): GlyphMetrics;
 }
 
 export interface GlyphOptions {
-  fontStack: Font[];
   category?: string;
 }
 
@@ -90,18 +108,19 @@ class GlyphCacheEntry {
 }
 
 class GlyphCache {
-  protected cache: Map<Font[], Record<string, GlyphCacheEntry>> = new Map();
+  protected cache: Map<string, Record<string, GlyphCacheEntry>> = new Map();
 
-  lookup(fontStack: Font[], code: string, category?: string): GlyphCacheEntry {
-    let entries = this.cache.get(fontStack);
+  lookup(code: string, category?: string): GlyphCacheEntry {
+    let entries = this.cache.get(Glyph.CURRENT_CACHE_KEY);
     if (entries === undefined) {
       entries = {};
-      this.cache.set(fontStack, entries);
+      this.cache.set(Glyph.CURRENT_CACHE_KEY, entries);
     }
     const key = category ? `${code}%${category}` : code;
     let entry = entries[key];
     if (entry === undefined) {
-      entry = new GlyphCacheEntry(fontStack, code, category);
+      const musicFontStack = Tables.MUSIC_FONT_STACK.slice();
+      entry = new GlyphCacheEntry(musicFontStack, code, category);
       entries[key] = entry;
     }
     return entry;
@@ -111,7 +130,9 @@ class GlyphCache {
 class GlyphOutline {
   private i: number = 0;
 
-  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {}
+  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {
+    // Automatically assign private properties: this.outline, this.originX, this.originY, and this.scale.
+  }
 
   done(): boolean {
     return this.i >= this.outline.length;
@@ -165,30 +186,19 @@ class GlyphOutline {
 }
 
 export class Glyph extends Element {
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATIC MEMBERS
+
   static get CATEGORY(): string {
     return 'Glyph';
   }
 
   protected static cache = new GlyphCache();
 
-  bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
-  code: string;
-  // metrics is initialised in the constructor by either setOptions or reset
-  // eslint-disable-next-line
-  metrics!: GlyphMetrics;
-  topGlyphs: Glyph[] = [];
-  botGlyphs: Glyph[] = [];
-
-  protected options: GlyphOptions;
-  protected originShift: { x: number; y: number };
-  protected x_shift: number;
-  protected y_shift: number;
-  scale: number = 1;
-  protected point: number;
-  protected stave?: Stave;
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // Static methods for loading and rendering glyphs.
+  // The current cache key for GlyphCache above.
+  // Computed whenever the Flow.setMusicFont(...) is called.
+  // It is set to a comma separated list of font names.
+  public static CURRENT_CACHE_KEY: string = '';
 
   /**
    * Pass a key of the form `glyphs.{category}.{code}.{key}` to Font.lookupMetric(). If the initial lookup fails,
@@ -276,13 +286,9 @@ export class Glyph extends Element {
     y_pos: number,
     point: number,
     code: string,
-    options?: { font?: Font; category: string }
+    options?: { category: string }
   ): GlyphMetrics {
-    const params = {
-      fontStack: Tables.DEFAULT_FONT_STACK,
-      ...options,
-    };
-    const data = Glyph.cache.lookup(params.fontStack, code, params.category);
+    const data = Glyph.cache.lookup(code, options?.category);
     const metrics = data.metrics;
     if (data.point != -1) {
       point = data.point;
@@ -363,8 +369,8 @@ export class Glyph extends Element {
     return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
 
-  static getWidth(fontStack: Font[], code: string, point: number, category?: string): number {
-    const data = Glyph.cache.lookup(fontStack, code, category);
+  static getWidth(code: string, point: number, category?: string): number {
+    const data = Glyph.cache.lookup(code, category);
     if (data.point != -1) {
       point = data.point;
     }
@@ -372,27 +378,39 @@ export class Glyph extends Element {
     return data.bbox.getW() * scale;
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // INSTANCE MEMBERS
+
+  bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
+  code: string;
+  // metrics is initialized in the constructor by reset() or setOptions() which calls reset().
+  // eslint-disable-next-line
+  metrics!: GlyphMetrics;
+  topGlyphs: Glyph[] = [];
+  botGlyphs: Glyph[] = [];
+
+  protected options: GlyphOptions = {};
+  protected originShift: { x: number; y: number };
+  protected x_shift: number;
+  protected y_shift: number;
+  scale: number = 1;
+  protected point: number;
+  protected stave?: Stave;
+
   /**
    * @param code
    * @param point
    * @param options
    */
-  constructor(code: string, point: number, options?: { category: string }) {
+  constructor(code: string, point: number, options?: GlyphOptions) {
     super();
 
     this.code = code;
     this.point = point;
-    this.options = {
-      fontStack: this.getFontStack(),
-    };
 
+    this.originShift = { x: 0, y: 0 };
     this.x_shift = 0;
     this.y_shift = 0;
-
-    this.originShift = {
-      x: 0,
-      y: 0,
-    };
 
     if (options) {
       this.setOptions(options);
@@ -437,7 +455,7 @@ export class Glyph extends Element {
   }
 
   reset(): void {
-    const data = Glyph.cache.lookup(this.options.fontStack, this.code, this.options.category);
+    const data = Glyph.cache.lookup(this.code, this.options.category);
     this.metrics = data.metrics;
     // Override point from metrics file
     if (data.point != -1) {

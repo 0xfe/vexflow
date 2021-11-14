@@ -1,18 +1,19 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
-// ## Description
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { Element } from './element';
+import { FontInfo } from './font';
 import { Note } from './note';
-import { Stave } from './stave';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
+// For backwards compatibility with 3.0.9, first_note and/or last_note can be undefined or null.
+// We prefer undefined instead of null.
+// However, some of our test cases used to pass in null, so maybe there is client code relying on it.
 export interface TieNotes {
-  first_note: Note | null;
-  last_note: Note | null;
+  first_note?: Note | null;
+  last_note?: Note | null;
   first_indices?: number[];
   last_indices?: number[];
 }
@@ -22,6 +23,9 @@ export class StaveTie extends Element {
     return 'StaveTie';
   }
 
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
+
   public render_options: {
     cp2: number;
     last_x_shift: number;
@@ -30,12 +34,9 @@ export class StaveTie extends Element {
     first_x_shift: number;
     text_shift_x: number;
     y_shift: number;
-    font: FontInfo;
   };
 
   protected text?: string;
-
-  protected font: FontInfo;
 
   // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: TieNotes;
@@ -66,15 +67,9 @@ export class StaveTie extends Element {
       last_x_shift: 0,
       y_shift: 7,
       tie_spacing: 0,
-      font: { family: 'Arial', size: 10, weight: '' },
     };
 
-    this.font = this.render_options.font;
-  }
-
-  setFont(font: FontInfo): this {
-    this.font = font;
-    return this;
+    this.resetFont();
   }
 
   setDirection(direction: number): this {
@@ -171,11 +166,12 @@ export class StaveTie extends Element {
     let center_x = (first_x_px + last_x_px) / 2;
     center_x -= ctx.measureText(this.text).width / 2;
     const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
-
-    ctx.save();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    ctx.fillText(this.text, center_x + this.render_options.text_shift_x, (stave as Stave).getYForTopText() - 1);
-    ctx.restore();
+    if (stave) {
+      ctx.save();
+      ctx.setFont(this.textFont);
+      ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
+      ctx.restore();
+    }
   }
 
   draw(): boolean {
@@ -185,19 +181,20 @@ export class StaveTie extends Element {
     const first_note = this.notes.first_note;
     const last_note = this.notes.last_note;
 
-    let first_x_px;
-    let last_x_px;
-    let first_ys;
-    let last_ys;
+    // Provide some default values so the compiler doesn't complain.
+    let first_x_px = 0;
+    let last_x_px = 0;
+    let first_ys: number[] = [0];
+    let last_ys: number[] = [0];
     let stem_direction = 0;
     if (first_note) {
       first_x_px = first_note.getTieRightX() + this.render_options.tie_spacing;
       stem_direction = first_note.getStemDirection();
       first_ys = first_note.getYs();
-    } else {
-      const stave = (last_note as Note).checkStave();
+    } else if (last_note) {
+      const stave = last_note.checkStave();
       first_x_px = stave.getTieStartX();
-      first_ys = (last_note as Note).getYs();
+      first_ys = last_note.getYs();
       this.notes.first_indices = this.notes.last_indices;
     }
 
@@ -205,10 +202,10 @@ export class StaveTie extends Element {
       last_x_px = last_note.getTieLeftX() + this.render_options.tie_spacing;
       stem_direction = last_note.getStemDirection();
       last_ys = last_note.getYs();
-    } else {
-      const stave = (first_note as Note).checkStave();
+    } else if (first_note) {
+      const stave = first_note.checkStave();
       last_x_px = stave.getTieEndX();
-      last_ys = (first_note as Note).getYs();
+      last_ys = first_note.getYs();
       this.notes.last_indices = this.notes.first_indices;
     }
 

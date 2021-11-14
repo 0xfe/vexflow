@@ -33,7 +33,8 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: 'serif', size: 12, weight: 'italic' },
+      font: { family: 'serif', size: 12, style: 'italic' }, // BUG: originally the weight was set to italic. We changed it to style.
+      // font: { family: Font.SERIF, size: 12, style: 'italic' }, // RONYEH
       text: 'gliss.',
     },
   });
@@ -145,4 +146,5 @@ function simple1(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StaveLineTests);
 export { StaveLineTests };

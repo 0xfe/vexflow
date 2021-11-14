@@ -2,10 +2,11 @@
 // MIT License
 
 import { Element } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
-import { FontInfo } from './types/common';
+import { Tables } from './tables';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -33,11 +34,18 @@ function drawPedalGlyph(name: string, context: RenderContext, x: number, y: numb
  */
 export class PedalMarking extends Element {
   /** To enable logging for this class. Set `Vex.Flow.PedalMarking.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'PedalMarking';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SERIF,
+    size: 12,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
+  };
 
   protected line: number;
   protected type: number;
@@ -49,7 +57,6 @@ export class PedalMarking extends Element {
     text_margin_right: number;
     bracket_line_width: number;
   };
-  protected font: FontInfo;
   protected notes: StaveNote[];
 
   /** Glyph data */
@@ -116,11 +123,7 @@ export class PedalMarking extends Element {
     this.custom_depress_text = '';
     this.custom_release_text = '';
 
-    this.font = {
-      family: 'Times New Roman',
-      size: 12,
-      weight: 'italic bold',
-    };
+    this.resetFont();
 
     this.render_options = {
       bracket_height: 10,
@@ -184,7 +187,7 @@ export class PedalMarking extends Element {
       const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
-      const point = this.musicFont.lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       if (is_pedal_depressed) {
         // Adjustment for release+depress
@@ -244,7 +247,7 @@ export class PedalMarking extends Element {
       const x = note.getAbsoluteX();
       const y = stave.getYForBottomText(this.line + 3);
 
-      const point = this.musicFont.lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       let text_width = 0;
       if (is_pedal_depressed) {
@@ -273,7 +276,7 @@ export class PedalMarking extends Element {
     ctx.save();
     ctx.setStrokeStyle(this.render_options.color);
     ctx.setFillStyle(this.render_options.color);
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
 
     L('Rendering Pedal Marking');
 

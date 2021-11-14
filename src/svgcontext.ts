@@ -2,13 +2,15 @@
 // MIT License
 // @author Gregory Ristow (2015)
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { normalizeAngle, prefix, RuntimeError } from './util';
 
 // eslint-disable-next-line
-type Attributes = { [key: string]: any };
+export type Attributes = Record<string, any>;
 
-const attrNamesToIgnoreMap: { [nodeName: string]: Attributes } = {
+/** For a particular element type (e.g., rect), we will not apply certain presentation attributes. */
+const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Attributes /* ignored attributes */> = {
   path: {
     x: true,
     y: true,
@@ -36,7 +38,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const TWO_PI = 2 * Math.PI;
 
-interface State {
+export interface State {
   state: Attributes;
   attributes: Attributes;
   shadow_attributes: Attributes;
@@ -59,10 +61,10 @@ class MeasureTextCache {
 
     const family = attributes['font-family'];
     const size = attributes['font-size'];
-    const style = attributes['font-style'];
     const weight = attributes['font-weight'];
+    const style = attributes['font-style'];
 
-    const key = `${family}%${size}%${style}%${weight}`;
+    const key = `${family}%${size}%${weight}%${style}`;
     let entry = entries[key];
     if (entry === undefined) {
       entry = this.measureImpl(text, svg, attributes);
@@ -89,15 +91,13 @@ class MeasureTextCache {
     const bbox = txt.getBBox();
     svg.removeChild(txt);
 
-    // Remove the trailing 'pt' from the font size and scale to convert from points
-    // to canvas units.
+    const fontSizeInPt: string = attributes['font-size'];
+
+    // Remove the trailing 'pt' from the font size and scale to convert from points to canvas pixel units.
     // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    const fontSize = attributes['font-size'];
-    const height = (fontSize.substring(0, fontSize.length - 2) * 4) / 3;
-    return {
-      width: bbox.width,
-      height: height,
-    };
+    const height = Font.convertSizeToPixelValue(fontSizeInPt);
+
+    return { width: bbox.width, height: height };
   }
 }
 
@@ -115,57 +115,55 @@ export class SVGContext extends RenderContext {
   pen: { x: number; y: number };
   lineWidth: number;
   attributes: Attributes;
-  background_attributes: Attributes;
   shadow_attributes: Attributes;
   state: Attributes;
   state_stack: State[];
+
+  // Always points to the current group.
+  // Calls to add() or openGroup() will append the new element to `this.parent`.
   parent: SVGGElement;
+  // The stack of groups.
   groups: SVGGElement[];
-  fontString: string = '';
+
+  backgroundFillStyle: string = 'white';
+
+  /** Formatted as CSS font shorthand (e.g., 'italic bold 12pt Arial') */
+  protected fontCSSString: string = '';
 
   constructor(element: HTMLElement) {
     super();
     this.element = element;
 
+    // Create a SVG element and add it to the container element.
     const svg = this.create('svg');
-    // Add it to the canvas:
     this.element.appendChild(svg);
-
-    // Point to it:
     this.svg = svg;
-    this.groups = [this.svg]; // Create the group stack
+
     this.parent = this.svg;
+    this.groups = [this.svg];
 
     this.path = '';
     this.pen = { x: NaN, y: NaN };
     this.lineWidth = 1.0;
-    this.state = {
-      scale: { x: 1, y: 1 },
-      'font-family': 'Arial',
-      'font-size': '8pt',
-      'font-weight': 'normal',
+
+    const defaultFontAttributes = {
+      'font-family': Font.SANS_SERIF,
+      'font-size': Font.SIZE + 'pt',
+      'font-weight': FontWeight.NORMAL,
+      'font-style': FontStyle.NORMAL,
     };
 
-    const defaultAttributes = {
-      'stroke-dasharray': 'none',
-      'font-family': 'Arial',
-      'font-size': '10pt',
-      'font-weight': 'normal',
-      'font-style': 'normal',
+    this.state = {
+      scale: { x: 1, y: 1 },
+      ...defaultFontAttributes,
     };
 
     this.attributes = {
       'stroke-width': 0.3,
+      'stroke-dasharray': 'none',
       fill: 'black',
       stroke: 'black',
-      ...defaultAttributes,
-    };
-
-    this.background_attributes = {
-      'stroke-width': 0,
-      fill: 'white',
-      stroke: 'white',
-      ...defaultAttributes,
+      ...defaultFontAttributes,
     };
 
     this.shadow_attributes = {
@@ -216,75 +214,17 @@ export class SVGContext extends RenderContext {
     this.parent.appendChild(elem);
   }
 
-  // ### Styling & State Methods:
-
-  setFont(family: string, size: number, weight?: string): this {
-    // In SVG italic is handled by font-style.
-    // We search the weight argument and apply bold and italic
-    // to font-weight and font-style respectively.
-    let foundBold = false;
-    let foundItalic = false;
-    // Weight might also be a number (200, 400, etc...) so we
-    // test its type to be sure we have access to String methods.
-    if (typeof weight === 'string') {
-      // look for "italic" in the weight:
-      if (weight.indexOf('italic') !== -1) {
-        weight = weight.replace(/italic/g, '');
-        foundItalic = true;
-      }
-      // look for "bold" in weight
-      if (weight.indexOf('bold') !== -1) {
-        weight = weight.replace(/bold/g, '');
-        foundBold = true;
-      }
-      // remove any remaining spaces
-      weight = weight.replace(/ /g, '');
-    }
-    const noWeightProvided = typeof weight === 'undefined' || weight === '';
-    if (noWeightProvided) {
-      weight = 'normal';
-    }
-
-    const fontAttributes = {
-      'font-family': family,
-      'font-size': size + 'pt',
-      'font-weight': foundBold ? 'bold' : weight,
-      'font-style': foundItalic ? 'italic' : 'normal',
-    };
-
-    // Currently this.fontString only supports size & family. See setRawFont().
-    this.fontString = `${size}pt ${family}`;
-    this.attributes = { ...this.attributes, ...fontAttributes };
-    this.state = { ...this.state, ...fontAttributes };
-
-    return this;
-  }
-
-  setRawFont(font: string): this {
-    this.fontString = font.trim();
-    // Assumes size first, splits on space -- which is presently
-    // how all existing modules are calling this.
-    const fontArray = this.fontString.split(' ');
-
-    const size = fontArray[0];
-    this.attributes['font-size'] = size;
-    this.state['font-size'] = size;
-
-    const family = fontArray[1];
-    this.attributes['font-family'] = family;
-    this.state['font-family'] = family;
-
-    return this;
-  }
-
   setFillStyle(style: string): this {
     this.attributes.fill = style;
     return this;
   }
 
+  /**
+   * Used to set the fill color for `clearRect()`. This allows us to simulate
+   * cutting a "hole" into the SVG drawing.
+   */
   setBackgroundFillStyle(style: string): this {
-    this.background_attributes.fill = style;
-    this.background_attributes.stroke = style;
+    this.backgroundFillStyle = style;
     return this;
   }
 
@@ -403,13 +343,13 @@ export class SVGContext extends RenderContext {
   // ### Drawing helper methods:
 
   applyAttributes(element: SVGElement, attributes: Attributes): SVGElement {
-    const attrNamesToIgnore = attrNamesToIgnoreMap[element.nodeName];
-    Object.keys(attributes).forEach((propertyName) => {
-      if (attrNamesToIgnore && attrNamesToIgnore[propertyName]) {
-        return;
+    const attrNamesToIgnore = ATTRIBUTES_TO_IGNORE[element.nodeName];
+    for (const attrName in attributes) {
+      if (attrNamesToIgnore && attrNamesToIgnore[attrName]) {
+        continue;
       }
-      element.setAttributeNS(null, propertyName, attributes[propertyName]);
-    });
+      element.setAttributeNS(null, attrName, attributes[attrName]);
+    }
 
     return element;
   }
@@ -431,33 +371,21 @@ export class SVGContext extends RenderContext {
       this.svg.removeChild(this.svg.lastChild);
     }
 
-    // Replace the viewbox attribute we just removed:
+    // Replace the viewbox attribute we just removed.
     this.scale(this.state.scale.x, this.state.scale.y);
   }
 
   // ## Rectangles:
   rect(x: number, y: number, width: number, height: number, attributes?: Attributes): this {
-    // Avoid invalid negative height attribs by
-    // flipping the rectangle on its head:
+    // Avoid invalid negative height attributes by flipping the rectangle on its head:
     if (height < 0) {
       y += height;
       height *= -1;
     }
 
-    // Create the rect & style it:
     const rectangle = this.create('rect');
-    if (typeof attributes === 'undefined') {
-      attributes = {
-        fill: 'none',
-        'stroke-width': this.lineWidth,
-        stroke: 'black',
-      };
-    }
-
-    attributes = { ...attributes, x, y, width, height };
-
-    this.applyAttributes(rectangle, attributes);
-
+    attributes = attributes ?? { fill: 'none', 'stroke-width': this.lineWidth, stroke: 'black' };
+    this.applyAttributes(rectangle, { x, y, width, height, ...attributes });
     this.add(rectangle);
     return this;
   }
@@ -469,21 +397,13 @@ export class SVGContext extends RenderContext {
   }
 
   clearRect(x: number, y: number, width: number, height: number): this {
-    // TODO(GCR): Improve implementation of this...
-    // Currently it draws a box of the background color, rather
-    // than creating alpha through lower z-levels.
+    // Currently this fills a rect with the backgroundFillStyle, rather
+    // than "cut a hole" into the existing shapes.
     //
-    // See the implementation of this in SVGKit:
-    // http://sourceforge.net/projects/svgkit/
-    // as a starting point.
-    //
-    // Adding a large number of transform paths (as we would
-    // have to do) could be a real performance hit.  Since
-    // tabNote seems to be the only module that makes use of this
+    // Since tabNote seems to be the only module that makes use of this
     // it may be worth creating a separate tabStave that would
     // draw lines around locations of tablature fingering.
-    //
-    this.rect(x, y, width, height, this.background_attributes);
+    this.rect(x, y, width, height, { 'stroke-width': 0, fill: this.backgroundFillStyle });
     return this;
   }
 
@@ -638,8 +558,8 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
+  // TODO: State should be deep-copied.
   save(): this {
-    // TODO(mmuthanna): State needs to be deep-copied.
     this.state_stack.push({
       state: {
         'font-family': this.state['font-family'],
@@ -667,8 +587,8 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
+  // TODO: State should be deep-restored.
   restore(): this {
-    // TODO(0xfe): State needs to be deep-restored.
     const savedState = this.state_stack.pop();
     if (savedState) {
       const state = savedState;
@@ -696,14 +616,6 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
-  set font(value: string) {
-    this.setRawFont(value);
-  }
-
-  get font(): string {
-    return this.fontString;
-  }
-
   set fillStyle(style: string | CanvasGradient | CanvasPattern) {
     this.setFillStyle(style as string);
   }
@@ -718,5 +630,34 @@ export class SVGContext extends RenderContext {
 
   get strokeStyle(): string | CanvasGradient | CanvasPattern {
     return this.attributes.stroke;
+  }
+
+  /**
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900). It is inserted
+   *               into the font-weight attribute (e.g., font-weight="bold")
+   * @param style is a string (e.g., 'italic', 'normal') that is inserted into the
+   *              font-style attribute (e.g., font-style="italic")
+   */
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    const fontInfo = Font.validate(f, size, weight, style);
+    this.fontCSSString = Font.toCSSString(fontInfo);
+    const fontAttributes = {
+      'font-family': fontInfo.family,
+      'font-size': fontInfo.size,
+      'font-weight': fontInfo.weight,
+      'font-style': fontInfo.style,
+    };
+    this.attributes = { ...this.attributes, ...fontAttributes };
+    this.state = { ...this.state, ...fontAttributes };
+    return this;
+  }
+
+  /** Return a string of the form `'italic bold 15pt Arial'` */
+  getFont(): string {
+    return this.fontCSSString;
   }
 }
