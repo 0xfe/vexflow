@@ -10,6 +10,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = (grunt) => {
   const BASE_DIR = __dirname;
   const BUILD_DIR = path.join(BASE_DIR, 'build');
+  const DOCS_DIR = path.join(BASE_DIR, 'docs');
   const RELEASE_DIR = path.join(BASE_DIR, 'releases');
   const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
   const MODULE_ENTRY_SRC = path.join(BASE_DIR, 'src/index.ts');
@@ -208,7 +209,7 @@ module.exports = (grunt) => {
             expand: true,
             dest: RELEASE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', '*.map'],
           },
         ],
       },
@@ -218,7 +219,17 @@ module.exports = (grunt) => {
             expand: true,
             dest: REFERENCE_DIR,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', '*.map'],
+          },
+        ],
+      },
+      typedoc: {
+        files: [
+          {
+            expand: true,
+            dest: DOCS_DIR,
+            cwd: BUILD_DIR,
+            src: ['apidocs/**'],
           },
         ],
       },
@@ -226,7 +237,7 @@ module.exports = (grunt) => {
     typedoc: {
       build: {
         options: {
-          out: 'build/docs',
+          out: 'build/apidocs',
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
@@ -292,6 +303,7 @@ module.exports = (grunt) => {
       'webpack:buildDynamic',
       'copy:module',
       'typedoc',
+      'copy:typedoc',
     ]
   );
 
