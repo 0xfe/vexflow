@@ -45,8 +45,7 @@
   "license": "MIT",
   "files": [
     "build",
-    "src",
-    "tests"
+    "src"
   ],
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
