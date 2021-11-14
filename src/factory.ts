@@ -12,6 +12,7 @@ import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
 import { EasyScore, EasyScoreOptions } from './easyscore';
 import { Element } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
@@ -41,12 +42,11 @@ import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
 import { TextBracket } from './textbracket';
 import { TextDynamics } from './textdynamics';
-import { TextFont, TextFontRegistry } from './textfont';
 import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
 import { Tuplet, TupletOptions } from './tuplet';
-import { FontInfo } from './types/common';
+import { isHTMLCanvas } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
@@ -62,11 +62,7 @@ export interface FactoryOptions {
     height: number;
     background?: string;
   };
-  font?: {
-    family: string;
-    size: number;
-    weight: string;
-  };
+  font?: FontInfo;
 }
 
 // eslint-disable-next-line
@@ -75,14 +71,14 @@ function L(...args: any[]) {
 }
 
 /**
- * Factory implements a high level API around VexFlow. It will eventually
- * become the canonical way to use VexFlow.
- *
- * *This API is currently DRAFT*
+ * Factory implements a high level API around VexFlow.
  */
 export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /**
    * Static simplified function to access constructor without providing FactoryOptions
@@ -125,11 +121,7 @@ export class Factory {
         height: 200,
         background: '#FFF',
       },
-      font: {
-        family: 'Arial',
-        size: 10,
-        weight: '',
-      },
+      font: Factory.TEXT_FONT,
     };
 
     this.setOptions(options);
@@ -163,14 +155,18 @@ export class Factory {
     let backend = this.options.renderer.backend;
     if (backend === undefined) {
       const elem = document.getElementById(elementId);
-      if (elem instanceof window.HTMLCanvasElement) {
+      // We use a custom type check here, because node-canvas mimics canvas,
+      // but is not an instance of window.HTMLCanvasElement.
+      // In fact, `window` might be undefined here.
+      // See: https://www.npmjs.com/package/canvas
+      if (isHTMLCanvas(elem)) {
         backend = Renderer.Backends.CANVAS;
       } else {
         backend = Renderer.Backends.SVG;
       }
     }
 
-    this.context = Renderer.buildContext(elementId as string, backend, width, height, background);
+    this.context = Renderer.buildContext(elementId, backend, width, height, background);
   }
 
   getContext(): RenderContext {
@@ -339,29 +335,27 @@ export class Factory {
     return accid;
   }
 
-  Annotation(params?: {
-    text?: string;
-    vJustify?: string;
-    hJustify?: string;
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-  }): Annotation {
+  Annotation(params?: { text?: string; vJustify?: string; hJustify?: string; font?: FontInfo }): Annotation {
     const p = {
       text: 'p',
       vJustify: 'below',
       hJustify: 'center',
-      fontFamily: 'Times',
-      fontSize: 14,
-      fontWeight: 'bold italic',
       options: {},
       ...params,
     };
 
+    // RONYEH: Factory.Annotation has a different default font from new Annotation()...
+    const font = {
+      family: 'Times' /* RONYEH: Font.SERIF */,
+      size: 14,
+      weight: FontWeight.BOLD,
+      style: FontStyle.ITALIC,
+      ...p.font,
+    };
     const annotation = new Annotation(p.text);
     annotation.setJustification(p.hJustify);
     annotation.setVerticalJustification(p.vJustify);
-    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight);
+    annotation.setFont(font);
     annotation.setContext(this.context);
     return annotation;
   }
@@ -518,8 +512,8 @@ export class Factory {
   }
 
   StaveTie(params: {
-    from: Note | null;
-    to: Note | null;
+    from?: Note | null;
+    to?: Note | null;
     first_indices?: number[];
     last_indices?: number[];
     text?: string;
@@ -660,11 +654,6 @@ export class Factory {
     const group = new NoteSubGroup(p.notes);
     group.setContext(this.context);
     return group;
-  }
-
-  TextFont(params: TextFontRegistry): TextFont {
-    params.factory = this;
-    return new TextFont(params);
   }
 
   /** Render the score. */

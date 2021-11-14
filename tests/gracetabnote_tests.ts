@@ -114,4 +114,5 @@ function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Slurred Test');
 }
 
+VexFlowTests.register(GraceTabNoteTests);
 export { GraceTabNoteTests };

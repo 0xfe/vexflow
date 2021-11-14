@@ -91,6 +91,7 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
   ctx.setFont('Arial', VexFlowTests.Font.size, '');
+  // ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size); // RONYEH
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -120,4 +121,5 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Vibrato with Bend');
 }
 
+VexFlowTests.register(VibratoTests);
 export { VibratoTests };

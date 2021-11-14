@@ -479,4 +479,5 @@ function drawThirtySecondWithScratches(options: TestOptions, contextBuilder: Con
   expect(0);
 }
 
+VexFlowTests.register(RhythmTests);
 export { RhythmTests };

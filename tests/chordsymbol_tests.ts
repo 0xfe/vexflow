@@ -394,4 +394,5 @@ function doubleBottom(options: TestOptions): void {
   ok(true, '2 Bottom Chord Symbol');
 }
 
+VexFlowTests.register(ChordSymbolTests);
 export { ChordSymbolTests };

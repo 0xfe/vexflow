@@ -6,7 +6,6 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { RenderContext } from '../src/rendercontext';
 import { ContextBuilder } from '../src/renderer';
@@ -383,7 +382,8 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont(Font.SANS_SERIF, 10, 'bold');
+  ctx.setFont('sans-serif', 10, 'bold');
+  // ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD); // RONYEH
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -523,4 +523,5 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
   ok(true, 'TabNotes successfully drawn');
 }
 
+VexFlowTests.register(TabNoteTests);
 export { TabNoteTests };

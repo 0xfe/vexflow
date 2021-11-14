@@ -47,6 +47,7 @@
 
       let vexURL;
       let testsURL;
+      let vexPlusTestsURL;
       let isVersionFourOrNewer = true;
 
       if (ver.includes('unpkg')) {
@@ -66,6 +67,7 @@
         }
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
+        vexPlusTestsURL = '../' + path + '/vexflow-debug-with-tests.js';
       }
 
       // Display which VexFlow version we loaded.
@@ -75,31 +77,40 @@
 
       let loadVexFlow;
       if (isVersionFourOrNewer) {
-        // When loading version >= 4.0.0, only load vexflow-tests.js
-        loadVexFlow = () => loadScript(testsURL);
+        // When loading version >= 4.0.0, only load vexflow-debug-with-tests.js
+        loadVexFlow = () => loadScript(vexPlusTestsURL);
       } else {
-        // When loading versions <= 3.0.9, load both vexflow-debug.js and vexflow-tests.js
+        // 3.0.9 depends on jQuery.
+        await loadScript('https://code.jquery.com/jquery-3.6.0.slim.min.js');
+        // 3.0.9 uses module.exports in tabstave_tests.js.
+        window.module = {};
+
+        // When loading versions <= 3.0.9, load vexflow-debug.js and then vexflow-tests.js
         loadVexFlow = () => loadScript(vexURL).then(() => loadScript(testsURL));
       }
 
       await loadVexFlow();
 
-      // Version < 4.0.0 does not have support for preloading web fonts.
-      if (Vex.Flow.Font.loadWebFonts) {
-        await Vex.Flow.Font.loadWebFonts();
+      const VF = Vex.Flow;
+
+      // Versions 4.0.0 and newer have support for preloading web fonts.
+      // Versions 3.0.9 and older do not support this feature.
+      if (VF.Font.loadWebFonts) {
+        await VF.Font.loadWebFonts();
         // Optional: view the loaded fonts.
         // await document.fonts.ready;
         // document.fonts.forEach((fontFace) => console.log(fontFace));
       }
 
       // Load qunit.js as late as possible to avoid a race condition!
-      // The QUnit module drop down box doesn't appear if Vex.Flow.Test.run() runs too late.
+      // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
       await loadScript('support/qunit.js');
 
       // Show only failed tests.
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
-      Vex.Flow.Test.run();
+
+      VF.Test.run();
     </script>
   </body>
 </html>

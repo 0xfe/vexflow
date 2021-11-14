@@ -30,8 +30,6 @@ const TabTieTests = {
   },
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
 /**
  * Helper function to create TabNote objects.
  */
@@ -46,6 +44,7 @@ function setupContext(options: TestOptions, w: number = 0, h: number = 0): { con
   context.fillStyle = '#221';
   context.strokeStyle = '#221';
   context.setFont('Arial', VexFlowTests.Font.size, '');
+  // context.setFont('Arial', VexFlowTests.Font.size); // RONYEH. setFont() params are optional, so no need to pass ''.
 
   const stave = new TabStave(10, 10, w || 350).addTabGlyph().setContext(context).draw();
 
@@ -235,4 +234,5 @@ function continuous(options: TestOptions, contextBuilder: ContextBuilder): void 
   ok(true, 'Continuous Hammeron');
 }
 
+VexFlowTests.register(TabTieTests);
 export { TabTieTests };

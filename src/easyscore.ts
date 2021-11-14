@@ -22,9 +22,9 @@ function L(...args: any[]): void {
 }
 
 // eslint-disable-next-line
-type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
+export type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
 
-class EasyScoreGrammar implements Grammar {
+export class EasyScoreGrammar implements Grammar {
   builder: Builder;
 
   constructor(builder: Builder) {
@@ -209,13 +209,13 @@ class EasyScoreGrammar implements Grammar {
   }
 }
 
-interface NotePiece {
+export interface NotePiece {
   key: string;
   accid?: string | null;
   octave?: string;
 }
 
-class Piece {
+export class Piece {
   chord: NotePiece[] = [];
   duration: string;
   dots: number = 0;
@@ -226,7 +226,7 @@ class Piece {
   }
 }
 
-interface BuilderElements {
+export interface BuilderElements {
   notes: StaveNote[];
   accidentals: (Accidental | undefined)[][];
 }

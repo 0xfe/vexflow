@@ -63,4 +63,5 @@ function drawBeginAndEnd(options: TestOptions, contextBuilder: ContextBuilder): 
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveModifierTests);
 export { StaveModifierTests };

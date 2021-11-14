@@ -1,9 +1,10 @@
-import { GonvilleFont } from "./gonville_glyphs";
-import { GonvilleMetrics } from "./gonville_metrics";
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
 
-const Gonville = { 
-  fontData: GonvilleFont,
+import { GonvilleFont } from './gonville_glyphs';
+import { GonvilleMetrics } from './gonville_metrics';
+
+export const Gonville = {
+  data: GonvilleFont,
   metrics: GonvilleMetrics,
 };
-
-export default Gonville;

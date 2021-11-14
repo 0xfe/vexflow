@@ -46,7 +46,7 @@ export class Voice extends Element {
   protected stave?: Stave;
   protected mode: VoiceMode = VoiceMode.STRICT;
   protected expTicksUsed?: number;
-  protected preFormatted?: boolean;
+  protected preFormatted: boolean = false;
   protected options: { softmaxFactor: number };
 
   protected readonly totalTicks: Fraction;

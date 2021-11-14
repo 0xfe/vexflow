@@ -180,4 +180,5 @@ function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void 
   ok(true, 'Full Dot');
 }
 
+VexFlowTests.register(DotTests);
 export { DotTests };

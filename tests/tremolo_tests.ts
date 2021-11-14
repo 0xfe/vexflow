@@ -53,4 +53,5 @@ function tremoloBasic(options: TestOptions): void {
   ok(true, 'Tremolo - Basic');
 }
 
+VexFlowTests.register(TremoloTests);
 export { TremoloTests };

@@ -6,7 +6,9 @@
 // TODO: KeyManager.getAccidental(key) specifies that the return value's .accidental property is string | undefined.
 //       However, we check it against null.
 
-import { KeyManager } from '../src/keymanager';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { KeyManager } from '../src/';
 
 const KeyManagerTests = {
   Start(): void {
@@ -82,4 +84,5 @@ function selectNotes(): void {
   equal(note.accidental, '#');
 }
 
+VexFlowTests.register(KeyManagerTests);
 export { KeyManagerTests };

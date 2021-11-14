@@ -103,4 +103,5 @@ function full(options: TestOptions, contextBuilder: ContextBuilder): void {
   );
 }
 
+VexFlowTests.register(VoiceTests);
 export { VoiceTests };

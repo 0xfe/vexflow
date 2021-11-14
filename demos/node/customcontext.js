@@ -2,17 +2,15 @@
 
 /* eslint-disable no-console */
 
-const { createCanvas } = require('canvas');
 const Vex = require('../../build/vexflow-debug');
+
 const VF = Vex.Flow;
 
 // A custom Vex.Flow.RenderContext implementation.
-// This is just a stub for demonstration purposes that console.logs all method
-// calls and arguments.
+// This is just a stub for demonstration purposes that console.logs method calls and arguments.
 class CustomContext extends VF.RenderContext {
   constructor() {
     super();
-    this.font = '';
     this.fillStyle = '';
     this.strokeStyle = '';
   }
@@ -30,14 +28,14 @@ class CustomContext extends VF.RenderContext {
     this.log('clear');
   }
 
-  setFont(family, size, weight = '') {
-    this.log('setFont', family, size, weight);
+  setFont(f, sz, wt, st) {
+    this.log('setFont', f, sz, wt, st);
     return this;
   }
 
-  setRawFont(font) {
-    this.log('setRawFont', font);
-    return this;
+  getFont() {
+    this.log(`getFont() => '10pt Arial'`);
+    return '10pt Arial';
   }
 
   setFillStyle(style) {
@@ -185,7 +183,7 @@ class CustomContext extends VF.RenderContext {
 
 const renderer = new VF.Renderer(new CustomContext());
 const context = renderer.getContext();
-context.setFont('Arial', 10, '').setBackgroundFillStyle('#eed');
+context.setFont('Arial', 10).setBackgroundFillStyle('#eed');
 
 const stave = new VF.Stave(10, 40, 400);
 stave.addClef('treble');

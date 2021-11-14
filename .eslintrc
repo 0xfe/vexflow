@@ -3,7 +3,8 @@
   "env": { "browser": true, "node": true },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "tsconfig.json"
+    "project": "tsconfig.json",
+    "extraFileExtensions": [".mjs"]
   },
   "plugins": ["@typescript-eslint", "prettier", "simple-import-sort", "import"],
   "rules": {

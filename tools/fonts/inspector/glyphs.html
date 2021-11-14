@@ -63,14 +63,13 @@
       function chooseFont(fontName) {
         document.getElementById('title').innerText = 'Glyph Inspector – ' + fontName;
 
-        /* RONYEH 3.0.9 BEGIN */
-        const font = Vex.Flow.Fonts[fontName]();
-        Vex.Flow.DEFAULT_FONT_STACK = [font];
-        /* RONYEH 3.0.9 END */
+        /* Version 4.0.0 */
+        const font = Vex.Flow.setMusicFont(fontName);
 
-        /*
-        const font = Vex.Flow.setMusicFont(fontName); // RONYEH 4.0.0
-        */
+        /* Version 3.0.9 */
+        // const font = Vex.Flow.Fonts[fontName]();
+        // Vex.Flow.DEFAULT_FONT_STACK = [font];
+
         const glyphs = font.getGlyphs();
 
         // Calculate the canvas height programmatically based on the number of glyphs.

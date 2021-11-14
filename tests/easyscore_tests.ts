@@ -396,4 +396,5 @@ function keys(options: TestOptions): void {
   }
 }
 
+VexFlowTests.register(EasyScoreTests);
 export { EasyScoreTests };

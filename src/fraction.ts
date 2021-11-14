@@ -17,9 +17,12 @@ export class Fraction {
   private static __staticFractionB = new Fraction();
   private static __staticFractionTmp = new Fraction();
 
-  /** GCD: Greatest common divisor using Euclidean algorithm. */
+  /**
+   * GCD: Greatest common divisor using the Euclidean algorithm.
+   * Note: GCD(0, 0) => 0 and GCD(0, n) => n.
+   */
   static GCD(a: number, b: number): number {
-    if (typeof a !== 'number' || Number.isNaN(a) || a === 0 || typeof b !== 'number' || Number.isNaN(b) || b === 0) {
+    if (typeof a !== 'number' || Number.isNaN(a) || typeof b !== 'number' || Number.isNaN(b)) {
       throw new RuntimeError('BadArgument', `Invalid numbers: ${a}, ${b}`);
     }
 

@@ -385,4 +385,5 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'TabNotes successfully drawn');
 }
 
+VexFlowTests.register(ArticulationTests);
 export { ArticulationTests };

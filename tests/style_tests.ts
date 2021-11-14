@@ -142,4 +142,5 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'TabNote Modifiers Style');
 }
 
+VexFlowTests.register(StyleTests);
 export { StyleTests };

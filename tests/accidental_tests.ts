@@ -1195,4 +1195,5 @@ function factoryAPI(options: TestOptions): void {
   ok(true, 'Factory API');
 }
 
+VexFlowTests.register(AccidentalTests);
 export { AccidentalTests };

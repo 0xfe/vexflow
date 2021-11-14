@@ -1,12 +1,13 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Element } from './element';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFont } from './textfont';
-import { FontInfo } from './types/common';
+import { TextFormatter } from './textformatter';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -14,14 +15,14 @@ function L(...args: any[]) {
   if (Annotation.DEBUG) log('Vex.Flow.Annotation', args);
 }
 
-enum Justify {
+export enum AnnotationHorizontalJustify {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
   CENTER_STEM = 4,
 }
 
-enum VerticalJustify {
+export enum AnnotationVerticalJustify {
   TOP = 1,
   CENTER = 2,
   BOTTOM = 3,
@@ -36,32 +37,34 @@ enum VerticalJustify {
  */
 export class Annotation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Annotations category string. */
   static get CATEGORY(): string {
     return 'Annotation';
   }
 
-  /** Text annotations can be positioned and justified relative to the note. */
-  static Justify = Justify;
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
-  static JustifyString: Record<string, number> = {
-    left: Justify.LEFT,
-    right: Justify.RIGHT,
-    center: Justify.CENTER,
-    centerStem: Justify.CENTER_STEM,
+  /** Text annotations can be positioned and justified relative to the note. */
+  static HorizontalJustify = AnnotationHorizontalJustify;
+
+  static HorizontalJustifyString: Record<string, number> = {
+    left: AnnotationHorizontalJustify.LEFT,
+    right: AnnotationHorizontalJustify.RIGHT,
+    center: AnnotationHorizontalJustify.CENTER,
+    centerStem: AnnotationHorizontalJustify.CENTER_STEM,
   };
 
-  static VerticalJustify = VerticalJustify;
+  static VerticalJustify = AnnotationVerticalJustify;
 
   static VerticalJustifyString: Record<string, number> = {
-    above: Annotation.VerticalJustify.TOP,
-    top: Annotation.VerticalJustify.TOP,
-    below: Annotation.VerticalJustify.BOTTOM,
-    bottom: Annotation.VerticalJustify.BOTTOM,
-    center: Annotation.VerticalJustify.CENTER,
-    centerStem: Annotation.VerticalJustify.CENTER_STEM,
+    above: AnnotationVerticalJustify.TOP,
+    top: AnnotationVerticalJustify.TOP,
+    below: AnnotationVerticalJustify.BOTTOM,
+    bottom: AnnotationVerticalJustify.BOTTOM,
+    center: AnnotationVerticalJustify.CENTER,
+    centerStem: AnnotationVerticalJustify.CENTER_STEM,
   };
 
   /** Arrange annotations within a `ModifierContext` */
@@ -70,18 +73,15 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
-      let testWidth = 0;
+      let textWidth = 0;
       const annotation = annotations[i];
-      const textFont = TextFont.getTextFontFromVexFontData({
-        family: annotation.font.family,
-        size: annotation.font.size,
-        weight: 'normal',
-      });
+      const textFormatter = TextFormatter.create(annotation.textFont);
+
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
-      // Get the string width from the font metrics
-      testWidth = textFont.getWidthForString(annotation.text);
-      width = Math.max(width, testWidth);
+      const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
+      // Get the text width from the font metrics.
+      textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      width = Math.max(width, textWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line += numLines;
@@ -95,11 +95,9 @@ export class Annotation extends Modifier {
     return true;
   }
 
-  protected justification: Justify;
-  protected vert_justification: VerticalJustify;
+  protected justification: AnnotationHorizontalJustify;
+  protected vert_justification: AnnotationVerticalJustify;
   protected text: string;
-  // Initialized by the constructor via this.setFont('Arial', 10).
-  protected font!: FontInfo;
 
   /**
    * Annotations inherit from `Modifier` and is positioned correctly when
@@ -110,25 +108,19 @@ export class Annotation extends Modifier {
     super();
 
     this.text = text;
-    this.justification = Justify.CENTER;
+    this.justification = AnnotationHorizontalJustify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
-    this.setFont('Arial', 10);
+    this.resetFont();
 
     // The default width is calculated from the text.
     this.setWidth(Tables.textWidth(text));
-  }
-
-  /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */
-  setFont(family: string, size: number, weight: string = ''): this {
-    this.font = { family, size, weight };
-    return this;
   }
 
   /**
    * Set vertical position of text (above or below stave).
    * @param just value in `Annotation.VerticalJustify`.
    */
-  setVerticalJustification(just: string | VerticalJustify): this {
+  setVerticalJustification(just: string | AnnotationVerticalJustify): this {
     this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
@@ -136,7 +128,7 @@ export class Annotation extends Modifier {
   /**
    * Get horizontal justification.
    */
-  getJustification(): Justify {
+  getJustification(): AnnotationHorizontalJustify {
     return this.justification;
   }
 
@@ -144,8 +136,8 @@ export class Annotation extends Modifier {
    * Set horizontal justification.
    * @param justification value in `Annotation.Justify`.
    */
-  setJustification(just: string | Justify): this {
-    this.justification = typeof just === 'string' ? Annotation.JustifyString[just] : just;
+  setJustification(just: string | AnnotationHorizontalJustify): this {
+    this.justification = typeof just === 'string' ? Annotation.HorizontalJustifyString[just] : just;
     return this;
   }
 
@@ -161,7 +153,8 @@ export class Annotation extends Modifier {
     ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
+
     const text_width = ctx.measureText(this.text).width;
 
     // Estimate text height to be the same as the width of an 'm'.
@@ -172,11 +165,11 @@ export class Annotation extends Modifier {
     let x;
     let y;
 
-    if (this.justification === Annotation.Justify.LEFT) {
+    if (this.justification === Annotation.HorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.justification === Annotation.Justify.RIGHT) {
+    } else if (this.justification === Annotation.HorizontalJustify.RIGHT) {
       x = start.x - text_width;
-    } else if (this.justification === Annotation.Justify.CENTER) {
+    } else if (this.justification === Annotation.HorizontalJustify.CENTER) {
       x = start.x - text_width / 2;
     } /* CENTER_STEM */ else {
       x = (note as StemmableNote).getStemX() - text_width / 2;

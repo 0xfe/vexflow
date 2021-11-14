@@ -3,11 +3,9 @@
 //
 // Registry Tests
 
-import { EasyScore } from '../src/easyscore';
-import { Element } from '../src/element';
-import { Factory } from '../src/factory';
-import { Registry } from '../src/registry';
-import { StaveNote } from '../src/stavenote';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { EasyScore, Element, Factory, Registry, StaveNote } from '../src/';
 
 const RegistryTests = {
   Start(): void {
@@ -88,4 +86,5 @@ function classes(): void {
   equal(registry.getElementsByClass('boo').length, 0);
 }
 
+VexFlowTests.register(RegistryTests);
 export { RegistryTests };

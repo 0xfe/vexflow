@@ -871,4 +871,5 @@ function flatBeamsDownBounds(options: TestOptions): void {
   ok(true, 'Flat Beams Down (uniform) Test');
 }
 
+VexFlowTests.register(AutoBeamFormattingTests);
 export { AutoBeamFormattingTests };

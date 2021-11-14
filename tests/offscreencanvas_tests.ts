@@ -1,18 +1,21 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2021.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2021.
 // MIT License
 //
 // OffscreenCanvas Tests
+
+import { VexFlowTests } from './vexflow_test_helpers';
 
 import { CanvasContext } from '../src/canvascontext';
 import { Formatter } from '../src/formatter';
 import { Stave } from '../src/stave';
 import { BarlineType } from '../src/stavebarline';
 import { StaveNote } from '../src/stavenote';
+import { globalObject } from '../src/util';
 
 const OffscreenCanvasTests = {
   Start(): void {
     // At the time of writing, OffscreenCanvas is still an experimental technology.
-    if (window.OffscreenCanvas === undefined) {
+    if (globalObject().OffscreenCanvas === undefined) {
       return;
     }
 
@@ -57,4 +60,5 @@ function simpleTest(): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(OffscreenCanvasTests);
 export { OffscreenCanvasTests };

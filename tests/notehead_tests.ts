@@ -7,8 +7,6 @@
 //       Each time you call scale(sx, sy), it multiplies the sx and sy by the currently stored scale.
 //       The SVGContext operates differently. It just sets the sx and sy as the new scale, instead of multiplying it.
 //       See: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/scale
-// TODO: The middle C note head is missing a ledger line. Should it automatically draw one? In older versions of VexFlow, there is a ledger line.
-//       See: https://www.vexflow.com/tests/?module=NoteHead
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -193,4 +191,5 @@ function basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder
   ok('NoteHead Bounding Boxes');
 }
 
+VexFlowTests.register(NoteHeadTests);
 export { NoteHeadTests };

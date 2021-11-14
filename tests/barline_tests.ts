@@ -21,6 +21,10 @@ function enums(): void {
   // VexFlow 4.0 renamed Barline.type => BarlineType.
   // The old way still works, for backwards compatibility.
   equal(Barline.type, BarlineType);
+
+  const a = BarlineType['DOUBLE'];
+  const b = BarlineType.DOUBLE;
+  equal(a, b);
 }
 
 function simple(options: TestOptions): void {
@@ -64,4 +68,5 @@ function style(options: TestOptions): void {
   ok(true, 'Style');
 }
 
+VexFlowTests.register(BarlineTests);
 export { BarlineTests };

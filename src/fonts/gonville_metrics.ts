@@ -93,6 +93,12 @@ export const GonvilleMetrics = {
     },
   },
 
+  // These are for numeric digits, such as in time signatures
+  digits: {
+    point: 40,
+    tupletPoint: 28,
+  },
+
   // articulation: {
   // },
 
@@ -117,12 +123,6 @@ export const GonvilleMetrics = {
 
   // noteHead: {
   // },
-
-  // These are for numeric digits, such as in time signatures
-  digits: {
-    point: 40,
-    tupletPoint: 28,
-  },
 
   stem: {
     heightAdjustmentForFlag: -3,

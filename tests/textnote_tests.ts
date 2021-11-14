@@ -3,18 +3,13 @@
 //
 // Text Note Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: TextNote needs a setFont() accessor.
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Crescendo } from '../src/crescendo';
 import { Flow } from '../src/flow';
 import { Note } from '../src/note';
-import { TextNote } from '../src/textnote';
 import { Stave } from '../src/stave';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { TextNote } from '../src/textnote';
 
 const TextNoteTests = {
   Start(): void {
@@ -142,7 +137,9 @@ function superscriptAndSubscript(options: TestOptions): void {
 
   voice2.getTickables().forEach((note) => {
     const textNote = note as TextNote;
-    textNote.font = { family: 'Serif', size: 15, weight: '' };
+    // textNote.font = { family: 'Serif', size: 15, weight: '' }; // 3.0.9 API was not consistent. Usually .font is a string.
+    textNote.setFont({ family: 'Serif', size: 15 }); // In 4.0.0, use setFont(fontInfo) instead.
+    // textNote.setFont({ family: Font.SERIF, size: 15 }); // RONYEH Instead of specifying 'Serif', you can use the constant.
     textNote.setLine(13);
     textNote.setJustification(TextNote.Justification.LEFT);
   });
@@ -280,4 +277,5 @@ function textDynamics(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(TextNoteTests);
 export { TextNoteTests };

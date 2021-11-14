@@ -189,7 +189,8 @@ export class Tuplet extends Element {
     // eslint-disable-next-line
     console.warn(
       'beats_occupied has been deprecated as an option for tuplets. Please use notes_occupied instead.',
-      'Calls to getBeatsOccupied / setBeatsOccupied should now be routed to getNotesOccupied / setNotesOccupied.'
+      'Calls to getBeatsOccupied / setBeatsOccupied should now be routed to getNotesOccupied / setNotesOccupied.',
+      'The old methods will be removed in VexFlow 5.0.'
     );
   }
 

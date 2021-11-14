@@ -162,4 +162,5 @@ const top = createTest(
   }
 );
 
+VexFlowTests.register(CurveTests);
 export { CurveTests };

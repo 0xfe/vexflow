@@ -5,11 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Beam } from '../src/beam';
-import { Bend } from '../src/bend';
-import { GraceNote, GraceNoteStruct } from '../src/gracenote';
-import { Barline } from '../src/stavebarline';
-import { Stroke } from '../src/strokes';
+import { Barline, Beam, Bend, GraceNote, GraceNoteStruct, Stroke } from '../src/';
 
 const StrokesTests = {
   Start(): void {
@@ -441,4 +437,5 @@ function notesWithTab(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StrokesTests);
 export { StrokesTests };

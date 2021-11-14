@@ -139,4 +139,5 @@ function drawClefChange(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(ClefTests);
 export { ClefTests };

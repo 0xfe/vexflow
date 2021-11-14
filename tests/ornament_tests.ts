@@ -16,7 +16,6 @@ import { Ornament } from '../src/ornament';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
-import { Tables } from '../src/tables';
 import { Voice, VoiceMode } from '../src/voice';
 
 const OrnamentTests = {
@@ -233,7 +232,7 @@ function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: Cont
 }
 
 function jazzOrnaments(options: TestOptions): void {
-  const clefWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', 38); // widest clef
+  const clefWidth = Glyph.getWidth('gClef', 38); // widest clef
 
   // Helper function.
   function draw(modifiers: Ornament[], keys: string[], x: number, width: number, y: number, stemDirection?: number) {
@@ -392,4 +391,5 @@ function jazzOrnaments(options: TestOptions): void {
   draw(mods, ['e/4'], curX, width, curY);
 }
 
+VexFlowTests.register(OrnamentTests);
 export { OrnamentTests };

@@ -714,4 +714,5 @@ function factoryAPI(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveTests);
 export { StaveTests };
