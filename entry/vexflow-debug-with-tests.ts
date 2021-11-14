@@ -5,13 +5,14 @@
 // It statically bundles all the music engraving fonts, and also includes the tests from vexflow/tests/.
 // flow.html
 
-import { Vex } from '../';
-import { loadMusicFonts } from '../fonts/bundleAll';
-import { loadTextFonts } from '../fonts/textfonts';
+import { Vex } from '../src/index';
+
+import { loadMusicFonts } from '../src/fonts/bundleAll';
+import { loadTextFonts } from '../src/fonts/textfonts';
 
 loadMusicFonts();
 loadTextFonts();
 
-export * from '../../tests';
-export * from '../';
+export * from '../src/index';
+export * from '../tests/index';
 export default Vex;

@@ -4,35 +4,37 @@
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "exports": {
     ".": {
-      "types": "./build/src/entry/vexflow.d.ts",
-      "require": "./build/vexflow.js",
-      "import": "./build/esm/vexflow.js"
+      "types": "./build/esm/entry/vexflow.d.ts",
+      "require": "./build/cjs/vexflow.js",
+      "import": "./build/esm/entry/vexflow.js"
     },
     "./core": {
-      "types": "./build/src/entry/vexflow-core.d.ts",
-      "require": "./build/vexflow-core.js",
-      "import": "./build/esm/vexflow-core.js"
+      "types": "./build/esm/entry/vexflow-core.d.ts",
+      "require": "./build/cjs/vexflow-core.js",
+      "import": "./build/esm/entry/vexflow-core.js"
     },
     "./core-with-bravura": {
-      "types": "./build/src/entry/vexflow-core-with-bravura.d.ts",
-      "require": "./build/vexflow-core-with-bravura.js",
-      "import": "./build/esm/vexflow-core-with-bravura.js"
+      "types": "./build/esm/entry/vexflow-core-with-bravura.d.ts",
+      "require": "./build/cjs/vexflow-core-with-bravura.js",
+      "import": "./build/esm/entry/vexflow-core-with-bravura.js"
     },
     "./core-with-gonville": {
-      "types": "./build/src/entry/vexflow-core-with-gonville.d.ts",
-      "require": "./build/vexflow-core-with-gonville.js",
-      "import": "./build/esm/vexflow-core-with-gonville.js"
+      "types": "./build/esm/entry/vexflow-core-with-gonville.d.ts",
+      "require": "./build/cjs/vexflow-core-with-gonville.js",
+      "import": "./build/esm/entry/vexflow-core-with-gonville.js"
     },
     "./core-with-petaluma": {
-      "types": "./build/src/entry/vexflow-core-with-petaluma.d.ts",
-      "require": "./build/vexflow-core-with-petaluma.js",
-      "import": "./build/esm/vexflow-core-with-petaluma.js"
+      "types": "./build/esm/entry/vexflow-core-with-petaluma.d.ts",
+      "require": "./build/cjs/vexflow-core-with-petaluma.js",
+      "import": "./build/esm/entry/vexflow-core-with-petaluma.js"
     }
   },
-  "main": "build/vexflow.js",
-  "module": "build/esm/vexflow.js",
-  "types": "build/src/index.d.ts",
-  "browser": "build/vexflow.js",
+  "main": "./build/cjs/vexflow.js",
+  "browser": "./build/cjs/vexflow.js",
+  "module": "./build/esm/entry/vexflow.js",
+  "types": "./build/esm/entry/vexflow.d.ts",
+  "unpkg": "./build/cjs/vexflow.js",
+  "jsdelivr": "./build/cjs/vexflow.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -45,7 +47,11 @@
   "license": "MIT",
   "files": [
     "build",
-    "src"
+    "src",
+    "entry",
+    "!entry/vexflow-debug-with-tests.ts",
+    "tests/flow.html",
+    "AUTHORS.md"
   ],
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"

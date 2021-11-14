@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 
 const { createCanvas } = require('canvas');
-const Vex = require('../../build/vexflow-debug');
+const Vex = require('../../build/cjs/vexflow');
 
 const { Renderer, Stave } = Vex.Flow;
 

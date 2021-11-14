@@ -5,7 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Barline, Beam, Bend, GraceNote, GraceNoteStruct, Stroke } from '../src/';
+import { Barline, Beam, Bend, GraceNote, GraceNoteStruct, Stroke } from '../src/index';
 
 const StrokesTests = {
   Start(): void {

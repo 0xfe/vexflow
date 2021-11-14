@@ -5,7 +5,7 @@
 
 /* eslint-disable no-console */
 
-const Vex = require('../../build/vexflow-debug');
+const Vex = require('../../build/cjs/vexflow');
 
 const { Flow, Stave, StaveNote } = Vex.Flow;
 

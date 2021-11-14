@@ -73,11 +73,19 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
+import { BUILD, VERSION } from './version';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
 
 export class Flow {
+  static get VERSION() {
+    return VERSION;
+  }
+  static get BUILD() {
+    return BUILD;
+  }
+
   static Accidental = Accidental;
   static Annotation = Annotation;
   static Articulation = Articulation;
@@ -167,10 +175,6 @@ export class Flow {
   static BarlineType = BarlineType;
   static ModifierPosition = ModifierPosition;
   // ... more to come ...
-
-  // VERSION and BUILD are set by webpack string-replace-loader. See: Gruntfile.js.
-  static VERSION: string = '_VEX_VERSION_';
-  static BUILD: string = '_VEX_BUILD_';
 
   /**
    * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.

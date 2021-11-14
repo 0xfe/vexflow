@@ -9,12 +9,13 @@
 
 // In the future, we could do something different with this entry file, such as turn on flags for logging.
 
-import { Vex } from '../';
-import { loadMusicFonts } from '../fonts/bundleAll';
-import { loadTextFonts } from '../fonts/textfonts';
+import { Vex } from '../src/index';
+
+import { loadMusicFonts } from '../src/fonts/bundleAll';
+import { loadTextFonts } from '../src/fonts/textfonts';
 
 loadMusicFonts();
 loadTextFonts();
 
-export * from '../';
+export * from '../src/index';
 export default Vex;

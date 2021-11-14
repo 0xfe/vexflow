@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 
-// A module entry file `src/entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
+// A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow';
 const VEX_CORE = 'vexflow-core';
@@ -18,14 +18,17 @@ const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
+const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
+const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
-// Global variables that will be set below.
-let PACKAGE_JSON;
-let VEXFLOW_VERSION;
+// Make the src/version.ts file.
+const VERSION_FILE = path.join(BASE_DIR, 'src/version.ts');
+child_process.execSync(`node ./tools/generate_version_file.js ${VERSION_FILE}`);
+
+// Global variable that will be set below.
 let BANNER;
-let GIT_COMMIT_HASH;
 
 // PRODUCTION_MODE will enable minification, etc.
 // See: https://webpack.js.org/configuration/mode/
@@ -39,8 +42,8 @@ const SINGLE_BUNDLE = 'single';
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
  */
 function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE) {
-  // The module entry is a full path to a typescript file stored in vexflow/src/entry/.
-  const entry = path.join(BASE_DIR, 'src/entry/', file + '.ts');
+  // The module entry is a full path to a typescript file stored in vexflow/entry/.
+  const entry = path.join(BASE_DIR, 'entry/', file + '.ts');
   const outputFilename = file + '.js';
 
   // TODO: Explore passing multiple entry points to the entry field instead of running multiple webpack tasks
@@ -69,14 +72,15 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     // publicPath needs more testing! :-(
     // In some tests, this needs to be './' to work, but in others it needs to be 'auto' to work.
     // publicPath = './';
-    publicPath = 'auto';
+    publicPath = '';
+    // publicPath = 'auto';
   }
 
   return {
     mode: mode,
     entry: entry,
     output: {
-      path: BUILD_DIR,
+      path: BUILD_CJS_DIR,
       filename: outputFilename,
       chunkFilename: chunkFilename,
       library: {
@@ -88,25 +92,17 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
       publicPath: publicPath,
     },
     resolve: {
-      extensions: ['.ts', '...'],
+      extensions: ['.ts', '.tsx', '.js', '...'],
     },
     devtool: process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? 'source-map' : false,
     module: {
       rules: [
         {
-          // Add VERSION and BUILD properties to Vex.Flow.
-          test: /flow\.ts$/,
-          loader: 'string-replace-loader',
-          options: {
-            multiple: [
-              { search: '_VEX_BUILD_', replace: GIT_COMMIT_HASH },
-              { search: '_VEX_VERSION_', replace: VEXFLOW_VERSION },
-            ],
-          },
-        },
-        {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,
+          resolve: {
+            fullySpecified: false,
+          },
           use: [
             {
               loader: 'ts-loader',
@@ -130,10 +126,10 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
 }
 
 module.exports = (grunt) => {
-  // Get current build information from git and package.json.
-  GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
-  PACKAGE_JSON = grunt.file.readJSON('package.json');
-  VEXFLOW_VERSION = PACKAGE_JSON.version;
+  // Get current build information from package.json and git.
+  const PACKAGE_JSON = grunt.file.readJSON('package.json');
+  const VEXFLOW_VERSION = PACKAGE_JSON.version;
+  const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
   BANNER =
     `VexFlow ${VEXFLOW_VERSION}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
     `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
@@ -211,33 +207,8 @@ module.exports = (grunt) => {
         expand: true,
         cwd: BASE_DIR,
         src: ['tools/esm/package.json'],
-        dest: path.join(BUILD_DIR, 'esm/'),
+        dest: BUILD_ESM_DIR,
         flatten: true,
-      },
-      // Modules: For now, we just copy the vexflow****.js to the esm/ folder and add exports at the bottom.
-      moduleJSFiles: {
-        expand: true,
-        cwd: BUILD_DIR,
-        src: ['*.js'],
-        dest: path.join(BUILD_DIR, 'esm/'),
-        flatten: true,
-        options: {
-          process: (content) => {
-            // We take a JS file that sets globalThis.Vex, and turn it into a ES module.
-            // To do this, we extract all the classes from Vex.Flow, and re-export them.
-            // We also export Vex both as a named export and as a default export.
-            // THIS IS A HACK, so we should figure out how to use webpack to export both ESM and CJS.
-            const exports = `
-const Vex = globalThis['Vex'];
-const Flow = Vex.Flow;
-const  { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice, BarlineType, ModifierPosition } = Vex.Flow;
-export { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice, BarlineType, ModifierPosition };
-export { Vex, Flow };
-export default Vex;`;
-            // Append our magic exports. :-)
-            return content + exports;
-          },
-        },
       },
       release: {
         files: [
@@ -332,11 +303,26 @@ export default Vex;`;
       'webpack:buildProdBravuraOnly',
       'webpack:buildProdGonvilleOnly',
       'webpack:buildProdPetalumaOnly',
-      'copy:moduleJSFiles',
+      'buildESModules',
+      'buildTypeDeclarations',
       'copy:modulePackageJSON',
       'typedoc',
     ]
   );
+
+  grunt.registerTask('buildTypeDeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
+    grunt.log.writeln('Building *.d.ts');
+    const results = child_process.execSync('tsc -p tsconfig.types.json').toString();
+    grunt.log.writeln(results);
+  });
+
+  grunt.registerTask('buildESModules', 'Use tsc to create ESM JS files in build/esm/', () => {
+    grunt.log.writeln('Building ESM');
+    const results1 = child_process.execSync('tsc -p tsconfig.esm.json').toString();
+    grunt.log.writeln(results1);
+    const results2 = child_process.execSync('node ./tools/esm/fix-imports-and-exports ./build/esm/').toString();
+    grunt.log.writeln(results2);
+  });
 
   // `grunt watch`
   grunt.registerTask(

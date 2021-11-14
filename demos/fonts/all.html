@@ -21,13 +21,13 @@
     <div id="outputPetaluma"></div>
     <p>View the source code for more information.</p>
     <!--
-        The standard VexFlow library (build/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
+        The standard VexFlow library (build/cjs/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
         It statically bundles all the music fonts, and selects Bravura as its default.
-        For this demo we include build/vexflow-debug.js, which is the non-minified version of vexflow.js.
-        The build/*.js files are compatible with <script> tags.
+        For this demo we include build/cjs/vexflow-debug.js, which is the non-minified version of vexflow.js.
+        The build/cjs/*.js files are compatible with <script> tags.
         The build/esm/*.js files are compatible with ESM import statements.
     -->
-    <script src="../../build/vexflow-debug.js"></script>
+    <script src="../../build/cjs/vexflow-debug.js"></script>
     <script>
       console.log(Vex);
       console.log('VexFlow BUILD ' + Vex.Flow.BUILD);

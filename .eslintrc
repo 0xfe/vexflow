@@ -34,6 +34,10 @@
               // Vex goes first!
               ["^.*/vex$"],
               ["^.*/vexflow_test_helpers$"],
+
+              // Imports of the index.ts file next.
+              ["^.*/index$"],
+
               // Side effect imports.
               ["^\\u0000"],
               // Packages.

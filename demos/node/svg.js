@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 
-const Vex = require('../../build/vexflow-debug');
+const Vex = require('../../build/cjs/vexflow');
 const { JSDOM } = require('jsdom');
 
 const VF = Vex.Flow;
