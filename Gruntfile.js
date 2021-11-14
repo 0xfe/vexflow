@@ -18,7 +18,6 @@ const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
-const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
 // Global variables that will be set below.
@@ -239,16 +238,6 @@ export default Vex;`;
           },
         },
       },
-      release: {
-        files: [
-          {
-            expand: true,
-            cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
-            dest: RELEASES_DIR,
-          },
-        ],
-      },
       reference: {
         files: [
           {
@@ -271,36 +260,6 @@ export default Vex;`;
         src: ['./src/index.ts'],
       },
     },
-    gitcommit: {
-      releases: {
-        options: {
-          message: 'Committing release binaries for new version: <%= pkg.version %>',
-          verbose: true,
-        },
-        files: [
-          {
-            src: [`${RELEASES_DIR}/*.js`, `${RELEASES_DIR}/*.map`],
-            expand: true,
-          },
-        ],
-      },
-    },
-    bump: {
-      options: {
-        files: ['package.json', 'component.json'],
-        commitFiles: ['package.json', 'component.json'],
-        updateConfigs: ['pkg'],
-        createTag: false,
-        push: false,
-      },
-    },
-    release: {
-      options: {
-        bump: false,
-        commit: false,
-        npm: false, // Run npm publish by hand
-      },
-    },
     clean: {
       build: { src: [BUILD_DIR] },
     },
@@ -310,8 +269,6 @@ export default Vex;`;
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-typedoc');
-  grunt.loadNpmTasks('grunt-release');
-  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-webpack');
@@ -387,34 +344,4 @@ export default Vex;`;
       'copy:reference',
     ]
   );
-
-  // Release current build.
-  grunt.registerTask(
-    'stage',
-    'Build to releases/.', //
-    [
-      //
-      'default',
-      'qunit',
-      'copy:release',
-    ]
-  );
-
-  // Increment package version and generate releases. Does NOT automatically publish to NPM.
-  grunt.registerTask(
-    'publish',
-    'Generate releases.', //
-    [
-      //
-      'bump',
-      'stage',
-      'gitcommit:releases',
-      'release',
-      'alldone',
-    ]
-  );
-
-  grunt.registerTask('alldone', 'Publish VexFlow NPM.', () => {
-    grunt.log.ok('NOT YET DONE: Run `npm publish` now to publish NPM.');
-  });
 };
