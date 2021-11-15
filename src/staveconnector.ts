@@ -2,7 +2,7 @@
 // MIT License
 
 import { Element } from './element';
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
@@ -36,7 +36,7 @@ export class StaveConnector extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: Font.SERIF */,
+    family: Font.SERIF,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

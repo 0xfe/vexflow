@@ -1,7 +1,7 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Larry Kuhns 2011
 
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 
@@ -23,7 +23,7 @@ export class Volta extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    family: Font.SANS_SERIF,
     size: 9,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

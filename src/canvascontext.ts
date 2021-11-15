@@ -1,10 +1,10 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { globalObject, isHTMLCanvas } from '.';
 import { Font, FontInfo } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
-import { warn } from './util';
+import { isHTMLCanvas } from './typeguard';
+import { globalObject, warn } from './util';
 
 /**
  * A rendering context for the Canvas backend. This class serves as a proxy for the
