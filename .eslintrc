@@ -54,6 +54,14 @@
       }
     },
     {
+      "files": ["demos/**/*.js"],
+      "extends": ["eslint:recommended", "prettier"],
+      "rules": {
+        "no-console": "off",
+        "no-unused-vars": "off"
+      }
+    },
+    {
       "files": ["src/**/*.js"],
       "extends": ["eslint:recommended", "prettier"]
     },
@@ -61,9 +69,9 @@
       "files": ["tests/**/*.js"],
       "extends": ["eslint:recommended", "prettier"],
       "rules": {
-        "no-restricted-globals": 0,
-        "no-undef": 0,
-        "no-undef-init": 0
+        "no-restricted-globals": "off",
+        "no-undef": "off",
+        "no-undef-init": "off"
       }
     }
   ]

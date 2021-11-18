@@ -19,9 +19,11 @@
     <p>VexFlow Build: <span id="info"></span></p>
     <p>See also: <a href="script-tag.html">Script Tag</a></p>
     <script type="module">
-      import Vex from '../../build/esm/entry/vexflow-debug.js';
+      import Vex from '../../build/esm/entry/vexflow-core.js';
 
       document.querySelector('#info').innerText = Vex.Flow.BUILD;
+
+      await Vex.Flow.setMusicFont('Bravura');
 
       const { Factory } = Vex.Flow;
 
@@ -43,6 +45,10 @@
         .addTimeSignature('4/4');
 
       factory.draw();
+
+      // Just for debugging, assign Vex.Flow to the global VF variable.
+      // No you can do VF.setMusicFont('Gonville'); from the command line.
+      window.VF = Vex.Flow;
     </script>
   </body>
 </html>

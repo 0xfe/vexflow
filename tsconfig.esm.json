@@ -1,12 +1,12 @@
-// Build the ES module JS files and emits the *.d.ts files for the src/ folder.
+// Build the ES module JS files for the src/ and entry/ folders.
 // It ignores the tests/ folder because users of our NPM package don't need
-// to have the source or type definitions for tests.
+// to have the source for tests.
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./build/esm/",
     "declaration": false,
-    "sourceMap": false
+    "removeComments": true
   },
   "include": ["./src", "./entry"],
   "exclude": ["./entry/vexflow-debug-with-tests.ts"]

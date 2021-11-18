@@ -69,12 +69,24 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     chunkFilename = 'vexflow-font-[name].js';
 
     // See: https://webpack.js.org/guides/public-path/
-    // publicPath needs more testing! :-(
-    // In some tests, this needs to be './' to work, but in others it needs to be 'auto' to work.
-    // publicPath = './';
-    publicPath = '';
+    // There is no setting for publicPath that works for all use cases.
+    // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
+    // Customize the publicPath to work with your production environment.
+    publicPath = './';
+
+    // The chunks will be loaded from the same URL as the webpage.
+    // demos/fonts/core.html fails.
+    // publicPath = '';
+
+    // demos/node/canvas.js fails with:
+    //   Error: Automatic publicPath is not supported in this browser
+    // undefined and `auto` are equivalent.
     // publicPath = 'auto';
+    // publicPath = undefined;
   }
+
+  // https://webpack.js.org/configuration/devtool/
+  const devtool = process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? undefined : 'eval';
 
   return {
     mode: mode,
@@ -94,7 +106,7 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '...'],
     },
-    devtool: process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? 'source-map' : false,
+    devtool: devtool,
     module: {
       rules: [
         {
@@ -203,6 +215,7 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
+      // The build/esm/ folder needs a package.json that says "type": "module".
       modulePackageJSON: {
         expand: true,
         cwd: BASE_DIR,
@@ -303,25 +316,29 @@ module.exports = (grunt) => {
       'webpack:buildProdBravuraOnly',
       'webpack:buildProdGonvilleOnly',
       'webpack:buildProdPetalumaOnly',
-      'buildESModules',
-      'buildTypeDeclarations',
+      'buildESM',
       'copy:modulePackageJSON',
+      'buildTypeDeclarations',
       'typedoc',
     ]
   );
 
   grunt.registerTask('buildTypeDeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
-    grunt.log.writeln('Building *.d.ts');
+    grunt.log.writeln('Building *.d.ts files in build/types/');
     const results = child_process.execSync('tsc -p tsconfig.types.json').toString();
     grunt.log.writeln(results);
   });
 
-  grunt.registerTask('buildESModules', 'Use tsc to create ESM JS files in build/esm/', () => {
-    grunt.log.writeln('Building ESM');
-    const results1 = child_process.execSync('tsc -p tsconfig.esm.json').toString();
-    grunt.log.writeln(results1);
-    const results2 = child_process.execSync('node ./tools/esm/fix-imports-and-exports ./build/esm/').toString();
-    grunt.log.writeln(results2);
+  // Outputs ESM module files to build/esm/.
+  // Also fixes the imports and exports so that they all end in .js.
+  grunt.registerTask('buildESM', 'Use tsc to create ESM JS files in build/esm/', () => {
+    grunt.log.writeln('ESM: Building to build/esm/');
+    const outputTSC = child_process.execSync('tsc -p tsconfig.esm.json').toString();
+    grunt.log.writeln(outputTSC);
+
+    grunt.log.writeln('ESM: Fixing Imports/Exports');
+    const outputFix = child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/').toString();
+    grunt.log.writeln(outputFix);
   });
 
   // `grunt watch`

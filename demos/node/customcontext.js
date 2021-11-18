@@ -1,8 +1,6 @@
 // node customcontext.js
 
-/* eslint-disable no-console */
-
-const Vex = require('../../build/cjs/vexflow');
+const Vex = require('vexflow');
 
 const VF = Vex.Flow;
 
