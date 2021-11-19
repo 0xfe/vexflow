@@ -265,7 +265,7 @@ export default Vex;`;
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['apidocs/**'],
+            src: ['api/**'],
             dest: DOCS_DIR,
           },
         ],
@@ -274,7 +274,7 @@ export default Vex;`;
     typedoc: {
       build: {
         options: {
-          out: 'build/apidocs',
+          out: 'build/api',
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
