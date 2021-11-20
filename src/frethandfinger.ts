@@ -4,7 +4,7 @@
 // Class to draws string numbers into the notation.
 
 import { Builder } from './easyscore';
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StaveNote } from './stavenote';
@@ -16,7 +16,7 @@ export class FretHandFinger extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    family: Font.SANS_SERIF,
     size: 9,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

@@ -7,12 +7,18 @@
 
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Beam } from '../src/beam';
-import { StaveNoteStruct } from '../src/stavenote';
-import { Stem } from '../src/stem';
-import { StemmableNote } from '../src/stemmablenote';
-import { TabNoteStruct } from '../src/tabnote';
-import { Voice } from '../src/voice';
+import {
+  AnnotationVerticalJustify,
+  Beam,
+  Font,
+  FontStyle,
+  FontWeight,
+  StaveNoteStruct,
+  Stem,
+  StemmableNote,
+  TabNoteStruct,
+  Voice,
+} from '../src/index';
 
 const BeamTests = {
   Start(): void {
@@ -709,8 +715,8 @@ function tabBeamsAutoStem(options: TestOptions): void {
 }
 
 function complexWithAnnotation(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 500, 200);
-  const stave = f.Stave({ y: 40 });
+  const factory = VexFlowTests.makeFactory(options, 500, 200);
+  const stave = factory.Stave({ y: 40 });
 
   const s1: StaveNoteStruct[] = [
     { keys: ['e/4'], duration: '128', stem_direction: 1 },
@@ -732,18 +738,33 @@ function complexWithAnnotation(options: TestOptions): void {
     { keys: ['c/5'], duration: '32', stem_direction: -1 },
   ];
 
-  const notes1 = s1.map((struct) => f.StaveNote(struct).addModifier(f.Annotation({ text: '1', vJustify: 'above' }), 0));
+  const font = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
+  };
 
-  const notes2 = s2.map((struct) => f.StaveNote(struct).addModifier(f.Annotation({ text: '3', vJustify: 'below' }), 0));
+  const notes1 = s1.map((struct) =>
+    factory
+      .StaveNote(struct) //
+      .addModifier(factory.Annotation({ text: '1', vJustify: AnnotationVerticalJustify.TOP, font }), 0)
+  );
 
-  f.Beam({ notes: notes1 });
-  f.Beam({ notes: notes2 });
+  const notes2 = s2.map((struct) =>
+    factory
+      .StaveNote(struct) //
+      .addModifier(factory.Annotation({ text: '3', vJustify: AnnotationVerticalJustify.BOTTOM, font }), 0)
+  );
 
-  const voice = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes1).addTickables(notes2);
+  factory.Beam({ notes: notes1 });
+  factory.Beam({ notes: notes2 });
 
-  f.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
+  const voice = factory.Voice().setMode(Voice.Mode.SOFT).addTickables(notes1).addTickables(notes2);
 
-  f.draw();
+  factory.Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave: stave });
+
+  factory.draw();
 
   ok(true, 'Complex beam annotations');
 }

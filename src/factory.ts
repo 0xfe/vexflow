@@ -2,6 +2,7 @@
 // @author Mohit Cheppudira
 // MIT License
 
+import { AnnotationHorizontalJustify, AnnotationVerticalJustify } from '.';
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
@@ -12,7 +13,7 @@ import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
 import { EasyScore, EasyScoreOptions } from './easyscore';
 import { Element } from './element';
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { FontInfo } from './font';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
@@ -335,27 +336,23 @@ export class Factory {
     return accid;
   }
 
-  Annotation(params?: { text?: string; vJustify?: string; hJustify?: string; font?: FontInfo }): Annotation {
+  Annotation(params?: {
+    text?: string;
+    hJustify?: string | AnnotationHorizontalJustify;
+    vJustify?: string | AnnotationVerticalJustify;
+    font?: FontInfo;
+  }): Annotation {
     const p = {
       text: 'p',
-      vJustify: 'below',
-      hJustify: 'center',
-      options: {},
+      hJustify: AnnotationHorizontalJustify.CENTER,
+      vJustify: AnnotationVerticalJustify.BOTTOM,
       ...params,
     };
 
-    // RONYEH: Factory.Annotation has a different default font from new Annotation()...
-    const font = {
-      family: 'Times' /* RONYEH: Font.SERIF */,
-      size: 14,
-      weight: FontWeight.BOLD,
-      style: FontStyle.ITALIC,
-      ...p.font,
-    };
     const annotation = new Annotation(p.text);
     annotation.setJustification(p.hJustify);
     annotation.setVerticalJustification(p.vJustify);
-    annotation.setFont(font);
+    annotation.setFont(p.font);
     annotation.setContext(this.context);
     return annotation;
   }

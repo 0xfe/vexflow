@@ -3,7 +3,7 @@
 //
 // VexFlow Test Support Library
 
-import { ContextBuilder, Factory, Flow, RenderContext, Renderer } from '../src/';
+import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
@@ -63,6 +63,14 @@ if (!global.$) {
       text(t: string) {
         element.textContent = t;
         return $element;
+      },
+      html(h?: string) {
+        if (!h) {
+          return element.innerHTML;
+        } else {
+          element.innerHTML = h;
+          return $element;
+        }
       },
       append(...elementsToAppend: HTMLElement[]) {
         elementsToAppend.forEach((e) => {
@@ -180,7 +188,8 @@ export class VexFlowTests {
    * @param tagName
    */
   static createTest(elementId: string, testTitle: string, tagName: string, titleId: string = ''): HTMLElement {
-    const title = $('<div/>').addClass('name').attr('id', titleId).text(testTitle).get(0);
+    const anchorTestTitle = `<a href="#${titleId}">${testTitle}</a>`;
+    const title = $('<div/>').addClass('name').attr('id', titleId).html(anchorTestTitle).get(0);
     const vexOutput = $(`<${tagName}/>`).addClass('vex-tabdiv').attr('id', elementId).get(0);
     const container = $('<div/>').addClass('testcanvas').append(title, vexOutput).get(0);
     $('#vexflow_testoutput').append(container);
@@ -287,8 +296,7 @@ export class VexFlowTests {
    */
   static plotLegendForNoteWidth(ctx: RenderContext, x: number, y: number): void {
     ctx.save();
-    ctx.setFont('Arial', 8, '');
-    // ctx.setFont(Font.SANS_SERIF, 8); // RONYEH
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     const spacing = 12;
     let lastY = y;

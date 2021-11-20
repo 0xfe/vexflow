@@ -4,7 +4,7 @@
 import { BoundingBox, Bounds } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -65,7 +65,7 @@ export class Stave extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF*/,
+    family: Font.SANS_SERIF,
     size: 8,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

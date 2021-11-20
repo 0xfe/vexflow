@@ -5,6 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Font, FontStyle } from '../src/font';
+
 const StaveLineTests = {
   Start(): void {
     QUnit.module('StaveLine');
@@ -33,8 +35,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: 'serif', size: 12, style: 'italic' }, // BUG: originally the weight was set to italic. We changed it to style.
-      // font: { family: Font.SERIF, size: 12, style: 'italic' }, // RONYEH
+      font: { family: Font.SERIF, size: 12, style: FontStyle.ITALIC },
       text: 'gliss.',
     },
   });

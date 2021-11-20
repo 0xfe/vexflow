@@ -375,6 +375,18 @@ export default Vex;`;
     ]
   );
 
+  // `grunt watchDevelop`
+  // This is the fastest way to build vexflow-debug-with-tests.js.
+  // Open tests/flow.html to see the test output.
+  grunt.registerTask(
+    'watchDevelop',
+    `Watch src/ & tests/ for changes and generate a development build.`, //
+    [
+      'clean:build', //
+      'webpack:watchDebugPlusTests',
+    ]
+  );
+
   // `grunt test`
   grunt.registerTask(
     'test',

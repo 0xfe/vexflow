@@ -8,14 +8,20 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from '../src/factory';
-import { RenderContext } from '../src/rendercontext';
-import { ContextBuilder } from '../src/renderer';
-import { Stave } from '../src/stave';
-import { StaveNote, StaveNoteStruct } from '../src/stavenote';
-import { StemmableNote } from '../src/stemmablenote';
-import { TickContext } from '../src/tickcontext';
-import { Tremolo } from '../src/tremolo';
+import {
+  ContextBuilder,
+  Factory,
+  Font,
+  FontStyle,
+  FontWeight,
+  RenderContext,
+  Stave,
+  StaveNote,
+  StaveNoteStruct,
+  StemmableNote,
+  TickContext,
+  Tremolo,
+} from '../src/index';
 
 const PercussionTests = {
   Start(): void {
@@ -178,14 +184,21 @@ const basic2 = createSingleMeasureTest((f) => {
 });
 
 const snare0 = createSingleMeasureTest((f) => {
+  const font = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
+  };
+
   f.Voice().addTickables([
     f
       .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
       .addArticulation(0, f.Articulation({ type: 'a>' }))
-      .addModifier(f.Annotation({ text: 'L' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L' }), 0),
+      .addModifier(f.Annotation({ text: 'L', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
   ]);
 });
 

@@ -7,98 +7,103 @@
 
 import { VexFlowTests } from './vexflow_test_helpers';
 
-import { Accidental } from '../src/accidental';
-import { Annotation } from '../src/annotation';
-import { Articulation } from '../src/articulation';
-import { BarNote } from '../src/barnote';
-import { Beam } from '../src/beam';
-import { Bend } from '../src/bend';
-import { BoundingBox } from '../src/boundingbox';
-import { BoundingBoxComputation } from '../src/boundingboxcomputation';
-import { ChordSymbol } from '../src/chordsymbol';
-import { Clef } from '../src/clef';
-import { ClefNote } from '../src/clefnote';
-import { Crescendo } from '../src/crescendo';
-import { Curve } from '../src/curve';
-import { Dot } from '../src/dot';
-import { EasyScore } from '../src/easyscore';
-import { Element } from '../src/element';
-import { Factory } from '../src/factory';
-import { Flow } from '../src/flow';
-import { Font } from '../src/font';
-import { Formatter } from '../src/formatter';
-import { Fraction } from '../src/fraction';
-import { FretHandFinger } from '../src/frethandfinger';
-import { GhostNote } from '../src/ghostnote';
-import { Glyph } from '../src/glyph';
-import { GlyphNote } from '../src/glyphnote';
-import { GraceNote } from '../src/gracenote';
-import { GraceNoteGroup } from '../src/gracenotegroup';
-import { GraceTabNote } from '../src/gracetabnote';
-import { KeyManager } from '../src/keymanager';
-import { KeySignature } from '../src/keysignature';
-import { KeySigNote } from '../src/keysignote';
-import { Modifier } from '../src/modifier';
-import { ModifierContext } from '../src/modifiercontext';
-import { MultiMeasureRest } from '../src/multimeasurerest';
-import { Music } from '../src/music';
-import { Note } from '../src/note';
-import { NoteHead } from '../src/notehead';
-import { NoteSubGroup } from '../src/notesubgroup';
-import { Ornament } from '../src/ornament';
-import { Parser } from '../src/parser';
-import { PedalMarking } from '../src/pedalmarking';
-import { Registry } from '../src/registry';
-import { Renderer } from '../src/renderer';
-import { RepeatNote } from '../src/repeatnote';
-import { Stave } from '../src/stave';
-import { Barline } from '../src/stavebarline';
-import { StaveConnector } from '../src/staveconnector';
-import { StaveHairpin } from '../src/stavehairpin';
-import { StaveLine } from '../src/staveline';
-import { StaveModifier } from '../src/stavemodifier';
-import { StaveNote } from '../src/stavenote';
-import { Repetition } from '../src/staverepetition';
-import { StaveTempo } from '../src/stavetempo';
-import { StaveText } from '../src/stavetext';
-import { StaveTie } from '../src/stavetie';
-import { Volta } from '../src/stavevolta';
-import { Stem } from '../src/stem';
-import { StringNumber } from '../src/stringnumber';
-import { Stroke } from '../src/strokes';
-import { System } from '../src/system';
-import { TabNote } from '../src/tabnote';
-import { TabSlide } from '../src/tabslide';
-import { TabStave } from '../src/tabstave';
-import { TabTie } from '../src/tabtie';
-import { TextBracket } from '../src/textbracket';
-import { TextDynamics } from '../src/textdynamics';
-import { TextFormatter } from '../src/textformatter';
-import { TextNote } from '../src/textnote';
-import { TickContext } from '../src/tickcontext';
-import { TimeSignature } from '../src/timesignature';
-import { TimeSigNote } from '../src/timesignote';
-import { Tremolo } from '../src/tremolo';
-import { Tuning } from '../src/tuning';
-import { Tuplet } from '../src/tuplet';
-import { Vibrato } from '../src/vibrato';
-import { VibratoBracket } from '../src/vibratobracket';
-import { Voice } from '../src/voice';
+import {
+  Accidental,
+  Annotation,
+  Articulation,
+  Barline,
+  BarNote,
+  Beam,
+  Bend,
+  BoundingBox,
+  BoundingBoxComputation,
+  ChordSymbol,
+  Clef,
+  ClefNote,
+  Crescendo,
+  Curve,
+  Dot,
+  EasyScore,
+  Element,
+  Factory,
+  Flow,
+  Font,
+  Formatter,
+  Fraction,
+  FretHandFinger,
+  GhostNote,
+  Glyph,
+  GlyphNote,
+  GraceNote,
+  GraceNoteGroup,
+  GraceTabNote,
+  KeyManager,
+  KeySignature,
+  KeySigNote,
+  Modifier,
+  ModifierContext,
+  MultiMeasureRest,
+  Music,
+  Note,
+  NoteHead,
+  NoteSubGroup,
+  Ornament,
+  Parser,
+  PedalMarking,
+  Registry,
+  Renderer,
+  RepeatNote,
+  Repetition,
+  Stave,
+  StaveConnector,
+  StaveHairpin,
+  StaveLine,
+  StaveModifier,
+  StaveNote,
+  StaveTempo,
+  StaveText,
+  StaveTie,
+  Stem,
+  StringNumber,
+  Stroke,
+  System,
+  TabNote,
+  TabSlide,
+  TabStave,
+  TabTie,
+  TextBracket,
+  TextDynamics,
+  TextFormatter,
+  TextNote,
+  TickContext,
+  TimeSignature,
+  TimeSigNote,
+  Tremolo,
+  Tuning,
+  Tuplet,
+  Vibrato,
+  VibratoBracket,
+  Voice,
+  Volta,
+} from '../src/index';
+
+// Tell TypeScript that we want very flexible typing,
+// so we can use the Vex.Flow.* API in unusual ways without warnings.
+// eslint-disable-next-line
+declare let Vex: Record<string, any> & { Flow: typeof Flow & Record<string, any> };
 
 const VFPrefixTests = {
   Start(): void {
     QUnit.module('VF.* API');
     test('VF.* API', VF_Prefix);
+    test('VF Alias', VF_Alias);
   },
 };
-
-// eslint-disable-next-line
-declare let Vex: any;
 
 function VF_Prefix(): void {
   // Intentionally use Vex.Flow here so we can verify that the Vex.Flow.* API
   // is equivalent to using the individual classes in TypeScript.
-  const VF = Vex.Flow as unknown as typeof Flow;
+  const VF = Vex.Flow;
   equal(Accidental, VF.Accidental);
   equal(Annotation, VF.Annotation);
   equal(Articulation, VF.Articulation);
@@ -166,7 +171,7 @@ function VF_Prefix(): void {
   equal(TabTie, VF.TabTie);
   equal(TextBracket, VF.TextBracket);
   equal(TextDynamics, VF.TextDynamics);
-  equal(TextFormatter, VF.TextFormatter); // RONYEH: Renamed TextFont to TextFormatter.
+  equal(TextFormatter, VF.TextFormatter);
   equal(TextNote, VF.TextNote);
   equal(TickContext, VF.TickContext);
   equal(TimeSignature, VF.TimeSignature);
@@ -178,6 +183,35 @@ function VF_Prefix(): void {
   equal(VibratoBracket, VF.VibratoBracket);
   equal(Voice, VF.Voice);
   equal(Volta, VF.Volta);
+}
+
+/**
+ * If you have name collisions with VexFlow classes, consider extracting classes from Vex.Flow
+ * and renaming them with a VF prefix.
+ */
+function VF_Alias(): void {
+  const Flow = Vex.Flow;
+  const VFAliases = {
+    get VFAccidental() {
+      return Flow.Accidental;
+    },
+    get VFAnnotation() {
+      return Flow.Annotation;
+    },
+    get VFVibrato() {
+      return Flow.Vibrato;
+    },
+  };
+  const { VFVibrato, VFAccidental, VFAnnotation } = VFAliases;
+  equal(Accidental, VFAccidental);
+  equal(Annotation, VFAnnotation);
+
+  const vibrato = new VFVibrato();
+  ok(vibrato);
+
+  const acc1 = new VFAccidental('##');
+  const acc2 = new Accidental('##');
+  equal(acc1.type, acc2.type);
 }
 
 VexFlowTests.register(VFPrefixTests);
