@@ -1,5 +1,7 @@
 reference
 reference/
+releases
+releases/
 build
 build/
 *.lock
