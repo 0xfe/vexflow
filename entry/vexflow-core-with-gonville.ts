@@ -4,19 +4,17 @@
 // Support Dynamic Importing of Music Fonts
 //
 // vexflow-core-with-gonville.ts is the entry point for vexflow-core-with-gonville.js.
-// This version includes only Gonville.
-// It also overrides the `Flow.setMusicFont(...)` function to be async,
-// loading other music fonts (e.g., Bravura) on the fly.
+// This version bundles the Gonville music engraving font.
+// It also overrides the `Flow.setMusicFont(...)` function to be async, which allows
+// other music fonts (e.g., Bravura) to be loaded on the fly.
 
-import { Vex } from '../src/index';
+import { Flow, Vex } from './vexflow-core';
 
-import { loadMusicFonts } from '../src/fonts/bundleGonville';
-import { loadTextFonts } from '../src/fonts/textfonts';
+import { Font } from '../src/font';
+import { Gonville } from '../src/fonts/gonville';
 
-loadMusicFonts();
-
-// Load the two text fonts that ChordSymbol & Annotation use.
-loadTextFonts();
+Font.load('Gonville', Gonville.data, Gonville.metrics);
+Flow.setMusicFont('Gonville');
 
 export * from '../src/index';
 export default Vex;

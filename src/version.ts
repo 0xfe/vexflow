@@ -1,2 +1,2 @@
 export const VERSION: string = '4.0.0';
-export const BUILD: string = '96b665045cc2fe7bffce61d7cbd9ca8a22e876be';
+export const BUILD: string = '025252b73a9d644634f0778c0990c740f4497244';

@@ -19,9 +19,15 @@
     <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
     <p>This page calls Flow.setMusicFont(...).then(...) with a onFontsLoaded callback.</p>
     <div id="output"></div>
+    <script>
+      // Optional: set the VEX_PUBLICPATH global variable to specify the location of the vexflow-font-xxxx.js files.
+      // Normally, the font files are assumed to be in the same directory as vexflow-core.js. However, in some
+      // environments you will need to explicitly set this path.
+      // VEX_PUBLICPATH = '/assets/';
+    </script>
     <!--
         The vexflow core build includes no music fonts.
-        You can use the async Flow.setMusicFont(...) method to load the music fonts dynamically.
+        Use the `async Flow.setMusicFont(...)` method to load the music fonts dynamically.
     -->
     <script src="../../build/cjs/vexflow-core.js"></script>
     <script>
@@ -38,7 +44,7 @@
       // Vex.Flow.setMusicFont('Gonville').then(onFontsLoaded);
 
       function onFontsLoaded(musicFonts) {
-        console.log('Successfully loaded this music font stack:');
+        console.log('Successfully loaded these music fonts:');
         console.log(...musicFonts);
 
         const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });

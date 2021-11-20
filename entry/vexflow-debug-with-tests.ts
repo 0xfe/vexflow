@@ -7,7 +7,7 @@
 
 import { Vex } from '../src/index';
 
-import { loadMusicFonts } from '../src/fonts/bundleAll';
+import { loadMusicFonts } from '../src/fonts/bundleAllMusicFonts';
 import { loadTextFonts } from '../src/fonts/textfonts';
 
 loadMusicFonts();

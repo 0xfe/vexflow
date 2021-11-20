@@ -4,19 +4,17 @@
 // Support Dynamic Importing of Music Fonts
 //
 // vexflow-core-with-petaluma.ts is the entry point for vexflow-core-with-petaluma.js.
-// This version includes only Petaluma.
-// It also overrides the `Flow.setMusicFont(...)` function to be async,
-// loading other music fonts (e.g., Bravura) on the fly.
+// This version bundles the Petaluma music engraving font.
+// It also overrides the `Flow.setMusicFont(...)` function to be async, which allows
+// other music fonts (e.g., Gonville) to be loaded on the fly.
 
-import { Vex } from '../src/index';
+import { Flow, Vex } from './vexflow-core';
 
-import { loadMusicFonts } from '../src/fonts/bundlePetaluma';
-import { loadTextFonts } from '../src/fonts/textfonts';
+import { Font } from '../src/font';
+import { Petaluma } from '../src/fonts/petaluma';
 
-loadMusicFonts();
-
-// Load the two text fonts that ChordSymbol & Annotation use.
-loadTextFonts();
+Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
+Flow.setMusicFont('Petaluma');
 
 export * from '../src/index';
 export default Vex;

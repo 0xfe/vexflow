@@ -1,6 +1,12 @@
 // node canvas.js > output.html
 
-const Vex = require('vexflow');
+// const Vex = require('vexflow');
+global.VEX_PUBLICPATH = '../../build/cjs/';
+const Vex = require('vexflow/core');
+
+console.log(Vex);
+return;
+
 const { createCanvas } = require('canvas');
 
 const { Renderer, Stave } = Vex.Flow;

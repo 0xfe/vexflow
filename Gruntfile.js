@@ -15,6 +15,21 @@ const VEX_CORE_PETALUMA = 'vexflow-core-with-petaluma';
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
+// Optional environment variables to customize the build.
+//
+// Specify where dynamic imports will be loaded from.
+// The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
+// If not specified, we set it to the empty string ''.
+// Then src/publicpath.ts will try to determine the path automatically.
+// See: https://webpack.js.org/configuration/output/#outputpublicpath
+//      https://webpack.js.org/guides/public-path/#automatic-publicpath
+const VEX_BASE_PATH = process.env.VEX_BASE_PATH ?? '';
+// Control the type of source maps that will be produced.
+// If not specified, high quality source maps will be generated for production builds,
+// and none will be generated for development/debug builds.
+// See: https://webpack.js.org/configuration/devtool/
+const VEX_DEVTOOL = process.env.VEX_DEVTOOL; // Note: In 3.0.9 this was called VEX_GENMAP.
+
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
@@ -63,36 +78,19 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   let globalObject = `(typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this)`;
 
   let chunkFilename = undefined;
-  let publicPath = 'auto';
   if (bundleStrategy === CODE_SPLITTING) {
     // Font files for dynamic import. See: webpackChunkName in async.ts
     chunkFilename = 'vexflow-font-[name].js';
-
-    // See: https://webpack.js.org/guides/public-path/
-    // There is no setting for publicPath that works for all use cases.
-    // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
-    // Customize the publicPath to work with your production environment.
-    publicPath = './';
-
-    // The chunks will be loaded from the same URL as the webpage.
-    // demos/fonts/core.html fails.
-    // publicPath = '';
-
-    // demos/node/canvas.js fails with:
-    //   Error: Automatic publicPath is not supported in this browser
-    // undefined and `auto` are equivalent.
-    // publicPath = 'auto';
-    // publicPath = undefined;
   }
 
-  // https://webpack.js.org/configuration/devtool/
-  const devtool = process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? undefined : 'eval';
+  const devtool = VEX_DEVTOOL || (mode === PRODUCTION_MODE ? 'source-map' : false);
 
   return {
     mode: mode,
     entry: entry,
     output: {
       path: BUILD_CJS_DIR,
+      publicPath: VEX_BASE_PATH,
       filename: outputFilename,
       chunkFilename: chunkFilename,
       library: {
@@ -101,7 +99,21 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
         export: 'default',
       },
       globalObject: globalObject,
-      publicPath: publicPath,
+
+      // The `publicPath` is the base path for the dynamically loaded JS chunks.
+      // See: https://webpack.js.org/guides/public-path/
+      // There isn't one setting for `publicPath` that will work for all deployments.
+      // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
+      // Customize the `publicPath` below to work with your production environment.
+
+      // Looks for the chunk files in the same directory as the HTML file.
+      // The chunks will be loaded from the same URL as the webpage.
+      //   Error: Automatic publicPath is not supported in this browser
+
+      // publicPath: undefined; // undefined and `auto` are equivalent.
+      // publicPath: '';
+      // publicPath: './',
+      publicPath: 'auto',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '...'],
@@ -149,10 +161,10 @@ module.exports = (grunt) => {
 
   // We need a different webpack config for each build target.
   const prodAllFonts = getConfig(VEX, SINGLE_BUNDLE);
-  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING);
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING);
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING);
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING);
+  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
+  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
+  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
+  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
   const debugAllFonts = getConfig(VEX_DEBUG, SINGLE_BUNDLE, DEVELOPMENT_MODE);
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, SINGLE_BUNDLE, DEVELOPMENT_MODE);

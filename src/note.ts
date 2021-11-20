@@ -6,13 +6,13 @@ import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
-import { RenderContext } from './rendercontext';
+import { drawDot, RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { defined, drawDot, RuntimeError } from './util';
+import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
 export interface KeyProps {
