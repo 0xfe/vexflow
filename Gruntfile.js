@@ -18,7 +18,6 @@ const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
-const DOCS_DIR = path.join(BASE_DIR, 'docs');
 const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
@@ -260,21 +259,11 @@ export default Vex;`;
           },
         ],
       },
-      typedoc: {
-        files: [
-          {
-            expand: true,
-            cwd: BUILD_DIR,
-            src: ['api/**'],
-            dest: DOCS_DIR,
-          },
-        ],
-      },
     },
     typedoc: {
       build: {
         options: {
-          out: 'build/api',
+          out: 'docs/api',
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
@@ -347,7 +336,6 @@ export default Vex;`;
       'copy:moduleJSFiles',
       'copy:modulePackageJSON',
       'typedoc',
-      'copy:typedoc',
     ]
   );
 
