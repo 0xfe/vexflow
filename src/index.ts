@@ -68,7 +68,7 @@ export * from './stringnumber';
 export * from './strokes';
 export * from './svgcontext';
 export * from './system';
-// Do not export './tables'.
+// Do not export './tables' because it is internal.
 export * from './tabnote';
 export * from './tabslide';
 export * from './tabstave';

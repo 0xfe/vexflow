@@ -5,19 +5,24 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Font, FontGlyph } from '../src';
-import { Annotation } from '../src/annotation';
-import { Beam } from '../src/beam';
-import { Bend } from '../src/bend';
-import { Flow } from '../src/flow';
-import { Formatter } from '../src/formatter';
-import { Note } from '../src/note';
-import { Registry } from '../src/registry';
-import { Stave } from '../src/stave';
-import { StaveConnector } from '../src/staveconnector';
-import { StaveNote } from '../src/stavenote';
+import {
+  Annotation,
+  Beam,
+  Bend,
+  Flow,
+  Font,
+  FontGlyph,
+  FontWeight,
+  Formatter,
+  Note,
+  Registry,
+  Stave,
+  StaveConnector,
+  StaveNote,
+  Voice,
+  VoiceTime,
+} from '../src/index';
 import { Tables } from '../src/tables';
-import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 
 const FormatterTests = {
@@ -712,8 +717,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times', 12, 'normal')
-          // .setFont(Font.SERIF, 12, FontWeight.NORMAL) // RONYEH
+            .setFont(Font.SERIF, 12, FontWeight.NORMAL)
         );
       }
       notes.push(note);

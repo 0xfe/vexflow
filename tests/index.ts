@@ -1,8 +1,27 @@
 // vexflow-debug-with-tests.ts includes this module via:
 //   export * from '../../tests';
-// To add a new test class, add an export * statement to this file for that class.
-// The test file needs to call VexFlowTests.register(...).
+//
+// To add a new test module, add a new line:
+//   `export * from './xxxx_tests';`
+// to this file that points to the new file `xxxx_tests.ts`.
+//
+// The test module needs to call VexFlowTests.register(...).
+// For example, in annotation_tests.ts, the last two lines are:
+//   VexFlowTests.register(AnnotationTests);
+//   export { AnnotationTests };
+//
 // In vexflow_test_helpers.ts: VexFlowTests.run() will run all registered tests.
+//
+// To iterate faster during development, you can comment out most of this file
+// and focus on just testing the module(s) you are currently working on.
+//
+// For example, you can open two terminals and run the following:
+//   grunt watchDevelop
+//   fswatch build/vexflow-debug-with-tests.js | xargs -n1 -I{} npm run generate:current
+// The first `grunt watchDevelop` command will build a new vexflow-debug-with-tests.js
+// every time you edit a file. The second command render PNGs for each test module that is
+// not commented out. It will do this every time the first command produces a new build.
+
 export * from './accidental_tests';
 export * from './annotation_tests';
 export * from './articulation_tests';

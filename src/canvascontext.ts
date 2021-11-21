@@ -1,10 +1,10 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { globalObject, isHTMLCanvas } from '.';
 import { Font, FontInfo } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
-import { warn } from './util';
+import { isHTMLCanvas } from './typeguard';
+import { globalObject, warn } from './util';
 
 /**
  * A rendering context for the Canvas backend. This class serves as a proxy for the
@@ -16,7 +16,7 @@ export class CanvasContext extends RenderContext {
 
   /**
    * The HTMLCanvasElement or OffscreenCanvas that is associated with the above context.
-   * If there was no associated <canvas> element, just store the default WIDTH / HEIGHT.
+   * If there was no associated `<canvas>` element, just store the default WIDTH / HEIGHT.
    */
   canvas: HTMLCanvasElement | OffscreenCanvas | { width: number; height: number };
 

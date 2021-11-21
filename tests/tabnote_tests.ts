@@ -6,6 +6,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Flow } from '../src/flow';
+import { Font, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { RenderContext } from '../src/rendercontext';
 import { ContextBuilder } from '../src/renderer';
@@ -382,8 +383,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont('sans-serif', 10, 'bold');
-  // ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD); // RONYEH
+  ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD);
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);

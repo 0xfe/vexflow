@@ -19,7 +19,7 @@ export class StringNumber extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    family: Font.SANS_SERIF,
     size: Font.SIZE,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

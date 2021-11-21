@@ -16,8 +16,6 @@
 // Let the TS compiler know that QUnit and its related functions are available globally.
 // https://www.typescriptlang.org/docs/handbook/declaration-merging.html#global-augmentation
 declare global {
-  const VF: any;
-
   // See: https://api.qunitjs.com/QUnit/
   const QUnit: {
     module: (name: string) => void;
