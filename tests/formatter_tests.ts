@@ -6,7 +6,9 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import {
+  Accidental,
   Annotation,
+  Articulation,
   Beam,
   Bend,
   Flow,
@@ -14,11 +16,15 @@ import {
   FontGlyph,
   FontWeight,
   Formatter,
+  FretHandFinger,
   Note,
   Registry,
   Stave,
   StaveConnector,
   StaveNote,
+  StringNumber,
+  TextBracket,
+  Tuplet,
   Voice,
   VoiceTime,
 } from '../src/index';
@@ -38,6 +44,7 @@ const FormatterTests = {
     run('Vertical alignment - few unaligned beats', unalignedNoteDurations1);
     run('Vertical alignment - many unaligned beats', unalignedNoteDurations2, { globalSoftmax: false });
     run('Vertical alignment - many unaligned beats (global softmax)', unalignedNoteDurations2, { globalSoftmax: true });
+    run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
     run('StaveNote - Justification', justifyStaveNotes);
     run('Notes with Tab', notesWithTab);
     run('Multiple Staves - Justified', multiStaves, { debug: true });
@@ -315,6 +322,46 @@ function unalignedNoteDurations2(options: TestOptions): void {
   voice2.draw(context, stave2);
 
   ok(voice1.getTickables()[1].getX() > voice2.getTickables()[1].getX());
+}
+
+function alignedMixedElements(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 750, 280);
+  const context = f.getContext();
+  const stave = new Stave(10, 40, 400);
+  const notes = [
+    new StaveNote({ keys: ['c/5'], duration: '8' })
+      .addAccidental(0, new Accidental('##'))
+      .addModifier(new FretHandFinger('4').setPosition(4), 0)
+      .addModifier(new StringNumber('3').setPosition(4), 0)
+      .addArticulation(0, new Articulation('a.').setPosition(4))
+      .addArticulation(0, new Articulation('a>').setPosition(4))
+      .addArticulation(0, new Articulation('a^').setPosition(4))
+      .addArticulation(0, new Articulation('am').setPosition(4))
+      .addArticulation(0, new Articulation('a@u').setPosition(4))
+      .addModifier(new Annotation('yyyy').setVerticalJustification(3), 0)
+      .addModifier(new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0)
+      .addModifier(new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0),
+    new StaveNote({ keys: ['c/5'], duration: '8' }),
+    new StaveNote({ keys: ['c/5'], duration: '8' }),
+  ];
+
+  const tuplet = new Tuplet(notes).setTupletLocation(-1);
+
+  const bracket = new TextBracket({
+    start: notes[0],
+    stop: notes[2],
+    position: -1,
+    text: '8',
+    superscript: 'vb',
+  });
+
+  Formatter.FormatAndDraw(context, stave, notes);
+
+  stave.setContext(context).draw();
+  tuplet.setContext(context).draw();
+  bracket.setContext(context).draw();
+
+  ok(true);
 }
 
 function justifyStaveNotes(options: TestOptions): void {
