@@ -16,7 +16,7 @@ export class CanvasContext extends RenderContext {
 
   /**
    * The HTMLCanvasElement or OffscreenCanvas that is associated with the above context.
-   * If there was no associated <canvas> element, just store the default WIDTH / HEIGHT.
+   * If there was no associated `<canvas>` element, just store the default WIDTH / HEIGHT.
    */
   canvas: HTMLCanvasElement | OffscreenCanvas | { width: number; height: number };
 
