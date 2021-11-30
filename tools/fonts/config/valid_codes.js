@@ -39,6 +39,12 @@ module.exports = {
   timeSig9: 'v9',
   timeSigCommon: 'v41',
   timeSigCutCommon: 'vb6',
+  timeSigPlus: 'v7b',
+  timeSigPlusSmall: 'v7b',
+  timeSigParensRight: 'v84',
+  timeSigParensRightSmall: 'v84',
+  timeSigParensLeft: 'v9c',
+  timeSigParensRightSmall: 'v9c',
 
   // notehead (e0a0-e0ff)
   noteheadDoubleWhole: 'v53',
@@ -160,6 +166,19 @@ module.exports = {
   ornamentPrecompDoubleCadenceUpperPrefix: 'vb4',
   ornamentPrecompDoubleCadenceUpperPrefixTurn: 'v68',
   ornamentPrecompTrillLowerSuffix: 'v2c',
+
+  // brass techniques  (e5d0–e5ef)
+  brassScoop: 'vxx',
+  brassDoitMedium: 'vxx',
+  brassFallLipShort: 'vxx',
+  brassLiftMedium: 'vxx',
+  brassFallRoughMedium: 'vxx',
+  brassBend: 'vxx',
+  brassMuteClosed: 'vxx',
+  brassMuteOpen: 'vxx',
+  brassFlip: 'vxx',
+  brassJazzTurn: 'vxx',
+  brassSmear: 'vxx',
 
   // string techniques (e610-e62f)
   stringsDownBow: 'v94',
