@@ -17,6 +17,8 @@ const TimeSignatureTests = {
     const run = VexFlowTests.runTests;
     run('Basic Time Signatures', basic);
     run('Big Signature Test', big);
+    run('Additive Signature Test', additive);
+    run('Complex Signature Test', complex);
     run('Time Signature multiple staves alignment test', multiple);
     run('Time Signature Change Test', change);
   },
@@ -67,6 +69,27 @@ function big(options: TestOptions, contextBuilder: ContextBuilder): void {
     .addTimeSignature('7/16')
     .addTimeSignature('1234567/890')
     .addTimeSignature('987/654321')
+    .setContext(ctx)
+    .draw();
+
+  ok(true, 'all pass');
+}
+
+function additive(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('2+2+3/8').addTimeSignature('2+2+3/4+4').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function complex(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300)
+    .addTimeSignature('(2+3)/16')
+    .addTimeSignature('+')
+    .addTimeSignature('3/8')
     .setContext(ctx)
     .draw();
 

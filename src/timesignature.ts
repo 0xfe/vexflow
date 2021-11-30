@@ -18,9 +18,9 @@ export interface TimeSignatureInfo {
 }
 
 const assertIsValidFraction = (timeSpec: string) => {
-  const numbers = timeSpec.split('/').filter((number) => number !== '');
+  const numbers = timeSpec.split('/');
 
-  if (numbers.length !== 2) {
+  if (numbers.length !== 2 && numbers[0] !== '+') {
     throw new RuntimeError(
       'BadTimeSignature',
       `Invalid time spec: ${timeSpec}. Must be in the form "<numerator>/<denominator>"`
@@ -28,8 +28,8 @@ const assertIsValidFraction = (timeSpec: string) => {
   }
 
   numbers.forEach((number) => {
-    if (isNaN(Number(number))) {
-      throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`);
+    if (/^([0-9+()]{1,})$/.test(number) == false) {
+      throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain valid signatures.`);
     }
   });
 };
@@ -92,15 +92,15 @@ export class TimeSignature extends StaveModifier {
       assertIsValidFraction(timeSpec);
     }
 
-    const [topDigits, botDigits] = timeSpec.split('/').map((number) => number.split(''));
+    const parts = timeSpec.split('/');
 
     return {
       num: true,
-      glyph: this.makeTimeSignatureGlyph(topDigits, botDigits),
+      glyph: this.makeTimeSignatureGlyph(parts[0] ?? '', parts[1] ?? ''),
     };
   }
 
-  makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
+  makeTimeSignatureGlyph(topDigits: string, botDigits: string): Glyph {
     return new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
   }
 

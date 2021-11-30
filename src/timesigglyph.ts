@@ -11,8 +11,8 @@ export class TimeSignatureGlyph extends Glyph {
 
   constructor(
     timeSignature: TimeSignature,
-    topDigits: string[],
-    botDigits: string[],
+    topDigits: string,
+    botDigits: string,
     code: string,
     point: number,
     options?: { category: string }
@@ -24,8 +24,19 @@ export class TimeSignatureGlyph extends Glyph {
 
     let topWidth = 0;
     for (let i = 0; i < topDigits.length; ++i) {
-      const num = topDigits[i];
-      const topGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
+      let timeSigType = topDigits[i];
+      switch (topDigits[i]) {
+        case '+':
+          timeSigType = 'Plus';
+          break;
+        case '(':
+          timeSigType = 'ParensLeft';
+          break;
+        case ')':
+          timeSigType = 'ParensRight';
+          break;
+      }
+      const topGlyph = new Glyph('timeSig' + timeSigType, this.timeSignature.point);
 
       this.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width ?? 0;
@@ -33,8 +44,19 @@ export class TimeSignatureGlyph extends Glyph {
 
     let botWidth = 0;
     for (let i = 0; i < botDigits.length; ++i) {
-      const num = botDigits[i];
-      const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
+      let timeSigType = botDigits[i];
+      switch (botDigits[i]) {
+        case '+':
+          timeSigType = 'PlusSmall';
+          break;
+        case '(':
+          timeSigType = 'ParensLeftSmall';
+          break;
+        case ')':
+          timeSigType = 'ParensRightSmall';
+          break;
+      }
+      const botGlyph = new Glyph('timeSig' + timeSigType, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
       botWidth += defined(botGlyph.getMetrics().width);
