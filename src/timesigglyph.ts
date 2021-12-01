@@ -1,3 +1,9 @@
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// Renders time signatures glyphs for staffs
+// This class is used by TimeSignature to render the associated glyphs
+
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
 import { defined } from './util';
@@ -79,31 +85,24 @@ export class TimeSignatureGlyph extends Glyph {
 
   renderToStave(x: number): void {
     const stave = this.checkStave();
+    const ctx = this.checkContext();
 
     let start_x = x + this.topStartX;
+    let y = 0;
+    if (this.botGlyphs.length > 0) y = stave.getYForLine(this.timeSignature.topLine);
+    else y = (stave.getYForLine(this.timeSignature.topLine) + stave.getYForLine(this.timeSignature.bottomLine)) / 2;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + this.x_shift,
-        stave.getYForLine(this.timeSignature.topLine)
-      );
+      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + this.x_shift, y);
       start_x += defined(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
+    y = stave.getYForLine(this.timeSignature.bottomLine);
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
       this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + glyph.getMetrics().x_shift,
-        stave.getYForLine(this.timeSignature.bottomLine)
-      );
+      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + glyph.getMetrics().x_shift, y);
       start_x += defined(glyph.getMetrics().width);
     }
   }
