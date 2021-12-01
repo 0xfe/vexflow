@@ -46,10 +46,10 @@ import { TextNote, TextNoteStruct } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSigNote } from './timesignote';
 import { Tuplet, TupletOptions } from './tuplet';
-import { isHTMLCanvas } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
+import { isHTMLCanvas } from './web';
 
 export interface FactoryOptions {
   stave?: {

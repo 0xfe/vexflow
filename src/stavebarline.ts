@@ -5,6 +5,9 @@
 import { Stave } from './stave';
 import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
+import { isCategory } from './typeguard';
+
+export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Barline);
 
 export enum BarlineType {
   SINGLE = 1,

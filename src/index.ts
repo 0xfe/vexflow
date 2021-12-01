@@ -23,6 +23,7 @@ export * from './element';
 export * from './factory';
 export * from './flow';
 export * from './font';
+// Do not export './fonts/*' because they are used by the entry/* files.
 export * from './formatter';
 export * from './fraction';
 export * from './frethandfinger';
@@ -45,6 +46,7 @@ export * from './notesubgroup';
 export * from './ornament';
 export * from './parser';
 export * from './pedalmarking';
+// Do not export './publicpath'. It is used internally by vexflow-core.ts
 export * from './registry';
 export * from './rendercontext';
 export * from './renderer';
@@ -68,7 +70,7 @@ export * from './stringnumber';
 export * from './strokes';
 export * from './svgcontext';
 export * from './system';
-// Do not export './tables'.
+// Do not export './tables'. It is accessible via Vex.Flow.*.
 export * from './tabnote';
 export * from './tabslide';
 export * from './tabstave';
@@ -87,9 +89,11 @@ export * from './tuning';
 export * from './tuplet';
 export * from './typeguard';
 export * from './util';
+// Do not export './version'. It is accessible via Vex.Flow.VERSION & Vex.Flow.BUILD.
 export * from './vibrato';
 export * from './vibratobracket';
 export * from './voice';
+export * from './web';
 
 export { Vex };
 export default Vex;

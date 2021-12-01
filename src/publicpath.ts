@@ -26,11 +26,14 @@ declare global {
 
 let scriptPath: string | undefined;
 
+console.log(`THE __webpack_public_path__ WAS: [${__webpack_public_path__}]`);
+
 if (globalObj.VEX_BASE_PATH) {
   scriptPath = globalObj.VEX_BASE_PATH;
-  console.log('THE PUBLICPATH WAS MANUALLY SPECIFIED', scriptPath);
-} else {
-  console.log("Let's figure out the public path automatically");
+  console.log(`THE script's base path WAS MANUALLY SPECIFIED [${scriptPath}]`);
+} else if (__webpack_public_path__ === 'VEX_AUTO') {
+  console.log("Let's figure out the base path automatically");
+
   // WORKER
   if (globalObj.importScripts) {
     scriptPath = globalObj.location.href;
@@ -40,9 +43,8 @@ if (globalObj.VEX_BASE_PATH) {
     console.log('scriptPath is', scriptPath);
   }
 
-  const document = globalObj.document;
-
   // REGULAR JS SCRIPT TAG
+  const document = globalObj.document;
   if (!scriptPath && document) {
     console.log("I'M JUST A SCRIPT TAG");
     if (document.currentScript) {
@@ -65,34 +67,16 @@ if (globalObj.VEX_BASE_PATH) {
     scriptPath = scriptPath
       .replace(/#.*$/, '') // remove hash
       .replace(/\?.*$/, '') // remove query
-      .replace(/\/[^\/]+$/, '/'); // remove everything after the last slash
+      .replace(/\/[^/]+$/, '/'); // remove everything after the last slash
     console.log("It's now: ", scriptPath);
   } else {
     console.log("OK, we give up! Let's make a guess.");
     scriptPath = './';
   }
+} else {
+  console.log("LET'S JUST USE ./");
+  scriptPath = './';
 }
 
-console.log('BEFORE THE PUBLIC PATH WAS: ', __webpack_public_path__);
 __webpack_public_path__ = scriptPath;
 console.log('The publicPath is now set to ' + __webpack_public_path__);
-
-/*
-webpack/runtime/publicPath
-(() => {
-	var scriptUrl;
-	if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-	var document = __webpack_require__.g.document;
-	if (!scriptUrl && document) {
-		if (document.currentScript)
-			scriptUrl = document.currentScript.src
-		if (!scriptUrl) {
-			var scripts = document.getElementsByTagName("script");
-			if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
-		}
-	}
-	if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
-	scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-	__webpack_require__.p = scriptUrl;
-})();
-*/

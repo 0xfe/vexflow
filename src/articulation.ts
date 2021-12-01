@@ -4,13 +4,14 @@
 
 import { Builder } from './easyscore';
 import { Glyph } from './glyph';
+import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { StaveNote } from './stavenote';
+import { isStaveNote, StaveNote } from './stavenote';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { isTabNote } from './tabnote';
 import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {

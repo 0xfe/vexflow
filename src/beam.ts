@@ -5,11 +5,12 @@ import { Element } from './element';
 import { Fraction } from './fraction';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { isTabNote } from './tabnote';
 import { Tuplet } from './tuplet';
-import { isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 

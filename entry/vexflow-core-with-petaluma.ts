@@ -8,8 +8,9 @@
 // It also overrides the `Flow.setMusicFont(...)` function to be async, which allows
 // other music fonts (e.g., Gonville) to be loaded on the fly.
 
-import { Flow, Vex } from './vexflow-core';
+import { Vex } from './vexflow-core';
 
+import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { Petaluma } from '../src/fonts/petaluma';
 

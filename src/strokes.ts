@@ -8,8 +8,9 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { Note } from './note';
-import { isNote, isStaveNote, isTabNote } from './typeguard';
+import { isNote, Note } from './note';
+import { isStaveNote } from './stavenote';
+import { isTabNote } from './tabnote';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {

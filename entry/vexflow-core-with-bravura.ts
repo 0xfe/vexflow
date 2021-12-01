@@ -8,8 +8,9 @@
 // It also overrides the `Flow.setMusicFont(...)` function to be async, which allows
 // other music fonts (e.g., Petaluma) to be loaded on the fly.
 
-import { Flow, Vex } from './vexflow-core';
+import { Vex } from './vexflow-core';
 
+import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { Bravura } from '../src/fonts/bravura';
 

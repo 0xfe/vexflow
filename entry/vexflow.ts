@@ -11,7 +11,7 @@
 // In the future, we could do something different with this entry file, such as globally disabling
 // error checks, or some other fun optimization.
 
-import { Vex } from '../src/index';
+import { Vex } from '../src/vex';
 
 import { loadMusicFonts } from '../src/fonts/bundleAllMusicFonts';
 import { loadTextFonts } from '../src/fonts/textfonts';

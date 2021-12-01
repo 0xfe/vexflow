@@ -12,8 +12,11 @@ import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
+import { isCategory } from './typeguard';
 import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
+
+export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);
 
 export interface KeyProps {
   stem_down_x_offset: number;

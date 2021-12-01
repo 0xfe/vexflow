@@ -5,7 +5,7 @@
 // It statically bundles all the music engraving fonts, and also includes the tests from vexflow/tests/.
 // flow.html
 
-import { Vex } from '../src/index';
+import { Vex } from '../src/vex';
 
 import { loadMusicFonts } from '../src/fonts/bundleAllMusicFonts';
 import { loadTextFonts } from '../src/fonts/textfonts';

@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
@@ -16,19 +17,8 @@ const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
 // Optional environment variables to customize the build.
-//
-// Specify where dynamic imports will be loaded from.
-// The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
-// If not specified, we set it to the empty string ''.
-// Then src/publicpath.ts will try to determine the path automatically.
-// See: https://webpack.js.org/configuration/output/#outputpublicpath
-//      https://webpack.js.org/guides/public-path/#automatic-publicpath
-const VEX_BASE_PATH = process.env.VEX_BASE_PATH ?? '';
-// Control the type of source maps that will be produced.
-// If not specified, high quality source maps will be generated for production builds,
-// and none will be generated for development/debug builds.
-// See: https://webpack.js.org/configuration/devtool/
-const VEX_DEVTOOL = process.env.VEX_DEVTOOL; // Note: In 3.0.9 this was called VEX_GENMAP.
+//   process.env.VEX_BASE_PATH
+//   process.env.VEX_DEVTOOL
 
 // Output directories.
 const BASE_DIR = __dirname;
@@ -83,14 +73,17 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     chunkFilename = 'vexflow-font-[name].js';
   }
 
-  const devtool = VEX_DEVTOOL || (mode === PRODUCTION_MODE ? 'source-map' : false);
+  // Control the type of source maps that will be produced.
+  // If not specified, production builds will get high quality source maps, and development/debug builds will get nothing.
+  // See: https://webpack.js.org/configuration/devtool/
+  // In version 3.0.9 this was called VEX_GENMAP.
+  const devtool = process.env.VEX_DEVTOOL || (mode === PRODUCTION_MODE ? 'source-map' : false);
 
   return {
     mode: mode,
     entry: entry,
     output: {
       path: BUILD_CJS_DIR,
-      publicPath: VEX_BASE_PATH,
       filename: outputFilename,
       chunkFilename: chunkFilename,
       library: {
@@ -101,19 +94,21 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
       globalObject: globalObject,
 
       // The `publicPath` is the base path for the dynamically loaded JS chunks.
-      // See: https://webpack.js.org/guides/public-path/
+      //   https://webpack.js.org/guides/public-path/
+      //   https://webpack.js.org/configuration/output/#outputpublicpath
       // There isn't one setting for `publicPath` that will work for all deployments.
       // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
-      // Customize the `publicPath` below to work with your production environment.
-
-      // Looks for the chunk files in the same directory as the HTML file.
-      // The chunks will be loaded from the same URL as the webpage.
-      //   Error: Automatic publicPath is not supported in this browser
-
-      // publicPath: undefined; // undefined and `auto` are equivalent.
-      // publicPath: '';
-      // publicPath: './',
-      publicPath: 'auto',
+      // You can customize the `publicPath` below to work with your production environment.
+      //   publicPath: undefined, // undefined and `auto` are equivalent.
+      //   publicPath: 'auto',    // https://webpack.js.org/guides/public-path/#automatic-publicpath
+      //   publicPath: '',
+      //   publicPath: './',
+      // Our solution below:
+      //   Specify the VEX_BASE_PATH environment variable at build time, or
+      //   Specify the VEX_BASE_PATH global variable at runtime.
+      // The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
+      // If not specified, we set it to 'VEX_AUTO' which tells `src/publicpath.ts` to determine the path automatically.
+      publicPath: process.env.VEX_BASE_PATH ?? 'VEX_AUTO',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '...'],
@@ -139,6 +134,9 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     plugins: [
       // Add a banner at the top of the file.
       new webpack.BannerPlugin(BANNER),
+      new CircularDependencyPlugin({
+        cwd: process.cwd(),
+      }),
     ],
     optimization: {
       minimizer: [
