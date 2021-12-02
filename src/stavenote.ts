@@ -1157,9 +1157,9 @@ export class StaveNote extends StemmableNote {
       const flagY =
         this.getStemDirection() === Stem.DOWN
           ? // Down stems are below the note head and have flags on the right.
-            y_top - noteStemHeight + 2
+            y_top - noteStemHeight + 2 - (this.flag !== undefined ? this.flag.checkMetrics().y_shift : 0)
           : // Up stems are above the note head and have flags on the right.
-            y_bottom - noteStemHeight - 2;
+            y_bottom - noteStemHeight - 2 - (this.flag !== undefined ? this.flag.checkMetrics().y_shift : 0);
 
       // Draw the Flag
       ctx.openGroup('flag', undefined, { pointerBBox: true });

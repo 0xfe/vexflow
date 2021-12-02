@@ -21,8 +21,6 @@ export interface TypeProps extends KeyProps {
   rest: boolean;
   flag: boolean;
   stem_offset: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
   tabnote_stem_up_extension: number;
   tabnote_stem_down_extension: number;
   dot_shiftY: number;
@@ -46,8 +44,6 @@ export interface GlyphProps {
   rest: boolean;
   line_below: number;
   line_above: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
   stem: Stem;
   code: string;
   code_flag_upstem: string;

@@ -179,12 +179,26 @@ export const GonvilleMetrics = {
       },
       flag32ndDown: {
         shiftX: -0.16,
+        shiftY: 9,
       },
       flag64thDown: {
         shiftX: -0.16,
+        shiftY: 13,
       },
       flag128thDown: {
         shiftX: -0.16,
+        shiftY: 22,
+      },
+      flag8thUp: {},
+      flag16thUp: {},
+      flag32ndUp: {
+        shiftY: -9,
+      },
+      flag64thUp: {
+        shiftY: -13,
+      },
+      flag128thUp: {
+        shiftY: -22,
       },
     },
     textNote: {
