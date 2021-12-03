@@ -4,7 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { Element } from './element';
 import { Factory } from './factory';
-import { FormatOptions, Formatter, FormatterOptions } from './formatter';
+import { FormatParams, Formatter, FormatterOptions } from './formatter';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave, StaveOptions } from './stave';
@@ -16,7 +16,7 @@ export interface SystemFormatterOptions extends FormatterOptions {
   alpha?: number;
 }
 
-export interface SystemParams {
+export interface SystemStave {
   voices: Voice[];
   stave?: Stave;
   noJustification?: boolean;
@@ -48,7 +48,7 @@ export interface SystemOptions {
   width?: number;
   y?: number;
   details?: SystemFormatterOptions;
-  formatOptions?: FormatOptions;
+  formatOptions?: FormatParams;
   noJustification?: boolean;
 }
 
@@ -67,7 +67,7 @@ export class System extends Element {
   protected formatter?: Formatter;
   protected startX?: number;
   protected lastY?: number;
-  protected parts: Required<SystemParams>[];
+  protected parts: Required<SystemStave>[];
   protected connector?: StaveConnector;
   protected debugNoteMetricsYs?: { y: number; voice: Voice }[];
 
@@ -143,7 +143,7 @@ export class System extends Element {
    *
    *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});`
    */
-  addStave(params: SystemParams): Stave {
+  addStave(params: SystemStave): Stave {
     const staveOptions: StaveOptions = { left_bar: false, ...params.options };
 
     const stave =
