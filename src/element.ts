@@ -21,10 +21,39 @@ export interface ElementAttributes {
 
 /** Element style */
 export interface ElementStyle {
+  /**
+   * CSS color used for the shadow.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   shadowColor?: string;
+  /**
+   * Level of blur applied to shadows.
+   *
+   * Values that are not finite numbers greater than or equal to zero are ignored.
+   */
   shadowBlur?: number;
+  /**
+   * CSS color used with context fill command.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   fillStyle?: string;
+  /**
+   * CSS color used with context stroke command.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   strokeStyle?: string;
+  /**
+   * Line width, 1.0 by default.
+   */
   lineWidth?: number;
 }
 
