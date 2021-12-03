@@ -2,21 +2,19 @@
 // MIT License
 //
 // vexflow.ts is the entry point for the build output file vexflow.js.
-// It statically bundles all the music engraving fonts, and
-// automatically sets the music font stack to: Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
+// It statically bundles all the music engraving fonts, and sets the music font stack to:
+// Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
 
-// Currently, the code is identical to vexflow-debug.ts, but the webpack config inside Gruntfile.js
-// sets the webpack mode to 'production' to produce a minified build.
-
-// In the future, we could do something different with this entry file, such as globally disabling
-// error checks, or some other fun optimization.
+// The webpack config inside Gruntfile.js sets the mode to 'production' to produce a minified build.
 
 import { Vex } from '../src/vex';
 
-import { loadMusicFonts } from '../src/fonts/bundleAllMusicFonts';
+import { Flow } from '../src/flow';
+import { loadAllMusicFonts } from '../src/fonts/load_all';
 import { loadTextFonts } from '../src/fonts/textfonts';
 
-loadMusicFonts();
+loadAllMusicFonts();
+Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
 loadTextFonts();
 
 export * from '../src/index';

@@ -95,5 +95,6 @@ export * from './vibratobracket';
 export * from './voice';
 export * from './web';
 
+// Export Vex as a named export AND as a default export, to support both ways of importing.
 export { Vex };
 export default Vex;

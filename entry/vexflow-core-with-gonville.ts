@@ -11,10 +11,9 @@
 import { Vex } from './vexflow-core';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
-import { Gonville } from '../src/fonts/gonville';
+import { loadGonville } from '../src/fonts/load_gonville';
 
-Font.load('Gonville', Gonville.data, Gonville.metrics);
+loadGonville();
 Flow.setMusicFont('Gonville');
 
 export * from '../src/index';

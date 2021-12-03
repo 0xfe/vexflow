@@ -1,6 +1,6 @@
 // An example of how to use VexFlow in node.
 // Run: `node pdf.js`
-// Saves a PDF in `score.pdf`.
+// Saves a PDF in `output/score.pdf`.
 
 /* eslint-disable no-console */
 
@@ -8,6 +8,12 @@ const Vex = require('../../build/cjs/vexflow');
 const { JSDOM } = require('jsdom');
 const { jsPDF } = require('jspdf');
 require('svg2pdf.js');
+const fs = require('fs');
+
+// Make sure the output folder exists.
+if (!fs.existsSync('./output/')) {
+  fs.mkdirSync('./output/');
+}
 
 const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
 
@@ -47,5 +53,5 @@ Formatter.FormatAndDraw(context, stave, notes);
 
 const doc = new jsPDF();
 const svgElement = div.childNodes[0];
-doc.svg(svgElement).then(() => doc.save('score.pdf'));
-console.log('Saved a PDF: score.pdf');
+doc.svg(svgElement).then(() => doc.save('output/score.pdf'));
+console.log('Saved a PDF: output/score.pdf');

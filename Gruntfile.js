@@ -6,6 +6,8 @@ const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
+const CHECK_FOR_CIRCULAR_DEPENDENCIES = false;
+
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow';
@@ -79,6 +81,15 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   // In version 3.0.9 this was called VEX_GENMAP.
   const devtool = process.env.VEX_DEVTOOL || (mode === PRODUCTION_MODE ? 'source-map' : false);
 
+  let plugins = [new webpack.BannerPlugin(BANNER) /* Add a banner at the top of the file. */];
+  if (CHECK_FOR_CIRCULAR_DEPENDENCIES) {
+    plugins.push(
+      new CircularDependencyPlugin({
+        cwd: process.cwd(),
+      })
+    );
+  }
+
   return {
     mode: mode,
     entry: entry,
@@ -131,13 +142,7 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
         },
       ],
     },
-    plugins: [
-      // Add a banner at the top of the file.
-      new webpack.BannerPlugin(BANNER),
-      new CircularDependencyPlugin({
-        cwd: process.cwd(),
-      }),
-    ],
+    plugins: plugins,
     optimization: {
       minimizer: [
         // DO NOT extract the banner into a separate file.

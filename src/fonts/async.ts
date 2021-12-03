@@ -28,23 +28,23 @@ export function setupAsyncFontLoader() {
 
       switch (fontName) {
         case 'Bravura': {
-          const module = await import(/* webpackChunkName: "bravura" */ './bravura');
-          font.setDataAndMetrics(module.Bravura);
+          const { Bravura } = await import(/* webpackChunkName: "bravura" */ './bravura');
+          font.setDataAndMetrics(Bravura);
           break;
         }
         case 'Gonville': {
-          const module = await import(/* webpackChunkName: "gonville" */ './gonville');
-          font.setDataAndMetrics(module.Gonville);
+          const { Gonville } = await import(/* webpackChunkName: "gonville" */ './gonville');
+          font.setDataAndMetrics(Gonville);
           break;
         }
         case 'Petaluma': {
-          const module = await import(/* webpackChunkName: "petaluma" */ './petaluma');
-          font.setDataAndMetrics(module.Petaluma);
+          const { Petaluma } = await import(/* webpackChunkName: "petaluma" */ './petaluma');
+          font.setDataAndMetrics(Petaluma);
           break;
         }
         case 'Custom': {
-          const module = await import(/* webpackChunkName: "custom" */ './custom');
-          font.setDataAndMetrics(module.Custom);
+          const { Custom } = await import(/* webpackChunkName: "custom" */ './custom');
+          font.setDataAndMetrics(Custom);
           break;
         }
         default: {

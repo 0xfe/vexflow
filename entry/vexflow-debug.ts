@@ -4,18 +4,12 @@
 // vexflow-debug.ts is the entry point for the build output file vexflow-debug.js.
 // It statically bundles all the music engraving fonts.
 
-// Currently, the code is identical to vexflow.ts, but the webpack config inside Gruntfile.js
+// Currently, it just imports vexflow.ts, but the webpack config inside Gruntfile.js
 // sets the webpack mode to 'development' to produce an unminified build.
 
 // In the future, we could do something different with this entry file, such as turn on flags for logging.
 
-import { Vex } from '../src/vex';
-
-import { loadMusicFonts } from '../src/fonts/bundleAllMusicFonts';
-import { loadTextFonts } from '../src/fonts/textfonts';
-
-loadMusicFonts();
-loadTextFonts();
+import { Vex } from './vexflow';
 
 export * from '../src/index';
 export default Vex;

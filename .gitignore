@@ -1,7 +1,7 @@
 reference
-reference/
 build
-build/
+demos/node/output
+
 *.lock
 ruby_sess.*
 .*.swp
@@ -32,4 +32,3 @@ npm-debug.log
 #eclipse
 .project
 .settings/
-

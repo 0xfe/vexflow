@@ -11,10 +11,9 @@
 import { Vex } from './vexflow-core';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
-import { Bravura } from '../src/fonts/bravura';
+import { loadBravura } from '../src/fonts/load_bravura';
 
-Font.load('Bravura', Bravura.data, Bravura.metrics);
+loadBravura();
 Flow.setMusicFont('Bravura');
 
 export * from '../src/index';

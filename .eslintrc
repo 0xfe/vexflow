@@ -49,7 +49,7 @@
       }
     },
     {
-      "files": ["demos/**/*.js"],
+      "files": ["demos/**/*.js", "demos/**/*.mjs"],
       "extends": ["eslint:recommended", "prettier"],
       "rules": {
         "no-console": "off",

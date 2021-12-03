@@ -5,9 +5,21 @@
 // Since this file is an ES module, we need to use build/esm/entry/vexflow.js which exports all the types you need.
 // The ES module version of VexFlow is NOT compatible with classic <script src="..."></script> tags.
 
-/* eslint-disable no-console */
+import { Vex } from 'vexflow';
 
-import { Vex } from '../../build/esm/entry/vexflow.js';
+// The above import statement is equivalent to the following:
+// import { Vex } from '../../build/esm/entry/vexflow.js';
+// It works because our package.json has an exports field that points to the correct ESM entry point:
+/*
+"exports": {
+  ".": {
+    "types": "./build/types/entry/vexflow.d.ts",
+    "require": "./build/cjs/vexflow.js",
+    "import": "./build/esm/entry/vexflow.js"
+  },
+  ...
+}
+*/
 
 console.log('VexFlow BUILD: ' + Vex.Flow.BUILD);
 

@@ -11,10 +11,9 @@
 import { Vex } from './vexflow-core';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
-import { Petaluma } from '../src/fonts/petaluma';
+import { loadPetaluma } from '../src/fonts/load_petaluma';
 
-Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
+loadPetaluma();
 Flow.setMusicFont('Petaluma');
 
 export * from '../src/index';
