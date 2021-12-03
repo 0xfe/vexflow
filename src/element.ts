@@ -86,18 +86,39 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /** Set the draw style of a stemmable note. */
+  /**
+   * Set the element style used to render.
+   *
+   * Example:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.draw();
+   * ```
+   * Note: If the element draws additional sub-elements (ie.: Modifiers in a Stave),
+   * the style can be applied to all of them by means of the context:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.getContext().setFillStyle('red');
+   * element.getContext().setStrokeStyle('red');
+   * element.draw();
+   * ```
+   * or using drawWithStyle:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.drawWithStyle();
+   * ```
+   */
   setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
 
-  /** Get the draw style of a stemmable note. */
+  /** Get the element style used for rendering. */
   getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
-  /** Apply current style to Canvas `context`. */
+  /** Apply the element style to `context`. */
   applyStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -114,7 +135,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Restore style of `context`. */
+  /** Restore the style of `context`. */
   restoreStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -125,7 +146,10 @@ export abstract class Element {
     return this;
   }
 
-  /** Draw with style of an element. */
+  /**
+   * Draw the element and all its sub-elements (ie.: Modifiers in a Stave)
+   * with the element style.
+   */
   drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();
