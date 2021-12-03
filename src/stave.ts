@@ -23,15 +23,9 @@ export interface StaveLineConfig {
 }
 
 export interface StaveOptions {
-  spacing?: number;
-  thickness?: number;
-  x_shift?: number;
-  y_shift?: number;
-  cps?: { x: number; y: number }[];
   bottom_text_position?: number;
   line_config?: StaveLineConfig[];
   space_below_staff_ln?: number;
-  glyph_spacing_px?: number;
   space_above_staff_ln?: number;
   vertical_bar_width?: number;
   fill_style?: string;
@@ -120,12 +114,7 @@ export class Stave extends Element {
     this.resetFont();
 
     this.options = {
-      spacing: 2,
-      thickness: 2,
-      x_shift: 0,
-      y_shift: 10,
       vertical_bar_width: 10, // Width around vertical bar end-marker
-      glyph_spacing_px: 10,
       num_lines: 5,
       fill_style: '#999999',
       left_bar: true, // draw vertical bar on left
@@ -136,7 +125,6 @@ export class Stave extends Element {
       top_text_position: 1, // in staff lines
       bottom_text_position: 4, // in staff lines
       line_config: [],
-      cps: [],
       ...options,
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
