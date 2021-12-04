@@ -156,6 +156,7 @@ const validNoteTypes: Record<string, { name: string }> = {
   m: { name: 'muted' },
   s: { name: 'slash' },
   g: { name: 'ghost' },
+  p: { name: 'parenthesized' },
 };
 
 const customNoteHeads: Record<string, { code: string }> = {
@@ -941,6 +942,10 @@ const durationCodes: Record<string, any> = {
         // Ghostnote
         code_head: 'noteheadDoubleWhole',
       },
+      p: {
+        // Parenthesis drawn by notehead.draw()
+        code_head: 'noteheadDoubleWhole',
+      },
     },
   },
 
@@ -996,6 +1001,10 @@ const durationCodes: Record<string, any> = {
       },
       g: {
         // Ghostnote
+        code_head: 'noteheadWhole',
+      },
+      p: {
+        // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadWhole',
       },
     },
@@ -1056,6 +1065,10 @@ const durationCodes: Record<string, any> = {
         // Ghostnote
         code_head: 'noteheadHalf',
       },
+      p: {
+        // Parenthesis drawn by notehead.draw()
+        code_head: 'noteheadHalf',
+      },
     },
   },
 
@@ -1113,6 +1126,10 @@ const durationCodes: Record<string, any> = {
       },
       g: {
         // Ghostnote
+        code_head: 'noteheadBlack',
+      },
+      p: {
+        // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
       },
     },
@@ -1179,6 +1196,10 @@ const durationCodes: Record<string, any> = {
         // Ghostnote
         code_head: 'noteheadBlack',
       },
+      p: {
+        // Parenthesis drawn by notehead.draw()
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1241,6 +1262,10 @@ const durationCodes: Record<string, any> = {
       },
       g: {
         // Ghostnote
+        code_head: 'noteheadBlack',
+      },
+      p: {
+        // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
       },
     },
@@ -1307,6 +1332,10 @@ const durationCodes: Record<string, any> = {
         // Ghostnote
         code_head: 'noteheadBlack',
       },
+      p: {
+        // Parenthesis drawn by notehead.draw()
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1371,6 +1400,10 @@ const durationCodes: Record<string, any> = {
         // Ghostnote
         code_head: 'noteheadBlack',
       },
+      p: {
+        // Parenthesis drawn by notehead.draw()
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1433,6 +1466,10 @@ const durationCodes: Record<string, any> = {
       },
       g: {
         // Ghostnote
+        code_head: 'noteheadBlack',
+      },
+      p: {
+        // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
       },
     },

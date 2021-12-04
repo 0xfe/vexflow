@@ -30,6 +30,7 @@ const EasyScoreTests = {
     run('Draw Basic Slash', drawBasicSlashTest);
     run('Draw Ghostnote Basic', drawGhostBasicTest);
     run('Draw Ghostnote Dotted', drawGhostDottedTest);
+    run('Draw Parenthesised', drawParenthesisedTest);
     run('Draw Accidentals', drawAccidentalsTest);
     run('Draw Beams', drawBeamsTest);
     run('Draw Tuplets', drawTupletsTest);
@@ -60,7 +61,7 @@ function createShortcuts(score: EasyScore) {
  */
 function basic(): void {
   const score = new EasyScore();
-  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g'];
+  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g, 'c3/p', 'c3//p'];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
   mustPass.forEach((line) => equal(score.parse(line).success, true, line));
@@ -353,6 +354,34 @@ function drawGhostDottedTest(options: TestOptions): void {
   f.draw();
   expect(0);
 }
+
+function drawParenthesisedTest(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 600, 350);
+  const score = f.EasyScore();
+  const system = f.System();
+
+  const { voice, notes } = createShortcuts(score);
+
+  system
+    .addStave({
+      voices: [
+        voice(notes('(d4 e4 g4)/q/p, c4/q, c4/q/r, c4/q/p', { stem: 'down' })),
+        voice(notes('c#5/h/p., c5/q/p', { stem: 'up' })),
+      ],
+    })
+    .addClef('treble');
+
+  system
+    .addStave({
+      voices: [voice(notes('c#3/q/p, cn3/q/p, bb3/q/p, d##3/q/p', { clef: 'bass' }))],
+    })
+    .addClef('bass');
+  system.addConnector().setType(StaveConnector.type.BRACKET);
+
+  f.draw();
+  expect(0);
+}
+
 
 function drawAccidentalsTest(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 600, 350);
