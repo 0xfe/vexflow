@@ -77,8 +77,6 @@ export class Stroke extends Modifier {
   protected note_end?: Note;
   public render_options: {
     font_scale: number;
-    stroke_px: number;
-    stroke_spacing: number;
   };
 
   constructor(type: number, options?: { all_voices: boolean }) {
@@ -95,8 +93,6 @@ export class Stroke extends Modifier {
 
     this.render_options = {
       font_scale: 38,
-      stroke_px: 3,
-      stroke_spacing: 10,
     };
 
     this.resetFont();

@@ -40,7 +40,6 @@ export interface FormatterOptions {
 
 export interface FormatParams {
   align_rests?: boolean;
-  padding?: number;
   stave?: Stave;
   context?: RenderContext;
   auto_beam?: boolean;
@@ -1018,7 +1017,7 @@ export class Formatter {
 
   // This method is just like `format` except that the `justifyWidth` is inferred from the `stave`.
   formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatParams): this {
-    const options: FormatParams = { padding: 10, context: stave.getContext(), ...optionsParam };
+    const options: FormatParams = { context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - Stave.defaultPadding;

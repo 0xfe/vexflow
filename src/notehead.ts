@@ -148,8 +148,6 @@ export class NoteHead extends Note {
       ...this.render_options,
       // font size for note heads
       glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
-      // number of stroke px to the left and right of head
-      stroke_px: 3,
     };
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
