@@ -17,7 +17,7 @@ export interface TimeSignatureInfo {
   num: boolean;
 }
 
-const assertIsValidFraction = (timeSpec: string) => {
+const assertIsValidTimeSig = (timeSpec: string) => {
   const numbers = timeSpec.split('/');
 
   if (numbers.length !== 2 && numbers[0] !== '+') {
@@ -28,7 +28,7 @@ const assertIsValidFraction = (timeSpec: string) => {
   }
 
   numbers.forEach((number) => {
-    if (/^([0-9+()]{1,})$/.test(number) == false) {
+    if (/^[0-9+()]+$/.test(number) == false) {
       throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain valid signatures.`);
     }
   });
@@ -89,7 +89,7 @@ export class TimeSignature extends StaveModifier {
     }
 
     if (this.validate_args) {
-      assertIsValidFraction(timeSpec);
+      assertIsValidTimeSig(timeSpec);
     }
 
     const parts = timeSpec.split('/');

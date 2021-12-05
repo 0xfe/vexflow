@@ -27,12 +27,12 @@ const TimeSignatureTests = {
 function parser(): void {
   const timeSig = new TimeSignature();
 
-  const mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+'];
+  const mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+', '1+', '+1', '(3+', '+3)', '()', '(+)'];
   mustFail.forEach((invalidString) => {
     throws(() => timeSig.parseTimeSpec(invalidString), /BadTimeSignature/);
   });
 
-  const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|'];
+  const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|', '+'];
   mustPass.forEach((validString) => timeSig.parseTimeSpec(validString));
 
   ok(true, 'all pass');
