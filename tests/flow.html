@@ -39,9 +39,11 @@
       // Support a query param to choose which VexFlow version to load.
       // ver=(build/cjs | reference | releases | etc...)
       // If omitted, `ver` defaults to 'build/cjs'.
-      // `ver` can also specify a version hosted on unpkg.com:
-      // ver=unpkg@3.0.9  or  ver=unpkg@1.2.77
-      // See: https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
+      // `ver` can also specify a version hosted on unpkg.com / jsdelivr.com:
+      // ver=unpkg@3.0.9     => https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
+      // ver=unpkg@1.2.77    => https://unpkg.com/vexflow@1.2.77/releases/vexflow-debug.js
+      // ver=jsdelivr@4.0.0  => https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
+      // ver=jsdelivr@1.2.90 => https://cdn.jsdelivr.net/npm/vexflow@1.2.90/releases/vexflow-debug.js
       const params = new URLSearchParams(window.location.search);
       const ver = params.get('ver') ?? 'build/cjs';
 
@@ -50,18 +52,31 @@
       let vexPlusTestsURL;
       let isVersionFourOrNewer = true;
 
+      // Determine if we are loading VexFlow from a CDN.
+      let cdnURLPath;
       if (ver.includes('unpkg')) {
+        cdnURLPath = 'https://unpkg.com/';
+      } else if (ver.includes('jsdelivr')) {
+        cdnURLPath = 'https://cdn.jsdelivr.net/npm/';
+      }
+      // If we are loading from a CDN, build the URLs.
+      if (typeof cdnURLPath !== 'undefined') {
         const version = ver.split('@')[1];
-        vexURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-debug.js`;
-        testsURL = `https://unpkg.com/vexflow@${version}/releases/vexflow-tests.js`;
         if (parseFloat(version) < 4) {
           isVersionFourOrNewer = false;
+          vexURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-debug.js`;
+          testsURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-tests.js`;
+        } else {
+          // VexFlow 4 moved the build output from releases/ to build/.
+          vexURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug.js`;
+          vexPlusTestsURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug-with-tests.js`;
         }
       } else {
+        // We are NOT loading from a CDN.
+        // We are loading from the local filesystem (vexflow/build/ | vexflow/reference | vexflow/releases/).
         const path = ver;
 
-        // RONYEH: For now, we assume the 'releases' folder is version 3.0.9.
-        // Before we ship 4.0, we'll need to update this to reflect any changes to the releases/ folder.
+        // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
         if (path === 'releases') {
           isVersionFourOrNewer = false;
         }

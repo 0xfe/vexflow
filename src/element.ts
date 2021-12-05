@@ -21,10 +21,39 @@ export interface ElementAttributes {
 
 /** Element style */
 export interface ElementStyle {
+  /**
+   * CSS color used for the shadow.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   shadowColor?: string;
+  /**
+   * Level of blur applied to shadows.
+   *
+   * Values that are not finite numbers greater than or equal to zero are ignored.
+   */
   shadowBlur?: number;
+  /**
+   * CSS color used with context fill command.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   fillStyle?: string;
+  /**
+   * CSS color used with context stroke command.
+   *
+   * Examples: 'red', '#ff0000', '#ff000010', 'rgb(255,0,0)'
+   *
+   * See [CSS Legal Color Values](https://www.w3schools.com/cssref/css_colors_legal.asp)
+   */
   strokeStyle?: string;
+  /**
+   * Line width, 1.0 by default.
+   */
   lineWidth?: number;
 }
 
@@ -86,18 +115,39 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /** Set the draw style of a stemmable note. */
+  /**
+   * Set the element style used to render.
+   *
+   * Example:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.draw();
+   * ```
+   * Note: If the element draws additional sub-elements (ie.: Modifiers in a Stave),
+   * the style can be applied to all of them by means of the context:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.getContext().setFillStyle('red');
+   * element.getContext().setStrokeStyle('red');
+   * element.draw();
+   * ```
+   * or using drawWithStyle:
+   * ```typescript
+   * element.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+   * element.drawWithStyle();
+   * ```
+   */
   setStyle(style: ElementStyle): this {
     this.style = style;
     return this;
   }
 
-  /** Get the draw style of a stemmable note. */
+  /** Get the element style used for rendering. */
   getStyle(): ElementStyle | undefined {
     return this.style;
   }
 
-  /** Apply current style to Canvas `context`. */
+  /** Apply the element style to `context`. */
   applyStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -114,7 +164,7 @@ export abstract class Element {
     return this;
   }
 
-  /** Restore style of `context`. */
+  /** Restore the style of `context`. */
   restoreStyle(
     context: RenderContext | undefined = this.context,
     style: ElementStyle | undefined = this.getStyle()
@@ -125,7 +175,10 @@ export abstract class Element {
     return this;
   }
 
-  /** Draw with style of an element. */
+  /**
+   * Draw the element and all its sub-elements (ie.: Modifiers in a Stave)
+   * with the element style.
+   */
   drawWithStyle(): void {
     this.checkContext();
     this.applyStyle();

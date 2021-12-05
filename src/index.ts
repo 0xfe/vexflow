@@ -70,7 +70,7 @@ export * from './stringnumber';
 export * from './strokes';
 export * from './svgcontext';
 export * from './system';
-// Do not export './tables'. It is accessible via Vex.Flow.*.
+// Do not export './tables' because it is internal. Its public API is accessible via Vex.Flow.*.
 export * from './tabnote';
 export * from './tabslide';
 export * from './tabstave';

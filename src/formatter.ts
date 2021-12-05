@@ -39,9 +39,8 @@ export interface FormatterOptions {
   maxIterations?: number;
 }
 
-export interface FormatOptions {
+export interface FormatParams {
   align_rests?: boolean;
-  padding?: number;
   stave?: Stave;
   context?: RenderContext;
   auto_beam?: boolean;
@@ -263,7 +262,7 @@ export class Formatter {
     ctx: RenderContext,
     stave: Stave,
     notes: StemmableNote[],
-    params?: FormatOptions | boolean
+    params?: FormatParams | boolean
   ): BoundingBox | undefined {
     let options = {
       auto_beam: false,
@@ -315,7 +314,7 @@ export class Formatter {
     tabnotes: TabNote[],
     notes: Tickable[],
     autobeam: boolean,
-    params: FormatOptions
+    params: FormatParams
   ): void {
     let opts = {
       auto_beam: autobeam,
@@ -995,7 +994,7 @@ export class Formatter {
    * Set `options.context` to the rendering context. Set `options.align_rests`
    * to true to enable rest alignment.
    */
-  format(voices: Voice[], justifyWidth?: number, options?: FormatOptions): this {
+  format(voices: Voice[], justifyWidth?: number, options?: FormatParams): this {
     const opts = {
       align_rests: false,
       ...options,
@@ -1018,8 +1017,8 @@ export class Formatter {
   }
 
   // This method is just like `format` except that the `justifyWidth` is inferred from the `stave`.
-  formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatOptions): this {
-    const options: FormatOptions = { padding: 10, context: stave.getContext(), ...optionsParam };
+  formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatParams): this {
+    const options: FormatParams = { context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - Stave.defaultPadding;

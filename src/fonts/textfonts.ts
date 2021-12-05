@@ -12,10 +12,9 @@ export function loadTextFonts() {
     const fontData = RobotoSlabFont;
     const { fontFamily, resolution, glyphs } = fontData;
     Font.load(fontFamily, fontData);
-    // H isn't actually the tallest or the widest.
-    // Interestingly, the lowercase b is the tallest.
-    const maxSizeGlyph = 'H'; // Two lines of lyrics touch each other because we don't allow enough vertical space.
-    // const maxSizeGlyph = 'b'; // RONYEH: introduces a visual diff, but the spacing is better.
+    // Previously we used 'H', but it isn't actually the tallest or the widest.
+    // Interestingly, the lowercase 'b' is the tallest glyph.
+    const maxSizeGlyph = 'b';
     TextFormatter.registerInfo({
       family: fontFamily,
       resolution,
@@ -36,9 +35,9 @@ export function loadTextFonts() {
     const fontData = PetalumaScriptFont;
     const { fontFamily, resolution, glyphs } = fontData;
     Font.load(fontFamily, fontData);
-    // M is wider, but H is taller. :-) We continue to use H for consistency / legacy reasons.
+    // M is wider, but H is taller. :-)
     // Lowercase b is also taller in this font.
-    const maxSizeGlyph = 'H';
+    const maxSizeGlyph = 'b';
     TextFormatter.registerInfo({
       family: fontFamily,
       resolution,

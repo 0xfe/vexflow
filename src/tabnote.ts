@@ -8,7 +8,7 @@
 // See `tests/tabnote_tests.ts` for usage examples.
 
 import { Dot, isDot } from './dot';
-// import { Font } from './font'; // RONYEH
+import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { Stave } from './stave';
@@ -162,8 +162,7 @@ export class TabNote extends StemmableNote {
       // normal glyph scale
       scale: 1.0,
       // default tablature font
-      font: `10pt Arial`,
-      // font: `${Font.SIZE}pt ${Font.SANS_SERIF}`, // RONYEH
+      font: `${Font.SIZE}pt ${Font.SANS_SERIF}`,
     };
 
     this.glyph = Tables.getGlyphProps(this.duration, this.noteType);

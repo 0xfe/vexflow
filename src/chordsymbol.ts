@@ -375,12 +375,7 @@ export class ChordSymbol extends Modifier {
     let family = 'Roboto Slab, Times, serif';
     if (Tables.currentMusicFont().getName() === 'Petaluma') {
       // Fixes Issue #1180
-      // https://github.com/0xfe/vexflow/issues/1180
-      // family = 'PetalumaScript, Arial, sans-serif';
-
-      // RONYEH: A mismatched font family results in loading Roboto Slab's metrics instead.
-      // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
-      family = 'petalumaScript,Arial';
+      family = 'PetalumaScript, Arial, sans-serif';
     }
     return {
       family,

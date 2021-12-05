@@ -27,7 +27,6 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
-const RELEASES_DIR = path.join(BASE_DIR, 'releases');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
 // Make the src/version.ts file.
@@ -238,22 +237,12 @@ module.exports = (grunt) => {
         dest: BUILD_ESM_DIR,
         flatten: true,
       },
-      release: {
-        files: [
-          {
-            expand: true,
-            cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
-            dest: RELEASES_DIR,
-          },
-        ],
-      },
       reference: {
         files: [
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['*.js', 'docs/**', '*.map'],
+            src: ['*.js', '*.map'],
             dest: REFERENCE_DIR,
           },
         ],
@@ -262,46 +251,18 @@ module.exports = (grunt) => {
     typedoc: {
       build: {
         options: {
-          out: 'build/docs',
+          out: 'docs/api',
           name: 'vexflow',
           excludeProtected: true,
           excludePrivate: true,
+          disableSources: true,
         },
         src: ['./src/index.ts'],
       },
     },
-    gitcommit: {
-      releases: {
-        options: {
-          message: 'Committing release binaries for new version: <%= pkg.version %>',
-          verbose: true,
-        },
-        files: [
-          {
-            src: [`${RELEASES_DIR}/*.js`, `${RELEASES_DIR}/*.map`],
-            expand: true,
-          },
-        ],
-      },
-    },
-    bump: {
-      options: {
-        files: ['package.json', 'component.json'],
-        commitFiles: ['package.json', 'component.json'],
-        updateConfigs: ['pkg'],
-        createTag: false,
-        push: false,
-      },
-    },
-    release: {
-      options: {
-        bump: false,
-        commit: false,
-        npm: false, // Run npm publish by hand
-      },
-    },
     clean: {
       build: { src: [BUILD_DIR] },
+      reference: { src: [REFERENCE_DIR] },
     },
   });
 
@@ -309,8 +270,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-typedoc');
-  grunt.loadNpmTasks('grunt-release');
-  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-webpack');
@@ -380,6 +339,18 @@ module.exports = (grunt) => {
     ]
   );
 
+  // `grunt watchDevelop`
+  // This is the fastest way to build vexflow-debug-with-tests.js.
+  // Open tests/flow.html to see the test output.
+  grunt.registerTask(
+    'watchDevelop',
+    `Watch src/ & tests/ for changes and generate a development build.`, //
+    [
+      'clean:build', //
+      'webpack:watchDebugPlusTests',
+    ]
+  );
+
   // `grunt test`
   grunt.registerTask(
     'test',
@@ -400,39 +371,10 @@ module.exports = (grunt) => {
     'Build to reference/.', //
     [
       //
-      'default',
-      'qunit',
+      'clean:reference',
+      'clean:build',
+      'webpack:buildDebugPlusTests',
       'copy:reference',
     ]
   );
-
-  // Release current build.
-  grunt.registerTask(
-    'stage',
-    'Build to releases/.', //
-    [
-      //
-      'default',
-      'qunit',
-      'copy:release',
-    ]
-  );
-
-  // Increment package version and generate releases. Does NOT automatically publish to NPM.
-  grunt.registerTask(
-    'publish',
-    'Generate releases.', //
-    [
-      //
-      'bump',
-      'stage',
-      'gitcommit:releases',
-      'release',
-      'alldone',
-    ]
-  );
-
-  grunt.registerTask('alldone', 'Publish VexFlow NPM.', () => {
-    grunt.log.ok('NOT YET DONE: Run `npm publish` now to publish NPM.');
-  });
 };

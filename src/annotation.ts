@@ -2,13 +2,9 @@
 // MIT License
 
 import { Element } from './element';
-import { FontInfo } from './font';
-import { Modifier } from './modifier';
-import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
+import { FontInfo, log, ModifierContextState, StemmableNote, TextFormatter } from './index';
+import { Modifier, ModifierPosition } from './modifier';
 import { Tables } from './tables';
-import { TextFormatter } from './textformatter';
-import { log } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -73,21 +69,29 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
-      let textWidth = 0;
       const annotation = annotations[i];
       const textFormatter = TextFormatter.create(annotation.textFont);
 
-      // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
       // Get the text width from the font metrics.
-      textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      const textWidth = textFormatter.getWidthForTextInPx(annotation.text);
       width = Math.max(width, textWidth);
-      if (annotation.getPosition() === Modifier.Position.ABOVE) {
+
+      if (annotation.getPosition() === ModifierPosition.ABOVE) {
         annotation.setTextLine(state.top_text_line);
-        state.top_text_line += numLines;
+        // Like in CSS, lineHeight is multiplied by the font size.
+        const lineHeight = 1.4;
+        // This is expressed in fractional stave spaces.
+        const verticalSpaceNeeded = (lineHeight * textFormatter.maxHeight) / Tables.STAVE_LINE_DISTANCE;
+        // Each subsequent annotation is shifted downward by 1.4 lines.
+        state.top_text_line += verticalSpaceNeeded;
       } else {
         annotation.setTextLine(state.text_line);
-        state.text_line += numLines;
+        // Like in CSS, lineHeight is multiplied by the font size.
+        const lineHeight = 1.1;
+        // This is expressed in fractional stave spaces.
+        const verticalSpaceNeeded = (lineHeight * textFormatter.maxHeight) / Tables.STAVE_LINE_DISTANCE;
+        // Each subsequent annotation is shifted upward by 1.1 lines.
+        state.text_line += verticalSpaceNeeded;
       }
     }
     state.left_shift += width / 2;
@@ -95,8 +99,8 @@ export class Annotation extends Modifier {
     return true;
   }
 
-  protected justification: AnnotationHorizontalJustify;
-  protected vert_justification: AnnotationVerticalJustify;
+  protected horizontalJustification: AnnotationHorizontalJustify;
+  protected verticalJustification: AnnotationVerticalJustify;
   protected text: string;
 
   /**
@@ -108,8 +112,8 @@ export class Annotation extends Modifier {
     super();
 
     this.text = text;
-    this.justification = AnnotationHorizontalJustify.CENTER;
-    this.vert_justification = Annotation.VerticalJustify.TOP;
+    this.horizontalJustification = AnnotationHorizontalJustify.CENTER;
+    this.verticalJustification = AnnotationVerticalJustify.TOP;
     this.resetFont();
 
     // The default width is calculated from the text.
@@ -118,10 +122,10 @@ export class Annotation extends Modifier {
 
   /**
    * Set vertical position of text (above or below stave).
-   * @param just value in `Annotation.VerticalJustify`.
+   * @param just value in `AnnotationVerticalJustify`.
    */
   setVerticalJustification(just: string | AnnotationVerticalJustify): this {
-    this.vert_justification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
+    this.verticalJustification = typeof just === 'string' ? Annotation.VerticalJustifyString[just] : just;
     return this;
   }
 
@@ -129,7 +133,7 @@ export class Annotation extends Modifier {
    * Get horizontal justification.
    */
   getJustification(): AnnotationHorizontalJustify {
-    return this.justification;
+    return this.horizontalJustification;
   }
 
   /**
@@ -137,7 +141,7 @@ export class Annotation extends Modifier {
    * @param justification value in `Annotation.Justify`.
    */
   setJustification(just: string | AnnotationHorizontalJustify): this {
-    this.justification = typeof just === 'string' ? Annotation.HorizontalJustifyString[just] : just;
+    this.horizontalJustification = typeof just === 'string' ? Annotation.HorizontalJustifyString[just] : just;
     return this;
   }
 
@@ -147,7 +151,7 @@ export class Annotation extends Modifier {
     const note = this.checkAttachedNote();
     this.setRendered();
 
-    const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
+    const start = note.getModifierStartXY(ModifierPosition.ABOVE, this.index);
 
     // We're changing context parameters. Save current state.
     ctx.save();
@@ -165,11 +169,11 @@ export class Annotation extends Modifier {
     let x;
     let y;
 
-    if (this.justification === Annotation.HorizontalJustify.LEFT) {
+    if (this.horizontalJustification === AnnotationHorizontalJustify.LEFT) {
       x = start.x;
-    } else if (this.justification === Annotation.HorizontalJustify.RIGHT) {
+    } else if (this.horizontalJustification === AnnotationHorizontalJustify.RIGHT) {
       x = start.x - text_width;
-    } else if (this.justification === Annotation.HorizontalJustify.CENTER) {
+    } else if (this.horizontalJustification === AnnotationHorizontalJustify.CENTER) {
       x = start.x - text_width / 2;
     } /* CENTER_STEM */ else {
       x = (note as StemmableNote).getStemX() - text_width / 2;
@@ -187,7 +191,7 @@ export class Annotation extends Modifier {
       spacing = stave.getSpacingBetweenLines();
     }
 
-    if (this.vert_justification === Annotation.VerticalJustify.BOTTOM) {
+    if (this.verticalJustification === AnnotationVerticalJustify.BOTTOM) {
       // HACK: We need to compensate for the text's height since its origin
       // is bottom-right.
       y = stave.getYForBottomText(this.text_line + Tables.TEXT_HEIGHT_OFFSET_HACK);
@@ -195,11 +199,11 @@ export class Annotation extends Modifier {
         const stem_base = note.getStemDirection() === 1 ? stem_ext.baseY : stem_ext.topY;
         y = Math.max(y, stem_base + spacing * (this.text_line + 2));
       }
-    } else if (this.vert_justification === Annotation.VerticalJustify.CENTER) {
+    } else if (this.verticalJustification === AnnotationVerticalJustify.CENTER) {
       const yt = note.getYForTopText(this.text_line) - 1;
       const yb = stave.getYForBottomText(this.text_line);
       y = yt + (yb - yt) / 2 + text_height / 2;
-    } else if (this.vert_justification === Annotation.VerticalJustify.TOP) {
+    } else if (this.verticalJustification === AnnotationVerticalJustify.TOP) {
       y = Math.min(stave.getYForTopText(this.text_line), note.getYs()[0] - 10);
       if (has_stem) {
         y = Math.min(y, stem_ext.topY - 5 - spacing * this.text_line);

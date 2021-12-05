@@ -4,7 +4,7 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { FontInfo, FontStyle, FontWeight } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { TieNotes } from './stavetie';
 import { TabNote } from './tabnote';
 import { TabTie } from './tabtie';
@@ -16,7 +16,7 @@ export class TabSlide extends TabTie {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: Font.SERIF */,
+    family: Font.SERIF,
     size: 10,
     weight: FontWeight.BOLD,
     style: FontStyle.ITALIC,

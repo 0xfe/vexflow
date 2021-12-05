@@ -43,8 +43,7 @@ function setupContext(options: TestOptions, w: number = 0, h: number = 0): { con
   const context = options.contextBuilder!(options.elementId, w || 350, h || 160);
   context.fillStyle = '#221';
   context.strokeStyle = '#221';
-  context.setFont('Arial', VexFlowTests.Font.size, '');
-  // context.setFont('Arial', VexFlowTests.Font.size); // RONYEH. setFont() params are optional, so no need to pass ''.
+  context.setFont('Arial', VexFlowTests.Font.size);
 
   const stave = new TabStave(10, 10, w || 350).addTabGlyph().setContext(context).draw();
 

@@ -51,7 +51,6 @@ export class Accidental extends Modifier {
   };
   public render_options: {
     parenLeftPadding: number;
-    stroke_px: number;
     font_scale: number;
     parenRightPadding: number;
   };
@@ -492,9 +491,6 @@ export class Accidental extends Modifier {
     this.render_options = {
       // Font size for glyphs
       font_scale: 38,
-
-      // Length of stroke across heads above or below the stave.
-      stroke_px: 3,
 
       // Padding between accidental and parentheses on each side
       parenLeftPadding: 2,
