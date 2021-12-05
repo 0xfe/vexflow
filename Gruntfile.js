@@ -263,6 +263,7 @@ export default Vex;`;
     },
     clean: {
       build: { src: [BUILD_DIR] },
+      reference: { src: [REFERENCE_DIR] },
     },
   });
 
@@ -352,8 +353,9 @@ export default Vex;`;
     'Build to reference/.', //
     [
       //
-      'default',
-      'qunit',
+      'clean:reference',
+      'clean:build',
+      'webpack:buildDebugPlusTests',
       'copy:reference',
     ]
   );

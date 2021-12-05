@@ -27,6 +27,9 @@
 # PNG viewer on OSX. Switch this to whatever your system uses.
 # VIEWER=open
 
+# use . as decimal separator
+LC_NUMERIC="en_US.UTF-8"
+
 # Check ImageMagick installation
 command -v convert >/dev/null 2>&1 || { echo >&2 "Error: ImageMagick not found."; exit 1; }
 
@@ -154,7 +157,11 @@ function diff_image() {
   # Calculate the difference metric and store the composite diff image.
   local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
 
-  local isGT=`echo "$hash > $THRESHOLD" | bc -l`
+  # Remove scientific notation
+  local hash6=`printf "%.6f" $hash`
+  local THRESHOLD6=`printf "%.6f" $THRESHOLD`
+
+  local isGT=`echo "$hash6 > $THRESHOLD6" | bc -l`
   if [ "$isGT" == "1" ]
   then
     # Add the result to results.text
