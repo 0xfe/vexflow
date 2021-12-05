@@ -4,6 +4,7 @@
 // VexFlow Test Support Library
 
 import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/index';
+
 import { Assert } from './types/qunit';
 
 /* eslint-disable */

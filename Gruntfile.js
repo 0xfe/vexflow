@@ -163,10 +163,10 @@ module.exports = (grunt) => {
 
   // We need a different webpack config for each build target.
   const prodAllFonts = getConfig(VEX, SINGLE_BUNDLE);
-  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING, DEVELOPMENT_MODE); // RONYEH: REVERT TO PRODUCTION MODE
+  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, PRODUCTION_MODE);
+  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING, PRODUCTION_MODE);
+  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING, PRODUCTION_MODE);
+  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING, PRODUCTION_MODE);
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
   const debugAllFonts = getConfig(VEX_DEBUG, SINGLE_BUNDLE, DEVELOPMENT_MODE);
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, SINGLE_BUNDLE, DEVELOPMENT_MODE);

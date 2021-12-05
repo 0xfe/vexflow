@@ -2,9 +2,13 @@
 // MIT License
 
 import { Element } from './element';
-import { FontInfo, log, ModifierContextState, StemmableNote, TextFormatter } from './index';
+import { FontInfo } from './font';
 import { Modifier, ModifierPosition } from './modifier';
+import { ModifierContextState } from './modifiercontext';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { TextFormatter } from './textformatter';
+import { log } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {

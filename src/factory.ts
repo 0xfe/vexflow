@@ -2,9 +2,8 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { AnnotationHorizontalJustify, AnnotationVerticalJustify } from '.';
 import { Accidental } from './accidental';
-import { Annotation } from './annotation';
+import { Annotation, AnnotationHorizontalJustify, AnnotationVerticalJustify } from './annotation';
 import { Articulation } from './articulation';
 import { BarNote } from './barnote';
 import { Beam } from './beam';
