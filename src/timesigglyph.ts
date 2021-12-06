@@ -32,14 +32,17 @@ export class TimeSignatureGlyph extends Glyph {
     for (let i = 0; i < topDigits.length; ++i) {
       let timeSigType = topDigits[i];
       switch (topDigits[i]) {
+        case '-':
+          timeSigType = 'Minus';
+          break;
         case '+':
-          timeSigType = 'Plus';
+          timeSigType = botDigits.length > 0 ? 'PlusSmall' : 'Plus';
           break;
         case '(':
-          timeSigType = 'ParensLeft';
+          timeSigType = botDigits.length > 0 ? 'ParensLeftSmall' : 'ParensLeft';
           break;
         case ')':
-          timeSigType = 'ParensRight';
+          timeSigType = botDigits.length > 0 ? 'ParensRightSmall' : 'ParensRight';
           break;
       }
       const topGlyph = new Glyph('timeSig' + timeSigType, this.timeSignature.point);

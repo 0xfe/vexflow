@@ -18,6 +18,9 @@ const TimeSignatureTests = {
     run('Basic Time Signatures', basic);
     run('Big Signature Test', big);
     run('Additive Signature Test', additive);
+    run('Alternating Signature Test', alternating);
+    run('Interchangeable Signature Test', interchangeable);
+    run('Aggregate Signature Test', agregate);
     run('Complex Signature Test', complex);
     run('Time Signature multiple staves alignment test', multiple);
     run('Time Signature Change Test', change);
@@ -78,7 +81,38 @@ function big(options: TestOptions, contextBuilder: ContextBuilder): void {
 function additive(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 400, 120);
 
-  new Stave(10, 10, 300).addTimeSignature('2+2+3/8').addTimeSignature('2+2+3/4+4').setContext(ctx).draw();
+  new Stave(10, 10, 300).addTimeSignature('2+3+2/8').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function alternating(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('6/8').addTimeSignature('+').addTimeSignature('3/4').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function interchangeable(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('3/4').addTimeSignature('-').addTimeSignature('2/4').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function agregate(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300)
+    .addTimeSignature('2/4')
+    .addTimeSignature('+')
+    .addTimeSignature('3/8')
+    .addTimeSignature('+')
+    .addTimeSignature('5/4')
+    .setContext(ctx)
+    .draw();
 
   ok(true, 'all pass');
 }
