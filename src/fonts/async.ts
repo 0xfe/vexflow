@@ -6,6 +6,13 @@ import { Flow } from '../flow';
 import { Font } from '../font';
 import { RuntimeError } from '../util';
 
+// Here we add an import for `webpack_publicpath.ts` to CJS builds that need dynamic font loading (e.g., vexflow-core.js).
+// In ESM, import('./bravura.js') works natively, so the webpack specific code is NOT needed.
+// Search for `webpack_publicpath` in Gruntfile.js.
+// DO NOT DELETE THE LINE BELOW :-D
+/* IMPORT_WEBPACK_PUBLICPATH_HERE */
+// DO NOT DELETE THE LINE ABOVE :-D
+
 /**
  * Call this to convert `Flow.setMusicFont(...)` to an async function which
  * supports dynamic font loading.
@@ -21,30 +28,30 @@ export function setupAsyncFontLoader() {
     // Make sure each individual font is loaded before we proceed.
     for (const fontName of fontNames) {
       const font = Font.load(fontName);
-      // Check if the font data has already been loaded.
+      // Check if the font data has already been loaded before.
       if (font.hasData()) {
         continue;
       }
 
       switch (fontName) {
         case 'Bravura': {
-          const { Bravura } = await import(/* webpackChunkName: "bravura" */ './bravura');
-          font.setDataAndMetrics(Bravura);
+          const module = await import(/* webpackChunkName: "vexflow-font-bravura" */ './bravura');
+          font.setDataAndMetrics(module.Bravura);
           break;
         }
         case 'Gonville': {
-          const { Gonville } = await import(/* webpackChunkName: "gonville" */ './gonville');
-          font.setDataAndMetrics(Gonville);
+          const module = await import(/* webpackChunkName: "vexflow-font-gonville" */ './gonville');
+          font.setDataAndMetrics(module.Gonville);
           break;
         }
         case 'Petaluma': {
-          const { Petaluma } = await import(/* webpackChunkName: "petaluma" */ './petaluma');
-          font.setDataAndMetrics(Petaluma);
+          const module = await import(/* webpackChunkName: "vexflow-font-petaluma" */ './petaluma');
+          font.setDataAndMetrics(module.Petaluma);
           break;
         }
         case 'Custom': {
-          const { Custom } = await import(/* webpackChunkName: "custom" */ './custom');
-          font.setDataAndMetrics(Custom);
+          const module = await import(/* webpackChunkName: "vexflow-font-custom" */ './custom');
+          font.setDataAndMetrics(module.Custom);
           break;
         }
         default: {

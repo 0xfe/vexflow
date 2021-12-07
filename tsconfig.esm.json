@@ -9,5 +9,5 @@
     "removeComments": true
   },
   "include": ["./src", "./entry"],
-  "exclude": ["./entry/vexflow-debug-with-tests.ts"]
+  "exclude": ["./entry/vexflow-debug-with-tests.ts", "./src/fonts/webpack_publicpath.ts"]
 }

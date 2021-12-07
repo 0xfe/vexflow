@@ -14,6 +14,12 @@
       body {
         margin: 20px;
       }
+      #output {
+        min-height: 220px;
+        background-color: #fbfbf0;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
     </style>
   </head>
   <body>
@@ -25,8 +31,13 @@
       <a href="#" onclick="chooseFont('Petaluma')">Petaluma</a> &nbsp;
     </div>
     <div id="output"></div>
+    <p>
+      <a href="core-with-promise.html">See: core-with-promise.html</a><br />
+      <a href="all.html">See: all.html</a>
+    </p>
     <script>
-      // window.VEX_BASE_PATH = "./FOO/";
+      // Set this variable if the font files (e.g., vexflow-font-bravura.js) are in a different folder from vexflow-core.js.
+      // window.VEX_BASE_PATH = "/path/to/fonts/";
     </script>
     <!-- The vexflow core build includes no music fonts. -->
     <script src="../../build/cjs/vexflow-core.js"></script>

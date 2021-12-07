@@ -17,10 +17,13 @@
   </head>
   <body>
     <p>
-      This page uses vexflow-core-with-gonville.js, which statically bundles only the Gonville font. You do not need to
-      call Flow.setMusicFont(...) because VexFlow will default to using Gonville.
+      This page uses <b>vexflow-core-with-gonville.js</b>, which statically bundles only the Gonville font. You do not
+      need to call Flow.setMusicFont(...) because VexFlow will default to using Gonville.
     </p>
     <div id="output"></div>
+    <p>
+      <a href="with-petaluma.html">See: with-petaluma.html</a>
+    </p>
     <script src="../../build/cjs/vexflow-core-with-gonville.js"></script>
     <script type="module">
       const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });

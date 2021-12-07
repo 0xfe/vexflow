@@ -39,6 +39,8 @@ let BANNER;
 // PRODUCTION_MODE will enable minification, etc.
 // See: https://webpack.js.org/configuration/mode/
 const PRODUCTION_MODE = 'production';
+// FOR DEBUGGING PURPOSES, you can temporarily comment out the line above and use the line below to disable minification.
+// const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
 const CODE_SPLITTING = 'split';
@@ -71,14 +73,14 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   let chunkFilename = undefined;
   if (bundleStrategy === CODE_SPLITTING) {
     // Font files for dynamic import. See: webpackChunkName in async.ts
-    chunkFilename = 'vexflow-font-[name].js';
+    chunkFilename = '[name].js';
   }
 
   // Control the type of source maps that will be produced.
   // If not specified, production builds will get high quality source maps, and development/debug builds will get nothing.
   // See: https://webpack.js.org/configuration/devtool/
   // In version 3.0.9 this was called VEX_GENMAP.
-  const devtool = process.env.VEX_DEVTOOL || (mode === PRODUCTION_MODE ? 'source-map' : false);
+  const devtool = process.env.VEX_DEVTOOL || (mode === DEVELOPMENT_MODE ? false : 'source-map');
 
   let plugins = [new webpack.BannerPlugin(BANNER) /* Add a banner at the top of the file. */];
   if (CHECK_FOR_CIRCULAR_DEPENDENCIES) {
@@ -103,9 +105,10 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
       },
       globalObject: globalObject,
 
-      // The `publicPath` is the base path for the dynamically loaded JS chunks.
+      // The `publicPath` is the base path for dynamically loaded JS chunks.
       //   https://webpack.js.org/guides/public-path/
       //   https://webpack.js.org/configuration/output/#outputpublicpath
+      // It is used by async.ts to import the font files at runtime.
       // There isn't one setting for `publicPath` that will work for all deployments.
       // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
       // You can customize the `publicPath` below to work with your production environment.
@@ -113,12 +116,13 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
       //   publicPath: 'auto',    // https://webpack.js.org/guides/public-path/#automatic-publicpath
       //   publicPath: '',
       //   publicPath: './',
-      // Our solution below:
+      // Our solution:
       //   Specify the VEX_BASE_PATH environment variable at build time, or
       //   Specify the VEX_BASE_PATH global variable at runtime.
       // The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
-      // If not specified, we set it to 'VEX_AUTO' which tells `src/publicpath.ts` to determine the path automatically.
-      publicPath: process.env.VEX_BASE_PATH ?? 'VEX_AUTO',
+      publicPath: process.env.VEX_BASE_PATH ?? './',
+      // Or comment out the above line, and set it to whatever you like:
+      // publicPath: '/my/custom/public/path/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '...'],
@@ -126,6 +130,15 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     devtool: devtool,
     module: {
       rules: [
+        {
+          // Add the magic import to async.ts to support dynamic font loading.
+          test: /async\.ts$/,
+          loader: 'string-replace-loader',
+          options: {
+            search: '/* IMPORT_WEBPACK_PUBLICPATH_HERE */',
+            replace: "import './webpack_publicpath';",
+          },
+        },
         {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,

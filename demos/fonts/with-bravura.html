@@ -17,10 +17,13 @@
   </head>
   <body>
     <p>
-      This page uses vexflow-core-with-bravura.js, which statically bundles only the Bravura font. You do not need to
-      call Flow.setMusicFont(...) because VexFlow will default to using Bravura.
+      This page uses <b>vexflow-core-with-bravura.js</b>, which statically bundles only the Bravura font. You do not
+      need to call Flow.setMusicFont(...) because VexFlow will default to using Bravura.
     </p>
     <div id="output"></div>
+    <p>
+      <a href="with-gonville.html">See: with-gonville.html</a>
+    </p>
     <script src="../../build/cjs/vexflow-core-with-bravura.js"></script>
     <script type="module">
       const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
