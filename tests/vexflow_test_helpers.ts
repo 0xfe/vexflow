@@ -154,7 +154,7 @@ export class VexFlowTests {
   static FONT_STACKS: Record<string, string[]> = {
     Bravura: ['Bravura', 'Gonville', 'Custom'],
     Gonville: ['Gonville', 'Bravura', 'Custom'],
-    Petaluma: ['Petaluma', 'Gonville', 'Custom'],
+    Petaluma: ['Petaluma', 'Gonville', 'Bravura', 'Custom'],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {
