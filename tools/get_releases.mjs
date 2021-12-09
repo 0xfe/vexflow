@@ -73,7 +73,6 @@ function createTargetDirs() {
   versions4OrLater.forEach((ver) => {
     const tempDir = path.join(RELEASES_DIR, ver + TEMP_SUFFIX);
     if (!fs.existsSync(tempDir)) {
-      console.log(`mkdir releases/${ver}/ --> ${tempDir}`);
       fs.mkdirSync(tempDir);
     }
   });
