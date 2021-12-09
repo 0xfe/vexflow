@@ -2,6 +2,7 @@
 //
 // ## Description
 
+import { Annotation } from './annotation';
 import { ModifierContext } from './modifiercontext';
 import { NoteStruct } from './note';
 import { Stave } from './stave';
@@ -61,12 +62,14 @@ export class GhostNote extends StemmableNote {
   }
 
   draw(): void {
-    // Draw the modifiers
+    // Draw Annotations
     this.setRendered();
     for (let i = 0; i < this.modifiers.length; ++i) {
       const modifier = this.modifiers[i];
-      modifier.setContext(this.getContext());
-      modifier.drawWithStyle();
+      if (modifier instanceof Annotation) {
+        modifier.setContext(this.getContext());
+        modifier.drawWithStyle();
+      }
     }
   }
 }

@@ -46,6 +46,7 @@
 
 import { Element } from './element';
 import { Formatter } from './formatter';
+import { GhostNote } from './ghostnote';
 import { Glyph } from './glyph';
 import { Note } from './note';
 import { Stem } from './stem';
@@ -273,6 +274,8 @@ export class Tuplet extends Element {
       // y_pos = first_note.getStemExtents().topY - 10;
 
       for (let i = 0; i < this.notes.length; ++i) {
+        // Skip Ghostnotes
+        if (this.notes[i] instanceof GhostNote) continue;
         const top_y =
           this.notes[i].getStemDirection() === Stem.UP
             ? this.notes[i].getStemExtents().topY - 10
@@ -286,6 +289,8 @@ export class Tuplet extends Element {
       y_pos = first_note.checkStave().getYForLine(4) + 20;
 
       for (let i = 0; i < this.notes.length; ++i) {
+        // Skip Ghostnotes
+        if (this.notes[i] instanceof GhostNote) continue;
         const bottom_y =
           this.notes[i].getStemDirection() === Stem.UP
             ? this.notes[i].getStemExtents().baseY + 20

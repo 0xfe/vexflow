@@ -8,10 +8,8 @@
 //
 // See `tests/stavenote_tests.ts` for usage examples.
 
-import { Accidental } from './accidental';
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
-import { Dot } from './dot';
 import { ElementStyle } from './element';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -865,47 +863,6 @@ export class StaveNote extends StemmableNote {
 
   getKeyLine(index: number): number {
     return this.keyProps[index].line;
-  }
-
-  // Helper function to add an accidental to a key
-  addAccidental(index: number, accidental: Modifier): this {
-    return this.addModifier(accidental, index);
-  }
-
-  // Helper function to add an articulation to a key
-  addArticulation(index: number, articulation: Modifier): this {
-    return this.addModifier(articulation, index);
-  }
-
-  // Helper function to add an annotation to a key
-  addAnnotation(index: number, annotation: Modifier): this {
-    return this.addModifier(annotation, index);
-  }
-
-  // Helper function to add a dot on a specific key
-  addDot(index: number): this {
-    const dot = new Dot();
-    dot.setDotShiftY(this.glyph.dot_shiftY);
-    this.dots++;
-    return this.addModifier(dot, index);
-  }
-
-  // Convenience method to add dot to all keys in note
-  addDotToAll(): this {
-    for (let i = 0; i < this.keys.length; ++i) {
-      this.addDot(i);
-    }
-    return this;
-  }
-
-  // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Accidental[] {
-    return this.checkModifierContext().getMembers(Accidental.CATEGORY) as Accidental[];
-  }
-
-  // Get all dots in the `ModifierContext`
-  getDots(): Dot[] {
-    return this.checkModifierContext().getMembers(Dot.CATEGORY) as Dot[];
   }
 
   // Get the width of the note if it is displaced. Used for `Voice`

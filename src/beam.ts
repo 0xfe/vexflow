@@ -3,6 +3,7 @@
 
 import { Element } from './element';
 import { Fraction } from './fraction';
+import { GhostNote } from './ghostnote';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stem } from './stem';
@@ -555,6 +556,8 @@ export class Beam extends Element {
       // iterate through notes, calculating y shift and stem extension
       for (let i = 1; i < notes.length; ++i) {
         const note = notes[i];
+        // Skip Ghostnotes
+        if (note instanceof GhostNote) continue;
         const adjustedStemTipY =
           this.getSlopeY(note.getStemX(), firstNote.getStemX(), firstNote.getStemExtents().topY, slope) + yShiftTemp;
 
@@ -689,6 +692,8 @@ export class Beam extends Element {
 
     for (let i = 0; i < notes.length; ++i) {
       const note = notes[i];
+      // Skip Ghostnotes
+      if (note instanceof GhostNote) continue;
       const stem = note.getStem();
       if (stem) {
         const stemX = note.getStemX();
