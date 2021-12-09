@@ -31,8 +31,6 @@
           "warn",
           {
             "groups": [
-              // The webpack publicPath needs to be imported first.
-              ["^.*/publicpath$"],
               // Any import that starts with vex goes next.
               ["^.*/vex.*$"],
               // Imports of the index.ts file next.
