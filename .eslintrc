@@ -47,7 +47,8 @@
       }
     },
     {
-      "files": ["demos/**/*.js", "demos/**/*.mjs"],
+      // disable some eslint rules in the demos and tools folders.
+      "files": ["{demos,tools}/**/*.{js,cjs,mjs}"],
       "extends": ["eslint:recommended", "prettier"],
       "rules": {
         "no-console": "off",
@@ -57,15 +58,6 @@
     {
       "files": ["src/**/*.js"],
       "extends": ["eslint:recommended", "prettier"]
-    },
-    {
-      "files": ["tests/**/*.js"],
-      "extends": ["eslint:recommended", "prettier"],
-      "rules": {
-        "no-restricted-globals": "off",
-        "no-undef": "off",
-        "no-undef-init": "off"
-      }
     }
   ]
 }

@@ -66,6 +66,7 @@ export class TextFormatter {
    * This method will return a fallback formatter if there are no matches.
    */
   static create(requestedFont: FontInfo = {}): TextFormatter {
+    L('create: ', requestedFont);
     if (!requestedFont.family) {
       requestedFont.family = Font.SANS_SERIF;
     }
@@ -138,6 +139,7 @@ export class TextFormatter {
    * @param overwrite
    */
   static registerInfo(info: TextFormatterInfo, overwrite: boolean = false): void {
+    L('registerInfo: ', info, overwrite);
     const fontFamily = info.family;
     const currFontInfo = registry[fontFamily];
     if (currFontInfo === undefined || overwrite) {

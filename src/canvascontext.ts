@@ -6,6 +6,35 @@ import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { globalObject, warn } from './util';
 import { isHTMLCanvas } from './web';
 
+// https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/offscreencanvas
+// https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/types/offscreencanvas/index.d.ts
+
+interface OffscreenCanvas extends EventTarget {
+  width: number;
+  height: number;
+  // ...more stuff that we removed.
+}
+
+// https://html.spec.whatwg.org/multipage/canvas.html#offscreencanvasrenderingcontext2d
+interface OffscreenCanvasRenderingContext2D
+  extends CanvasState,
+    CanvasTransform,
+    CanvasCompositing,
+    CanvasImageSmoothing,
+    CanvasFillStrokeStyles,
+    CanvasShadowStyles,
+    CanvasFilters,
+    CanvasRect,
+    CanvasDrawPath,
+    CanvasText,
+    CanvasDrawImage,
+    CanvasImageData,
+    CanvasPathDrawingStyles,
+    CanvasTextDrawingStyles,
+    CanvasPath {
+  readonly canvas: OffscreenCanvas;
+}
+
 /**
  * A rendering context for the Canvas backend. This class serves as a proxy for the
  * underlying CanvasRenderingContext2D object, part of the browser's API.

@@ -4,8 +4,6 @@
 // This meant to be used with the visual regression test system in
 // `tools/visual_regression.sh`.
 
-/* eslint-disable no-console */
-
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
 const path = require('path');

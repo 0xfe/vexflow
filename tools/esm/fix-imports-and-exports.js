@@ -20,8 +20,6 @@
 // - Assume single quoted strings.
 // - Assume import(...) function uses only string literals.
 
-/* eslint-disable no-console */
-
 import * as fs from 'fs';
 import * as path from 'path';
 
