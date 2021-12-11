@@ -1,8 +1,6 @@
 // node svg.js > output.svg
 
-/* eslint-disable no-console */
-
-const Vex = require('../../build/cjs/vexflow');
+const Vex = require('vexflow');
 const { JSDOM } = require('jsdom');
 
 const VF = Vex.Flow;

@@ -6,10 +6,17 @@ const outputFile = process.argv[2] ?? path.join(__dirname, '../src/version.ts');
 
 const PACKAGE_JSON = JSON.parse(fs.readFileSync('package.json'));
 const VEXFLOW_VERSION = PACKAGE_JSON.version;
-const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
+const GIT_COMMIT_ID = child_process.execSync('git rev-parse HEAD').toString().trim();
+const DATE = new Date().toISOString();
 
-const VERSION = `export const VERSION: string = '${VEXFLOW_VERSION}';`;
-const BUILD = `export const BUILD: string = '${GIT_COMMIT_HASH}';`;
-const DATE = `export const DATE: string = '${new Date().toISOString()}';`;
+const V = `export const VERSION: string = '${VEXFLOW_VERSION}';`;
+const I = `export const ID: string = '${GIT_COMMIT_ID}';`;
+const D = `export const DATE: string = '${DATE}';`;
 
-fs.writeFileSync(outputFile, `${VERSION}\n${BUILD}\n${DATE}`);
+fs.writeFileSync(outputFile, `${V}\n${I}\n${D}`);
+
+module.exports = {
+  VERSION: VEXFLOW_VERSION,
+  ID: GIT_COMMIT_ID,
+  DATE: DATE,
+};

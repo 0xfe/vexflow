@@ -6,13 +6,19 @@
 // In Node v11.15.0, the require path must look like one of the following:
 //   require('../../build/cjs/vexflow')
 //   require('../../build/cjs/vexflow.js')
-// The usual require('vexflow') will NOT work because legacy Node JS does not support self referencing via
+// The usual require('vexflow') will NOT work in this folder because legacy Node JS does not support self referencing via
 // the exports field of `vexflow/package.json`.
+// However, it should work fine in your project if you ran 'npm install vexflow'.
 const Vex = require('../../build/cjs/vexflow');
+// const Vex = require('../../build/cjs/vexflow-bravura');
+// const Vex = require('../../build/cjs/vexflow-gonville');
+// const Vex = require('../../build/cjs/vexflow-petaluma');
 
 const { Flow, Stave, Accidental, Font } = Vex.Flow;
 
-console.log('VexFlow BUILD: ' + Flow.BUILD);
+console.log('VexFlow BUILD ID: ' + Flow.BUILD.ID);
+
+console.log('The music font stack is: ' + Flow.getMusicFont());
 
 console.log("Stave's default TEXT_FONT is [" + Font.toCSSString(Stave.TEXT_FONT) + ']');
 

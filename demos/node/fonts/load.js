@@ -9,7 +9,7 @@
 const { registerFont, createCanvas } = require('canvas');
 const { JSDOM } = require('jsdom');
 
-const fontsDir = '../../tools/fonts/@/';
+const fontsDir = '../../../tools/fonts/@/';
 registerFont(fontsDir + 'bravura/Bravura_1.392.woff', { family: 'Bravura' });
 registerFont(fontsDir + 'petaluma/Petaluma_1.065.woff', { family: 'Petaluma' });
 registerFont(fontsDir + 'petaluma/PetalumaScript_1.10.woff', { family: 'PetalumaScript' });

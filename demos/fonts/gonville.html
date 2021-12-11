@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- 
-  vexflow-core-with-bravura.js bundles the Bravura music font. 
+  vexflow-gonville.js bundles the Gonville music font. 
   There is no need to call Vex.Flow.setMusicFont(...).
 -->
 <html>
@@ -17,14 +17,14 @@
   </head>
   <body>
     <p>
-      This page uses <b>vexflow-core-with-bravura.js</b>, which statically bundles only the Bravura font. You do not
-      need to call Flow.setMusicFont(...) because VexFlow will default to using Bravura.
+      This page uses <b>vexflow-gonville.js</b>, which statically bundles only the Gonville font. You do not need to
+      call Flow.setMusicFont(...) because VexFlow will use Gonville by default.
     </p>
     <div id="output"></div>
     <p>
-      <a href="with-gonville.html">See: with-gonville.html</a>
+      <a href="petaluma.html">See: petaluma.html</a>
     </p>
-    <script src="../../build/cjs/vexflow-core-with-bravura.js"></script>
+    <script src="../../build/cjs/vexflow-gonville.js"></script>
     <script type="module">
       const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
       const score = factory.EasyScore();

@@ -8,25 +8,45 @@
       "require": "./build/cjs/vexflow.js",
       "import": "./build/esm/entry/vexflow.js"
     },
+    "./bravura": {
+      "types": "./build/types/entry/vexflow-bravura.d.ts",
+      "require": "./build/cjs/vexflow-bravura.js",
+      "import": "./build/esm/entry/vexflow-bravura.js"
+    },
+    "./gonville": {
+      "types": "./build/types/entry/vexflow-gonville.d.ts",
+      "require": "./build/cjs/vexflow-gonville.js",
+      "import": "./build/esm/entry/vexflow-gonville.js"
+    },
+    "./petaluma": {
+      "types": "./build/types/entry/vexflow-petaluma.d.ts",
+      "require": "./build/cjs/vexflow-petaluma.js",
+      "import": "./build/esm/entry/vexflow-petaluma.js"
+    },
     "./core": {
       "types": "./build/types/entry/vexflow-core.d.ts",
       "require": "./build/cjs/vexflow-core.js",
       "import": "./build/esm/entry/vexflow-core.js"
     },
-    "./core-with-bravura": {
-      "types": "./build/types/entry/vexflow-core-with-bravura.d.ts",
-      "require": "./build/cjs/vexflow-core-with-bravura.js",
-      "import": "./build/esm/entry/vexflow-core-with-bravura.js"
+    "./font/bravura": {
+      "types": "./build/types/entry/vexflow-font-bravura.d.ts",
+      "require": "./build/cjs/vexflow-font-bravura.js",
+      "import": "./build/esm/entry/vexflow-font-bravura.js"
     },
-    "./core-with-gonville": {
-      "types": "./build/types/entry/vexflow-core-with-gonville.d.ts",
-      "require": "./build/cjs/vexflow-core-with-gonville.js",
-      "import": "./build/esm/entry/vexflow-core-with-gonville.js"
+    "./font/gonville": {
+      "types": "./build/types/entry/vexflow-font-gonville.d.ts",
+      "require": "./build/cjs/vexflow-font-gonville.js",
+      "import": "./build/esm/entry/vexflow-font-gonville.js"
     },
-    "./core-with-petaluma": {
-      "types": "./build/types/entry/vexflow-core-with-petaluma.d.ts",
-      "require": "./build/cjs/vexflow-core-with-petaluma.js",
-      "import": "./build/esm/entry/vexflow-core-with-petaluma.js"
+    "./font/petaluma": {
+      "types": "./build/types/entry/vexflow-font-petaluma.d.ts",
+      "require": "./build/cjs/vexflow-font-petaluma.js",
+      "import": "./build/esm/entry/vexflow-font-petaluma.js"
+    },
+    "./font/custom": {
+      "types": "./build/types/entry/vexflow-font-custom.d.ts",
+      "require": "./build/cjs/vexflow-font-custom.js",
+      "import": "./build/esm/entry/vexflow-font-custom.js"
     }
   },
   "main": "./build/cjs/vexflow.js",
@@ -100,6 +120,7 @@
     "start": "grunt stage",
     "reference": "grunt reference",
     "lint": "grunt eslint",
+    "build:esm": "grunt buildESM",
     "qunit": "grunt test",
     "generate:current": "node   ./tools/generate_png_images.js ../build/cjs ./build/images/current   ${VF_GENERATE_OPTIONS}",
     "generate:reference": "node ./tools/generate_png_images.js ../reference ./build/images/reference ${VF_GENERATE_OPTIONS}",

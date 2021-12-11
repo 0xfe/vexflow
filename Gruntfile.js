@@ -5,16 +5,26 @@ const webpack = require('webpack');
 const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const VER = require('./tools/generate_version_file'); // Make the src/version.ts file.
+
+const BUILD_VERSION = VER.VERSION;
+const BUILD_DATE = VER.DATE;
+const BUILD_ID = VER.ID;
 
 const CHECK_FOR_CIRCULAR_DEPENDENCIES = false;
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow';
-const VEX_CORE = 'vexflow-core';
-const VEX_CORE_BRAVURA = 'vexflow-core-with-bravura';
-const VEX_CORE_GONVILLE = 'vexflow-core-with-gonville';
-const VEX_CORE_PETALUMA = 'vexflow-core-with-petaluma';
+const VEX_BRAVURA = 'vexflow-bravura';
+const VEX_GONVILLE = 'vexflow-gonville';
+const VEX_PETALUMA = 'vexflow-petaluma';
+const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules below.
+const VEX_FONT_MODULE_BRAVURA = 'vexflow-font-bravura';
+const VEX_FONT_MODULE_GONVILLE = 'vexflow-font-gonville';
+const VEX_FONT_MODULE_PETALUMA = 'vexflow-font-petaluma';
+const VEX_FONT_MODULE_CUSTOM = 'vexflow-font-custom';
+
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
@@ -29,12 +39,9 @@ const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
-// Make the src/version.ts file.
-const VERSION_FILE = path.join(BASE_DIR, 'src/version.ts');
-child_process.execSync(`node ./tools/generate_version_file.js ${VERSION_FILE}`);
-
 // Global variable that will be set below.
 let BANNER;
+const NO_BANNER = false; // A flag for disabling the MIT license banner for font module files.
 
 // PRODUCTION_MODE will enable minification, etc.
 // See: https://webpack.js.org/configuration/mode/
@@ -43,13 +50,12 @@ const PRODUCTION_MODE = 'production';
 // const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
-const CODE_SPLITTING = 'split';
-const SINGLE_BUNDLE = 'single';
+const fontLibraryPrefix = 'VexFlowFont_';
 
 /**
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
  */
-function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE) {
+function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName = 'Vex') {
   // The module entry is a full path to a typescript file stored in vexflow/entry/.
   const entry = path.join(BASE_DIR, 'entry/', file + '.ts');
   const outputFilename = file + '.js';
@@ -70,19 +76,19 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   // without the parentheses, code splitting will be broken. Search for `webpackChunkVex` inside the output files.
   let globalObject = `(typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this)`;
 
-  let chunkFilename = undefined;
-  if (bundleStrategy === CODE_SPLITTING) {
-    // Font files for dynamic import. See: webpackChunkName in async.ts
-    chunkFilename = '[name].js';
-  }
-
   // Control the type of source maps that will be produced.
   // If not specified, production builds will get high quality source maps, and development/debug builds will get nothing.
   // See: https://webpack.js.org/configuration/devtool/
   // In version 3.0.9 this was called VEX_GENMAP.
   const devtool = process.env.VEX_DEVTOOL || (mode === DEVELOPMENT_MODE ? false : 'source-map');
 
-  let plugins = [new webpack.BannerPlugin(BANNER) /* Add a banner at the top of the file. */];
+  let plugins = [];
+
+  // Add a banner at the top of the file.
+  if (addBanner) {
+    plugins.push(new webpack.BannerPlugin(BANNER));
+  }
+
   if (CHECK_FOR_CIRCULAR_DEPENDENCIES) {
     plugins.push(
       new CircularDependencyPlugin({
@@ -97,9 +103,9 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     output: {
       path: BUILD_CJS_DIR,
       filename: outputFilename,
-      chunkFilename: chunkFilename,
+
       library: {
-        name: 'Vex',
+        name: libraryName,
         type: 'umd',
         export: 'default',
       },
@@ -120,7 +126,7 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
       //   Specify the VEX_BASE_PATH environment variable at build time, or
       //   Specify the VEX_BASE_PATH global variable at runtime.
       // The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
-      publicPath: process.env.VEX_BASE_PATH ?? './',
+      // publicPath: process.env.VEX_BASE_PATH ?? './',
       // Or comment out the above line, and set it to whatever you like:
       // publicPath: '/my/custom/public/path/',
     },
@@ -130,15 +136,15 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
     devtool: devtool,
     module: {
       rules: [
-        {
-          // Add the magic import to async.ts to support dynamic font loading.
-          test: /async\.ts$/,
-          loader: 'string-replace-loader',
-          options: {
-            search: '/* IMPORT_WEBPACK_PUBLICPATH_HERE */',
-            replace: "import './webpack_publicpath';",
-          },
-        },
+        // {
+        //   // Add the magic import to async.ts to support dynamic font loading.
+        //   test: /async\.ts$/,
+        //   loader: 'string-replace-loader',
+        //   options: {
+        //     search: '/* IMPORT_WEBPACK_PUBLICPATH_HERE */',
+        //     replace: "import './webpack_publicpath';",
+        //   },
+        // },
         {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,
@@ -165,25 +171,45 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
 }
 
 module.exports = (grunt) => {
-  // Get current build information from package.json and git.
-  const PACKAGE_JSON = grunt.file.readJSON('package.json');
-  const VEXFLOW_VERSION = PACKAGE_JSON.version;
-  const GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
   BANNER =
-    `VexFlow ${VEXFLOW_VERSION}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
+    `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
     `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
     `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
   // We need a different webpack config for each build target.
-  const prodAllFonts = getConfig(VEX, SINGLE_BUNDLE);
-  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, PRODUCTION_MODE);
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING, PRODUCTION_MODE);
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING, PRODUCTION_MODE);
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING, PRODUCTION_MODE);
+  const prodAllFonts = getConfig(VEX, PRODUCTION_MODE);
+  const prodBravuraOnly = getConfig(VEX_BRAVURA, PRODUCTION_MODE);
+  const prodGonvilleOnly = getConfig(VEX_GONVILLE, PRODUCTION_MODE);
+  const prodPetalumaOnly = getConfig(VEX_PETALUMA, PRODUCTION_MODE);
+  const prodNoFonts = getConfig(VEX_CORE, PRODUCTION_MODE);
+  const prodFontModuleBravura = getConfig(
+    VEX_FONT_MODULE_BRAVURA,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Bravura'
+  );
+  const prodFontModulePetaluma = getConfig(
+    VEX_FONT_MODULE_PETALUMA,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Petaluma'
+  );
+  const prodFontModuleGonville = getConfig(
+    VEX_FONT_MODULE_GONVILLE,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Gonville'
+  );
+  const prodFontModuleCustom = getConfig(
+    VEX_FONT_MODULE_CUSTOM,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Custom'
+  );
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
-  const debugAllFonts = getConfig(VEX_DEBUG, SINGLE_BUNDLE, DEVELOPMENT_MODE);
-  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, SINGLE_BUNDLE, DEVELOPMENT_MODE);
-  const debugNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, DEVELOPMENT_MODE);
+  const debugAllFonts = getConfig(VEX_DEBUG, DEVELOPMENT_MODE);
+  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, DEVELOPMENT_MODE);
+  const debugNoFonts = getConfig(VEX_CORE, DEVELOPMENT_MODE);
 
   // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
   const watch = {
@@ -194,14 +220,19 @@ module.exports = (grunt) => {
     },
   };
 
+  const PACKAGE_JSON = grunt.file.readJSON('package.json');
   grunt.initConfig({
     pkg: PACKAGE_JSON,
     webpack: {
       buildProdAllFonts: prodAllFonts,
-      buildProdNoFonts: prodNoFonts,
       buildProdBravuraOnly: prodBravuraOnly,
       buildProdGonvilleOnly: prodGonvilleOnly,
       buildProdPetalumaOnly: prodPetalumaOnly,
+      buildProdNoFonts: prodNoFonts,
+      buildProdFontModuleBravura: prodFontModuleBravura,
+      buildProdFontModulePetaluma: prodFontModulePetaluma,
+      buildProdFontModuleGonville: prodFontModuleGonville,
+      buildProdFontModuleCustom: prodFontModuleCustom,
 
       buildDebug: debugAllFonts,
       buildDebugPlusTests: debugAllFontsWithTests,
@@ -299,10 +330,14 @@ module.exports = (grunt) => {
       'webpack:buildDebug',
       'webpack:buildDebugPlusTests',
       'webpack:buildProdAllFonts',
-      'webpack:buildProdNoFonts',
       'webpack:buildProdBravuraOnly',
       'webpack:buildProdGonvilleOnly',
       'webpack:buildProdPetalumaOnly',
+      'webpack:buildProdNoFonts',
+      'webpack:buildProdFontModuleBravura',
+      'webpack:buildProdFontModulePetaluma',
+      'webpack:buildProdFontModuleGonville',
+      'webpack:buildProdFontModuleCustom',
       'buildESM',
       'copy:modulePackageJSON',
       'buildTypeDeclarations',

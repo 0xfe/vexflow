@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-// Load demos/worker/index.html in a
+// Run a web server from the vexflow/ directory to test workers.
+// For example, `npx http-server` and then open http://127.0.0.1:8080/demos/worker/
 
 // Web Workers have an importScripts() method that allows you to load scripts. importScripts(...) is similar to require(...) in Node.js.
 importScripts('../../build/cjs/vexflow.js');
@@ -34,5 +35,5 @@ onmessage = function (e) {
   ctx.fillStyle = '#0098BB';
   ctx.fillText(randomFont + ' – vexflow.js bundled with all music fonts.', 5, 15);
 
-  postMessage('VexFlow BUILD: ' + Vex.Flow.BUILD);
+  postMessage('VexFlow BUILD: ' + JSON.stringify(Vex.Flow.BUILD));
 };

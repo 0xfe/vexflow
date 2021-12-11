@@ -1,6 +1,10 @@
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// MIT License
+
 import { Font } from '../font';
-import { Petaluma } from './petaluma';
+import { PetalumaFont } from './petaluma_glyphs';
+import { PetalumaMetrics } from './petaluma_metrics';
 
 export function loadPetaluma() {
-  Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
+  Font.load('Petaluma', PetalumaFont, PetalumaMetrics);
 }

@@ -61,13 +61,6 @@ function fixImportsAndExports(filePath) {
         .replace(/^export (.*?) from (.*?)\/';$/gm, "export $1 from $2/index';")
         .replace(/^export (.*?) from (.*?)';$/gm, "export $1 from $2.js';");
       return fixedLine;
-    } else if (line.includes(`import('`)) {
-      // e.g., import('./bravura.js')
-      if (line.endsWith(`.js');`)) {
-        return line;
-      }
-      const fixedLine = line.replace(/^(.*?)import\('(.*?)'\);(.*?)$/gm, "$1import('$2.js');$3");
-      return fixedLine;
     } else {
       return line;
     }

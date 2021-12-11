@@ -75,17 +75,21 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
-import { BUILD, VERSION } from './version';
+import { DATE, ID, VERSION } from './version';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
 
 export class Flow {
-  static get VERSION() {
-    return VERSION;
-  }
   static get BUILD() {
-    return BUILD;
+    return {
+      /** version number. */
+      VERSION: VERSION,
+      /** git commit ID that this library was built from. */
+      ID: ID,
+      /** The date when this library was compiled. */
+      DATE: DATE,
+    };
   }
 
   static Accidental = Accidental;
@@ -200,7 +204,8 @@ export class Flow {
    *
    * Example:
    * ```
-   * await Vex.Flow.setMusicFont('Petaluma');
+   * await Vex.Flow.fetchMusicFont('Petaluma');
+   * Vex.Flow.setMusicFont('Petaluma');
    * ... (do VexFlow stuff) ...
    * ```
    * @returns CASE 1: an array of Font objects corresponding to the provided `fontNames`.
@@ -212,6 +217,16 @@ export class Flow {
     Tables.MUSIC_FONT_STACK = fonts;
     Glyph.CURRENT_CACHE_KEY = fontNames.join(',');
     return fonts;
+  }
+
+  /**
+   * Used with vexflow-core which supports dynamic font loading.
+   * See: async.ts for the implementation.
+   * See: vexflow/entry/vexflow-core.ts which calls into async.ts.
+   */
+  // eslint-disable-next-line
+  static async fetchMusicFont(fontName: string, fontModulePath?: string): Promise<void> {
+    return Promise.resolve();
   }
 
   static getMusicFont(): string[] {

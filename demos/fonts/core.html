@@ -48,13 +48,8 @@
           container.removeChild(container.firstChild);
         }
 
-        // Vex.Flow.setMusicFont(fontName) is an async function that triggers
-        // the loading of the font stored in vexflow-font-${fontName}.js.
-        // Choose between:
-        //   await Vex.Flow.setMusicFont('Bravura')
-        //   await Vex.Flow.setMusicFont('Gonville')
-        //   await Vex.Flow.setMusicFont('Petaluma')
-        await Vex.Flow.setMusicFont(fontName);
+        await Vex.Flow.fetchMusicFont(fontName);
+        Vex.Flow.setMusicFont(fontName);
 
         renderScore();
       }

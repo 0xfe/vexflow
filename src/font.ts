@@ -427,11 +427,6 @@ export class Font {
     this.metrics = metrics;
   }
 
-  setDataAndMetrics(obj: { data: FontData; metrics: FontMetrics }): void {
-    this.data = obj.data;
-    this.metrics = obj.metrics;
-  }
-
   hasData(): boolean {
     return this.data !== undefined;
   }

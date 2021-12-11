@@ -3,15 +3,18 @@
 // Load demos/worker/index.html in a
 
 // Web Workers have an importScripts() method that allows you to load scripts. importScripts(...) is similar to require(...) in Node.js.
-VEX_BASE_PATH = '../../build/cjs/';
-importScripts(VEX_BASE_PATH + 'vexflow-core.js');
+// VEX_BASE_PATH = '../../build/cjs/';
+// importScripts(VEX_BASE_PATH + 'vexflow-core.js');
+
+importScripts('../../build/cjs/vexflow-core.js');
 
 onmessage = function (e) {
-  postMessage('VexFlow BUILD: ' + Vex.Flow.BUILD);
+  postMessage('VexFlow BUILD: ' + JSON.stringify(Vex.Flow.BUILD));
 
   const fonts = ['Bravura', 'Gonville', 'Petaluma'];
   const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
-  Vex.Flow.setMusicFont(randomFont).then(() => {
+  Vex.Flow.fetchMusicFont(randomFont).then(() => {
+    Vex.Flow.setMusicFont(randomFont);
     const { Stave, CanvasContext, BarlineType, StaveNote, Formatter } = Vex.Flow;
 
     const offscreenCanvas = e.data.canvas;

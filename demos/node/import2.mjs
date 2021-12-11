@@ -1,4 +1,4 @@
-// node interactive.mjs
+// node import2.mjs
 //
 // Press a key to advance to the next command. CTRL+C to quit.
 // This demo uses await import(...) to load, in sequence:
@@ -79,7 +79,7 @@ async function step1() {
   const { Flow } = await import('vexflow/core');
 
   VF = Flow;
-  console.log('Loaded VexFlow Version: ', VF.VERSION, ' Build: ', VF.BUILD);
+  console.log('Loaded VexFlow Version: ', VF.BUILD.VERSION, ' Build: ', VF.BUILD.ID);
   console.log('The music font stack is empty:', VF.getMusicFont());
 
   console.log('\n==================================\n');
@@ -87,9 +87,9 @@ async function step1() {
 }
 
 async function step2() {
-  const { Flow } = await import('vexflow/core');
-  await Flow.setMusicFont('Bravura');
-  console.log('The current music font stack is:', Flow.getMusicFont());
+  await VF.fetchMusicFont('Bravura');
+  VF.setMusicFont('Bravura');
+  console.log('The current music font stack is:', VF.getMusicFont());
   const svg = getScoreSVG();
   sharp(Buffer.from(svg)).toFile('output/score_bravura.png');
 
@@ -98,7 +98,8 @@ async function step2() {
 }
 
 async function step3() {
-  await VF.setMusicFont('Petaluma');
+  await VF.fetchMusicFont('Petaluma');
+  VF.setMusicFont('Petaluma');
   console.log('The current music font stack is:', VF.getMusicFont());
   const svg = getScoreSVG();
   sharp(Buffer.from(svg)).toFile('output/score_petaluma.png');
@@ -108,7 +109,8 @@ async function step3() {
 }
 
 async function step4() {
-  await VF.setMusicFont('Gonville');
+  await VF.fetchMusicFont('Gonville');
+  VF.setMusicFont('Gonville');
   console.log('The current music font stack is:', VF.getMusicFont());
   const svg = getScoreSVG();
   sharp(Buffer.from(svg)).toFile('output/score_gonville.png');

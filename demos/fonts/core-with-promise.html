@@ -16,8 +16,8 @@
     </style>
   </head>
   <body>
-    <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
-    <p>This page calls Flow.setMusicFont(...).then(...) with a onFontsLoaded callback.</p>
+    <p>This demonstrates how to use <b>vexflow-core.js</b> to load fonts on demand.</p>
+    <p>View the page's source.</p>
     <div id="output"></div>
     <p>
       <a href="core.html">See: core.html</a><br />
@@ -35,21 +35,22 @@
     -->
     <script src="../../build/cjs/vexflow-core.js"></script>
     <script>
-      // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
-      // the loading of the fonts (stored in vexflow-font-xxxx.js).
-      // It returns a Promise that resolves to the loaded music font(s).
-      // Notice here that Flow.setMusicFont(...) takes a variable number of font family strings.
-      // The first argument is the primary music engraving font.
-      // The others are fallbacks, in case a glyph is not found in the first music font.
-      Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
-
-      // If you only specify one font, fewer bundles will be loaded.
+      // Each call to fetchMusicFont() loads a font bundle.
+      // You can skip some fonts if you will not be using them.
       // See your browser's developer tools > network tab for details.
-      // Vex.Flow.setMusicFont('Gonville').then(onFontsLoaded);
+      Vex.Flow.fetchMusicFont('Bravura')
+        .then(() => Vex.Flow.fetchMusicFont('Gonville'))
+        .then(() => Vex.Flow.fetchMusicFont('Petaluma'))
+        .then(() => Vex.Flow.fetchMusicFont('Custom'))
+        .then(onFontsLoaded);
 
       function onFontsLoaded(musicFonts) {
         console.log('Successfully loaded these music fonts:');
         console.log(...musicFonts);
+
+        // The first argument is the primary music engraving font.
+        // The others are fallbacks, in case a glyph is not found in the first music font.
+        Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom');
 
         const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
         const score = factory.EasyScore();

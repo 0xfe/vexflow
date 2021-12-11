@@ -21,9 +21,17 @@
     <script type="module">
       import Vex from '../../build/esm/entry/vexflow-core.js';
 
-      document.querySelector('#info').innerText = Vex.Flow.BUILD;
+      const { VERSION, ID, DATE } = Vex.Flow.BUILD;
+      document.querySelector('#info').innerText = `${VERSION} / ${ID} / ${DATE}`;
 
-      await Vex.Flow.setMusicFont('Bravura');
+      // await Vex.Flow.fetchMusicFont('Bravura');
+      // Vex.Flow.setMusicFont('Bravura');
+
+      // await Vex.Flow.fetchMusicFont('Gonville');
+      // Vex.Flow.setMusicFont('Gonville');
+
+      await Vex.Flow.fetchMusicFont('Petaluma');
+      Vex.Flow.setMusicFont('Petaluma');
 
       const { Factory } = Vex.Flow;
 

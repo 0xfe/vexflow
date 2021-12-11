@@ -2,9 +2,11 @@
 // Run: `node pdf.js`
 // Saves a PDF in `output/score.pdf`.
 
-/* eslint-disable no-console */
+const Vex = require('vexflow');
+// const Vex = require('vexflow/bravura');
+// const Vex = require('vexflow/petaluma');
+// const Vex = require('vexflow/gonville');
 
-const Vex = require('../../build/cjs/vexflow');
 const { JSDOM } = require('jsdom');
 const { jsPDF } = require('jspdf');
 require('svg2pdf.js');
@@ -17,8 +19,7 @@ if (!fs.existsSync('./output/')) {
 
 const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
 
-console.log('VexFlow Build: ' + Flow.BUILD);
-Flow.setMusicFont('Gonville');
+console.log('VexFlow Build: ' + Flow.BUILD.ID);
 
 const dom = new JSDOM('<!DOCTYPE html><html><body><div id="container"></div><body></html>');
 global.window = dom.window;
