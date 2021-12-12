@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- 
+  This inspector renders ad identifies the glyphs in tools/fonts/legacy/gonville_all.ts.
+-->
+<html>
+  <head>
+    <title>Gonville Inspector</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      body {
+        background: white;
+        font-family: Helvetica Neue, Arial, sans-serif;
+        font-size: 18px;
+        color: black;
+        margin: 40px 40px 80px 40px;
+      }
+
+      a {
+        color: green;
+        text-decoration: none;
+        border-bottom: dotted 2px;
+      }
+
+      a.button {
+        color: green;
+        background: #bfb;
+        text-decoration: none;
+        padding: 5px;
+        margin: 2px;
+        border: 5px solid #aea;
+      }
+
+      div#error {
+        width: 60%;
+        padding: 10px;
+        color: red;
+        background: #faa;
+        border: 15px solid #d99;
+      }
+    </style>
+
+    <script src="../legacy/gonville_all.ts"></script>
+    <script>
+    function parse(str, ctx, xo, yo){
+      if (!str) return;
+      const parts = str.split(' ');
+      let i = 0;
+      let n = 10;
+      ctx.fillStyle = '#006400';
+      ctx.strokeStyle = 'magenta';
+      ctx.beginPath();      
+      while (i < parts.length) {
+        switch (parts[i++]) {
+          case 'm':
+            ctx.moveTo( parseInt(parts[i++])/n + xo , -(parseInt(parts[i++])/n) + yo);
+            break;
+          case 'l':
+            ctx.lineTo(parseInt(parts[i++])/n + xo, -(parseInt(parts[i++])/n) + yo);
+            break;
+          case 'q':
+            x = parseInt(parts[i++])/n + xo;
+            y = -(parseInt(parts[i++])/n) + yo;
+            ctx.quadraticCurveTo(
+              parseInt(parts[i++])/n + xo,
+              -(parseInt(parts[i++])/n) + yo,
+              x,
+              y
+            );
+            break;
+          case 'b':
+            x = parseInt(parts[i++])/n + xo;
+            y = -(parseInt(parts[i++])/n) + yo;
+            ctx.bezierCurveTo(
+              parseInt(parts[i++])/n + xo,
+              -(parseInt(parts[i++])/n) + yo,
+              parseInt(parts[i++])/n + xo,
+              -(parseInt(parts[i++])/n) + yo,
+              x,
+              y
+            );
+            break;
+        }
+      }
+      ctx.fill();
+    }
+  </script>
+  </head>
+
+  <body>
+    <h1 id="title">Gonville Inspector</h1>
+    <canvas id="glyphs"></canvas>
+    <script>
+      let ctx;
+
+      // Calculate the canvas height programmatically based on the number of glyphs.
+      const canvasWidth = 2200;
+      const ROW_HEIGHT = 200;
+      const COL_WIDTH = 200;
+      const numGlyphs = 1500;
+      const numGlyphsPerRow = 10;
+      const numRowsNeeded = Math.ceil(numGlyphs / numGlyphsPerRow);
+      const canvasHeight = numRowsNeeded * ROW_HEIGHT;
+
+      var canvas = document.getElementById('glyphs');
+      // Retina display trick:
+      // Make the canvas twice as large as our width x height.
+      // Then set the scale to (2, 2).
+      canvas.width = canvasWidth * 2; // Setting the width clears the canvas.
+      canvas.height = canvasHeight * 2;
+      canvas.style.height = canvasHeight + 'px';
+      canvas.style.width = canvasWidth + 'px';
+      if (!ctx) {
+        ctx = canvas.getContext('2d');
+      }
+      ctx.setTransform(2, 0, 0, 2, 0, 0); // reset the scale to (2, 2)
+
+      let x0 = 200;
+      let y0 = 200;
+      for (g in GonvilleAll.glyphs) {
+        parse(GonvilleAll.glyphs[g].o, ctx, x0, y0 );
+        ctx.font = "30px Comic Sans MS";
+        ctx.fillStyle = "red";
+        ctx.textAlign = "center";
+        ctx.fillText(g, x0 - 70, y0 - 50);
+        x0 = x0 + 200;
+        if (x0 > 200*10){
+          x0 = 200;
+          y0 = y0 + 200;
+        }
+      }
+    </script>
+  </body>
+</html>
