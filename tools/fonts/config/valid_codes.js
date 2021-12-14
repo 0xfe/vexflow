@@ -39,12 +39,13 @@ module.exports = {
   timeSig9: 'v9',
   timeSigCommon: 'v41',
   timeSigCutCommon: 'vb6',
-  timeSigPlus: 'v7b',
-  timeSigPlusSmall: 'v7b',
+  timeSigPlus: 'v8b',
+  timeSigPlusSmall: 'v8b',
+  timeSigMinus: 'v25',
   timeSigParensRight: 'v84',
   timeSigParensRightSmall: 'v84',
   timeSigParensLeft: 'v9c',
-  timeSigParensRightSmall: 'v9c',
+  timeSigParensLeftSmall: 'v9c',
 
   // notehead (e0a0-e0ff)
   noteheadDoubleWhole: 'v53',
