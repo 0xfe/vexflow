@@ -449,6 +449,10 @@ export class StaveNote extends StemmableNote {
   setBeam(beam: Beam): this {
     this.beam = beam;
     this.calcNoteDisplacements();
+    // Update stem extension is a beam is assigned.
+    if (this.stem) {
+      this.stem.setExtension(this.getStemExtension());
+    }
     return this;
   }
 

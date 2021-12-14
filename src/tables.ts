@@ -1104,6 +1104,7 @@ const durationCodes: Record<string, any> = {
       stem_offset: 0,
       flag: true,
       beam_count: 1,
+      stem_beam_extension: 0,
       code_flag_upstem: 'flag8thUp',
       code_flag_downstem: 'flag8thDown',
       tabnote_stem_up_extension: 0,
@@ -1160,6 +1161,7 @@ const durationCodes: Record<string, any> = {
   16: {
     common: {
       beam_count: 2,
+      stem_beam_extension: 0,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1219,6 +1221,7 @@ const durationCodes: Record<string, any> = {
   32: {
     common: {
       beam_count: 3,
+      stem_beam_extension: 7.5,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1278,6 +1281,7 @@ const durationCodes: Record<string, any> = {
   64: {
     common: {
       beam_count: 4,
+      stem_beam_extension: 15,
       stem: true,
       stem_offset: 0,
       flag: true,
@@ -1337,6 +1341,7 @@ const durationCodes: Record<string, any> = {
   128: {
     common: {
       beam_count: 5,
+      stem_beam_extension: 22.5,
       stem: true,
       stem_offset: 0,
       flag: true,

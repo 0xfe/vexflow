@@ -178,8 +178,15 @@ export abstract class StemmableNote extends Note {
 
   // Get the stem extension for the current duration
   getStemExtension(): number {
+    const glyph = this.getGlyph();
+
     if (this.stem_extension_override != undefined) {
       return this.stem_extension_override;
+    }
+
+    // Use stem_beam_extension with beams
+    if (this.beam) {
+      return glyph.stem_beam_extension;
     }
 
     const flagCode =
