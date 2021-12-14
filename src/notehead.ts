@@ -280,13 +280,13 @@ export class NoteHead extends Note {
       const staveSpace = this.checkStave().getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else if (this.noteType === 'p') {
-      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
-      });
-      Glyph.renderGlyph(ctx, head_x - 4, y, glyph_font_scale, 'noteheadParenthesisLeft', {
+      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, 'noteheadParenthesisLeft', {
         category: `noteHead.standard.noteheadParenthesisLeft`,
       });
-      Glyph.renderGlyph(ctx, head_x + this.width + 1, y, glyph_font_scale, 'noteheadParenthesisRight', {
+      Glyph.renderGlyph(ctx, head_x + 5, y, glyph_font_scale, this.glyph_code, {
+        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
+      });
+      Glyph.renderGlyph(ctx, head_x + 18, y, glyph_font_scale, 'noteheadParenthesisRight', {
         category: `noteHead.standard.noteheadParenthesisRight`,
       });
     } else {

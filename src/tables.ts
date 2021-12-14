@@ -579,6 +579,7 @@ export class Tables {
   static TABLATURE_FONT_SCALE = 39;
 
   static SLASH_NOTEHEAD_WIDTH = 15;
+  static PARENTHESIS_NOTEHEAD_WIDTH = 20;
   static STAVE_LINE_DISTANCE = 10;
 
   // HACK:
@@ -945,6 +946,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadDoubleWhole',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1006,6 +1008,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadWhole',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1068,6 +1071,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadHalf',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1131,6 +1135,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1199,6 +1204,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1267,6 +1273,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1335,6 +1342,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1403,6 +1411,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
@@ -1471,6 +1480,7 @@ const durationCodes: Record<string, any> = {
       p: {
         // Parenthesis drawn by notehead.draw()
         code_head: 'noteheadBlack',
+        getWidth: () => Tables.PARENTHESIS_NOTEHEAD_WIDTH,
       },
     },
   },
