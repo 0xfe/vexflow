@@ -16,7 +16,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font } from './font';
+import { Font, FontModule } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -221,13 +221,8 @@ export class Flow {
 
   /**
    * Used with vexflow-core which supports dynamic font loading.
-   * See: async.ts for the implementation.
-   * See: vexflow/entry/vexflow-core.ts which calls into async.ts.
    */
-  // eslint-disable-next-line
-  static async fetchMusicFont(fontName: string, fontModulePath?: string): Promise<void> {
-    return Promise.resolve();
-  }
+  static fetchMusicFont: (fontName: string, fontModuleOrPath?: string | FontModule) => Promise<void>;
 
   static getMusicFont(): string[] {
     const fonts = Tables.MUSIC_FONT_STACK;

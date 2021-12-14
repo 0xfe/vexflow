@@ -12,7 +12,7 @@
 import { Vex } from '../src/vex';
 
 import { Flow } from '../src/flow';
-import { Font } from '../src/font';
+import { Font, FontModule } from '../src/font';
 import { loadTextFonts } from '../src/fonts/textfonts';
 import { globalObject, RuntimeError } from '../src/util';
 
@@ -22,9 +22,6 @@ const fontModules: Record<string, string> = {
   Petaluma: './vexflow-font-petaluma.js',
   Custom: './vexflow-font-custom.js',
 };
-
-// eslint-disable-next-line
-export type FontModule = { data: any; metrics: any };
 
 /**
  * @param fontName the name of the music font to load.

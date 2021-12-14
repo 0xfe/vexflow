@@ -17,6 +17,8 @@ export interface FontInfo {
   style?: string;
 }
 
+export type FontModule = { data: FontData; metrics: FontMetrics };
+
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
   fontFamily?: string;

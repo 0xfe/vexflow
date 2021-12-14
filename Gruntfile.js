@@ -318,8 +318,7 @@ module.exports = (grunt) => {
 
   grunt.registerTask('buildTypeDeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
     grunt.log.writeln('Building *.d.ts files in build/types/');
-    const results = child_process.execSync('tsc -p tsconfig.types.json').toString();
-    grunt.log.writeln(results);
+    child_process.execSync('tsc -p tsconfig.types.json').toString();
   });
 
   // Outputs ESM module files to build/esm/.
