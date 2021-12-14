@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // Run a web server from the vexflow/ directory to test workers.
 // For example, `npx http-server` and then open http://127.0.0.1:8080/demos/worker/
 

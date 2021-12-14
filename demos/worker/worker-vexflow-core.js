@@ -1,10 +1,6 @@
-/* eslint-disable */
-
 // Load demos/worker/index.html in a
 
 // Web Workers have an importScripts() method that allows you to load scripts. importScripts(...) is similar to require(...) in Node.js.
-// VEX_BASE_PATH = '../../build/cjs/';
-// importScripts(VEX_BASE_PATH + 'vexflow-core.js');
 
 importScripts('../../build/cjs/vexflow-core.js');
 
@@ -15,6 +11,9 @@ onmessage = function (e) {
   const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
   Vex.Flow.fetchMusicFont(randomFont).then(() => {
     Vex.Flow.setMusicFont(randomFont);
+
+    console.log(self);
+
     const { Stave, CanvasContext, BarlineType, StaveNote, Formatter } = Vex.Flow;
 
     const offscreenCanvas = e.data.canvas;

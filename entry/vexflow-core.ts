@@ -2,16 +2,12 @@
 // MIT License
 // @author Ron B. Yeh
 //
-// Support Dynamic Importing of Music Engraving Fonts
+// A smaller initial bundle that supports dynamic importing of music engraving fonts.
 //
 // vexflow-core.ts is the entry point for output file vexflow-core.js.
-// It will not load any music fonts by default.
-// It also overrides the `Flow.setMusicFont(...)` function to be async,
-// loading music fonts (e.g., Bravura, Petaluma, Gonville) on the fly.
-
-// Do not preload / bundle any fonts.
-// All music fonts will be loaded dynamically:
-// `Flow.fetchMusicFont(fontName)`
+// It does not preload / bundle any music fonts by default.
+// All music fonts will be loaded dynamically via: `Flow.fetchMusicFont(fontName)`
+// Remember to call `Flow.setMusicFont(fontName)` after fetching the font module.
 
 import { Vex } from '../src/vex';
 
@@ -19,13 +15,6 @@ import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { loadTextFonts } from '../src/fonts/textfonts';
 import { globalObject, RuntimeError } from '../src/util';
-
-// Here we add an import for `webpack_publicpath.ts` to CJS builds that need dynamic font loading (e.g., vexflow-core.js).
-// In ESM, import('./bravura.js') works natively, so the webpack specific code is NOT needed.
-// Search for `webpack_publicpath` in Gruntfile.js.
-// DO NOT DELETE THE LINE BELOW :-D
-/* IMPORT_  XXX  WEBPACK_PUBLICPATH_HERE */
-// DO NOT DELETE THE LINE ABOVE :-D
 
 const fontModules: Record<string, string> = {
   Bravura: './vexflow-font-bravura.js',
@@ -37,9 +26,15 @@ const fontModules: Record<string, string> = {
 // eslint-disable-next-line
 export type FontModule = { data: any; metrics: any };
 
+/**
+ * @param fontName the name of the music font to load.
+ * @param fontModuleOrPath Either a font module object (containing a .data and .metrics properties) or a path to a font module.
+ * The font module is assumed to be in the same directory as the vexflow-core.js entry point.
+ */
 Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontModule): Promise<void> => {
   const font = Font.load(fontName);
-  // Check if the font data has already been loaded before.
+
+  // If the font has already been loaded before we do nothing.
   if (font.hasData()) {
     return;
   }
@@ -57,12 +52,13 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
     const module = await import(/* webpackIgnore: true */ fontModuleOrPath);
 
     const g = globalObject();
-    const moduleCJS = g['VexFlowFont_' + fontName];
+    const moduleCJS = g['VexFlowFont' + fontName];
     if (typeof moduleCJS !== 'undefined') {
-      // CJS builds will set a VexFlowFont_Bravura | VexFlowFont_Gonville | etc variable.
+      // CJS font modules will set a global variable named: VexFlowFontBravura | VexFlowFontGonville | VexFlowFontPetaluma | etc.
       fontModule = moduleCJS;
     } else {
-      // ESM
+      // ESM font modules will export an object named "Font" with properties named "data" and "metrics".
+      // See vexflow-font-bravura.ts for an example.
       fontModule = module.Font;
     }
   } else {

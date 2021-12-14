@@ -8,4 +8,5 @@ export const Font = {
   data: BravuraFont,
   metrics: BravuraMetrics,
 };
+
 export default Font;

@@ -35,11 +35,12 @@
       <a href="core-with-promise.html">See: core-with-promise.html</a><br />
       <a href="all.html">See: all.html</a>
     </p>
-    <script>
-      // Set this variable if the font files (e.g., vexflow-font-bravura.js) are in a different folder from vexflow-core.js.
-      // window.VEX_BASE_PATH = "/path/to/fonts/";
-    </script>
-    <!-- The vexflow core build includes no music fonts. -->
+    <!--
+      The vexflow core build includes no music fonts.
+      Do the following to load a font dynamically:
+        await Vex.Flow.fetchMusicFont(fontName);
+        Vex.Flow.setMusicFont(fontName);
+    -->
     <script src="../../build/cjs/vexflow-core.js"></script>
     <script type="module">
       async function chooseFont(fontName) {

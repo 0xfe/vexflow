@@ -46,7 +46,6 @@ export * from './notesubgroup';
 export * from './ornament';
 export * from './parser';
 export * from './pedalmarking';
-// Do not export './publicpath'. It is used internally by vexflow-core.ts
 export * from './registry';
 export * from './rendercontext';
 export * from './renderer';

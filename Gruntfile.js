@@ -29,7 +29,6 @@ const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
 // Optional environment variables to customize the build.
-//   process.env.VEX_BASE_PATH
 //   process.env.VEX_DEVTOOL
 
 // Output directories.
@@ -50,7 +49,7 @@ const PRODUCTION_MODE = 'production';
 // const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
-const fontLibraryPrefix = 'VexFlowFont_';
+const fontLibraryPrefix = 'VexFlowFont';
 
 /**
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
@@ -110,25 +109,6 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
         export: 'default',
       },
       globalObject: globalObject,
-
-      // The `publicPath` is the base path for dynamically loaded JS chunks.
-      //   https://webpack.js.org/guides/public-path/
-      //   https://webpack.js.org/configuration/output/#outputpublicpath
-      // It is used by async.ts to import the font files at runtime.
-      // There isn't one setting for `publicPath` that will work for all deployments.
-      // In some scenarios, it needs to be './' to work, but in others it needs to be 'auto' to work.
-      // You can customize the `publicPath` below to work with your production environment.
-      //   publicPath: undefined, // undefined and `auto` are equivalent.
-      //   publicPath: 'auto',    // https://webpack.js.org/guides/public-path/#automatic-publicpath
-      //   publicPath: '',
-      //   publicPath: './',
-      // Our solution:
-      //   Specify the VEX_BASE_PATH environment variable at build time, or
-      //   Specify the VEX_BASE_PATH global variable at runtime.
-      // The value of this option should end in a slash in most cases. For example: VEX_BASE_PATH=/js/
-      // publicPath: process.env.VEX_BASE_PATH ?? './',
-      // Or comment out the above line, and set it to whatever you like:
-      // publicPath: '/my/custom/public/path/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '...'],
@@ -136,15 +116,6 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
     devtool: devtool,
     module: {
       rules: [
-        // {
-        //   // Add the magic import to async.ts to support dynamic font loading.
-        //   test: /async\.ts$/,
-        //   loader: 'string-replace-loader',
-        //   options: {
-        //     search: '/* IMPORT_WEBPACK_PUBLICPATH_HERE */',
-        //     replace: "import './webpack_publicpath';",
-        //   },
-        // },
         {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,
@@ -355,12 +326,9 @@ module.exports = (grunt) => {
   // Also fixes the imports and exports so that they all end in .js.
   grunt.registerTask('buildESM', 'Use tsc to create ESM JS files in build/esm/', () => {
     grunt.log.writeln('ESM: Building to build/esm/');
-    const outputTSC = child_process.execSync('tsc -p tsconfig.esm.json').toString();
-    grunt.log.writeln(outputTSC);
-
+    child_process.execSync('tsc -p tsconfig.esm.json').toString();
     grunt.log.writeln('ESM: Fixing Imports/Exports');
-    const outputFix = child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/').toString();
-    grunt.log.writeln(outputFix);
+    child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/').toString();
   });
 
   // `grunt watch`
