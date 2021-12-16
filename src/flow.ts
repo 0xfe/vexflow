@@ -185,31 +185,30 @@ export class Flow {
   // ... more to come ...
 
   /**
-   * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.
-   *
-   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
-   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
-   * 'Bravura', 'Gonville', 'Custom'. This method is synchronous.
-   *
    * Examples:
    * ```
    * Vex.Flow.setMusicFont('Petaluma');
    * Vex.Flow.setMusicFont('Bravura', 'Gonville');
    * ```
    *
-   * **CASE 2**: You are using the lighter weight `vexflow-core.js` to take advantage of lazy loading for fonts.
-   * In this case, you MUST call this method at the beginning, since the default music font stack is empty.
-   * This method is replaced by an async function, so you must use `await` or a Promise to wait for the fonts
-   * to load before proceeding. See `demos/fonts/` for examples. See `src/fonts/async.ts` for implementation details.
+   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
+   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
+   * 'Bravura', 'Gonville', 'Custom'.
    *
+   * **CASE 2**: You are using `vexflow-bravura.js` or `vexflow-petaluma.js` or `vexflow-gonville.js`,
+   * which includes a single music font. Calling this method is unnecessary.
+   *
+   * **CASE 3**: You are using the light weight `vexflow-core.js` to take advantage of lazy loading for fonts.
+   * In this case, the default music font stack is empty.
    * Example:
    * ```
    * await Vex.Flow.fetchMusicFont('Petaluma');
    * Vex.Flow.setMusicFont('Petaluma');
    * ... (do VexFlow stuff) ...
    * ```
-   * @returns CASE 1: an array of Font objects corresponding to the provided `fontNames`.
-   * @returns CASE 2: Promise<Font[]> that resolves to the same array of Font objects as above.
+   * See `demos/fonts/` for more examples.
+   *
+   * @returns an array of Font objects corresponding to the provided `fontNames`.
    */
   static setMusicFont(...fontNames: string[]): Font[] {
     // Convert the array of font names into an array of Font objects.

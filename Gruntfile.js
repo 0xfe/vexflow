@@ -244,14 +244,6 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
-      // The build/esm/ folder needs a package.json that says "type": "module".
-      modulePackageJSON: {
-        expand: true,
-        cwd: BASE_DIR,
-        src: ['tools/esm/package.json'],
-        dest: BUILD_ESM_DIR,
-        flatten: true,
-      },
       reference: {
         files: [
           {
@@ -310,7 +302,6 @@ module.exports = (grunt) => {
       'webpack:buildProdFontModuleGonville',
       'webpack:buildProdFontModuleCustom',
       'buildESM',
-      'copy:modulePackageJSON',
       'buildTypeDeclarations',
       'typedoc',
     ]
@@ -324,10 +315,13 @@ module.exports = (grunt) => {
   // Outputs ESM module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
   grunt.registerTask('buildESM', 'Use tsc to create ESM JS files in build/esm/', () => {
-    grunt.log.writeln('ESM: Building to build/esm/');
-    child_process.execSync('tsc -p tsconfig.esm.json').toString();
-    grunt.log.writeln('ESM: Fixing Imports/Exports');
-    child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/').toString();
+    grunt.log.writeln('ESM: Build to build/esm/');
+    child_process.execSync('tsc -p tsconfig.esm.json');
+    grunt.log.writeln('ESM: Fix Imports/Exports');
+    child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
+    // The build/esm/ folder needs a package.json that says "type": "module".
+    grunt.log.writeln('ESM: Add package.json with "type": "module"');
+    child_process.execSync('cp ./tools/esm/package.json ./build/esm/package.json');
   });
 
   // `grunt watch`
