@@ -131,8 +131,13 @@ const launchTestPage = async (jobs, jobId) => {
       const ret = [];
       VF_TEST_GLOBAL.elmDefs = ret;
       Array.from(elms).forEach((elm) => {
-        let nameStr = (elm.querySelector('.name') || {}).innerText;
-        nameStr = encodeURIComponent(nameStr.replace(/[:›]/g, '-').replace(/[\s]/g, '_'));
+        const nameElm = elm.querySelector('.name');
+        let nameStr = nameElm.getAttribute('id');
+        if (!nameStr) {
+          // for old version, generate fake filename.
+          nameStr = (nameElm || {}).innerText;
+          nameStr = encodeURIComponent(nameStr.replace(/[:›]/g, '-').replace(/[\s]/g, '_'));
+        }
 
         let type = 'png';
         let el = elm.querySelector('canvas.vex-tabdiv');
