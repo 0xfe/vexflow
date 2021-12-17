@@ -127,9 +127,37 @@ export class VexFlowTests {
     VexFlowTests.tests.push(test);
   }
 
+  static parseJobOptions(): { jobs: number; jobId: number } {
+    let jobs = 1;
+    let jobId = 0;
+    if (window) {
+      const { location } = window;
+      if (location) {
+        const sps = new URLSearchParams(location.search);
+        const jobsParam = sps.get('jobs');
+        const jobIdParam = sps.get('jobId');
+        if (jobsParam) {
+          jobs = parseInt(jobsParam, 10);
+        }
+        if (jobIdParam) {
+          jobId = parseInt(jobIdParam, 10);
+        }
+      }
+    }
+    return {
+      jobs,
+      jobId,
+    };
+  }
+
   // flow.html calls this to invoke all the tests.
   static run(): void {
-    VexFlowTests.tests.forEach((test) => test.Start());
+    const { jobs, jobId } = VexFlowTests.parseJobOptions();
+    VexFlowTests.tests.forEach((test, idx: number) => {
+      if (jobs === 1 || idx % jobs === jobId) {
+        test.Start();
+      }
+    });
   }
 
   // See: generate_png_images.js

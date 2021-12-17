@@ -43,7 +43,7 @@ if (process.argv.length >= 5) {
  *   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville --parallel
  */
 
-const appMain = (onArg) => {
+const appMain = () => {
   if (fontStacksToTest.length <= 1 || process.argv.length < 5) {
     return false;
   }
@@ -65,7 +65,6 @@ const appMain = (onArg) => {
         jobs = Infinity;
       }
     }
-    onArg(lStr);
   });
   if (jobs <= 1) {
     return false;
@@ -124,38 +123,7 @@ const appMain = (onArg) => {
   return true;
 };
 
-// Produce filenames that match version 3.0.9.
-// Remove `.Bravura` from the filename.
-const compatMode = {
-  mode: null,
-  MODES: {
-    BackCompat: 'BackCompat',
-  },
-  fixFileNames: () => {
-    if (compatMode.mode !== compatMode.MODES.BackCompat) {
-      return;
-    }
-    // If we are only testing the Bravura font, do not include the font name in the file name.
-    // See tests/vexflow_test_helpers.ts / runNodeTestHelper() / onlyBravura mode.
-    fs.readdirSync(imageDir).forEach((filename) => {
-      const matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
-      if (matches && matches[2]) {
-        const backCompatFileName = `${matches[1]}.${matches[3]}`;
-        fs.renameSync(path.join(imageDir, filename), path.join(imageDir, backCompatFileName));
-        process.stdout.write(`${imageDir}: ${filename} -> ${backCompatFileName}\n`);
-      }
-    });
-  },
-};
-
-if (
-  appMain((lStr) => {
-    if (!lStr.startsWith('--backcompat')) {
-      return;
-    }
-    compatMode.mode = compatMode.MODES.BackCompat;
-  })
-) {
+if (appMain()) {
   return;
 }
 
@@ -250,5 +218,3 @@ VFT.run();
 
 // During the 3.0.9 => 4.0.0 migration, run() was briefly renamed to runTests().
 // VFT.runTests();
-
-compatMode.fixFileNames();
