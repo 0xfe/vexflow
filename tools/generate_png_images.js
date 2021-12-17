@@ -88,7 +88,6 @@ const appMain = () => {
   };
 
   const run = (font, id) => {
-    console.log(`run: ${font}`);
     let child;
     const { argv0, argv } = childArgs;
     const childArgv = [...argv, `--fonts=${font}`];
