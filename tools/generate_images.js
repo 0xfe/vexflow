@@ -10,7 +10,7 @@ const log = (msg = 'undefined', type) => {
   process.stdout.write('\n');
 };
 
-const parseArgs = (compatMode) => {
+const parseArgs = () => {
   const argv = [...process.argv];
 
   const argv0 = argv.shift();
@@ -48,9 +48,6 @@ const parseArgs = (compatMode) => {
             }
           });
         break;
-      case '--backcompat':
-        compatMode.mode = compatMode.MODES.BackCompat;
-        break;
       case '--parallel':
         parallel = str;
         break;
@@ -73,30 +70,7 @@ const parseArgs = (compatMode) => {
 };
 
 const appMain = async () => {
-  // Produce filenames that match version 3.0.9.
-  // Remove `.Bravura` from the filename.
-  const compatMode = {
-    mode: null,
-    MODES: {
-      BackCompat: 'BackCompat',
-    },
-    fixFileNames: (imageDir) => {
-      if (compatMode.mode !== compatMode.MODES.BackCompat) {
-        return;
-      }
-      // If we are only testing the Bravura font, do not include the font name in the file name.
-      // See tests/vexflow_test_helpers.ts / runNodeTestHelper() / onlyBravura mode.
-      fs.readdirSync(imageDir).forEach((filename) => {
-        const matches = filename.match(/(.+)([\._]Bravura\.)(png|svg|svg\.png)$/);
-        if (matches && matches[2]) {
-          const backCompatFileName = `${matches[1]}.${matches[3]}`;
-          fs.renameSync(path.join(imageDir, filename), path.join(imageDir, backCompatFileName));
-          process.stdout.write(`${imageDir}: ${filename} -> ${backCompatFileName}\n`);
-        }
-      });
-    },
-  };
-  const options = parseArgs(compatMode);
+  const options = parseArgs();
   const { childArgs, backends } = options;
   const { ver, imageDir, args } = childArgs;
 
@@ -154,8 +128,6 @@ const appMain = async () => {
   if (error) {
     process.exit(1);
   }
-
-  compatMode.fixFileNames(imageDir);
 };
 
 appMain();

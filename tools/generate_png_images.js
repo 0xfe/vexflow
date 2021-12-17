@@ -88,6 +88,7 @@ const appMain = () => {
   };
 
   const run = (font, id) => {
+    console.log(`run: ${font}`);
     let child;
     const { argv0, argv } = childArgs;
     const childArgv = [...argv, `--fonts=${font}`];
@@ -114,9 +115,20 @@ const appMain = () => {
 
   // TODO: limit the number of processes to specified number(jobs).
   // console.log(jobs);
-  fontStacksToTest.forEach((font, idx) => {
-    children.push(run(font, idx));
+
+  // filename quirk : see tests/vexflow_test_helpers.ts:runNodeTestHelper().
+  const quirkFontName = 'Bravura';
+  const fontsToTest = fontStacksToTest.filter((font) => font !== quirkFontName);
+
+  let quirkFont = fontsToTest.length !== fontStacksToTest.length ? quirkFontName : undefined;
+  fontsToTest.forEach((font, idx) => {
+    // ensure that the quirk font is tested with the other font.
+    children.push(run(quirkFont ? [quirkFont, font].join(',') : font, idx));
+    quirkFont = undefined;
   });
+  if (quirkFont) {
+    children.push(run(quirkFont, idx));
+  }
 
   // FIXME: need timeout detection?
   // setInterval(wait, 1000);
