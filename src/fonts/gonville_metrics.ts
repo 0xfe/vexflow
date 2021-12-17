@@ -189,8 +189,6 @@ export const GonvilleMetrics = {
         shiftX: -0.16,
         shiftY: 22,
       },
-      flag8thUp: {},
-      flag16thUp: {},
       flag32ndUp: {
         shiftY: -9,
       },
