@@ -3,14 +3,18 @@
   "env": { "browser": true, "node": true },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "tsconfig.json"
+    "project": "tsconfig.json",
+    "extraFileExtensions": [".mjs"]
   },
-  "plugins": ["@typescript-eslint", "prettier", "simple-import-sort"],
+  "plugins": ["@typescript-eslint", "prettier", "simple-import-sort", "import"],
   "rules": {
-    "no-console": 1, // Means warning
-    "prettier/prettier": 2, // Means error
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
+    "no-console": "warn",
+    "prettier/prettier": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "import/first": "error",
+    "import/no-duplicates": "error",
+    "import/newline-after-import": "warn"
   },
   "overrides": [
     {
@@ -22,7 +26,27 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
-        "@typescript-eslint/no-inferrable-types": "off"
+        "@typescript-eslint/no-inferrable-types": "off",
+        "simple-import-sort/imports": [
+          "warn",
+          {
+            "groups": [
+              // Vex goes first!
+              ["^.*/vex$"],
+              ["^.*/vexflow_test_helpers$"],
+              // Side effect imports.
+              ["^\\u0000"],
+              // Packages.
+              // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+              ["^@?\\w"],
+              // Absolute imports and other imports such as Vue-style `@/foo`.
+              // Anything not matched in another group.
+              ["^"],
+              // All other relative imports (anything that starts with a dot).
+              ["^\\."]
+            ]
+          }
+        ]
       }
     },
     {

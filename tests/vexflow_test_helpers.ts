@@ -3,17 +3,15 @@
 //
 // VexFlow Test Support Library
 
-import { Factory } from 'factory';
-import { Flow } from 'flow';
-import { Font, Fonts } from 'font';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder, Renderer } from 'renderer';
-
+import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/';
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
-declare const global: any;
 declare const $: any;
+declare let global: any;
+if (typeof global === 'undefined') {
+  global = window ?? globalThis ?? this;
+}
 /* eslint-enable */
 
 export interface TestOptions {
@@ -27,13 +25,13 @@ export interface TestOptions {
 }
 
 // Each test case will switch through the available fonts, and then restore the original font when done.
-let originalFontStack: Font[];
+let originalFontNames: string[];
 function useTempFontStack(fontName: string): void {
-  originalFontStack = Flow.DEFAULT_FONT_STACK;
-  Flow.DEFAULT_FONT_STACK = VexFlowTests.FONT_STACKS[fontName];
+  originalFontNames = Flow.getMusicFont();
+  Flow.setMusicFont(...VexFlowTests.FONT_STACKS[fontName]);
 }
 function restoreOriginalFontStack(): void {
-  Flow.DEFAULT_FONT_STACK = originalFontStack;
+  Flow.setMusicFont(...originalFontNames);
 }
 
 // A micro util inspired by jQuery.
@@ -65,6 +63,14 @@ if (!global.$) {
       text(t: string) {
         element.textContent = t;
         return $element;
+      },
+      html(h?: string) {
+        if (!h) {
+          return element.innerHTML;
+        } else {
+          element.innerHTML = h;
+          return $element;
+        }
       },
       append(...elementsToAppend: HTMLElement[]) {
         elementsToAppend.forEach((e) => {
@@ -109,17 +115,27 @@ const NODE_TEST_CONFIG = {
   fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
 };
 
-/**
- *
- */
-class VexFlowTests {
+interface Test {
+  Start(): void;
+}
+
+export class VexFlowTests {
+  static tests: Test[] = [];
+
+  // Call this at the end of a `tests/xxxx_tests.ts` file to register the module.
+  static register(test: Test): void {
+    VexFlowTests.tests.push(test);
+  }
+
+  // flow.html calls this to invoke all the tests.
+  static run(): void {
+    VexFlowTests.tests.forEach((test) => test.Start());
+  }
+
   // See: generate_png_images.js
   // Provides access to Node JS fs & process.
   // eslint-disable-next-line
   static shims: any;
-
-  // Defined in run.ts
-  static run: () => void;
 
   static RUN_CANVAS_TESTS = true;
   static RUN_SVG_TESTS = true;
@@ -132,12 +148,12 @@ class VexFlowTests {
   static Font = { size: 10 };
 
   /**
-   *
+   * Each font stack is a prioritized list of font names.
    */
-  static FONT_STACKS: Record<string, Font[]> = {
-    Bravura: [Fonts.Bravura(), Fonts.Gonville(), Fonts.Custom()],
-    Gonville: [Fonts.Gonville(), Fonts.Bravura(), Fonts.Custom()],
-    Petaluma: [Fonts.Petaluma(), Fonts.Gonville(), Fonts.Custom()],
+  static FONT_STACKS: Record<string, string[]> = {
+    Bravura: ['Bravura', 'Gonville', 'Custom'],
+    Gonville: ['Gonville', 'Bravura', 'Custom'],
+    Petaluma: ['Petaluma', 'Gonville', 'Bravura', 'Custom'],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {
@@ -171,8 +187,9 @@ class VexFlowTests {
    * @param testTitle
    * @param tagName
    */
-  static createTest(elementId: string, testTitle: string, tagName: string): HTMLElement {
-    const title = $('<div/>').addClass('name').text(testTitle).get(0);
+  static createTest(elementId: string, testTitle: string, tagName: string, titleId: string = ''): HTMLElement {
+    const anchorTestTitle = `<a href="#${titleId}">${testTitle}</a>`;
+    const title = $('<div/>').addClass('name').attr('id', titleId).html(anchorTestTitle).get(0);
     const vexOutput = $(`<${tagName}/>`).addClass('vex-tabdiv').attr('id', elementId).get(0);
     const container = $('<div/>').addClass('testcanvas').append(title, vexOutput).get(0);
     $('#vexflow_testoutput').append(container);
@@ -235,12 +252,33 @@ class VexFlowTests {
   /** Run QUnit.test(...) for each font. */
   // eslint-disable-next-line
   static runWithParams({ fontStacks, testFunc, name, params, backend, tagName, testType, helper }: any): void {
+    if (name === undefined) {
+      throw new Error('Test name is undefined.');
+    }
+    const testTypeLowerCase = testType.toLowerCase();
     fontStacks.forEach((fontStackName: string) => {
       QUnit.test(name, (assert: Assert) => {
         useTempFontStack(fontStackName);
-        const elementId = VexFlowTests.generateTestID(`${testType.toLowerCase()}_` + fontStackName);
-        const title = assert.test.module.name + ' › ' + name + ` › ${testType} + ${fontStackName}`;
-        const element = VexFlowTests.createTest(elementId, title, tagName);
+        const elementId = VexFlowTests.generateTestID(`${testTypeLowerCase}_` + fontStackName);
+        const moduleName = assert.test.module.name;
+        const title = moduleName + ' › ' + name + ` › ${testType} + ${fontStackName}`;
+
+        // Add an element id for the title div, so that we can scroll directly to a test case.
+        // Add a fragment identifier to the url (e.g., #Stave.Multiple_Stave_Barline_Test.Bravura)
+        // This titleId will match the name of the PNGs generated by visual regression tests
+        // (without the _Current.png or _Reference.png).
+        let prefix = '';
+        if (testTypeLowerCase === 'canvas') {
+          prefix = testTypeLowerCase + '_';
+        } else {
+          // DO NOT ADD A PREFIX TO SVG TESTS
+          // The canvas prefix above is for making sure our element ids are unique,
+          // since we have a canvas+bravura test case and a svg+bravura test case
+          // that would otherwise have the same titleId.
+        }
+        const titleId = `${prefix}${sanitizeName(moduleName)}.${sanitizeName(name)}.${fontStackName}`;
+
+        const element = VexFlowTests.createTest(elementId, title, tagName, titleId);
         const options: TestOptions = { elementId, params, assert, backend };
         const isSVG = backend === Renderer.Backends.SVG;
         const contextBuilder: ContextBuilder = isSVG ? Renderer.getSVGContext : Renderer.getCanvasContext;
@@ -258,7 +296,7 @@ class VexFlowTests {
    */
   static plotLegendForNoteWidth(ctx: RenderContext, x: number, y: number): void {
     ctx.save();
-    ctx.setFont('Arial', 8, '');
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     const spacing = 12;
     let lastY = y;
@@ -286,27 +324,52 @@ class VexFlowTests {
   }
 }
 
-/** Currently unused. */
-/*
-global.almostEqual = (value: number, expectedValue: number, errorMargin: number): boolean => {
-  return global.equal(Math.abs(value - expectedValue) < errorMargin, true);
-};
-*/
-
 /**
  * Used with array.reduce(...) to flatten arrays of arrays in the tests.
  */
 // eslint-disable-next-line
-const concat = (a: any[], b: any[]): any[] => a.concat(b);
+export const concat = (a: any[], b: any[]): any[] => a.concat(b);
 
 /** Used in KeySignature and ClefKeySignature Tests. */
-const MAJOR_KEYS = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
-const MINOR_KEYS = ['Am', 'Dm', 'Gm', 'Cm', 'Fm', 'Bbm', 'Ebm', 'Abm', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'D#m', 'A#m'];
+export const MAJOR_KEYS = [
+  //
+  'C',
+  'F',
+  'Bb',
+  'Eb',
+  'Ab',
+  'Db',
+  'Gb',
+  'Cb',
+  'G',
+  'D',
+  'A',
+  'E',
+  'B',
+  'F#',
+  'C#',
+];
+export const MINOR_KEYS = [
+  'Am',
+  'Dm',
+  'Gm',
+  'Cm',
+  'Fm',
+  'Bbm',
+  'Ebm',
+  'Abm',
+  'Em',
+  'Bm',
+  'F#m',
+  'C#m',
+  'G#m',
+  'D#m',
+  'A#m',
+];
 
-// We no longer provide a global.VF in tests.
-// Everything can be accessed via Vex.Flow.* and Vex.Flow.Test.* or by importing the class directly.
+// VexFlow classes can be accessed via Vex.Flow.* or by directly importing a library class.
+// Tests can be accessed via Vex.Flow.Test.* or by directly importing a test class.
+// Here we set Vex.Flow.Test = VexFlowTests.
 // eslint-disable-next-line
 // @ts-ignore
 Flow.Test = VexFlowTests;
-
-export { concat, MAJOR_KEYS, MINOR_KEYS, VexFlowTests };

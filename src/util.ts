@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { RenderContext } from './rendercontext';
@@ -10,6 +10,22 @@ export class RuntimeError extends Error {
     super('[RuntimeError] ' + code + ': ' + message);
     this.code = code;
   }
+}
+
+export function globalObject(): typeof globalThis {
+  if (typeof globalThis !== 'undefined') {
+    return globalThis;
+  }
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  return Function('return this')();
 }
 
 /**
@@ -28,7 +44,7 @@ export function defined<T>(x?: T, code: string = 'undefined', message: string = 
 export function log(block: string, ...args: any[]): void {
   if (!args) return;
   const line = Array.prototype.slice.call(args).join(' ');
-  window.console.log(block + ': ' + line);
+  globalObject().console.log(block + ': ' + line);
 }
 
 /** Dump warning to console. */
@@ -36,7 +52,7 @@ export function log(block: string, ...args: any[]): void {
 export function warn(...args: any[]): void {
   const line = args.join(' ');
   const err = new Error();
-  window.console.log('Warning: ', line, err.stack);
+  globalObject().console.log('Warning: ', line, err.stack);
 }
 
 /** Round number to nearest fractional value (`.5`, `.25`, etc.) */

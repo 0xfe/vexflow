@@ -1,12 +1,12 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Tremolo Tests
 
-import { Barline } from 'stavebarline';
-import { Tremolo } from 'tremolo';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Barline } from '../src/stavebarline';
+import { Tremolo } from '../src/tremolo';
 
 const TremoloTests = {
   Start(): void {
@@ -53,4 +53,5 @@ function tremoloBasic(options: TestOptions): void {
   ok(true, 'Tremolo - Basic');
 }
 
+VexFlowTests.register(TremoloTests);
 export { TremoloTests };

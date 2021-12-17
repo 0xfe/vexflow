@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 //
@@ -46,7 +46,7 @@ function L(...args: any[]) {
 }
 
 export class ModifierContext {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   state: ModifierContextState;
 

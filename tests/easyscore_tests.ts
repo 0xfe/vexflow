@@ -3,15 +3,15 @@
 //
 // EasyScore Tests
 
-import { Articulation } from 'articulation';
-import { EasyScore } from 'easyscore';
-import { FretHandFinger } from 'frethandfinger';
-import { Modifier } from 'modifier';
-import { StaveConnector } from 'staveconnector';
-import { Stem } from 'stem';
-import { Tuplet } from 'tuplet';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Articulation } from '../src/articulation';
+import { EasyScore } from '../src/easyscore';
+import { FretHandFinger } from '../src/frethandfinger';
+import { Modifier } from '../src/modifier';
+import { StaveConnector } from '../src/staveconnector';
+import { Stem } from '../src/stem';
+import { Tuplet } from '../src/tuplet';
 
 const EasyScoreTests = {
   Start(): void {
@@ -396,4 +396,5 @@ function keys(options: TestOptions): void {
   }
 }
 
+VexFlowTests.register(EasyScoreTests);
 export { EasyScoreTests };

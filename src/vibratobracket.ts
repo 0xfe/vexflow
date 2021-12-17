@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Balazs Forian-Szabo
 // MIT License
 
@@ -15,7 +15,7 @@ function L(...args: any[]) {
 /** `VibratoBracket` renders vibrato effect between two notes. */
 export class VibratoBracket extends Element {
   /** To enable logging for this class. Set `Vex.Flow.VibratoBracket.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'VibratoBracket';

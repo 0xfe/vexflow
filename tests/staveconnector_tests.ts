@@ -1,18 +1,18 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // StaveConnector Tests
 
 // TODO: Should we change StaveConnector.type => StaveConnectorType? We are inconsistent with this.
 
-import { Flow } from 'flow';
-import { Modifier } from 'modifier';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { StaveConnector } from 'staveconnector';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Flow } from '../src/flow';
+import { Modifier } from '../src/modifier';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { StaveConnector } from '../src/staveconnector';
 
 const StaveConnectorTests = {
   Start(): void {
@@ -461,4 +461,5 @@ function drawCombined(options: TestOptions, contextBuilder: ContextBuilder): voi
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveConnectorTests);
 export { StaveConnectorTests };

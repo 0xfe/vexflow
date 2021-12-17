@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
@@ -45,7 +45,7 @@ export class GlyphNote extends Note {
     if (!this.preFormatted && this.modifierContext) {
       this.modifierContext.preFormat();
     }
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

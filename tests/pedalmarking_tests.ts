@@ -1,15 +1,15 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // PedalMarking Tests
 
 // TODO: Fix Error => Type 'Tickable' is not assignable to type 'StaveNote'.
 
-import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
-import { Tickable } from 'tickable';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Factory } from '../src/factory';
+import { StaveNote } from '../src/stavenote';
+import { Tickable } from '../src/tickable';
 
 const PedalMarkingTests = {
   Start(): void {
@@ -90,4 +90,5 @@ const customTest2 = createTest((factory, notes0, notes1) => {
   return pedal;
 });
 
+VexFlowTests.register(PedalMarkingTests);
 export { PedalMarkingTests };

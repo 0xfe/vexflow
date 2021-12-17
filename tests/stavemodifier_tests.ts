@@ -1,14 +1,14 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // StaveModifier Tests
 
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { StaveModifierPosition } from 'stavemodifier';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { StaveModifierPosition } from '../src/stavemodifier';
 
 const StaveModifierTests = {
   Start(): void {
@@ -63,4 +63,5 @@ function drawBeginAndEnd(options: TestOptions, contextBuilder: ContextBuilder): 
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveModifierTests);
 export { StaveModifierTests };

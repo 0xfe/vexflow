@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // NoteHead Tests
@@ -7,20 +7,18 @@
 //       Each time you call scale(sx, sy), it multiplies the sx and sy by the currently stored scale.
 //       The SVGContext operates differently. It just sets the sx and sy as the new scale, instead of multiplying it.
 //       See: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/scale
-// TODO: The middle C note head is missing a ledger line. Should it automatically draw one? In older versions of VexFlow, there is a ledger line.
-//       See: https://www.vexflow.com/tests/?module=NoteHead
-
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { NoteHead } from 'notehead';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { TickContext } from 'tickcontext';
-import { Voice } from 'voice';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { NoteHead } from '../src/notehead';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { TickContext } from '../src/tickcontext';
+import { Voice } from '../src/voice';
 
 const NoteHeadTests = {
   Start(): void {
@@ -193,4 +191,5 @@ function basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder
   ok('NoteHead Bounding Boxes');
 }
 
+VexFlowTests.register(NoteHeadTests);
 export { NoteHeadTests };

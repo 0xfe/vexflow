@@ -1,9 +1,9 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export enum Justification {
@@ -33,14 +33,12 @@ export class TextNote extends Note {
     return 'TextNote';
   }
 
-  protected text: string;
-  protected superscript?: string;
-  protected subscript?: string;
-  protected smooth: boolean;
-
-  protected font: FontInfo;
-  protected justification: Justification;
-  protected line: number;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 12,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
 
   static get Justification(): typeof Justification {
     return Justification;
@@ -109,18 +107,20 @@ export class TextNote extends Note {
     };
   }
 
+  protected text: string;
+  protected superscript?: string;
+  protected subscript?: string;
+  protected smooth: boolean;
+  protected justification: Justification;
+  protected line: number;
+
   constructor(noteStruct: TextNoteStruct) {
     super(noteStruct);
 
     this.text = noteStruct.text || '';
     this.superscript = noteStruct.superscript;
     this.subscript = noteStruct.subscript;
-    this.font = {
-      family: 'Arial',
-      size: 12,
-      weight: '',
-      ...noteStruct.font,
-    };
+    this.setFont(noteStruct.font);
     this.line = noteStruct.line || 0;
     this.smooth = noteStruct.smooth || false;
     this.ignore_ticks = noteStruct.ignore_ticks || false;
@@ -164,20 +164,20 @@ export class TextNote extends Note {
         // Width already set.
       } else {
         const ctx = this.checkContext();
-        ctx.setFont(this.font.family, this.font.size, this.font.weight);
+        ctx.setFont(this.textFont);
         this.setWidth(ctx.measureText(this.text).width);
       }
     }
 
-    if (this.justification === TextNote.Justification.CENTER) {
+    if (this.justification === Justification.CENTER) {
       this.leftDisplacedHeadPx = this.width / 2;
-    } else if (this.justification === TextNote.Justification.RIGHT) {
+    } else if (this.justification === Justification.RIGHT) {
       this.leftDisplacedHeadPx = this.width;
     }
 
     // We reposition to the center of the note head
     this.rightDisplacedHeadPx = tickContext.getMetrics().glyphPx / 2;
-    this.setPreFormatted(true);
+    this.preFormatted = true;
   }
 
   /**
@@ -197,9 +197,9 @@ export class TextNote extends Note {
     // Align based on tick-context width.
     const width = this.getWidth();
 
-    if (this.justification === TextNote.Justification.CENTER) {
+    if (this.justification === Justification.CENTER) {
       x -= width / 2;
-    } else if (this.justification === TextNote.Justification.RIGHT) {
+    } else if (this.justification === Justification.RIGHT) {
       x -= width;
     }
 
@@ -210,20 +210,24 @@ export class TextNote extends Note {
     } else {
       y = stave.getYForLine(this.line + -3);
       this.applyStyle(ctx);
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
+      ctx.setFont(this.textFont);
       ctx.fillText(this.text, x, y);
 
       const height = ctx.measureText(this.text).height;
 
-      // Write superscript
+      // We called this.setFont(...) in the constructor, so we know this.textFont is available.
+      // eslint-disable-next-line
+      const { family, size, weight, style } = this.textFont!;
+      // Scale the font size by 1/1.3.
+      const smallerFontSize = Font.scaleSize(size, 0.769231);
+
       if (this.superscript) {
-        ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+        ctx.setFont(family, smallerFontSize, weight, style);
         ctx.fillText(this.superscript, x + this.width + 2, y - height / 2.2);
       }
 
-      // Write subscript
       if (this.subscript) {
-        ctx.setFont(this.font.family, this.font.size / 1.3, this.font.weight);
+        ctx.setFont(family, smallerFontSize, weight, style);
         ctx.fillText(this.subscript, x + this.width + 2, y + height / 2.2 - 1);
       }
 

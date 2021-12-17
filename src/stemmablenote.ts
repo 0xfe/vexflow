@@ -1,11 +1,10 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // `StemmableNote` is an abstract interface for notes with optional stems.
 // Examples of stemmable notes are `StaveNote` and `TabNote`
 
-import { Glyph } from './glyph';
-import { GlyphProps } from './glyph';
+import { Glyph, GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';
 import { Stem, StemOptions } from './stem';
 import { Tables } from './tables';
@@ -135,7 +134,7 @@ export abstract class StemmableNote extends Note {
       const glyph = this.getBaseCustomNoteHeadGlyph() || this.getGlyph();
 
       // Get the font-specific customizations for the note heads.
-      const offsets = this.musicFont.lookupMetric(`stem.noteHead.${glyph.code_head}`, {
+      const offsets = Tables.currentMusicFont().lookupMetric(`stem.noteHead.${glyph.code_head}`, {
         offsetYBaseStemUp: 0,
         offsetYTopStemUp: 0,
         offsetYBaseStemDown: 0,
@@ -244,7 +243,6 @@ export abstract class StemmableNote extends Note {
   postFormat(): this {
     this.beam?.postFormat();
     this.postFormatted = true;
-
     return this;
   }
 

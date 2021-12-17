@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Auto Beaming Tests
@@ -6,13 +6,13 @@
 // TODO: Beam.generateBeams(voice.getTickables() as StemmableNote[], ...) requires a cast to StemmableNote[].
 //       Is there a cleaner way to handle this?
 
-import { Beam } from 'beam';
-import { EasyScore } from 'easyscore';
-import { Fraction } from 'fraction';
-import { Stem } from 'stem';
-import { StemmableNote } from 'stemmablenote';
-
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Beam } from '../src/beam';
+import { EasyScore } from '../src/easyscore';
+import { Fraction } from '../src/fraction';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
 
 const AutoBeamFormattingTests = {
   Start(): void {
@@ -871,4 +871,5 @@ function flatBeamsDownBounds(options: TestOptions): void {
   ok(true, 'Flat Beams Down (uniform) Test');
 }
 
+VexFlowTests.register(AutoBeamFormattingTests);
 export { AutoBeamFormattingTests };

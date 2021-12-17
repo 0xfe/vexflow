@@ -1,19 +1,19 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // GraceTabNote Tests
 
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { GraceNoteGroup } from 'gracenotegroup';
-import { GraceTabNote } from 'gracetabnote';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Voice } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { GraceNoteGroup } from '../src/gracenotegroup';
+import { GraceTabNote } from '../src/gracetabnote';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Voice } from '../src/voice';
 
 const GraceTabNoteTests = {
   Start(): void {
@@ -114,4 +114,5 @@ function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Slurred Test');
 }
 
+VexFlowTests.register(GraceTabNoteTests);
 export { GraceTabNoteTests };

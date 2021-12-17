@@ -1,13 +1,13 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Mike Corrigan <corrigan@gmail.com>
 // MIT License
-
-import { isGraceNote } from 'typeguard';
 
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
+import { Tables } from './tables';
+import { isGraceNote } from './typeguard';
 
 /** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {
@@ -44,19 +44,20 @@ export class Tremolo extends Modifier {
     const scale = gn ? GraceNote.SCALE : 1;
     const category = `tremolo.${gn ? 'grace' : 'default'}`;
 
-    const y_spacing = this.musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
+    const musicFont = Tables.currentMusicFont();
+    const y_spacing = musicFont.lookupMetric(`${category}.spacing`) * stemDirection;
     const height = this.num * y_spacing;
     let y = note.getStemExtents().baseY - height;
 
     if (stemDirection < 0) {
-      y += this.musicFont.lookupMetric(`${category}.offsetYStemDown`) * scale;
+      y += musicFont.lookupMetric(`${category}.offsetYStemDown`) * scale;
     } else {
-      y += this.musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
+      y += musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
     }
 
-    const fontScale = this.musicFont.lookupMetric(`${category}.point`);
+    const fontScale = musicFont.lookupMetric(`${category}.point`);
 
-    x += this.musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
+    x += musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {
       Glyph.renderGlyph(ctx, x, y, fontScale, this.code, { category });
       y += y_spacing;

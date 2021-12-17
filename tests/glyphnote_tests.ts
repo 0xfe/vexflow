@@ -1,16 +1,16 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // GlyphNote Tests
 
-import { ChordSymbol } from 'chordsymbol';
-import { Glyph } from 'glyph';
-import { Note } from 'note';
-import { Registry } from 'registry';
-import { StaveConnector } from 'staveconnector';
-import { Voice } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { ChordSymbol } from '../src/chordsymbol';
+import { Glyph } from '../src/glyph';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { StaveConnector } from '../src/staveconnector';
+import { Voice } from '../src/voice';
 
 const GlyphNoteTests = {
   Start(): void {
@@ -142,4 +142,5 @@ function repeatNote(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(GlyphNoteTests);
 export { GlyphNoteTests };

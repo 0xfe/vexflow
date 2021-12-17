@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Ron B. Yeh
 // MIT License
 //
@@ -7,10 +7,12 @@
 // eslint-disable-next-line
 // @ts-nocheck to support ES5 style class declaration in the fakeES5() test case.
 
-import { StaveNote } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
-import { TabNote } from 'tabnote';
-import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from 'typeguard';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { StaveNote } from '../src/stavenote';
+import { StemmableNote } from '../src/stemmablenote';
+import { TabNote } from '../src/tabnote';
+import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from '../src/typeguard';
 
 const TypeGuardTests = {
   Start(): void {
@@ -134,4 +136,5 @@ function edgeCaseES5vsES6(): void {
   ok(xInstance instanceof Z, 'es6: x IS an instanceof Z');
 }
 
+VexFlowTests.register(TypeGuardTests);
 export { TypeGuardTests };

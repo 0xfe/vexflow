@@ -1,22 +1,22 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // TabTie Tests
 
-import { Annotation } from 'annotation';
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { Note } from 'note';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { TieNotes } from 'stavetie';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { TabTie } from 'tabtie';
-import { Voice } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Annotation } from '../src/annotation';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { Note } from '../src/note';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { TieNotes } from '../src/stavetie';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { TabTie } from '../src/tabtie';
+import { Voice } from '../src/voice';
 
 const TabTieTests = {
   Start(): void {
@@ -29,8 +29,6 @@ const TabTieTests = {
     run('Continuous', continuous);
   },
 };
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Helper function to create TabNote objects.
@@ -45,7 +43,7 @@ function setupContext(options: TestOptions, w: number = 0, h: number = 0): { con
   const context = options.contextBuilder!(options.elementId, w || 350, h || 160);
   context.fillStyle = '#221';
   context.strokeStyle = '#221';
-  context.setFont('Arial', VexFlowTests.Font.size, '');
+  context.setFont('Arial', VexFlowTests.Font.size);
 
   const stave = new TabStave(10, 10, w || 350).addTabGlyph().setContext(context).draw();
 
@@ -235,4 +233,5 @@ function continuous(options: TestOptions, contextBuilder: ContextBuilder): void 
   ok(true, 'Continuous Hammeron');
 }
 
+VexFlowTests.register(TabTieTests);
 export { TabTieTests };

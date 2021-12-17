@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { BoundingBox } from './boundingbox';
@@ -46,7 +46,7 @@ export class Voice extends Element {
   protected stave?: Stave;
   protected mode: VoiceMode = VoiceMode.STRICT;
   protected expTicksUsed?: number;
-  protected preFormatted?: boolean;
+  protected preFormatted: boolean = false;
   protected options: { softmaxFactor: number };
 
   protected readonly totalTicks: Fraction;

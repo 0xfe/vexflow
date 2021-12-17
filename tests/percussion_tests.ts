@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 // Author: Mike Corrigan 2012 <corrigan@gmail.com>
 //
@@ -6,16 +6,22 @@
 
 // TODO: Type 'Tickable[]' is not assignable to type 'StemmableNote[]'.
 
-import { Factory } from 'factory';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { StemmableNote } from 'stemmablenote';
-import { TickContext } from 'tickcontext';
-import { Tremolo } from 'tremolo';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import {
+  ContextBuilder,
+  Factory,
+  Font,
+  FontStyle,
+  FontWeight,
+  RenderContext,
+  Stave,
+  StaveNote,
+  StaveNoteStruct,
+  StemmableNote,
+  TickContext,
+  Tremolo,
+} from '../src/index';
 
 const PercussionTests = {
   Start(): void {
@@ -178,14 +184,21 @@ const basic2 = createSingleMeasureTest((f) => {
 });
 
 const snare0 = createSingleMeasureTest((f) => {
+  const font = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
+  };
+
   f.Voice().addTickables([
     f
       .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
       .addArticulation(0, f.Articulation({ type: 'a>' }))
-      .addModifier(f.Annotation({ text: 'L' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L' }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L' }), 0),
+      .addModifier(f.Annotation({ text: 'L', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
   ]);
 });
 
@@ -224,4 +237,5 @@ const snare3 = createSingleMeasureTest((factory) => {
     ]);
 });
 
+VexFlowTests.register(PercussionTests);
 export { PercussionTests };

@@ -1,15 +1,15 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Three Voices Tests - Three voices in single staff.
 
-import { Beam } from 'beam';
-import { BuilderOptions } from 'easyscore';
-import { Factory } from 'factory';
-import { Note } from 'note';
-import { Voice } from 'voice';
-
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Beam } from '../src/beam';
+import { BuilderOptions } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { Voice } from '../src/voice';
 
 const ThreeVoicesTests = {
   Start(): void {
@@ -220,4 +220,5 @@ function autoRestThreeVoices2(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(ThreeVoicesTests);
 export { ThreeVoicesTests };

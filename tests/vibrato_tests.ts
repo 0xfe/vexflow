@@ -1,16 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Vibrato Tests
 
-import { Bend } from 'bend';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Vibrato } from 'vibrato';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Bend, ContextBuilder, Font, Formatter, TabNote, TabNoteStruct, TabStave, Vibrato } from '../src/index';
 
 const VibratoTests = {
   Start(): void {
@@ -90,7 +85,7 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.3, 1.3);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
-  ctx.setFont('Arial', VexFlowTests.Font.size, '');
+  ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -120,4 +115,5 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Vibrato with Bend');
 }
 
+VexFlowTests.register(VibratoTests);
 export { VibratoTests };

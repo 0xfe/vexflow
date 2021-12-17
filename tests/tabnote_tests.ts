@@ -1,19 +1,20 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // TabNote Tests
 
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { TickContext } from 'tickcontext';
-import { Voice, VoiceMode } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Flow } from '../src/flow';
+import { Font, FontWeight } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { TickContext } from '../src/tickcontext';
+import { Voice, VoiceMode } from '../src/voice';
 
 const TabNoteTests = {
   Start(): void {
@@ -97,7 +98,6 @@ function tickContext(): void {
 
 function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 140);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
@@ -246,7 +246,6 @@ function drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void
 
 function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
@@ -384,7 +383,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
     return tabNote;
   });
 
-  ctx.setFont('sans-serif', 10, 'bold');
+  ctx.setFont(Font.SANS_SERIF, 10, FontWeight.BOLD);
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
@@ -394,7 +393,6 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
 
 function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 250);
-
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 550, { num_lines: 8 });
   stave.setContext(ctx);
@@ -525,4 +523,5 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
   ok(true, 'TabNotes successfully drawn');
 }
 
+VexFlowTests.register(TabNoteTests);
 export { TabNoteTests };

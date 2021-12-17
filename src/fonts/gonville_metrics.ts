@@ -5,17 +5,20 @@
 export const GonvilleMetrics = {
   name: 'Gonville',
   smufl: false,
+
   stave: {
     padding: 12,
     endPaddingMax: 10,
     endPaddingMin: 5,
-    unalignedNotePadding: 10
+    unalignedNotePadding: 10,
   },
+
   accidental: {
     noteheadAccidentalPadding: 1,
     leftPadding: 2,
     accidentalSpacing: 3,
   },
+
   clef: {
     default: {
       point: 40,
@@ -90,6 +93,15 @@ export const GonvilleMetrics = {
     },
   },
 
+  // These are for numeric digits, such as in time signatures
+  digits: {
+    point: 40,
+    tupletPoint: 28,
+  },
+
+  // articulation: {
+  // },
+
   tremolo: {
     default: {
       point: 25,
@@ -109,11 +121,8 @@ export const GonvilleMetrics = {
     },
   },
 
-  // These are for numeric digits, such as in time signatures
-  digits: {
-    point: 40,
-    tupletPoint: 28,
-  },
+  // noteHead: {
+  // },
 
   stem: {
     heightAdjustmentForFlag: -3,

@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // StaveNote Tests
@@ -6,26 +6,26 @@
 // TODO: In StaveNote.preFormat() line 929, should noteHeadPadding default to StaveNote.minNoteheadPadding?
 //       The bounding box of a note changes slightly when we add a ModifierContext (even if we add zero modifiers).
 
-import { Accidental } from 'accidental';
-import { Annotation } from 'annotation';
-import { Articulation } from 'articulation';
-import { Beam } from 'beam';
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { Fraction } from 'fraction';
-import { FretHandFinger } from 'frethandfinger';
-import { Modifier, ModifierPosition } from 'modifier';
-import { ModifierContext } from 'modifiercontext';
-import { RenderContext } from 'rendercontext';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { Stem } from 'stem';
-import { StringNumber } from 'stringnumber';
-import { Stroke } from 'strokes';
-import { TickContext } from 'tickcontext';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Accidental } from '../src/accidental';
+import { Annotation } from '../src/annotation';
+import { Articulation } from '../src/articulation';
+import { Beam } from '../src/beam';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { Fraction } from '../src/fraction';
+import { FretHandFinger } from '../src/frethandfinger';
+import { Modifier, ModifierPosition } from '../src/modifier';
+import { ModifierContext } from '../src/modifiercontext';
+import { RenderContext } from '../src/rendercontext';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
+import { StringNumber } from '../src/stringnumber';
+import { Stroke } from '../src/strokes';
+import { TickContext } from '../src/tickcontext';
 
 const StaveNoteTests = {
   Start(): void {
@@ -290,9 +290,7 @@ function stemExtensionPitch(): void {
 
 function setStemDirectionDisplacement(): void {
   function getDisplacements(note: StaveNote) {
-    // eslint-disable-next-line
-    // @ts-ignore direct access to protected variable .note_heads
-    return note.note_heads.map((notehead) => notehead.isDisplaced());
+    return note.noteHeads.map((noteHead) => noteHead.isDisplaced());
   }
 
   const stemUpDisplacements = [false, true, false];
@@ -1111,4 +1109,5 @@ function centerAlignedMultiVoice(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StaveNoteTests);
 export { StaveNoteTests };

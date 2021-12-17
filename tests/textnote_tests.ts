@@ -1,20 +1,16 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Text Note Tests
 
-/* eslint-disable */
-// @ts-nocheck
-
-// TODO: TextNote needs a setFont() accessor.
-
-import { Crescendo } from 'crescendo';
-import { Flow } from 'flow';
-import { Note } from 'note';
-import { TextNote } from 'textnote';
-import { Stave } from 'stave';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Font } from '../src';
+import { Crescendo } from '../src/crescendo';
+import { Flow } from '../src/flow';
+import { Note } from '../src/note';
+import { Stave } from '../src/stave';
+import { TextNote } from '../src/textnote';
 
 const TextNoteTests = {
   Start(): void {
@@ -142,7 +138,7 @@ function superscriptAndSubscript(options: TestOptions): void {
 
   voice2.getTickables().forEach((note) => {
     const textNote = note as TextNote;
-    textNote.font = { family: 'Serif', size: 15, weight: '' };
+    textNote.setFont({ family: Font.SERIF, size: 15 });
     textNote.setLine(13);
     textNote.setJustification(TextNote.Justification.LEFT);
   });
@@ -280,4 +276,5 @@ function textDynamics(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(TextNoteTests);
 export { TextNoteTests };

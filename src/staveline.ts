@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 //
@@ -7,11 +7,12 @@
 // A simple line is often used for notating glissando articulations, but you
 // can format a `StaveLine` with arrows or colors for more pedagogical
 // purposes, such as diagrams.
+
 import { Element } from './element';
+import { FontInfo } from './font';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { Tables } from './tables';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineNotes {
@@ -51,6 +52,9 @@ export class StaveLine extends Element {
     return 'StaveLine';
   }
 
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
+
   // Text Positioning
   static readonly TextVerticalPosition = {
     TOP: 1,
@@ -79,7 +83,6 @@ export class StaveLine extends Element {
   };
 
   protected text: string;
-  protected font: FontInfo;
 
   // These five instance variables are all initialized by the constructor via this.setNotes(notes).
   protected notes!: StaveLineNotes;
@@ -106,12 +109,7 @@ export class StaveLine extends Element {
     this.setNotes(notes);
 
     this.text = '';
-
-    this.font = {
-      family: 'Arial',
-      size: 10,
-      weight: '',
-    };
+    this.resetFont();
 
     this.render_options = {
       // Space to add to the left or the right
@@ -140,12 +138,6 @@ export class StaveLine extends Element {
       text_position_vertical: StaveLine.TextVerticalPosition.TOP,
       text_justification: StaveLine.TextJustification.CENTER,
     };
-  }
-
-  // Set the font for the `StaveLine` text
-  setFont(font: FontInfo): this {
-    this.font = font;
-    return this;
   }
 
   // The the annotation for the `StaveLine`
@@ -198,10 +190,7 @@ export class StaveLine extends Element {
   // Apply the text styling to the context
   applyFontStyle(): void {
     const ctx = this.checkContext();
-
-    if (this.font) {
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
-    }
+    ctx.setFont(this.textFont);
 
     const render_options = this.render_options;
     const color = render_options.color;

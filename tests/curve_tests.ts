@@ -1,14 +1,14 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Curve Tests
 
-import { CurvePosition } from 'curve';
-import { BuilderOptions } from 'easyscore';
-import { Factory } from 'factory';
-import { StaveNote } from 'stavenote';
-
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { CurvePosition } from '../src/curve';
+import { BuilderOptions } from '../src/easyscore';
+import { Factory } from '../src/factory';
+import { StaveNote } from '../src/stavenote';
 
 const CurveTests = {
   Start(): void {
@@ -162,4 +162,5 @@ const top = createTest(
   }
 );
 
+VexFlowTests.register(CurveTests);
 export { CurveTests };

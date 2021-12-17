@@ -1,13 +1,20 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-/** Bounding boxes for interactive notation */
+// Bounding boxes for interactive notation.
 
-export class BoundingBox {
-  protected x: number;
-  protected y: number;
-  protected w: number;
-  protected h: number;
+export interface Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export class BoundingBox implements Bounds {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 
   /**
    * Create a new copy.

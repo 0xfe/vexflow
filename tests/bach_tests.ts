@@ -1,14 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Bach Demo
 
-import { Factory } from 'factory';
-import { Registry } from 'registry';
-import { BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-
 import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { BarlineType, Factory, Registry, StaveNote } from '../src/';
 
 const BachDemoTests = {
   Start(): void {
@@ -434,4 +431,5 @@ function minuet1(options: TestOptions): void {
   ok(true, 'Bach Minuet 1');
 }
 
+VexFlowTests.register(BachDemoTests);
 export { BachDemoTests };

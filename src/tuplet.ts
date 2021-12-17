@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 /**
  * ## Description
@@ -50,6 +50,7 @@ import { Glyph } from './glyph';
 import { Note } from './note';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
 import { defined, RuntimeError } from './util';
 
 export interface TupletOptions {
@@ -120,7 +121,7 @@ export class Tuplet extends Element {
 
     this.ratioed =
       this.options.ratioed != undefined ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
-    this.point = this.musicFont.lookupMetric('digits.tupletPoint');
+    this.point = Tables.currentMusicFont().lookupMetric('digits.tupletPoint');
     this.y_pos = 16;
     this.x_pos = 100;
     this.width = 200;
@@ -188,7 +189,8 @@ export class Tuplet extends Element {
     // eslint-disable-next-line
     console.warn(
       'beats_occupied has been deprecated as an option for tuplets. Please use notes_occupied instead.',
-      'Calls to getBeatsOccupied / setBeatsOccupied should now be routed to getNotesOccupied / setNotesOccupied.'
+      'Calls to getBeatsOccupied / setBeatsOccupied should now be routed to getNotesOccupied / setNotesOccupied.',
+      'The old methods will be removed in VexFlow 5.0.'
     );
   }
 
@@ -352,7 +354,7 @@ export class Tuplet extends Element {
     }
 
     // draw numerator glyphs
-    const shiftY = this.musicFont.lookupMetric('digits.shiftY', 0);
+    const shiftY = Tables.currentMusicFont().lookupMetric('digits.shiftY', 0);
 
     let x_offset = 0;
     this.numerator_glyphs.forEach((glyph) => {

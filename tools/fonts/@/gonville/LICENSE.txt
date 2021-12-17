@@ -1,0 +1,41 @@
+This is the LICENCE file for Simon Tatham's musical symbols font
+'Gonville'.
+
+The usable form of Gonville consists of font files in standard font
+formats: OTF, Type 1 PFA and SVG. These files are generated as
+output by running a set of computer programs (the source code).
+
+Use of the output font files is UNRESTRICTED. I, Simon Tatham,
+hereby disclaim any copyright I may hold in those files, to the
+maximum extent permitted by law. Anybody receiving a copy of a
+Gonville font file is hereby granted permission to use, copy, modify
+and redistribute it in any form with no restrictions and with no
+conditions. In particular, typesetting with Gonville font files in a
+way that embeds portions of the font data in the output document
+(e.g. PDF) imposes no constraint whatsoever on the ways in which you
+may use or license the resulting document.
+
+---
+
+The Gonville source code is copyright 2009 Simon Tatham. All rights
+reserved.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

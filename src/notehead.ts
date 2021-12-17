@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { BoundingBox } from './boundingbox';
@@ -96,7 +96,7 @@ function drawSlashNoteHead(
  */
 export class NoteHead extends Note {
   /** To enable logging for this class. Set `Vex.Flow.NoteHead.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'NoteHead';
@@ -147,9 +147,7 @@ export class NoteHead extends Note {
     this.render_options = {
       ...this.render_options,
       // font size for note heads
-      glyph_font_scale: noteStruct.glyph_font_scale || Tables.DEFAULT_NOTATION_FONT_SCALE,
-      // number of stroke px to the left and right of head
-      stroke_px: 3,
+      glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
     };
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
@@ -208,8 +206,9 @@ export class NoteHead extends Note {
     // For a more natural displaced notehead, we adjust the displacement amount
     // by half the stem width in order to maintain a slight overlap with the stem
     const displacementStemAdjustment = Stem.WIDTH / 2;
-    const fontShift = this.musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
-    const displacedFontShift = this.musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
+    const musicFont = Tables.currentMusicFont();
+    const fontShift = musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
+    const displacedFontShift = musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
 
     return (
       x +
@@ -249,7 +248,7 @@ export class NoteHead extends Note {
     const width = this.getWidth() + this.leftDisplacedHeadPx + this.rightDisplacedHeadPx;
 
     this.setWidth(width);
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 
@@ -282,7 +281,6 @@ export class NoteHead extends Note {
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        font: this.musicFont,
         category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
       });
     }

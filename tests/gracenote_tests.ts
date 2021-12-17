@@ -1,17 +1,17 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // GraceNote Tests
 
 // TODO: In the 'stem' test (aka Grace Note Stem › SVG + Petaluma in flow.html), the Petaluma note heads are not scaled down properly.
 
-import { Beam } from 'beam';
-import { Factory } from 'factory';
-import { Formatter } from 'formatter';
-import { GraceNote, GraceNoteStruct } from 'gracenote';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Beam } from '../src/beam';
+import { Factory } from '../src/factory';
+import { Formatter } from '../src/formatter';
+import { GraceNote, GraceNoteStruct } from '../src/gracenote';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const GraceNoteTests = {
   Start(): void {
@@ -480,4 +480,5 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
   ok(true, 'Seventeenth Test');
 }
 
+VexFlowTests.register(GraceNoteTests);
 export { GraceNoteTests };

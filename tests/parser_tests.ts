@@ -1,9 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Parser Tests
 
-import { Grammar, Parser, Result, RuleFunction } from 'parser';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { Grammar, Parser, Result, RuleFunction } from '../src/parser';
 
 const ParserTests = {
   Start(): void {
@@ -157,4 +159,5 @@ function microscore(): void {
   fails(parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
 }
 
+VexFlowTests.register(ParserTests);
 export { ParserTests };

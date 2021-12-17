@@ -1,13 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Registry Tests
 
-import { EasyScore } from 'easyscore';
-import { Element } from 'element';
-import { Factory } from 'factory';
-import { Registry } from 'registry';
-import { StaveNote } from 'stavenote';
+import { VexFlowTests } from './vexflow_test_helpers';
+
+import { EasyScore, Element, Factory, Registry, StaveNote } from '../src/';
 
 const RegistryTests = {
   Start(): void {
@@ -88,4 +86,5 @@ function classes(): void {
   equal(registry.getElementsByClass('boo').length, 0);
 }
 
+VexFlowTests.register(RegistryTests);
 export { RegistryTests };

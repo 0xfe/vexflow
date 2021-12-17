@@ -1,9 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // StaveLine Tests
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Font, FontStyle } from '../src/font';
 
 const StaveLineTests = {
   Start(): void {
@@ -33,7 +35,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: 'serif', size: 12, weight: 'italic' },
+      font: { family: Font.SERIF, size: 12, style: FontStyle.ITALIC },
       text: 'gliss.',
     },
   });
@@ -145,4 +147,5 @@ function simple1(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StaveLineTests);
 export { StaveLineTests };

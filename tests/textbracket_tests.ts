@@ -1,9 +1,8 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // TextBracket Tests
 
-import { FontInfo } from '../src/types/common';
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const TextBracketTests = {
@@ -76,7 +75,8 @@ function simple1(options: TestOptions): void {
       options: {
         position: 'top',
         superscript: 'superscript',
-        font: { family: 'Arial', size: 15, weight: '' },
+        // weight & style below can be left undefined. They will fall back to the default defined in textbracket.ts.
+        font: { family: 'Arial', size: 15, weight: 'normal', style: 'normal' },
       },
     }),
   ];
@@ -90,7 +90,7 @@ function simple1(options: TestOptions): void {
         superscript: 'vb',
         position: 'bottom',
         line: 3,
-        font: { size: 30 } as FontInfo,
+        font: { size: 30 },
       },
     }),
     f.TextBracket({
@@ -121,4 +121,5 @@ function simple1(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(TextBracketTests);
 export { TextBracketTests };

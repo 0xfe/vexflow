@@ -1,8 +1,9 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
+import { Font } from './font';
 import { Fraction } from './fraction';
 import { ModifierContext } from './modifiercontext';
 import { RenderContext } from './rendercontext';
@@ -37,9 +38,8 @@ export interface FormatterOptions {
   maxIterations?: number;
 }
 
-export interface FormatOptions {
+export interface FormatParams {
   align_rests?: boolean;
-  padding?: number;
   stave?: Stave;
   context?: RenderContext;
   auto_beam?: boolean;
@@ -165,7 +165,7 @@ function getRestLineForNextNoteGroup(
  */
 export class Formatter {
   // To enable logging for this class. Set `Vex.Flow.Formatter.DEBUG` to `true`.
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
   protected hasMinTotalWidth: boolean;
   protected minTotalWidth: number;
   protected contextGaps: {
@@ -207,7 +207,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Tables.DEFAULT_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: Tables.currentMusicFont().lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -223,7 +223,7 @@ export class Formatter {
     }
 
     ctx.save();
-    ctx.setFont('Arial', 8, '');
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     contextGaps.gaps.forEach((gap) => {
       stroke(x + gap.x1, x + gap.x2, 'rgba(100,200,100,0.4)');
@@ -261,7 +261,7 @@ export class Formatter {
     ctx: RenderContext,
     stave: Stave,
     notes: StemmableNote[],
-    params?: FormatOptions | boolean
+    params?: FormatParams | boolean
   ): BoundingBox | undefined {
     let options = {
       auto_beam: false,
@@ -313,7 +313,7 @@ export class Formatter {
     tabnotes: TabNote[],
     notes: Tickable[],
     autobeam: boolean,
-    params: FormatOptions
+    params: FormatParams
   ): void {
     let opts = {
       auto_beam: autobeam,
@@ -459,7 +459,7 @@ export class Formatter {
    * @returns the estimated width in pixels
    */
   preCalculateMinTotalWidth(voices: Voice[]): number {
-    const unalignedPadding = Tables.DEFAULT_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    const unalignedPadding = Tables.currentMusicFont().lookupMetric('stave.unalignedNotePadding');
     // Calculate additional padding based on 3 methods:
     // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
     let unalignedCtxCount = 0;
@@ -768,7 +768,7 @@ export class Formatter {
       lastContext.getMetrics().notePx -
       lastContext.getMetrics().totalRightPx -
       firstContext.getMetrics().totalLeftPx;
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.currentMusicFont();
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     let targetWidth = adjustedJustifyWidth;
@@ -776,7 +776,7 @@ export class Formatter {
     let actualWidth = shiftToIdealDistances(distances);
     // Calculate right justification by finding max of (configured value, min distance between tickables)
     // so measures with lots of white space use it evenly, and crowded measures use at least the configured
-    // space
+    // space.
     const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
       let mdCalc = targetWidth / 2;
       if (distances.length > 1) {
@@ -993,7 +993,7 @@ export class Formatter {
    * Set `options.context` to the rendering context. Set `options.align_rests`
    * to true to enable rest alignment.
    */
-  format(voices: Voice[], justifyWidth?: number, options?: FormatOptions): this {
+  format(voices: Voice[], justifyWidth?: number, options?: FormatParams): this {
     const opts = {
       align_rests: false,
       ...options,
@@ -1016,12 +1016,16 @@ export class Formatter {
   }
 
   // This method is just like `format` except that the `justifyWidth` is inferred from the `stave`.
-  formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatOptions): this {
-    const options: FormatOptions = { padding: 10, context: stave.getContext(), ...optionsParam };
+  formatToStave(voices: Voice[], stave: Stave, optionsParam?: FormatParams): this {
+    const options: FormatParams = { context: stave.getContext(), ...optionsParam };
 
     // eslint-disable-next-line
     const justifyWidth = stave.getNoteEndX() - stave.getNoteStartX() - Stave.defaultPadding;
     L('Formatting voices to width: ', justifyWidth);
     return this.format(voices, justifyWidth, options);
+  }
+
+  getTickContext(tick: number): TickContext | undefined {
+    return this.tickContexts?.map[tick];
   }
 }

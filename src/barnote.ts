@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
 import { ModifierContext } from './modifiercontext';
@@ -20,7 +20,7 @@ function L(...args: any[]) {
  */
 export class BarNote extends Note {
   /** To enable logging for this class. Set `Vex.Flow.BarNote.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'BarNote';
@@ -76,7 +76,7 @@ export class BarNote extends Note {
 
   /** Overridden to ignore. */
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

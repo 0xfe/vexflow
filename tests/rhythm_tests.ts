@@ -1,17 +1,17 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Rhythm Tests
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Formatter } from 'formatter';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { BarlineType } from 'stavebarline';
-import { StaveNote } from 'stavenote';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Formatter } from '../src/formatter';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { BarlineType } from '../src/stavebarline';
+import { StaveNote } from '../src/stavenote';
 
 const RhythmTests = {
   Start(): void {
@@ -479,4 +479,5 @@ function drawThirtySecondWithScratches(options: TestOptions, contextBuilder: Con
   expect(0);
 }
 
+VexFlowTests.register(RhythmTests);
 export { RhythmTests };

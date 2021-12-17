@@ -1,15 +1,24 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Font, FontInfo } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
-import { warn } from './util';
+import { isHTMLCanvas } from './typeguard';
+import { globalObject, warn } from './util';
 
 /**
- * A rendering context for the Canvas backend (CanvasRenderingContext2D).
+ * A rendering context for the Canvas backend. This class serves as a proxy for the
+ * underlying CanvasRenderingContext2D object, part of the browser's API.
  */
 export class CanvasContext extends RenderContext {
-  context2D: CanvasRenderingContext2D;
-  canvas: HTMLCanvasElement | { width: number; height: number };
+  /**  The 2D rendering context from the Canvas API. Forward method calls to this object. */
+  context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+  /**
+   * The HTMLCanvasElement or OffscreenCanvas that is associated with the above context.
+   * If there was no associated `<canvas>` element, just store the default WIDTH / HEIGHT.
+   */
+  canvas: HTMLCanvasElement | OffscreenCanvas | { width: number; height: number };
 
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
@@ -44,7 +53,7 @@ export class CanvasContext extends RenderContext {
     return [width, height];
   }
 
-  constructor(context: CanvasRenderingContext2D) {
+  constructor(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
     super();
     this.context2D = context;
     if (!context.canvas) {
@@ -132,8 +141,8 @@ export class CanvasContext extends RenderContext {
   }
 
   resize(width: number, height: number): this {
-    const canvasElement = this.context2D.canvas;
-    const devicePixelRatio = window.devicePixelRatio || 1;
+    const canvas = this.context2D.canvas;
+    const devicePixelRatio = globalObject().devicePixelRatio || 1;
 
     // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
     [width, height] = CanvasContext.sanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
@@ -142,10 +151,15 @@ export class CanvasContext extends RenderContext {
     width = (width / devicePixelRatio) | 0;
     height = (height / devicePixelRatio) | 0;
 
-    canvasElement.width = width * devicePixelRatio;
-    canvasElement.height = height * devicePixelRatio;
-    canvasElement.style.width = width + 'px';
-    canvasElement.style.height = height + 'px';
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
+
+    // The canvas could be an instance of either HTMLCanvasElement or an OffscreenCanvas.
+    // Only HTMLCanvasElement has a style attribute.
+    if (isHTMLCanvas(canvas)) {
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+    }
 
     return this.scale(devicePixelRatio, devicePixelRatio);
   }
@@ -252,34 +266,23 @@ export class CanvasContext extends RenderContext {
     return this.context2D.strokeStyle;
   }
 
-  setFont(family: string, size: number, weight?: string): this {
-    this.context2D.font = (weight || '') + ' ' + size + 'pt ' + family;
-    this.textHeight = (size * 4) / 3;
+  /**
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   */
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    const fontInfo = Font.validate(f, size, weight, style);
+    this.context2D.font = Font.toCSSString(fontInfo);
+    this.textHeight = Font.convertSizeToPixelValue(fontInfo.size);
     return this;
   }
 
   /** Return a string of the form `'italic bold 15pt Arial'` */
   getFont(): string {
-    return this.context2D.font;
-  }
-
-  setRawFont(font: string): this {
-    this.context2D.font = font;
-
-    const fontArray = font.split(' ');
-    const size = Number(fontArray[0].match(/\d+/));
-    // The font size is specified in points, scale it to canvas units.
-    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    this.textHeight = (size * 4) / 3;
-
-    return this;
-  }
-
-  set font(value: string) {
-    this.setRawFont(value);
-  }
-
-  get font(): string {
     return this.context2D.font;
   }
 }

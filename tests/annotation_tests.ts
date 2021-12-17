@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Annotation Tests
@@ -7,22 +7,24 @@
 //       Did a previous version of the API accept a number as the fourth argument?
 //       We removed the fourth argument from all of our test cases.
 
-import { Annotation } from 'annotation';
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { Registry } from 'registry';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { TabNote, TabNoteStruct } from 'tabnote';
-import { TabStave } from 'tabstave';
-import { Tickable } from 'tickable';
-import { Vibrato } from 'vibrato';
-import { Voice } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { ModifierPosition } from '../src';
+import { Annotation } from '../src/annotation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Flow } from '../src/flow';
+import { Font, FontStyle, FontWeight } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { Registry } from '../src/registry';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { TabNote, TabNoteStruct } from '../src/tabnote';
+import { TabStave } from '../src/tabstave';
+import { Tickable } from '../src/tickable';
+import { Vibrato } from '../src/vibrato';
+import { Voice } from '../src/voice';
 
 const AnnotationTests = {
   Start(): void {
@@ -77,7 +79,9 @@ function lyrics(options: TestOptions): void {
       const verse = Math.floor(ix / 3);
       const noteGroupID = 'n' + (ix % 3);
       const noteGroup = registry.getElementById(noteGroupID) as Tickable;
-      noteGroup.addModifier(f.Annotation({ text }).setFont('Roboto Slab', fontSize, 'normal'), verse);
+      const lyricsAnnotation = f.Annotation({ text }).setFont('Roboto Slab', fontSize);
+      lyricsAnnotation.setPosition(ModifierPosition.ABOVE);
+      noteGroup.addModifier(lyricsAnnotation, verse);
     });
 
     // Second row doesn't have any lyrics.
@@ -99,7 +103,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = ' 10pt Arial';
+  ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -129,7 +133,7 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.strokeStyle = '#221';
   const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
-  const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
+  const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
 
   const notes = [
     staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
@@ -145,7 +149,7 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.font = ' 10pt Arial';
+  ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -160,7 +164,7 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
       positions: [{ str: 2, fret: 9 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('(8va)').setFont('Times', FONT_SIZE, 'italic'), 0)
+      .addModifier(new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC), 0)
       .addModifier(new Annotation('A.H.'), 0),
   ];
 
@@ -173,10 +177,11 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   ctx.scale(1.5, 1.5);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
-  ctx.setFont('Arial', FONT_SIZE, '');
+  ctx.setFont(Font.SANS_SERIF, FONT_SIZE);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
-  const annotation = (text: string) => new Annotation(text).setFont('Times', FONT_SIZE, 'italic');
+  const annotation = (text: string) =>
+    new Annotation(text).setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC);
 
   const notes = [
     tabNote({
@@ -219,7 +224,7 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string) =>
-    new Annotation(text).setFont('Times', FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
+    new Annotation(text).setFont(Font.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
 
   const notes = [
     staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
@@ -273,7 +278,7 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)
-      .setFont('Arial', FONT_SIZE)
+      .setFont(Font.SANS_SERIF, FONT_SIZE)
       .setJustification(hJustification)
       .setVerticalJustification(vJustification);
 
@@ -301,7 +306,7 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)
-      .setFont('Arial', FONT_SIZE)
+      .setFont(Font.SANS_SERIF, FONT_SIZE)
       .setJustification(hJustification)
       .setVerticalJustification(vJustification);
 
@@ -321,7 +326,7 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 200);
-  ctx.font = '10pt Arial';
+  ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 550);
   stave.setContext(ctx);
   stave.draw();
@@ -402,4 +407,5 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'TabNotes successfully drawn');
 }
 
+VexFlowTests.register(AnnotationTests);
 export { AnnotationTests };

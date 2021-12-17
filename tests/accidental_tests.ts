@@ -1,26 +1,26 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Accidental Tests
 
-import { Accidental } from 'accidental';
-import { Beam } from 'beam';
-import { Factory } from 'factory';
-import { Flow } from 'flow';
-import { Formatter } from 'formatter';
-import { Modifier } from 'modifier';
-import { ModifierContext } from 'modifiercontext';
-import { Note } from 'note';
-import { RenderContext } from 'rendercontext';
-import { Stave } from 'stave';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-import { Stem } from 'stem';
-import { TickContext } from 'tickcontext';
-import { TimeSigNote } from 'timesignote';
-import { isCategory } from 'typeguard';
-import { Voice } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Accidental } from '../src/accidental';
+import { Beam } from '../src/beam';
+import { Factory } from '../src/factory';
+import { Flow } from '../src/flow';
+import { Formatter } from '../src/formatter';
+import { Modifier } from '../src/modifier';
+import { ModifierContext } from '../src/modifiercontext';
+import { Note } from '../src/note';
+import { RenderContext } from '../src/rendercontext';
+import { Stave } from '../src/stave';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
+import { TickContext } from '../src/tickcontext';
+import { TimeSigNote } from '../src/timesignote';
+import { isCategory } from '../src/typeguard';
+import { Voice } from '../src/voice';
 
 const AccidentalTests = {
   Start(): void {
@@ -1195,4 +1195,5 @@ function factoryAPI(options: TestOptions): void {
   ok(true, 'Factory API');
 }
 
+VexFlowTests.register(AccidentalTests);
 export { AccidentalTests };

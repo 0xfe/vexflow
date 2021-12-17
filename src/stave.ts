@@ -1,11 +1,10 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { isBarline } from 'typeguard';
-
-import { BoundingBox } from './boundingbox';
+import { BoundingBox, Bounds } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -16,7 +15,7 @@ import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
-import { Bounds, FontInfo } from './types/common';
+import { isBarline } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -24,15 +23,9 @@ export interface StaveLineConfig {
 }
 
 export interface StaveOptions {
-  spacing?: number;
-  thickness?: number;
-  x_shift?: number;
-  y_shift?: number;
-  cps?: { x: number; y: number }[];
   bottom_text_position?: number;
   line_config?: StaveLineConfig[];
   space_below_staff_ln?: number;
-  glyph_spacing_px?: number;
   space_above_staff_ln?: number;
   vertical_bar_width?: number;
   fill_style?: string;
@@ -65,9 +58,17 @@ export class Stave extends Element {
     return 'Stave';
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: 8,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
+
+  readonly options: Required<StaveOptions>;
+
   protected start_x: number;
   protected clef: string;
-  protected options: Required<StaveOptions>;
   protected endClef?: string;
 
   protected x: number;
@@ -79,7 +80,6 @@ export class Stave extends Element {
   protected formatted: boolean;
   protected end_x: number;
   protected measure: number;
-  protected font: FontInfo;
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
@@ -88,12 +88,13 @@ export class Stave extends Element {
   // This is the sum of the padding that normally goes on left + right of a stave during
   // drawing. Used to size staves correctly with content width.
   static get defaultPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
+
   // Right padding, used by system if startX is already determined.
   static get rightPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
@@ -110,18 +111,10 @@ export class Stave extends Element {
     this.measure = 0;
     this.clef = 'treble';
     this.endClef = undefined;
-    this.font = {
-      family: 'sans-serif',
-      size: 8,
-      weight: '',
-    };
+    this.resetFont();
+
     this.options = {
-      spacing: 2,
-      thickness: 2,
-      x_shift: 0,
-      y_shift: 10,
       vertical_bar_width: 10, // Width around vertical bar end-marker
-      glyph_spacing_px: 10,
       num_lines: 5,
       fill_style: '#999999',
       left_bar: true, // draw vertical bar on left
@@ -132,7 +125,6 @@ export class Stave extends Element {
       top_text_position: 1, // in staff lines
       bottom_text_position: 4, // in staff lines
       line_config: [],
-      cps: [],
       ...options,
     };
     this.bounds = { x: this.x, y: this.y, w: this.width, h: 0 };
@@ -195,7 +187,7 @@ export class Stave extends Element {
   }
 
   getTieEndX(): number {
-    return this.x + this.width;
+    return this.end_x;
   }
 
   getX(): number {
@@ -368,7 +360,8 @@ export class Stave extends Element {
     return this.getYForLine(this.options.num_lines);
   }
 
-  // This returns the y for the *center* of a staff line
+  // This returns
+  /** @returns the y for the *center* of a staff line */
   getYForLine(line: number): number {
     const options = this.options;
     const spacing = options.spacing_between_lines_px;
@@ -427,7 +420,7 @@ export class Stave extends Element {
   }
 
   // Bar Line functions
-  setBegBarType(type: number): this {
+  setBegBarType(type: number | BarlineType): this {
     // Only valid bar types at beginning of stave is none, single or begin repeat
     const { SINGLE, REPEAT_BEGIN, NONE } = BarlineType;
     if (type === SINGLE || type === REPEAT_BEGIN || type === NONE) {
@@ -437,7 +430,7 @@ export class Stave extends Element {
     return this;
   }
 
-  setEndBarType(type: number): this {
+  setEndBarType(type: number | BarlineType): this {
     // Repeat end not valid at end of stave
     if (type !== BarlineType.REPEAT_BEGIN) {
       (this.modifiers[1] as Barline).setType(type);
@@ -765,10 +758,10 @@ export class Stave extends Element {
     // Render measure numbers
     if (this.measure > 0) {
       ctx.save();
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
-      const text_width = ctx.measureText('' + this.measure).width;
+      ctx.setFont(this.textFont);
+      const textWidth = ctx.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;
-      ctx.fillText('' + this.measure, this.x - text_width / 2, y);
+      ctx.fillText('' + this.measure, this.x - textWidth / 2, y);
       ctx.restore();
     }
     ctx.closeGroup();

@@ -1,16 +1,16 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 // Author: Taehoon Moon 2016
 //
 // NoteSubGroup Tests
 
-import { BarNote } from 'barnote';
-import { Factory } from 'factory';
-import { Note } from 'note';
-import { BarlineType } from 'stavebarline';
-import { StaveNote, StaveNoteStruct } from 'stavenote';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { BarNote } from '../src/barnote';
+import { Factory } from '../src/factory';
+import { Note } from '../src/note';
+import { BarlineType } from '../src/stavebarline';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 
 const NoteSubGroupTests = {
   Start(): void {
@@ -203,4 +203,5 @@ function multiStaff(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(NoteSubGroupTests);
 export { NoteSubGroupTests };

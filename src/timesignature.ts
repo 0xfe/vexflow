@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // Implements time signatures glyphs for staffs
@@ -7,6 +7,7 @@
 
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Tables } from './tables';
 import { TimeSignatureGlyph } from './timesigglyph';
 import { defined, RuntimeError } from './util';
 
@@ -16,10 +17,10 @@ export interface TimeSignatureInfo {
   num: boolean;
 }
 
-const assertIsValidFraction = (timeSpec: string) => {
-  const numbers = timeSpec.split('/').filter((number) => number !== '');
+const assertIsValidTimeSig = (timeSpec: string) => {
+  const numbers = timeSpec.split('/');
 
-  if (numbers.length !== 2) {
+  if (numbers.length !== 2 && numbers[0] !== '+' && numbers[0] !== '-') {
     throw new RuntimeError(
       'BadTimeSignature',
       `Invalid time spec: ${timeSpec}. Must be in the form "<numerator>/<denominator>"`
@@ -27,8 +28,9 @@ const assertIsValidFraction = (timeSpec: string) => {
   }
 
   numbers.forEach((number) => {
-    if (isNaN(Number(number))) {
-      throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain two valid numbers.`);
+    // Characters consisting in number 0..9, '+', '-', '(' or ')'
+    if (/^[0-9+\-()]+$/.test(number) == false) {
+      throw new RuntimeError('BadTimeSignature', `Invalid time spec: ${timeSpec}. Must contain valid signatures.`);
     }
   });
 };
@@ -66,8 +68,9 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    this.point = this.musicFont.lookupMetric('digits.point');
-    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
+    const musicFont = Tables.currentMusicFont();
+    this.point = musicFont.lookupMetric('digits.point');
+    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifierPosition.BEGIN);
@@ -87,18 +90,18 @@ export class TimeSignature extends StaveModifier {
     }
 
     if (this.validate_args) {
-      assertIsValidFraction(timeSpec);
+      assertIsValidTimeSig(timeSpec);
     }
 
-    const [topDigits, botDigits] = timeSpec.split('/').map((number) => number.split(''));
+    const parts = timeSpec.split('/');
 
     return {
       num: true,
-      glyph: this.makeTimeSignatureGlyph(topDigits, botDigits),
+      glyph: this.makeTimeSignatureGlyph(parts[0] ?? '', parts[1] ?? ''),
     };
   }
 
-  makeTimeSignatureGlyph(topDigits: string[], botDigits: string[]): Glyph {
+  makeTimeSignatureGlyph(topDigits: string, botDigits: string): Glyph {
     return new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
   }
 

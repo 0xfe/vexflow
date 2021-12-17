@@ -1,6 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
-//
-// ## Description
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // This file implements the `Crescendo` object which draws crescendos and
 // decrescendo dynamics markings. A `Crescendo` is initialized with a
@@ -51,7 +49,7 @@ function renderHairpin(ctx: RenderContext, params: CrescendoParams) {
 }
 
 export class Crescendo extends Note {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Crescendo category string. */
   static get CATEGORY(): string {
@@ -104,7 +102,7 @@ export class Crescendo extends Note {
 
   // Preformat the note
   preFormat(): this {
-    this.setPreFormatted(true);
+    this.preFormatted = true;
     return this;
   }
 

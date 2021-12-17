@@ -1,11 +1,12 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // TickContext Tests
 
-import { Flow } from 'flow';
-import { TickContext } from 'tickcontext';
+import { VexFlowTests } from './vexflow_test_helpers';
 
+import { Flow } from '../src/flow';
+import { TickContext } from '../src/tickcontext';
 import { MockTickable } from './mocks';
 
 const TickContextTests = {
@@ -47,4 +48,5 @@ function tracking(): void {
   equal(tc.getWidth(), 30);
 }
 
+VexFlowTests.register(TickContextTests);
 export { TickContextTests };

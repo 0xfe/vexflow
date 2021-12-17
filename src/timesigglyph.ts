@@ -1,3 +1,9 @@
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// ## Description
+// Renders time signatures glyphs for staffs
+// This class is used by TimeSignature to render the associated glyphs
+
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
 import { defined } from './util';
@@ -11,8 +17,8 @@ export class TimeSignatureGlyph extends Glyph {
 
   constructor(
     timeSignature: TimeSignature,
-    topDigits: string[],
-    botDigits: string[],
+    topDigits: string,
+    botDigits: string,
     code: string,
     point: number,
     options?: { category: string }
@@ -24,8 +30,22 @@ export class TimeSignatureGlyph extends Glyph {
 
     let topWidth = 0;
     for (let i = 0; i < topDigits.length; ++i) {
-      const num = topDigits[i];
-      const topGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
+      let timeSigType = topDigits[i];
+      switch (topDigits[i]) {
+        case '-':
+          timeSigType = 'Minus';
+          break;
+        case '+':
+          timeSigType = botDigits.length > 0 ? 'PlusSmall' : 'Plus';
+          break;
+        case '(':
+          timeSigType = botDigits.length > 0 ? 'ParensLeftSmall' : 'ParensLeft';
+          break;
+        case ')':
+          timeSigType = botDigits.length > 0 ? 'ParensRightSmall' : 'ParensRight';
+          break;
+      }
+      const topGlyph = new Glyph('timeSig' + timeSigType, this.timeSignature.point);
 
       this.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width ?? 0;
@@ -33,8 +53,19 @@ export class TimeSignatureGlyph extends Glyph {
 
     let botWidth = 0;
     for (let i = 0; i < botDigits.length; ++i) {
-      const num = botDigits[i];
-      const botGlyph = new Glyph('timeSig' + num, this.timeSignature.point);
+      let timeSigType = botDigits[i];
+      switch (botDigits[i]) {
+        case '+':
+          timeSigType = 'PlusSmall';
+          break;
+        case '(':
+          timeSigType = 'ParensLeftSmall';
+          break;
+        case ')':
+          timeSigType = 'ParensRightSmall';
+          break;
+      }
+      const botGlyph = new Glyph('timeSig' + timeSigType, this.timeSignature.point);
 
       this.botGlyphs.push(botGlyph);
       botWidth += defined(botGlyph.getMetrics().width);
@@ -57,31 +88,24 @@ export class TimeSignatureGlyph extends Glyph {
 
   renderToStave(x: number): void {
     const stave = this.checkStave();
+    const ctx = this.checkContext();
 
     let start_x = x + this.topStartX;
+    let y = 0;
+    if (this.botGlyphs.length > 0) y = stave.getYForLine(this.timeSignature.topLine);
+    else y = (stave.getYForLine(this.timeSignature.topLine) + stave.getYForLine(this.timeSignature.bottomLine)) / 2;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + this.x_shift,
-        stave.getYForLine(this.timeSignature.topLine)
-      );
+      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + this.x_shift, y);
       start_x += defined(glyph.getMetrics().width);
     }
 
     start_x = x + this.botStartX;
+    y = stave.getYForLine(this.timeSignature.bottomLine);
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
       this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
-      Glyph.renderOutline(
-        this.checkContext(),
-        glyph.getMetrics().outline,
-        this.scale,
-        start_x + glyph.getMetrics().x_shift,
-        stave.getYForLine(this.timeSignature.bottomLine)
-      );
+      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + glyph.getMetrics().x_shift, y);
       start_x += defined(glyph.getMetrics().width);
     }
   }

@@ -1,15 +1,11 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Strokes Tests
 
-import { Beam } from 'beam';
-import { Bend } from 'bend';
-import { GraceNote, GraceNoteStruct } from 'gracenote';
-import { Barline } from 'stavebarline';
-import { Stroke } from 'strokes';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Barline, Beam, Bend, GraceNote, GraceNoteStruct, Stroke } from '../src/';
 
 const StrokesTests = {
   Start(): void {
@@ -441,4 +437,5 @@ function notesWithTab(options: TestOptions): void {
   ok(true);
 }
 
+VexFlowTests.register(StrokesTests);
 export { StrokesTests };

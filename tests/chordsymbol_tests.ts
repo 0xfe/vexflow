@@ -1,16 +1,16 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // ChordSymbol Tests
 
-import { Accidental } from 'accidental';
-import { ChordSymbol } from 'chordsymbol';
-import { Factory } from 'factory';
-import { Formatter } from 'formatter';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Accidental } from '../src/accidental';
+import { ChordSymbol } from '../src/chordsymbol';
+import { Factory } from '../src/factory';
+import { Formatter } from '../src/formatter';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
 
 const ChordSymbolTests = {
   Start(): void {
@@ -394,4 +394,5 @@ function doubleBottom(options: TestOptions): void {
   ok(true, '2 Bottom Chord Symbol');
 }
 
+VexFlowTests.register(ChordSymbolTests);
 export { ChordSymbolTests };

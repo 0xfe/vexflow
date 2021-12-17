@@ -1,8 +1,7 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { FontInfo } from 'types/common';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
@@ -13,15 +12,22 @@ export class StaveText extends StaveModifier {
     return 'StaveText';
   }
 
-  protected text: string;
-  protected shift_x?: number;
-  protected shift_y?: number;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SERIF,
+    size: 16,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
+
   protected options: {
     shift_x: number;
     shift_y: number;
     justification: number;
   };
-  protected font: FontInfo;
+
+  protected text: string;
+  protected shift_x?: number;
+  protected shift_y?: number;
 
   constructor(
     text: string,
@@ -40,11 +46,7 @@ export class StaveText extends StaveModifier {
       ...options,
     };
 
-    this.font = {
-      family: 'times',
-      size: 16,
-      weight: 'normal',
-    };
+    this.resetFont();
   }
 
   setStaveText(text: string): this {
@@ -62,11 +64,6 @@ export class StaveText extends StaveModifier {
     return this;
   }
 
-  setFont(font: FontInfo): this {
-    this.font = { ...this.font, ...font };
-    return this;
-  }
-
   setText(text: string): this {
     this.text = text;
     return this;
@@ -78,7 +75,7 @@ export class StaveText extends StaveModifier {
 
     ctx.save();
     ctx.setLineWidth(2);
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
     const text_width = ctx.measureText('' + this.text).width;
 
     let x;

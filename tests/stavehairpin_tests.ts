@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 // Author: Raffaele Viglianti, 2012
 //
@@ -6,11 +6,11 @@
 
 // TODO: Incorrect property names in the options object: vo, left_ho, right_ho.
 
-import { RenderContext } from 'rendercontext';
-import { StaveHairpin, StaveHairpinRenderOptions } from 'stavehairpin';
-import { StaveNote } from 'stavenote';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { RenderContext } from '../src/rendercontext';
+import { StaveHairpin, StaveHairpinRenderOptions } from '../src/stavehairpin';
+import { StaveNote } from '../src/stavenote';
 
 const StaveHairpinTests = {
   Start(): void {
@@ -129,4 +129,5 @@ const height = createTest((ctx, notes) => {
   });
 });
 
+VexFlowTests.register(StaveHairpinTests);
 export { StaveHairpinTests };

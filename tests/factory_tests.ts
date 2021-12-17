@@ -1,12 +1,12 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Factory Tests
 
-import { Factory } from 'factory';
-import { Barline } from 'stavebarline';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Factory } from '../src/factory';
+import { Barline } from '../src/stavebarline';
 
 const FactoryTests = {
   Start(): void {
@@ -61,4 +61,5 @@ function drawTab(options: TestOptions): void {
   expect(1);
 }
 
+VexFlowTests.register(FactoryTests);
 export { FactoryTests };

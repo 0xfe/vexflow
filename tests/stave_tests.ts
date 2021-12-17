@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // Basic Stave Tests
@@ -6,24 +6,24 @@
 // TODO: Like Stave.setTempo(t: StaveTempoOptions, ...), Stave.setText(...) could declare an interface called StaveTextOptions.
 //       This helps developers because they can use the named type in their code for type checking.
 
-import { Accidental } from 'accidental';
-import { Beam } from 'beam';
-import { Clef } from 'clef';
-import { Formatter } from 'formatter';
-import { KeySignature } from 'keysignature';
-import { Modifier } from 'modifier';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { Barline, BarlineType } from 'stavebarline';
-import { StaveModifier } from 'stavemodifier';
-import { StaveNote } from 'stavenote';
-import { Repetition } from 'staverepetition';
-import { StaveTempoOptions } from 'stavetempo';
-import { VoltaType } from 'stavevolta';
-import { Justification } from 'textnote';
-import { TimeSignature } from 'timesignature';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Accidental } from '../src/accidental';
+import { Beam } from '../src/beam';
+import { Clef } from '../src/clef';
+import { Formatter } from '../src/formatter';
+import { KeySignature } from '../src/keysignature';
+import { Modifier } from '../src/modifier';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { Barline, BarlineType } from '../src/stavebarline';
+import { StaveModifier } from '../src/stavemodifier';
+import { StaveNote } from '../src/stavenote';
+import { Repetition } from '../src/staverepetition';
+import { StaveTempoOptions } from '../src/stavetempo';
+import { VoltaType } from '../src/stavevolta';
+import { Justification } from '../src/textnote';
+import { TimeSignature } from '../src/timesignature';
 
 const StaveTests = {
   Start(): void {
@@ -714,4 +714,5 @@ function factoryAPI(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(StaveTests);
 export { StaveTests };

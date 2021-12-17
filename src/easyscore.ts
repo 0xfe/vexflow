@@ -1,7 +1,5 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-
-import { Stem } from 'stem';
 
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
@@ -12,6 +10,7 @@ import { Note } from './note';
 import { Grammar, Match, Parser, Result, Rule, RuleFunction } from './parser';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
+import { Stem } from './stem';
 import { TupletOptions } from './tuplet';
 import { defined, log, RuntimeError } from './util';
 import { Voice } from './voice';
@@ -23,9 +22,9 @@ function L(...args: any[]): void {
 }
 
 // eslint-disable-next-line
-type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
+export type CommitHook = (obj: any, note: StaveNote, builder: Builder) => void;
 
-class EasyScoreGrammar implements Grammar {
+export class EasyScoreGrammar implements Grammar {
   builder: Builder;
 
   constructor(builder: Builder) {
@@ -210,13 +209,13 @@ class EasyScoreGrammar implements Grammar {
   }
 }
 
-interface NotePiece {
+export interface NotePiece {
   key: string;
   accid?: string | null;
   octave?: string;
 }
 
-class Piece {
+export class Piece {
   chord: NotePiece[] = [];
   duration: string;
   dots: number = 0;
@@ -227,7 +226,7 @@ class Piece {
   }
 }
 
-interface BuilderElements {
+export interface BuilderElements {
   notes: StaveNote[];
   accidentals: (Accidental | undefined)[][];
 }

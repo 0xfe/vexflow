@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 // ## Description
 // A base class for stave modifiers (e.g. clefs, key signatures)
@@ -112,7 +112,7 @@ export class StaveModifier extends Element {
   }
 
   // eslint-disable-next-line
-  draw(element?: Element, x_shift?: number): void {
+  draw(...args: any[]): void {
     // DO NOTHING.
   }
 }

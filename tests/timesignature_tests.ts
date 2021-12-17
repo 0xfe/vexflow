@@ -1,14 +1,14 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 //
 // TimeSignature Tests
 
-import { ContextBuilder } from 'renderer';
-import { Stave, StaveLineConfig } from 'stave';
-import { StaveConnector } from 'staveconnector';
-import { TimeSignature } from 'timesignature';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { ContextBuilder } from '../src/renderer';
+import { Stave, StaveLineConfig } from '../src/stave';
+import { StaveConnector } from '../src/staveconnector';
+import { TimeSignature } from '../src/timesignature';
 
 const TimeSignatureTests = {
   Start(): void {
@@ -17,6 +17,11 @@ const TimeSignatureTests = {
     const run = VexFlowTests.runTests;
     run('Basic Time Signatures', basic);
     run('Big Signature Test', big);
+    run('Additive Signature Test', additive);
+    run('Alternating Signature Test', alternating);
+    run('Interchangeable Signature Test', interchangeable);
+    run('Aggregate Signature Test', agregate);
+    run('Complex Signature Test', complex);
     run('Time Signature multiple staves alignment test', multiple);
     run('Time Signature Change Test', change);
   },
@@ -25,12 +30,12 @@ const TimeSignatureTests = {
 function parser(): void {
   const timeSig = new TimeSignature();
 
-  const mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+'];
+  const mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+', '1+', '+1', '(3+', '+3)', '()', '(+)'];
   mustFail.forEach((invalidString) => {
     throws(() => timeSig.parseTimeSpec(invalidString), /BadTimeSignature/);
   });
 
-  const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|'];
+  const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|', '+'];
   mustPass.forEach((validString) => timeSig.parseTimeSpec(validString));
 
   ok(true, 'all pass');
@@ -67,6 +72,58 @@ function big(options: TestOptions, contextBuilder: ContextBuilder): void {
     .addTimeSignature('7/16')
     .addTimeSignature('1234567/890')
     .addTimeSignature('987/654321')
+    .setContext(ctx)
+    .draw();
+
+  ok(true, 'all pass');
+}
+
+function additive(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('2+3+2/8').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function alternating(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('6/8').addTimeSignature('+').addTimeSignature('3/4').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function interchangeable(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300).addTimeSignature('3/4').addTimeSignature('-').addTimeSignature('2/4').setContext(ctx).draw();
+
+  ok(true, 'all pass');
+}
+
+function agregate(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300)
+    .addTimeSignature('2/4')
+    .addTimeSignature('+')
+    .addTimeSignature('3/8')
+    .addTimeSignature('+')
+    .addTimeSignature('5/4')
+    .setContext(ctx)
+    .draw();
+
+  ok(true, 'all pass');
+}
+
+function complex(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 400, 120);
+
+  new Stave(10, 10, 300)
+    .addTimeSignature('(2+3)/16')
+    .addTimeSignature('+')
+    .addTimeSignature('3/8')
     .setContext(ctx)
     .draw();
 
@@ -116,4 +173,5 @@ function change(options: TestOptions): void {
   ok(true, 'all pass');
 }
 
+VexFlowTests.register(TimeSignatureTests);
 export { TimeSignatureTests };

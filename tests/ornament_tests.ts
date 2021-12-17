@@ -1,4 +1,4 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 // Author: Cyril Silverman
 //
@@ -6,18 +6,17 @@
 
 // TODO: Formatting for Jazz Ornaments is incorrect. The last note + ornament bleeds into the next measure.
 
-import { Accidental } from 'accidental';
-import { Beam } from 'beam';
-import { Formatter } from 'formatter';
-import { Glyph } from 'glyph';
-import { Ornament } from 'ornament';
-import { ContextBuilder } from 'renderer';
-import { Stave } from 'stave';
-import { StaveNote } from 'stavenote';
-import { Tables } from 'tables';
-import { Voice, VoiceMode } from 'voice';
-
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+
+import { Accidental } from '../src/accidental';
+import { Beam } from '../src/beam';
+import { Formatter } from '../src/formatter';
+import { Glyph } from '../src/glyph';
+import { Ornament } from '../src/ornament';
+import { ContextBuilder } from '../src/renderer';
+import { Stave } from '../src/stave';
+import { StaveNote } from '../src/stavenote';
+import { Voice, VoiceMode } from '../src/voice';
 
 const OrnamentTests = {
   Start(): void {
@@ -233,7 +232,7 @@ function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: Cont
 }
 
 function jazzOrnaments(options: TestOptions): void {
-  const clefWidth = Glyph.getWidth(Tables.DEFAULT_FONT_STACK, 'gClef', 38); // widest clef
+  const clefWidth = Glyph.getWidth('gClef', 38); // widest clef
 
   // Helper function.
   function draw(modifiers: Ornament[], keys: string[], x: number, width: number, y: number, stemDirection?: number) {
@@ -392,4 +391,5 @@ function jazzOrnaments(options: TestOptions): void {
   draw(mods, ['e/4'], curX, width, curY);
 }
 
+VexFlowTests.register(OrnamentTests);
 export { OrnamentTests };

@@ -1,8 +1,7 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { FontInfo } from 'types/common';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -20,12 +19,18 @@ export class StaveTempo extends StaveModifier {
     return 'StaveTempo';
   }
 
-  protected font: FontInfo;
-  /** Font size for note. */
-  public render_options = { glyph_font_scale: 30 };
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
+
   protected tempo: StaveTempoOptions;
   protected shift_x: number;
   protected shift_y: number;
+  /** Font size for note. */
+  public render_options = { glyph_font_scale: 30 };
 
   constructor(tempo: StaveTempoOptions, x: number, shift_y: number) {
     super();
@@ -35,11 +40,7 @@ export class StaveTempo extends StaveModifier {
     this.x = x;
     this.shift_x = 10;
     this.shift_y = shift_y;
-    this.font = {
-      family: 'times',
-      size: 14,
-      weight: 'bold',
-    };
+    this.resetFont();
   }
 
   setTempo(tempo: StaveTempoOptions): this {
@@ -69,20 +70,20 @@ export class StaveTempo extends StaveModifier {
     const duration = this.tempo.duration;
     const dots = this.tempo.dots || 0;
     const bpm = this.tempo.bpm;
-    const font = this.font;
     let x = this.x + this.shift_x + shift_x;
     const y = stave.getYForTopText(1) + this.shift_y;
 
     ctx.save();
 
     if (name) {
-      ctx.setFont(font.family, font.size, font.weight);
+      ctx.setFont(this.textFont);
       ctx.fillText(name, x, y);
       x += ctx.measureText(name).width;
     }
 
     if (duration && bpm) {
-      ctx.setFont(font.family, font.size, 'normal');
+      // Override the weight and style.
+      ctx.setFont({ ...this.textFont, weight: 'normal', style: 'normal' });
 
       if (name) {
         x += ctx.measureText(' ').width;

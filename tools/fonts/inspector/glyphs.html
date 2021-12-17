@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!-- 
+  Build VexFlow by running `grunt`.
+  Once `vexflow-debug.js` has been created, open this file locally in your browser.
+  This inspector uses `Vex.Flow.Glyph.render(ctx, x, y)` to draw the glyph outlines that are
+  included with the VexFlow distribution.
+-->
+<html>
+  <head>
+    <title>Glyph Inspector</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      body {
+        background: white;
+        font-family: Helvetica Neue, Arial, sans-serif;
+        font-size: 18px;
+        color: black;
+        margin: 40px 40px 80px 40px;
+      }
+
+      a {
+        color: green;
+        text-decoration: none;
+        border-bottom: dotted 2px;
+      }
+
+      a.button {
+        color: green;
+        background: #bfb;
+        text-decoration: none;
+        padding: 5px;
+        margin: 2px;
+        border: 5px solid #aea;
+      }
+
+      div#error {
+        width: 60%;
+        padding: 10px;
+        color: red;
+        background: #faa;
+        border: 15px solid #d99;
+      }
+    </style>
+
+    <script src="../../../build/vexflow-debug.js"></script>
+  </head>
+
+  <body>
+    <h1 id="title">Glyph Inspector</h1>
+    <p>
+      <i>Cross indicates render coordinates.</i>
+    </p>
+    <div>
+      <a href="#" onclick="chooseFont('Bravura')">Bravura</a> &nbsp;
+      <a href="#" onclick="chooseFont('Gonville')">Gonville</a> &nbsp;
+      <a href="#" onclick="chooseFont('Petaluma')">Petaluma</a> &nbsp;
+      <a href="#" onclick="chooseFont('Custom')">Custom</a> &nbsp;
+    </div>
+    <canvas id="glyphs"></canvas>
+    <script>
+      let ctx;
+
+      function chooseFont(fontName) {
+        document.getElementById('title').innerText = 'Glyph Inspector – ' + fontName;
+
+        /* Version 4.0.0 */
+        const font = Vex.Flow.setMusicFont(fontName);
+
+        /* Version 3.0.9 */
+        // const font = Vex.Flow.Fonts[fontName]();
+        // Vex.Flow.DEFAULT_FONT_STACK = [font];
+
+        const glyphs = font.getGlyphs();
+
+        // Calculate the canvas height programmatically based on the number of glyphs.
+        const canvasWidth = 1200;
+        const ROW_HEIGHT = 150;
+        const COL_WIDTH = 200;
+        const numGlyphs = Object.keys(glyphs).length;
+        const numGlyphsPerRow = canvasWidth / COL_WIDTH;
+        const numRowsNeeded = Math.ceil(numGlyphs / numGlyphsPerRow);
+        const canvasHeight = numRowsNeeded * ROW_HEIGHT;
+
+        var canvas = document.getElementById('glyphs');
+        // Retina display trick:
+        // Make the canvas twice as large as our width x height.
+        // Then set the scale to (2, 2).
+        canvas.width = canvasWidth * 2; // Setting the width clears the canvas.
+        canvas.height = canvasHeight * 2;
+        canvas.style.height = canvasHeight + 'px';
+        canvas.style.width = canvasWidth + 'px';
+        if (!ctx) {
+          ctx = canvas.getContext('2d');
+        }
+        ctx.setTransform(2, 0, 0, 2, 0, 0); // reset the scale to (2, 2)
+
+        var x = 0;
+        var y = 50;
+        for (let glyphName in glyphs) {
+          // Show the glyph name.
+          ctx.fillStyle = '#222';
+          ctx.font = '8pt Arial';
+          ctx.fillText(glyphName, x, y + 30);
+
+          const originX = x + 100;
+          const originY = y;
+
+          // Show the glyph outline.
+          ctx.fillStyle = '#006400';
+          if (glyphs[glyphName].o) {
+            g = new Vex.Flow.Glyph(glyphName, 72, { font: font });
+            g.render(ctx, originX, originY);
+
+            // See the GlyphMetrics interface in glyph.ts.
+            const metrics = g.getMetrics();
+            ctx.save();
+            ctx.font = '8pt monospace';
+            ctx.fillText('w: ' + Math.floor(metrics.width), x, y - 6);
+            ctx.fillText('h: ' + Math.floor(metrics.height), x, y + 6);
+            ctx.restore();
+          }
+          {
+            // draw magenta cross hairs at the glyph's origin
+            ctx.strokeStyle = 'magenta';
+            ctx.beginPath();
+            ctx.moveTo(originX - 6, originY);
+            ctx.lineTo(originX + 6, originY);
+            ctx.moveTo(originX, originY - 6);
+            ctx.lineTo(originX, originY + 6);
+            ctx.stroke();
+          }
+
+          // Each column is 200px wide.
+          x += COL_WIDTH;
+
+          // Wrap around to the next line.
+          if (x > 1000) {
+            x = 0;
+
+            // Each row is 150px high.
+            y += ROW_HEIGHT;
+          }
+        }
+      }
+      chooseFont('Bravura');
+    </script>
+  </body>
+</html>

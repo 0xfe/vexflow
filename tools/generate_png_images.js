@@ -124,6 +124,8 @@ const appMain = (onArg) => {
   return true;
 };
 
+// Produce filenames that match version 3.0.9.
+// Remove `.Bravura` from the filename.
 const compatMode = {
   mode: null,
   MODES: {
@@ -133,9 +135,10 @@ const compatMode = {
     if (compatMode.mode !== compatMode.MODES.BackCompat) {
       return;
     }
-    // see tests/vexflow_test_helpers.ts:runNodeTestHelper():onlyBravura mode.
+    // If we are only testing the Bravura font, do not include the font name in the file name.
+    // See tests/vexflow_test_helpers.ts / runNodeTestHelper() / onlyBravura mode.
     fs.readdirSync(imageDir).forEach((filename) => {
-      var matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
+      const matches = filename.match(/(.+)(\.Bravura\.)(png|svg)$/);
       if (matches && matches[2]) {
         const backCompatFileName = `${matches[1]}.${matches[3]}`;
         fs.renameSync(path.join(imageDir, filename), path.join(imageDir, backCompatFileName));
@@ -199,19 +202,37 @@ if (!global.QUnit) {
   QUMock.assertions.test = { module: { name: '' } };
 }
 
-if (scriptDir.includes('releases')) {
-  // THE OLD WAY loads two JS files.
-  // TODO: Remove this block lines 31-37, after the new version has been moved to 'releases/'
-  global.Vex = require(`${scriptDir}/vexflow-debug.js`);
-  require(`${scriptDir}/vexflow-tests.js`);
-  global.Vex.Flow.shims = { fs };
+// The entry point to the VexFlow tests has evolved over time. :-)
+// In 3.0.9, vexflow-tests.js contained only the test code. The core library was in vexflow-debug.js.
+// While migrating to TypeScript in 2021, we realized the vexflow-tests.js included the core library.
+//   Thus, only vexflow-tests.js is used (and vexflow-debug.js is redundant).
+//   See: https://github.com/0xfe/vexflow/pull/1074
+// In 4.0.0, this file was renamed to vexflow-debug-with-tests.js for clarity.
+//   It includes both the VexFlow library and the test code.
+// We use feature detection to determine which file(s) to include.
+const vexflowDebugWithTestsJS = path.join(scriptDir, 'vexflow-debug-with-tests.js');
+if (fs.existsSync(path.resolve(__dirname, vexflowDebugWithTestsJS))) {
+  // Version 4.0.0.
+  global.Vex = require(vexflowDebugWithTestsJS);
 } else {
-  // THE NEW WAY loads a single JS file.
-  // See: https://github.com/0xfe/vexflow/pull/1074
-  // Load from the build/ or reference/ folder.
-  global.Vex = require(`${scriptDir}/vexflow-tests.js`);
-  global.Vex.Flow.Test.shims = { fs };
+  const vexflowTests = require(path.join(scriptDir, 'vexflow-tests.js'));
+  if (typeof vexflowTests.Flow === 'object') {
+    // During the migration of 3.0.9 => 4.0.0.
+    // vexflowTests has all we need!
+    global.Vex = vexflowTests;
+  } else {
+    // typeof vexflowTests.Flow === 'undefined'
+    // Version 3.0.9 and older used vexflow-tests.js in combination with vexflow-debug.js!
+    global.Vex = require(path.join(scriptDir, 'vexflow-debug.js'));
+  }
 }
+
+// Some versions of VexFlow (during the 3.0.9 => 4.0.0 migration) may have required the next line:
+// global.Vex.Flow.shims = { fs };
+
+// 4.0.0
+// vexflow_test_helpers uses this to write out image files.
+global.Vex.Flow.Test.shims = { fs };
 
 // Tell VexFlow that we're outside the browser. Just run the Node tests.
 const VFT = Vex.Flow.Test;
@@ -226,5 +247,8 @@ fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
 // Run all tests.
 VFT.run();
+
+// During the 3.0.9 => 4.0.0 migration, run() was briefly renamed to runTests().
+// VFT.runTests();
 
 compatMode.fixFileNames();

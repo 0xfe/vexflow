@@ -1,21 +1,9 @@
-/* petaluma text font not available from webfont cdn that I know of, so get it
-  fron the project
-  */
-@font-face {
-  font-family: 'petalumaScript';
-  src: url('../releases/fonts/petalumascript-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Roboto Slab', serif;
-}
 body {
-  padding: 20px;
   font-family: Arial, sans-serif;
   font-size: 12px;
   color: black;
   margin: 0px;
+  padding: 0px;
   height: 80%;
 }
 
@@ -37,7 +25,6 @@ div#error {
 }
 
 div.testcanvas {
-  font-family: Arial, sans-serif;
   font-size: 18px;
   color: #554;
 }
@@ -47,12 +34,10 @@ div.testcanvas .vex-tabdiv {
 }
 
 div.testcanvas .name {
-  font-family: Arial, sans-serif;
   font-size: 18px;
   color: #447;
 }
 
 p.vf-footer {
-  font-family: Arial, sans-serif;
   font-size: 14px;
 }

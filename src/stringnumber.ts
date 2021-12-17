@@ -1,18 +1,16 @@
-// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+// [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author: Larry Kuhns
 //
-// ## Description
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { Stem } from 'stem';
-
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
+import { Stem } from './stem';
 import { isStaveNote, isStemmableNote } from './typeguard';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
@@ -20,14 +18,12 @@ export class StringNumber extends Modifier {
     return 'StringNumber';
   }
 
-  protected radius: number;
-  protected last_note?: Note;
-  protected string_number: string;
-  protected x_offset: number;
-  protected y_offset: number;
-  protected dashed: boolean;
-  protected leg: number;
-  protected font: FontInfo;
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -117,6 +113,14 @@ export class StringNumber extends Modifier {
     return true;
   }
 
+  public radius: number;
+  protected last_note?: Note;
+  protected string_number: string;
+  protected x_offset: number;
+  protected y_offset: number;
+  protected dashed: boolean;
+  protected leg: number;
+
   constructor(number: string) {
     super();
 
@@ -130,11 +134,7 @@ export class StringNumber extends Modifier {
     this.dashed = true; // true - draw dashed extension  false - no extension
     this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
-    this.font = {
-      family: 'sans-serif',
-      size: 10,
-      weight: 'bold',
-    };
+    this.resetFont();
   }
 
   setLineEndType(leg: number): this {
@@ -217,7 +217,7 @@ export class StringNumber extends Modifier {
     ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
     ctx.setLineWidth(1.5);
     ctx.stroke();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
 
