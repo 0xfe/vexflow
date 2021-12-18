@@ -7,10 +7,9 @@ import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { StaveNote } from './stavenote';
-import { StemmableNote  } from './stemmablenote';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
@@ -267,7 +266,7 @@ export class Articulation extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ articulations }: { articulations: string }, note: StaveNote, builder: Builder): void {
+  static easyScoreHook({ articulations }: { articulations: string }, note: StemmableNote, builder: Builder): void {
     if (!articulations) return;
 
     const articNameToCode: Record<string, string> = {

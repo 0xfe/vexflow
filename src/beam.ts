@@ -555,18 +555,20 @@ export class Beam extends Element {
       // iterate through notes, calculating y shift and stem extension
       for (let i = 1; i < notes.length; ++i) {
         const note = notes[i];
-        const adjustedStemTipY =
-          this.getSlopeY(note.getStemX(), firstNote.getStemX(), firstNote.getStemExtents().topY, slope) + yShiftTemp;
+        if (note.hasStem() || note.isRest()) {
+          const adjustedStemTipY =
+            this.getSlopeY(note.getStemX(), firstNote.getStemX(), firstNote.getStemExtents().topY, slope) + yShiftTemp;
 
-        const stemTipY = note.getStemExtents().topY;
-        // beam needs to be shifted up to accommodate note
-        if (stemTipY * stemDirection < adjustedStemTipY * stemDirection) {
-          const diff = Math.abs(stemTipY - adjustedStemTipY);
-          yShiftTemp += diff * -stemDirection;
-          totalStemExtension += diff * i;
-        } else {
-          // beam overshoots note, account for the difference
-          totalStemExtension += (stemTipY - adjustedStemTipY) * stemDirection;
+          const stemTipY = note.getStemExtents().topY;
+          // beam needs to be shifted up to accommodate note
+          if (stemTipY * stemDirection < adjustedStemTipY * stemDirection) {
+            const diff = Math.abs(stemTipY - adjustedStemTipY);
+            yShiftTemp += diff * -stemDirection;
+            totalStemExtension += diff * i;
+          } else {
+            // beam overshoots note, account for the difference
+            totalStemExtension += (stemTipY - adjustedStemTipY) * stemDirection;
+          }
         }
       }
 
@@ -705,8 +707,6 @@ export class Beam extends Element {
           const totalBeamWidth = (beam_count - 1) * beamWidth * 1.5 + beamWidth;
           stem.setVisibility(true).setStemlet(true, totalBeamWidth + stemlet_extension);
         }
-      } else {
-        throw new RuntimeError('NoStem', 'stem undefined.');
       }
     }
   }

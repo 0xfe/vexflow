@@ -8,8 +8,8 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { BuilderOptions } from '../src/easyscore';
 import { Factory } from '../src/factory';
 import { Stave } from '../src/stave';
-import { StaveNote } from '../src/stavenote';
 import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
 
 const StaveTieTests = {
   Start(): void {
@@ -30,7 +30,10 @@ const StaveTieTests = {
 /**
  * Used by the 7 tests below to set up the stave, easyscore, notes, voice, and to format & draw.
  */
-function createTest(notesData: [string, BuilderOptions], setupTies: (f: Factory, n: StaveNote[], s: Stave) => void) {
+function createTest(
+  notesData: [string, BuilderOptions],
+  setupTies: (f: Factory, n: StemmableNote[], s: Stave) => void
+) {
   return (options: TestOptions) => {
     const factory = VexFlowTests.makeFactory(options, 300);
     const stave = factory.Stave();

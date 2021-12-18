@@ -22,6 +22,7 @@ import {
   Stave,
   StaveConnector,
   StaveNote,
+  StemmableNote,
   StringNumber,
   TextBracket,
   Tuplet,
@@ -553,7 +554,7 @@ function proportional(options: TestOptions): void {
     score.tuplet(score.notes('a4/32, a4, a4, a4, a4, a4, a4'), { notes_occupied: 8 }),
   ];
 
-  const createVoice = (notes: StaveNote[]) => score.voice(notes, { time: '1/4' });
+  const createVoice = (notes: StemmableNote[]) => score.voice(notes, { time: '1/4' });
   const createStave = (voice: Voice) =>
     system
       .addStave({ voices: [voice], debugNoteMetrics: debug })

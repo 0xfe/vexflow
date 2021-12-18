@@ -155,6 +155,7 @@ const validNoteTypes: Record<string, { name: string }> = {
   h: { name: 'harmonic' },
   m: { name: 'muted' },
   s: { name: 'slash' },
+  g: { name: 'ghost' },
 };
 
 const customNoteHeads: Record<string, { code: string }> = {
@@ -933,6 +934,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadDoubleWhole',
+      },
     },
   },
 
@@ -985,6 +990,10 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
+      },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadWhole',
       },
     },
   },
@@ -1040,6 +1049,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadHalf',
+      },
     },
   },
 
@@ -1094,6 +1107,10 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
+      },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1155,6 +1172,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1214,6 +1235,10 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
+      },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1275,6 +1300,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1335,6 +1364,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1394,6 +1427,10 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
+      },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
       },
     },
   },
