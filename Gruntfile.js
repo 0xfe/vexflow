@@ -1,5 +1,11 @@
 /* global module, __dirname, process, require */
 
+// This Gruntfile supports these optional environment variables:
+//   VEX_CIRCULAR    if true, we display a list of circular dependencies in the code base.
+//   VEX_DEVTOOL     override our default for webpack's devtool config: https://webpack.js.org/configuration/devtool/
+// To pass in environment variables on the command line, you can do something like:
+//   VEX_CIRCULAR=true VEX_DEVTOOL=eval grunt
+
 const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
@@ -11,7 +17,7 @@ const BUILD_VERSION = VER.VERSION;
 const BUILD_DATE = VER.DATE;
 const BUILD_ID = VER.ID;
 
-const CHECK_FOR_CIRCULAR_DEPENDENCIES = false;
+const CHECK_FOR_CIRCULAR_DEPENDENCIES = process.env.VEX_CIRCULAR || false;
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
@@ -27,9 +33,6 @@ const VEX_FONT_MODULE_CUSTOM = 'vexflow-font-custom';
 
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
-
-// Optional environment variables to customize the build.
-//   process.env.VEX_DEVTOOL
 
 // Output directories.
 const BASE_DIR = __dirname;
