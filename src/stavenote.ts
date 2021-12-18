@@ -195,9 +195,82 @@ export class StaveNote extends StemmableNote {
           xShift = voiceXShift + 2;
           noteU.note.setXShift(xShift);
         } else {
-          // shift lower voice right
-          xShift = voiceXShift + 2;
-          noteL.note.setXShift(xShift);
+          //Vexflowpatch: Instead of shifting notes, remove the appropriate flag
+          //If we are sharing a line, switch one notes stem direction.
+          //If we are sharing a line and in the same voice, only then offset one note
+          const lineDiff = Math.abs(noteU.line - noteL.line);
+          if (noteU.note.hasStem() && noteL.note.hasStem()) {
+            //If we have different dot values, must offset
+            //Or If we have a non-filled in mixed with a filled in notehead, must offset
+            if (noteU.note.duration !== noteL.note.duration || noteU.note.dots !== noteL.note.dots) {
+              xShift = voiceXShift + 2;
+              if (noteU.stemDirection === noteL.stemDirection) {
+                // upper voice is middle voice, so shift it right
+                noteU.note.setXShift(xShift);
+              } else {
+                // shift lower voice right
+                noteL.note.setXShift(xShift);
+              }
+              if (noteU.note.dots > 0) {
+                let foundDots = 0;
+                for (const modifier of noteU.note.modifiers) {
+                  if (modifier.getCategory() === 'Dot') {
+                    foundDots++;
+                    //offset dot(s) above the shifted note
+                    //lines + 1 to negative pixels
+                    modifier.setYShift(-10 * (noteL.maxLine - noteU.line + 1));
+                    if (foundDots === noteU.note.dots) {
+                      break;
+                    }
+                  }
+                }
+              }
+            } else if (lineDiff < 1 && lineDiff > 0) {
+              //if the notes are quite close but not on the same line, shift
+              xShift = voiceXShift + 2;
+              if (noteU.stemDirection === noteL.stemDirection) {
+                // upper voice is middle voice, so shift it right
+                noteU.note.setXShift(xShift);
+              } else {
+                // shift lower voice right
+                noteL.note.setXShift(xShift);
+              }
+            } else if (noteU.note.voice !== noteL.note.voice) {
+              //If we are not in the same voice
+              if (noteU.stemDirection === noteL.stemDirection) {
+                if (noteU.line > noteL.line) {
+                  //noteU is above noteL
+                  if (noteU.stemDirection === 1) {
+                    noteL.note.renderFlag = false;
+                  } else {
+                    noteU.note.renderFlag = false;
+                  }
+                } else if (noteL.line > noteU.line) {
+                  //note L is above noteU
+                  if (noteL.stemDirection === 1) {
+                    noteU.note.renderFlag = false;
+                  } else {
+                    noteL.note.renderFlag = false;
+                  }
+                } else {
+                  //same line, swap stem direction for one note
+                  if (noteL.stemDirection === 1) {
+                    noteL.stemDirection = -1;
+                    noteL.note.setStemDirection(-1);
+                  }
+                }
+              }
+            } //Very close whole notes
+          } else {
+            xShift = voiceXShift + 2;
+            if (noteU.stemDirection === noteL.stemDirection) {
+              // upper voice is middle voice, so shift it right
+              noteU.note.setXShift(xShift);
+            } else {
+              // shift lower voice right
+              noteL.note.setXShift(xShift);
+            }
+          }
         }
       }
 
@@ -613,7 +686,7 @@ export class StaveNote extends StemmableNote {
   }
 
   hasFlag(): boolean {
-    return super.hasFlag() && !this.isRest();
+    return super.hasFlag() && !this.isRest() && this.renderFlag;
   }
 
   getStemX(): number {
@@ -748,13 +821,13 @@ export class StaveNote extends StemmableNote {
   setStyle(style: ElementStyle): this {
     super.setStyle(style);
     this._noteHeads.forEach((notehead) => notehead.setStyle(style));
-    this.stem?.setStyle(style);
+    if (this.stem) this.stem.setStyle(style);
     return this;
   }
 
   setStemStyle(style: ElementStyle): this {
     const stem = this.getStem();
-    stem?.setStyle(style);
+    if (stem) stem.setStyle(style);
     return this;
   }
   getStemStyle(): ElementStyle | undefined {
@@ -1022,7 +1095,7 @@ export class StaveNote extends StemmableNote {
     const hasStem = this.stem !== undefined;
     const hasFlag = this.glyph.flag as boolean; // specified in tables.js
     const hasNoBeam = this.beam === undefined;
-    return hasStem && hasFlag && hasNoBeam;
+    return hasStem && hasFlag && hasNoBeam && this.renderFlag;
   }
 
   // Draw the flag for the note
@@ -1091,9 +1164,11 @@ export class StaveNote extends StemmableNote {
       this.stem.adjustHeightForFlag();
     }
 
-    ctx.openGroup('stem', undefined, { pointerBBox: true });
-    this.stem?.setContext(ctx).draw();
-    ctx.closeGroup();
+    if (this.stem) {
+      ctx.openGroup('stem', undefined, { pointerBBox: true });
+      this.stem.setContext(ctx).draw();
+      ctx.closeGroup();
+    }
   }
 
   /** Primarily used as the scaling factor for grace notes, GraceNote will return the required scale. */
@@ -1155,9 +1230,11 @@ export class StaveNote extends StemmableNote {
     // Format note head x positions
     this._noteHeads.forEach((notehead) => notehead.setX(xBegin));
 
-    // Format stem x positions
-    const stemX = this.getStemX();
-    this.stem?.setNoteHeadXBounds(stemX, stemX);
+    if (this.stem) {
+      // Format stem x positions
+      const stemX = this.getStemX();
+      this.stem.setNoteHeadXBounds(stemX, stemX);
+    }
 
     L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 
