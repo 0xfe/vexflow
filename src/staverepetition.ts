@@ -31,6 +31,7 @@ export class Repetition extends StaveModifier {
     DS_AL_CODA: 10, // D.S. al coda at end of stave
     DS_AL_FINE: 11, // D.S. al Fine at end of stave
     FINE: 12, // Fine at end of stave
+    TO_CODA: 13, // To Coda at end of stave
   };
 
   protected symbol_type: number;
@@ -96,6 +97,10 @@ export class Repetition extends StaveModifier {
       case Repetition.type.FINE:
         this.drawSymbolText(stave, x, 'Fine', false);
         break;
+      // VexFlowPatch: added TO_CODA type, handling
+      case Repetition.type.TO_CODA:
+        this.drawSymbolText(stave, x, 'To', true);
+        break;
       default:
         break;
     }
@@ -133,12 +138,14 @@ export class Repetition extends StaveModifier {
       text_x = this.x + x + this.x_shift + stave.getWidth() - 5 - modifierWidth - ctx.measureText(text).width;
       // TODO this is weird. setting the x position should probably be refactored, parameters aren't clear here.
     } else {
-      // Offset Signo text to left stave end
-      symbol_x = this.x + x + stave.getWidth() - 5 + this.x_shift;
-      text_x = symbol_x - +ctx.measureText(text).width - 12;
+      // VexFlowPatch: fix placement, like for DS_AL_CODA
+      this.x_shift = -(text_x + ctx.measureText(text).width + 12 + stave.options.vertical_bar_width + 12);
+      // TO_CODA and DS_AL_CODA draw in the next measure without this x_shift, not sure why not for other symbols.
+      text_x = this.x + this.x_shift + stave.options.vertical_bar_width;
+      symbol_x = text_x + ctx.measureText(text).width + 12;
     }
 
-    const y = stave.getYForTopText(stave.getNumLines()) + this.y_shift;
+    const y = stave.getYForTopText(stave.getNumLines()) + this.y_shift + 25;
     if (draw_coda) {
       Glyph.renderGlyph(ctx, symbol_x, y, 40, 'coda', { category: 'coda' });
     }
