@@ -97,7 +97,6 @@ export class Repetition extends StaveModifier {
       case Repetition.type.FINE:
         this.drawSymbolText(stave, x, 'Fine', false);
         break;
-      // VexFlowPatch: added TO_CODA type, handling
       case Repetition.type.TO_CODA:
         this.drawSymbolText(stave, x, 'To', true);
         break;
@@ -138,7 +137,6 @@ export class Repetition extends StaveModifier {
       text_x = this.x + x + this.x_shift + stave.getWidth() - 5 - modifierWidth - ctx.measureText(text).width;
       // TODO this is weird. setting the x position should probably be refactored, parameters aren't clear here.
     } else {
-      // VexFlowPatch: fix placement, like for DS_AL_CODA
       this.x_shift = -(text_x + ctx.measureText(text).width + 12 + stave.options.vertical_bar_width + 12);
       // TO_CODA and DS_AL_CODA draw in the next measure without this x_shift, not sure why not for other symbols.
       text_x = this.x + this.x_shift + stave.options.vertical_bar_width;
