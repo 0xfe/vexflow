@@ -191,7 +191,7 @@ export abstract class StemmableNote extends Note {
 
     const flagCode =
       this.getStemDirection() === Stem.DOWN ? this.glyph.code_flag_downstem : this.glyph.code_flag_upstem;
-    return Math.abs(Tables.MUSIC_FONT_STACK[0].lookupMetric(`glyphs.flag.${flagCode}.shiftY`, 0));
+    return Math.abs(Tables.currentMusicFont().lookupMetric(`glyphs.flag.${flagCode}.shiftY`, 0));
   }
 
   // Set the stem length to a specific. Will override the default length.
