@@ -49,15 +49,13 @@ const parseArgs = () => {
           });
         break;
       case '--parallel':
-        parallel = str;
+        parallel = parseInt(value);
         break;
       default:
         childArgs.args.push(str);
         break;
     }
   });
-
-  childArgs.args.push(parallel || '--parallel');
 
   backends = backends || {
     all: true,
@@ -66,13 +64,44 @@ const parseArgs = () => {
   return {
     childArgs,
     backends,
+    parallel,
+  };
+};
+
+const resolveJobsOption = (childArgs) => {
+  let numTestes = NaN;
+  let allJobs = 1;
+
+  try {
+    global.Vex = require(`../${childArgs.ver}/vexflow-debug-with-tests.js`);
+    if (global.Vex) {
+      const { Flow } = global.Vex;
+      if (Flow) {
+        const { Test } = Flow;
+        if (Test && Test.tests && Test.parseJobOptions) {
+          numTestes = Test.tests.length;
+          allJobs = Math.ceil(numTestes / 10);
+        }
+      }
+    }
+  } catch (e) {
+    // may old release, ignore
+    log(e.toString());
+  }
+
+  return {
+    numTestes,
+    allJobs,
   };
 };
 
 const appMain = async () => {
   const options = parseArgs();
-  const { childArgs, backends } = options;
+  const { childArgs, backends, parallel } = options;
+  const { numTestes, allJobs } = resolveJobsOption(childArgs);
   const { ver, imageDir, args } = childArgs;
+
+  const jobs = parallel <= 1 ? 1 : allJobs;
 
   const backendDefs = {
     jsdom: {
@@ -89,10 +118,14 @@ const appMain = async () => {
     },
   };
 
-  const execChild = (backend) => {
-    log(`${backend} start`);
+  const execChild = (backend, jobs, jobId, key) => {
+    const proc = `${ver}_${backend}_${jobId}_${jobs}-${key}`;
+    log(`${proc} start`);
     const backendDef = backendDefs[backend];
-    const child = spawn(childArgs.argv0, [backendDef.path].concat(backendDef.getArgs()));
+    const child = spawn(
+      childArgs.argv0,
+      [backendDef.path].concat(backendDef.getArgs(), [`--jobs=${jobs}`, `--jobId=${jobId}`])
+    );
     return new Promise((resolve) => {
       child.stdout.on('data', (data) => {
         process.stdout.write(data);
@@ -103,31 +136,55 @@ const appMain = async () => {
       });
 
       child.on('close', (code) => {
-        log(`${backend} closed with code ${code}`);
-        resolve({ backend, code });
+        log(`${proc} closed with code ${code}`);
+        resolve({ key, code });
       });
     });
   };
 
   const execChildren = async (backends) => {
-    const error = false;
+    let exitCode = 0;
+    let ps = [];
+    let keys = [];
+    let key = 0;
+    const procs = require('os').cpus().length;
+    log(JSON.stringify(backends));
     for (const backend in backendDefs) {
-      if (!backends.none && (backends.all || backends[backend])) {
-        const { code } = await execChild(backend);
-        if (code !== 0) {
-          error = true;
+      if (!exitCode && !backends.none && (backends.all || backends[backend])) {
+        for (let i = 0; (!exitCode && i < jobs) || ps.length; ) {
+          while (i < jobs && ps.length < procs) {
+            ps.push(execChild(backend, jobs, i, key));
+            key += 1;
+            keys.push(i);
+            i += 1;
+          }
+          if (ps.length) {
+            const { key: doneKey, code } = await Promise.race(ps);
+            const keyIdx = keys.indexOf(doneKey);
+            ps.splice(keyIdx, 1);
+            keys.splice(keyIdx, 1);
+            if (code) {
+              exitCode = code;
+              log('remote error. aborting...');
+              break;
+            }
+          }
         }
       }
+      if (!ps.length) {
+        // log(`${backend} end`);
+      }
     }
-    return error;
+    return exitCode;
   };
 
   fs.mkdirSync(imageDir, { recursive: true });
 
-  const error = await execChildren(backends);
-  if (error) {
-    process.exit(1);
-  }
+  const exitCode = await execChildren(backends);
+  // log('end of execChildren =======================');
+  process.exit(exitCode);
 };
 
 appMain();
+
+// log('end of file ---------------------------------------');

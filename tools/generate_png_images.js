@@ -16,126 +16,34 @@ global.document = dom.window.document;
 
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
+const runOptions = {
+  jobs: 1,
+  jobId: 0,
+};
 // Optional: 3rd argument specifies which font stacks to test. Defaults to all.
 // For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
 const ALL_FONTS = ['Bravura', 'Gonville', 'Petaluma'];
 let fontStacksToTest = ALL_FONTS;
-if (process.argv.length >= 5) {
-  const fontsOption = process.argv[4].toLowerCase();
-  if (fontsOption.startsWith('--fonts=')) {
-    const fontsList = fontsOption.split('=')[1].split(',');
-    fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
-  }
-}
+const { argv } = process;
 
-/**
- * run tests in parallel.
- *
- *  --parallel[=<jobs>]
- *   <jobs>:
- *    <jobs> <= 1: limit to a single job
- *    otherwise: number of fonts to test jobs
- *
- * For example:
- *   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --parallel
- *   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville --parallel
- */
-
-const appMain = () => {
-  if (fontStacksToTest.length <= 1 || process.argv.length < 5) {
-    return false;
-  }
-
-  const pArgv = process.argv;
-  const childArgs = {
-    argv0: pArgv[0],
-    argv: pArgv.slice(1, 4),
-  };
-
-  let jobs = 0;
-  pArgv.slice(4).forEach((str) => {
-    const lStr = str.toLowerCase();
-    if (lStr.startsWith('--parallel')) {
-      const nameVal = str.split('=');
-      if (nameVal.length > 1) {
-        jobs = parseInt(nameVal[1]);
-      } else {
-        jobs = Infinity;
-      }
+if (argv.length >= 5) {
+  for (let i = 4; i < argv.length; i++) {
+    const arg = argv[i].toLowerCase();
+    const value = arg.split('=')[1];
+    const intValue = parseInt(value);
+    if (arg.startsWith('--fonts=')) {
+      const fontsList = value.split(',');
+      fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
+    } else if (arg.startsWith('--jobs=')) {
+      runOptions.jobs = intValue;
+    } else if (arg.startsWith('--jobid=')) {
+      runOptions.jobId = intValue;
+    } else {
+      // console.log('???', arg);
     }
-  });
-  if (jobs <= 1) {
-    return false;
   }
-
-  let children = [];
-  let exitCode = 0;
-  const asyncWait = () => {
-    const tChildren = [];
-    children.forEach((child, idx) => {
-      if (child && !child.done) {
-        tChildren.push(child);
-      }
-    });
-
-    if (!tChildren.length) {
-      // process.stdout.write('finish');
-      exit(exitCode);
-    }
-    children = tChildren;
-  };
-
-  const run = (font, id) => {
-    let child;
-    const { argv0, argv } = childArgs;
-    const childArgv = [...argv, `--fonts=${font}`];
-    try {
-      child = spawn(argv0, childArgv);
-      process.stdout.write(`[${id}]:${font}:${childArgv} started\n`);
-      child.stdout.on('data', (data) => {
-        process.stdout.write(data);
-      });
-      child.stderr.on('data', (data) => {
-        process.stderr.write(data);
-      });
-      child.on('close', (code) => {
-        process.stdout.write(`\n[${id}]:${font}: exited with code ${code}\n`);
-        child.done = true;
-        exitCode = code | exitCode;
-        asyncWait(code);
-      });
-    } catch (e) {
-      process.stderr.write(e);
-    }
-    return child;
-  };
-
-  // TODO: limit the number of processes to specified number(jobs).
-  // console.log(jobs);
-
-  // filename quirk : see tests/vexflow_test_helpers.ts:runNodeTestHelper().
-  const quirkFontName = 'Bravura';
-  const fontsToTest = fontStacksToTest.filter((font) => font !== quirkFontName);
-
-  let quirkFont = fontsToTest.length !== fontStacksToTest.length ? quirkFontName : undefined;
-  fontsToTest.forEach((font, idx) => {
-    // ensure that the quirk font is tested with the other font.
-    children.push(run(quirkFont ? [quirkFont, font].join(',') : font, idx));
-    quirkFont = undefined;
-  });
-  if (quirkFont) {
-    children.push(run(quirkFont, idx));
-  }
-
-  // FIXME: need timeout detection?
-  // setInterval(wait, 1000);
-  return true;
-};
-
-if (appMain()) {
-  return;
 }
 
 // When generating PNG images for the visual regression tests,
@@ -224,8 +132,10 @@ VFT.NODE_FONT_STACKS = fontStacksToTest;
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
+// eslint-disable-next-line no-console
+console.log(`jsdom: run(${JSON.stringify(runOptions)})`);
 // Run all tests.
-VFT.run();
+VFT.run(runOptions);
 
 // During the 3.0.9 => 4.0.0 migration, run() was briefly renamed to runTests().
 // VFT.runTests();

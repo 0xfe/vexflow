@@ -318,61 +318,14 @@ const execChild = async (jobs, jobId) => {
 };
 
 const appMain = async () => {
-  const { jobs, jobId, SCRIPT_VER } = options;
-  let numTestes = NaN;
-  let allJobs = 1;
   let exitCode = 0;
-  if (Number.isNaN(jobId)) {
-    try {
-      global.Vex = require(`../${SCRIPT_VER}/vexflow-debug-with-tests.js`);
-      if (options.parallel !== 1 && !options.module && global.Vex) {
-        const { Flow } = global.Vex;
-        if (Flow) {
-          const { Test } = Flow;
-          if (Test && Test.tests && Test.parseJobOptions) {
-            numTestes = Test.tests.length;
-            allJobs = Math.ceil(numTestes / 10);
-          }
-        }
-      }
-    } catch (e) {
-      // may old release, ignore
-      // log(e.toString());
-    }
+  const { jobs, jobId } = options;
+  await launchTestPage(jobs, jobId).catch((e) => {
+    // jobLog(e.toString(), 'joberror', options);
+    jobLog(e.stack, 'joberror', options);
+    exitCode = 4;
+  });
 
-    fs.mkdirSync(options.IMAGE_OUTPUT_DIR, { recursive: true });
-    log(`${SCRIPT_VER} ${options.IMAGE_OUTPUT_DIR}`);
-    log(`numTests=${Number.isNaN(numTestes) ? 'unknown' : numTestes}, allJobs=${allJobs}, jobs=${jobs}`);
-    let ps = [];
-    let keys = [];
-    for (let i = 0; i < allJobs || ps.length; ) {
-      while (i < allJobs && ps.length < jobs) {
-        ps.push(execChild(allJobs, i));
-        keys.push(i);
-        i += 1;
-      }
-      if (ps.length) {
-        const { jobId: doneKey, code } = await Promise.race(ps);
-        const keyIdx = keys.indexOf(doneKey);
-        ps.splice(keyIdx, 1);
-        keys.splice(keyIdx, 1);
-        if (code) {
-          exitCode = code;
-          log('remote error. aborting...');
-          break;
-        }
-      }
-    }
-    if (!ps.length) {
-      log('end');
-    }
-  } else {
-    await launchTestPage(jobs, jobId).catch((e) => {
-      // jobLog(e.toString(), 'joberror', options);
-      jobLog(e.stack, 'joberror', options);
-      exitCode = 4;
-    });
-  }
   process.exit(exitCode);
 };
 

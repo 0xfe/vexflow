@@ -89,6 +89,11 @@ if (!global.$) {
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
 
+export type RunOptions = {
+  jobs: number;
+  jobId: number;
+};
+
 /** Allow `name` to be used inside file names. */
 function sanitizeName(name: string): string {
   return name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -127,9 +132,8 @@ export class VexFlowTests {
     VexFlowTests.tests.push(test);
   }
 
-  static parseJobOptions(): { jobs: number; jobId: number } {
-    let jobs = 1;
-    let jobId = 0;
+  static parseJobOptions(runOptions: RunOptions | undefined): RunOptions {
+    let { jobs, jobId } = runOptions || { jobs: 1, jobId: 0 };
     if (window) {
       const { location } = window;
       if (location) {
@@ -151,8 +155,8 @@ export class VexFlowTests {
   }
 
   // flow.html calls this to invoke all the tests.
-  static run(): void {
-    const { jobs, jobId } = VexFlowTests.parseJobOptions();
+  static run(runOptions: RunOptions | undefined): void {
+    const { jobs, jobId } = VexFlowTests.parseJobOptions(runOptions);
     VexFlowTests.tests.forEach((test, idx: number) => {
       if (jobs === 1 || idx % jobs === jobId) {
         test.Start();
