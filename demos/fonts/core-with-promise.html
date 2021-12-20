@@ -15,7 +15,17 @@
     </style>
   </head>
   <body>
-    <p>This demonstrates how to use <b>vexflow-core.js</b> to load fonts on demand.</p>
+    <p>
+      To see the demo, start a web server and load this page (e.g., `npx http-server` and navigate to
+      <a href="http://127.0.0.1:8080/demos/fonts/core-with-promise.html"
+        >http://127.0.0.1:8080/demos/fonts/core-with-promise.html</a
+      >).
+    </p>
+    <p>
+      Using <b>vexflow-core.js</b> allows your webpage to load a small initial bundle. It will load fonts on demand when
+      you call <code>Vex.Flow.fetchMusicFont(fontName)</code>. This method is asynchronous and returns a Promise.
+    </p>
+    <p>Open your browser's developer tools to see that font modules are downloaded upon request:</p>
     <p>View the page's source.</p>
     <div id="output"></div>
     <p>
@@ -23,7 +33,7 @@
       <a href="all.html">See: all.html</a>
     </p>
     <!--
-        The vexflow core build includes no music fonts.
+        The vexflow-core.js build includes no music fonts.
     -->
     <script src="../../build/cjs/vexflow-core.js"></script>
     <script>
@@ -36,10 +46,7 @@
         .then(() => Vex.Flow.fetchMusicFont('Custom'))
         .then(onFontsLoaded);
 
-      function onFontsLoaded(musicFonts) {
-        console.log('Successfully loaded these music fonts:');
-        console.log(...musicFonts);
-
+      function onFontsLoaded() {
         // The first argument is the primary music engraving font.
         // The others are fallbacks, in case a glyph is not found in the first music font.
         Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom');

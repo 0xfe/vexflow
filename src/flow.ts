@@ -221,7 +221,11 @@ export class Flow {
   /**
    * Used with vexflow-core which supports dynamic font loading.
    */
-  static fetchMusicFont: (fontName: string, fontModuleOrPath?: string | FontModule) => Promise<void>;
+  // eslint-disable-next-line
+  static async fetchMusicFont(fontName: string, fontModuleOrPath?: string | FontModule): Promise<void> {
+    // The default implementation does nothing.
+    // See vexflow-core.ts for the implementation that vexflow-core.js uses.
+  }
 
   static getMusicFont(): string[] {
     const fonts = Tables.MUSIC_FONT_STACK;

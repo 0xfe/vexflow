@@ -27,6 +27,8 @@ const fontModules: Record<string, string> = {
  * @param fontName the name of the music font to load.
  * @param fontModuleOrPath Either a font module object (containing a .data and .metrics properties) or a path to a font module.
  * The font module is assumed to be in the same directory as the vexflow-core.js entry point.
+ *
+ * This replaces the default empty implementation in flow.ts.
  */
 Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontModule): Promise<void> => {
   const font = Font.load(fontName);

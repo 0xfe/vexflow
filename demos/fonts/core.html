@@ -25,8 +25,18 @@
     </style>
   </head>
   <body>
-    <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
-    <p>Choose one of the fonts below:</p>
+    <p>
+      To see the demo, start a web server and load this page (e.g., `npx http-server` and navigate to
+      <a href="http://127.0.0.1:8080/demos/fonts/core.html">http://127.0.0.1:8080/demos/fonts/core.html</a>).
+    </p>
+    <p>
+      Using <b>vexflow-core.js</b> allows your webpage to load a small initial bundle. It will load fonts on demand when
+      you call <code>await Vex.Flow.fetchMusicFont(fontName)</code>.
+    </p>
+    <p>
+      Open your browser's developer tools and choose one of the fonts below. You will see that a font module is
+      downloaded when needed:
+    </p>
     <div>
       <a href="#" onclick="chooseFont('Bravura')">Bravura</a> &nbsp;
       <a href="#" onclick="chooseFont('Gonville')">Gonville</a> &nbsp;
@@ -34,14 +44,15 @@
     </div>
     <div id="output"></div>
     <p>
-      <a href="core-with-promise.html">See: core-with-promise.html</a><br />
+      <a href="core-with-promise.html">See: core-with-promise.html</a> if you prefer to use Promises instead of
+      await.<br />
       <a href="all.html">See: all.html</a>
     </p>
     <!--
-      The vexflow core build includes no music fonts.
+      The vexflow-core.js build includes no music fonts.
       Do the following to load a font dynamically:
-        await Vex.Flow.fetchMusicFont(fontName);
-        Vex.Flow.setMusicFont(fontName);
+          await Vex.Flow.fetchMusicFont(fontName);
+          Vex.Flow.setMusicFont(fontName);
     -->
     <script src="../../build/cjs/vexflow-core.js"></script>
     <script type="module">

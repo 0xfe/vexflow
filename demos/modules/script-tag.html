@@ -14,8 +14,9 @@
     <p>See also: <a href="module.html">ES Modules</a></p>
     <script src="../../build/cjs/vexflow.js"></script>
     <script>
-      const { Factory, BUILD } = Vex.Flow;
-      document.querySelector('#info').innerText = BUILD;
+      const { Factory, Flow } = Vex.Flow;
+      const { VERSION, ID, DATE } = Flow.BUILD;
+      document.querySelector('#info').innerText = VERSION + ' / ' + ID + ' / ' + DATE;
 
       const factory = new Factory({
         renderer: { elementId: 'output', width: 500, height: 200 },
