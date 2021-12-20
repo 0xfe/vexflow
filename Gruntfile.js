@@ -1,10 +1,15 @@
 /* global module, __dirname, process, require */
 
 // This Gruntfile supports these optional environment variables:
-//   VEX_CIRCULAR    if true, we display a list of circular dependencies in the code base.
-//   VEX_DEVTOOL     override our default for webpack's devtool config: https://webpack.js.org/configuration/devtool/
-// To pass in environment variables on the command line, you can do something like:
-//   VEX_CIRCULAR=true VEX_DEVTOOL=eval grunt
+//   VEX_DEBUG_CIRCULAR_DEPENDENCIES
+//       if true, we display a list of circular dependencies in the code base.
+//   VEX_DEVTOOL
+//       override our default setting for webpack's devtool config
+//       https://webpack.js.org/configuration/devtool/
+// To pass in environment variables, you can use your ~/.bash_profile or do something like:
+//   export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
+//   export VEX_DEVTOOL=eval
+//   grunt
 
 const path = require('path');
 const webpack = require('webpack');
@@ -17,7 +22,8 @@ const BUILD_VERSION = VER.VERSION;
 const BUILD_DATE = VER.DATE;
 const BUILD_ID = VER.ID;
 
-const CHECK_FOR_CIRCULAR_DEPENDENCIES = process.env.VEX_CIRCULAR || false;
+const DEBUG_CIRCULAR_DEPENDENCIES =
+  process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === 'true' || process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === '1';
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
@@ -91,7 +97,7 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
     plugins.push(new webpack.BannerPlugin(BANNER));
   }
 
-  if (CHECK_FOR_CIRCULAR_DEPENDENCIES) {
+  if (DEBUG_CIRCULAR_DEPENDENCIES) {
     plugins.push(
       new CircularDependencyPlugin({
         cwd: process.cwd(),
