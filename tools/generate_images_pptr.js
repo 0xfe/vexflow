@@ -67,6 +67,8 @@ args.forEach((str) => {
 
 usage();
 
+const progressChars = ['|', '/', '-', '\\'];
+let progressCharsIndex = 0;
 const savePNGData = (filename, pngDataURL) => {
   let ret = false;
   if (pngDataURL.split) {
@@ -75,6 +77,7 @@ const savePNGData = (filename, pngDataURL) => {
     fs.writeFileSync(filename, imageBuffer, { encoding: 'base64' });
     ret = true;
   }
+  progress(progressChars[progressCharsIndex++ % progressChars.length]);
   return ret;
 };
 
