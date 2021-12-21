@@ -232,7 +232,7 @@ const appMain = async () => {
   fs.mkdirSync(imageDir, { recursive: true });
 
   const exitCode = await execChildren(backends);
-  log('done.');
+  log(exitCode ? 'aborted.' : 'done.');
   process.exit(exitCode);
 };
 
