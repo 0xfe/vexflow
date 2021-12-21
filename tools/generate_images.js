@@ -181,6 +181,19 @@ const appMain = async () => {
         pptr_jobs: backendDefs.pptr.jobs,
       })
     );
+
+    const race = async (ps) => {
+      if (!ps.length) {
+        return { code: 0 };
+      }
+      const { key: doneKey, code } = await Promise.race(ps);
+      const keyIdx = keys.indexOf(doneKey);
+      ps.splice(keyIdx, 1);
+      keys.splice(keyIdx, 1);
+
+      return { code };
+    };
+
     for (const backend in backendDefs) {
       if (!exitCode && !backends.none && (backends.all || backends[backend])) {
         const { jobs } = backendDefs[backend];
@@ -192,10 +205,7 @@ const appMain = async () => {
             i += 1;
           }
           if (ps.length) {
-            const { key: doneKey, code } = await Promise.race(ps);
-            const keyIdx = keys.indexOf(doneKey);
-            ps.splice(keyIdx, 1);
-            keys.splice(keyIdx, 1);
+            const { code } = await race(ps);
             if (code) {
               exitCode = code;
               log('remote error. aborting...');
@@ -208,6 +218,14 @@ const appMain = async () => {
         // log(`${backend} end`);
       }
     }
+
+    while (ps.length && !exitCode) {
+      const { code } = await race(ps);
+      if (code) {
+        exitCode = code;
+      }
+    }
+
     return exitCode;
   };
 
