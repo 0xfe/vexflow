@@ -168,10 +168,6 @@ const appMain = async () => {
   };
 
   const execChildren = async (backends) => {
-    let exitCode = 0;
-    let ps = [];
-    let keys = [];
-    let key = 0;
     log(
       JSON.stringify({
         numTestes,
@@ -182,30 +178,40 @@ const appMain = async () => {
       })
     );
 
-    const race = async (ps) => {
+    const children = {};
+    let ps = [];
+    const push = (key, promise) => {
+      children[key] = promise;
+      ps = Object.values(children);
+      // console.log(0, ps);
+    };
+
+    const race = async () => {
       if (!ps.length) {
         return { code: 0 };
       }
-      const { key: doneKey, code } = await Promise.race(ps);
-      const keyIdx = keys.indexOf(doneKey);
-      ps.splice(keyIdx, 1);
-      keys.splice(keyIdx, 1);
-
+      const { key, code } = await Promise.race(ps);
+      // console.log(0.5, ps);
+      delete children[key];
+      ps = Object.values(children);
+      // console.log(1, ps);
       return { code };
     };
+
+    let exitCode = 0;
+    let key = 0;
 
     for (const backend in backendDefs) {
       if (!exitCode && !backends.none && (backends.all || backends[backend])) {
         const { jobs } = backendDefs[backend];
         for (let i = 0; (!exitCode && i < jobs) || ps.length; ) {
           while (i < jobs && ps.length < parallel) {
-            ps.push(execChild(backend, jobs, i, key));
+            push(key, execChild(backend, jobs, i, key));
             key += 1;
-            keys.push(i);
             i += 1;
           }
           if (ps.length) {
-            const { code } = await race(ps);
+            const { code } = await race();
             if (code) {
               exitCode = code;
               log('remote error. aborting...');
@@ -220,7 +226,7 @@ const appMain = async () => {
     }
 
     while (ps.length && !exitCode) {
-      const { code } = await race(ps);
+      const { code } = await race();
       if (code) {
         exitCode = code;
       }
