@@ -12,7 +12,7 @@ export class StaveSection extends StaveModifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
-    size: 12,
+    size: 10,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
   };
@@ -29,7 +29,7 @@ export class StaveSection extends StaveModifier {
     this.x = x;
     this.shift_x = 0;
     this.shift_y = shift_y;
-    this.setFont('bold 12pt sans-serif');
+    this.resetFont();
   }
 
   setStaveSection(section: string): this {
@@ -67,7 +67,7 @@ export class StaveSection extends StaveModifier {
     let x = this.x + shift_x;
     ctx.beginPath();
     ctx.setLineWidth(2);
-    ctx.rect(x, y + textHeight / 8, width, height);
+    ctx.rect(x, y + textHeight / 4, width, height);
     ctx.stroke();
     x += (width - textWidth) / 2;
     ctx.fillText('' + this.section, x, y + 16);
