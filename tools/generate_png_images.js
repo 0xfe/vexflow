@@ -133,7 +133,7 @@ VFT.NODE_FONT_STACKS = fontStacksToTest;
 fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
 // eslint-disable-next-line no-console
-console.log(`jsdom: run(${JSON.stringify(runOptions)})`);
+// console.log(`\njsdom: run(${JSON.stringify(runOptions)})`);
 // Run all tests.
 VFT.run(runOptions);
 

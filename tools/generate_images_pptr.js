@@ -67,8 +67,20 @@ args.forEach((str) => {
 
 usage();
 
-const progressChars = ['|', '/', '-', '\\'];
-let progressCharsIndex = 0;
+const drawProgress = (() => {
+  const progressChars = ['|', '/', '-', '\\'];
+  let progressCharsIndex = 0;
+  let lastTime = Date.now();
+  return () => {
+    const now = Date.now();
+    if (now - lastTime > 2000) {
+      lastTime = now;
+      progressCharsIndex = (progressCharsIndex + 1) % progressChars.length;
+      progress(`${progressChars[progressCharsIndex]}`);
+    }
+  };
+})();
+
 const savePNGData = (filename, pngDataURL) => {
   let ret = false;
   if (pngDataURL.split) {
@@ -77,7 +89,7 @@ const savePNGData = (filename, pngDataURL) => {
     fs.writeFileSync(filename, imageBuffer, { encoding: 'base64' });
     ret = true;
   }
-  progress(progressChars[progressCharsIndex++ % progressChars.length]);
+  drawProgress();
   return ret;
 };
 

@@ -132,7 +132,7 @@ const appMain = async () => {
       getArgs: () => {
         return [`../${ver}`, imageDir].concat(args);
       },
-      jobs: parallel,
+      jobs: numTestes ? parallel : 1,
     },
     pptr: {
       path: './tools/generate_images_pptr.js',
@@ -172,7 +172,15 @@ const appMain = async () => {
     let ps = [];
     let keys = [];
     let key = 0;
-    log(JSON.stringify(backends));
+    log(
+      JSON.stringify({
+        numTestes,
+        pptrJobs,
+        backends,
+        jsdom_jobs: backendDefs.jsdom.jobs,
+        pptr_jobs: backendDefs.pptr.jobs,
+      })
+    );
     for (const backend in backendDefs) {
       if (!exitCode && !backends.none && (backends.all || backends[backend])) {
         const { jobs } = backendDefs[backend];
@@ -206,7 +214,7 @@ const appMain = async () => {
   fs.mkdirSync(imageDir, { recursive: true });
 
   const exitCode = await execChildren(backends);
-  // log('end of execChildren =======================');
+  log('done.');
   process.exit(exitCode);
 };
 
