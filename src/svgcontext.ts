@@ -91,13 +91,7 @@ class MeasureTextCache {
     const bbox = txt.getBBox();
     svg.removeChild(txt);
 
-    const fontSizeInPt: string = attributes['font-size'];
-
-    // Remove the trailing 'pt' from the font size and scale to convert from points to canvas pixel units.
-    // CSS specifies dpi to be 96 and there are 72 points to an inch: 96/72 == 4/3.
-    const height = Font.convertSizeToPixelValue(fontSizeInPt);
-
-    return { width: bbox.width, height: height };
+    return { width: bbox.width, height: bbox.height };
   }
 }
 

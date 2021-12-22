@@ -310,9 +310,9 @@ export class Stave extends Element {
   }
 
   // Section functions
-  setSection(section: string, y: number, xOffset = 0, fontSize = 10) {
+  setSection(section: string, y: number, xOffset = 0, fontSize?: number) {
     const staveSection = new StaveSection(section, this.x + xOffset, y);
-    staveSection.setFontSize(fontSize);
+    if (fontSize) staveSection.setFontSize(fontSize);
     this.modifiers.push(staveSection);
     return this;
   }

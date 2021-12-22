@@ -260,7 +260,7 @@ export class CanvasContext extends RenderContext {
     const metrics = this.context2D.measureText(text);
     return {
       width: metrics.width,
-      height: this.textHeight,
+      height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent,
     };
   }
 
