@@ -7,8 +7,6 @@
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
 const path = require('path');
-const { exit } = require('process');
-const { spawn } = require('child_process');
 
 const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
 global.window = dom.window;
@@ -20,15 +18,12 @@ const runOptions = {
   jobs: 1,
   job: 0,
 };
-// Optional: 3rd argument specifies which font stacks to test. Defaults to all.
+// Optional:
+//  --fonts argument specifies which font stacks to test. Defaults to all.
+//  --jobs, --job: see tests/vexflow_test_helpers.ts: VexFlowTests.run()
 // For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
-/**
- * usage: node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR [--fonts=fonts] [--jobs=jobs] [--job=job]
- *   --jobs, --job: see tests/vexflow_test_helpers.ts: VexFlowTests.run()
- */
-
 const ALL_FONTS = ['Bravura', 'Gonville', 'Petaluma'];
 let fontStacksToTest = ALL_FONTS;
 const { argv } = process;
@@ -137,8 +132,6 @@ VFT.NODE_FONT_STACKS = fontStacksToTest;
 // Create the image directory if it doesn't exist.
 fs.mkdirSync(VFT.NODE_IMAGEDIR, { recursive: true });
 
-// eslint-disable-next-line no-console
-// console.log(`\njsdom: run(${JSON.stringify(runOptions)})`);
 // Run all tests.
 VFT.run(runOptions);
 
