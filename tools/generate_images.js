@@ -198,35 +198,29 @@ const appMain = async () => {
 
     let exitCode = 0;
     let key = 0;
+    const requests = [];
 
     for (const backend in backendDefs) {
-      if (!exitCode && !backends.none && (backends.all || backends[backend])) {
+      if (!backends.none && (backends.all || backends[backend])) {
         const { jobs } = backendDefs[backend];
-        for (let i = 0; (!exitCode && i < jobs) || ps.length; ) {
-          while (i < jobs && ps.length < parallel) {
-            push(key, execChild(backend, jobs, i, key));
-            key += 1;
-            i += 1;
-          }
-          if (ps.length) {
-            const { code } = await race();
-            if (code) {
-              exitCode = code;
-              log('remote error. aborting...');
-              break;
-            }
-          }
+        for (let job = 0; job < jobs; job += 1, key += 1) {
+          requests.push({ backend, jobs, job, key });
         }
-      }
-      if (!ps.length) {
-        // log(`${backend} end`);
       }
     }
 
-    while (ps.length && !exitCode) {
-      const { code } = await race();
-      if (code) {
-        exitCode = code;
+    while (requests.length || ps.length) {
+      while (ps.length < parallel && requests.length) {
+        const { backend, jobs, job, key } = requests.shift();
+        push(key, execChild(backend, jobs, job, key));
+      }
+      if (ps.length) {
+        const { code } = await race();
+        if (code) {
+          exitCode = code;
+          log('child error. aborting...');
+          break;
+        }
       }
     }
 
