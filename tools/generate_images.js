@@ -111,7 +111,7 @@ const resolveJobsOption = (ver) => {
     }
   } catch (e) {
     // may old release, ignore
-    log(e.toString());
+    log(e.toString(), 'warn');
   }
 
   return {
