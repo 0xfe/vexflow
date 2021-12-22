@@ -5,39 +5,11 @@ import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Element } from './element';
 import { Font, FontGlyph } from './font';
-import { KeyProps } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
 import { defined, RuntimeError } from './util';
-
-export interface TypeProps extends KeyProps {
-  getWidth(scale?: number): number;
-
-  code: string;
-  code_head: string;
-  stem: boolean;
-  rest: boolean;
-  flag: boolean;
-  stem_offset: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
-  tabnote_stem_up_extension: number;
-  tabnote_stem_down_extension: number;
-  dot_shiftY: number;
-  line_above: number;
-  line_below: number;
-  beam_count: number;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  position: string;
-}
-
-export interface DurationCode {
-  common: TypeProps;
-  type: Record<string, TypeProps>;
-}
 
 export interface GlyphProps {
   code_head: string;
@@ -46,8 +18,7 @@ export interface GlyphProps {
   rest: boolean;
   line_below: number;
   line_above: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
+  stem_beam_extension: number;
   stem: Stem;
   code: string;
   code_flag_upstem: string;

@@ -449,6 +449,10 @@ export class StaveNote extends StemmableNote {
   setBeam(beam: Beam): this {
     this.beam = beam;
     this.calcNoteDisplacements();
+    // Update stem extension is a beam is assigned.
+    if (this.stem) {
+      this.stem.setExtension(this.getStemExtension());
+    }
     return this;
   }
 
@@ -1154,12 +1158,13 @@ export class StaveNote extends StemmableNote {
       // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.
       // The extra +/- 2 pushes the flag glyph outward so it covers the stem entirely.
       // Alternatively, we could shorten the stem.
+      const extension = this.flag !== undefined ? this.flag.checkMetrics().y_shift : 0;
       const flagY =
         this.getStemDirection() === Stem.DOWN
           ? // Down stems are below the note head and have flags on the right.
-            y_top - noteStemHeight + 2
+            y_top - noteStemHeight + 2 - extension
           : // Up stems are above the note head and have flags on the right.
-            y_bottom - noteStemHeight - 2;
+            y_bottom - noteStemHeight - 2 - extension;
 
       // Draw the Flag
       ctx.openGroup('flag', undefined, { pointerBBox: true });
