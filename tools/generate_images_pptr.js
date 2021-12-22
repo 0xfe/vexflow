@@ -36,8 +36,8 @@ const progress = (msg) => {
 };
 
 const options = {
-  jobs: require('os').cpus().length,
-  job: NaN,
+  jobs: 1,
+  job: 0,
   SCRIPT_VER: argv[2] || 'build',
   IMAGE_OUTPUT_DIR: argv[3],
   TIMEOUT: 30 * 1000,
