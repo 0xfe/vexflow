@@ -151,7 +151,7 @@ const launchTestPage = async (jobs, job) => {
         if (!nameStr) {
           // for old version, generate fake filename.
           nameStr = (nameElm || {}).innerText;
-          nameStr = encodeURIComponent(nameStr.replace(/[:›]/g, '-').replace(/[\s]/g, '_'));
+          nameStr = encodeURIComponent(nameStr.replace(/[:›]/g, '_').replace(/[\s]/g, '.'));
         }
 
         let type = 'png';
