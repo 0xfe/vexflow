@@ -112,6 +112,7 @@ const resolveJobsOption = (ver) => {
   } catch (e) {
     // may old release, ignore
     log(e.toString(), 'warn');
+    log('Parallel execution mode is not supported.', 'info');
   }
 
   return {
