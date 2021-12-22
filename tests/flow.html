@@ -77,7 +77,7 @@
         const path = ver;
 
         // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
-        if (path === 'releases') {
+        if (path.startsWith('releases')) {
           isVersionFourOrNewer = false;
         }
         vexURL = '../' + path + '/vexflow-debug.js';
