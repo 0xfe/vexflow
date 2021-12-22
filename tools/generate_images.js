@@ -184,7 +184,6 @@ const appMain = async () => {
     const push = (key, promise) => {
       children[key] = promise;
       ps = Object.values(children);
-      // console.log(0, ps);
     };
 
     const race = async () => {
@@ -192,10 +191,8 @@ const appMain = async () => {
         return { code: 0 };
       }
       const { key, code } = await Promise.race(ps);
-      // console.log(0.5, ps);
       delete children[key];
       ps = Object.values(children);
-      // console.log(1, ps);
       return { code };
     };
 
