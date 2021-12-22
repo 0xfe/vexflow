@@ -18,7 +18,7 @@ const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
 const runOptions = {
   jobs: 1,
-  jobId: 0,
+  job: 0,
 };
 // Optional: 3rd argument specifies which font stacks to test. Defaults to all.
 // For example:
@@ -38,8 +38,8 @@ if (argv.length >= 5) {
       fontStacksToTest = fontsList.map((fontName) => fontName.charAt(0).toUpperCase() + fontName.slice(1));
     } else if (arg.startsWith('--jobs=')) {
       runOptions.jobs = intValue;
-    } else if (arg.startsWith('--jobid=')) {
-      runOptions.jobId = intValue;
+    } else if (arg.startsWith('--job=')) {
+      runOptions.job = intValue;
     } else {
       // console.log('???', arg);
     }

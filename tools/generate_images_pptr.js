@@ -14,14 +14,14 @@ const log = (msg = 'undefined', type) => {
 };
 
 const jobLog = (msg, type, jobInfo) => {
-  const prefix = jobInfo ? `${jobInfo.jobId}/${jobInfo.jobs}: ` : '';
+  const prefix = jobInfo ? `${jobInfo.job}/${jobInfo.jobs}: ` : '';
   log(`${prefix}${msg}`, type);
 };
 
 const usage = () => {
   if (!options.IMAGE_OUTPUT_DIR) {
     log(
-      `Usage: node ${argv[1]} SCRIPT_VER IMAGE_OUTPUT_DIR [--module=moduleToTest] [--parallel=1] [--jobs=<jobs>] [--jobId=<jobId>]`
+      `Usage: node ${argv[1]} SCRIPT_VER IMAGE_OUTPUT_DIR [--module=moduleToTest] [--parallel=1] [--jobs=<jobs>] [--job=<job>]`
     );
     process.exit(1);
   }
@@ -34,7 +34,7 @@ const progress = (msg) => {
 
 const options = {
   jobs: require('os').cpus().length,
-  jobId: NaN,
+  job: NaN,
   SCRIPT_VER: argv[2] || 'build',
   IMAGE_OUTPUT_DIR: argv[3],
   TIMEOUT: 30 * 1000,
@@ -47,7 +47,7 @@ args.forEach((str) => {
     const name = arg[1];
     switch (name) {
       case 'jobs':
-      case 'jobId':
+      case 'job':
       case 'parallel':
         options[name] = parseInt(arg[2]);
         break;
@@ -130,12 +130,12 @@ const getTestModules = async () => {
   return testModules;
 };
 
-const launchTestPage = async (jobs, jobId) => {
-  // log(`launchChild ${jobId}/${jobs}`);
+const launchTestPage = async (jobs, job) => {
+  // log(`launchChild ${job}/${jobs}`);
   const moduleArg = options.module ? `&module=${options.module}` : '';
-  const { browser, page } = await launch(`?jobs=${jobs}&jobId=${jobId}&ver=${options.SCRIPT_VER}${moduleArg}`, {
+  const { browser, page } = await launch(`?jobs=${jobs}&job=${job}&ver=${options.SCRIPT_VER}${moduleArg}`, {
     jobs,
-    jobId,
+    job,
   });
 
   const genImages = async (onFinish) => {
@@ -259,7 +259,7 @@ const launchTestPage = async (jobs, jobId) => {
     };
 
     for (let elmDef of elmDefs) {
-      // progress(`${jobId}/${jobs}: ${elmDef.nameStr}`);
+      // progress(`${job}/${jobs}: ${elmDef.nameStr}`);
       ret.results[elmDef.nameStr] = await doIt(elmDef);
     }
 
@@ -285,10 +285,10 @@ const launchTestPage = async (jobs, jobId) => {
       }
 
       if (!data.startsWith('Tests completed in')) {
-        progress(`${jobId}/${jobs}: ${data}`);
+        progress(`${job}/${jobs}: ${data}`);
         page.waitForTimeout(200);
       } else {
-        progress(`${jobId}/${jobs}: ${data}`);
+        progress(`${job}/${jobs}: ${data}`);
         const ret = await genImages();
 
         // console.log(JSON.stringify(args.results, null, 2));
@@ -306,10 +306,10 @@ const launchTestPage = async (jobs, jobId) => {
   await func();
 };
 
-const execChild = async (jobs, jobId) => {
-  log(`${jobId}/${jobs}: start`);
+const execChild = async (jobs, job) => {
+  log(`${job}/${jobs}: start`);
   const { argv } = process;
-  const args = [argv[1], argv[2], argv[3], `--jobs=${jobs}`, `--jobId=${jobId}`];
+  const args = [argv[1], argv[2], argv[3], `--jobs=${jobs}`, `--job=${job}`];
   if (options.module) {
     args.push(`--module=${options.module}`);
   }
@@ -326,16 +326,16 @@ const execChild = async (jobs, jobId) => {
     });
 
     child.on('close', (code) => {
-      log(`${jobId}/${jobs} closed with code ${code}`);
-      resolve({ jobId, code });
+      log(`${job}/${jobs} closed with code ${code}`);
+      resolve({ job, code });
     });
   });
 };
 
 const appMain = async () => {
   let exitCode = 0;
-  const { jobs, jobId } = options;
-  await launchTestPage(jobs, jobId).catch((e) => {
+  const { jobs, job } = options;
+  await launchTestPage(jobs, job).catch((e) => {
     // jobLog(e.toString(), 'joberror', options);
     jobLog(e.stack, 'joberror', options);
     exitCode = 4;

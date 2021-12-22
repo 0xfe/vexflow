@@ -143,13 +143,13 @@ const appMain = async () => {
     },
   };
 
-  const execChild = (backend, jobs, jobId, key) => {
-    const proc = `${ver}_${backend}_${jobId}_${jobs}-${key}`;
+  const execChild = (backend, jobs, job, key) => {
+    const proc = `${key}:${ver}_${backend}_${job}/${jobs}`;
     log(`${proc} start`);
     const backendDef = backendDefs[backend];
     const child = spawn(
       childArgs.argv0,
-      [backendDef.path].concat(backendDef.getArgs(), [`--jobs=${jobs}`, `--jobId=${jobId}`])
+      [backendDef.path].concat(backendDef.getArgs(), [`--jobs=${jobs}`, `--job=${job}`])
     );
     return new Promise((resolve) => {
       child.stdout.on('data', (data) => {

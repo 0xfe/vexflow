@@ -91,7 +91,7 @@ export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder
 
 export type RunOptions = {
   jobs: number;
-  jobId: number;
+  job: number;
 };
 
 /** Allow `name` to be used inside file names. */
@@ -133,32 +133,32 @@ export class VexFlowTests {
   }
 
   static parseJobOptions(runOptions: RunOptions | undefined): RunOptions {
-    let { jobs, jobId } = runOptions || { jobs: 1, jobId: 0 };
+    let { jobs, job } = runOptions || { jobs: 1, job: 0 };
     if (window) {
       const { location } = window;
       if (location) {
         const sps = new URLSearchParams(location.search);
         const jobsParam = sps.get('jobs');
-        const jobIdParam = sps.get('jobId');
+        const jobParam = sps.get('job');
         if (jobsParam) {
           jobs = parseInt(jobsParam, 10);
         }
-        if (jobIdParam) {
-          jobId = parseInt(jobIdParam, 10);
+        if (jobParam) {
+          job = parseInt(jobParam, 10);
         }
       }
     }
     return {
       jobs,
-      jobId,
+      job,
     };
   }
 
   // flow.html calls this to invoke all the tests.
   static run(runOptions: RunOptions | undefined): void {
-    const { jobs, jobId } = VexFlowTests.parseJobOptions(runOptions);
+    const { jobs, job } = VexFlowTests.parseJobOptions(runOptions);
     VexFlowTests.tests.forEach((test, idx: number) => {
-      if (jobs === 1 || idx % jobs === jobId) {
+      if (jobs === 1 || idx % jobs === job) {
         test.Start();
       }
     });
