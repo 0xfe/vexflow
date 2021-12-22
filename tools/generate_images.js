@@ -12,12 +12,12 @@ const log = (msg = 'undefined', type) => {
 
 const usage = () => {
   log('Usage:');
-  log('  node generate_images.js ver imageDir [--backend=<backend>] [--parallel=<jobs>]');
+  log('  node generate_images.js ver imageDir [--backends=<backends>] [--parallel=<jobs>]');
   log('Options:');
   log('  ver  : specify the version to run.');
   log('  imageDir  : specify the directory to save images.');
   log(
-    '  --backend=<backend>  : specify backends to run. default is all. available backends are "jsdom", "pptr", "all". default is "all"'
+    '  --backends=<backends>  : specify backends to run. default is "all". available backends are "jsdom", "pptr", "all". Multiple backends can be specified by separating them with commas, such as "jsdom,pptr"'
   );
   log('  --parallel=<jobs>  : specify the number of parallel processes. default is the number of cpus');
   process.exit(1);
@@ -47,7 +47,7 @@ const parseArgs = () => {
     const value = prop[1];
     const intValue = parseInt(value, 10);
     switch (name) {
-      case '--backend':
+      case '--backends':
         backends = backends || {};
         value
           .toLowerCase()
