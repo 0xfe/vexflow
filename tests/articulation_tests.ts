@@ -184,30 +184,54 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
   const stave = new Stave(10, 50, 750).addClef('treble').setContext(ctx).draw();
 
   const notes = [
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['c/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['c/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
     staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
       .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
-    staveNote({ keys: ['f/5'], duration: 'q', stem_direction: Stem.DOWN })
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
       .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
-    staveNote({ keys: ['f/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('am').setPosition(ModifierPosition.ABOVE))
+    staveNote({ keys: ['f/5'], duration: 'q' })
       .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
-    staveNote({ keys: ['f/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
-    staveNote({ keys: ['f/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
-    staveNote({ keys: ['f/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('am').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
     ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);

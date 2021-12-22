@@ -8,6 +8,7 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
+import { StemmableNote  } from './stemmablenote';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
@@ -215,14 +216,26 @@ export class Articulation extends Modifier {
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
       let lines = 5;
+      let stemDirection = note.getStemDirection();
+      let stemHeight = 0;
+      // Decide if we need to consider beam direction in placement.
+      if (note instanceof StemmableNote) {
+        const stem = (note as StemmableNote).getStem();
+        if (stem && note.getStemDirection() == Stem.DOWN) {
+          stemHeight = stem.getHeight() / 5;
+        }
+      }
       const stave: Stave | undefined = note.getStave();
       if (stave) {
         lines = stave.getNumLines();
       }
       if (articulation.getPosition() === ABOVE) {
-        const noteLine = note.getLineNumber(true);
+        let noteLine = note.getLineNumber(true);
+        if (stemDirection === Stem.UP) {
+          noteLine += stemHeight;
+        }
         let increment = getIncrement(articulation, state.top_text_line, ABOVE);
-        const curTop = noteLine + state.text_line;
+        const curTop = noteLine + state.text_line + 0.5;
         // If articulation must be above stave, add lines between note and stave top
         if (!articulation.articulation.between_lines && curTop < lines) {
           increment += lines - curTop;
@@ -230,9 +243,12 @@ export class Articulation extends Modifier {
         articulation.setTextLine(state.top_text_line);
         state.top_text_line += increment;
       } else if (articulation.getPosition() === BELOW) {
-        const noteLine = note.getLineNumber();
+        let noteLine = note.getLineNumber();
+        if (stemDirection === Stem.DOWN) {
+          noteLine += stemHeight;
+        }
         let increment = getIncrement(articulation, state.text_line, BELOW);
-        const curBottom = (lines - noteLine) + state.text_line;
+        const curBottom = (lines - noteLine) + state.text_line + 1.5;
         // if articulation must be below stave, add lines from note to stave bottom
         if (!articulation.articulation.between_lines && curBottom < lines) {
           increment += lines - curBottom;
