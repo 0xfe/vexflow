@@ -171,6 +171,7 @@ const appMain = async () => {
   const execChildren = async (backends) => {
     log(
       JSON.stringify({
+        parallel,
         numTestes,
         pptrJobs,
         backends,
