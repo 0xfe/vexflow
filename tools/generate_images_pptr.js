@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
 
 const { argv } = process;
 
@@ -117,22 +116,6 @@ const launch = async (query, jobInfo) => {
   };
 };
 
-const getTestModules = async () => {
-  const { browser, page } = await launch('?module=unknown');
-  await page.waitForTimeout(1000);
-  const testModules = await page.$eval('#qunit-modulefilter', (selectElm) => {
-    const ret = [];
-    Array.from(selectElm.options).forEach((optionElm) => {
-      const { value } = optionElm;
-      if (value && value.length) {
-        ret.push(value);
-      }
-    });
-    return ret;
-  });
-  return testModules;
-};
-
 const launchTestPage = async (jobs, job) => {
   // log(`launchChild ${job}/${jobs}`);
   const moduleArg = options.module ? `&module=${options.module}` : '';
@@ -141,8 +124,7 @@ const launchTestPage = async (jobs, job) => {
     job,
   });
 
-  const genImages = async (onFinish) => {
-    const onFinishArgs = {};
+  const genImages = async () => {
     const elmDefs = await page.$$eval('#vexflow_testoutput .testcanvas', (elms) => {
       window.VF_TEST_GLOBAL = {};
       const { VF_TEST_GLOBAL } = window;
@@ -284,7 +266,6 @@ const launchTestPage = async (jobs, job) => {
       if (d > options.TIMEOUT) {
         await browser.close();
         throw Error(`Error: test timeout (${d / 1000} sec).`);
-        break;
       }
 
       if (!data.startsWith('Tests completed in')) {
@@ -307,32 +288,6 @@ const launchTestPage = async (jobs, job) => {
     }
   };
   await func();
-};
-
-const execChild = async (jobs, job) => {
-  log(`${job}/${jobs}: start`);
-  const { argv } = process;
-  const args = [argv[1], argv[2], argv[3], `--jobs=${jobs}`, `--job=${job}`];
-  if (options.module) {
-    args.push(`--module=${options.module}`);
-  }
-
-  const child = spawn(argv[0], args);
-
-  return new Promise((resolve) => {
-    child.stdout.on('data', (data) => {
-      process.stdout.write(data);
-    });
-
-    child.stderr.on('data', (data) => {
-      process.stderr.write(data);
-    });
-
-    child.on('close', (code) => {
-      log(`${job}/${jobs} closed with code ${code}`);
-      resolve({ job, code });
-    });
-  });
 };
 
 const appMain = async () => {
