@@ -24,6 +24,11 @@ const runOptions = {
 // For example:
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=petaluma
 //   node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR --fonts=bravura,gonville
+/**
+ * usage: node generate_png_images.js SCRIPT_DIR IMAGE_OUTPUT_DIR [--fonts=fonts] [--jobs=jobs] [--job=job]
+ *   --jobs, --job: see tests/vexflow_test_helpers.ts: VexFlowTests.run()
+ */
+
 const ALL_FONTS = ['Bravura', 'Gonville', 'Petaluma'];
 let fontStacksToTest = ALL_FONTS;
 const { argv } = process;

@@ -18,6 +18,9 @@ const jobLog = (msg, type, jobInfo) => {
   log(`${prefix}${msg}`, type);
 };
 
+/**
+ * --job{s} see tests/vexflow_test_helpers.ts: VexFlowTests.run()
+ */
 const usage = () => {
   if (!options.IMAGE_OUTPUT_DIR) {
     log(
