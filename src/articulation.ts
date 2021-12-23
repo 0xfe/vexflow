@@ -8,6 +8,8 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
+import { StemmableNote  } from './stemmablenote';
+import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
@@ -203,23 +205,57 @@ export class Articulation extends Modifier {
   static format(articulations: Articulation[], state: ModifierContextState): boolean {
     if (!articulations || articulations.length === 0) return false;
 
-    const isAbove = (artic: Articulation) => artic.getPosition() === ABOVE;
-    const isBelow = (artic: Articulation) => artic.getPosition() === BELOW;
     const margin = 0.5;
+
     const getIncrement = (articulation: Articulation, line: number, position: number) =>
       roundToNearestHalf(
         getRoundingFunction(line, position),
         defined(articulation.glyph.getMetrics().height) / 10 + margin
       );
 
-    articulations.filter(isAbove).forEach((articulation) => {
-      articulation.setTextLine(state.top_text_line);
-      state.top_text_line += getIncrement(articulation, state.top_text_line, ABOVE);
-    });
-
-    articulations.filter(isBelow).forEach((articulation) => {
-      articulation.setTextLine(state.text_line);
-      state.text_line += getIncrement(articulation, state.text_line, BELOW);
+    articulations.forEach((articulation) => {
+      const note = articulation.checkAttachedNote();
+      let lines = 5;
+      let stemDirection = note.getStemDirection();
+      let stemHeight = 0;
+      // Decide if we need to consider beam direction in placement.
+      if (note instanceof StemmableNote) {
+        const stem = (note as StemmableNote).getStem();
+        if (stem && note.getStemDirection() == Stem.DOWN) {
+          stemHeight = stem.getHeight() / 5;
+        }
+      }
+      const stave: Stave | undefined = note.getStave();
+      if (stave) {
+        lines = stave.getNumLines();
+      }
+      if (articulation.getPosition() === ABOVE) {
+        let noteLine = note.getLineNumber(true);
+        if (stemDirection === Stem.UP) {
+          noteLine += stemHeight;
+        }
+        let increment = getIncrement(articulation, state.top_text_line, ABOVE);
+        const curTop = noteLine + state.text_line + 0.5;
+        // If articulation must be above stave, add lines between note and stave top
+        if (!articulation.articulation.between_lines && curTop < lines) {
+          increment += lines - curTop;
+        }
+        articulation.setTextLine(state.top_text_line);
+        state.top_text_line += increment;
+      } else if (articulation.getPosition() === BELOW) {
+        let noteLine = note.getLineNumber();
+        if (stemDirection === Stem.DOWN) {
+          noteLine += stemHeight;
+        }
+        let increment = getIncrement(articulation, state.text_line, BELOW);
+        const curBottom = (lines - noteLine) + state.text_line + 1.5;
+        // if articulation must be below stave, add lines from note to stave bottom
+        if (!articulation.articulation.between_lines && curBottom < lines) {
+          increment += lines - curBottom;
+        }
+        articulation.setTextLine(state.text_line);
+        state.text_line += increment;
+      }
     });
 
     const width = articulations
