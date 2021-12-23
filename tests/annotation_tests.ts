@@ -9,17 +9,19 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { ModifierPosition } from '../src';
-import { Annotation } from '../src/annotation';
+import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
+import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
 import { Flow } from '../src/flow';
 import { Font, FontStyle, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
+import { ModifierPosition } from '../src/modifier';
 import { Registry } from '../src/registry';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
 import { TabNote, TabNoteStruct } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { Tickable } from '../src/tickable';
@@ -30,6 +32,7 @@ const AnnotationTests = {
   Start(): void {
     QUnit.module('Annotation');
     const run = VexFlowTests.runTests;
+    run('Placement', placement);
     run('Lyrics', lyrics);
     run('Simple Annotation', simple);
     run('Standard Notation Annotation', standard);
@@ -80,7 +83,7 @@ function lyrics(options: TestOptions): void {
       const noteGroupID = 'n' + (ix % 3);
       const noteGroup = registry.getElementById(noteGroupID) as Tickable;
       const lyricsAnnotation = f.Annotation({ text }).setFont('Roboto Slab', fontSize);
-      lyricsAnnotation.setPosition(ModifierPosition.ABOVE);
+      lyricsAnnotation.setPosition(ModifierPosition.BELOW);
       noteGroup.addModifier(lyricsAnnotation, verse);
     });
 
@@ -214,6 +217,69 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   Formatter.FormatAndDraw(ctx, stave, notes);
   ok(true, 'Fingerpicking');
+}
+function placement(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 750, 300);
+  ctx.fillStyle = '#221';
+  ctx.strokeStyle = '#221';
+  const stave = new Stave(10, 50, 750).addClef('treble').setContext(ctx).draw();
+
+  const annotation = (text: string, fontSize: number, vj: number) =>
+    new Annotation(text).setFont(Font.SERIF, fontSize).setVerticalJustification(vj);
+
+  const notes = [
+    staveNote({ keys: ['e/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 10, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 10, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['c/5'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 10, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addAnnotation(0, annotation('v1', 14, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 14, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['f/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('am').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 20, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addAnnotation(0, annotation('v1', 11, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 11, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addAnnotation(0, annotation('v1', 11, AnnotationVerticalJustify.TOP))
+      .addAnnotation(0, annotation('v2', 20, AnnotationVerticalJustify.TOP)),
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addAnnotation(0, annotation('v1', 12, AnnotationVerticalJustify.BOTTOM))
+      .addAnnotation(0, annotation('v2', 12, AnnotationVerticalJustify.BOTTOM)),
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addAnnotation(0, annotation('v1', 11, AnnotationVerticalJustify.BOTTOM))
+      .addAnnotation(0, annotation('v2', 20, AnnotationVerticalJustify.BOTTOM)),
+    staveNote({ keys: ['f/5'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('am').setPosition(ModifierPosition.BELOW))
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.BOTTOM))
+      .addAnnotation(0, annotation('v2', 20, AnnotationVerticalJustify.BOTTOM)),
+    staveNote({ keys: ['f/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addAnnotation(0, annotation('v1', 10, AnnotationVerticalJustify.BOTTOM))
+      .addAnnotation(0, annotation('v2', 20, AnnotationVerticalJustify.BOTTOM)),
+    staveNote({ keys: ['f/5'], duration: 'w' })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addAnnotation(0, annotation('v1', 11, AnnotationVerticalJustify.BOTTOM))
+      .addAnnotation(0, annotation('v2', 16, AnnotationVerticalJustify.BOTTOM)),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, ' Annotation Placement');
 }
 
 function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
