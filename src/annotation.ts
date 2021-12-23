@@ -1,13 +1,11 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
-import { noteheadSquareWhite } from '../tools/fonts/config/valid_codes';
 import { Element } from './element';
 import { FontInfo, log, ModifierContextState, StemmableNote, TextFormatter } from './index';
 import { Modifier, ModifierPosition } from './modifier';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { warn } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -80,7 +78,7 @@ export class Annotation extends Modifier {
 
       const note = annotation.checkAttachedNote();
       const stave: Stave | undefined = note.getStave();
-      const stemDirection = note.getStemDirection();
+      const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
       let lines = 5;
       if (note instanceof StemmableNote) {
@@ -188,7 +186,7 @@ export class Annotation extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
-    const stemDirection = note.getStemDirection();
+    const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
     const textFormatter = TextFormatter.create(this.textFont);
     const start = note.getModifierStartXY(ModifierPosition.ABOVE, this.index);
 

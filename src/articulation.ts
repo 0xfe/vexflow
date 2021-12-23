@@ -216,7 +216,7 @@ export class Articulation extends Modifier {
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
       let lines = 5;
-      const stemDirection = note.getStemDirection();
+      const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
       // Decide if we need to consider beam direction in placement.
       if (note instanceof StemmableNote) {
