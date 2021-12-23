@@ -11,15 +11,12 @@ const log = (msg = 'undefined', type) => {
 };
 
 const usage = () => {
-  log('Usage:');
-  log('  node generate_images.js ver imageDir [--backends=<backends>] [--parallel=<jobs>]');
-  log('Options:');
-  log('  ver  : specify the version to run.');
-  log('  imageDir  : specify the directory to save images.');
-  log(
-    '  --backends=<backends>  : specify backends to run. default is "all". available backends are "jsdom", "pptr", "all". Multiple backends can be specified by separating them with commas, such as "jsdom,pptr"'
-  );
-  log('  --parallel=<jobs>  : specify the number of parallel processes. default is the number of cpus');
+  log(`\
+Usage: node generate_images.js <version> /path/to/image/dir [options...]
+Options:
+  --backends=(all|jsdom|pptr) : Specify which backend(s) to run.
+  --parallel=<num> : Number of parallel processes. Defaults to the number of CPUs.\
+  `);
   process.exit(1);
 };
 
