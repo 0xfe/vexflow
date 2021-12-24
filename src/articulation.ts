@@ -4,15 +4,16 @@
 
 import { Builder } from './easyscore';
 import { Glyph } from './glyph';
+import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { StaveNote } from './stavenote';
-import { StemmableNote  } from './stemmablenote';
 import { Stave } from './stave';
+import { isStaveNote, StaveNote } from './stavenote';
 import { Stem } from './stem';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { isTabNote } from './tabnote';
 import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
@@ -216,7 +217,7 @@ export class Articulation extends Modifier {
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
       let lines = 5;
-      let stemDirection = note.getStemDirection();
+      const stemDirection = note.getStemDirection();
       let stemHeight = 0;
       // Decide if we need to consider beam direction in placement.
       if (note instanceof StemmableNote) {
@@ -248,7 +249,7 @@ export class Articulation extends Modifier {
           noteLine += stemHeight;
         }
         let increment = getIncrement(articulation, state.text_line, BELOW);
-        const curBottom = (lines - noteLine) + state.text_line + 1.5;
+        const curBottom = lines - noteLine + state.text_line + 1.5;
         // if articulation must be below stave, add lines from note to stave bottom
         if (!articulation.articulation.between_lines && curBottom < lines) {
           increment += lines - curBottom;

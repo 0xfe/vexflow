@@ -9,8 +9,9 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
+import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
-import { isStaveNote, isStemmableNote } from './typeguard';
+import { isStemmableNote } from './stemmablenote';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {

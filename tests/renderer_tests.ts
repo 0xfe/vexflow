@@ -18,7 +18,7 @@ import {
   Stave,
   StaveNote,
   SVGContext,
-} from '../src/';
+} from '../src/index';
 
 // TODO: Should FactoryOptions.renderer.elementId also accept a canvas | div?
 

@@ -4,35 +4,57 @@
   "description": "A JavaScript library for rendering music notation and guitar tablature.",
   "exports": {
     ".": {
-      "types": "./build/src/entry/vexflow.d.ts",
-      "require": "./build/vexflow.js",
-      "import": "./build/esm/vexflow.js"
+      "types": "./build/types/entry/vexflow.d.ts",
+      "require": "./build/cjs/vexflow.js",
+      "import": "./build/esm/entry/vexflow.js"
+    },
+    "./bravura": {
+      "types": "./build/types/entry/vexflow-bravura.d.ts",
+      "require": "./build/cjs/vexflow-bravura.js",
+      "import": "./build/esm/entry/vexflow-bravura.js"
+    },
+    "./gonville": {
+      "types": "./build/types/entry/vexflow-gonville.d.ts",
+      "require": "./build/cjs/vexflow-gonville.js",
+      "import": "./build/esm/entry/vexflow-gonville.js"
+    },
+    "./petaluma": {
+      "types": "./build/types/entry/vexflow-petaluma.d.ts",
+      "require": "./build/cjs/vexflow-petaluma.js",
+      "import": "./build/esm/entry/vexflow-petaluma.js"
     },
     "./core": {
-      "types": "./build/src/entry/vexflow-core.d.ts",
-      "require": "./build/vexflow-core.js",
-      "import": "./build/esm/vexflow-core.js"
+      "types": "./build/types/entry/vexflow-core.d.ts",
+      "require": "./build/cjs/vexflow-core.js",
+      "import": "./build/esm/entry/vexflow-core.js"
     },
-    "./core-with-bravura": {
-      "types": "./build/src/entry/vexflow-core-with-bravura.d.ts",
-      "require": "./build/vexflow-core-with-bravura.js",
-      "import": "./build/esm/vexflow-core-with-bravura.js"
+    "./font/bravura": {
+      "types": "./build/types/entry/vexflow-font-bravura.d.ts",
+      "require": "./build/cjs/vexflow-font-bravura.js",
+      "import": "./build/esm/entry/vexflow-font-bravura.js"
     },
-    "./core-with-gonville": {
-      "types": "./build/src/entry/vexflow-core-with-gonville.d.ts",
-      "require": "./build/vexflow-core-with-gonville.js",
-      "import": "./build/esm/vexflow-core-with-gonville.js"
+    "./font/gonville": {
+      "types": "./build/types/entry/vexflow-font-gonville.d.ts",
+      "require": "./build/cjs/vexflow-font-gonville.js",
+      "import": "./build/esm/entry/vexflow-font-gonville.js"
     },
-    "./core-with-petaluma": {
-      "types": "./build/src/entry/vexflow-core-with-petaluma.d.ts",
-      "require": "./build/vexflow-core-with-petaluma.js",
-      "import": "./build/esm/vexflow-core-with-petaluma.js"
+    "./font/petaluma": {
+      "types": "./build/types/entry/vexflow-font-petaluma.d.ts",
+      "require": "./build/cjs/vexflow-font-petaluma.js",
+      "import": "./build/esm/entry/vexflow-font-petaluma.js"
+    },
+    "./font/custom": {
+      "types": "./build/types/entry/vexflow-font-custom.d.ts",
+      "require": "./build/cjs/vexflow-font-custom.js",
+      "import": "./build/esm/entry/vexflow-font-custom.js"
     }
   },
-  "main": "build/vexflow.js",
-  "module": "build/esm/vexflow.js",
-  "types": "build/src/index.d.ts",
-  "browser": "build/vexflow.js",
+  "main": "./build/cjs/vexflow.js",
+  "browser": "./build/cjs/vexflow.js",
+  "module": "./build/esm/entry/vexflow.js",
+  "types": "./build/types/entry/vexflow.d.ts",
+  "unpkg": "./build/cjs/vexflow.js",
+  "jsdelivr": "./build/cjs/vexflow.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/0xfe/vexflow.git"
@@ -45,18 +67,20 @@
   "license": "MIT",
   "files": [
     "build",
-    "src"
+    "src",
+    "entry",
+    "!entry/vexflow-debug-with-tests.ts",
+    "tests/flow.html",
+    "AUTHORS.md"
   ],
   "bugs": {
     "url": "https://github.com/0xfe/vexflow/issues"
-  },
-  "dependencies": {
-    "@types/offscreencanvas": "^2019.6.4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "canvas": "^2.8.0",
+    "circular-dependency-plugin": "^5.2.2",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
@@ -83,8 +107,8 @@
     "opentype.js": "^1.3.4",
     "prettier": "^2.5.0",
     "qunit": "^2.17.2",
+    "sharp": "^0.29.3",
     "recursive-copy": "^2.0.13",
-    "string-replace-loader": "^3.1.0",
     "svg2pdf.js": "^2.2.0",
     "ts-loader": "^9.2.6",
     "typedoc": "^0.22.10",
@@ -95,8 +119,9 @@
     "start": "grunt stage",
     "reference": "grunt reference",
     "lint": "grunt eslint",
+    "build:esm": "grunt buildESM",
     "qunit": "grunt test",
-    "generate:current": "node   ./tools/generate_png_images.js ../build     ./build/images/current   ${VF_GENERATE_OPTIONS}",
+    "generate:current": "node   ./tools/generate_png_images.js ../build/cjs ./build/images/current   ${VF_GENERATE_OPTIONS}",
     "generate:reference": "node ./tools/generate_png_images.js ../reference ./build/images/reference ${VF_GENERATE_OPTIONS}",
     "diff:reference": "./tools/visual_regression.sh reference",
     "get:releases": "node ./tools/get_releases.mjs",

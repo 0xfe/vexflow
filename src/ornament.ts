@@ -8,8 +8,8 @@ import { ModifierContextState } from './modifiercontext';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { isTabNote } from './tabnote';
 import { TickContext } from './tickcontext';
-import { isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line

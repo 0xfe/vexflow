@@ -3,11 +3,16 @@
 //
 // This class implements dot modifiers for notes.
 
+import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { isStaveNote } from './stavenote';
+import { isTabNote } from './tabnote';
+import { isCategory } from './typeguard';
 import { RuntimeError } from './util';
+
+export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
 
 export class Dot extends Modifier {
   static get CATEGORY(): string {

@@ -3,11 +3,10 @@
 // MIT License
 
 import { Glyph } from './glyph';
-import { GraceNote } from './gracenote';
+import { GraceNote, isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { isGraceNote } from './typeguard';
 
 /** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {

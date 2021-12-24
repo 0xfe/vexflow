@@ -1,0 +1,13 @@
+// Emit the *.d.ts files for the src/ and entry/ folders.
+// It ignores the tests/ folder because users of our NPM package don't need
+// to have the type definitions for tests.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/types/",
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "include": ["./src", "./entry"],
+  "exclude": ["./entry/vexflow-debug-with-tests.ts"]
+}

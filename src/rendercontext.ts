@@ -79,3 +79,22 @@ export abstract class RenderContext {
     return this;
   }
 }
+
+/**
+ * Draw a tiny dot marker on the specified context. A great debugging aid.
+ * @param ctx context
+ * @param x dot x coordinate
+ * @param y dot y coordinate
+ * @param color
+ */
+export function drawDot(ctx: RenderContext, x: number, y: number, color = '#F55'): void {
+  ctx.save();
+  ctx.setFillStyle(color);
+
+  // draw a circle
+  ctx.beginPath();
+  ctx.arc(x, y, 3, 0, Math.PI * 2, true);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}

@@ -28,6 +28,7 @@ import {
   Voice,
   VoiceTime,
 } from '../src/index';
+
 import { Tables } from '../src/tables';
 import { MockTickable } from './mocks';
 

@@ -26,6 +26,8 @@ const OffscreenCanvasTests = {
 
 function simpleTest(): void {
   // Create a CanvasContext from an OffscreenCanvas.
+  // eslint-disable-next-line
+  // @ts-ignore
   const offscreenCanvas = new OffscreenCanvas(550, 200);
   const offscreenCtx = offscreenCanvas.getContext('2d');
   if (offscreenCtx == null) {

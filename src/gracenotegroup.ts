@@ -11,13 +11,16 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { isStaveNote } from './stavenote';
 import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabTie } from './tabtie';
-import { isStaveNote } from './typeguard';
+import { isCategory } from './typeguard';
 import { log } from './util';
 import { Voice } from './voice';
+
+export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, GraceNoteGroup);
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 // eslint-disable-next-line

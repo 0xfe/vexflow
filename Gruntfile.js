@@ -1,45 +1,71 @@
 /* global module, __dirname, process, require */
 
+// This Gruntfile supports these optional environment variables:
+//   VEX_DEBUG_CIRCULAR_DEPENDENCIES
+//       if true, we display a list of circular dependencies in the code base.
+//   VEX_DEVTOOL
+//       override our default setting for webpack's devtool config
+//       https://webpack.js.org/configuration/devtool/
+// To pass in environment variables, you can use your ~/.bash_profile or do something like:
+//   export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
+//   export VEX_DEVTOOL=eval
+//   grunt
+
 const path = require('path');
 const webpack = require('webpack');
 const child_process = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const VER = require('./tools/generate_version_file'); // Make the src/version.ts file.
 
-// A module entry file `src/entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
+const BUILD_VERSION = VER.VERSION;
+const BUILD_DATE = VER.DATE;
+const BUILD_ID = VER.ID;
+
+const DEBUG_CIRCULAR_DEPENDENCIES =
+  process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === 'true' || process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === '1';
+
+// A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow';
-const VEX_CORE = 'vexflow-core';
-const VEX_CORE_BRAVURA = 'vexflow-core-with-bravura';
-const VEX_CORE_GONVILLE = 'vexflow-core-with-gonville';
-const VEX_CORE_PETALUMA = 'vexflow-core-with-petaluma';
+const VEX_BRAVURA = 'vexflow-bravura';
+const VEX_GONVILLE = 'vexflow-gonville';
+const VEX_PETALUMA = 'vexflow-petaluma';
+const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules below.
+const VEX_FONT_MODULE_BRAVURA = 'vexflow-font-bravura';
+const VEX_FONT_MODULE_GONVILLE = 'vexflow-font-gonville';
+const VEX_FONT_MODULE_PETALUMA = 'vexflow-font-petaluma';
+const VEX_FONT_MODULE_CUSTOM = 'vexflow-font-custom';
+
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
 // Output directories.
 const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
+const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
+const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 
-// Global variables that will be set below.
-let PACKAGE_JSON;
-let VEXFLOW_VERSION;
+// Global variable that will be set below.
 let BANNER;
-let GIT_COMMIT_HASH;
+const NO_BANNER = false; // A flag for disabling the MIT license banner for font module files.
 
 // PRODUCTION_MODE will enable minification, etc.
 // See: https://webpack.js.org/configuration/mode/
 const PRODUCTION_MODE = 'production';
+// FOR DEBUGGING PURPOSES, you can temporarily comment out the line above and use the line below to disable minification.
+// const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
-const CODE_SPLITTING = 'split';
-const SINGLE_BUNDLE = 'single';
+const fontLibraryPrefix = 'VexFlowFont';
 
 /**
  * @returns a webpack config object. Default to PRODUCTION_MODE unless you specify DEVELOPMENT_MODE.
  */
-function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE) {
-  // The module entry is a full path to a typescript file stored in vexflow/src/entry/.
-  const entry = path.join(BASE_DIR, 'src/entry/', file + '.ts');
+function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName = 'Vex') {
+  // The module entry is a full path to a typescript file stored in vexflow/entry/.
+  const entry = path.join(BASE_DIR, 'entry/', file + '.ts');
   const outputFilename = file + '.js';
 
   // TODO: Explore passing multiple entry points to the entry field instead of running multiple webpack tasks
@@ -58,54 +84,53 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
   // without the parentheses, code splitting will be broken. Search for `webpackChunkVex` inside the output files.
   let globalObject = `(typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this)`;
 
-  let chunkFilename = undefined;
-  let publicPath = 'auto';
-  if (bundleStrategy === CODE_SPLITTING) {
-    // Font files for dynamic import. See: webpackChunkName in async.ts
-    chunkFilename = 'vexflow-font-[name].js';
+  // Control the type of source maps that will be produced.
+  // If not specified, production builds will get high quality source maps, and development/debug builds will get nothing.
+  // See: https://webpack.js.org/configuration/devtool/
+  // In version 3.0.9 this was called VEX_GENMAP.
+  const devtool = process.env.VEX_DEVTOOL || (mode === DEVELOPMENT_MODE ? false : 'source-map');
 
-    // See: https://webpack.js.org/guides/public-path/
-    // publicPath needs more testing! :-(
-    // In some tests, this needs to be './' to work, but in others it needs to be 'auto' to work.
-    // publicPath = './';
-    publicPath = 'auto';
+  let plugins = [];
+
+  // Add a banner at the top of the file.
+  if (addBanner) {
+    plugins.push(new webpack.BannerPlugin(BANNER));
+  }
+
+  if (DEBUG_CIRCULAR_DEPENDENCIES) {
+    plugins.push(
+      new CircularDependencyPlugin({
+        cwd: process.cwd(),
+      })
+    );
   }
 
   return {
     mode: mode,
     entry: entry,
     output: {
-      path: BUILD_DIR,
+      path: BUILD_CJS_DIR,
       filename: outputFilename,
-      chunkFilename: chunkFilename,
+
       library: {
-        name: 'Vex',
+        name: libraryName,
         type: 'umd',
         export: 'default',
       },
       globalObject: globalObject,
-      publicPath: publicPath,
     },
     resolve: {
-      extensions: ['.ts', '...'],
+      extensions: ['.ts', '.tsx', '.js', '...'],
     },
-    devtool: process.env.VEX_GENMAP || mode === PRODUCTION_MODE ? 'source-map' : false,
+    devtool: devtool,
     module: {
       rules: [
         {
-          // Add VERSION and BUILD properties to Vex.Flow.
-          test: /flow\.ts$/,
-          loader: 'string-replace-loader',
-          options: {
-            multiple: [
-              { search: '_VEX_BUILD_', replace: GIT_COMMIT_HASH },
-              { search: '_VEX_VERSION_', replace: VEXFLOW_VERSION },
-            ],
-          },
-        },
-        {
           test: /(\.ts$|\.js$)/,
           exclude: /node_modules/,
+          resolve: {
+            fullySpecified: false,
+          },
           use: [
             {
               loader: 'ts-loader',
@@ -115,10 +140,7 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
         },
       ],
     },
-    plugins: [
-      // Add a banner at the top of the file.
-      new webpack.BannerPlugin(BANNER),
-    ],
+    plugins: plugins,
     optimization: {
       minimizer: [
         // DO NOT extract the banner into a separate file.
@@ -129,25 +151,45 @@ function getConfig(file, bundleStrategy = SINGLE_BUNDLE, mode = PRODUCTION_MODE)
 }
 
 module.exports = (grunt) => {
-  // Get current build information from git and package.json.
-  GIT_COMMIT_HASH = child_process.execSync('git rev-parse HEAD').toString().trim();
-  PACKAGE_JSON = grunt.file.readJSON('package.json');
-  VEXFLOW_VERSION = PACKAGE_JSON.version;
   BANNER =
-    `VexFlow ${VEXFLOW_VERSION}   ${new Date().toISOString()}   ${GIT_COMMIT_HASH}\n` +
+    `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
     `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
     `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
   // We need a different webpack config for each build target.
-  const prodAllFonts = getConfig(VEX, SINGLE_BUNDLE);
-  const prodNoFonts = getConfig(VEX_CORE, CODE_SPLITTING);
-  const prodBravuraOnly = getConfig(VEX_CORE_BRAVURA, CODE_SPLITTING);
-  const prodGonvilleOnly = getConfig(VEX_CORE_GONVILLE, CODE_SPLITTING);
-  const prodPetalumaOnly = getConfig(VEX_CORE_PETALUMA, CODE_SPLITTING);
+  const prodAllFonts = getConfig(VEX, PRODUCTION_MODE);
+  const prodBravuraOnly = getConfig(VEX_BRAVURA, PRODUCTION_MODE);
+  const prodGonvilleOnly = getConfig(VEX_GONVILLE, PRODUCTION_MODE);
+  const prodPetalumaOnly = getConfig(VEX_PETALUMA, PRODUCTION_MODE);
+  const prodNoFonts = getConfig(VEX_CORE, PRODUCTION_MODE);
+  const prodFontModuleBravura = getConfig(
+    VEX_FONT_MODULE_BRAVURA,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Bravura'
+  );
+  const prodFontModulePetaluma = getConfig(
+    VEX_FONT_MODULE_PETALUMA,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Petaluma'
+  );
+  const prodFontModuleGonville = getConfig(
+    VEX_FONT_MODULE_GONVILLE,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Gonville'
+  );
+  const prodFontModuleCustom = getConfig(
+    VEX_FONT_MODULE_CUSTOM,
+    PRODUCTION_MODE,
+    NO_BANNER,
+    fontLibraryPrefix + 'Custom'
+  );
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
-  const debugAllFonts = getConfig(VEX_DEBUG, SINGLE_BUNDLE, DEVELOPMENT_MODE);
-  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, SINGLE_BUNDLE, DEVELOPMENT_MODE);
-  const debugNoFonts = getConfig(VEX_CORE, CODE_SPLITTING, DEVELOPMENT_MODE);
+  const debugAllFonts = getConfig(VEX_DEBUG, DEVELOPMENT_MODE);
+  const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, DEVELOPMENT_MODE);
+  const debugNoFonts = getConfig(VEX_CORE, DEVELOPMENT_MODE);
 
   // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
   const watch = {
@@ -158,14 +200,19 @@ module.exports = (grunt) => {
     },
   };
 
+  const PACKAGE_JSON = grunt.file.readJSON('package.json');
   grunt.initConfig({
     pkg: PACKAGE_JSON,
     webpack: {
       buildProdAllFonts: prodAllFonts,
-      buildProdNoFonts: prodNoFonts,
       buildProdBravuraOnly: prodBravuraOnly,
       buildProdGonvilleOnly: prodGonvilleOnly,
       buildProdPetalumaOnly: prodPetalumaOnly,
+      buildProdNoFonts: prodNoFonts,
+      buildProdFontModuleBravura: prodFontModuleBravura,
+      buildProdFontModulePetaluma: prodFontModulePetaluma,
+      buildProdFontModuleGonville: prodFontModuleGonville,
+      buildProdFontModuleCustom: prodFontModuleCustom,
 
       buildDebug: debugAllFonts,
       buildDebugPlusTests: debugAllFontsWithTests,
@@ -206,38 +253,6 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     copy: {
-      modulePackageJSON: {
-        expand: true,
-        cwd: BASE_DIR,
-        src: ['tools/esm/package.json'],
-        dest: path.join(BUILD_DIR, 'esm/'),
-        flatten: true,
-      },
-      // Modules: For now, we just copy the vexflow****.js to the esm/ folder and add exports at the bottom.
-      moduleJSFiles: {
-        expand: true,
-        cwd: BUILD_DIR,
-        src: ['*.js'],
-        dest: path.join(BUILD_DIR, 'esm/'),
-        flatten: true,
-        options: {
-          process: (content) => {
-            // We take a JS file that sets globalThis.Vex, and turn it into a ES module.
-            // To do this, we extract all the classes from Vex.Flow, and re-export them.
-            // We also export Vex both as a named export and as a default export.
-            // THIS IS A HACK, so we should figure out how to use webpack to export both ESM and CJS.
-            const exports = `
-const Vex = globalThis['Vex'];
-const Flow = Vex.Flow;
-const  { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice, BarlineType, ModifierPosition } = Vex.Flow;
-export { Accidental, Annotation, Articulation, BarNote, Beam, Bend, BoundingBox, BoundingBoxComputation, ChordSymbol, Clef, ClefNote, Crescendo, Curve, Dot, EasyScore, Element, Factory, Font, Formatter, Fraction, FretHandFinger, GhostNote, Glyph, GlyphNote, GraceNote, GraceNoteGroup, GraceTabNote, KeyManager, KeySignature, KeySigNote, Modifier, ModifierContext, MultiMeasureRest, Music, Note, NoteHead, NoteSubGroup, Ornament, Parser, PedalMarking, Registry, RenderContext, Renderer, RepeatNote, Stave, Barline, StaveConnector, StaveHairpin, StaveLine, StaveModifier, StaveNote, Repetition, StaveTempo, StaveText, StaveTie, Volta, Stem, StringNumber, Stroke, System, Tables, TabNote, TabSlide, TabStave, TabTie, TextBracket, TextDynamics, TextFormatter, TextNote, TickContext, TimeSignature, TimeSigNote, Tremolo, Tuning, Tuplet, Vibrato, VibratoBracket, Voice, BarlineType, ModifierPosition };
-export { Vex, Flow };
-export default Vex;`;
-            // Append our magic exports. :-)
-            return content + exports;
-          },
-        },
-      },
       reference: {
         files: [
           {
@@ -287,15 +302,36 @@ export default Vex;`;
       'webpack:buildDebug',
       'webpack:buildDebugPlusTests',
       'webpack:buildProdAllFonts',
-      'webpack:buildProdNoFonts',
       'webpack:buildProdBravuraOnly',
       'webpack:buildProdGonvilleOnly',
       'webpack:buildProdPetalumaOnly',
-      'copy:moduleJSFiles',
-      'copy:modulePackageJSON',
+      'webpack:buildProdNoFonts',
+      'webpack:buildProdFontModuleBravura',
+      'webpack:buildProdFontModulePetaluma',
+      'webpack:buildProdFontModuleGonville',
+      'webpack:buildProdFontModuleCustom',
+      'buildESM',
+      'buildTypeDeclarations',
       'typedoc',
     ]
   );
+
+  grunt.registerTask('buildTypeDeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
+    grunt.log.writeln('Building *.d.ts files in build/types/');
+    child_process.execSync('tsc -p tsconfig.types.json').toString();
+  });
+
+  // Outputs ESM module files to build/esm/.
+  // Also fixes the imports and exports so that they all end in .js.
+  grunt.registerTask('buildESM', 'Use tsc to create ESM JS files in build/esm/', () => {
+    grunt.log.writeln('ESM: Build to build/esm/');
+    child_process.execSync('tsc -p tsconfig.esm.json');
+    grunt.log.writeln('ESM: Fix Imports/Exports');
+    child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
+    // The build/esm/ folder needs a package.json that says "type": "module".
+    grunt.log.writeln('ESM: Add package.json with "type": "module"');
+    child_process.execSync('cp ./tools/esm/package.json ./build/esm/package.json');
+  });
 
   // `grunt watch`
   grunt.registerTask(
