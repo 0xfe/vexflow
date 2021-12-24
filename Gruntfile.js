@@ -258,7 +258,7 @@ module.exports = (grunt) => {
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['*.js', '*.map'],
+            src: ['**/*.js', '**/*.map'],
             dest: REFERENCE_DIR,
           },
         ],

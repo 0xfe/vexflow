@@ -122,7 +122,7 @@
     "build:esm": "grunt buildESM",
     "qunit": "grunt test",
     "generate:current": "node   ./tools/generate_png_images.js ../build/cjs ./build/images/current   ${VF_GENERATE_OPTIONS}",
-    "generate:reference": "node ./tools/generate_png_images.js ../reference ./build/images/reference ${VF_GENERATE_OPTIONS}",
+    "generate:reference": "node ./tools/generate_png_images.js ../reference/cjs ./build/images/reference ${VF_GENERATE_OPTIONS}",
     "diff:reference": "./tools/visual_regression.sh reference",
     "get:releases": "node ./tools/get_releases.mjs",
     "test": "npm run lint && npm run qunit && npm run generate:current",
