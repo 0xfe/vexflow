@@ -9,13 +9,13 @@ import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Flow } from '../src/flow';
 import { Font } from '../src/font';
-import { Stem } from '../src/stem';
 import { Formatter } from '../src/formatter';
-import { ContextBuilder } from '../src/renderer';
 import { ModifierPosition } from '../src/modifier';
+import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { Barline } from '../src/stavebarline';
 import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
 import { TabNote } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { Voice } from '../src/voice';
@@ -232,12 +232,11 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
       .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
       .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
-    ];
+  ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
   ok(true, ' Annotation Placement');
 }
-
 
 function drawArticulations2(options: TestOptions): void {
   expect(0);

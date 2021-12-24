@@ -8,10 +8,10 @@ import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isStaveNote, StaveNote } from './stavenote';
-import { StemmableNote } from './stemmablenote';
 import { Stave } from './stave';
+import { isStaveNote, StaveNote } from './stavenote';
 import { Stem } from './stem';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { isTabNote } from './tabnote';
 import { defined, log, RuntimeError } from './util';
@@ -217,7 +217,7 @@ export class Articulation extends Modifier {
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
       let lines = 5;
-      let stemDirection = note.getStemDirection();
+      const stemDirection = note.getStemDirection();
       let stemHeight = 0;
       // Decide if we need to consider beam direction in placement.
       if (note instanceof StemmableNote) {
