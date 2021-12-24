@@ -187,11 +187,14 @@ export abstract class StemmableNote extends Note {
       return this.stem_extension_override;
     }
 
-    if (glyph) {
-      return this.getStemDirection() === Stem.UP ? glyph.stem_up_extension : glyph.stem_down_extension;
+    // Use stem_beam_extension with beams
+    if (this.beam) {
+      return glyph.stem_beam_extension;
     }
 
-    return 0;
+    const flagCode =
+      this.getStemDirection() === Stem.DOWN ? this.glyph.code_flag_downstem : this.glyph.code_flag_upstem;
+    return Math.abs(Tables.currentMusicFont().lookupMetric(`glyphs.flag.${flagCode}.shiftY`, 0));
   }
 
   // Set the stem length to a specific. Will override the default length.

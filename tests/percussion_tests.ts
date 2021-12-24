@@ -134,7 +134,7 @@ const basic0 = createSingleMeasureTest((f) => {
 
   f.Beam({ notes: voice0.getTickables() as StemmableNote[] });
   f.Beam({ notes: voice1.getTickables().slice(0, 2) as StemmableNote[] });
-  f.Beam({ notes: voice1.getTickables().slice(3, 6) as StemmableNote[] });
+  f.Beam({ notes: voice1.getTickables().slice(3, 5) as StemmableNote[] });
 });
 
 const basic1 = createSingleMeasureTest((f) => {

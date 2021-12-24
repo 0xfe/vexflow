@@ -175,7 +175,7 @@ export class EasyScoreGrammar implements Grammar {
     return { token: '[0-9whq]+' };
   }
   TYPES(): Rule {
-    return { token: '[rRsSxX]' };
+    return { token: '[rRsSmMhH]' };
   }
   LPAREN(): Rule {
     return { token: '[(]' };
