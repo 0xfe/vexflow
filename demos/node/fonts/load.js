@@ -1,4 +1,4 @@
-// node fonts.js > output.html
+// node load.js > output.html
 //
 // This demo shows how to use node-canvas to load a font (woff / otf).
 // It does not currently use VexFlow.
