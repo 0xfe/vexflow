@@ -52,7 +52,7 @@
   "main": "./build/cjs/vexflow.js",
   "browser": "./build/cjs/vexflow.js",
   "module": "./build/esm/entry/vexflow.js",
-  "types": "./build/esm/entry/vexflow.d.ts",
+  "types": "./build/types/entry/vexflow.d.ts",
   "unpkg": "./build/cjs/vexflow.js",
   "jsdelivr": "./build/cjs/vexflow.js",
   "repository": {
