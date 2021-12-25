@@ -91,39 +91,58 @@ const parseArgs = () => {
   };
 };
 
-const resolveJobsOption = (ver) => {
+const resolveJobsOption = (verIn) => {
   let numTestes = NaN;
   let pptrJobs = 1;
+  let ver = verIn;
 
-  try {
-    global.Vex = require(`../${ver}/vexflow-debug-with-tests.js`);
-    if (global.Vex) {
-      const { Flow } = global.Vex;
-      if (Flow) {
-        const { Test } = Flow;
-        if (Test && Test.tests && Test.parseJobOptions) {
-          numTestes = Test.tests.length;
-          pptrJobs = Math.ceil(numTestes / 10);
+  let jsFileName;
+  ['cjs', ''].some((dir) => {
+    const tVer = `${verIn}${dir.length ? '/' : ''}${dir}`;
+    const tJsFileName = `../${tVer}/vexflow-debug-with-tests.js`;
+    if (fs.existsSync(path.resolve(__dirname, tJsFileName))) {
+      ver = tVer;
+      jsFileName = tJsFileName;
+      return true;
+    }
+    return false;
+  });
+
+  if (jsFileName) {
+    try {
+      global.Vex = require(jsFileName);
+      if (global.Vex) {
+        const { Flow } = global.Vex;
+        if (Flow) {
+          const { Test } = Flow;
+          if (Test && Test.tests && Test.parseJobOptions) {
+            numTestes = Test.tests.length;
+            pptrJobs = Math.ceil(numTestes / 10);
+          }
         }
       }
+    } catch (e) {
+      // may old release, ignore
+      log(e.toString(), 'warn');
     }
-  } catch (e) {
-    // may old release, ignore
-    log(e.toString(), 'warn');
+  }
+
+  if (Number.isNaN(numTestes)) {
     log('Parallel execution mode is not supported.', 'info');
   }
 
   return {
     numTestes,
     pptrJobs,
+    ver,
   };
 };
 
 const appMain = async () => {
   const options = parseArgs();
   const { childArgs, backends, parallel } = options;
-  const { numTestes, pptrJobs } = resolveJobsOption(childArgs.ver);
-  const { ver, imageDir, args } = childArgs;
+  const { numTestes, pptrJobs, ver } = resolveJobsOption(childArgs.ver);
+  const { imageDir, args } = childArgs;
 
   const backendDefs = {
     jsdom: {
@@ -169,6 +188,7 @@ const appMain = async () => {
   const execChildren = async (backends) => {
     log(
       JSON.stringify({
+        ver,
         parallel,
         numTestes,
         pptrJobs,
