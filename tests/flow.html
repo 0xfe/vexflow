@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html>
+  <!-- 
+    This page does not work with Safari 13.0.2 due to
+    - top level await
+    - nullish coalescing operator
+    Use flow-old-browser.html instead.
+   -->
   <head>
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
@@ -37,15 +43,15 @@
       }
 
       // Support a query param to choose which VexFlow version to load.
-      // ver=(build|reference|releases|etc...)
-      // If omitted, `ver` defaults to 'build'.
+      // ver=(build/cjs | reference | releases | etc...)
+      // If omitted, `ver` defaults to 'build/cjs'.
       // `ver` can also specify a version hosted on unpkg.com / jsdelivr.com:
       // ver=unpkg@3.0.9     => https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
       // ver=unpkg@1.2.77    => https://unpkg.com/vexflow@1.2.77/releases/vexflow-debug.js
       // ver=jsdelivr@4.0.0  => https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
       // ver=jsdelivr@1.2.90 => https://cdn.jsdelivr.net/npm/vexflow@1.2.90/releases/vexflow-debug.js
       const params = new URLSearchParams(window.location.search);
-      const ver = params.get('ver') ?? 'build';
+      const ver = params.get('ver') ?? 'build/cjs';
 
       let vexURL;
       let testsURL;
@@ -77,6 +83,8 @@
         const path = ver;
 
         // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
+        // TODO/RONYEH: This is not a good assumption. We should download releases into versioned subdirectories,
+        // e.g., vexflow/releases/4.0.1/ so we can parse the version correctly.
         if (path.startsWith('releases')) {
           isVersionFourOrNewer = false;
         }

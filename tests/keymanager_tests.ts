@@ -8,7 +8,7 @@
 
 import { VexFlowTests } from './vexflow_test_helpers';
 
-import { KeyManager } from '../src/';
+import { KeyManager } from '../src/index';
 
 const KeyManagerTests = {
   Start(): void {

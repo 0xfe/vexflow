@@ -10,10 +10,12 @@ import { Beam } from '../src/beam';
 import { Flow } from '../src/flow';
 import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
+import { ModifierPosition } from '../src/modifier';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { Barline } from '../src/stavebarline';
-import { StaveNote } from '../src/stavenote';
+import { StaveNote, StaveNoteStruct } from '../src/stavenote';
+import { Stem } from '../src/stem';
 import { TabNote } from '../src/tabnote';
 import { TabStave } from '../src/tabstave';
 import { Voice } from '../src/voice';
@@ -22,6 +24,7 @@ const ArticulationTests = {
   Start(): void {
     QUnit.module('Articulation');
     const run = VexFlowTests.runTests;
+    run('Articulation - Vertical Placement', verticalPlacement);
     run('Articulation - Staccato/Staccatissimo', drawArticulations, { sym1: 'a.', sym2: 'av' });
     run('Articulation - Accent/Tenuto', drawArticulations, { sym1: 'a>', sym2: 'a-' });
     run('Articulation - Marcato/L.H. Pizzicato', drawArticulations, { sym1: 'a^', sym2: 'a+' });
@@ -171,6 +174,68 @@ function drawFermata(options: TestOptions): void {
 
   // Helper function to justify and draw a 4/4 voice
   formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.DOUBLE);
+}
+
+function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 750, 300);
+  ctx.fillStyle = '#221';
+  ctx.strokeStyle = '#221';
+  const staveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
+  const stave = new Stave(10, 50, 750).addClef('treble').setContext(ctx).draw();
+
+  const notes = [
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['c/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['c/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['f/5'], duration: 'q' })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+    staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, ' Annotation Placement');
 }
 
 function drawArticulations2(options: TestOptions): void {

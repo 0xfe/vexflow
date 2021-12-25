@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!-- 
   Instead of async/await, you can use Promise style chains.
-  For example: Vex.Flow.setMusicFont(...).then(onFulfilledCallback) 
 -->
 <html>
   <head>
@@ -16,30 +15,41 @@
     </style>
   </head>
   <body>
-    <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
-    <p>This page calls Flow.setMusicFont(...).then(...) with a onFontsLoaded callback.</p>
+    <p>
+      To see the demo, start a web server and load this page (e.g., `npx http-server` and navigate to
+      <a href="http://127.0.0.1:8080/demos/fonts/core-with-promise.html"
+        >http://127.0.0.1:8080/demos/fonts/core-with-promise.html</a
+      >).
+    </p>
+    <p>
+      Using <b>vexflow-core.js</b> allows your webpage to load a small initial bundle. It will load fonts on demand when
+      you call <code>Vex.Flow.fetchMusicFont(fontName)</code>. This method is asynchronous and returns a Promise.
+    </p>
+    <p>Open your browser's developer tools to see that font modules are downloaded upon request:</p>
+    <p>View the page's source.</p>
     <div id="output"></div>
+    <p>
+      <a href="core.html">See: core.html</a><br />
+      <a href="all.html">See: all.html</a>
+    </p>
     <!--
-        The vexflow core build includes no music fonts.
-        You can use the async Flow.setMusicFont(...) method to load the music fonts dynamically.
+        The vexflow-core.js build includes no music fonts.
     -->
-    <script src="../../build/vexflow-core.js"></script>
+    <script src="../../build/cjs/vexflow-core.js"></script>
     <script>
-      // Vex.Flow.setMusicFont(...fontNames) is an async function that triggers
-      // the loading of the fonts (stored in vexflow-font-xxxx.js).
-      // It returns a Promise that resolves to the loaded music font(s).
-      // Notice here that Flow.setMusicFont(...) takes a variable number of font family strings.
-      // The first argument is the primary music engraving font.
-      // The others are fallbacks, in case a glyph is not found in the first music font.
-      Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom').then(onFontsLoaded);
-
-      // If you only specify one font, fewer bundles will be loaded.
+      // Each call to fetchMusicFont() loads a font bundle.
+      // You can skip some fonts if you will not be using them.
       // See your browser's developer tools > network tab for details.
-      // Vex.Flow.setMusicFont('Gonville').then(onFontsLoaded);
+      Vex.Flow.fetchMusicFont('Bravura')
+        .then(() => Vex.Flow.fetchMusicFont('Gonville'))
+        .then(() => Vex.Flow.fetchMusicFont('Petaluma'))
+        .then(() => Vex.Flow.fetchMusicFont('Custom'))
+        .then(onFontsLoaded);
 
-      function onFontsLoaded(musicFonts) {
-        console.log('Successfully loaded this music font stack:');
-        console.log(...musicFonts);
+      function onFontsLoaded() {
+        // The first argument is the primary music engraving font.
+        // The others are fallbacks, in case a glyph is not found in the first music font.
+        Vex.Flow.setMusicFont('Petaluma', 'Bravura', 'Gonville', 'Custom');
 
         const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
         const score = factory.EasyScore();

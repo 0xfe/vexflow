@@ -9,9 +9,15 @@
   </head>
   <body>
     <div id="output"></div>
-    <p>This page shows how to include VexFlow via <b>import</b> of the ES module file. View the source code.</p>
     <p>
-      This page only works if you run a web server in the <b>vexflow/</b> directory (e.g., `npx http-server` and
+      This page shows how to include VexFlow via direct <b>import</b> of an ES module entry file. View the source code.
+    </p>
+    <p>
+      Open the vexflow/build/esm/entry/ folder to see the various entry points. This particular demo uses
+      vexflow-core.js.
+    </p>
+    <p>
+      This page only works if you run a web server in the <b>vexflow/</b> directory (e.g., <b>npx http-server</b> and
       navigate to
       <a href="http://127.0.0.1:8080/demos/modules/module.html">http://127.0.0.1:8080/demos/modules/module.html</a>).
     </p>
@@ -19,9 +25,24 @@
     <p>VexFlow Build: <span id="info"></span></p>
     <p>See also: <a href="script-tag.html">Script Tag</a></p>
     <script type="module">
-      import Vex from '../../build/esm/vexflow-debug.js';
+      import Vex from '../../build/esm/entry/vexflow.js';
+      Vex.Flow.setMusicFont('Petaluma');
 
-      document.querySelector('#info').innerText = Vex.Flow.BUILD;
+      // Instead of the above two lines, use the code below
+      // to load the music fonts dynamically.
+      // This results in a smaller initial bundle, but adds some
+      // latency due to the asynchronous loading of the fonts.
+      //
+      // import Vex from '../../build/esm/entry/vexflow-core.js';
+      // await Vex.Flow.fetchMusicFont('Bravura');
+      // Vex.Flow.setMusicFont('Bravura');
+      // await Vex.Flow.fetchMusicFont('Gonville');
+      // Vex.Flow.setMusicFont('Gonville');
+      // await Vex.Flow.fetchMusicFont('Petaluma');
+      // Vex.Flow.setMusicFont('Petaluma');
+
+      const { VERSION, ID, DATE } = Vex.Flow.BUILD;
+      document.querySelector('#info').innerText = `${VERSION} / ${ID} / ${DATE}`;
 
       const { Factory } = Vex.Flow;
 
@@ -43,6 +64,10 @@
         .addTimeSignature('4/4');
 
       factory.draw();
+
+      // Just for debugging, assign Vex.Flow to the global VF variable.
+      // No you can do VF.setMusicFont('Gonville'); from the command line.
+      window.VF = Vex.Flow;
     </script>
   </body>
 </html>

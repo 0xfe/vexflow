@@ -73,6 +73,7 @@ const parseArgs = () => {
         break;
       case '--help':
         usage();
+        break;
       default:
         childArgs.args.push(str);
         break;

@@ -31,18 +31,15 @@
           "warn",
           {
             "groups": [
-              // Vex goes first!
-              ["^.*/vex$"],
-              ["^.*/vexflow_test_helpers$"],
-              // Side effect imports.
+              // Any import that starts with vex goes next.
+              ["^.*/vex.*$"],
+              // Imports of the index.ts file next.
+              ["^.*/index$"],
+              // The rest are just the defaults for the eslint-plugin-simple-import-sort plugin:
+              // Search for "default groups" here: https://github.com/lydell/eslint-plugin-simple-import-sort
               ["^\\u0000"],
-              // Packages.
-              // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
               ["^@?\\w"],
-              // Absolute imports and other imports such as Vue-style `@/foo`.
-              // Anything not matched in another group.
               ["^"],
-              // All other relative imports (anything that starts with a dot).
               ["^\\."]
             ]
           }
@@ -50,17 +47,18 @@
       }
     },
     {
-      "files": ["src/**/*.js"],
-      "extends": ["eslint:recommended", "prettier"]
-    },
-    {
-      "files": ["tests/**/*.js"],
+      // disable some eslint rules in the demos and tools folders.
+      "files": ["{demos,tools}/**/*.{js,cjs,mjs}"],
       "extends": ["eslint:recommended", "prettier"],
       "rules": {
-        "no-restricted-globals": 0,
-        "no-undef": 0,
-        "no-undef-init": 0
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "no-undef": "off"
       }
+    },
+    {
+      "files": ["src/**/*.js"],
+      "extends": ["eslint:recommended", "prettier"]
     }
   ]
 }

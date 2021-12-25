@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- 
+  vexflow-petaluma.js bundles the Petaluma music font. 
+  There is no need to call Vex.Flow.setMusicFont(...).
+-->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      This page uses <b>vexflow-petaluma.js</b>, which statically bundles only the Petaluma font. You do not need to
+      call Flow.setMusicFont(...) because VexFlow will use Petaluma by default.
+    </p>
+    <div id="output"></div>
+    <p>
+      <a href="bravura.html">See: bravura.html</a>
+    </p>
+    <script src="../../build/cjs/vexflow-petaluma.js"></script>
+    <script type="module">
+      const factory = new Vex.Flow.Factory({ renderer: { elementId: 'output', width: 500, height: 200 } });
+      const score = factory.EasyScore();
+      const system = factory.System();
+      system
+        .addStave({
+          voices: [
+            score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+            score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+          ],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+      factory.draw();
+    </script>
+  </body>
+</html>

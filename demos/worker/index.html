@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+      canvas {
+        width: 500px;
+        height: 200px;
+        border: 1px solid gray;
+        display: block;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      The five scores below are rendered by web workers via
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas" target="_blank">OffscreenCanvas</a>. To
+      see this page, you need to run a webserver from the vexflow directory. For example, `npx http-server`, then open
+      http://127.0.0.1:8080/demos/worker/.
+    </p>
+    <script type="module">
+      if (window.Worker) {
+        const numScores = 5;
+
+        const workers = [];
+        const offscreenCanvases = [];
+        for (let i = 0; i < numScores; i++) {
+          document.body.insertAdjacentHTML(
+            'beforeend',
+            `<canvas id="outputCanvas${i}" width="1000" height="400"></canvas>`
+          );
+
+          // Test the standard bundle (vexflow.js) and also the minimal bundle with dynamically loaded fonts (vexflow-core.js).
+          const workerJS = Math.random() > 0.5 ? 'worker-vexflow.js' : 'worker-vexflow-core.js';
+
+          const w = new Worker(workerJS);
+          w.onmessage = function (e) {
+            console.log(`Message from #${i} / ${workerJS}:  [${e.data}]`);
+          };
+          workers.push(w);
+          const offscreen = document.getElementById('outputCanvas' + i).transferControlToOffscreen();
+          offscreenCanvases.push(offscreen);
+        }
+
+        for (let i = 0; i < numScores; i++) {
+          const canvas = offscreenCanvases[i];
+          workers[i].postMessage({ canvas: canvas }, [canvas] /* transfer list */);
+        }
+      } else {
+        alert("This browser doesn't support web workers.");
+      }
+    </script>
+  </body>
+</html>
