@@ -4,6 +4,8 @@
 import { FontInfo } from './font';
 
 export interface TextMeasure {
+  x: number;
+  y: number;
   width: number;
   height: number;
 }

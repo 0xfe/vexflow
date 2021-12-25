@@ -69,7 +69,7 @@ export class StaveSection extends StaveModifier {
     const x = this.x + shift_x;
     ctx.beginPath();
     ctx.setLineWidth(rectWidth);
-    ctx.rect(x, y - height + paddingY, width, height);
+    ctx.rect(x, y + textMeasurements.y - paddingY, width, height);
     ctx.stroke();
     ctx.fillText(this.section, x + paddingX, y);
     ctx.restore();

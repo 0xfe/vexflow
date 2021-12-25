@@ -91,7 +91,7 @@ class MeasureTextCache {
     const bbox = txt.getBBox();
     svg.removeChild(txt);
 
-    return { width: bbox.width, height: bbox.height };
+    return { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height };
   }
 }
 
