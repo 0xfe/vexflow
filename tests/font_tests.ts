@@ -41,9 +41,13 @@ function setFont(): void {
   const canvas = document.createElement('canvas');
   canvas.width = 800;
   canvas.height = 400;
+
+  // Set the font and get the font to verify that it matches.
+  // NOTE: Safari has a bug where it does not return the font-weight!
+  // https://github.com/0xfe/vexflow/issues/1240#issuecomment-986504088
   const ctx = new CanvasContext(canvas.getContext('2d') as CanvasRenderingContext2D);
-  ctx.setFont('PetalumaScript', '100px', 'bold');
-  equal(ctx.font, 'bold 100px PetalumaScript');
+  ctx.setFont('PetalumaScript', '100px', 'normal', 'italic');
+  equal(ctx.font, 'italic 100px PetalumaScript');
 
   const voice = new Voice();
   // Many elements do not override the default Element.TEXT_FONT.

@@ -2,7 +2,9 @@
 <html>
   <!-- 
   Use async/await to load fonts dynamically.
-  For example: await Vex.Flow.setMusicFont('Bravura')
+  For example:
+    await Vex.Flow.fetchMusicFont('Bravura');
+    Vex.Flow.setMusicFont('Bravura');
   Open the developer console to verify that only vexflow-core.js is loaded when this page is first shown.
   -->
   <head>
@@ -14,19 +16,45 @@
       body {
         margin: 20px;
       }
+      #output {
+        min-height: 220px;
+        background-color: #fbfbf0;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
     </style>
   </head>
   <body>
-    <p>This demonstrates how using vexflow-core.js allows you to load fonts on demand.</p>
-    <p>Choose one of the fonts below:</p>
+    <p>
+      To see the demo, start a web server and load this page (e.g., `npx http-server` and navigate to
+      <a href="http://127.0.0.1:8080/demos/fonts/core.html">http://127.0.0.1:8080/demos/fonts/core.html</a>).
+    </p>
+    <p>
+      Using <b>vexflow-core.js</b> allows your webpage to load a small initial bundle. It will load fonts on demand when
+      you call <code>await Vex.Flow.fetchMusicFont(fontName)</code>.
+    </p>
+    <p>
+      Open your browser's developer tools and choose one of the fonts below. You will see that a font module is
+      downloaded when needed:
+    </p>
     <div>
       <a href="#" onclick="chooseFont('Bravura')">Bravura</a> &nbsp;
       <a href="#" onclick="chooseFont('Gonville')">Gonville</a> &nbsp;
       <a href="#" onclick="chooseFont('Petaluma')">Petaluma</a> &nbsp;
     </div>
     <div id="output"></div>
-    <!-- The vexflow core build includes no music fonts. -->
-    <script src="../../build/vexflow-core.js"></script>
+    <p>
+      <a href="core-with-promise.html">See: core-with-promise.html</a> if you prefer to use Promises instead of
+      await.<br />
+      <a href="all.html">See: all.html</a>
+    </p>
+    <!--
+      The vexflow-core.js build includes no music fonts.
+      Do the following to load a font dynamically:
+          await Vex.Flow.fetchMusicFont(fontName);
+          Vex.Flow.setMusicFont(fontName);
+    -->
+    <script src="../../build/cjs/vexflow-core.js"></script>
     <script type="module">
       async function chooseFont(fontName) {
         const container = document.getElementById('output');
@@ -34,13 +62,8 @@
           container.removeChild(container.firstChild);
         }
 
-        // Vex.Flow.setMusicFont(fontName) is an async function that triggers
-        // the loading of the font stored in vexflow-font-${fontName}.js.
-        // Choose between:
-        //   await Vex.Flow.setMusicFont('Bravura')
-        //   await Vex.Flow.setMusicFont('Gonville')
-        //   await Vex.Flow.setMusicFont('Petaluma')
-        await Vex.Flow.setMusicFont(fontName);
+        await Vex.Flow.fetchMusicFont(fontName);
+        Vex.Flow.setMusicFont(fontName);
 
         renderScore();
       }

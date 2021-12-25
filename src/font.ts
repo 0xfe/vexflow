@@ -17,6 +17,8 @@ export interface FontInfo {
   style?: string;
 }
 
+export type FontModule = { data: FontData; metrics: FontMetrics };
+
 export interface FontData {
   glyphs: Record<string, FontGlyph>;
   fontFamily?: string;
@@ -425,11 +427,6 @@ export class Font {
 
   setMetrics(metrics: FontMetrics): void {
     this.metrics = metrics;
-  }
-
-  setDataAndMetrics(obj: { data: FontData; metrics: FontMetrics }): void {
-    this.data = obj.data;
-    this.metrics = obj.metrics;
   }
 
   hasData(): boolean {

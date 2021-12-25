@@ -6,6 +6,7 @@ import { Beam } from './beam';
 import { Bend } from './bend';
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
+import { CanvasContext } from './canvascontext';
 import { ChordSymbol } from './chordsymbol';
 import { Clef } from './clef';
 import { ClefNote } from './clefnote';
@@ -15,7 +16,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font } from './font';
+import { Font, FontModule } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -57,6 +58,7 @@ import { Volta } from './stavevolta';
 import { Stem } from './stem';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
+import { SVGContext } from './svgcontext';
 import { System } from './system';
 import { Tables } from './tables';
 import { TabNote } from './tabnote';
@@ -73,11 +75,23 @@ import { TimeSigNote } from './timesignote';
 import { Tremolo } from './tremolo';
 import { Tuning } from './tuning';
 import { Tuplet } from './tuplet';
+import { DATE, ID, VERSION } from './version';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
 
 export class Flow {
+  static get BUILD() {
+    return {
+      /** version number. */
+      VERSION: VERSION,
+      /** git commit ID that this library was built from. */
+      ID: ID,
+      /** The date when this library was compiled. */
+      DATE: DATE,
+    };
+  }
+
   static Accidental = Accidental;
   static Annotation = Annotation;
   static Articulation = Articulation;
@@ -87,6 +101,7 @@ export class Flow {
   static Bend = Bend;
   static BoundingBox = BoundingBox;
   static BoundingBoxComputation = BoundingBoxComputation;
+  static CanvasContext = CanvasContext;
   static ChordSymbol = ChordSymbol;
   static Clef = Clef;
   static ClefNote = ClefNote;
@@ -143,6 +158,7 @@ export class Flow {
   static Stem = Stem;
   static StringNumber = StringNumber;
   static Stroke = Stroke;
+  static SVGContext = SVGContext;
   static System = System;
   static TabNote = TabNote;
   static TabSlide = TabSlide;
@@ -168,35 +184,31 @@ export class Flow {
   static ModifierPosition = ModifierPosition;
   // ... more to come ...
 
-  // VERSION and BUILD are set by webpack string-replace-loader. See: Gruntfile.js.
-  static VERSION: string = '_VEX_VERSION_';
-  static BUILD: string = '_VEX_BUILD_';
-
   /**
-   * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.
-   *
-   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
-   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
-   * 'Bravura', 'Gonville', 'Custom'. This method is synchronous.
-   *
    * Examples:
    * ```
    * Vex.Flow.setMusicFont('Petaluma');
    * Vex.Flow.setMusicFont('Bravura', 'Gonville');
    * ```
    *
-   * **CASE 2**: You are using the lighter weight `vexflow-core.js` to take advantage of lazy loading for fonts.
-   * In this case, you MUST call this method at the beginning, since the default music font stack is empty.
-   * This method is replaced by an async function, so you must use `await` or a Promise to wait for the fonts
-   * to load before proceeding. See `demos/fonts/` for examples. See `src/fonts/async.ts` for implementation details.
+   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
+   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
+   * 'Bravura', 'Gonville', 'Custom'.
    *
+   * **CASE 2**: You are using `vexflow-bravura.js` or `vexflow-petaluma.js` or `vexflow-gonville.js`,
+   * which includes a single music font. Calling this method is unnecessary.
+   *
+   * **CASE 3**: You are using the light weight `vexflow-core.js` to take advantage of lazy loading for fonts.
+   * In this case, the default music font stack is empty.
    * Example:
    * ```
-   * await Vex.Flow.setMusicFont('Petaluma');
+   * await Vex.Flow.fetchMusicFont('Petaluma');
+   * Vex.Flow.setMusicFont('Petaluma');
    * ... (do VexFlow stuff) ...
    * ```
-   * @returns CASE 1: an array of Font objects corresponding to the provided `fontNames`.
-   * @returns CASE 2: Promise<Font[]> that resolves to the same array of Font objects as above.
+   * See `demos/fonts/` for more examples.
+   *
+   * @returns an array of Font objects corresponding to the provided `fontNames`.
    */
   static setMusicFont(...fontNames: string[]): Font[] {
     // Convert the array of font names into an array of Font objects.
@@ -204,6 +216,15 @@ export class Flow {
     Tables.MUSIC_FONT_STACK = fonts;
     Glyph.CURRENT_CACHE_KEY = fontNames.join(',');
     return fonts;
+  }
+
+  /**
+   * Used with vexflow-core which supports dynamic font loading.
+   */
+  // eslint-disable-next-line
+  static async fetchMusicFont(fontName: string, fontModuleOrPath?: string | FontModule): Promise<void> {
+    // The default implementation does nothing.
+    // See vexflow-core.ts for the implementation that vexflow-core.js uses.
   }
 
   static getMusicFont(): string[] {

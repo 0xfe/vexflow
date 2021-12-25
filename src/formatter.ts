@@ -6,16 +6,17 @@ import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { Fraction } from './fraction';
 import { ModifierContext } from './modifiercontext';
+import { isNote } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { StaveConnector } from './staveconnector';
+import { isStaveNote } from './stavenote';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabNote } from './tabnote';
 import { TabStave } from './tabstave';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { isNote, isStaveNote } from './typeguard';
 import { defined, log, midLine, RuntimeError } from './util';
 import { Voice } from './voice';
 

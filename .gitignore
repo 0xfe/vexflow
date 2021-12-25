@@ -1,9 +1,11 @@
 reference
-reference/
 releases
-releases/
 build
-build/
+demos/node/output
+
+.DS_Store
+node_modules
+
 *.lock
 ruby_sess.*
 .*.swp
@@ -14,9 +16,6 @@ ruby_sess.*
 *.pyc
 .svn
 .class
-# except foo.o which is hand maintained
-!foo.o
-.DS_Store
 .idea/VexFlow.iml
 .idea/encodings.xml
 .idea/misc.xml
@@ -24,7 +23,6 @@ ruby_sess.*
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/workspace.xml
-node_modules
 docs/*.html
 docs/public
 docs/docco.css
@@ -34,4 +32,3 @@ npm-debug.log
 #eclipse
 .project
 .settings/
-

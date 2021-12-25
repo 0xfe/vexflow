@@ -1,18 +1,25 @@
 // An example of how to use VexFlow in node.
 // Run: `node pdf.js`
-// Saves a PDF in `score.pdf`.
+// Saves a PDF in `output/score.pdf`.
 
-/* eslint-disable no-console */
+const Vex = require('vexflow');
+// const Vex = require('vexflow/bravura');
+// const Vex = require('vexflow/petaluma');
+// const Vex = require('vexflow/gonville');
 
-const Vex = require('../../build/vexflow-debug');
 const { JSDOM } = require('jsdom');
 const { jsPDF } = require('jspdf');
 require('svg2pdf.js');
+const fs = require('fs');
+
+// Make sure the output folder exists.
+if (!fs.existsSync('./output/')) {
+  fs.mkdirSync('./output/');
+}
 
 const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
 
-console.log('VexFlow Build: ' + Flow.BUILD);
-Flow.setMusicFont('Gonville');
+console.log('VexFlow Build: ' + Flow.BUILD.ID);
 
 const dom = new JSDOM('<!DOCTYPE html><html><body><div id="container"></div><body></html>');
 global.window = dom.window;
@@ -47,5 +54,5 @@ Formatter.FormatAndDraw(context, stave, notes);
 
 const doc = new jsPDF();
 const svgElement = div.childNodes[0];
-doc.svg(svgElement).then(() => doc.save('score.pdf'));
-console.log('Saved a PDF: score.pdf');
+doc.svg(svgElement).then(() => doc.save('output/score.pdf'));
+console.log('Saved a PDF: output/score.pdf');

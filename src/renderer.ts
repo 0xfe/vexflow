@@ -4,8 +4,8 @@
 import { CanvasContext } from './canvascontext';
 import { RenderContext } from './rendercontext';
 import { SVGContext } from './svgcontext';
-import { isHTMLCanvas, isHTMLDiv } from './typeguard';
 import { RuntimeError } from './util';
+import { isHTMLCanvas, isHTMLDiv } from './web';
 
 // A ContextBuilder is either Renderer.getSVGContext or Renderer.getCanvasContext.
 export type ContextBuilder = typeof Renderer.getSVGContext | typeof Renderer.getCanvasContext;

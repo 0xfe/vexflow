@@ -5,7 +5,7 @@
 
 import { VexFlowTests } from './vexflow_test_helpers';
 
-import { BoundingBox } from '../src/';
+import { BoundingBox } from '../src/index';
 
 const BoundingBoxTests = {
   Start(): void {

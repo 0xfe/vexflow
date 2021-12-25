@@ -209,12 +209,13 @@ if (!global.QUnit) {
 //   See: https://github.com/0xfe/vexflow/pull/1074
 // In 4.0.0, this file was renamed to vexflow-debug-with-tests.js for clarity.
 //   It includes both the VexFlow library and the test code.
-// We use feature detection to determine which file(s) to include.
+// We use file detection to determine which file(s) to include.
 const vexflowDebugWithTestsJS = path.join(scriptDir, 'vexflow-debug-with-tests.js');
 if (fs.existsSync(path.resolve(__dirname, vexflowDebugWithTestsJS))) {
   // Version 4.0.0.
   global.Vex = require(vexflowDebugWithTestsJS);
 } else {
+  console.log('Generating Images for version <= 3.0.9');
   const vexflowTests = require(path.join(scriptDir, 'vexflow-tests.js'));
   if (typeof vexflowTests.Flow === 'object') {
     // During the migration of 3.0.9 => 4.0.0.

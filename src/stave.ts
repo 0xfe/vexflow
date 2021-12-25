@@ -6,7 +6,7 @@ import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
-import { Barline, BarlineType } from './stavebarline';
+import { Barline, BarlineType, isBarline } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Repetition } from './staverepetition';
 import { StaveSection } from './stavesection';
@@ -15,7 +15,6 @@ import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
-import { isBarline } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {

@@ -6,15 +6,15 @@ The full `vexflow.js` includes the following music engraving fonts: Bravura, Pet
 
 ## with-bravura.html
 
-This page uses `vexflow-core-with-bravura.js`, which statically bundles only the Bravura font. You do not need to call `Flow.setMusicFont(...)`.
+This page uses `vexflow-bravura.js`, which statically bundles only the Bravura font. You do not need to call `Flow.setMusicFont(...)`.
 
 ## with-gonville.html
 
-This page uses `vexflow-core-with-gonville.js`, which statically bundles only the Gonville font. You do not need to call `Flow.setMusicFont(...)`.
+This page uses `vexflow-gonville.js`, which statically bundles only the Gonville font. You do not need to call `Flow.setMusicFont(...)`.
 
 ## with-petaluma.html
 
-This page uses `vexflow-core-with-petaluma.js`, which statically bundles only the Petaluma font. You do not need to call `Flow.setMusicFont(...)`.
+This page uses `vexflow-petaluma.js`, which statically bundles only the Petaluma font. You do not need to call `Flow.setMusicFont(...)`.
 
 ## core.html
 

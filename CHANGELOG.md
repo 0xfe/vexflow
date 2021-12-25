@@ -34,6 +34,9 @@ Please help test this beta release and [report issues on GitHub](https://github.
   - `Flow.NOTATION_FONT_SCALE` was previously named `Flow.DEFAULT_NOTATION_FONT_SCALE`.
   - `setFont(...)` in `CanvasContext` and `SVGContext` previously took arguments: `family`, `size`, `weight`. The `weight` argument allowed strings like `'italic bold'`. This no longer works, and `'italic'` must now be passed into the `style` argument.
 
+- **Build Process**
+  - Gruntfile environment variable `VEX_DEVTOOL` was previously named `VEX_GENMAP`. This environment variable sets the [webpack devtool configuration option](https://webpack.js.org/configuration/devtool/).
+
 # 3.0.9 / 2020-04-21
 
 - Support [Bravura](https://github.com/steinbergmedia/bravura), the reference font for [Standard Music Font Layout](https://w3c.github.io/smufl/latest/index.html).
