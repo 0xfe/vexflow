@@ -28,6 +28,8 @@ const EasyScoreTests = {
     run('Draw Basic Muted', drawBasicMutedTest);
     run('Draw Basic Harmonic', drawBasicHarmonicTest);
     run('Draw Basic Slash', drawBasicSlashTest);
+    run('Draw Ghostnote Basic', drawGhostBasicTest);
+    run('Draw Ghostnote Dotted', drawGhostDottedTest);
     run('Draw Accidentals', drawAccidentalsTest);
     run('Draw Beams', drawBeamsTest);
     run('Draw Tuplets', drawTupletsTest);
@@ -58,7 +60,7 @@ function createShortcuts(score: EasyScore) {
  */
 function basic(): void {
   const score = new EasyScore();
-  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s'];
+  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g'];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
   mustPass.forEach((line) => equal(score.parse(line).success, true, line));
@@ -291,6 +293,62 @@ function drawBasicSlashTest(options: TestOptions): void {
     })
     .addClef('bass');
   system.addConnector().setType(StaveConnector.type.BRACKET);
+
+  f.draw();
+  expect(0);
+}
+
+function drawGhostBasicTest(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 550);
+  const score = f.EasyScore();
+  const system = f.System();
+
+  system.addStave({
+    voices: [
+      score.voice(
+        [
+          ...score.notes('f#5/4, f5, db5, c5', { stem: 'up' }),
+          ...score.beam(score.notes('c5/8, d5, fn5, e5', { stem: 'up' })),
+          ...score.beam(score.notes('d5, c5', { stem: 'up' })),
+        ],
+        { time: '7/4' }
+      ),
+      score.voice(score.notes('c4/h/g, f4/4, c4/4/g, e4/4, c4/8/g, d##4/8, c4/8, c4/8', { stem: 'down' }), {
+        time: '7/4',
+      }),
+    ],
+  });
+
+  f.draw();
+  expect(0);
+}
+
+function drawGhostDottedTest(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 550);
+  const score = f.EasyScore();
+  const system = f.System();
+
+  system.addStave({
+    voices: [
+      score.voice(
+        [
+          ...score.notes('c4/4/g., fbb5/8, d5/4', { stem: 'up' }),
+          ...score.beam(score.notes('c5/8, c#5/16, d5/16', { stem: 'up' })),
+          ...score.notes('c4/2/g.., fn5/8', { stem: 'up' }),
+        ],
+        { time: '8/4' }
+      ),
+      score.voice(
+        [
+          ...score.notes('f#4/4', { stem: 'down' }),
+          ...score.beam(score.notes('e4/8, d4/8', { stem: 'down' })),
+          ...score.notes('c4/4/g.., cb4/16, c#4/h, d4/4', { stem: 'down' }),
+          ...score.beam(score.notes('fn4/8, e4/8', { stem: 'down' })),
+        ],
+        { time: '8/4' }
+      ),
+    ],
+  });
 
   f.draw();
   expect(0);

@@ -268,7 +268,7 @@ export class Articulation extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ articulations }: { articulations: string }, note: StaveNote, builder: Builder): void {
+  static easyScoreHook({ articulations }: { articulations: string }, note: StemmableNote, builder: Builder): void {
     if (!articulations) return;
 
     const articNameToCode: Record<string, string> = {
