@@ -1,7 +1,11 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 import { Element } from './element';
-import { FontInfo, log, ModifierContextState, StemmableNote, TextFormatter } from './index';
+import { log } from './util';
+import { FontInfo } from './font';
+import { ModifierContextState  } from './modifiercontext';
+import { StemmableNote } from './stemmablenote';
+import { TextFormatter } from './textformatter';
 import { Modifier, ModifierPosition } from './modifier';
 import { Stave } from './stave';
 import { Stem } from './stem';
