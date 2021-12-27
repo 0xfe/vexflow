@@ -9,7 +9,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Accidental } from '../src/accidental';
-import { Annotation } from '../src/annotation';
+import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
 import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Flow } from '../src/flow';
@@ -1031,7 +1031,7 @@ function centerAlignedRestAnnotation(options: TestOptions): void {
 
   const note = f
     .StaveNote({ keys: ['b/4'], duration: '1r', align_center: true })
-    .addAnnotation(0, new Annotation('Whole measure rest').setPosition(3));
+    .addAnnotation(0, new Annotation('Whole measure rest').setVerticalJustification(AnnotationVerticalJustify.TOP));
 
   const voice = f.Voice().setStrict(false).addTickables([note]);
 

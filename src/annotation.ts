@@ -1,15 +1,12 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 import { Element } from './element';
-import { FontInfo } from './font';
+import { FontInfo, log, ModifierContextState, StemmableNote, TextFormatter } from './index';
 import { Modifier, ModifierPosition } from './modifier';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFormatter } from './textformatter';
-import { log } from './util';
+import { TabNote, TabNotePosition } from './tabnote';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -71,6 +68,12 @@ export class Annotation extends Modifier {
   /** Arrange annotations within a `ModifierContext` */
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
     if (!annotations || annotations.length === 0) return false;
+    const topString = (ar : TabNotePosition[]): number => {
+      return ar.map((x) => x.str).reduce((a, b) => a > b ? a : b);
+    }
+    const bottomString = (ar : TabNotePosition[]): number => {
+      return ar.map((x) => x.str).reduce((a, b) => a < b ? a : b);
+    }
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
@@ -85,9 +88,18 @@ export class Annotation extends Modifier {
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
       let lines = 5;
-      if (note instanceof StemmableNote) {
+      if (note instanceof TabNote) {
+        if (note.render_options.draw_stem) {
+          const stem = (note as StemmableNote).getStem();
+          if (stem) {
+            stemHeight = Math.abs(stem.getHeight()) / Tables.STAVE_LINE_DISTANCE;
+          }  
+        } else {
+          stemHeight = 0;
+        }
+      } else if (note instanceof StemmableNote) {
         const stem = (note as StemmableNote).getStem();
-        if (stem) {
+        if (stem && note.getNoteType() === 'n') {
           stemHeight = Math.abs(stem.getHeight()) / Tables.STAVE_LINE_DISTANCE;
         }
       }
@@ -100,6 +112,9 @@ export class Annotation extends Modifier {
 
       if (annotation.verticalJustification === this.VerticalJustify.TOP) {
         let noteLine = note.getLineNumber(true);
+        if (note instanceof TabNote) {
+          noteLine = lines - (bottomString((note as TabNote).getPositions()) - 0.5);
+        }
         if (stemDirection === Stem.UP) {
           noteLine += stemHeight;
         }
@@ -114,6 +129,9 @@ export class Annotation extends Modifier {
         }
       } else if (annotation.verticalJustification === this.VerticalJustify.BOTTOM) {
         let noteLine = lines - note.getLineNumber();
+        if (note instanceof TabNote) {
+          noteLine = topString((note as TabNote).getPositions()) - 1;
+        }
         if (stemDirection === Stem.DOWN) {
           noteLine += stemHeight;
         }
@@ -157,10 +175,6 @@ export class Annotation extends Modifier {
     // The default width is calculated from the text.
     this.setWidth(Tables.textWidth(text));
   }
-  setPosition(position: string | number): this {
-    return super.setPosition(position);
-  }
-
   /**
    * Set vertical position of text (above or below stave).
    * @param just value in `AnnotationVerticalJustify`.
@@ -230,9 +244,10 @@ export class Annotation extends Modifier {
     }
 
     if (this.verticalJustification === AnnotationVerticalJustify.BOTTOM) {
-      // HACK: We need to compensate for the text's height since its origin
-      // is bottom-right.
-      y = note.getYs()[0] + (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE + text_height;
+      // Use the largest (lowest) Y value
+      const ys: number[] = note.getYs();
+      y = ys.reduce((a, b) => a > b ? a : b);
+      y += (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE + text_height;
       if (has_stem && stemDirection === Stem.DOWN) {
         y = Math.max(y, stem_ext.topY + text_height + spacing * this.text_line);
       }
@@ -243,6 +258,9 @@ export class Annotation extends Modifier {
     } else if (this.verticalJustification === AnnotationVerticalJustify.TOP) {
       y = note.getYs()[0] - (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE;
       if (has_stem && stemDirection === Stem.UP) {
+        // If the stem is above the stave already, go with default line width vs. actual
+        // since the lines between don't really matter.
+        spacing = stem_ext.topY < stave.getTopLineTopY() ? Tables.STAVE_LINE_DISTANCE : spacing;
         y = Math.min(y, stem_ext.topY - spacing * (this.text_line + 1));
       }
     } /* CENTER_STEM */ else {

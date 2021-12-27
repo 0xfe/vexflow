@@ -121,7 +121,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('T'), 0)
+      .addModifier(new Annotation('T').setVerticalJustification(AnnotationVerticalJustify.TOP), 0)
       .addModifier(new Bend('Full'), 0),
   ];
 
@@ -177,7 +177,6 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
 function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
-  ctx.scale(1.5, 1.5);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
   ctx.setFont(Font.SANS_SERIF, FONT_SIZE);
@@ -200,19 +199,19 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
     tabNote({
       positions: [{ str: 6, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('p'), 0),
+    }).addModifier(annotation('p').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
     tabNote({
       positions: [{ str: 3, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('i'), 0),
+    }).addModifier(annotation('i').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
     tabNote({
       positions: [{ str: 2, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('m'), 0),
+    }).addModifier(annotation('m').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
     tabNote({
       positions: [{ str: 1, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('a'), 0),
+    }).addModifier(annotation('a').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -466,7 +465,7 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   // Alternatively, you could add all the notes in one big array with spread syntax.
   // voice.addTickables([...notes1, ...notes2, ...notes3]);
 
-  new Formatter().joinVoices([voice]).formatToStave([voice], stave);
+  new Formatter().joinVoices([voice]).formatToStave([voice], stave, { stave });
 
   voice.draw(ctx, stave);
 
