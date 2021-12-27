@@ -32,6 +32,7 @@
       </p>
     </div>
     <script type="module">
+      // CJS
       function loadScript(url) {
         return new Promise((resolve, reject) => {
           const script = document.createElement('script');
@@ -52,6 +53,8 @@
       // ver=jsdelivr@1.2.90 => https://cdn.jsdelivr.net/npm/vexflow@1.2.90/releases/vexflow-debug.js
       const params = new URLSearchParams(window.location.search);
       const ver = params.get('ver') ?? 'build/cjs';
+
+      const useESM = params.get('esm') === 'true';
 
       let vexURL;
       let testsURL;
@@ -99,8 +102,15 @@
       srcLink.innerText = `VexFlow Source [${ver}]`;
 
       let loadVexFlow;
-      if (isVersionFourOrNewer) {
-        // When loading version >= 4.0.0, only load vexflow-debug-with-tests.js
+      if (useESM) {
+        // This ESM branch only works if flow.html is accessed from a web server
+        // (e.g., `npx http-server` and browse to http://127.0.0.1:8080/tests/flow.html).
+        loadVexFlow = async () => {
+          const module = await import('../build/esm/entry/vexflow-debug-with-tests.js');
+          window.Vex = module.Vex;
+        };
+      } else if (isVersionFourOrNewer) {
+        // When loading version >= 4.0.0 / CJS, only load vexflow-debug-with-tests.js
         loadVexFlow = () => loadScript(vexPlusTestsURL);
       } else {
         // 3.0.9 depends on jQuery.

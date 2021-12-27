@@ -608,7 +608,7 @@ export abstract class Note extends Tickable {
   // eslint-disable-next-line
   getModifierStartXY(position?: number, index?: number, options?: any): { x: number; y: number } {
     if (!this.preFormatted) {
-      throw new RuntimeError('UnformattedNote', "Can't call GetModifierStartXY on an unformatted note");
+      throw new RuntimeError('UnformattedNote', "Can't call getModifierStartXY(...) on an unformatted note");
     }
 
     return {
@@ -707,5 +707,17 @@ export abstract class Note extends Tickable {
   // Get the properties for all the keys in the note
   getKeyProps(): KeyProps[] {
     return this.keyProps;
+  }
+
+  /** Get the coordinates for where dot modifiers begin. */
+  // eslint-disable-next-line
+  getDotStartXY(position?: number, index?: number): { x: number; y: number } {
+    return this.getModifierStartXY(position, index, { forceFlagRight: true });
+  }
+
+  // eslint-disable-next-line
+  getDotPropsAndShift(dotIndex: number): { props: { line: number }; shift: number } {
+    // Only StaveNote or TabNote support this method.
+    throw new RuntimeError('Internal', 'Unexpected instance.');
   }
 }

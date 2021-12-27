@@ -13,6 +13,7 @@
     "moduleResolution": "node",
     "lib": ["dom", "es2017"],
     "removeComments": false
+    /* "noImplicitOverride": true */ // Require the override keyword when a subclass overrides a method.
   },
   "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
 }

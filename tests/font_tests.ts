@@ -5,21 +5,17 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import {
-  Accidental,
-  Bend,
-  CanvasContext,
-  Element,
-  Flow,
-  Font,
-  FontStyle,
-  FontWeight,
-  PedalMarking,
-  StaveNote,
-  TextBracket,
-  TextNote,
-  Voice,
-} from '../src';
+import { Accidental } from '../src/accidental';
+import { Bend } from '../src/bend';
+import { CanvasContext } from '../src/canvascontext';
+import { Element } from '../src/element';
+import { Flow } from '../src/flow';
+import { Font, FontStyle, FontWeight } from '../src/font';
+import { PedalMarking } from '../src/pedalmarking';
+import { StaveNote } from '../src/stavenote';
+import { TextBracket } from '../src/textbracket';
+import { TextNote } from '../src/textnote';
+import { Voice } from '../src/voice';
 
 const FontTests = {
   Start(): void {

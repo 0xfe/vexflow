@@ -7,10 +7,7 @@ import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isStaveNote } from './stavenote';
-import { isTabNote } from './tabnote';
 import { isCategory } from './typeguard';
-import { RuntimeError } from './util';
 
 export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
 
@@ -35,20 +32,7 @@ export class Dot extends Modifier {
       const dot = dots[i];
       const note = dot.getNote();
 
-      let props;
-      let shift;
-
-      if (isStaveNote(note)) {
-        const index = dot.checkIndex();
-        props = note.getKeyProps()[index];
-        shift = note.getRightDisplacedHeadPx();
-      } else if (isTabNote(note)) {
-        props = { line: 0.5 }; // Shim key props for dot placement
-        shift = 0;
-      } else {
-        // note object is not StaveNote or TabNote.
-        throw new RuntimeError('Internal', 'Unexpected instance.');
-      }
+      const { props, shift } = note.getDotPropsAndShift(dot.checkIndex());
 
       const note_id = note.getAttribute('id');
       dot_list.push({ line: props.line, note, note_id, dot });
@@ -142,12 +126,7 @@ export class Dot extends Modifier {
     const stave = note.checkStave();
     const lineSpace = stave.getSpacingBetweenLines();
 
-    const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
-
-    // Set the starting y coordinate to the base of the stem for TabNotes.
-    if (isTabNote(note)) {
-      start.y = note.getStemExtents().baseY;
-    }
+    const start = note.getDotStartXY(this.position, this.index);
 
     const x = start.x + this.x_shift + this.width - this.radius;
     const y = start.y + this.y_shift + this.dot_shiftY * lineSpace;

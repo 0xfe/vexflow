@@ -1240,4 +1240,11 @@ export class StaveNote extends StemmableNote {
     this.restoreStyle();
     this.setRendered();
   }
+
+  override getDotPropsAndShift(dotIndex: number): { props: { line: number }; shift: number } {
+    return {
+      props: this.getKeyProps()[dotIndex], //
+      shift: this.getRightDisplacedHeadPx(),
+    };
+  }
 }

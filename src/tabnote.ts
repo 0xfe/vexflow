@@ -471,4 +471,18 @@ export class TabNote extends StemmableNote {
     this.drawModifiers();
     ctx.closeGroup();
   }
+
+  /** Get the coordinates for where dot modifiers begin. */
+  // eslint-disable-next-line
+  override getDotStartXY(position?: number, index?: number): { x: number; y: number } {
+    const start = super.getDotStartXY(position, index);
+    // Set the starting y coordinate to the base of the stem for TabNotes.
+    start.y = this.getStemExtents().baseY;
+    return start;
+  }
+
+  // eslint-disable-next-line
+  override getDotPropsAndShift(dotIndex: number): { props: { line: number }; shift: number } {
+    return { props: { line: 0.5 }, shift: 0 };
+  }
 }
