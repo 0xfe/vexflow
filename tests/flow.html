@@ -82,10 +82,10 @@
         // We are loading from the local filesystem (vexflow/build/ | vexflow/reference | vexflow/releases/).
         const path = ver;
 
-        // We currently assume the 'releases' folder is version 3.0.9 or older.
+        // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
         // TODO/RONYEH: This is not a good assumption. We should download releases into versioned subdirectories,
         // e.g., vexflow/releases/4.0.1/ so we can parse the version correctly.
-        if (path === 'releases') {
+        if (path.startsWith('releases')) {
           isVersionFourOrNewer = false;
         }
         vexURL = '../' + path + '/vexflow-debug.js';
