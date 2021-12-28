@@ -40,10 +40,12 @@ export class Dot extends Modifier {
       if (isStaveNote(note)) {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
-        shift = note.getRightDisplacedHeadPx();
+        // consider right displaced head with no previous modifier
+        if (right_shift === 0) shift = note.getRightDisplacedHeadPx();
+        else shift = right_shift;
       } else if (note.getCategory() === 'TabNote') {
         props = { line: 0.5 }; // Shim key props for dot placement
-        shift = 0;
+        shift = right_shift;
       } else {
         // note object is not StaveNote or TabNote.
         throw new RuntimeError('Internal', 'Unexpected instance.');
