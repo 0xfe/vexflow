@@ -72,13 +72,6 @@ export class Annotation extends Modifier {
   /** Arrange annotations within a `ModifierContext` */
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
     if (!annotations || annotations.length === 0) return false;
-    const topString = (ar : TabNotePosition[]): number => {
-      return ar.map((x) => x.str).reduce((a, b) => a > b ? a : b);
-    }
-    const bottomString = (ar : TabNotePosition[]): number => {
-      return ar.map((x) => x.str).reduce((a, b) => a < b ? a : b);
-    }
-
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
       const annotation = annotations[i];
@@ -117,7 +110,7 @@ export class Annotation extends Modifier {
       if (annotation.verticalJustification === this.VerticalJustify.TOP) {
         let noteLine = note.getLineNumber(true);
         if (note instanceof TabNote) {
-          noteLine = lines - (bottomString((note as TabNote).getPositions()) - 0.5);
+          noteLine = lines - ((note as TabNote).leastString() - 0.5);
         }
         if (stemDirection === Stem.UP) {
           noteLine += stemHeight;
@@ -134,7 +127,7 @@ export class Annotation extends Modifier {
       } else if (annotation.verticalJustification === this.VerticalJustify.BOTTOM) {
         let noteLine = lines - note.getLineNumber();
         if (note instanceof TabNote) {
-          noteLine = topString((note as TabNote).getPositions()) - 1;
+          noteLine = (note as TabNote).greatestString() - 1;
         }
         if (stemDirection === Stem.DOWN) {
           noteLine += stemHeight;
