@@ -61,7 +61,21 @@ function createShortcuts(score: EasyScore) {
  */
 function basic(): void {
   const score = new EasyScore();
-  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g, 'c3/p', 'c3//p'];
+  const mustPass = [
+    'c4',
+    'c#4',
+    'c4/r',
+    'c#5',
+    'c3/m',
+    'c3//m',
+    'c3//h',
+    'c3/s',
+    'c3//s',
+    'c3/g',
+    'c3//g',
+    'c3/p',
+    'c3//p',
+  ];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
   mustPass.forEach((line) => equal(score.parse(line).success, true, line));
@@ -381,7 +395,6 @@ function drawParenthesisedTest(options: TestOptions): void {
   f.draw();
   expect(0);
 }
-
 
 function drawAccidentalsTest(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 600, 350);
