@@ -7,9 +7,8 @@ import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isCategory } from './typeguard';
 
-export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
+// export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
 
 export class Dot extends Modifier {
   static get CATEGORY(): string {
@@ -134,5 +133,9 @@ export class Dot extends Modifier {
     ctx.beginPath();
     ctx.arc(x, y, this.radius, 0, Math.PI * 2, false);
     ctx.fill();
+  }
+
+  isDot(): this is Dot {
+    return true;
   }
 }

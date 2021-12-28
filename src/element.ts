@@ -2,6 +2,7 @@
 // @author Mohit Cheppudira
 // MIT License
 
+import { Dot } from '.';
 import { BoundingBox } from './boundingbox';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
@@ -448,6 +449,10 @@ export abstract class Element {
    * Type Guard: Returns true if this element is a TabNote.
    */
   isTabNote(): this is TabNote {
+    return false;
+  }
+
+  isDot(): this is Dot {
     return false;
   }
 }

@@ -7,7 +7,7 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { Dot, isDot } from './dot';
+import { Dot } from './dot';
 import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -376,7 +376,7 @@ export class TabNote extends StemmableNote {
   drawModifiers(): void {
     this.modifiers.forEach((modifier) => {
       // Only draw the dots if enabled.
-      if (isDot(modifier) && !this.render_options.draw_dots) {
+      if (modifier.isDot() && !this.render_options.draw_dots) {
         return;
       }
 
