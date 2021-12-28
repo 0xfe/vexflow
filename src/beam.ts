@@ -9,7 +9,6 @@ import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
 import { Tuplet } from './tuplet';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
@@ -474,7 +473,7 @@ export class Beam extends Element {
 
     if (auto_stem && isStaveNote(notes[0])) {
       stem_direction = calculateStemDirection(notes);
-    } else if (auto_stem && isTabNote(notes[0])) {
+    } else if (auto_stem && notes[0].isTabNote()) {
       // Auto Stem TabNotes
       const stem_weight = notes.reduce((memo, note) => memo + note.getStemDirection(), 0);
       stem_direction = stem_weight > -1 ? Stem.UP : Stem.DOWN;
@@ -910,7 +909,7 @@ export class Beam extends Element {
     if (this.postFormatted) return;
 
     // Calculate a smart slope if we're not forcing the beams to be flat.
-    if (isTabNote(this.notes[0]) || this.render_options.flat_beams) {
+    if (this.notes[0].isTabNote() || this.render_options.flat_beams) {
       this.calculateFlatSlope();
     } else {
       this.calculateSlope();

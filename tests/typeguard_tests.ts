@@ -12,7 +12,7 @@ import { VexFlowTests } from './vexflow_test_helpers';
 import { isNote } from '../src/note';
 import { isStaveNote, StaveNote } from '../src/stavenote';
 import { isStemmableNote, StemmableNote } from '../src/stemmablenote';
-import { isTabNote, TabNote } from '../src/tabnote';
+import { TabNote } from '../src/tabnote';
 import { isCategory } from '../src/typeguard';
 
 const TypeGuardTests = {
@@ -30,10 +30,10 @@ function real(): void {
   const s = new StaveNote({ keys: ['c/4'], duration: 'w' });
   ok(isStaveNote(s), 'isStaveNote helper function');
   ok(isCategory(s, StaveNote), 'Use isCategory(s, StaveNote) directly');
-  notOk(isTabNote(s), 'isTabNote helper function. s is NOT a TabNote.');
+  notOk(s.isTabNote(), 'isTabNote helper function. s is NOT a TabNote.');
 
   const t = new TabNote({ positions: [{ str: 2, fret: 1 }], duration: '1' });
-  ok(isTabNote(t), 'isTabNote helper function');
+  ok(t.isTabNote(), 'isTabNote helper function');
   notOk(isStaveNote(t), 't is NOT a StaveNote');
 
   ok(isNote(s), 'StaveNote extends StemmableNote which extends Note, so s is a Note');

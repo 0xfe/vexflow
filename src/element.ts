@@ -6,6 +6,7 @@ import { BoundingBox } from './boundingbox';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
+import { TabNote } from './tabnote';
 import { defined } from './util';
 
 /** Element attributes. */
@@ -441,5 +442,12 @@ export abstract class Element {
   set fontWeight(weight: string | number) {
     const fontInfo = this.fontInfo;
     this.setFont(fontInfo.family, fontInfo.size, weight, fontInfo.style);
+  }
+
+  /**
+   * Type Guard: Returns true if this element is a TabNote.
+   */
+  isTabNote(): this is TabNote {
+    return false;
   }
 }

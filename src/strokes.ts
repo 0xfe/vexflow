@@ -10,7 +10,6 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { isNote, Note } from './note';
 import { isStaveNote } from './stavenote';
-import { isTabNote } from './tabnote';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
@@ -50,7 +49,7 @@ export class Stroke extends Modifier {
         const { line } = note.getKeyProps()[index];
         const shift = note.getLeftDisplacedHeadPx();
         return { line, shift, stroke };
-      } else if (isTabNote(note)) {
+      } else if (note.isTabNote()) {
         // Only TabNote objects have getPositions().
         const { str: string } = note.getPositions()[index];
         return { line: string, shift: 0, stroke };

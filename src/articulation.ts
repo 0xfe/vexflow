@@ -13,7 +13,6 @@ import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
 import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
@@ -82,7 +81,7 @@ function getTopY(note: Note, textLine: number): number {
     } else {
       return Math.min(...note.getYs());
     }
-  } else if (isTabNote(note)) {
+  } else if (note.isTabNote()) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return stemTipY;
@@ -111,7 +110,7 @@ function getBottomY(note: Note, textLine: number): number {
     } else {
       return Math.max(...note.getYs());
     }
-  } else if (isTabNote(note)) {
+  } else if (note.isTabNote()) {
     if (note.hasStem()) {
       if (stemDirection === Stem.UP) {
         return note.checkStave().getYForBottomText(textLine);
@@ -325,7 +324,7 @@ export class Articulation extends Modifier {
 
     const stave = note.checkStave();
     const staffSpace = stave.getSpacingBetweenLines();
-    const isTab = isTabNote(note);
+    const isTab = note.isTabNote();
 
     // Articulations are centered over/under the note head.
     const { x } = note.getModifierStartXY(position, index);

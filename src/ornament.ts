@@ -8,7 +8,6 @@ import { ModifierContextState } from './modifiercontext';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
 import { TickContext } from './tickcontext';
 import { defined, log, RuntimeError } from './util';
 
@@ -253,7 +252,7 @@ export class Ornament extends Modifier {
     let y = stemDir === Stem.DOWN ? stemExtents.baseY : stemExtents.topY;
 
     // TabNotes don't have stems attached to them. Tab stems are rendered outside the stave.
-    if (isTabNote(note)) {
+    if (note.isTabNote()) {
       if (note.hasStem()) {
         if (stemDir === Stem.DOWN) {
           y = stave.getYForTopText(this.text_line);
