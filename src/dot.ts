@@ -8,7 +8,6 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { isStaveNote } from './stavenote';
-import { isTabNote } from './tabnote';
 import { isCategory } from './typeguard';
 import { RuntimeError } from './util';
 
@@ -42,7 +41,7 @@ export class Dot extends Modifier {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
         shift = note.getRightDisplacedHeadPx();
-      } else if (isTabNote(note)) {
+      } else if (note.getCategory() === 'TabNote') {
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = 0;
       } else {
@@ -145,7 +144,7 @@ export class Dot extends Modifier {
     const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
     // Set the starting y coordinate to the base of the stem for TabNotes.
-    if (isTabNote(note)) {
+    if (note.getCategory() === 'TabNote') {
       start.y = note.getStemExtents().baseY;
     }
 

@@ -7,7 +7,7 @@ import { Builder } from './easyscore';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { StaveNote } from './stavenote';
+import { StemmableNote } from './stemmablenote';
 import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
@@ -102,7 +102,7 @@ export class FretHandFinger extends Modifier {
     return true;
   }
 
-  static easyScoreHook({ fingerings }: { fingerings?: string } = {}, note: StaveNote, builder: Builder): void {
+  static easyScoreHook({ fingerings }: { fingerings?: string } = {}, note: StemmableNote, builder: Builder): void {
     fingerings
       ?.split(',')
       .map((fingeringString: string) => {
