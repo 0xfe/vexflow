@@ -116,17 +116,17 @@ export const GonvilleMetrics = {
   tremolo: {
     default: {
       point: 25,
-      spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      spacing: 5,
+      offsetYStemUp: -5,
+      offsetYStemDown: 5,
       offsetXStemUp: 9,
       offsetXStemDown: -0.5,
     },
     grace: {
       point: 15,
       spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      offsetYStemUp: -5,
+      offsetYStemDown: 5,
       offsetXStemUp: 6.5,
       offsetXStemDown: -0.5,
     },

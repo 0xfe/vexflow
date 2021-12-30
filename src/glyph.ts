@@ -263,9 +263,9 @@ export class Glyph extends Element {
       point = data.point;
     }
 
-    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
+    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale;
 
-    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
+    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos + metrics.x_shift * scale, y_pos + metrics.y_shift * scale);
     return metrics;
   }
 
