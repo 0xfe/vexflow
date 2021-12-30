@@ -559,7 +559,7 @@ function microtonal(options: TestOptions): void {
   notes.forEach((note, index) => {
     Note.plotMetrics(f.getContext(), note, 140);
     ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-    note.getAccidentals().forEach((accid: Accidental, index: number) => {
+    note.getAccidentals().forEach((accid: Modifier, index: number) => {
       ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
     });
   });
@@ -623,7 +623,7 @@ function microtonal_iranian(options: TestOptions): void {
   notes.forEach((note, index) => {
     Note.plotMetrics(f.getContext(), note, 140);
     ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-    note.getAccidentals().forEach((accid: Accidental, index: number) => {
+    note.getAccidentals().forEach((accid: Modifier, index: number) => {
       ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
     });
   });
@@ -720,7 +720,7 @@ function sagittal(options: TestOptions): void {
   notes.forEach((note, index) => {
     Note.plotMetrics(f.getContext(), note, 140);
     ok(note.getAccidentals().length > 0, 'Note ' + index + ' has accidentals');
-    note.getAccidentals().forEach((accid: Accidental, index: number) => {
+    note.getAccidentals().forEach((accid: Modifier, index: number) => {
       ok(accid.getWidth() > 0, 'Accidental ' + index + ' has set width');
     });
   });
@@ -1186,7 +1186,7 @@ function factoryAPI(options: TestOptions): void {
 
   notes.forEach((n, i) => {
     ok(n.getAccidentals().length > 0, 'Note ' + i + ' has accidentals');
-    n.getAccidentals().forEach((accid: Accidental, i: number) => {
+    n.getAccidentals().forEach((accid: Modifier, i: number) => {
       ok(accid.getWidth() > 0, 'Accidental ' + i + ' has set width');
     });
   });

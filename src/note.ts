@@ -1,7 +1,6 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Accidental } from './accidental';
 import { Beam } from './beam';
 import { Dot } from './dot';
 import { Font } from './font';
@@ -595,13 +594,13 @@ export abstract class Note extends Tickable {
   }
 
   // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Accidental[] {
-    return this.checkModifierContext().getMembers(Accidental.CATEGORY) as Accidental[];
+  getAccidentals(): Modifier[] {
+    return this.checkModifierContext().getMembers('Accidental') as Modifier[];
   }
 
   // Get all dots in the `ModifierContext`
-  getDots(): Dot[] {
-    return this.checkModifierContext().getMembers(Dot.CATEGORY) as Dot[];
+  getDots(): Modifier[] {
+    return this.checkModifierContext().getMembers('Dot') as Modifier[];
   }
 
   /** Get the coordinates for where modifiers begin. */
