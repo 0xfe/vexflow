@@ -99,9 +99,6 @@ function centerRest(rest: StaveNoteFormatSettings, noteU: StaveNoteFormatSetting
 }
 
 export class StaveNote extends StemmableNote {
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  // STATIC MEMBERS
-
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
@@ -134,23 +131,6 @@ export class StaveNote extends StemmableNote {
   /** Format notes inside a ModifierContext. */
   static format(notes: StaveNote[], state: ModifierContextState): boolean {
     if (!notes || notes.length < 2) return false;
-
-    // FIXME: VexFlow will soon require that a stave be set before formatting.
-    // Which, according to the below condition, means that following branch will
-    // always be taken and the rest of this function is dead code.
-    //
-    // Problematically, `Formatter#formatByY` was not designed to work for more
-    // than 2 voices (although, doesn't throw on this condition, just tries
-    // to power through).
-    //
-    // Based on the above:
-    //   * 2 voices can be formatted *with or without* a stave being set but
-    //     the output will be different
-    //   * 3 voices can only be formatted *without* a stave
-    if (notes[0].getStave()) {
-      StaveNote.formatByY(notes, state);
-      return true;
-    }
 
     const notesList: StaveNoteFormatSettings[] = [];
 
@@ -201,164 +181,38 @@ export class StaveNote extends StemmableNote {
 
     const voiceXShift = Math.max(noteU.voice_shift, noteL.voice_shift);
     let xShift = 0;
-    let stemDelta;
 
     // Test for two voice note intersection
     if (voices === 2) {
       const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
-      // if top voice is a middle voice, check stem intersection with lower voice
-      if (noteU.stemDirection === noteL.stemDirection && noteU.minLine <= noteL.maxLine) {
-        if (!noteU.isrest) {
-          stemDelta = Math.abs(noteU.line - (noteL.maxLine + 0.5));
-          stemDelta = Math.max(stemDelta, noteU.stemMin);
-          noteU.minLine = noteU.line - stemDelta;
-          noteU.note.setStemLength(stemDelta * 10);
-        }
-      }
       if (noteU.minLine <= noteL.maxLine + lineSpacing) {
-        if (noteU.isrest) {
-          // shift rest up
-          shiftRestVertical(noteU, noteL, 1);
-        } else if (noteL.isrest) {
-          // shift rest down
-          shiftRestVertical(noteL, noteU, -1);
+        if (noteU.stemDirection === noteL.stemDirection) {
+          // upper voice is middle voice, so shift it right
+          xShift = voiceXShift + 2;
+          noteU.note.setXShift(xShift);
         } else {
-          xShift = voiceXShift;
-          if (noteU.stemDirection === noteL.stemDirection) {
-            // upper voice is middle voice, so shift it right
-            noteU.note.setXShift(xShift + 3);
-          } else {
-            // shift lower voice right
-            noteL.note.setXShift(xShift);
-          }
+          // shift lower voice right
+          xShift = voiceXShift + 2;
+          noteL.note.setXShift(xShift);
         }
       }
 
       // format complete
+      state.right_shift += xShift;
       return true;
     }
 
     if (!noteM) throw new RuntimeError('InvalidState', 'noteM not defined.');
 
-    // Check middle voice stem intersection with lower voice
-    if (noteM.minLine < noteL.maxLine + 0.5) {
-      if (!noteM.isrest) {
-        stemDelta = Math.abs(noteM.line - (noteL.maxLine + 0.5));
-        stemDelta = Math.max(stemDelta, noteM.stemMin);
-        noteM.minLine = noteM.line - stemDelta;
-        noteM.note.setStemLength(stemDelta * 10);
-      }
-    }
-
-    // For three voices, test if rests can be repositioned
-    //
-    // Special case 1 :: middle voice rest between two notes
-    //
-    if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
-      if (noteU.minLine <= noteM.maxLine || noteM.minLine <= noteL.maxLine) {
-        const restHeight = noteM.maxLine - noteM.minLine;
-        const space = noteU.minLine - noteL.maxLine;
-        if (restHeight < space) {
-          // center middle voice rest between the upper and lower voices
-          centerRest(noteM, noteU, noteL);
-        } else {
-          xShift = voiceXShift + 3; // shift middle rest right
-          noteM.note.setXShift(xShift);
-        }
-        // format complete
-        return true;
-      }
-    }
-
-    // Special case 2 :: all voices are rests
-    if (noteU.isrest && noteM.isrest && noteL.isrest) {
-      // Shift upper voice rest up
-      shiftRestVertical(noteU, noteM, 1);
-      // Shift lower voice rest down
-      shiftRestVertical(noteL, noteM, -1);
-      // format complete
-      return true;
-    }
-
-    // Test if any other rests can be repositioned
-    if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
-      // Shift middle voice rest up
-      shiftRestVertical(noteM, noteL, 1);
-    }
-    if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
-      // Shift middle voice rest down
-      shiftRestVertical(noteM, noteU, -1);
-    }
-    if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
-      // shift upper voice rest up;
-      shiftRestVertical(noteU, noteM, 1);
-    }
-    if (noteL.isrest && noteM.minLine <= noteL.maxLine) {
-      // shift lower voice rest down
-      shiftRestVertical(noteL, noteM, -1);
-    }
-
     // If middle voice intersects upper or lower voice
-    if (
-      (!noteU.isrest && !noteM.isrest && noteU.minLine <= noteM.maxLine + 0.5) ||
-      (!noteM.isrest && !noteL.isrest && noteM.minLine <= noteL.maxLine)
-    ) {
-      xShift = voiceXShift + 3; // shift middle note right
+    if (noteU.minLine <= noteM.maxLine + 0.5 || noteM.minLine <= noteL.maxLine) {
+      // shift middle note right
+      xShift = voiceXShift + 2;
       noteM.note.setXShift(xShift);
     }
 
-    return true;
-  }
-
-  static formatByY(notes: StaveNote[], state: ModifierContextState): void {
-    // NOTE: this function does not support more than two voices per stave. Use with care.
-
-    let hasStave = true;
-    for (let i = 0; i < notes.length; i++) {
-      hasStave = hasStave && notes[i].getStave() != undefined;
-    }
-    if (!hasStave) {
-      throw new RuntimeError('NoStave', 'All notes must have a stave.');
-    }
-
-    let xShift = 0;
-
-    for (let i = 0; i < notes.length - 1; i++) {
-      let topNote = notes[i];
-      let bottomNote = notes[i + 1];
-
-      if (topNote.getStemDirection() === Stem.DOWN) {
-        topNote = notes[i + 1];
-        bottomNote = notes[i];
-      }
-
-      const topKeys = topNote.getKeyProps();
-      const bottomKeys = bottomNote.getKeyProps();
-
-      const HALF_NOTEHEAD_HEIGHT = 0.5;
-
-      // `keyProps` and `stave.getYForLine` have different notions of a `line`
-      // so we have to convert the keyProps value by subtracting 5.
-      // See https://github.com/0xfe/vexflow/wiki/Development-Gotchas
-      //
-      // We also extend the y for each note by a half notehead because the
-      // notehead's origin is centered
-      const topStave = topNote.checkStave();
-      const topNoteBottomY = topStave.getYForLine(5 - topKeys[0].line + HALF_NOTEHEAD_HEIGHT);
-
-      const bottomStave = bottomNote.checkStave();
-      const bottomNoteTopY = bottomStave.getYForLine(5 - bottomKeys[bottomKeys.length - 1].line - HALF_NOTEHEAD_HEIGHT);
-
-      const areNotesColliding =
-        bottomNoteTopY != undefined && topNoteBottomY != undefined ? bottomNoteTopY - topNoteBottomY < 0 : false;
-
-      if (areNotesColliding) {
-        xShift = topNote.getVoiceShiftWidth() + 2;
-        bottomNote.setXShift(xShift);
-      }
-    }
-
     state.right_shift += xShift;
+    return true;
   }
 
   static postFormat(notes: Note[]): boolean {
