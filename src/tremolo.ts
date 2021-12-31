@@ -63,12 +63,11 @@ export class Tremolo extends Modifier {
       y += musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
     }
 
-    // add extra_stroke_scale for big strokes(#1258)
-    const fontScale = musicFont.lookupMetric(`${category}.point`) * this.extra_stroke_scale;
+    const fontScale = musicFont.lookupMetric(`${category}.point`);
 
     x += musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {
-      Glyph.renderGlyph(ctx, x, y, fontScale, this.code, { category });
+      Glyph.renderGlyph(ctx, x, y, fontScale, this.code, { category, scale: this.extra_stroke_scale });
       y += y_spacing;
     }
   }

@@ -255,7 +255,7 @@ export class Glyph extends Element {
     y_pos: number,
     point: number,
     code: string,
-    options?: { category: string }
+    options?: { category?: string; scale?: number }
   ): GlyphMetrics {
     const data = Glyph.cache.lookup(code, options?.category);
     const metrics = data.metrics;
@@ -263,9 +263,15 @@ export class Glyph extends Element {
       point = data.point;
     }
 
-    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale;
+    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * (options?.scale ?? 1);
 
-    Glyph.renderOutline(ctx, metrics.outline, scale, x_pos + metrics.x_shift * scale, y_pos + metrics.y_shift * scale);
+    Glyph.renderOutline(
+      ctx,
+      metrics.outline,
+      scale,
+      x_pos + metrics.x_shift * (options?.scale ?? 1),
+      y_pos + metrics.y_shift * (options?.scale ?? 1)
+    );
     return metrics;
   }
 
