@@ -6,6 +6,7 @@ import { Glyph } from './glyph';
 import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
+import { Tables } from './tables';
 
 /** Parenthesis implements parenthesis modifiers for notes.*/
 export class Parenthesis extends Modifier {
@@ -13,9 +14,17 @@ export class Parenthesis extends Modifier {
     return 'Parenthesis';
   }
 
-  protected scale: number;
+  protected point: number;
 
-  // Arrange dots inside a ModifierContext.
+  /** Add parentheses to note. */
+  static addParentheses(note: Note): void {
+    for (let i = 0; i < note.keys.length; i++) {
+      note.addModifier(new Parenthesis(ModifierPosition.LEFT), i);
+      note.addModifier(new Parenthesis(ModifierPosition.RIGHT), i);
+    }
+  }
+
+  /** Arrange parenthesis inside a ModifierContext. */
   static format(parentheses: Parenthesis[], state: ModifierContextState): boolean {
     const { right_shift, left_shift } = state;
 
@@ -54,16 +63,17 @@ export class Parenthesis extends Modifier {
 
     this.position = position ?? Modifier.Position.LEFT;
 
-    this.scale = 39;
-    this.setWidth(7);
+    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
+    this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
   }
 
   setNote(note: Note): this {
     this.note = note;
-    this.scale = 39;
+    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
+    this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
     if (note.getCategory() === 'GraceNote') {
-      this.scale = (39 * 3) / 5;
-      this.setWidth(3);
+      this.point = Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.point');
+      this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.width'));
     }
     return this;
   }
@@ -77,11 +87,11 @@ export class Parenthesis extends Modifier {
     const x = start.x + this.x_shift;
     const y = start.y + this.y_shift;
     if (this.position == Modifier.Position.RIGHT) {
-      Glyph.renderGlyph(ctx, x + 1, y, this.scale, 'noteheadParenthesisRight', {
+      Glyph.renderGlyph(ctx, x + 1, y, this.point, 'noteheadParenthesisRight', {
         category: `noteHead.standard.noteheadParenthesisRight`,
       });
     } else if (this.position == Modifier.Position.LEFT) {
-      Glyph.renderGlyph(ctx, x - 2, y, this.scale, 'noteheadParenthesisLeft', {
+      Glyph.renderGlyph(ctx, x - 2, y, this.point, 'noteheadParenthesisLeft', {
         category: `noteHead.standard.noteheadParenthesisLeft`,
       });
     }

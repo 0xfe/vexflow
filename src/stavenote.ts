@@ -11,11 +11,10 @@
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
-import { Modifier, ModifierPosition } from './modifier';
+import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note, NoteStruct } from './note';
 import { NoteHead } from './notehead';
-import { Parenthesis } from './parenthesis';
 import { Stave } from './stave';
 import { Stem, StemOptions } from './stem';
 import { StemmableNote } from './stemmablenote';
@@ -427,12 +426,6 @@ export class StaveNote extends StemmableNote {
     }
     this.reset();
     this.buildFlag();
-    if (this.noteType === 'p') {
-      for (let i = 0; i < this.keys.length; i++) {
-        this.addModifier(new Parenthesis(ModifierPosition.LEFT), i);
-        this.addModifier(new Parenthesis(ModifierPosition.RIGHT), i);
-      }
-    }
   }
 
   reset(): this {

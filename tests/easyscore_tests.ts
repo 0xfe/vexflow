@@ -9,6 +9,7 @@ import { Articulation } from '../src/articulation';
 import { EasyScore } from '../src/easyscore';
 import { FretHandFinger } from '../src/frethandfinger';
 import { Modifier } from '../src/modifier';
+import { Parenthesis } from '../src/parenthesis';
 import { StaveConnector } from '../src/staveconnector';
 import { Stem } from '../src/stem';
 import { Tuplet } from '../src/tuplet';
@@ -61,21 +62,7 @@ function createShortcuts(score: EasyScore) {
  */
 function basic(): void {
   const score = new EasyScore();
-  const mustPass = [
-    'c4',
-    'c#4',
-    'c4/r',
-    'c#5',
-    'c3/m',
-    'c3//m',
-    'c3//h',
-    'c3/s',
-    'c3//s',
-    'c3/g',
-    'c3//g',
-    'c3/p',
-    'c3//p',
-  ];
+  const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g'];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
   mustPass.forEach((line) => equal(score.parse(line).success, true, line));
@@ -376,18 +363,27 @@ function drawParenthesisedTest(options: TestOptions): void {
 
   const { voice, notes } = createShortcuts(score);
 
-  system
-    .addStave({
-      voices: [
-        voice(notes('(d4 e4 g4)/q/p, c4/q, c4/q/r, c4/q/p', { stem: 'down' })),
-        voice(notes('c#5/h/p., c5/q/p', { stem: 'up' })),
-      ],
-    })
-    .addClef('treble');
+  const notes1 = notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes1[0]);
+  Parenthesis.addParentheses(notes1[3]);
+  const notes2 = notes('c#5/h., c5/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes2[0]);
+  Parenthesis.addParentheses(notes2[1]);
 
   system
     .addStave({
-      voices: [voice(notes('c#3/q/p, cn3/q/p, bb3/q/p, d##3/q/p', { clef: 'bass' }))],
+      voices: [voice(notes1), voice(notes2)],
+    })
+    .addClef('treble');
+
+  const notes3 = notes('c#3/q, cn3/q, bb3/q, d##3/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes3[0]);
+  Parenthesis.addParentheses(notes3[1]);
+  Parenthesis.addParentheses(notes3[2]);
+  Parenthesis.addParentheses(notes3[3]);
+  system
+    .addStave({
+      voices: [voice(notes3)],
     })
     .addClef('bass');
   system.addConnector().setType(StaveConnector.type.BRACKET);
