@@ -150,7 +150,7 @@ const appMain = async () => {
       getArgs: () => {
         return [`../${ver}`, imageDir].concat(args);
       },
-      jobs: numTestes ? parallel : 1,
+      jobs: numTestes ? Math.min(pptrJobs, parallel) : 1,
     },
     pptr: {
       path: './tools/generate_images_pptr.js',
