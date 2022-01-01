@@ -593,14 +593,9 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Modifier[] {
-    return this.checkModifierContext().getMembers('Accidental') as Modifier[];
-  }
-
-  // Get all dots in the `ModifierContext`
-  getDots(): Modifier[] {
-    return this.checkModifierContext().getMembers('Dot') as Modifier[];
+  // Get all modifiers of a specific type in the `ModifierContext`
+  getModifiersByType(type: string): Modifier[] {
+    return this.checkModifierContext().getMembers(type) as Modifier[];
   }
 
   /** Get the coordinates for where modifiers begin. */

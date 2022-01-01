@@ -21,6 +21,11 @@ export class Dot extends Modifier {
   protected radius: number;
   protected dot_shiftY: number;
 
+  /** Returns the dots associated to a Note. */
+  static getDots(note: Note): Dot[] {
+    return note.getModifiersByType(Dot.CATEGORY) as Dot[];
+  }
+
   // Arrange dots inside a ModifierContext.
   static format(dots: Dot[], state: ModifierContextState): boolean {
     const right_shift = state.right_shift;
