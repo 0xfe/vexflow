@@ -8,7 +8,7 @@ import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Tables } from './tables';
 
-/** Parenthesis implements parenthesis modifiers for notes.*/
+/** Parenthesis implements parenthesis modifiers for notes. */
 export class Parenthesis extends Modifier {
   static get CATEGORY(): string {
     return 'Parenthesis';
@@ -24,7 +24,7 @@ export class Parenthesis extends Modifier {
     }
   }
 
-  /** Arrange parenthesis inside a ModifierContext. */
+  /** Arrange parentheses inside a ModifierContext. */
   static format(parentheses: Parenthesis[], state: ModifierContextState): boolean {
     const { right_shift, left_shift } = state;
 
@@ -58,6 +58,11 @@ export class Parenthesis extends Modifier {
     return true;
   }
 
+  /**
+   * Constructor
+   *
+   * @param position Modifier.Position.LEFT (default) or Modifier.Position.RIGHT
+   */
   constructor(position: ModifierPosition) {
     super();
 
@@ -67,6 +72,7 @@ export class Parenthesis extends Modifier {
     this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
   }
 
+  /** Set the associated note. */
   setNote(note: Note): this {
     this.note = note;
     this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
@@ -78,6 +84,7 @@ export class Parenthesis extends Modifier {
     return this;
   }
 
+  /** Render the parenthesis. */
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
