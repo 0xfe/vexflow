@@ -9,6 +9,7 @@ import { Articulation } from '../src/articulation';
 import { EasyScore } from '../src/easyscore';
 import { FretHandFinger } from '../src/frethandfinger';
 import { Modifier } from '../src/modifier';
+import { Parenthesis } from '../src/parenthesis';
 import { StaveConnector } from '../src/staveconnector';
 import { Stem } from '../src/stem';
 import { Tuplet } from '../src/tuplet';
@@ -30,6 +31,7 @@ const EasyScoreTests = {
     run('Draw Basic Slash', drawBasicSlashTest);
     run('Draw Ghostnote Basic', drawGhostBasicTest);
     run('Draw Ghostnote Dotted', drawGhostDottedTest);
+    run('Draw Parenthesised', drawParenthesisedTest);
     run('Draw Accidentals', drawAccidentalsTest);
     run('Draw Beams', drawBeamsTest);
     run('Draw Tuplets', drawTupletsTest);
@@ -349,6 +351,42 @@ function drawGhostDottedTest(options: TestOptions): void {
       ),
     ],
   });
+
+  f.draw();
+  expect(0);
+}
+
+function drawParenthesisedTest(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 600, 350);
+  const score = f.EasyScore();
+  const system = f.System();
+
+  const { voice, notes } = createShortcuts(score);
+
+  const notes1 = notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes1[0]);
+  Parenthesis.addParentheses(notes1[3]);
+  const notes2 = notes('c#5/h., c5/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes2[0]);
+  Parenthesis.addParentheses(notes2[1]);
+
+  system
+    .addStave({
+      voices: [voice(notes1), voice(notes2)],
+    })
+    .addClef('treble');
+
+  const notes3 = notes('c#3/q, cn3/q, bb3/q, d##3/q', { stem: 'down' });
+  Parenthesis.addParentheses(notes3[0]);
+  Parenthesis.addParentheses(notes3[1]);
+  Parenthesis.addParentheses(notes3[2]);
+  Parenthesis.addParentheses(notes3[3]);
+  system
+    .addStave({
+      voices: [voice(notes3)],
+    })
+    .addClef('bass');
+  system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
   expect(0);

@@ -84,6 +84,17 @@ export const PetalumaMetrics = {
     },
   },
 
+  parenthesis: {
+    default: {
+      point: 39,
+      width: 7,
+    },
+    gracenote: {
+      point: (39 * 3) / 5,
+      width: 3,
+    },
+  },
+
   pedalMarking: {
     up: {
       point: 40,

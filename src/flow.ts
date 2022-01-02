@@ -37,6 +37,7 @@ import { Note } from './note';
 import { NoteHead } from './notehead';
 import { NoteSubGroup } from './notesubgroup';
 import { Ornament } from './ornament';
+import { Parenthesis } from './parenthesis';
 import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
@@ -139,6 +140,7 @@ export class Flow {
   static NoteHead = NoteHead;
   static NoteSubGroup = NoteSubGroup;
   static Ornament = Ornament;
+  static Parenthesis = Parenthesis;
   static Parser = Parser;
   static PedalMarking = PedalMarking;
   static Registry = Registry;

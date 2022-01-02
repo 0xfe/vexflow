@@ -17,6 +17,7 @@ import { Modifier } from './modifier';
 import { Note } from './note';
 import { NoteSubGroup } from './notesubgroup';
 import { Ornament } from './ornament';
+import { Parenthesis } from './parenthesis';
 import { StaveNote } from './stavenote';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
@@ -80,6 +81,7 @@ export class ModifierContext {
     // members are formatted and rendered before higher ones.
     this.PREFORMAT = [
       StaveNote,
+      Parenthesis,
       Dot,
       FretHandFinger,
       Accidental,

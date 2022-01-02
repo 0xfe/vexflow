@@ -9,7 +9,7 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Stave } from './stave';
-import { isStaveNote, StaveNote } from './stavenote';
+import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
