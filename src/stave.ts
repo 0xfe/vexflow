@@ -292,13 +292,8 @@ export class Stave extends Element {
     return start_x;
   }
 
-  // Coda & Segno Symbol functions
-  setRepetitionTypeLeft(type: number, y: number): this {
-    this.modifiers.push(new Repetition(type, this.x, y));
-    return this;
-  }
-
-  setRepetitionTypeRight(type: number, y: number): this {
+  /** Coda & Segno Symbol functions */
+  setRepetitionType(type: number, y: number): this {
     this.modifiers.push(new Repetition(type, this.x, y));
     return this;
   }

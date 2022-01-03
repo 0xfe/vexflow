@@ -125,22 +125,29 @@ export class Repetition extends StaveModifier {
     ctx.save();
     ctx.setFont(this.textFont);
 
-    // Default to right symbol
-    let text_x = 0 + this.x_shift;
-    let symbol_x = x + this.x_shift;
-    if (this.symbol_type === Repetition.type.CODA_LEFT) {
-      // Offset Coda text to right of stave beginning
-      text_x = this.x + stave.getVerticalBarWidth();
-      symbol_x = text_x + ctx.measureText(text).width + 12;
-    } else if (this.symbol_type === Repetition.type.DS) {
-      const modifierWidth = stave.getNoteStartX() - this.x;
-      text_x = this.x + x + this.x_shift + stave.getWidth() - 5 - modifierWidth - ctx.measureText(text).width;
-      // TODO this is weird. setting the x position should probably be refactored, parameters aren't clear here.
-    } else {
-      this.x_shift = -(text_x + ctx.measureText(text).width + 12 + stave.options.vertical_bar_width + 12);
-      // TO_CODA and DS_AL_CODA draw in the next measure without this x_shift, not sure why not for other symbols.
-      text_x = this.x + this.x_shift + stave.options.vertical_bar_width;
-      symbol_x = text_x + ctx.measureText(text).width + 12;
+    let text_x = 0;
+    let symbol_x = 0;
+    const modifierWidth = stave.getNoteStartX() - this.x;
+    switch (this.symbol_type) {
+      // To the left with symbol
+      case Repetition.type.CODA_LEFT:
+        // Offset Coda text to right of stave beginning
+        text_x = this.x + stave.getVerticalBarWidth();
+        symbol_x = text_x + ctx.measureText(text).width + 12;
+        break;
+      // To the right without symbol
+      case Repetition.type.DC:
+      case Repetition.type.DC_AL_FINE:
+      case Repetition.type.DS:
+      case Repetition.type.DS_AL_FINE:
+      case Repetition.type.FINE:
+        text_x = this.x + x + this.x_shift + stave.getWidth() - 5 - modifierWidth - ctx.measureText(text).width;
+        break;
+      // To the right with symbol
+      default:
+        text_x = this.x + x + this.x_shift + stave.getWidth() - 5 - modifierWidth - ctx.measureText(text).width - 12;
+        symbol_x = text_x + ctx.measureText(text).width + 12;
+        break;
     }
 
     const y = stave.getYForTopText(stave.getNumLines()) + this.y_shift + 25;
