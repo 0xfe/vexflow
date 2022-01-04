@@ -55,7 +55,7 @@ const basic = createTest((f: Factory, score: EasyScore) => {
       f.GhostNote({ duration: '4' }),
       f.StaveNote({ keys: ['e/4'], stem_direction: -1, duration: '4' }),
       f.GhostNote({ duration: '8' }),
-      f.StaveNote({ keys: ['d/4'], stem_direction: -1, duration: '8' }).addAccidental(0, f.Accidental({ type: '##' })),
+      f.StaveNote({ keys: ['d/4'], stem_direction: -1, duration: '8' }).addModifier(0, f.Accidental({ type: '##' })),
       f.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
       f.StaveNote({ keys: ['c/4'], stem_direction: -1, duration: '8' }),
     ],
@@ -101,7 +101,7 @@ const dotted = createTest((f: Factory, score: EasyScore) => {
   const notes2 = voice2.getTickables() as StemmableNote[];
 
   const addAccidental = (note: StemmableNote, type: string) =>
-    (note as StaveNote).addAccidental(0, f.Accidental({ type }));
+    (note as StaveNote).addModifier(0, f.Accidental({ type }));
 
   addAccidental(notes1[1], 'bb');
   addAccidental(notes1[4], '#');

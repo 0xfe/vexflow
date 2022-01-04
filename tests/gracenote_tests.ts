@@ -74,8 +74,8 @@ function basic(options: TestOptions): void {
     { keys: ['g/4'], duration: '16' },
   ].map(f.GraceNote.bind(f));
 
-  gracenotes[1].addAccidental(0, f.Accidental({ type: '##' }));
-  gracenotes3[3].addAccidental(0, f.Accidental({ type: 'bb' }));
+  gracenotes[1].addModifier(0, f.Accidental({ type: '##' }));
+  gracenotes3[3].addModifier(0, f.Accidental({ type: 'bb' }));
   gracenotes4[0].addDotToAll();
 
   const notes = [
@@ -84,7 +84,7 @@ function basic(options: TestOptions): void {
       .addModifier(0, f.GraceNoteGroup({ notes: gracenotes }).beamNotes()),
     f
       .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addAccidental(0, f.Accidental({ type: '#' }))
+      .addModifier(0, f.Accidental({ type: '#' }))
       .addModifier(0, f.GraceNoteGroup({ notes: gracenotes1 }).beamNotes()),
     f
       .StaveNote({ keys: ['c/5', 'd/5'], duration: '4', auto_stem: true })
@@ -135,9 +135,9 @@ function basicSlurred(options: TestOptions): void {
     { keys: ['a/4'], duration: '16' },
   ].map(f.GraceNote.bind(f));
 
-  gracenotes0[1].addAccidental(0, f.Accidental({ type: '#' }));
-  gracenotes3[3].addAccidental(0, f.Accidental({ type: 'b' }));
-  gracenotes3[2].addAccidental(0, f.Accidental({ type: 'n' }));
+  gracenotes0[1].addModifier(0, f.Accidental({ type: '#' }));
+  gracenotes3[3].addModifier(0, f.Accidental({ type: 'b' }));
+  gracenotes3[2].addModifier(0, f.Accidental({ type: 'n' }));
   gracenotes4[0].addDotToAll();
 
   const notes = [
@@ -146,7 +146,7 @@ function basicSlurred(options: TestOptions): void {
       .addModifier(0, f.GraceNoteGroup({ notes: gracenotes0, slur: true }).beamNotes()),
     f
       .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addAccidental(0, f.Accidental({ type: '#' }))
+      .addModifier(0, f.Accidental({ type: '#' }))
       .addModifier(0, f.GraceNoteGroup({ notes: gracenotes1, slur: true }).beamNotes()),
     f
       .StaveNote({ keys: ['c/5', 'd/5'], duration: '4', auto_stem: true })
@@ -408,7 +408,7 @@ function multipleVoices(options: TestOptions): void {
   ].map(f.GraceNote.bind(f));
 
   gracenotes2[0].setStemDirection(-1);
-  gracenotes2[0].addAccidental(0, f.Accidental({ type: '#' }));
+  gracenotes2[0].addModifier(0, f.Accidental({ type: '#' }));
 
   notes[1].addModifier(0, f.GraceNoteGroup({ notes: gracenotes4 }).beamNotes());
   notes[3].addModifier(0, f.GraceNoteGroup({ notes: gracenotes1 }));
@@ -473,7 +473,7 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
   ].map(f.GraceNote.bind(f));
 
   gracenotes2[0].setStemDirection(-1);
-  gracenotes2[0].addAccidental(0, f.Accidental({ type: '#' }));
+  gracenotes2[0].addModifier(0, f.Accidental({ type: '#' }));
 
   notes[1].addModifier(0, f.GraceNoteGroup({ notes: gracenotes4 }).beamNotes());
   notes[3].addModifier(0, f.GraceNoteGroup({ notes: gracenotes1 }));

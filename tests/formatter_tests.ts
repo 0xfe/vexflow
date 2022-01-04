@@ -332,14 +332,14 @@ function alignedMixedElements(options: TestOptions): void {
   const stave = new Stave(10, 40, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addAccidental(0, new Accidental('##'))
+      .addModifier(0, new Accidental('##'))
       .addModifier(0, new FretHandFinger('4').setPosition(4))
       .addModifier(0, new StringNumber('3').setPosition(4))
-      .addArticulation(0, new Articulation('a.').setPosition(4))
-      .addArticulation(0, new Articulation('a>').setPosition(4))
-      .addArticulation(0, new Articulation('a^').setPosition(4))
-      .addArticulation(0, new Articulation('am').setPosition(4))
-      .addArticulation(0, new Articulation('a@u').setPosition(4))
+      .addModifier(0, new Articulation('a.').setPosition(4))
+      .addModifier(0, new Articulation('a>').setPosition(4))
+      .addModifier(0, new Articulation('a^').setPosition(4))
+      .addModifier(0, new Articulation('am').setPosition(4))
+      .addModifier(0, new Articulation('a@u').setPosition(4))
       .addModifier(0, new Annotation('yyyy').setVerticalJustification(3))
       .addModifier(0, new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''))
       .addModifier(0, new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, '')),
@@ -762,7 +762,7 @@ function annotations(options: TestOptions): void {
         note.addDotToAll();
       }
       if (sm.lyrics.length > iii) {
-        note.addAnnotation(
+        note.addModifier(
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)

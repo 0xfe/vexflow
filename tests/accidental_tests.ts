@@ -161,12 +161,12 @@ function formatAccidentalSpaces(options: TestOptions): void {
       keys: ['e##/5'],
       duration: '8d',
     })
-      .addAccidental(0, new Accidental('##'))
+      .addModifier(0, new Accidental('##'))
       .addDotToAll(),
     new StaveNote({
       keys: ['b/4'],
       duration: '16',
-    }).addAccidental(0, new Accidental('b')),
+    }).addModifier(0, new Accidental('b')),
     new StaveNote({
       keys: ['f/3'],
       duration: '8',
@@ -179,8 +179,8 @@ function formatAccidentalSpaces(options: TestOptions): void {
       keys: ['e/4', 'g/4'],
       duration: '16',
     })
-      .addAccidental(0, new Accidental('bb'))
-      .addAccidental(1, new Accidental('bb')),
+      .addModifier(0, new Accidental('bb'))
+      .addModifier(1, new Accidental('bb')),
     new StaveNote({
       keys: ['d/4'],
       duration: '16',
@@ -189,8 +189,8 @@ function formatAccidentalSpaces(options: TestOptions): void {
       keys: ['e/4', 'g/4'],
       duration: '16',
     })
-      .addAccidental(0, new Accidental('#'))
-      .addAccidental(1, new Accidental('#')),
+      .addModifier(0, new Accidental('#'))
+      .addModifier(1, new Accidental('#')),
     new StaveNote({
       keys: ['g/4'],
       duration: '32',
@@ -236,37 +236,37 @@ function basic(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addAccidental(0, accid('b'))
-      .addAccidental(1, accid('#')),
+      .addModifier(0, accid('b'))
+      .addModifier(1, accid('#')),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addAccidental(0, accid('##'))
-      .addAccidental(1, accid('n'))
-      .addAccidental(2, accid('bb'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('#'))
-      .addAccidental(5, accid('n'))
-      .addAccidental(6, accid('bb')),
+      .addModifier(0, accid('##'))
+      .addModifier(1, accid('n'))
+      .addModifier(2, accid('bb'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('#'))
+      .addModifier(5, accid('n'))
+      .addModifier(6, accid('bb')),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addAccidental(0, accid('n'))
-      .addAccidental(1, accid('#'))
-      .addAccidental(2, accid('#'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb'))
-      .addAccidental(5, accid('##'))
-      .addAccidental(6, accid('#')),
+      .addModifier(0, accid('n'))
+      .addModifier(1, accid('#'))
+      .addModifier(2, accid('#'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb'))
+      .addModifier(5, accid('##'))
+      .addModifier(6, accid('#')),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('##').setAsCautionary())
-      .addAccidental(2, accid('#').setAsCautionary())
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb').setAsCautionary())
-      .addAccidental(5, accid('b').setAsCautionary()),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('##').setAsCautionary())
+      .addModifier(2, accid('#').setAsCautionary())
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb').setAsCautionary())
+      .addModifier(5, accid('b').setAsCautionary()),
   ];
 
   Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
@@ -307,7 +307,7 @@ function cautionary(options: TestOptions): void {
     const notes = rowMap.map((accidType: string) =>
       f
         .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
-        .addAccidental(0, f.Accidental({ type: accidType }))
+        .addModifier(0, f.Accidental({ type: accidType }))
     );
     const voice = score.voice(notes, { time: rowMap.length + '/4' });
     voice.getTickables().forEach((tickable) => {
@@ -330,40 +330,40 @@ function specialCases(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['f/4', 'd/5'], duration: '1' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('b')),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('b')),
 
     f
       .StaveNote({ keys: ['c/4', 'g/4'], duration: '2' })
-      .addAccidental(0, accid('##'))
-      .addAccidental(1, accid('##')),
+      .addModifier(0, accid('##'))
+      .addModifier(1, accid('##')),
 
     f
       .StaveNote({ keys: ['b/3', 'd/4', 'f/4'], duration: '16' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('#'))
-      .addAccidental(2, accid('##')),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('#'))
+      .addModifier(2, accid('##')),
 
     f
       .StaveNote({ keys: ['g/4', 'a/4', 'c/5', 'e/5'], duration: '16' })
-      .addAccidental(0, accid('b'))
-      .addAccidental(1, accid('b'))
-      .addAccidental(3, accid('n')),
+      .addModifier(0, accid('b'))
+      .addModifier(1, accid('b'))
+      .addModifier(3, accid('n')),
 
     f
       .StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4' })
-      .addAccidental(0, accid('b').setAsCautionary())
-      .addAccidental(1, accid('b').setAsCautionary())
-      .addAccidental(2, accid('bb'))
-      .addAccidental(3, accid('b')),
+      .addModifier(0, accid('b').setAsCautionary())
+      .addModifier(1, accid('b').setAsCautionary())
+      .addModifier(2, accid('bb'))
+      .addModifier(3, accid('b')),
 
     f
       .StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5', 'g/5'], duration: '8' })
-      .addAccidental(0, accid('bb'))
-      .addAccidental(1, accid('b').setAsCautionary())
-      .addAccidental(2, accid('n').setAsCautionary())
-      .addAccidental(3, accid('#'))
-      .addAccidental(4, accid('n').setAsCautionary()),
+      .addModifier(0, accid('bb'))
+      .addModifier(1, accid('b').setAsCautionary())
+      .addModifier(2, accid('n').setAsCautionary())
+      .addModifier(3, accid('#'))
+      .addModifier(4, accid('n').setAsCautionary()),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
@@ -391,28 +391,28 @@ function basicStemDown(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w', stem_direction: -1 })
-      .addAccidental(0, accid('b'))
-      .addAccidental(1, accid('#')),
+      .addModifier(0, accid('b'))
+      .addModifier(1, accid('#')),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2', stem_direction: -1 })
-      .addAccidental(0, accid('##'))
-      .addAccidental(1, accid('n'))
-      .addAccidental(2, accid('bb'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('#'))
-      .addAccidental(5, accid('n'))
-      .addAccidental(6, accid('bb')),
+      .addModifier(0, accid('##'))
+      .addModifier(1, accid('n'))
+      .addModifier(2, accid('bb'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('#'))
+      .addModifier(5, accid('n'))
+      .addModifier(6, accid('bb')),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: -1 })
-      .addAccidental(0, accid('n'))
-      .addAccidental(1, accid('#'))
-      .addAccidental(2, accid('#'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb'))
-      .addAccidental(5, accid('##'))
-      .addAccidental(6, accid('#')),
+      .addModifier(0, accid('n'))
+      .addModifier(1, accid('#'))
+      .addModifier(2, accid('#'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb'))
+      .addModifier(5, accid('##'))
+      .addModifier(6, accid('#')),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
@@ -457,44 +457,44 @@ function multiVoice(options: TestOptions): void {
 
   let note1 = f
     .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
-    .addAccidental(0, accid('b'))
-    .addAccidental(1, accid('n'))
-    .addAccidental(2, accid('#'))
+    .addModifier(0, accid('b'))
+    .addModifier(1, accid('n'))
+    .addModifier(2, accid('#'))
     .setStave(stave);
 
   let note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 })
-    .addAccidental(0, accid('b'))
-    .addAccidental(1, accid('bb'))
-    .addAccidental(2, accid('##'))
+    .addModifier(0, accid('b'))
+    .addModifier(1, accid('bb'))
+    .addModifier(2, accid('##'))
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 60);
 
   note1 = f
     .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
-    .addAccidental(0, accid('b'))
-    .addAccidental(1, accid('n'))
-    .addAccidental(2, accid('#'))
+    .addModifier(0, accid('b'))
+    .addModifier(1, accid('n'))
+    .addModifier(2, accid('#'))
     .setStave(stave);
 
   note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-    .addAccidental(0, accid('b'))
+    .addModifier(0, accid('b'))
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 150);
 
   note1 = f
     .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
-    .addAccidental(0, accid('b'))
-    .addAccidental(1, accid('n'))
-    .addAccidental(2, accid('#'))
+    .addModifier(0, accid('b'))
+    .addModifier(1, accid('n'))
+    .addModifier(2, accid('#'))
     .setStave(stave);
 
   note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-    .addAccidental(0, accid('b'))
+    .addModifier(0, accid('b'))
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 250);
@@ -512,46 +512,46 @@ function microtonal(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addAccidental(0, accid('db'))
-      .addAccidental(1, accid('d')),
+      .addModifier(0, accid('db'))
+      .addModifier(1, accid('d')),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addAccidental(0, accid('bbs'))
-      .addAccidental(1, accid('++'))
-      .addAccidental(2, accid('+'))
-      .addAccidental(3, accid('d'))
-      .addAccidental(4, accid('db'))
-      .addAccidental(5, accid('+'))
-      .addAccidental(6, accid('##')),
+      .addModifier(0, accid('bbs'))
+      .addModifier(1, accid('++'))
+      .addModifier(2, accid('+'))
+      .addModifier(3, accid('d'))
+      .addModifier(4, accid('db'))
+      .addModifier(5, accid('+'))
+      .addModifier(6, accid('##')),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addAccidental(0, accid('++'))
-      .addAccidental(1, accid('bbs'))
-      .addAccidental(2, accid('+'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('db'))
-      .addAccidental(5, accid('##'))
-      .addAccidental(6, accid('#')),
+      .addModifier(0, accid('++'))
+      .addModifier(1, accid('bbs'))
+      .addModifier(2, accid('+'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('db'))
+      .addModifier(5, accid('##'))
+      .addModifier(6, accid('#')),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('db').setAsCautionary())
-      .addAccidental(2, accid('bbs').setAsCautionary())
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('++').setAsCautionary())
-      .addAccidental(5, accid('d').setAsCautionary()),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('db').setAsCautionary())
+      .addModifier(2, accid('bbs').setAsCautionary())
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('++').setAsCautionary())
+      .addModifier(5, accid('d').setAsCautionary()),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
-      .addAccidental(0, accid('++-'))
-      .addAccidental(1, accid('+-'))
-      .addAccidental(2, accid('bs'))
-      .addAccidental(3, accid('bss'))
-      .addAccidental(4, accid('afhf'))
-      .addAccidental(5, accid('ashs')),
+      .addModifier(0, accid('++-'))
+      .addModifier(1, accid('+-'))
+      .addModifier(2, accid('bs'))
+      .addModifier(3, accid('bss'))
+      .addModifier(4, accid('afhf'))
+      .addModifier(5, accid('ashs')),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -579,43 +579,43 @@ function microtonal_iranian(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addAccidental(0, accid('k'))
-      .addAccidental(1, accid('o')),
+      .addModifier(0, accid('k'))
+      .addModifier(1, accid('o')),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addAccidental(0, accid('b'))
-      .addAccidental(1, accid('k'))
-      .addAccidental(2, accid('n'))
-      .addAccidental(3, accid('o'))
-      .addAccidental(4, accid('#'))
-      .addAccidental(5, accid('bb'))
-      .addAccidental(6, accid('##')),
+      .addModifier(0, accid('b'))
+      .addModifier(1, accid('k'))
+      .addModifier(2, accid('n'))
+      .addModifier(3, accid('o'))
+      .addModifier(4, accid('#'))
+      .addModifier(5, accid('bb'))
+      .addModifier(6, accid('##')),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addAccidental(0, accid('o'))
-      .addAccidental(1, accid('k'))
-      .addAccidental(2, accid('n'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb'))
-      .addAccidental(5, accid('##'))
-      .addAccidental(6, accid('#')),
+      .addModifier(0, accid('o'))
+      .addModifier(1, accid('k'))
+      .addModifier(2, accid('n'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb'))
+      .addModifier(5, accid('##'))
+      .addModifier(6, accid('#')),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('o').setAsCautionary())
-      .addAccidental(2, accid('n').setAsCautionary())
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('k').setAsCautionary()),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('o').setAsCautionary())
+      .addModifier(2, accid('n').setAsCautionary())
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('k').setAsCautionary()),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
-      .addAccidental(0, accid('k'))
-      .addAccidental(1, accid('k'))
-      .addAccidental(2, accid('k'))
-      .addAccidental(3, accid('k')),
+      .addModifier(0, accid('k'))
+      .addModifier(1, accid('k'))
+      .addModifier(2, accid('k'))
+      .addModifier(3, accid('k')),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -643,39 +643,39 @@ function sagittal(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-      .addAccidental(1, accid('accSagittal11MediumDiesisUp'))
-      .addAccidental(2, accid('accSagittal5CommaDown'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(3, accid('accSagittal7CommaDown')),
+      .addModifier(1, accid('accSagittal11MediumDiesisUp'))
+      .addModifier(2, accid('accSagittal5CommaDown'))
+      .addModifier(3, accid('b'))
+      .addModifier(3, accid('accSagittal7CommaDown')),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-      .addAccidental(2, accid('accSagittal35LargeDiesisDown')),
+      .addModifier(2, accid('accSagittal35LargeDiesisDown')),
 
-    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addAccidental(1, accid('accSagittal5CommaDown')),
+    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(1, accid('accSagittal5CommaDown')),
 
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-      .addAccidental(1, accid('b'))
-      .addAccidental(1, accid('accSagittal7CommaDown'))
-      .addAccidental(3, accid('accSagittal11LargeDiesisDown')),
+      .addModifier(1, accid('b'))
+      .addModifier(1, accid('accSagittal7CommaDown'))
+      .addModifier(3, accid('accSagittal11LargeDiesisDown')),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-      .addAccidental(1, accid('accSagittal11MediumDiesisUp'))
-      .addAccidental(2, accid('accSagittal5CommaDown'))
-      .addAccidental(3, accid('accSagittalFlat7CDown')),
+      .addModifier(1, accid('accSagittal11MediumDiesisUp'))
+      .addModifier(2, accid('accSagittal5CommaDown'))
+      .addModifier(3, accid('accSagittalFlat7CDown')),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-      .addAccidental(2, accid('accSagittal35LargeDiesisDown')),
+      .addModifier(2, accid('accSagittal35LargeDiesisDown')),
 
-    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addAccidental(1, accid('accSagittal5CommaDown')),
+    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(1, accid('accSagittal5CommaDown')),
 
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-      .addAccidental(1, accid('accSagittalFlat7CDown'))
-      .addAccidental(3, accid('accSagittal11LargeDiesisDown')),
+      .addModifier(1, accid('accSagittalFlat7CDown'))
+      .addModifier(3, accid('accSagittal11LargeDiesisDown')),
   ];
 
   f.StaveTie({
@@ -1149,37 +1149,37 @@ function factoryAPI(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' })
-      .addAccidental(0, accid('b'))
-      .addAccidental(1, accid('#')),
+      .addModifier(0, accid('b'))
+      .addModifier(1, accid('#')),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: 'h' })
-      .addAccidental(0, accid('##'))
-      .addAccidental(1, accid('n'))
-      .addAccidental(2, accid('bb'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('#'))
-      .addAccidental(5, accid('n'))
-      .addAccidental(6, accid('bb')),
+      .addModifier(0, accid('##'))
+      .addModifier(1, accid('n'))
+      .addModifier(2, accid('bb'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('#'))
+      .addModifier(5, accid('n'))
+      .addModifier(6, accid('bb')),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addAccidental(0, accid('n'))
-      .addAccidental(1, accid('#'))
-      .addAccidental(2, accid('#'))
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb'))
-      .addAccidental(5, accid('##'))
-      .addAccidental(6, accid('#')),
+      .addModifier(0, accid('n'))
+      .addModifier(1, accid('#'))
+      .addModifier(2, accid('#'))
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb'))
+      .addModifier(5, accid('##'))
+      .addModifier(6, accid('#')),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: 'w' })
-      .addAccidental(0, accid('#'))
-      .addAccidental(1, accid('##').setAsCautionary())
-      .addAccidental(2, accid('#').setAsCautionary())
-      .addAccidental(3, accid('b'))
-      .addAccidental(4, accid('bb').setAsCautionary())
-      .addAccidental(5, accid('b').setAsCautionary()),
+      .addModifier(0, accid('#'))
+      .addModifier(1, accid('##').setAsCautionary())
+      .addModifier(2, accid('#').setAsCautionary())
+      .addModifier(3, accid('b'))
+      .addModifier(4, accid('bb').setAsCautionary())
+      .addModifier(5, accid('b').setAsCautionary()),
   ];
 
   Formatter.SimpleFormat(notes);

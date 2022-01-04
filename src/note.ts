@@ -562,21 +562,6 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Helper function to add an accidental to a key
-  addAccidental(index: number, accidental: Modifier): this {
-    return this.addModifier(index, accidental);
-  }
-
-  // Helper function to add an articulation to a key
-  addArticulation(index: number, articulation: Modifier): this {
-    return this.addModifier(index, articulation);
-  }
-
-  // Helper function to add an annotation to a key
-  addAnnotation(index: number, annotation: Modifier): this {
-    return this.addModifier(index, annotation);
-  }
-
   // Helper function to add a dot on a specific key
   addDot(index: number): this {
     const dot = new Dot();

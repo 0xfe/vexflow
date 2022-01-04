@@ -136,8 +136,8 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
 
   const notes = [
-    staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
-    staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addAnnotation(2, annotation('Allegro')),
+    staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addModifier(0, annotation('quiet')),
+    staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addModifier(2, annotation('Allegro')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -227,10 +227,10 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
     new Annotation(text).setFont(Font.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
 
   const notes = [
-    staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
-    staveNote({ keys: ['a/4'], duration: 'w' }).addAnnotation(0, annotation('A')),
-    staveNote({ keys: ['c/5'], duration: 'w' }).addAnnotation(0, annotation('C')),
-    staveNote({ keys: ['e/5'], duration: 'w' }).addAnnotation(0, annotation('E')),
+    staveNote({ keys: ['f/4'], duration: 'w' }).addModifier(0, annotation('F')),
+    staveNote({ keys: ['a/4'], duration: 'w' }).addModifier(0, annotation('A')),
+    staveNote({ keys: ['c/5'], duration: 'w' }).addModifier(0, annotation('C')),
+    staveNote({ keys: ['e/5'], duration: 'w' }).addModifier(0, annotation('E')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -286,10 +286,10 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
     const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, annotation('Text', 1, v)),
-      staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, annotation('Text', 2, v)),
-      staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)),
-      staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)),
+      staveNote({ keys: ['c/3'], duration: 'q' }).addModifier(0, annotation('Text', 1, v)),
+      staveNote({ keys: ['c/4'], duration: 'q' }).addModifier(0, annotation('Text', 2, v)),
+      staveNote({ keys: ['c/5'], duration: 'q' }).addModifier(0, annotation('Text', 3, v)),
+      staveNote({ keys: ['c/6'], duration: 'q' }).addModifier(0, annotation('Text', 4, v)),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
@@ -313,10 +313,10 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
   for (let v = 1; v <= 4; ++v) {
     const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
     const notes = [
-      staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 1, v)),
-      staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 2, v)),
-      staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 3, v)),
-      staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v)),
+      staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 1, v)),
+      staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 2, v)),
+      staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 3, v)),
+      staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 4, v)),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }

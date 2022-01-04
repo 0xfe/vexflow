@@ -234,9 +234,9 @@ function drawRepeats(options: TestOptions, contextBuilder: ContextBuilder): void
     new StaveNote({ keys: ['g/4'], duration: '8' }),
     new StaveNote({ keys: ['e/4'], duration: '8' }),
   ];
-  notesBar2_part2[0].addAccidental(0, new Accidental('#'));
-  notesBar2_part2[1].addAccidental(0, new Accidental('#'));
-  notesBar2_part2[3].addAccidental(0, new Accidental('b'));
+  notesBar2_part2[0].addModifier(0, new Accidental('#'));
+  notesBar2_part2[1].addModifier(0, new Accidental('#'));
+  notesBar2_part2[3].addModifier(0, new Accidental('b'));
   // create the beams for 8th notes in 2nd measure
   const beam1 = new Beam(notesBar2_part1);
   const beam2 = new Beam(notesBar2_part2);

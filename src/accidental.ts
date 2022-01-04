@@ -411,7 +411,7 @@ export class Accidental extends Modifier {
       const modifiedPitches: string[] = [];
 
       const processNote = (t: Tickable) => {
-        // Only StaveNote implements .addAccidental(), which is used below.
+        // Only StaveNote implements .addModifier(), which is used below.
         if (!isStaveNote(t) || t.isRest() || t.shouldIgnoreTicks()) {
           return;
         }
@@ -456,7 +456,7 @@ export class Accidental extends Modifier {
             const accidental = new Accidental(accidentalString);
 
             // Attach the accidental to the StaveNote
-            staveNote.addAccidental(keyIndex, accidental);
+            staveNote.addModifier(keyIndex, accidental);
 
             // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(keyString);

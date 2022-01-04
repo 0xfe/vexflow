@@ -38,9 +38,9 @@ function drawMultipleMeasures(options: TestOptions): void {
     .addModifier(2, f.StringNumber({ number: '3', position: 'right' }));
 
   notes1[1]
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(0, f.StringNumber({ number: '5', position: 'below' }))
-    .addAccidental(1, f.Accidental({ type: '#' }).setAsCautionary())
+    .addModifier(1, f.Accidental({ type: '#' }).setAsCautionary())
     .addModifier(
       2,
       f
@@ -52,7 +52,7 @@ function drawMultipleMeasures(options: TestOptions): void {
   notes1[2]
     .addModifier(0, f.StringNumber({ number: '5', position: 'left' }))
     .addModifier(2, f.StringNumber({ number: '3', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }));
+    .addModifier(1, f.Accidental({ type: '#' }));
 
   notes1[3]
     .addModifier(0, f.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
@@ -76,14 +76,14 @@ function drawMultipleMeasures(options: TestOptions): void {
     .addModifier(2, f.StringNumber({ number: '3', position: 'right' }));
 
   notes2[1]
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(0, f.StringNumber({ number: '5', position: 'below' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
     .addModifier(2, f.StringNumber({ number: '3', position: 'above' }).setLastNote(notes2[3]).setDashed(false));
 
   notes2[2]
     .addModifier(2, f.StringNumber({ number: '3', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }));
+    .addModifier(1, f.Accidental({ type: '#' }));
 
   notes2[3]
     .addModifier(0, f.StringNumber({ number: '5', position: 'right' }).setOffsetY(7))
@@ -131,10 +131,10 @@ function drawFretHandFingers(options: TestOptions): void {
     .addModifier(2, f.Fingering({ number: '0', position: 'left' }));
 
   notes1[1]
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(0, f.Fingering({ number: '3', position: 'left' }))
     .addModifier(1, f.Fingering({ number: '2', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
     .addModifier(2, f.Fingering({ number: '0', position: 'left' }));
 
   notes1[2]
@@ -142,7 +142,7 @@ function drawFretHandFingers(options: TestOptions): void {
     .addModifier(1, f.Fingering({ number: '4', position: 'left' }))
     .addModifier(1, f.StringNumber({ number: '4', position: 'left' }))
     .addModifier(2, f.Fingering({ number: '0', position: 'above' }))
-    .addAccidental(1, f.Accidental({ type: '#' }));
+    .addModifier(1, f.Accidental({ type: '#' }));
 
   notes1[3]
     .addModifier(0, f.Fingering({ number: '3', position: 'right' }))
@@ -172,10 +172,10 @@ function drawFretHandFingers(options: TestOptions): void {
     .addModifier(2, f.Fingering({ number: '0', position: 'above' }));
 
   notes2[1]
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(0, f.Fingering({ number: '3', position: 'right' }))
     .addModifier(1, f.Fingering({ number: '2', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
     .addModifier(2, f.Fingering({ number: '0', position: 'left' }));
 
   notes2[2]
@@ -183,7 +183,7 @@ function drawFretHandFingers(options: TestOptions): void {
     .addModifier(1, f.Fingering({ number: '2', position: 'left' }))
     .addModifier(1, f.StringNumber({ number: '4', position: 'left' }))
     .addModifier(2, f.Fingering({ number: '1', position: 'right' }))
-    .addAccidental(2, f.Accidental({ type: '#' }));
+    .addModifier(2, f.Accidental({ type: '#' }));
 
   notes2[3]
     .addModifier(0, f.Fingering({ number: '3', position: 'right' }))
@@ -221,9 +221,9 @@ function multi(options: TestOptions): void {
     .addStroke(0, new Stroke(6))
     .addModifier(1, f.StringNumber({ number: '4', position: 'right' }))
     .addModifier(2, f.StringNumber({ number: '3', position: 'above' }))
-    .addAccidental(0, f.Accidental({ type: '#' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
-    .addAccidental(2, f.Accidental({ type: '#' }));
+    .addModifier(0, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
+    .addModifier(2, f.Accidental({ type: '#' }));
 
   notes1[2]
     .addStroke(0, new Stroke(2))
@@ -244,7 +244,7 @@ function multi(options: TestOptions): void {
     .addModifier(0, f.Fingering({ number: '0', position: 'left' }))
     .addModifier(0, f.StringNumber({ number: '6', position: 'below' }));
 
-  notes2[2].addAccidental(0, f.Accidental({ type: '#' }));
+  notes2[2].addModifier(0, f.Accidental({ type: '#' }));
 
   notes2[4].addModifier(0, f.Fingering({ number: '0', position: 'left' }));
 
@@ -279,51 +279,51 @@ function drawAccidentals(options: TestOptions): void {
 
   notes[0]
     .addModifier(0, f.Fingering({ number: '3', position: 'left' }))
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(1, f.Fingering({ number: '2', position: 'left' }))
     .addModifier(1, f.StringNumber({ number: '2', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
     .addModifier(2, f.Fingering({ number: '0', position: 'left' }))
-    .addAccidental(2, f.Accidental({ type: '#' }))
+    .addModifier(2, f.Accidental({ type: '#' }))
     .addModifier(3, f.Fingering({ number: '3', position: 'left' }))
-    .addAccidental(3, f.Accidental({ type: '#' }))
+    .addModifier(3, f.Accidental({ type: '#' }))
     .addModifier(4, f.Fingering({ number: '2', position: 'right' }))
     .addModifier(4, f.StringNumber({ number: '3', position: 'right' }))
-    .addAccidental(4, f.Accidental({ type: '#' }))
+    .addModifier(4, f.Accidental({ type: '#' }))
     .addModifier(5, f.Fingering({ number: '0', position: 'left' }))
-    .addAccidental(5, f.Accidental({ type: '#' }));
+    .addModifier(5, f.Accidental({ type: '#' }));
 
   notes[1]
-    .addAccidental(0, f.Accidental({ type: '#' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
-    .addAccidental(2, f.Accidental({ type: '#' }))
-    .addAccidental(3, f.Accidental({ type: '#' }))
-    .addAccidental(4, f.Accidental({ type: '#' }))
-    .addAccidental(5, f.Accidental({ type: '#' }));
+    .addModifier(0, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
+    .addModifier(2, f.Accidental({ type: '#' }))
+    .addModifier(3, f.Accidental({ type: '#' }))
+    .addModifier(4, f.Accidental({ type: '#' }))
+    .addModifier(5, f.Accidental({ type: '#' }));
 
   notes[2]
     .addModifier(0, f.Fingering({ number: '3', position: 'left' }))
-    .addAccidental(0, f.Accidental({ type: '#' }))
+    .addModifier(0, f.Accidental({ type: '#' }))
     .addModifier(1, f.Fingering({ number: '2', position: 'left' }))
     .addModifier(1, f.StringNumber({ number: '2', position: 'left' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
     .addModifier(2, f.Fingering({ number: '0', position: 'left' }))
-    .addAccidental(2, f.Accidental({ type: '#' }))
+    .addModifier(2, f.Accidental({ type: '#' }))
     .addModifier(3, f.Fingering({ number: '3', position: 'left' }))
-    .addAccidental(3, f.Accidental({ type: '#' }))
+    .addModifier(3, f.Accidental({ type: '#' }))
     .addModifier(4, f.Fingering({ number: '2', position: 'right' }))
     .addModifier(4, f.StringNumber({ number: '3', position: 'right' }))
-    .addAccidental(4, f.Accidental({ type: '#' }))
+    .addModifier(4, f.Accidental({ type: '#' }))
     .addModifier(5, f.Fingering({ number: '0', position: 'left' }))
-    .addAccidental(5, f.Accidental({ type: '#' }));
+    .addModifier(5, f.Accidental({ type: '#' }));
 
   notes[3]
-    .addAccidental(0, f.Accidental({ type: '#' }))
-    .addAccidental(1, f.Accidental({ type: '#' }))
-    .addAccidental(2, f.Accidental({ type: '#' }))
-    .addAccidental(3, f.Accidental({ type: '#' }))
-    .addAccidental(4, f.Accidental({ type: '#' }))
-    .addAccidental(5, f.Accidental({ type: '#' }));
+    .addModifier(0, f.Accidental({ type: '#' }))
+    .addModifier(1, f.Accidental({ type: '#' }))
+    .addModifier(2, f.Accidental({ type: '#' }))
+    .addModifier(3, f.Accidental({ type: '#' }))
+    .addModifier(4, f.Accidental({ type: '#' }))
+    .addModifier(5, f.Accidental({ type: '#' }));
 
   const voice = f.Voice().addTickables(notes);
   const ctx = f.getContext();

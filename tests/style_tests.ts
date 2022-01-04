@@ -66,12 +66,12 @@ function stave(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['e/4'], stem_direction: 1, duration: '4' }),
     f.StaveNote({ keys: ['f/4'], stem_direction: 1, duration: '8' }),
 
@@ -91,7 +91,7 @@ function stave(options: TestOptions): void {
   // StaveNote modifiers test.
   const mods1 = notes1.getModifiers();
   mods1[0].setStyle(FS('green'));
-  notes0.addArticulation(0, new Articulation('a.').setPosition(4).setStyle(FS('green')));
+  notes0.addModifier(0, new Articulation('a.').setPosition(4).setStyle(FS('green')));
   notes0.addModifier(0, new Ornament('mordent').setStyle(FS('lightgreen')));
 
   notes1.addModifier(0, new Annotation('blue').setStyle(FS('blue')));

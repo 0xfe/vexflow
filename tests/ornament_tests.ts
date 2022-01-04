@@ -240,7 +240,7 @@ function jazzOrnaments(options: TestOptions): void {
     const note = (keys: string[], duration: string, modifier: Ornament, stemDirection?: number) => {
       const n = new StaveNote({ keys, duration, stem_direction: stemDirection })
         .addModifier(0, modifier)
-        .addAccidental(0, new Accidental('b'));
+        .addModifier(0, new Accidental('b'));
       const dot = duration.indexOf('d') >= 0;
       if (dot) {
         n.addDotToAll();
