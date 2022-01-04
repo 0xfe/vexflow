@@ -81,7 +81,7 @@ const isInnerNoteIndex = (note: StaveNote, index: number) =>
 
 // Helper methods for rest positioning in ModifierContext.
 function shiftRestVertical(rest: StaveNoteFormatSettings, note: StaveNoteFormatSettings, dir: number) {
-  const delta = (note.isrest ? 0.0 : 1.0) * dir;
+  const delta = dir;
 
   rest.line += delta;
   rest.maxLine += delta;
@@ -186,7 +186,13 @@ export class StaveNote extends StemmableNote {
     if (voices === 2) {
       const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
       if (noteU.minLine <= noteL.maxLine + lineSpacing) {
-        if (noteU.stemDirection === noteL.stemDirection) {
+        if (noteU.isrest) {
+          // shift rest up
+          shiftRestVertical(noteU, noteL, 1);
+        } else if (noteL.isrest) {
+          // shift rest down
+          shiftRestVertical(noteL, noteU, -1);
+        } else if (noteU.stemDirection === noteL.stemDirection) {
           // upper voice is middle voice, so shift it right
           xShift = voiceXShift + 2;
           noteU.note.setXShift(xShift);
@@ -204,11 +210,76 @@ export class StaveNote extends StemmableNote {
 
     if (!noteM) throw new RuntimeError('InvalidState', 'noteM not defined.');
 
+    // For three voices, test if rests can be repositioned
+    //
+    // Special case 1 :: middle voice rest between two notes
+    //
+    if (noteM.isrest && !noteU.isrest && !noteL.isrest) {
+      if (noteU.minLine <= noteM.maxLine || noteM.minLine <= noteL.maxLine) {
+        const restHeight = noteM.maxLine - noteM.minLine;
+        const space = noteU.minLine - noteL.maxLine;
+        if (restHeight < space) {
+          // center middle voice rest between the upper and lower voices
+          centerRest(noteM, noteU, noteL);
+        } else {
+          xShift = voiceXShift + 2; // shift middle rest right
+          noteM.note.setXShift(xShift);
+          if (noteL.note.hasBeam() === false) {
+            noteL.stemDirection = -1;
+            noteL.note.setStemDirection(-1);
+          }
+          if (noteU.minLine <= noteL.maxLine && noteU.note.hasBeam() === false) {
+            noteU.stemDirection = 1;
+            noteU.note.setStemDirection(1);
+          }
+        }
+        // format complete
+        state.right_shift += xShift;
+        return true;
+      }
+    }
+
+    // Special case 2 :: all voices are rests
+    if (noteU.isrest && noteM.isrest && noteL.isrest) {
+      // Shift upper voice rest up
+      shiftRestVertical(noteU, noteM, 1);
+      // Shift lower voice rest down
+      shiftRestVertical(noteL, noteM, -1);
+      // format complete
+      state.right_shift += xShift;
+      return true;
+    }
+
+    // Test if any other rests can be repositioned
+    if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
+      // Shift middle voice rest up
+      shiftRestVertical(noteM, noteL, 1);
+    }
+    if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
+      // Shift middle voice rest down
+      shiftRestVertical(noteM, noteU, -1);
+    }
+    if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
+      // shift upper voice rest up;
+      shiftRestVertical(noteU, noteM, 1);
+    }
+    if (noteL.isrest && noteM.minLine <= noteL.maxLine) {
+      // shift lower voice rest down
+      shiftRestVertical(noteL, noteM, -1);
+    }
     // If middle voice intersects upper or lower voice
     if (noteU.minLine <= noteM.maxLine + 0.5 || noteM.minLine <= noteL.maxLine) {
       // shift middle note right
       xShift = voiceXShift + 2;
       noteM.note.setXShift(xShift);
+      if (noteL.note.hasBeam() === false) {
+        noteL.stemDirection = -1;
+        noteL.note.setStemDirection(-1);
+      }
+      if (noteU.minLine <= noteL.maxLine && noteU.note.hasBeam() === false) {
+        noteU.stemDirection = 1;
+        noteU.note.setStemDirection(1);
+      }
     }
 
     state.right_shift += xShift;
