@@ -219,7 +219,7 @@ export class TabNote extends StemmableNote {
   addDot(): this {
     const dot = new Dot();
     this.dots += 1;
-    return this.addModifier(dot, 0);
+    return this.addModifier(0, dot);
   }
 
   // Calculate and store the width of the note

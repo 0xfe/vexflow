@@ -79,7 +79,7 @@ function stave(options: TestOptions): void {
     f.TextDynamics({ text: 'sfz', duration: '16' }).setStyle(FS('blue')),
 
     // GhostNote modifiers test.
-    f.GhostNote({ duration: '16' }).addModifier(new Annotation('GhostNote green text').setStyle(FS('green'))),
+    f.GhostNote({ duration: '16' }).addModifier(0, new Annotation('GhostNote green text').setStyle(FS('green'))),
   ];
 
   const notes0 = notes[0] as StaveNote;
@@ -92,10 +92,10 @@ function stave(options: TestOptions): void {
   const mods1 = notes1.getModifiers();
   mods1[0].setStyle(FS('green'));
   notes0.addArticulation(0, new Articulation('a.').setPosition(4).setStyle(FS('green')));
-  notes0.addModifier(new Ornament('mordent').setStyle(FS('lightgreen')), 0);
+  notes0.addModifier(0, new Ornament('mordent').setStyle(FS('lightgreen')));
 
-  notes1.addModifier(new Annotation('blue').setStyle(FS('blue')), 0);
-  notes1.addModifier(new NoteSubGroup([f.ClefNote({ options: { size: 'small' } }).setStyle(FS('blue'))]), 0);
+  notes1.addModifier(0, new Annotation('blue').setStyle(FS('blue')));
+  notes1.addModifier(0, new NoteSubGroup([f.ClefNote({ options: { size: 'small' } }).setStyle(FS('blue'))]));
 
   const voice = f.Voice().addTickables(notes);
 
@@ -126,7 +126,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 4, fret: 9 },
       ],
       duration: 'h',
-    }).addModifier(new Annotation('green text').setStyle(FS('green')), 0),
+    }).addModifier(0, new Annotation('green text').setStyle(FS('green'))),
     tabNote({
       positions: [
         { str: 2, fret: 10 },
@@ -134,7 +134,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
       ],
       duration: 'h',
     })
-      .addModifier(new Bend('Full').setStyle(FS('brown')), 0)
+      .addModifier(0, new Bend('Full').setStyle(FS('brown')))
       .addStroke(0, new Stroke(1, { all_voices: false }).setStyle(FS('blue'))),
   ];
 

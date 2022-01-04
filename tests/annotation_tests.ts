@@ -81,7 +81,7 @@ function lyrics(options: TestOptions): void {
       const noteGroup = registry.getElementById(noteGroupID) as Tickable;
       const lyricsAnnotation = f.Annotation({ text }).setFont('Roboto Slab', fontSize);
       lyricsAnnotation.setPosition(ModifierPosition.ABOVE);
-      noteGroup.addModifier(lyricsAnnotation, verse);
+      noteGroup.addModifier(verse, lyricsAnnotation);
     });
 
     // Second row doesn't have any lyrics.
@@ -113,13 +113,13 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 4, fret: 9 },
       ],
       duration: 'h',
-    }).addModifier(new Annotation('T'), 0),
+    }).addModifier(0, new Annotation('T')),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('T'), 0)
-      .addModifier(new Bend('Full'), 0),
+      .addModifier(0, new Annotation('T'))
+      .addModifier(0, new Bend('Full')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -159,13 +159,13 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 3, fret: 12 },
       ],
       duration: 'h',
-    }).addModifier(new Annotation('Harm.'), 0),
+    }).addModifier(0, new Annotation('Harm.')),
     tabNote({
       positions: [{ str: 2, fret: 9 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC), 0)
-      .addModifier(new Annotation('A.H.'), 0),
+      .addModifier(0, new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC))
+      .addModifier(0, new Annotation('A.H.')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -193,23 +193,23 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 5, fret: 0 },
       ],
       duration: 'h',
-    }).addModifier(new Vibrato().setVibratoWidth(40)),
+    }).addModifier(0, new Vibrato().setVibratoWidth(40)),
     tabNote({
       positions: [{ str: 6, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('p'), 0),
+    }).addModifier(0, annotation('p')),
     tabNote({
       positions: [{ str: 3, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('i'), 0),
+    }).addModifier(0, annotation('i')),
     tabNote({
       positions: [{ str: 2, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('m'), 0),
+    }).addModifier(0, annotation('m')),
     tabNote({
       positions: [{ str: 1, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('a'), 0),
+    }).addModifier(0, annotation('a')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -246,20 +246,20 @@ function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): v
 
   const notes = [
     new StaveNote({ keys: ['a/3'], duration: '8' }).addModifier(
-      new Annotation('good').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('good').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['g/3'], duration: '8' }).addModifier(
-      new Annotation('even').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('even').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['c/4'], duration: '8' }).addModifier(
-      new Annotation('under').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('under').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['d/4'], duration: '8' }).addModifier(
-      new Annotation('beam').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('beam').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
   ];
 
@@ -377,20 +377,20 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-  notes1[0].addModifier(new Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
-  notes1[1].addModifier(new Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
-  notes1[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-  notes1[3].addModifier(new Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
+  notes1[0].addModifier(0, new Annotation('Text').setJustification(1).setVerticalJustification(1)); // U
+  notes1[1].addModifier(0, new Annotation('Text').setJustification(2).setVerticalJustification(2)); // D
+  notes1[2].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(3)); // U
+  notes1[3].addModifier(0, new Annotation('Text').setJustification(4).setVerticalJustification(4)); // D
 
-  notes2[0].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(1), 0); // U
-  notes2[1].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(2), 0); // D
-  notes2[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-  notes2[3].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(4), 0); // D
+  notes2[0].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(1)); // U
+  notes2[1].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(2)); // D
+  notes2[2].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(3)); // U
+  notes2[3].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(4)); // D
 
-  notes3[0].addModifier(new Annotation('Text').setVerticalJustification(1), 0); // U
-  notes3[1].addModifier(new Annotation('Text').setVerticalJustification(2), 0); // D
-  notes3[2].addModifier(new Annotation('Text').setVerticalJustification(3), 0); // U
-  notes3[3].addModifier(new Annotation('Text').setVerticalJustification(4), 0); // D
+  notes3[0].addModifier(0, new Annotation('Text').setVerticalJustification(1)); // U
+  notes3[1].addModifier(0, new Annotation('Text').setVerticalJustification(2)); // D
+  notes3[2].addModifier(0, new Annotation('Text').setVerticalJustification(3)); // U
+  notes3[3].addModifier(0, new Annotation('Text').setVerticalJustification(4)); // D
 
   const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 

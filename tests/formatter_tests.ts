@@ -333,16 +333,16 @@ function alignedMixedElements(options: TestOptions): void {
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
       .addAccidental(0, new Accidental('##'))
-      .addModifier(new FretHandFinger('4').setPosition(4), 0)
-      .addModifier(new StringNumber('3').setPosition(4), 0)
+      .addModifier(0, new FretHandFinger('4').setPosition(4))
+      .addModifier(0, new StringNumber('3').setPosition(4))
       .addArticulation(0, new Articulation('a.').setPosition(4))
       .addArticulation(0, new Articulation('a>').setPosition(4))
       .addArticulation(0, new Articulation('a^').setPosition(4))
       .addArticulation(0, new Articulation('am').setPosition(4))
       .addArticulation(0, new Articulation('a@u').setPosition(4))
-      .addModifier(new Annotation('yyyy').setVerticalJustification(3), 0)
-      .addModifier(new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0)
-      .addModifier(new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0),
+      .addModifier(0, new Annotation('yyyy').setVerticalJustification(3))
+      .addModifier(0, new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''))
+      .addModifier(0, new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, '')),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
@@ -413,7 +413,7 @@ function notesWithTab(options: TestOptions): void {
     f.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
 
     const tabVoice = score.voice([
-      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new Bend('Full'), 0),
+      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(0, new Bend('Full')),
       f
         .TabNote({
           positions: [
@@ -422,7 +422,7 @@ function notesWithTab(options: TestOptions): void {
           ],
           duration: '8',
         })
-        .addModifier(new Bend('Unison'), 1),
+        .addModifier(1, new Bend('Unison')),
       f.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
       f.TabNote({
         positions: [

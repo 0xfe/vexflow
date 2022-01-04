@@ -195,10 +195,10 @@ const snare0 = createSingleMeasureTest((f) => {
     f
       .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
       .addArticulation(0, f.Articulation({ type: 'a>' }))
-      .addModifier(f.Annotation({ text: 'L', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
+      .addModifier(0, f.Annotation({ text: 'L', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'R', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'L', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'L', font })),
   ]);
 });
 

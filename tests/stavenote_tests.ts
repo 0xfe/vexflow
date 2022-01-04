@@ -1056,10 +1056,10 @@ function centerAlignedNoteMultiModifiers(options: TestOptions): void {
     .addAnnotation(0, new Annotation('Test').setPosition(3))
     .addStroke(0, new Stroke(2))
     .addAccidental(1, new Accidental('#'))
-    .addModifier(newFinger('3', Modifier.Position.LEFT), 0)
-    .addModifier(newFinger('2', Modifier.Position.LEFT), 2)
-    .addModifier(newFinger('1', Modifier.Position.RIGHT), 1)
-    .addModifier(new StringNumber('4').setPosition(Modifier.Position.BELOW), 2)
+    .addModifier(0, newFinger('3', Modifier.Position.LEFT))
+    .addModifier(2, newFinger('2', Modifier.Position.LEFT))
+    .addModifier(1, newFinger('1', Modifier.Position.RIGHT))
+    .addModifier(2, new StringNumber('4').setPosition(Modifier.Position.BELOW))
     .addDotToAll();
 
   const voice = f.Voice().setStrict(false).addTickables([note]);

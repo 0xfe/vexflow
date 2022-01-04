@@ -535,7 +535,7 @@ export abstract class Note extends Tickable {
    * @param index of the key to modify.
    * @returns this
    */
-  addModifier(modifier: Modifier, index: number = 0): this {
+  addModifier(index: number, modifier: Modifier): this {
     // Backwards compatibility with 3.0.9.
     if (typeof index === 'string') {
       index = parseInt(index);
@@ -564,17 +564,17 @@ export abstract class Note extends Tickable {
 
   // Helper function to add an accidental to a key
   addAccidental(index: number, accidental: Modifier): this {
-    return this.addModifier(accidental, index);
+    return this.addModifier(index, accidental);
   }
 
   // Helper function to add an articulation to a key
   addArticulation(index: number, articulation: Modifier): this {
-    return this.addModifier(articulation, index);
+    return this.addModifier(index, articulation);
   }
 
   // Helper function to add an annotation to a key
   addAnnotation(index: number, annotation: Modifier): this {
-    return this.addModifier(annotation, index);
+    return this.addModifier(index, annotation);
   }
 
   // Helper function to add a dot on a specific key
@@ -582,7 +582,7 @@ export abstract class Note extends Tickable {
     const dot = new Dot();
     dot.setDotShiftY(this.glyph.dot_shiftY);
     this.dots++;
-    return this.addModifier(dot, index);
+    return this.addModifier(index, dot);
   }
 
   // Convenience method to add dot to all keys in note

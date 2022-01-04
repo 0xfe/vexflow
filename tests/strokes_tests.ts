@@ -97,12 +97,12 @@ function arpeggioDirectionless(options: TestOptions): void {
   notes1[2]
     .addStroke(0, new Stroke(7))
     .addAccidental(1, f.Accidental({ type: 'b' }))
-    .addModifier(graceNoteGroup, 0);
+    .addModifier(0, graceNoteGroup);
   notes1[3].addStroke(0, new Stroke(7)).addModifier(
+    0,
     f.NoteSubGroup({
       notes: [f.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } })],
-    }),
-    0
+    })
   );
 
   const voice1 = score.voice(notes1);
@@ -344,7 +344,7 @@ function notesWithTab(options: TestOptions): void {
         ],
         duration: '4',
       })
-      .addModifier(new Bend('Full'), 0),
+      .addModifier(0, new Bend('Full')),
     f
       .TabNote({
         positions: [
@@ -353,7 +353,7 @@ function notesWithTab(options: TestOptions): void {
         ],
         duration: '4',
       })
-      .addModifier(new Bend('Unison'), 1),
+      .addModifier(1, new Bend('Unison')),
     f.TabNote({
       positions: [
         { str: 3, fret: 7 },

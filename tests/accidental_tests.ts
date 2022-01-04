@@ -751,7 +751,7 @@ function automaticAccidentals0(options: TestOptions): void {
   ].map(f.StaveNote.bind(f));
 
   const gracenotes = [{ keys: ['d#/4'], duration: '16', slash: true }].map(f.GraceNote.bind(f));
-  notes[0].addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0);
+  notes[0].addModifier(0, f.GraceNoteGroup({ notes: gracenotes }).beamNotes());
 
   const voice = f
     .Voice()

@@ -422,20 +422,20 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-  notes1[0].addModifier(new Articulation('a>').setPosition(3), 0); // U
-  notes1[1].addModifier(new Articulation('a>').setPosition(4), 0); // D
-  notes1[2].addModifier(new Articulation('a.').setPosition(3), 0); // U
-  notes1[3].addModifier(new Articulation('a.').setPosition(4), 0); // D
+  notes1[0].addModifier(0, new Articulation('a>').setPosition(3)); // U
+  notes1[1].addModifier(0, new Articulation('a>').setPosition(4)); // D
+  notes1[2].addModifier(0, new Articulation('a.').setPosition(3)); // U
+  notes1[3].addModifier(0, new Articulation('a.').setPosition(4)); // D
 
-  notes2[0].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes2[1].addModifier(new Articulation('a>').setPosition(4), 0);
-  notes2[2].addModifier(new Articulation('a.').setPosition(3), 0);
-  notes2[3].addModifier(new Articulation('a.').setPosition(4), 0);
+  notes2[0].addModifier(0, new Articulation('a>').setPosition(3));
+  notes2[1].addModifier(0, new Articulation('a>').setPosition(4));
+  notes2[2].addModifier(0, new Articulation('a.').setPosition(3));
+  notes2[3].addModifier(0, new Articulation('a.').setPosition(4));
 
-  notes3[0].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes3[1].addModifier(new Articulation('a>').setPosition(4), 0);
-  notes3[2].addModifier(new Articulation('a.').setPosition(3), 0);
-  notes3[3].addModifier(new Articulation('a.').setPosition(4), 0);
+  notes3[0].addModifier(0, new Articulation('a>').setPosition(3));
+  notes3[1].addModifier(0, new Articulation('a>').setPosition(4));
+  notes3[2].addModifier(0, new Articulation('a.').setPosition(3));
+  notes3[3].addModifier(0, new Articulation('a.').setPosition(4));
 
   const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 

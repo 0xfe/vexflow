@@ -25,9 +25,9 @@ function tremoloBasic(options: TestOptions): void {
 
   const notes1 = score.notes('e4/4, e4, e4, e4', { stem: 'up' });
 
-  notes1[0].addModifier(new Tremolo(3));
-  notes1[1].addModifier(new Tremolo(2));
-  notes1[2].addModifier(new Tremolo(1));
+  notes1[0].addModifier(0, new Tremolo(3));
+  notes1[1].addModifier(0, new Tremolo(2));
+  notes1[2].addModifier(0, new Tremolo(1));
 
   const voice1 = score.voice(notes1);
 
@@ -40,9 +40,9 @@ function tremoloBasic(options: TestOptions): void {
 
   const notes2 = score.notes('e5/4, e5, e5, e5', { stem: 'down' });
 
-  notes2[1].addModifier(new Tremolo(1));
-  notes2[2].addModifier(new Tremolo(2));
-  notes2[3].addModifier(new Tremolo(3));
+  notes2[1].addModifier(0, new Tremolo(1));
+  notes2[2].addModifier(0, new Tremolo(2));
+  notes2[3].addModifier(0, new Tremolo(3));
 
   const voice2 = score.voice(notes2);
 

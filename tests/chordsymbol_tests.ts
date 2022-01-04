@@ -32,7 +32,7 @@ const subscript = { symbolModifier: ChordSymbol.symbolModifiers.SUBSCRIPT };
 
 // Helper function for creating StaveNotes.
 const note = (factory: Factory, keys: string[], duration: string, chordSymbol: ChordSymbol) =>
-  factory.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
+  factory.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
 
 function fontSize(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 750, 580);
@@ -332,7 +332,7 @@ function bottomStemDown(options: TestOptions): void {
   function draw(chords: ChordSymbol[], y: number) {
     // Helper function to create a StaveNote with a ChordSymbol and the stem pointing down.
     const note = (keys: string[], duration: string, chordSymbol: ChordSymbol) =>
-      new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(chordSymbol, 0);
+      new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(0, chordSymbol);
 
     const stave = new Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
     const notes = [
@@ -365,7 +365,7 @@ function doubleBottom(options: TestOptions): void {
   function draw(chords: ChordSymbol[], chords2: ChordSymbol[], y: number) {
     // Helper function to create a StaveNote with two ChordSymbols attached.
     const note = (keys: string[], duration: string, chordSymbol1: ChordSymbol, chordSymbol2: ChordSymbol) =>
-      new StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
+      new StaveNote({ keys, duration }).addModifier(0, chordSymbol1).addModifier(0, chordSymbol2);
 
     const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
     const notes = [
