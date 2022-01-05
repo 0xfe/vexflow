@@ -273,29 +273,33 @@ export class Tuplet extends Element {
       // y_pos = first_note.getStemExtents().topY - 10;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        if (this.notes[i].hasStem() || this.notes[i].isRest()) {
-          const top_y =
-            this.notes[i].getStemDirection() === Stem.UP
-              ? this.notes[i].getStemExtents().topY - 10
-              : this.notes[i].getStemExtents().baseY - 20;
+        const top_y =
+          this.notes[i].getStemDirection() === Stem.UP
+            ? this.notes[i].getStemExtents().topY - 10
+            : this.notes[i].getStemExtents().baseY - 20;
 
-          if (top_y < y_pos) {
-            y_pos = top_y;
-          }
+        if (top_y < y_pos) {
+          y_pos = top_y;
         }
       }
     } else {
-      y_pos = first_note.checkStave().getYForLine(4) + 20;
+      let lineCheck = 4; // tuplet default on line 4
+      // check modifiers below note for correct Y position
+      this.notes.forEach((nn) => {
+        const mc = nn.getModifierContext();
+        if (mc) {
+          lineCheck = Math.max(lineCheck, mc.getState().text_line + 1);
+        }
+      });
+      y_pos = first_note.checkStave().getYForLine(lineCheck) + 20;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        if (this.notes[i].hasStem() || this.notes[i].isRest()) {
-          const bottom_y =
-            this.notes[i].getStemDirection() === Stem.UP
-              ? this.notes[i].getStemExtents().baseY + 20
-              : this.notes[i].getStemExtents().topY + 10;
-          if (bottom_y > y_pos) {
-            y_pos = bottom_y;
-          }
+        const bottom_y =
+          this.notes[i].getStemDirection() === Stem.UP
+            ? this.notes[i].getStemExtents().baseY + 20
+            : this.notes[i].getStemExtents().topY + 10;
+        if (bottom_y > y_pos) {
+          y_pos = bottom_y;
         }
       }
     }
