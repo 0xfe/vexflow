@@ -11,6 +11,7 @@ import {
   Articulation,
   Beam,
   Bend,
+  Dot,
   Flow,
   Font,
   FontGlyph,
@@ -249,8 +250,9 @@ function unalignedNoteDurations1(options: TestOptions): void {
   const notes21 = [
     new StaveNote({ keys: ['a/4'], duration: '16' }),
     new StaveNote({ keys: ['b/4.'], duration: '4' }),
-    new StaveNote({ keys: ['a/4'], duration: '8d' }).addDotToAll(),
+    new StaveNote({ keys: ['a/4'], duration: '8d' }),
   ];
+  Dot.buildAndAttach([notes21[2]], { all: true });
 
   const ctx = f.getContext();
   const voice11 = score.voice(notes11, { time: '2/4' }).setMode(Voice.Mode.SOFT);
@@ -759,7 +761,7 @@ function annotations(options: TestOptions): void {
     durations.forEach((dd) => {
       const note = new StaveNote({ keys: ['b/4'], duration: dd });
       if (dd.indexOf('d') >= 0) {
-        note.addDotToAll();
+        Dot.buildAndAttach([note], { all: true });
       }
       if (sm.lyrics.length > iii) {
         note.addModifier(
@@ -775,7 +777,7 @@ function annotations(options: TestOptions): void {
 
     notes.forEach((note) => {
       if (note.getDuration().indexOf('d') >= 0) {
-        note.addDotToAll();
+        Dot.buildAndAttach([note], { all: true });
       }
     });
 

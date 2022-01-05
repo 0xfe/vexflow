@@ -8,6 +8,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Factory } from '../src/factory';
 import { Formatter } from '../src/formatter';
 import { GraceNote, GraceNoteStruct } from '../src/gracenote';
@@ -76,7 +77,7 @@ function basic(options: TestOptions): void {
 
   gracenotes[1].addModifier(0, f.Accidental({ type: '##' }));
   gracenotes3[3].addModifier(0, f.Accidental({ type: 'bb' }));
-  gracenotes4[0].addDotToAll();
+  Dot.buildAndAttach([gracenotes4[0]], { all: true });
 
   const notes = [
     f
@@ -138,7 +139,7 @@ function basicSlurred(options: TestOptions): void {
   gracenotes0[1].addModifier(0, f.Accidental({ type: '#' }));
   gracenotes3[3].addModifier(0, f.Accidental({ type: 'b' }));
   gracenotes3[2].addModifier(0, f.Accidental({ type: 'n' }));
-  gracenotes4[0].addDotToAll();
+  Dot.buildAndAttach([gracenotes4[0]], { all: true });
 
   const notes = [
     f

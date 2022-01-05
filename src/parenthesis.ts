@@ -16,11 +16,13 @@ export class Parenthesis extends Modifier {
 
   protected point: number;
 
-  /** Add parentheses to note. */
-  static addParentheses(note: Note): void {
-    for (let i = 0; i < note.keys.length; i++) {
-      note.addModifier(i, new Parenthesis(ModifierPosition.LEFT));
-      note.addModifier(i, new Parenthesis(ModifierPosition.RIGHT));
+  /** Add parentheses to the notes. */
+  static buildAndAttach(notes: Note[]): void {
+    for (const note of notes) {
+      for (let i = 0; i < note.keys.length; i++) {
+        note.addModifier(i, new Parenthesis(ModifierPosition.LEFT));
+        note.addModifier(i, new Parenthesis(ModifierPosition.RIGHT));
+      }
     }
   }
 

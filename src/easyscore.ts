@@ -3,6 +3,7 @@
 
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
+import { Dot } from './dot';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
 import { Music } from './music';
@@ -379,7 +380,7 @@ export class Builder {
     });
 
     // Attach dots.
-    for (let i = 0; i < dots; i++) note.addDotToAll();
+    for (let i = 0; i < dots; i++) Dot.buildAndAttach([note], { all: true });
 
     this.commitHooks.forEach((commitHook) => commitHook(options, note, this));
 

@@ -2,7 +2,6 @@
 // MIT License
 
 import { Beam } from './beam';
-import { Dot } from './dot';
 import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
@@ -559,22 +558,6 @@ export abstract class Note extends Tickable {
     modifier.setIndex(index);
     this.modifiers.push(modifier);
     this.preFormatted = false;
-    return this;
-  }
-
-  // Helper function to add a dot on a specific key
-  addDot(index: number): this {
-    const dot = new Dot();
-    dot.setDotShiftY(this.glyph.dot_shiftY);
-    this.dots++;
-    return this.addModifier(index, dot);
-  }
-
-  // Convenience method to add dot to all keys in note
-  addDotToAll(): this {
-    for (let i = 0; i < this.keys.length; ++i) {
-      this.addDot(i);
-    }
     return this;
   }
 

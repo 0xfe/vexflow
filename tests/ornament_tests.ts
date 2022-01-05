@@ -10,6 +10,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Formatter } from '../src/formatter';
 import { Glyph } from '../src/glyph';
 import { Ornament } from '../src/ornament';
@@ -243,7 +244,7 @@ function jazzOrnaments(options: TestOptions): void {
         .addModifier(0, new Accidental('b'));
       const dot = duration.indexOf('d') >= 0;
       if (dot) {
-        n.addDotToAll();
+        Dot.buildAndAttach([n], { all: true });
       }
       return n;
     };

@@ -7,6 +7,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Factory } from '../src/factory';
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
@@ -160,9 +161,7 @@ function formatAccidentalSpaces(options: TestOptions): void {
     new StaveNote({
       keys: ['e##/5'],
       duration: '8d',
-    })
-      .addModifier(0, new Accidental('##'))
-      .addDotToAll(),
+    }).addModifier(0, new Accidental('##')),
     new StaveNote({
       keys: ['b/4'],
       duration: '16',
@@ -208,6 +207,7 @@ function formatAccidentalSpaces(options: TestOptions): void {
       duration: 'q',
     }),
   ];
+  Dot.buildAndAttach([notes[0]], { all: true });
   const beams = Beam.generateBeams(notes);
   const voice = new Voice({
     num_beats: 4,

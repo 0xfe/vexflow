@@ -6,6 +6,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Formatter } from '../src/formatter';
 import { ModifierContext } from '../src/modifiercontext';
 import { Note } from '../src/note';
@@ -46,44 +47,42 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   stave.draw();
 
   const notes = [
-    new StaveNote({ keys: ['c/4', 'e/4', 'a/4', 'b/4'], duration: 'w' }).addDotToAll(),
-    new StaveNote({ keys: ['a/4', 'b/4', 'c/5'], duration: '4', stem_direction: 1 }).addDotToAll(),
-    new StaveNote({ keys: ['g/4', 'a/4', 'b/4'], duration: '4', stem_direction: -1 }).addDotToAll(),
-    new StaveNote({ keys: ['e/4', 'f/4', 'b/4', 'c/5'], duration: '4' }).addDotToAll(),
+    new StaveNote({ keys: ['c/4', 'e/4', 'a/4', 'b/4'], duration: 'w' }),
+    new StaveNote({ keys: ['a/4', 'b/4', 'c/5'], duration: '4', stem_direction: 1 }),
+    new StaveNote({ keys: ['g/4', 'a/4', 'b/4'], duration: '4', stem_direction: -1 }),
+    new StaveNote({ keys: ['e/4', 'f/4', 'b/4', 'c/5'], duration: '4' }),
     new StaveNote({
       keys: ['g/4', 'a/4', 'd/5', 'e/5', 'g/5'],
       duration: '4',
       stem_direction: -1,
-    }).addDotToAll(),
-    new StaveNote({ keys: ['g/4', 'b/4', 'd/5', 'e/5'], duration: '4', stem_direction: -1 }).addDotToAll(),
-    new StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4', stem_direction: 1 }).addDotToAll(),
-    new StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addDotToAll()
-      .addDotToAll(),
+    }),
+    new StaveNote({ keys: ['g/4', 'b/4', 'd/5', 'e/5'], duration: '4', stem_direction: -1 }),
+    new StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4', stem_direction: 1 }),
+    new StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' }),
+
     new StaveNote({
       keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'],
       duration: '16',
       stem_direction: -1,
-    })
-      .addDotToAll()
-      .addDotToAll()
-      .addDotToAll(),
-    new StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: 1 })
-      .addDotToAll()
-      .addDotToAll()
-      .addDotToAll(),
+    }),
+
+    new StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: 1 }),
+
     new StaveNote({
       keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'f/5'],
       duration: '16',
       stem_direction: 1,
-    }).addDotToAll(),
+    }),
     new StaveNote({
       keys: ['e/4', 'g/4', 'a/4', 'b/4', 'c/5'],
       duration: '16',
       stem_direction: 1,
-    }).addDotToAll(),
-    new StaveNote({ keys: ['e/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 }).addDotToAll(),
+    }),
+    new StaveNote({ keys: ['e/4', 'a/4', 'b/4', 'c/5'], duration: '16', stem_direction: 1 }),
   ];
+  Dot.buildAndAttach(notes, { all: true });
+  Dot.buildAndAttach([notes[7], notes[8], notes[9]], { all: true });
+  Dot.buildAndAttach([notes[8], notes[9]], { all: true });
 
   const beam = new Beam(notes.slice(notes.length - 2));
 
@@ -112,36 +111,32 @@ function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void 
   const stave = new Stave(30, 45, 700).setContext(ctx).draw();
 
   const notes1 = [
-    new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 }).addDotToAll().addDotToAll(),
-    new StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
-      .addDot(0)
-      .addDot(0)
-      .addDot(1)
-      .addDot(1)
-      .addDot(2)
-      .addDot(2)
-      .addDot(2),
-    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
-      .addDotToAll()
-      .addDotToAll()
-      .addDot(0),
-    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
-      .addDotToAll()
-      .addDotToAll()
-      .addDot(0),
-    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
-      .addDotToAll()
-      .addDotToAll()
-      .addDot(0),
+    new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 }),
+    new StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 }),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 }),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 }),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 }),
   ];
+  Dot.buildAndAttach([notes1[0], notes1[2], notes1[3], notes1[4]], { all: true });
+  Dot.buildAndAttach([notes1[0], notes1[2], notes1[3], notes1[4]], { all: true });
+  Dot.buildAndAttach([notes1[1]], { index: 0 });
+  Dot.buildAndAttach([notes1[1]], { index: 0 });
+  Dot.buildAndAttach([notes1[1]], { index: 1 });
+  Dot.buildAndAttach([notes1[1]], { index: 1 });
+  Dot.buildAndAttach([notes1[1]], { index: 2 });
+  Dot.buildAndAttach([notes1[1]], { index: 2 });
+  Dot.buildAndAttach([notes1[1]], { index: 2 });
+  Dot.buildAndAttach([notes1[2], notes1[3], notes1[4]]);
 
   const notes2 = [
-    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 }).addDotToAll(),
-    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll().addDotToAll(),
-    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll(),
-    new StaveNote({ keys: ['d/5', 'g/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll(),
-    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll(),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 }),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }),
+    new StaveNote({ keys: ['d/5', 'g/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }),
   ];
+  Dot.buildAndAttach(notes2, { all: true });
+  Dot.buildAndAttach([notes2[1]], { all: true });
 
   const voice1 = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes1);
   const voice2 = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes2);
