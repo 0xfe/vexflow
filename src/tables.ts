@@ -155,6 +155,7 @@ const validNoteTypes: Record<string, { name: string }> = {
   h: { name: 'harmonic' },
   m: { name: 'muted' },
   s: { name: 'slash' },
+  g: { name: 'ghost' },
 };
 
 const customNoteHeads: Record<string, { code: string }> = {
@@ -564,7 +565,10 @@ export class Tables {
    */
   static currentMusicFont(): Font {
     if (Tables.MUSIC_FONT_STACK.length === 0) {
-      throw new RuntimeError('NoFonts', 'The font stack is empty. Call: Flow.setMusicFont(...fontNames).');
+      throw new RuntimeError(
+        'NoFonts',
+        'The font stack is empty. See: await Flow.fetchMusicFont(...); Flow.setMusicFont(...).'
+      );
     } else {
       return Tables.MUSIC_FONT_STACK[0];
     }
@@ -888,8 +892,6 @@ const durationCodes: Record<string, any> = {
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Tables.STEM_HEIGHT,
-      stem_down_extension: -Tables.STEM_HEIGHT,
       tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
       tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
       dot_shiftY: 0,
@@ -935,6 +937,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadDoubleWhole',
+      },
     },
   },
 
@@ -943,8 +949,6 @@ const durationCodes: Record<string, any> = {
       stem: false,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: -Tables.STEM_HEIGHT,
-      stem_down_extension: -Tables.STEM_HEIGHT,
       tabnote_stem_up_extension: -Tables.STEM_HEIGHT,
       tabnote_stem_down_extension: -Tables.STEM_HEIGHT,
       dot_shiftY: 0,
@@ -990,6 +994,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadWhole',
+      },
     },
   },
 
@@ -998,8 +1006,6 @@ const durationCodes: Record<string, any> = {
       stem: true,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: 0,
-      stem_down_extension: 0,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1046,6 +1052,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadHalf',
+      },
     },
   },
 
@@ -1054,8 +1064,6 @@ const durationCodes: Record<string, any> = {
       stem: true,
       stem_offset: 0,
       flag: false,
-      stem_up_extension: 0,
-      stem_down_extension: 0,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1103,6 +1111,10 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
@@ -1112,10 +1124,9 @@ const durationCodes: Record<string, any> = {
       stem_offset: 0,
       flag: true,
       beam_count: 1,
+      stem_beam_extension: 0,
       code_flag_upstem: 'flag8thUp',
       code_flag_downstem: 'flag8thDown',
-      stem_up_extension: 0,
-      stem_down_extension: 0,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1164,19 +1175,22 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
   16: {
     common: {
       beam_count: 2,
+      stem_beam_extension: 0,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag16thUp',
       code_flag_downstem: 'flag16thDown',
-      stem_up_extension: 0,
-      stem_down_extension: 0,
       tabnote_stem_up_extension: 0,
       tabnote_stem_down_extension: 0,
       dot_shiftY: 0,
@@ -1225,19 +1239,22 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
   32: {
     common: {
       beam_count: 3,
+      stem_beam_extension: 7.5,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag32ndUp',
       code_flag_downstem: 'flag32ndDown',
-      stem_up_extension: 9,
-      stem_down_extension: 9,
       tabnote_stem_up_extension: 8,
       tabnote_stem_down_extension: 5,
       dot_shiftY: 0,
@@ -1286,19 +1303,22 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
   64: {
     common: {
       beam_count: 4,
+      stem_beam_extension: 15,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag64thUp',
       code_flag_downstem: 'flag64thDown',
-      stem_up_extension: 13,
-      stem_down_extension: 13,
       tabnote_stem_up_extension: 12,
       tabnote_stem_down_extension: 9,
       dot_shiftY: 0,
@@ -1347,19 +1367,22 @@ const durationCodes: Record<string, any> = {
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
       },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
+      },
     },
   },
 
   128: {
     common: {
       beam_count: 5,
+      stem_beam_extension: 22.5,
       stem: true,
       stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag128thUp',
       code_flag_downstem: 'flag128thDown',
-      stem_up_extension: 22,
-      stem_down_extension: 22,
       tabnote_stem_up_extension: 21,
       tabnote_stem_down_extension: 18,
       dot_shiftY: 0,
@@ -1407,6 +1430,10 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
+      },
+      g: {
+        // Ghostnote
+        code_head: 'noteheadBlack',
       },
     },
   },

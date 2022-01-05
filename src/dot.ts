@@ -3,11 +3,15 @@
 //
 // This class implements dot modifiers for notes.
 
+import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { isStaveNote } from './stavenote';
+import { isCategory } from './typeguard';
 import { RuntimeError } from './util';
+
+export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
 
 export class Dot extends Modifier {
   static get CATEGORY(): string {
@@ -36,10 +40,12 @@ export class Dot extends Modifier {
       if (isStaveNote(note)) {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
-        shift = note.getRightDisplacedHeadPx();
-      } else if (isTabNote(note)) {
+        // consider right displaced head with no previous modifier
+        if (right_shift === 0) shift = note.getRightDisplacedHeadPx();
+        else shift = right_shift;
+      } else if (note.getCategory() === 'TabNote') {
         props = { line: 0.5 }; // Shim key props for dot placement
-        shift = 0;
+        shift = right_shift;
       } else {
         // note object is not StaveNote or TabNote.
         throw new RuntimeError('Internal', 'Unexpected instance.');
@@ -140,7 +146,7 @@ export class Dot extends Modifier {
     const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
     // Set the starting y coordinate to the base of the stem for TabNotes.
-    if (isTabNote(note)) {
+    if (note.getCategory() === 'TabNote') {
       start.y = note.getStemExtents().baseY;
     }
 

@@ -1,7 +1,7 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RenderContext } from './rendercontext';
+// Note: Keep this module free of imports to reduce the chance of circular dependencies.
 
 /** `RuntimeError` will be thrown by VexFlow classes in case of error. */
 export class RuntimeError extends Error {
@@ -12,7 +12,9 @@ export class RuntimeError extends Error {
   }
 }
 
-export function globalObject(): typeof globalThis {
+/** VexFlow can be used outside of the browser (e.g., Node) where `window` may not be defined. */
+// eslint-disable-next-line
+export function globalObject(): typeof globalThis & any {
   if (typeof globalThis !== 'undefined') {
     return globalThis;
   }
@@ -67,24 +69,6 @@ export function midLine(a: number, b: number): number {
     mid_line = roundN(mid_line * 10, 5) / 10;
   }
   return mid_line;
-}
-
-/**
- * Draw a tiny dot marker on the specified canvas. A great debugging aid.
- * @param ctx canvas context
- * @param x dot x coordinate
- * @param y dot y coordinate
- */
-export function drawDot(ctx: RenderContext, x: number, y: number, color = '#55'): void {
-  ctx.save();
-  ctx.setFillStyle(color);
-
-  // draw a circle
-  ctx.beginPath();
-  ctx.arc(x, y, 3, 0, Math.PI * 2, true);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
 }
 
 /**

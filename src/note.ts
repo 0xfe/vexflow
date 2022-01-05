@@ -1,19 +1,24 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Accidental } from './accidental';
 import { Beam } from './beam';
+import { Dot } from './dot';
 import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
-import { RenderContext } from './rendercontext';
+import { drawDot, RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { defined, drawDot, RuntimeError } from './util';
+import { isCategory } from './typeguard';
+import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
+
+export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);
 
 export interface KeyProps {
   stem_down_x_offset: number;
@@ -556,6 +561,47 @@ export abstract class Note extends Tickable {
     this.modifiers.push(modifier);
     this.preFormatted = false;
     return this;
+  }
+
+  // Helper function to add an accidental to a key
+  addAccidental(index: number, accidental: Modifier): this {
+    return this.addModifier(accidental, index);
+  }
+
+  // Helper function to add an articulation to a key
+  addArticulation(index: number, articulation: Modifier): this {
+    return this.addModifier(articulation, index);
+  }
+
+  // Helper function to add an annotation to a key
+  addAnnotation(index: number, annotation: Modifier): this {
+    return this.addModifier(annotation, index);
+  }
+
+  // Helper function to add a dot on a specific key
+  addDot(index: number): this {
+    const dot = new Dot();
+    dot.setDotShiftY(this.glyph.dot_shiftY);
+    this.dots++;
+    return this.addModifier(dot, index);
+  }
+
+  // Convenience method to add dot to all keys in note
+  addDotToAll(): this {
+    for (let i = 0; i < this.keys.length; ++i) {
+      this.addDot(i);
+    }
+    return this;
+  }
+
+  // Get all accidentals in the `ModifierContext`
+  getAccidentals(): Accidental[] {
+    return this.checkModifierContext().getMembers(Accidental.CATEGORY) as Accidental[];
+  }
+
+  // Get all dots in the `ModifierContext`
+  getDots(): Dot[] {
+    return this.checkModifierContext().getMembers(Dot.CATEGORY) as Dot[];
   }
 
   /** Get the coordinates for where modifiers begin. */

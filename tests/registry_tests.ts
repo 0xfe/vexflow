@@ -5,7 +5,7 @@
 
 import { VexFlowTests } from './vexflow_test_helpers';
 
-import { EasyScore, Element, Factory, Registry, StaveNote } from '../src/';
+import { EasyScore, Element, Factory, Registry, StaveNote } from '../src/index';
 
 const RegistryTests = {
   Start(): void {

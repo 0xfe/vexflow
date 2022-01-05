@@ -20,22 +20,28 @@
     <h3>Petaluma</h3>
     <div id="outputPetaluma"></div>
     <p>View the source code for more information.</p>
+    <p>
+      <a href="core.html">Also see: core.html</a><br />
+      <a href="core-with-promise.html">Also see: core-with-promise.html</a>
+    </p>
     <!--
-        The standard VexFlow library (build/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
+        The standard VexFlow library (build/cjs/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
         It statically bundles all the music fonts, and selects Bravura as its default.
-        For this demo we include build/vexflow-debug.js, which is the non-minified version of vexflow.js.
-        The build/*.js files are compatible with <script> tags.
+        For this demo we include build/cjs/vexflow-debug.js, which is the non-minified version of vexflow.js.
+        The build/cjs/*.js files are compatible with <script> tags.
         The build/esm/*.js files are compatible with ESM import statements.
     -->
-    <script src="../../build/vexflow-debug.js"></script>
+    <script src="../../build/cjs/vexflow.js"></script>
     <script>
-      console.log(Vex);
-      console.log('VexFlow BUILD ' + Vex.Flow.BUILD);
+      const VF = Vex.Flow;
+
+      console.log(VF.BUILD);
+      console.log('VexFlow BUILD ' + JSON.stringify(VF.BUILD));
 
       {
         // Calling setMusicFont() here is optional, since Bravura is the default font.
-        Vex.Flow.setMusicFont('Bravura');
-        const factory = new Vex.Flow.Factory({
+        VF.setMusicFont('Bravura');
+        const factory = new VF.Factory({
           renderer: { elementId: 'outputBravura', width: 500, height: 130 },
         });
         const score = factory.EasyScore();
@@ -58,8 +64,8 @@
         // If you change fonts between different voices / staves, but use the same Factory, it won't do what you expect.
         // That's because a single Factory has particular ordering for drawing all of its internal members.
         // See `Factory.draw()` in factory.ts for more details.
-        Vex.Flow.setMusicFont('Gonville');
-        const factory = new Vex.Flow.Factory({
+        VF.setMusicFont('Gonville');
+        const factory = new VF.Factory({
           renderer: { elementId: 'outputGonville', width: 500, height: 130 },
         });
         const score = factory.EasyScore();
@@ -77,8 +83,8 @@
       }
 
       {
-        Vex.Flow.setMusicFont('Petaluma');
-        const factory = new Vex.Flow.Factory({
+        VF.setMusicFont('Petaluma');
+        const factory = new VF.Factory({
           renderer: { elementId: 'outputPetaluma', width: 500, height: 130 },
         });
         const score = factory.EasyScore();

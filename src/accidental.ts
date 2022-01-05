@@ -5,13 +5,16 @@
 
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
+import { isGraceNote } from './gracenote';
+import { isGraceNoteGroup } from './gracenotegroup';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Music } from './music';
 import { Note } from './note';
+import { isStaveNote } from './stavenote';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
-import { isCategory, isGraceNote, isGraceNoteGroup, isStaveNote } from './typeguard';
+import { isCategory } from './typeguard';
 import { defined, log } from './util';
 import { Voice } from './voice';
 

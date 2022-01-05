@@ -12,16 +12,18 @@
     <p>This page shows how to include VexFlow via an HTML &lt;script&gt; tag. View the source code.</p>
     <p>VexFlow Build: <span id="info"></span></p>
     <p>See also: <a href="module.html">ES Modules</a></p>
-    <script src="../../build/vexflow-debug.js"></script>
+    <script src="../../build/cjs/vexflow.js"></script>
     <script>
-      document.querySelector('#info').innerText = Vex.Flow.BUILD;
+      const { Factory, Flow } = Vex.Flow;
+      const { VERSION, ID, DATE } = Flow.BUILD;
+      document.querySelector('#info').innerText = VERSION + ' / ' + ID + ' / ' + DATE;
 
-      const vf = new Vex.Flow.Factory({
+      const factory = new Factory({
         renderer: { elementId: 'output', width: 500, height: 200 },
       });
 
-      const score = vf.EasyScore();
-      const system = vf.System();
+      const score = factory.EasyScore();
+      const system = factory.System();
 
       system
         .addStave({
@@ -33,7 +35,7 @@
         .addClef('treble')
         .addTimeSignature('4/4');
 
-      vf.draw();
+      factory.draw();
     </script>
   </body>
 </html>

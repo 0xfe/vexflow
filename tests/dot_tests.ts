@@ -6,6 +6,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Beam } from '../src/beam';
+import { Formatter } from '../src/formatter';
 import { ModifierContext } from '../src/modifiercontext';
 import { Note } from '../src/note';
 import { RenderContext } from '../src/rendercontext';
@@ -13,6 +14,7 @@ import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
 import { TickContext } from '../src/tickcontext';
+import { Voice } from '../src/voice';
 
 const DotTests = {
   Start(): void {
@@ -102,80 +104,56 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ok(true, 'Full Dot');
 }
 
-/**
- * Helper function for the multiVoice test case below.
- */
-function showTwoNotes(note1: StaveNote, note2: StaveNote, stave: Stave, ctx: RenderContext, x: number): void {
-  const modifierContext = new ModifierContext();
-  note1.setStave(stave).addToModifierContext(modifierContext);
-  note2.setStave(stave).addToModifierContext(modifierContext);
-
-  // Note: The order in which we call preformat() and setX(x) are different from showOneNote().
-  new TickContext().addTickable(note1).addTickable(note2).setX(x).preFormat();
-
-  note1.setContext(ctx).draw();
-  note2.setContext(ctx).draw();
-
-  Note.plotMetrics(ctx, note1, 180);
-  Note.plotMetrics(ctx, note2, 20);
-}
-
 function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 750, 300);
   ctx.setFillStyle('#221');
   ctx.setStrokeStyle('#221');
 
-  const stave = new Stave(30, 40, 700).setContext(ctx).draw();
+  const stave = new Stave(30, 45, 700).setContext(ctx).draw();
 
-  let note1 = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
-    .addDotToAll()
-    .addDotToAll();
+  const notes1 = [
+    new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 }).addDotToAll().addDotToAll(),
+    new StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
+      .addDot(0)
+      .addDot(0)
+      .addDot(1)
+      .addDot(1)
+      .addDot(2)
+      .addDot(2)
+      .addDot(2),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
+      .addDotToAll()
+      .addDotToAll()
+      .addDot(0),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
+      .addDotToAll()
+      .addDotToAll()
+      .addDot(0),
+    new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
+      .addDotToAll()
+      .addDotToAll()
+      .addDot(0),
+  ];
 
-  let note2 = new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 }).addDotToAll();
+  const notes2 = [
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 }).addDotToAll(),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll().addDotToAll(),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll(),
+    new StaveNote({ keys: ['d/5', 'g/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll(),
+    new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll(),
+  ];
 
-  showTwoNotes(note1, note2, stave, ctx, 60);
+  const voice1 = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes1);
+  const voice2 = new Voice().setMode(Voice.Mode.SOFT).addTickables(notes2);
+  const formatter = new Formatter().joinVoices([voice1, voice2]);
+  formatter.format([voice1, voice2], 700);
+  voice1.draw(ctx, stave);
+  voice2.draw(ctx, stave);
 
-  note1 = new StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
-    .addDot(0)
-    .addDot(0)
-    .addDot(1)
-    .addDot(1)
-    .addDot(2)
-    .addDot(2)
-    .addDot(2);
+  notes1.forEach((note) => Note.plotMetrics(ctx, note, 190));
+  notes2.forEach((note) => Note.plotMetrics(ctx, note, 20));
 
-  note2 = new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll().addDotToAll();
-
-  showTwoNotes(note1, note2, stave, ctx, 150);
-
-  note1 = new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
-    .addDotToAll()
-    .addDotToAll()
-    .addDot(0);
-
-  note2 = new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 }).addDotToAll();
-
-  showTwoNotes(note1, note2, stave, ctx, 250);
-
-  note1 = new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
-    .addDotToAll()
-    .addDotToAll()
-    .addDot(0);
-
-  note2 = new StaveNote({ keys: ['d/5', 'g/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll();
-
-  showTwoNotes(note1, note2, stave, ctx, 350);
-
-  note1 = new StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '8', stem_direction: -1 })
-    .addDotToAll()
-    .addDotToAll()
-    .addDot(0);
-
-  note2 = new StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '8', stem_direction: 1 }).addDotToAll();
-
-  showTwoNotes(note1, note2, stave, ctx, 450);
-
-  VexFlowTests.plotLegendForNoteWidth(ctx, 620, 180);
+  VexFlowTests.plotLegendForNoteWidth(ctx, 620, 220);
 
   ok(true, 'Full Dot');
 }

@@ -3,7 +3,8 @@
 //
 // VexFlow Test Support Library
 
-import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/';
+import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/index';
+
 import { Assert } from './types/qunit';
 
 /* eslint-disable */
@@ -89,6 +90,11 @@ if (!global.$) {
 
 export type TestFunction = (options: TestOptions, contextBuilder: ContextBuilder) => void;
 
+export type RunOptions = {
+  jobs: number;
+  job: number;
+};
+
 /** Allow `name` to be used inside file names. */
 function sanitizeName(name: string): string {
   return name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -127,9 +133,36 @@ export class VexFlowTests {
     VexFlowTests.tests.push(test);
   }
 
+  static parseJobOptions(runOptions: RunOptions | undefined): RunOptions {
+    let { jobs, job } = runOptions || { jobs: 1, job: 0 };
+    if (window) {
+      const { location } = window;
+      if (location) {
+        const sps = new URLSearchParams(location.search);
+        const jobsParam = sps.get('jobs');
+        const jobParam = sps.get('job');
+        if (jobsParam) {
+          jobs = parseInt(jobsParam, 10);
+        }
+        if (jobParam) {
+          job = parseInt(jobParam, 10);
+        }
+      }
+    }
+    return {
+      jobs,
+      job,
+    };
+  }
+
   // flow.html calls this to invoke all the tests.
-  static run(): void {
-    VexFlowTests.tests.forEach((test) => test.Start());
+  static run(runOptions: RunOptions | undefined): void {
+    const { jobs, job } = VexFlowTests.parseJobOptions(runOptions);
+    VexFlowTests.tests.forEach((test, idx: number) => {
+      if (jobs === 1 || idx % jobs === job) {
+        test.Start();
+      }
+    });
   }
 
   // See: generate_png_images.js

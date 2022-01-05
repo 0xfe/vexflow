@@ -2,53 +2,6 @@
 // Author: Ron B. Yeh
 // MIT License
 
-import { Dot } from './dot';
-import { GraceNote } from './gracenote';
-import { GraceNoteGroup } from './gracenotegroup';
-import { Note } from './note';
-import { Barline } from './stavebarline';
-import { StaveNote } from './stavenote';
-import { StemmableNote } from './stemmablenote';
-import { TabNote } from './tabnote';
-import { globalObject } from './util';
-
-// eslint-disable-next-line
-export function isHTMLCanvas(element: any): element is HTMLCanvasElement {
-  if (!element) return false;
-
-  const global = globalObject();
-  return (
-    // It's either an instance of the HTMLCanvasElement class,
-    (typeof global.HTMLCanvasElement === 'function' && element instanceof global.HTMLCanvasElement) ||
-    // OR it's pretending to be a <canvas> element. Good enough!
-    // Do not rely on .tagName, because node-canvas doesn't provide a tagName.
-    (typeof element.getContext === 'function' && typeof element.toDataURL === 'function')
-  );
-}
-
-// eslint-disable-next-line
-export function isHTMLDiv(element: any): element is HTMLDivElement {
-  if (!element) return false;
-
-  const global = globalObject();
-  return (
-    // It's either an instance of the HTMLDivElement class.
-    (typeof global.HTMLDivElement === 'function' && element instanceof global.HTMLDivElement) ||
-    // OR it's pretending to be a <div>. See: svgcontext.ts.
-    (typeof element.appendChild === 'function' && typeof element.style === 'object')
-  );
-}
-
-// Helper functions for checking an object's type, via `instanceof` and `obj.constructor.CATEGORY`.
-export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);
-export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, StemmableNote);
-export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, StaveNote);
-export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNote);
-export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, GraceNote);
-export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, GraceNoteGroup);
-export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
-export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Barline);
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */

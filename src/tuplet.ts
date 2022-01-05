@@ -273,25 +273,29 @@ export class Tuplet extends Element {
       // y_pos = first_note.getStemExtents().topY - 10;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const top_y =
-          this.notes[i].getStemDirection() === Stem.UP
-            ? this.notes[i].getStemExtents().topY - 10
-            : this.notes[i].getStemExtents().baseY - 20;
+        if (this.notes[i].hasStem() || this.notes[i].isRest()) {
+          const top_y =
+            this.notes[i].getStemDirection() === Stem.UP
+              ? this.notes[i].getStemExtents().topY - 10
+              : this.notes[i].getStemExtents().baseY - 20;
 
-        if (top_y < y_pos) {
-          y_pos = top_y;
+          if (top_y < y_pos) {
+            y_pos = top_y;
+          }
         }
       }
     } else {
       y_pos = first_note.checkStave().getYForLine(4) + 20;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const bottom_y =
-          this.notes[i].getStemDirection() === Stem.UP
-            ? this.notes[i].getStemExtents().baseY + 20
-            : this.notes[i].getStemExtents().topY + 10;
-        if (bottom_y > y_pos) {
-          y_pos = bottom_y;
+        if (this.notes[i].hasStem() || this.notes[i].isRest()) {
+          const bottom_y =
+            this.notes[i].getStemDirection() === Stem.UP
+              ? this.notes[i].getStemExtents().baseY + 20
+              : this.notes[i].getStemExtents().topY + 10;
+          if (bottom_y > y_pos) {
+            y_pos = bottom_y;
+          }
         }
       }
     }

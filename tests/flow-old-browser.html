@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- 
+  This page works with older browsers that do not support:
+  - top level await (e.g., Safari 13.0.2) 
+  - nullish coalescing operator (e.g., Safari 13.0.2)
+  This page is not guaranteed to be maintained, and will be removed entirely in the future.
+ -->
+<html>
+  <head>
+    <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
+    <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div style="text-align: center">
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <div>
+        <h2>[ <a href="https://vexflow.com">Home</a> ] [ <a href="https://github.com/0xfe/vexflow">GitHub</a> ]</h2>
+        <h3>
+          See the: <a id="vex-src" target="_blank"></a>. Don't forget to run the
+          <a href="https://github.com/0xfe/vexflow/wiki/Visual-Regression-Tests">Visual Regression Tests</a>!
+        </h3>
+      </div>
+      <p>&nbsp;</p>
+      <div id="vexflow_testoutput"></div>
+      <p>&nbsp;</p>
+    </div>
+    <script type="module">
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.onload = resolve;
+          script.onerror = reject;
+          script.src = url;
+          document.getElementsByTagName('head')[0].appendChild(script);
+        });
+      }
+
+      // Support a query param to choose which VexFlow version to load.
+      // ver=(build/cjs | reference | releases | etc...)
+      // If omitted, `ver` defaults to 'build/cjs'.
+      // `ver` can also specify a version hosted on unpkg.com / jsdelivr.com:
+      // ver=unpkg@3.0.9     => https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
+      // ver=unpkg@1.2.77    => https://unpkg.com/vexflow@1.2.77/releases/vexflow-debug.js
+      // ver=jsdelivr@4.0.0  => https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
+      // ver=jsdelivr@1.2.90 => https://cdn.jsdelivr.net/npm/vexflow@1.2.90/releases/vexflow-debug.js
+      const params = new URLSearchParams(window.location.search);
+      const ver = params.get('ver') || 'build/cjs';
+
+      let vexURL;
+      let testsURL;
+      let vexPlusTestsURL;
+      let isVersionFourOrNewer = true;
+
+      // Determine if we are loading VexFlow from a CDN.
+      let cdnURLPath;
+      if (ver.includes('unpkg')) {
+        cdnURLPath = 'https://unpkg.com/';
+      } else if (ver.includes('jsdelivr')) {
+        cdnURLPath = 'https://cdn.jsdelivr.net/npm/';
+      }
+      // If we are loading from a CDN, build the URLs.
+      if (typeof cdnURLPath !== 'undefined') {
+        const version = ver.split('@')[1];
+        if (parseFloat(version) < 4) {
+          isVersionFourOrNewer = false;
+          vexURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-debug.js`;
+          testsURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-tests.js`;
+        } else {
+          // VexFlow 4 moved the build output from releases/ to build/.
+          vexURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug.js`;
+          vexPlusTestsURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug-with-tests.js`;
+        }
+      } else {
+        // We are NOT loading from a CDN.
+        // We are loading from the local filesystem (vexflow/build/ | vexflow/reference | vexflow/releases/).
+        const path = ver;
+
+        // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
+        if (path === 'releases') {
+          isVersionFourOrNewer = false;
+        }
+        vexURL = '../' + path + '/vexflow-debug.js'; // version <= 3.0.9
+        testsURL = '../' + path + '/vexflow-tests.js'; // version <= 3.0.9
+        vexPlusTestsURL = '../' + path + '/vexflow-debug-with-tests.js'; // version >= 4.0.0 combined both files.
+      }
+
+      // Display which VexFlow version we loaded.
+      const srcLink = document.getElementById('vex-src');
+      srcLink.href = vexURL;
+      srcLink.innerText = `VexFlow Source [${ver}]`;
+
+      let loadVexFlow;
+      if (isVersionFourOrNewer) {
+        // When loading version >= 4.0.0, only load vexflow-debug-with-tests.js
+        loadVexFlow = () => loadScript(vexPlusTestsURL);
+      } else {
+        // When loading versions <= 3.0.9, load vexflow-debug.js and then vexflow-tests.js
+        loadVexFlow = () => loadScript(vexURL).then(() => loadScript(testsURL));
+      }
+
+      new Promise((resolve, reject) => {
+        if (isVersionFourOrNewer) {
+          resolve(undefined); // DO NOTHING
+        } else {
+          // 3.0.9 uses module.exports in tabstave_tests.js.
+          window.module = {};
+          // 3.0.9 depends on jQuery.
+          resolve(loadScript('https://code.jquery.com/jquery-3.6.0.slim.min.js'));
+        }
+      })
+        .then(() => loadVexFlow())
+        .then(() => {
+          // Versions 4.0.0 and newer have support for preloading web fonts.
+          // Versions 3.0.9 and older do not support this feature.
+          if (Vex.Flow.Font.loadWebFonts) {
+            return Vex.Flow.Font.loadWebFonts();
+          }
+        })
+        // Load qunit.js as late as possible to avoid a race condition!
+        // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
+        .then(() => loadScript('support/qunit.js'))
+        .then(() => {
+          // Show only failed tests.
+          QUnit.config.hidepassed = true;
+          QUnit.config.noglobals = true;
+
+          Vex.Flow.Test.run();
+        });
+    </script>
+  </body>
+</html>

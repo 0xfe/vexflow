@@ -84,6 +84,17 @@ export const GonvilleMetrics = {
     },
   },
 
+  parenthesis: {
+    default: {
+      point: 39,
+      width: 7,
+    },
+    gracenote: {
+      point: (39 * 3) / 5,
+      width: 3,
+    },
+  },
+
   pedalMarking: {
     up: {
       point: 40,
@@ -179,12 +190,24 @@ export const GonvilleMetrics = {
       },
       flag32ndDown: {
         shiftX: -0.16,
+        shiftY: 9,
       },
       flag64thDown: {
         shiftX: -0.16,
+        shiftY: 13,
       },
       flag128thDown: {
         shiftX: -0.16,
+        shiftY: 22,
+      },
+      flag32ndUp: {
+        shiftY: -9,
+      },
+      flag64thUp: {
+        shiftY: -13,
+      },
+      flag128thUp: {
+        shiftY: -22,
       },
     },
     textNote: {

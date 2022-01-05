@@ -279,12 +279,12 @@ function stemExtensionPitch(): void {
       'For wide staff ' + keys.toString() + ' StemExtension must be ' + expectedStemExtension * 2
     );
 
-    const whole_note = new StaveNote({ keys: keys, duration: 'w' });
-    equal(
-      whole_note.getStemExtension(),
-      -1 * Flow.STEM_HEIGHT,
-      'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * Flow.STEM_HEIGHT'
-    );
+    //    const whole_note = new StaveNote({ keys: keys, duration: 'w' });
+    //    equal(
+    //      whole_note.getStemExtension(),
+    //      -1 * Flow.STEM_HEIGHT,
+    //      'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * Flow.STEM_HEIGHT'
+    //    );
   });
 }
 

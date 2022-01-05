@@ -20,7 +20,24 @@ const GraceNoteTests = {
     run('Grace Note Basic', basic);
     run('Grace Note Basic with Slurs', basicSlurred);
     run('Grace Note Stem', stem);
-    run('Grace Note Stem with Beams', stemWithBeamed);
+    run('Grace Note Stem with Beams 1', stemWithBeamed, {
+      keys1: ['g/4'],
+      stemDirection1: 1,
+      keys2: ['d/5'],
+      stemDirection2: -1,
+    });
+    run('Grace Note Stem with Beams 2', stemWithBeamed, {
+      keys1: ['a/3'],
+      stemDirection1: 1,
+      keys2: ['a/5'],
+      stemDirection2: -1,
+    });
+    run('Grace Note Stem with Beams 3', stemWithBeamed, {
+      keys1: ['c/4'],
+      stemDirection1: 1,
+      keys2: ['c/6'],
+      stemDirection2: -1,
+    });
     run('Grace Note Slash', slash);
     run('Grace Note Slash with Beams', slashWithBeams);
     run('Grace Notes Multiple Voices', multipleVoices);
@@ -241,8 +258,8 @@ function stemWithBeamed(options: TestOptions): void {
 
   const beams: Beam[] = [];
   const voice = f.Voice().setStrict(false);
-  voice.addTickables(createBeamedNoteBlock(['g/4'], 1, beams));
-  voice.addTickables(createBeamedNoteBlock(['d/5'], -1, beams));
+  voice.addTickables(createBeamedNoteBlock(options.params.keys1, options.params.stemDirection1, beams));
+  voice.addTickables(createBeamedNoteBlock(options.params.keys2, options.params.stemDirection2, beams));
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
