@@ -10,6 +10,7 @@ import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import {
   AnnotationVerticalJustify,
   Beam,
+  Dot,
   Font,
   FontStyle,
   FontWeight,
@@ -564,8 +565,7 @@ function tabBeamsDown(options: TestOptions): void {
     return tabNote;
   });
 
-  notes[1].addDot();
-  notes[1].addDot();
+  Dot.buildAndAttach([notes[1], notes[1]]);
 
   f.Beam({ notes: notes.slice(1, 7) });
   f.Beam({ notes: notes.slice(8, 11) });

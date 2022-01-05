@@ -239,7 +239,6 @@ export abstract class Note extends Tickable {
     stroke_px: number;
   };
   protected duration: string;
-  protected dots: number;
   protected leftDisplacedHeadPx: number;
   protected rightDisplacedHeadPx: number;
   protected noteType: string;
@@ -274,7 +273,6 @@ export abstract class Note extends Tickable {
     this.keyProps = [];
 
     this.duration = parsedNoteStruct.duration;
-    this.dots = parsedNoteStruct.dots;
     this.noteType = parsedNoteStruct.type;
     this.customTypes = parsedNoteStruct.customTypes;
 
@@ -494,7 +492,7 @@ export abstract class Note extends Tickable {
 
   /** Accessor to isDotted. */
   isDotted(): boolean {
-    return this.dots > 0;
+    return this.getModifiersByType('Dot').length > 0;
   }
 
   /** Accessor to hasStem. */
