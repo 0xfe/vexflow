@@ -117,7 +117,8 @@
     "webpack": "^5.65.0"
   },
   "scripts": {
-    "start": "grunt stage",
+    "start": "npm run build && npx http-server",
+    "build": "grunt",
     "reference": "grunt reference",
     "lint": "grunt eslint",
     "build:esm": "grunt buildESM",
