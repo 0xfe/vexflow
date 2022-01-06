@@ -9,13 +9,13 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { ModifierPosition } from '../src';
 import { Annotation } from '../src/annotation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
 import { Flow } from '../src/flow';
 import { Font, FontStyle, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
+import { ModifierPosition } from '../src/modifier';
 import { Registry } from '../src/registry';
 import { ContextBuilder } from '../src/renderer';
 import { Stave } from '../src/stave';
