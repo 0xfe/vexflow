@@ -109,6 +109,7 @@
     "puppeteer": "^13.0.1",
     "qunit": "^2.17.2",
     "recursive-copy": "^2.0.13",
+    "release-it": "^14.11.8",
     "sharp": "^0.29.3",
     "svg2pdf.js": "^2.2.0",
     "ts-loader": "^9.2.6",
@@ -130,7 +131,12 @@
     "test:reference": "grunt test && npm run generate:current && npm run generate:reference && npm run diff:reference",
     "cache:save:reference": "if [ -d ./build/images/reference ]; then rm -rf ./reference/images && mv ./build/images/reference ./reference/images; fi;",
     "cache:restore:reference": "if [ -d ./reference/images ]; then mv ./reference/images ./build/images/reference; else npm run generate:reference; fi;",
-    "test:reference:cache": "npm run cache:save:reference && grunt test && npm run generate:current && npm run cache:restore:reference && npm run diff:reference"
+    "test:reference:cache": "npm run cache:save:reference && grunt test && npm run generate:current && npm run cache:restore:reference && npm run diff:reference",
+    "release": "release-it",
+    "release-alpha": "release-it --preRelease=alpha",
+    "release-beta": "release-it --preRelease=beta",
+    "release-rc": "release-it --preRelease=rc",
+    "release-dry-run": "release-it --dry-run"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [

@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "before:init": [],
+    "after:bump": [
+      "echo add build/ folder",
+      "git add -f build/",
+      "git commit -m 'Add build/ for release version ${version}.'"
+    ],
+    "after:npm:release": [],
+    "after:git:release": [],
+    "after:github:release": [],
+    "after:release": [
+      "echo Successfully released ${name} ver. ${version} to ${repo.repository}.",
+      "echo remove build/ folder",
+      "git rm -r build/",
+      "git commit -m 'Remove build/ after the release.'",
+      "git push"
+    ]
+  },
+  "git": {
+    "changelog": false,
+    "commitMessage": "release VexFlow ${version}"
+  },
+  "github": {
+    "release": true
+  },
+  "npm": {
+    "publish": true
+  }
+}
