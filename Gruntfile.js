@@ -224,7 +224,7 @@ module.exports = (grunt) => {
   const watchOptions = {
     atBegin: true,
     spawn: true,
-    interrupt: true,
+    interrupt: false,
     debounceDelay: 800,
   };
 

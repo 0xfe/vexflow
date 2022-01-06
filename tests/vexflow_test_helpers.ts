@@ -5,15 +5,13 @@
 
 import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/index';
 
+import { globalObject } from '../src/util';
 import { Assert } from './types/qunit';
 
-/* eslint-disable */
+// eslint-disable-next-line
 declare const $: any;
-declare let global: any;
-if (typeof global === 'undefined') {
-  global = window ?? globalThis ?? this;
-}
-/* eslint-enable */
+
+const global = globalObject();
 
 export interface TestOptions {
   elementId: string;

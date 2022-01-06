@@ -52,6 +52,7 @@
       // ver=jsdelivr@1.2.90 => https://cdn.jsdelivr.net/npm/vexflow@1.2.90/releases/vexflow-debug.js
       const params = new URLSearchParams(window.location.search);
       const ver = params.get('ver') ?? 'build/cjs';
+      const useESM = params.get('esm') === 'true';
 
       let vexURL;
       let testsURL;
@@ -99,10 +100,24 @@
       srcLink.innerText = `VexFlow Source [${ver}]`;
 
       let loadVexFlow;
-      if (isVersionFourOrNewer) {
+      const isFileProtocol = window.location.protocol === 'file:';
+      if (useESM && isFileProtocol) {
+        console.warn('ES modules require a web server for testing!');
+      }
+      if (useESM && !isFileProtocol) {
+        console.log('LOADING ESM: VexFlow >= 4.0.0');
+        // This ESM branch only works if flow.html is accessed from a web server
+        // (e.g., `npx http-server` and browse to http://127.0.0.1:8080/tests/flow.html).
+        loadVexFlow = async () => {
+          const module = await import('../build/esm/entry/vexflow-debug-with-tests.js');
+          window.Vex = module.Vex;
+        };
+      } else if (isVersionFourOrNewer) {
+        console.log('LOADING CJS: VexFlow >= 4.0.0');
         // When loading version >= 4.0.0, only load vexflow-debug-with-tests.js
         loadVexFlow = () => loadScript(vexPlusTestsURL);
       } else {
+        console.log('LOADING CJS: VexFlow <= 3.0.9');
         // 3.0.9 depends on jQuery.
         await loadScript('https://code.jquery.com/jquery-3.6.0.slim.min.js');
         // 3.0.9 uses module.exports in tabstave_tests.js.
