@@ -99,6 +99,7 @@
     "grunt-eslint": "^24.0.0",
     "grunt-force-task": "^3.0.0",
     "grunt-git": "^1.1.1",
+    "grunt-open": "^0.2.4",
     "grunt-typedoc": "^0.2.4",
     "grunt-webpack": "^5.0.0",
     "jsdom": "^19.0.0",
@@ -108,8 +109,8 @@
     "prettier": "^2.5.1",
     "puppeteer": "^13.0.1",
     "qunit": "^2.17.2",
-    "sharp": "^0.29.3",
     "recursive-copy": "^2.0.13",
+    "sharp": "^0.29.3",
     "svg2pdf.js": "^2.2.0",
     "ts-loader": "^9.2.6",
     "typedoc": "^0.22.10",
@@ -117,20 +118,20 @@
     "webpack": "^5.65.0"
   },
   "scripts": {
-    "start": "grunt stage",
+    "start": "grunt",
     "reference": "grunt reference",
     "lint": "grunt eslint",
-    "build:esm": "grunt buildESM",
+    "build:esm": "grunt build:esm",
     "qunit": "grunt test",
     "generate:current": "node ./tools/generate_images.js build ./build/images/current ${VF_GENERATE_OPTIONS}",
     "generate:reference": "node ./tools/generate_images.js reference ./build/images/reference ${VF_GENERATE_OPTIONS}",
     "diff:reference": "./tools/visual_regression.sh reference",
     "get:releases": "node ./tools/get_releases.mjs",
-    "test": "npm run lint && npm run qunit && npm run generate:current",
-    "test:reference": "npm run lint && npm run qunit && npm run generate:current && npm run generate:reference && npm run diff:reference",
+    "test": "grunt test && npm run generate:current",
+    "test:reference": "grunt test && npm run generate:current && npm run generate:reference && npm run diff:reference",
     "cache:save:reference": "if [ -d ./build/images/reference ]; then rm -rf ./reference/images && mv ./build/images/reference ./reference/images; fi;",
     "cache:restore:reference": "if [ -d ./reference/images ]; then mv ./reference/images ./build/images/reference; else npm run generate:reference; fi;",
-    "test:reference:cache": "npm run cache:save:reference && npm run lint && npm run qunit && npm run generate:current && npm run cache:restore:reference && npm run diff:reference"
+    "test:reference:cache": "npm run cache:save:reference && grunt test && npm run generate:current && npm run cache:restore:reference && npm run diff:reference"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [

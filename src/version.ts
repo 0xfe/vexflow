@@ -1,3 +1,3 @@
 export const VERSION: string = '4.0.0';
-export const ID: string = '806f6abbacc9908136cc74b425982052218c0253';
-export const DATE: string = '2021-12-29T17:59:12.128Z';
+export const ID: string = 'ea20b0604b05912301c38417be14c55923a7192b';
+export const DATE: string = '2022-01-06T02:06:02.713Z';

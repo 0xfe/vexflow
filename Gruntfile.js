@@ -12,8 +12,10 @@
 //   grunt
 
 const path = require('path');
+const fs = require('fs');
+const http = require('http');
 const webpack = require('webpack');
-const child_process = require('child_process');
+const { execSync, spawn } = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const VER = require('./tools/generate_version_file'); // Make the src/version.ts file.
@@ -46,6 +48,29 @@ const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
+
+// While developing, you can speed up builds by temporarily commenting out one of the tasks below.
+const debugTargets = [
+  'webpack:buildDebug', // CJS debug library: vexflow-debug.js
+  'webpack:buildDebugWithTests', // CJS debug library: vexflow-debug-with-tests.js
+];
+// While developing, you can speed up builds by temporarily commenting out one of the tasks below.
+const productionTargets = [
+  'webpack:buildProdAllFonts', // CJS Production: vexflow.js
+  'webpack:buildProdBravuraOnly', // CJS production library: vexflow-bravura.js
+  'webpack:buildProdGonvilleOnly', // CJS production library: vexflow-gonville.js
+  'webpack:buildProdPetalumaOnly', // CJS production library: vexflow-petaluma.js
+  'webpack:buildProdNoFonts', // CJS production library: vexflow-core.js
+  'webpack:buildProdFontModuleBravura', // CJS production library: vexflow-font-bravura.js
+  'webpack:buildProdFontModulePetaluma', // CJS production library: vexflow-font-petaluma.js
+  'webpack:buildProdFontModuleGonville', // CJS production library: vexflow-font-gonville.js
+  'webpack:buildProdFontModuleCustom', // CJS production library: vexflow-font-custom.js
+];
+const allTargets = [
+  ...debugTargets,
+  ...productionTargets,
+  'build:esm', // ESM outputs individual JS files to vexflow/build/esm/.
+];
 
 // Global variable that will be set below.
 let BANNER;
@@ -189,21 +214,13 @@ module.exports = (grunt) => {
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
   const debugAllFonts = getConfig(VEX_DEBUG, DEVELOPMENT_MODE);
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, DEVELOPMENT_MODE);
-  const debugNoFonts = getConfig(VEX_CORE, DEVELOPMENT_MODE);
-
-  // See: https://webpack.js.org/configuration/watch/#watchoptionsignored
-  const watch = {
-    watch: true,
-    watchOptions: {
-      aggregateTimeout: 600 /* ms */,
-      ignored: ['**/node_modules'],
-    },
-  };
 
   const PACKAGE_JSON = grunt.file.readJSON('package.json');
+
   grunt.initConfig({
     pkg: PACKAGE_JSON,
     webpack: {
+      // Build targets for production.
       buildProdAllFonts: prodAllFonts,
       buildProdBravuraOnly: prodBravuraOnly,
       buildProdGonvilleOnly: prodGonvilleOnly,
@@ -213,38 +230,18 @@ module.exports = (grunt) => {
       buildProdFontModulePetaluma: prodFontModulePetaluma,
       buildProdFontModuleGonville: prodFontModuleGonville,
       buildProdFontModuleCustom: prodFontModuleCustom,
-
+      // Build targets for development / debugging.
       buildDebug: debugAllFonts,
-      buildDebugPlusTests: debugAllFontsWithTests,
-      buildDebugNoFonts: debugNoFonts,
-
-      watchProdAllFonts: { ...prodAllFonts, ...watch },
-      watchProdNoFonts: { ...prodNoFonts, ...watch },
-      watchProdBravuraOnly: { ...prodBravuraOnly, ...watch },
-      watchProdGonvilleOnly: { ...prodGonvilleOnly, ...watch },
-      watchProdPetalumaOnly: { ...prodPetalumaOnly, ...watch },
-
-      watchDebug: { ...debugAllFonts, ...watch },
-      watchDebugPlusTests: { ...debugAllFontsWithTests, ...watch },
-      watchDebugNoFonts: { ...debugNoFonts, ...watch },
+      buildDebugWithTests: debugAllFontsWithTests,
     },
     concurrent: {
       options: {
         logConcurrentOutput: true,
         indent: true,
       },
-      debug: [
-        // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-        'webpack:watchDebug',
-        'webpack:watchDebugPlusTests',
-      ],
-      production: [
-        // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-        'webpack:watchProdAllFonts',
-        'webpack:watchProdNoFonts',
-      ],
+      debug: [...debugTargets],
+      production: [...productionTargets],
     },
-
     eslint: {
       target: ['./src', './tests'],
       options: { fix: true },
@@ -252,13 +249,21 @@ module.exports = (grunt) => {
     qunit: {
       files: ['tests/flow-headless-browser.html'],
     },
+    open: {
+      flow_html: {
+        path: './tests/flow.html',
+      },
+      flow_localhost: {
+        path: 'http://127.0.0.1:8080/tests/flow.html?esm=true',
+      },
+    },
     copy: {
       reference: {
         files: [
           {
             expand: true,
             cwd: BUILD_DIR,
-            src: ['cjs/*.js', 'cjs/*.map'],
+            src: ['**'],
             dest: REFERENCE_DIR,
           },
         ],
@@ -282,103 +287,162 @@ module.exports = (grunt) => {
     },
   });
 
-  grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-typedoc');
-  grunt.loadNpmTasks('grunt-git');
-  grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-concurrent');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-force-task');
+  grunt.loadNpmTasks('grunt-git');
+  grunt.loadNpmTasks('grunt-open');
+  grunt.loadNpmTasks('grunt-typedoc');
+  grunt.loadNpmTasks('grunt-webpack');
 
   // Default tasks that run when you type `grunt`.
   grunt.registerTask(
     'default',
-    'Build VexFlow', //
+    'Build all vexflow targets.', //
     [
+      //
       'clean:build',
       'eslint',
-      'webpack:buildDebug',
-      'webpack:buildDebugPlusTests',
-      'webpack:buildProdAllFonts',
-      'webpack:buildProdBravuraOnly',
-      'webpack:buildProdGonvilleOnly',
-      'webpack:buildProdPetalumaOnly',
-      'webpack:buildProdNoFonts',
-      'webpack:buildProdFontModuleBravura',
-      'webpack:buildProdFontModulePetaluma',
-      'webpack:buildProdFontModuleGonville',
-      'webpack:buildProdFontModuleCustom',
-      'buildESM',
-      'buildTypeDeclarations',
+      ...allTargets,
+      'build:typedeclarations',
       'typedoc',
     ]
   );
 
-  grunt.registerTask('buildTypeDeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
-    grunt.log.writeln('Building *.d.ts files in build/types/');
-    child_process.execSync('tsc -p tsconfig.types.json').toString();
-  });
-
   // Outputs ESM module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
-  grunt.registerTask('buildESM', 'Use tsc to create ESM JS files in build/esm/', () => {
+  grunt.registerTask('build:esm', 'Use tsc to create ESM JS files in build/esm/', () => {
     grunt.log.writeln('ESM: Build to build/esm/');
-    child_process.execSync('tsc -p tsconfig.esm.json');
+    execSync('tsc -p tsconfig.esm.json');
     grunt.log.writeln('ESM: Fix Imports/Exports');
-    child_process.execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
+    execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
     // The build/esm/ folder needs a package.json that says "type": "module".
     grunt.log.writeln('ESM: Add package.json with "type": "module"');
-    child_process.execSync('cp ./tools/esm/package.json ./build/esm/package.json');
+    execSync('cp ./tools/esm/package.json ./build/esm/package.json');
   });
 
-  // `grunt watch`
+  grunt.registerTask('build:typedeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
+    grunt.log.writeln('Building *.d.ts files in build/types/');
+    execSync('tsc -p tsconfig.types.json');
+  });
+
+  const filesToWatch = ['src/**', 'tests/**', '!src/version.ts'];
+
   grunt.registerTask(
-    'watch',
-    `Watch src/ & tests/ for changes. Generate dev builds ${VEX_DEBUG} & ${VEX_DEBUG_TESTS}.`, //
-    [
-      // While developing, you can speed up builds by temporarily commenting out the `eslint` task.
-      'clean:build',
-      'force:eslint',
-      'concurrent:debug',
-    ]
+    'watch:dev',
+    `Watch src/ & tests/ for changes. Generate dev builds ${VEX_DEBUG}.js & ${VEX_DEBUG_TESTS}.js.`,
+    () => {
+      const config = {
+        options: {
+          interrupt: true,
+        },
+        files: filesToWatch,
+        tasks: [
+          // While developing, you can speed up builds by temporarily commenting out the `force:eslint` task.
+          // Use the force: to prevent eslint errors from killing the watch task.
+          'clean:build',
+          'force:eslint',
+          'concurrent:debug',
+        ],
+      };
+      grunt.config('watch', config);
+      grunt.task.run('watch');
+    }
   );
 
-  // `grunt watchProduction`
   grunt.registerTask(
-    'watchProduction',
-    `Watch src/ & tests/ for changes. Generate production builds (vexflow.js and vexflow-core.js).`, //
-    [
-      // While developing, you can speed up builds by temporarily commenting out the `eslint` task.
-      'clean:build',
-      'force:eslint',
-      'concurrent:production',
-    ]
+    'watch:production',
+    `Watch src/ & tests/ for changes. Generate production builds (${VEX}.js, ${VEX_CORE}.js, ...).`,
+    () => {
+      const config = {
+        options: {
+          interrupt: true,
+        },
+        files: filesToWatch,
+        tasks: [
+          // While developing, you can speed up builds by temporarily commenting out the `force:eslint` task.
+          // Use the force: to prevent eslint errors from killing the watch task.
+          'clean:build',
+          'force:eslint',
+          'concurrent:production',
+        ],
+      };
+      grunt.config('watch', config);
+      grunt.task.run('watch');
+    }
   );
 
-  // `grunt watchDevelop`
-  // This is the fastest way to build vexflow-debug-with-tests.js.
+  // `grunt watch:dev:cjs`
+  // This is the fastest way to watch & build vexflow-debug-with-tests.js.
   // Open tests/flow.html to see the test output.
   grunt.registerTask(
-    'watchDevelop',
-    `Watch src/ & tests/ for changes and generate a development build.`, //
-    [
-      'clean:build', //
-      'webpack:watchDebugPlusTests',
-    ]
+    'watch:dev:cjs',
+    `Watch src/ & tests/ for changes. Generate CJS dev build ${VEX_DEBUG_TESTS}.js as fast as possible.`,
+    ['webpack:buildDebugWithTests']
+  );
+
+  // `grunt watch:dev:esm`
+  // This is the fastest way to watch & build the ESM target.
+  // Open http://localhost:8080/tests/flow.html?esm=true to see the test output.
+  grunt.registerTask(
+    'watch:dev:esm',
+    `Watch src/ & tests/ for changes. Generate ESM dev build in build/esm/ as fast as possible.`,
+    ['build:esm']
   );
 
   // `grunt test`
+  // Runs the command line qunit tests.
   grunt.registerTask(
     'test',
     'Run qunit tests.', //
     [
       //
       'clean:build',
-      'webpack:buildDebugPlusTests',
+      'eslint',
+      ...allTargets,
       'qunit',
     ]
+  );
+
+  // `grunt test:browser:cjs`
+  // Opens the default browser to the flow.html test page.
+  grunt.registerTask(
+    'test:browser:cjs',
+    'Test the CJS build by loading the flow.html file in the default browser.', //
+    () => {
+      // If the CJS build doesn't exist, build it.
+      if (!fs.existsSync(BUILD_CJS_DIR)) {
+        grunt.task.run([...allTargets]);
+        grunt.log.write('Build the CJS files.');
+      } else {
+        grunt.log.write('CJS files already exist. Skipping the build step.');
+      }
+      grunt.task.run(['open:flow_html']);
+    }
+  );
+
+  // `grunt test:browser:esm`
+  // Requres a web server to be running.
+  // Opens the default browser to the flow.html test page with the query param esm=true.
+  grunt.registerTask(
+    'test:browser:esm',
+    'Test the ESM build in a web server by navigating to http://localhost:8080/tests/flow.html?esm=true',
+    () => {
+      // If the ESM build doesn't exist, build it.
+      if (!fs.existsSync(BUILD_ESM_DIR)) {
+        grunt.task.run('build:esm');
+        grunt.log.writeln('Build the ESM files.');
+      } else {
+        grunt.log.writeln('ESM files already exist. Skipping the build step.');
+      }
+      grunt.task.run('open:flow_localhost');
+      grunt.log.writeln('Remember to launch http-server!');
+      grunt.log.writeln('npx http-server');
+    }
   );
 
   // `grunt reference` will build the current HEAD revision and copy it to reference/
@@ -389,9 +453,8 @@ module.exports = (grunt) => {
     'Build to reference/.', //
     [
       //
-      'clean:reference',
-      'clean:build',
-      'webpack:buildDebugPlusTests',
+      'clean',
+      ...allTargets,
       'copy:reference',
     ]
   );
