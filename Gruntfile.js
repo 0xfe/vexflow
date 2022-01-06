@@ -13,9 +13,9 @@
 
 const path = require('path');
 const fs = require('fs');
-const http = require('http');
 const webpack = require('webpack');
 const { execSync, spawn } = require('child_process');
+const { EventEmitter } = require('events');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const VER = require('./tools/generate_version_file'); // Make the src/version.ts file.
@@ -48,6 +48,10 @@ const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
+
+// `grunt watch` runs many tasks in parallel, so increase the limit (default: 10) to avoid warnings about memory leaks.
+EventEmitter.defaultMaxListeners = 20;
+const FILES_TO_WATCH = ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!node_modules/**'];
 
 // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
 const debugTargets = [
@@ -217,6 +221,13 @@ module.exports = (grunt) => {
 
   const PACKAGE_JSON = grunt.file.readJSON('package.json');
 
+  const watchOptions = {
+    atBegin: true,
+    spawn: true,
+    interrupt: true,
+    debounceDelay: 800,
+  };
+
   grunt.initConfig({
     pkg: PACKAGE_JSON,
     webpack: {
@@ -239,8 +250,9 @@ module.exports = (grunt) => {
         logConcurrentOutput: true,
         indent: true,
       },
-      debug: [...debugTargets],
-      production: [...productionTargets],
+      all: [...allTargets],
+      debug: [...debugTargets, 'build:esm'],
+      production: [...productionTargets, 'build:esm'],
     },
     eslint: {
       target: ['./src', './tests'],
@@ -293,7 +305,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-force-task');
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-open');
   grunt.loadNpmTasks('grunt-typedoc');
@@ -302,13 +313,13 @@ module.exports = (grunt) => {
   // Default tasks that run when you type `grunt`.
   grunt.registerTask(
     'default',
-    'Build all vexflow targets.', //
+    'Build all VexFlow targets.', //
     [
       //
       'clean:build',
       'eslint',
-      ...allTargets,
-      'build:typedeclarations',
+      'concurrent:all',
+      'build:types',
       'typedoc',
     ]
   );
@@ -325,74 +336,55 @@ module.exports = (grunt) => {
     execSync('cp ./tools/esm/package.json ./build/esm/package.json');
   });
 
-  grunt.registerTask('build:typedeclarations', 'Use tsc to create *.d.ts files in build/types/', () => {
+  grunt.registerTask('build:types', 'Use tsc to create *.d.ts files in build/types/', () => {
     grunt.log.writeln('Building *.d.ts files in build/types/');
     execSync('tsc -p tsconfig.types.json');
   });
 
-  const filesToWatch = ['src/**', 'tests/**', '!src/version.ts'];
-
-  grunt.registerTask(
-    'watch:dev',
-    `Watch src/ & tests/ for changes. Generate dev builds ${VEX_DEBUG}.js & ${VEX_DEBUG_TESTS}.js.`,
-    () => {
-      const config = {
-        options: {
-          interrupt: true,
-        },
-        files: filesToWatch,
+  // `grunt watch`
+  // Configure the watch task.
+  {
+    grunt.config.set('watch', {
+      scripts: {
+        files: FILES_TO_WATCH,
+        options: watchOptions,
         tasks: [
-          // While developing, you can speed up builds by temporarily commenting out the `force:eslint` task.
-          // Use the force: to prevent eslint errors from killing the watch task.
+          //
           'clean:build',
-          'force:eslint',
-          'concurrent:debug',
+          // 'eslint', // slows down the watch task substantially.
+          'concurrent:all',
         ],
-      };
-      grunt.config('watch', config);
-      grunt.task.run('watch');
-    }
-  );
+      },
+    });
+  }
 
-  grunt.registerTask(
-    'watch:production',
-    `Watch src/ & tests/ for changes. Generate production builds (${VEX}.js, ${VEX_CORE}.js, ...).`,
-    () => {
-      const config = {
-        options: {
-          interrupt: true,
-        },
-        files: filesToWatch,
-        tasks: [
-          // While developing, you can speed up builds by temporarily commenting out the `force:eslint` task.
-          // Use the force: to prevent eslint errors from killing the watch task.
-          'clean:build',
-          'force:eslint',
-          'concurrent:production',
-        ],
-      };
-      grunt.config('watch', config);
-      grunt.task.run('watch');
-    }
-  );
+  // `grunt watch:dev`
+  // Watch for changes and build debug CJS files & esm/*.
+  grunt.registerTask('watch:dev', '', () => {
+    // REPLACE THE DEFAULT WATCH TASKS.
+    grunt.config.set('watch.scripts.tasks', [
+      //
+      'clean:build',
+      // 'eslint', // slows down the watch task substantially.
+      'concurrent:debug',
+    ]);
+    grunt.config.set('eslint.options.failOnError', false);
+    grunt.task.run('watch');
+  });
 
-  // `grunt watch:dev:cjs`
-  // This is the fastest way to watch & build vexflow-debug-with-tests.js.
-  // Open tests/flow.html to see the test output.
-  grunt.registerTask(
-    'watch:dev:cjs',
-    `Watch src/ & tests/ for changes. Generate CJS dev build ${VEX_DEBUG_TESTS}.js as fast as possible.`,
-    ['webpack:buildDebugWithTests']
-  );
-
-  // `grunt watch:dev:esm`
-  // This is the fastest way to watch & build the ESM target.
-  // Open http://localhost:8080/tests/flow.html?esm=true to see the test output.
-  grunt.registerTask(
-    'watch:dev:esm',
-    `Watch src/ & tests/ for changes. Generate ESM dev build in build/esm/ as fast as possible.`,
-    ['build:esm']
-  );
+  // `grunt watch:production`
+  // Watch for changes and build production CJS files & esm/*.
+  grunt.registerTask('watch:production', '', () => {
+    // REPLACE THE DEFAULT WATCH TASKS.
+    grunt.config.set('watch.scripts.tasks', [
+      //
+      'clean:build',
+      // 'eslint', // slows down the watch task substantially.
+      'concurrent:production',
+    ]);
+    grunt.config.set('eslint.options.failOnError', false);
+    grunt.task.run('watch');
+  });
 
   // `grunt test`
   // Runs the command line qunit tests.
@@ -426,7 +418,7 @@ module.exports = (grunt) => {
   );
 
   // `grunt test:browser:esm`
-  // Requres a web server to be running.
+  // Requres a web server to be running (e.g., `npx http-server`).
   // Opens the default browser to the flow.html test page with the query param esm=true.
   grunt.registerTask(
     'test:browser:esm',
@@ -440,7 +432,7 @@ module.exports = (grunt) => {
         grunt.log.writeln('ESM files already exist. Skipping the build step.');
       }
       grunt.task.run('open:flow_localhost');
-      grunt.log.writeln('Remember to launch http-server!');
+      grunt.log.writeln('Remember to launch http-server in the vexflow/ directory!');
       grunt.log.writeln('npx http-server');
     }
   );

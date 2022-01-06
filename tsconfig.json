@@ -14,5 +14,5 @@
     "lib": ["dom", "es2017"],
     "removeComments": false
   },
-  "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
+  "exclude": ["**/node_modules", "./tools/fonts/legacy", "./releases", "./reference", "./build"]
 }
