@@ -14,13 +14,6 @@
 //
 // To iterate faster during development, you can comment out most of this file
 // and focus on just testing the module(s) you are currently working on.
-//
-// For example, you can open two terminals and run the following:
-//   grunt watchDevelop
-//   fswatch build/vexflow-debug-with-tests.js | xargs -n1 -I{} npm run generate:current
-// The first `grunt watchDevelop` command will build a new vexflow-debug-with-tests.js
-// every time you edit a file. The second command render PNGs for each test module that is
-// not commented out. It will do this every time the first command produces a new build.
 
 export * from './accidental_tests';
 export * from './annotation_tests';

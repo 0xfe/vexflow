@@ -6,15 +6,20 @@
 //   VEX_DEVTOOL
 //       override our default setting for webpack's devtool config
 //       https://webpack.js.org/configuration/devtool/
+//   VEX_GENERATE_OPTIONS
+//       options for controlling the ./tools/generate_images.js script.
+//       see the generate:current and generate:reference below.
 // To pass in environment variables, you can use your ~/.bash_profile or do something like:
-//   export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
-//   export VEX_DEVTOOL=eval
-//   grunt
+//     export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
+//     export VEX_DEVTOOL=eval
+//     grunt
+// Or you can do it all on one line:
+//     VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=eval grunt
 
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const { execSync, spawn, spawnSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const { EventEmitter } = require('events');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -56,12 +61,13 @@ EventEmitter.defaultMaxListeners = 20;
 const FILES_TO_WATCH = ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!node_modules/**'];
 
 // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-const cjsDebugTargets = [
+const cjsDebugBuilds = [
   'webpack:buildDebug', // CJS debug library: vexflow-debug.js
   'webpack:buildDebugWithTests', // CJS debug library: vexflow-debug-with-tests.js
 ];
+
 // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-const cjsProductionTargets = [
+const cjsProductionBuilds = [
   'webpack:buildProdAllFonts', // CJS Production: vexflow.js
   'webpack:buildProdBravuraOnly', // CJS production library: vexflow-bravura.js
   'webpack:buildProdGonvilleOnly', // CJS production library: vexflow-gonville.js
@@ -72,15 +78,12 @@ const cjsProductionTargets = [
   'webpack:buildProdFontModuleGonville', // CJS production library: vexflow-font-gonville.js
   'webpack:buildProdFontModuleCustom', // CJS production library: vexflow-font-custom.js
 ];
-const allTargets = [
-  ...cjsDebugTargets,
-  ...cjsProductionTargets,
+
+const esmBuild = [
   'build:esm', // ESM outputs individual JS files to build/esm/.
 ];
 
-// Global variable that will be set below.
-let BANNER;
-const NO_BANNER = false; // A flag for disabling the MIT license banner for font module files.
+const allBuilds = [...cjsDebugBuilds, ...cjsProductionBuilds, ...esmBuild];
 
 // PRODUCTION_MODE will enable minification, etc.
 // See: https://webpack.js.org/configuration/mode/
@@ -125,6 +128,10 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
 
   // Add a banner at the top of the file.
   if (addBanner) {
+    BANNER =
+      `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
+      `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
+      `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
     plugins.push(new webpack.BannerPlugin(BANNER));
   }
 
@@ -181,18 +188,22 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
   };
 }
 
-module.exports = (grunt) => {
-  BANNER =
-    `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
-    `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
-    `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
+function runCommand(command, ...args) {
+  // The stdio option passes the output from the spawned process back to this process's console.
+  spawnSync(command, args, { stdio: 'inherit' });
+}
 
-  // We need a different webpack config for each build target.
+// We need a different webpack config for each build target.
+// TODO: Transition to a multi-entry approach.
+function getWebpackConfigs() {
   const prodAllFonts = getConfig(VEX, PRODUCTION_MODE);
   const prodBravuraOnly = getConfig(VEX_BRAVURA, PRODUCTION_MODE);
   const prodGonvilleOnly = getConfig(VEX_GONVILLE, PRODUCTION_MODE);
   const prodPetalumaOnly = getConfig(VEX_PETALUMA, PRODUCTION_MODE);
   const prodNoFonts = getConfig(VEX_CORE, PRODUCTION_MODE);
+
+  // Disable the MIT license banner for font module files.
+  const NO_BANNER = false;
   const prodFontModuleBravura = getConfig(
     VEX_FONT_MODULE_BRAVURA,
     PRODUCTION_MODE,
@@ -217,45 +228,49 @@ module.exports = (grunt) => {
     NO_BANNER,
     fontLibraryPrefix + 'Custom'
   );
+
   // The webpack configs below specify DEVELOPMENT_MODE, which disables code minification.
   const debugAllFonts = getConfig(VEX_DEBUG, DEVELOPMENT_MODE);
   const debugAllFontsWithTests = getConfig(VEX_DEBUG_TESTS, DEVELOPMENT_MODE);
 
-  const PACKAGE_JSON = grunt.file.readJSON('package.json');
-
-  const watchOptions = {
-    atBegin: true,
-    spawn: true,
-    interrupt: false,
-    debounceDelay: 800,
+  return {
+    // Build targets for production.
+    buildProdAllFonts: prodAllFonts,
+    buildProdBravuraOnly: prodBravuraOnly,
+    buildProdGonvilleOnly: prodGonvilleOnly,
+    buildProdPetalumaOnly: prodPetalumaOnly,
+    buildProdNoFonts: prodNoFonts,
+    buildProdFontModuleBravura: prodFontModuleBravura,
+    buildProdFontModulePetaluma: prodFontModulePetaluma,
+    buildProdFontModuleGonville: prodFontModuleGonville,
+    buildProdFontModuleCustom: prodFontModuleCustom,
+    // Build targets for development / debugging.
+    buildDebug: debugAllFonts,
+    buildDebugWithTests: debugAllFontsWithTests,
   };
+}
+
+module.exports = (grunt) => {
+  const log = grunt.log.writeln;
+  function runTask(taskName) {
+    grunt.task.run(taskName);
+  }
+
+  const PACKAGE_JSON = grunt.file.readJSON('package.json');
 
   grunt.initConfig({
     pkg: PACKAGE_JSON,
-    webpack: {
-      // Build targets for production.
-      buildProdAllFonts: prodAllFonts,
-      buildProdBravuraOnly: prodBravuraOnly,
-      buildProdGonvilleOnly: prodGonvilleOnly,
-      buildProdPetalumaOnly: prodPetalumaOnly,
-      buildProdNoFonts: prodNoFonts,
-      buildProdFontModuleBravura: prodFontModuleBravura,
-      buildProdFontModulePetaluma: prodFontModulePetaluma,
-      buildProdFontModuleGonville: prodFontModuleGonville,
-      buildProdFontModuleCustom: prodFontModuleCustom,
-      // Build targets for development / debugging.
-      buildDebug: debugAllFonts,
-      buildDebugWithTests: debugAllFontsWithTests,
-    },
+    webpack: getWebpackConfigs(),
     concurrent: {
       options: {
         logConcurrentOutput: true,
         indent: true,
       },
-      all: [...allTargets],
-      debug: [...cjsDebugTargets, 'build:esm'],
-      production: [...cjsProductionTargets, 'build:esm'],
+      all: [...allBuilds],
+      debug: [...cjsDebugBuilds, ...esmBuild],
+      production: [...cjsProductionBuilds, ...esmBuild],
     },
+    // grunt eslint
     eslint: {
       target: ['./src', './tests'],
       options: { fix: true },
@@ -272,6 +287,7 @@ module.exports = (grunt) => {
       },
     },
     copy: {
+      // grunt copy:reference
       reference: {
         files: [
           {
@@ -282,6 +298,7 @@ module.exports = (grunt) => {
           },
         ],
       },
+      // grunt copy:save_reference_images
       // build/images/reference/ => reference/images/
       save_reference_images: {
         files: [
@@ -293,6 +310,7 @@ module.exports = (grunt) => {
           },
         ],
       },
+      // grunt copy:restore_reference_images
       // reference/images/ => build/images/reference/
       restore_reference_images: {
         files: [
@@ -330,7 +348,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-open');
   grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-webpack');
@@ -358,27 +375,30 @@ module.exports = (grunt) => {
     'qunit',
   ]);
 
+  // grunt build:cjs
   grunt.registerTask('build:cjs', 'Use webpack to create CJS files in build/cjs/', [
     'clean:build',
-    ...cjsDebugTargets,
-    ...cjsProductionTargets,
+    ...cjsDebugBuilds,
+    ...cjsProductionBuilds,
   ]);
 
-  // Outputs ESM module files to build/esm/.
+  // grunt build:esm
+  // Output ESM module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
-  grunt.registerTask('build:esm', 'Use tsc to create ESM files in build/esm/', () => {
-    grunt.log.writeln('ESM: Build to build/esm/');
-    execSync('tsc -p tsconfig.esm.json');
-    grunt.log.writeln('ESM: Fix Imports/Exports');
-    execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
+  grunt.registerTask('build:esm', 'Use tsc to create ES module files in build/esm/', () => {
+    log('ESM: Build to build/esm/');
+    runCommand('tsc', '-p', 'tsconfig.esm.json');
+    log('ESM: Fix Imports/Exports');
+    runCommand('node', './tools/esm/fix-imports-and-exports.js', './build/esm/');
     // The build/esm/ folder needs a package.json that says "type": "module".
-    grunt.log.writeln('ESM: Add package.json with "type": "module"');
-    execSync('cp ./tools/esm/package.json ./build/esm/package.json');
+    log('ESM: Add package.json with "type": "module"');
+    runCommand('cp', './tools/esm/package.json', './build/esm/package.json');
   });
 
+  // Output *.d.ts files to build/types/.
   grunt.registerTask('build:types', 'Use tsc to create *.d.ts files in build/types/', () => {
-    grunt.log.writeln('Building *.d.ts files in build/types/');
-    execSync('tsc -p tsconfig.types.json');
+    log('Building *.d.ts files in build/types/');
+    runCommand('tsc', '-p', 'tsconfig.types.json');
   });
 
   // `grunt watch`
@@ -387,7 +407,12 @@ module.exports = (grunt) => {
     grunt.config.set('watch', {
       scripts: {
         files: FILES_TO_WATCH,
-        options: watchOptions,
+        options: {
+          atBegin: true,
+          spawn: true,
+          interrupt: false,
+          debounceDelay: 800,
+        },
         tasks: [
           //
           'clean:build',
@@ -409,7 +434,7 @@ module.exports = (grunt) => {
       'concurrent:debug',
     ]);
     grunt.config.set('eslint.options.failOnError', false);
-    grunt.task.run('watch');
+    runTask('watch');
   });
 
   // `grunt watch:production`
@@ -423,7 +448,7 @@ module.exports = (grunt) => {
       'concurrent:production',
     ]);
     grunt.config.set('eslint.options.failOnError', false);
-    grunt.task.run('watch');
+    runTask('watch');
   });
 
   // `grunt test:browser:cjs`
@@ -434,12 +459,12 @@ module.exports = (grunt) => {
     () => {
       // If the CJS build doesn't exist, build it.
       if (!fs.existsSync(BUILD_CJS_DIR)) {
-        grunt.task.run('concurrent:all');
+        runTask('concurrent:all');
         grunt.log.write('Build the CJS files.');
       } else {
         grunt.log.write('CJS files already exist. Skipping the build step.');
       }
-      grunt.task.run(['open:flow_html']);
+      runTask('open:flow_html');
     }
   );
 
@@ -452,20 +477,21 @@ module.exports = (grunt) => {
     () => {
       // If the ESM build doesn't exist, build it.
       if (!fs.existsSync(BUILD_ESM_DIR)) {
-        grunt.task.run('build:esm');
-        grunt.log.writeln('Build the ESM files.');
+        runTask('build:esm');
+        log('Build the ESM files.');
       } else {
-        grunt.log.writeln('ESM files already exist. Skipping the build step.');
+        log('ESM files already exist. Skipping the build step.');
       }
-      grunt.task.run('open:flow_localhost');
-      grunt.log.writeln('Remember to launch http-server in the vexflow/ directory!');
-      grunt.log.writeln('npx http-server');
+      runTask('open:flow_localhost');
+      log('Remember to launch http-server in the vexflow/ directory!');
+      log('npx http-server');
     }
   );
 
-  // `grunt reference` will build the current HEAD revision and copy it to reference/
-  // After developing new features or fixing a bug, you can compare the current working tree
-  // against the reference with: `grunt test:reference`.
+  // grunt reference
+  // Build the current HEAD revision and copy it to reference/
+  // After developing new features or fixing a bug, you can compare the current
+  // working tree against the reference with: grunt test:reference
   grunt.registerTask('reference', 'Build to reference/.', [
     //
     'clean',
@@ -473,25 +499,26 @@ module.exports = (grunt) => {
     'copy:reference',
   ]);
 
-  // node ./tools/generate_images.js build ./build/images/current ${VF_GENERATE_OPTIONS}
-  grunt.registerTask('generate:current', 'Create images from the version in build/.', () => {
-    spawn('node', ['./tools/generate_images.js', 'build', './build/images/current', ...process.argv.slice(3)], {
-      stdio: 'inherit',
-    });
+  // node ./tools/generate_images.js build ./build/images/current ${VEX_GENERATE_OPTIONS}
+  grunt.registerTask('generate:current', 'Create images from the vexflow version in build/.', () => {
+    const options = process.env.VEX_GENERATE_OPTIONS;
+    const args = options ? options.split(' ') : [];
+    runCommand('node', './tools/generate_images.js', 'build', './build/images/current', ...args);
   });
 
-  // node ./tools/generate_images.js reference ./build/images/reference ${VF_GENERATE_OPTIONS}
-  grunt.registerTask('generate:reference', 'Create images from version in reference/.', () => {
-    spawn('node', ['./tools/generate_images.js', 'reference', './build/images/reference', ...process.argv.slice(3)], {
-      stdio: 'inherit',
-    });
+  // node ./tools/generate_images.js reference ./build/images/reference ${VEX_GENERATE_OPTIONS}
+  grunt.registerTask('generate:reference', 'Create images from vexflow version in reference/.', () => {
+    const options = process.env.VEX_GENERATE_OPTIONS;
+    const args = options ? options.split(' ') : [];
+    runCommand('node', './tools/generate_images.js', 'reference', './build/images/reference', ...args);
   });
 
   // ./tools/visual_regression.sh reference
-  grunt.registerTask('diff:reference', '', () => {
-    spawn('./tools/visual_regression.sh', ['reference'], { stdio: 'inherit' });
+  grunt.registerTask('diff:reference', 'Compare ', () => {
+    runCommand('./tools/visual_regression.sh');
   });
 
+  // grunt test:reference
   grunt.registerTask('test:reference', '', [
     //
     'test',
@@ -514,37 +541,61 @@ module.exports = (grunt) => {
     }
 
     if (fs.existsSync(BUILD_IMAGES_REFERENCE_DIR)) {
-      grunt.task.run('clean:reference_images');
-      grunt.task.run('copy:save_reference_images');
+      runTask('clean:reference_images');
+      runTask('copy:save_reference_images');
     }
   });
 
   grunt.registerTask('cache:restore:reference', '', () => {
     if (fs.existsSync(REFERENCE_IMAGES_DIR)) {
-      grunt.task.run('copy:restore_reference_images');
+      runTask('copy:restore_reference_images');
     } else {
-      grunt.task.run('generate:reference');
+      runTask('generate:reference');
     }
   });
 
   // grunt get:releases:3.0.9:4.0.0   =>   node ./tools/get_releases.mjs 3.0.9 4.0.0
   grunt.registerTask('get:releases', '', () => {
-    spawnSync('node', ['./tools/get_releases.mjs', ...grunt.task.current.args], { stdio: 'inherit' });
+    runCommand('node', './tools/get_releases.mjs', ...grunt.task.current.args);
   });
 
+  // grunt release
   grunt.registerTask('release', '', () => {
-    spawnSync('npx', ['release-it'], { stdio: 'inherit' });
+    runCommand('npx', 'release-it');
   });
+
+  // grunt release:alpha
   grunt.registerTask('release:alpha', '', () => {
-    spawnSync('npx', ['release-it', '--preRelease=alpha'], { stdio: 'inherit' });
+    runCommand('npx', 'release-it', '--preRelease=alpha');
   });
+
+  // grunt release:beta
   grunt.registerTask('release:beta', '', () => {
-    spawnSync('npx', ['release-it', '--preRelease=beta'], { stdio: 'inherit' });
+    runCommand('npx', 'release-it', '--preRelease=beta');
   });
+
+  // grunt release:rc
   grunt.registerTask('release:rc', '', () => {
-    spawnSync('npx', ['release-it', '--preRelease=rc'], { stdio: 'inherit' });
+    runCommand('npx', 'release-it', '--preRelease=rc');
   });
+
+  // grunt release:alpha
   grunt.registerTask('release:dry-run', '', () => {
-    spawnSync('npx', ['release-it', '--dry-run'], { stdio: 'inherit' });
+    runCommand('npx', 'release-it', '--dry-run');
+  });
+
+  // grunt release:dry-run:alpha
+  grunt.registerTask('release:dry-run:alpha', '', () => {
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=alpha');
+  });
+
+  // grunt release:dry-run:beta
+  grunt.registerTask('release:dry-run:beta', '', () => {
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=beta');
+  });
+
+  // grunt release:dry-run:rc
+  grunt.registerTask('release:dry-run:rc', '', () => {
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=rc');
   });
 };

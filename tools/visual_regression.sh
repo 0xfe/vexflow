@@ -13,16 +13,17 @@
 #
 #    $ ./tools/generate_png_images.js
 #
-#  Run the regression tests against the reference or blessed images in tests/blessed.
+#  Run the regression tests against the reference images.
 #
-#    $ ./tools/visual_regression.sh (reference|blessed) [test_prefix]
+#    $ ./tools/visual_regression.sh [prefix]
+#
+#  The optional argument allows you to compare a subset of the images
+#  (only those with names starting with the specified prefix).
 #
 #  Check build/images/diff/results.txt for results. This file is sorted
 #  by PHASH difference (most different files on top.) The composite diff
 #  images for failed tests (i.e., PHASH > 1.0) are stored in build/images/diff.
 #
-#  If you are satisfied with the differences, copy *.png from build/images
-#  into tests/blessed, and submit your change.
 
 # PNG viewer on OSX. Switch this to whatever your system uses.
 # VIEWER=open
@@ -40,23 +41,12 @@ THRESHOLD=0.01
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
 BASE=.
-if [ "$1" == "reference" ]
-then
-  ADIR=$BASE/build/images/reference
-  ANAME=Reference
-  BDIR=$BASE/build/images/current
-  BNAME=Current
-  DIFF=$BASE/build/images/diff
-elif  [ "$1" == "blessed" ]
-then
-  ADIR=$BASE/build/images/blessed
-  ANAME=Blessed
-  BDIR=$BASE/build/images/current
-  BNAME=Current
-  DIFF=$BASE/build/images/diff
-else
-  echo >&2 "Usage: visual_regression.sh (reference|blessed) [test_prefix]"; exit 1;
-fi
+ADIR=$BASE/build/images/reference
+ANAME=Reference
+BDIR=$BASE/build/images/current
+BNAME=Current
+DIFF=$BASE/build/images/diff
+
 
 # All results are stored here.
 RESULTS=$DIFF/results.txt
@@ -92,7 +82,7 @@ totalImagesB=`ls -1 $BDIR/$files | wc -l | xargs` # xargs trims spaces
 if [ $? -ne 0 ] || [ "$totalImagesB" -lt 1 ]
 then
   echo Missing images in $BDIR.
-  echo Please run \"npm run generate:current\"
+  echo Please run \"grunt generate:current\"
   exit 1
 fi
 
@@ -100,7 +90,7 @@ totalImagesA=`ls -1 $ADIR/$files | wc -l | xargs`
 if [ $? -ne 0 ] || [ "$totalImagesA" -lt 1 ]
 then
   echo Missing images in $ADIR.
-  echo Please run \"npm run generate:reference\"
+  echo Please run \"grunt generate:reference\"
   exit 1
 fi
 # check that #ImagesA == #ImagesB (will continue anyways)
@@ -207,7 +197,7 @@ wait
 cat $BDIR/*.warn 1>$WARNINGS 2>/dev/null
 rm -f $BDIR/*.warn
 
-## Check for files newly built that are not yet blessed.
+# Check for files newly built that are not in the reference.
 for image in $BDIR/$files
 do
   name=`basename $image .png`

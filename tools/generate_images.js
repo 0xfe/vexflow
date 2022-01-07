@@ -92,7 +92,7 @@ const parseArgs = () => {
 };
 
 const resolveJobsOption = (verIn) => {
-  let numTestes = NaN;
+  let numTests = NaN;
   let pptrJobs = 1;
   let ver = verIn;
 
@@ -116,8 +116,8 @@ const resolveJobsOption = (verIn) => {
         if (Flow) {
           const { Test } = Flow;
           if (Test && Test.tests && Test.parseJobOptions) {
-            numTestes = Test.tests.length;
-            pptrJobs = Math.ceil(numTestes / 10);
+            numTests = Test.tests.length;
+            pptrJobs = Math.ceil(numTests / 10);
           }
         }
       }
@@ -127,12 +127,12 @@ const resolveJobsOption = (verIn) => {
     }
   }
 
-  if (Number.isNaN(numTestes)) {
+  if (Number.isNaN(numTests)) {
     log('Parallel execution mode is not supported.', 'info');
   }
 
   return {
-    numTestes,
+    numTests,
     pptrJobs,
     ver,
   };
@@ -141,7 +141,7 @@ const resolveJobsOption = (verIn) => {
 const appMain = async () => {
   const options = parseArgs();
   const { childArgs, backends, parallel } = options;
-  const { numTestes, pptrJobs, ver } = resolveJobsOption(childArgs.ver);
+  const { numTests, pptrJobs, ver } = resolveJobsOption(childArgs.ver);
   const { imageDir, args } = childArgs;
 
   const backendDefs = {
@@ -150,7 +150,7 @@ const appMain = async () => {
       getArgs: () => {
         return [`../${ver}`, imageDir].concat(args);
       },
-      jobs: numTestes ? Math.min(pptrJobs, parallel) : 1,
+      jobs: numTests ? Math.min(pptrJobs, parallel) : 1,
     },
     pptr: {
       path: './tools/generate_images_pptr.js',
@@ -190,7 +190,7 @@ const appMain = async () => {
       JSON.stringify({
         ver,
         parallel,
-        numTestes,
+        numTests,
         pptrJobs,
         backends,
         jsdom_jobs: backendDefs.jsdom.jobs,
