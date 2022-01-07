@@ -15,6 +15,7 @@ const TEMP_SUFFIX = '-delete-me-later';
 
 // Determine which versions the user wants to extract/download.
 const versionsRequested = process.argv.slice(2);
+
 if (versionsRequested.length === 0) {
   console.log('Usage:   node get_releases.mjs <release-version>');
   console.log('Usage:   node get_releases.mjs <release-version> <release-version> <release-version> ...');

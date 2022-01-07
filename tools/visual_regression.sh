@@ -92,7 +92,7 @@ totalImagesB=`ls -1 $BDIR/$files | wc -l | xargs` # xargs trims spaces
 if [ $? -ne 0 ] || [ "$totalImagesB" -lt 1 ]
 then
   echo Missing images in $BDIR.
-  echo Please run \"npm run generate\"
+  echo Please run \"npm run generate:current\"
   exit 1
 fi
 
@@ -100,7 +100,7 @@ totalImagesA=`ls -1 $ADIR/$files | wc -l | xargs`
 if [ $? -ne 0 ] || [ "$totalImagesA" -lt 1 ]
 then
   echo Missing images in $ADIR.
-  echo Please run \"npm run generate\"
+  echo Please run \"npm run generate:reference\"
   exit 1
 fi
 # check that #ImagesA == #ImagesB (will continue anyways)

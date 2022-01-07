@@ -14,7 +14,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const { execSync, spawn } = require('child_process');
+const { execSync, spawn, spawnSync } = require('child_process');
 const { EventEmitter } = require('events');
 const TerserPlugin = require('terser-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
@@ -47,19 +47,21 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
+const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
+const REFERENCE_IMAGES_DIR = path.join(REFERENCE_DIR, 'images');
 
 // `grunt watch` runs many tasks in parallel, so increase the limit (default: 10) to avoid warnings about memory leaks.
 EventEmitter.defaultMaxListeners = 20;
 const FILES_TO_WATCH = ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!node_modules/**'];
 
 // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-const debugTargets = [
+const cjsDebugTargets = [
   'webpack:buildDebug', // CJS debug library: vexflow-debug.js
   'webpack:buildDebugWithTests', // CJS debug library: vexflow-debug-with-tests.js
 ];
 // While developing, you can speed up builds by temporarily commenting out one of the tasks below.
-const productionTargets = [
+const cjsProductionTargets = [
   'webpack:buildProdAllFonts', // CJS Production: vexflow.js
   'webpack:buildProdBravuraOnly', // CJS production library: vexflow-bravura.js
   'webpack:buildProdGonvilleOnly', // CJS production library: vexflow-gonville.js
@@ -71,9 +73,9 @@ const productionTargets = [
   'webpack:buildProdFontModuleCustom', // CJS production library: vexflow-font-custom.js
 ];
 const allTargets = [
-  ...debugTargets,
-  ...productionTargets,
-  'build:esm', // ESM outputs individual JS files to vexflow/build/esm/.
+  ...cjsDebugTargets,
+  ...cjsProductionTargets,
+  'build:esm', // ESM outputs individual JS files to build/esm/.
 ];
 
 // Global variable that will be set below.
@@ -251,8 +253,8 @@ module.exports = (grunt) => {
         indent: true,
       },
       all: [...allTargets],
-      debug: [...debugTargets, 'build:esm'],
-      production: [...productionTargets, 'build:esm'],
+      debug: [...cjsDebugTargets, 'build:esm'],
+      production: [...cjsProductionTargets, 'build:esm'],
     },
     eslint: {
       target: ['./src', './tests'],
@@ -280,6 +282,28 @@ module.exports = (grunt) => {
           },
         ],
       },
+      // build/images/reference/ => reference/images/
+      save_reference_images: {
+        files: [
+          {
+            expand: true,
+            cwd: BUILD_IMAGES_REFERENCE_DIR,
+            src: ['**'],
+            dest: REFERENCE_IMAGES_DIR,
+          },
+        ],
+      },
+      // reference/images/ => build/images/reference/
+      restore_reference_images: {
+        files: [
+          {
+            expand: true,
+            cwd: REFERENCE_IMAGES_DIR,
+            src: ['**'],
+            dest: BUILD_IMAGES_REFERENCE_DIR,
+          },
+        ],
+      },
     },
     typedoc: {
       build: {
@@ -296,6 +320,7 @@ module.exports = (grunt) => {
     clean: {
       build: { src: [BUILD_DIR] },
       reference: { src: [REFERENCE_DIR] },
+      reference_images: { src: [REFERENCE_IMAGES_DIR] },
     },
   });
 
@@ -310,23 +335,38 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-webpack');
 
-  // Default tasks that run when you type `grunt`.
-  grunt.registerTask(
-    'default',
-    'Build all VexFlow targets.', //
-    [
-      //
-      'clean:build',
-      'eslint',
-      'concurrent:all',
-      'build:types',
-      'typedoc',
-    ]
-  );
+  // This task is run when you type one of the following commands:
+  //   grunt
+  //   npm start
+  // Builds all targets for production and debugging.
+  grunt.registerTask('default', 'Build all VexFlow targets.', [
+    //
+    'clean:build',
+    'eslint',
+    'concurrent:all',
+    'build:types',
+    'typedoc',
+  ]);
+
+  // `grunt test`
+  // Run command line qunit tests.
+  grunt.registerTask('test', 'Run command line unit tests.', [
+    //
+    'clean:build',
+    'eslint',
+    'concurrent:all',
+    'qunit',
+  ]);
+
+  grunt.registerTask('build:cjs', 'Use webpack to create CJS files in build/cjs/', [
+    'clean:build',
+    ...cjsDebugTargets,
+    ...cjsProductionTargets,
+  ]);
 
   // Outputs ESM module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
-  grunt.registerTask('build:esm', 'Use tsc to create ESM JS files in build/esm/', () => {
+  grunt.registerTask('build:esm', 'Use tsc to create ESM files in build/esm/', () => {
     grunt.log.writeln('ESM: Build to build/esm/');
     execSync('tsc -p tsconfig.esm.json');
     grunt.log.writeln('ESM: Fix Imports/Exports');
@@ -386,29 +426,15 @@ module.exports = (grunt) => {
     grunt.task.run('watch');
   });
 
-  // `grunt test`
-  // Runs the command line qunit tests.
-  grunt.registerTask(
-    'test',
-    'Run qunit tests.', //
-    [
-      //
-      'clean:build',
-      'eslint',
-      ...allTargets,
-      'qunit',
-    ]
-  );
-
   // `grunt test:browser:cjs`
-  // Opens the default browser to the flow.html test page.
+  // Open the default browser to the flow.html test page.
   grunt.registerTask(
     'test:browser:cjs',
     'Test the CJS build by loading the flow.html file in the default browser.', //
     () => {
       // If the CJS build doesn't exist, build it.
       if (!fs.existsSync(BUILD_CJS_DIR)) {
-        grunt.task.run([...allTargets]);
+        grunt.task.run('concurrent:all');
         grunt.log.write('Build the CJS files.');
       } else {
         grunt.log.write('CJS files already exist. Skipping the build step.');
@@ -418,8 +444,8 @@ module.exports = (grunt) => {
   );
 
   // `grunt test:browser:esm`
-  // Requres a web server to be running (e.g., `npx http-server`).
-  // Opens the default browser to the flow.html test page with the query param esm=true.
+  // Open the default browser to `http://localhost:8080/tests/flow.html?esm=true`.
+  // Requires a web server (e.g., `npx http-server`).
   grunt.registerTask(
     'test:browser:esm',
     'Test the ESM build in a web server by navigating to http://localhost:8080/tests/flow.html?esm=true',
@@ -439,15 +465,86 @@ module.exports = (grunt) => {
 
   // `grunt reference` will build the current HEAD revision and copy it to reference/
   // After developing new features or fixing a bug, you can compare the current working tree
-  // against the reference with: `npm run test:reference`. See package.json for details.
-  grunt.registerTask(
-    'reference',
-    'Build to reference/.', //
-    [
-      //
-      'clean',
-      ...allTargets,
-      'copy:reference',
-    ]
-  );
+  // against the reference with: `grunt test:reference`.
+  grunt.registerTask('reference', 'Build to reference/.', [
+    //
+    'clean',
+    'concurrent:all',
+    'copy:reference',
+  ]);
+
+  // node ./tools/generate_images.js build ./build/images/current ${VF_GENERATE_OPTIONS}
+  grunt.registerTask('generate:current', 'Create images from the version in build/.', () => {
+    spawn('node', ['./tools/generate_images.js', 'build', './build/images/current', ...process.argv.slice(3)], {
+      stdio: 'inherit',
+    });
+  });
+
+  // node ./tools/generate_images.js reference ./build/images/reference ${VF_GENERATE_OPTIONS}
+  grunt.registerTask('generate:reference', 'Create images from version in reference/.', () => {
+    spawn('node', ['./tools/generate_images.js', 'reference', './build/images/reference', ...process.argv.slice(3)], {
+      stdio: 'inherit',
+    });
+  });
+
+  // ./tools/visual_regression.sh reference
+  grunt.registerTask('diff:reference', '', () => {
+    spawn('./tools/visual_regression.sh', ['reference'], { stdio: 'inherit' });
+  });
+
+  grunt.registerTask('test:reference', '', [
+    //
+    'test',
+    'generate:current',
+    'generate:reference',
+    'diff:reference',
+  ]);
+
+  grunt.registerTask('test:reference:cache', '', [
+    'cache:save:reference',
+    'test',
+    'generate:current',
+    'cache:restore:reference',
+    'diff:reference',
+  ]);
+
+  grunt.registerTask('cache:save:reference', '', () => {
+    if (!fs.existsSync(REFERENCE_IMAGES_DIR)) {
+      fs.mkdirSync(REFERENCE_IMAGES_DIR, { recursive: true });
+    }
+
+    if (fs.existsSync(BUILD_IMAGES_REFERENCE_DIR)) {
+      grunt.task.run('clean:reference_images');
+      grunt.task.run('copy:save_reference_images');
+    }
+  });
+
+  grunt.registerTask('cache:restore:reference', '', () => {
+    if (fs.existsSync(REFERENCE_IMAGES_DIR)) {
+      grunt.task.run('copy:restore_reference_images');
+    } else {
+      grunt.task.run('generate:reference');
+    }
+  });
+
+  // grunt get:releases:3.0.9:4.0.0   =>   node ./tools/get_releases.mjs 3.0.9 4.0.0
+  grunt.registerTask('get:releases', '', () => {
+    spawnSync('node', ['./tools/get_releases.mjs', ...grunt.task.current.args], { stdio: 'inherit' });
+  });
+
+  grunt.registerTask('release', '', () => {
+    spawnSync('npx', ['release-it'], { stdio: 'inherit' });
+  });
+  grunt.registerTask('release:alpha', '', () => {
+    spawnSync('npx', ['release-it', '--preRelease=alpha'], { stdio: 'inherit' });
+  });
+  grunt.registerTask('release:beta', '', () => {
+    spawnSync('npx', ['release-it', '--preRelease=beta'], { stdio: 'inherit' });
+  });
+  grunt.registerTask('release:rc', '', () => {
+    spawnSync('npx', ['release-it', '--preRelease=rc'], { stdio: 'inherit' });
+  });
+  grunt.registerTask('release:dry-run', '', () => {
+    spawnSync('npx', ['release-it', '--dry-run'], { stdio: 'inherit' });
+  });
 };

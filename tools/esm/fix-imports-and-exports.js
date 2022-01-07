@@ -1,7 +1,7 @@
 // Author: Ron B. Yeh
 
 // node ./tools/esm/fix-imports-and-exports.js ./build/esm/
-// See the `buildESM` task in Gruntfile.js.
+// See the `build:esm` task in Gruntfile.js.
 
 // This script recursively walks `build/esm/` and fixes imports & exports in every JS file.
 // It adds a .js extension to every import / export of a file, fixing files in place. For example:
