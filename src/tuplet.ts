@@ -287,9 +287,6 @@ export class Tuplet extends Element {
           if (modLines > 0) {
             y_pos = Math.min(modY, y_pos);
           }
-          if (top_y < y_pos) {
-            y_pos = top_y;
-          }
         }
       }
     } else {
