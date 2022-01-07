@@ -138,6 +138,9 @@
     "release:beta": "release-it --preRelease=beta",
     "release:rc": "release-it --preRelease=rc",
     "release:dry-run": "release-it --dry-run",
+    "release:dry-run:alpha": "release-it --dry-run --preRelease=alpha",
+    "release:dry-run:beta": "release-it --dry-run --preRelease=beta",
+    "release:dry-run:rc": "release-it --dry-run --preRelease=rc",
     "webpack": "grunt webpack"
   },
   "homepage": "https://vexflow.com/",

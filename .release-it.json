@@ -19,7 +19,8 @@
   },
   "git": {
     "changelog": false,
-    "commitMessage": "release VexFlow ${version}"
+    "commitMessage": "release VexFlow ${version}",
+    "requireUpstream": false
   },
   "github": {
     "release": true
