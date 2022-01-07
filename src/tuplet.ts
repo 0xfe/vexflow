@@ -273,13 +273,23 @@ export class Tuplet extends Element {
       // y_pos = first_note.getStemExtents().topY - 10;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const top_y =
-          this.notes[i].getStemDirection() === Stem.UP
-            ? this.notes[i].getStemExtents().topY - 10
-            : this.notes[i].getStemExtents().baseY - 20;
-
-        if (top_y < y_pos) {
-          y_pos = top_y;
+        const note = this.notes[i];
+        let modLines = 0;
+        const mc = note.getModifierContext();
+        if (mc) {
+          modLines = Math.max(modLines, mc.getState().top_text_line);
+        }
+        const modY = note.getYForTopText(modLines) - 20;
+        if (note.hasStem() || note.isRest()) {
+          const top_y =
+            note.getStemDirection() === Stem.UP ? note.getStemExtents().topY - 10 : note.getStemExtents().baseY - 20;
+          y_pos = Math.min(top_y, y_pos);
+          if (modLines > 0) {
+            y_pos = Math.min(modY, y_pos);
+          }
+          if (top_y < y_pos) {
+            y_pos = top_y;
+          }
         }
       }
     } else {
@@ -294,12 +304,14 @@ export class Tuplet extends Element {
       y_pos = first_note.checkStave().getYForLine(lineCheck) + 20;
 
       for (let i = 0; i < this.notes.length; ++i) {
-        const bottom_y =
-          this.notes[i].getStemDirection() === Stem.UP
-            ? this.notes[i].getStemExtents().baseY + 20
-            : this.notes[i].getStemExtents().topY + 10;
-        if (bottom_y > y_pos) {
-          y_pos = bottom_y;
+        if (this.notes[i].hasStem() || this.notes[i].isRest()) {
+          const bottom_y =
+            this.notes[i].getStemDirection() === Stem.UP
+              ? this.notes[i].getStemExtents().baseY + 20
+              : this.notes[i].getStemExtents().topY + 10;
+          if (bottom_y > y_pos) {
+            y_pos = bottom_y;
+          }
         }
       }
     }
