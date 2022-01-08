@@ -543,5 +543,11 @@ export const PetalumaMetrics = {
         reportedWidth: 5,
       },
     },
+    tuplet: {
+      noteHeadOffset: 20,
+      stemOffset: 10,
+      bottomLine: 4,
+      topModifierOffset: 20,
+    },
   },
 };

@@ -96,6 +96,9 @@ export class Tuplet extends Element {
   static get NESTING_OFFSET(): number {
     return 15;
   }
+  static get metrics(): any {
+    return Tables.currentMusicFont().getMetrics().glyphs.tuplet;
+  }
 
   constructor(notes: Note[], options: TupletOptions = {}) {
     super();
@@ -269,9 +272,9 @@ export class Tuplet extends Element {
     const first_note = this.notes[0];
     let y_pos;
     if (this.location === Tuplet.LOCATION_TOP) {
-      y_pos = first_note.checkStave().getYForLine(0) - 15;
-      // y_pos = first_note.getStemExtents().topY - 10;
+      y_pos = first_note.checkStave().getYForLine(0) - Tuplet.metrics.topModifierOffset;
 
+      // check modifiers above note to see if they will collide with tuplet beam
       for (let i = 0; i < this.notes.length; ++i) {
         const note = this.notes[i];
         let modLines = 0;
@@ -279,10 +282,12 @@ export class Tuplet extends Element {
         if (mc) {
           modLines = Math.max(modLines, mc.getState().top_text_line);
         }
-        const modY = note.getYForTopText(modLines) - 20;
+        const modY = note.getYForTopText(modLines) - Tuplet.metrics.noteHeadOffset;
         if (note.hasStem() || note.isRest()) {
           const top_y =
-            note.getStemDirection() === Stem.UP ? note.getStemExtents().topY - 10 : note.getStemExtents().baseY - 20;
+            note.getStemDirection() === Stem.UP
+              ? note.getStemExtents().topY - Tuplet.metrics.stemOffset
+              : note.getStemExtents().baseY - Tuplet.metrics.noteHeadOffset;
           y_pos = Math.min(top_y, y_pos);
           if (modLines > 0) {
             y_pos = Math.min(modY, y_pos);
@@ -290,22 +295,22 @@ export class Tuplet extends Element {
         }
       }
     } else {
-      let lineCheck = 4; // tuplet default on line 4
-      // check modifiers below note for correct Y position
+      let lineCheck = Tuplet.metrics.bottomLine; // tuplet default on line 4
+      // check modifiers below note to see if they will collide with tuplet beam
       this.notes.forEach((nn) => {
         const mc = nn.getModifierContext();
         if (mc) {
           lineCheck = Math.max(lineCheck, mc.getState().text_line + 1);
         }
       });
-      y_pos = first_note.checkStave().getYForLine(lineCheck) + 20;
+      y_pos = first_note.checkStave().getYForLine(lineCheck) + Tuplet.metrics.noteHeadOffset;
 
       for (let i = 0; i < this.notes.length; ++i) {
         if (this.notes[i].hasStem() || this.notes[i].isRest()) {
           const bottom_y =
             this.notes[i].getStemDirection() === Stem.UP
-              ? this.notes[i].getStemExtents().baseY + 20
-              : this.notes[i].getStemExtents().topY + 10;
+              ? this.notes[i].getStemExtents().baseY + Tuplet.metrics.noteHeadOffset
+              : this.notes[i].getStemExtents().topY + Tuplet.metrics.stemOffset;
           if (bottom_y > y_pos) {
             y_pos = bottom_y;
           }
