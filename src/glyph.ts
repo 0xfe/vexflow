@@ -263,14 +263,15 @@ export class Glyph extends Element {
       point = data.point;
     }
 
-    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * (options?.scale ?? 1);
+    const customScale = options?.scale ?? 1;
+    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
     Glyph.renderOutline(
       ctx,
       metrics.outline,
       scale,
-      x_pos + metrics.x_shift * (options?.scale ?? 1),
-      y_pos + metrics.y_shift * (options?.scale ?? 1)
+      x_pos + metrics.x_shift * customScale,
+      y_pos + metrics.y_shift * customScale
     );
     return metrics;
   }
