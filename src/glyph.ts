@@ -26,8 +26,6 @@ export interface GlyphProps {
   flag: boolean;
   width: number;
   text: string;
-  tabnote_stem_down_extension: number;
-  tabnote_stem_up_extension: number;
   beam_count: number;
   shift_y: number;
   getWidth(a?: number): number;
