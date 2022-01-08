@@ -258,9 +258,22 @@ export class CanvasContext extends RenderContext {
 
   measureText(text: string): TextMeasure {
     const metrics = this.context2D.measureText(text);
+
+    let y = 0;
+    let height = 0;
+    if (metrics.fontBoundingBoxAscent) {
+      y = -metrics.fontBoundingBoxAscent;
+      height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
+    } else {
+      y = -metrics.actualBoundingBoxAscent;
+      height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+    }
+    // Return x, y, width & height in the same manner as svg getBBox
     return {
+      x: 0,
+      y: y,
       width: metrics.width,
-      height: this.textHeight,
+      height: height,
     };
   }
 

@@ -12,7 +12,7 @@ export class StaveSection extends StaveModifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
-    size: 12,
+    size: 10,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
   };
@@ -55,19 +55,23 @@ export class StaveSection extends StaveModifier {
     ctx.setLineWidth(2);
     ctx.setFont(this.textFont);
 
-    const textWidth = ctx.measureText('' + this.section).width;
-    let width = textWidth + 6; // add left & right padding
-    if (width < 18) width = 18;
-    const height = 20;
+    const paddingX = 2;
+    const paddingY = 2;
+    const rectWidth = 2;
+    const textMeasurements = ctx.measureText(this.section);
+    const textWidth = textMeasurements.width;
+    const textHeight = textMeasurements.height;
+    const width = textWidth + 2 * paddingX; // add left & right padding
+    const height = textHeight + 2 * paddingY; // add top & bottom padding
+
     //  Seems to be a good default y
-    const y = stave.getYForTopText(3) + this.shift_y;
-    let x = this.x + shift_x;
+    const y = stave.getYForTopText(2) + this.shift_y;
+    const x = this.x + shift_x;
     ctx.beginPath();
-    ctx.setLineWidth(2);
-    ctx.rect(x, y, width, height);
+    ctx.setLineWidth(rectWidth);
+    ctx.rect(x, y + textMeasurements.y - paddingY, width, height);
     ctx.stroke();
-    x += (width - textWidth) / 2;
-    ctx.fillText('' + this.section, x, y + 16);
+    ctx.fillText(this.section, x + paddingX, y);
     ctx.restore();
     return this;
   }
