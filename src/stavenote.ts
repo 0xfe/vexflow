@@ -202,7 +202,10 @@ export class StaveNote extends StemmableNote {
           if (noteU.note.hasStem() && noteL.note.hasStem()) {
             //If we have different dot values, must offset
             //Or If we have a non-filled in mixed with a filled in notehead, must offset
-            if (noteU.note.duration !== noteL.note.duration || noteU.note.dots !== noteL.note.dots) {
+            if (
+              noteU.note.duration !== noteL.note.duration ||
+              noteU.note.getModifiersByType('Dot').length !== noteL.note.getModifiersByType('Dot').length
+            ) {
               xShift = voiceXShift + 2;
               if (noteU.stemDirection === noteL.stemDirection) {
                 // upper voice is middle voice, so shift it right
@@ -211,7 +214,7 @@ export class StaveNote extends StemmableNote {
                 // shift lower voice right
                 noteL.note.setXShift(xShift);
               }
-              if (noteU.note.dots > 0) {
+              if (noteU.note.getModifiersByType('Dot').length > 0) {
                 let foundDots = 0;
                 for (const modifier of noteU.note.modifiers) {
                   if (modifier.getCategory() === 'Dot') {
@@ -219,7 +222,7 @@ export class StaveNote extends StemmableNote {
                     //offset dot(s) above the shifted note
                     //lines + 1 to negative pixels
                     modifier.setYShift(-10 * (noteL.maxLine - noteU.line + 1));
-                    if (foundDots === noteU.note.dots) {
+                    if (foundDots === noteU.note.getModifiersByType('Dot').length) {
                       break;
                     }
                   }
