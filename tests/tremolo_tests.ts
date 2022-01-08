@@ -72,9 +72,9 @@ function tremoloBig(options: TestOptions): void {
   const tremolo3 = new Tremolo(1);
   tremolo3.extra_stroke_scale = 1.7;
   tremolo3.y_spacing_scale = 1.5;
-  notes1[0].addModifier(tremolo1);
-  notes1[1].addModifier(tremolo2);
-  notes1[2].addModifier(tremolo3);
+  notes1[0].addModifier(0, tremolo1);
+  notes1[1].addModifier(0, tremolo2);
+  notes1[2].addModifier(0, tremolo3);
 
   const voice1 = score.voice(notes1);
 
@@ -96,9 +96,9 @@ function tremoloBig(options: TestOptions): void {
   const tremolo6 = new Tremolo(3);
   tremolo6.extra_stroke_scale = 1.7;
   tremolo6.y_spacing_scale = 1.5;
-  notes2[1].addModifier(tremolo4);
-  notes2[2].addModifier(tremolo5);
-  notes2[3].addModifier(tremolo6);
+  notes2[1].addModifier(0, tremolo4);
+  notes2[2].addModifier(0, tremolo5);
+  notes2[3].addModifier(0, tremolo6);
 
   const voice2 = score.voice(notes2);
 
