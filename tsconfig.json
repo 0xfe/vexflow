@@ -15,5 +15,5 @@
     "removeComments": false
     // "noImplicitOverride": true, /* Introduce in the future for more type safety. Will cause >= 217 errors due to lack of "override" keyword. */
   },
-  "exclude": ["**/node_modules", "./tools/fonts/legacy", "./releases", "./reference", "./build"]
+  "exclude": ["node_modules/**/*", "tools/fonts/legacy", "releases", "reference", "build"]
 }
