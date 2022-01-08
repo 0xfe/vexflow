@@ -7,7 +7,7 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { Dot, isDot } from './dot';
+import { isDot } from './dot';
 import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -213,13 +213,6 @@ export class TabNote extends StemmableNote {
     }
 
     return 0;
-  }
-
-  // Add a dot to the note
-  addDot(): this {
-    const dot = new Dot();
-    this.dots += 1;
-    return this.addModifier(dot, 0);
   }
 
   // Calculate and store the width of the note

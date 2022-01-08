@@ -10,6 +10,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Formatter } from '../src/formatter';
 import { Glyph } from '../src/glyph';
 import { Ornament } from '../src/ornament';
@@ -56,19 +57,19 @@ function drawOrnaments(options: TestOptions, contextBuilder: ContextBuilder): vo
     new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent'), 0);
-  notes[1].addModifier(new Ornament('mordent_inverted'), 0);
-  notes[2].addModifier(new Ornament('turn'), 0);
-  notes[3].addModifier(new Ornament('turn_inverted'), 0);
-  notes[4].addModifier(new Ornament('tr'), 0);
-  notes[5].addModifier(new Ornament('upprall'), 0);
-  notes[6].addModifier(new Ornament('downprall'), 0);
-  notes[7].addModifier(new Ornament('prallup'), 0);
-  notes[8].addModifier(new Ornament('pralldown'), 0);
-  notes[9].addModifier(new Ornament('upmordent'), 0);
-  notes[10].addModifier(new Ornament('downmordent'), 0);
-  notes[11].addModifier(new Ornament('lineprall'), 0);
-  notes[12].addModifier(new Ornament('prallprall'), 0);
+  notes[0].addModifier(0, new Ornament('mordent'));
+  notes[1].addModifier(0, new Ornament('mordent_inverted'));
+  notes[2].addModifier(0, new Ornament('turn'));
+  notes[3].addModifier(0, new Ornament('turn_inverted'));
+  notes[4].addModifier(0, new Ornament('tr'));
+  notes[5].addModifier(0, new Ornament('upprall'));
+  notes[6].addModifier(0, new Ornament('downprall'));
+  notes[7].addModifier(0, new Ornament('prallup'));
+  notes[8].addModifier(0, new Ornament('pralldown'));
+  notes[9].addModifier(0, new Ornament('upmordent'));
+  notes[10].addModifier(0, new Ornament('downmordent'));
+  notes[11].addModifier(0, new Ornament('lineprall'));
+  notes[12].addModifier(0, new Ornament('prallprall'));
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -98,20 +99,20 @@ function drawOrnamentsDisplaced(options: TestOptions, contextBuilder: ContextBui
     new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent'), 0);
-  notes[1].addModifier(new Ornament('mordent_inverted'), 0);
-  notes[1].addModifier(new Ornament('mordent_inverted'), 0);
-  notes[2].addModifier(new Ornament('turn'), 0);
-  notes[3].addModifier(new Ornament('turn_inverted'), 0);
-  notes[4].addModifier(new Ornament('tr'), 0);
-  notes[5].addModifier(new Ornament('upprall'), 0);
-  notes[6].addModifier(new Ornament('downprall'), 0);
-  notes[7].addModifier(new Ornament('prallup'), 0);
-  notes[8].addModifier(new Ornament('pralldown'), 0);
-  notes[9].addModifier(new Ornament('upmordent'), 0);
-  notes[10].addModifier(new Ornament('downmordent'), 0);
-  notes[11].addModifier(new Ornament('lineprall'), 0);
-  notes[12].addModifier(new Ornament('prallprall'), 0);
+  notes[0].addModifier(0, new Ornament('mordent'));
+  notes[1].addModifier(0, new Ornament('mordent_inverted'));
+  notes[1].addModifier(0, new Ornament('mordent_inverted'));
+  notes[2].addModifier(0, new Ornament('turn'));
+  notes[3].addModifier(0, new Ornament('turn_inverted'));
+  notes[4].addModifier(0, new Ornament('tr'));
+  notes[5].addModifier(0, new Ornament('upprall'));
+  notes[6].addModifier(0, new Ornament('downprall'));
+  notes[7].addModifier(0, new Ornament('prallup'));
+  notes[8].addModifier(0, new Ornament('pralldown'));
+  notes[9].addModifier(0, new Ornament('upmordent'));
+  notes[10].addModifier(0, new Ornament('downmordent'));
+  notes[11].addModifier(0, new Ornament('lineprall'));
+  notes[12].addModifier(0, new Ornament('prallprall'));
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -135,10 +136,10 @@ const addDelayedTurns = (options: TestOptions, contextBuilder: ContextBuilder) =
     new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('turn').setDelayed(true), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setDelayed(true), 0);
-  notes[2].addModifier(new Ornament('turn_inverted').setDelayed(true), 0);
-  notes[3].addModifier(new Ornament('turn').setDelayed(true), 0);
+  notes[0].addModifier(0, new Ornament('turn').setDelayed(true));
+  notes[1].addModifier(0, new Ornament('turn_inverted').setDelayed(true));
+  notes[2].addModifier(0, new Ornament('turn_inverted').setDelayed(true));
+  notes[3].addModifier(0, new Ornament('turn').setDelayed(true));
 
   return { context, stave, notes };
 };
@@ -178,15 +179,15 @@ function drawOrnamentsStacked(options: TestOptions, contextBuilder: ContextBuild
     new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted'), 0);
-  notes[2].addModifier(new Ornament('turn'), 0);
-  notes[3].addModifier(new Ornament('turn_inverted'), 0);
+  notes[0].addModifier(0, new Ornament('mordent'));
+  notes[1].addModifier(0, new Ornament('turn_inverted'));
+  notes[2].addModifier(0, new Ornament('turn'));
+  notes[3].addModifier(0, new Ornament('turn_inverted'));
 
-  notes[0].addModifier(new Ornament('turn'), 0);
-  notes[1].addModifier(new Ornament('prallup'), 0);
-  notes[2].addModifier(new Ornament('upmordent'), 0);
-  notes[3].addModifier(new Ornament('lineprall'), 0);
+  notes[0].addModifier(0, new Ornament('turn'));
+  notes[1].addModifier(0, new Ornament('prallup'));
+  notes[2].addModifier(0, new Ornament('upmordent'));
+  notes[3].addModifier(0, new Ornament('lineprall'));
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -214,18 +215,18 @@ function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: Cont
     new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
-  notes[2].addModifier(new Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'), 0);
-  notes[3].addModifier(new Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'), 0);
-  notes[4].addModifier(new Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'), 0);
-  notes[5].addModifier(new Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'), 0);
-  notes[6].addModifier(new Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'), 0);
-  notes[7].addModifier(new Ornament('lineprall').setUpperAccidental('db').setLowerAccidental('db'), 0);
-  notes[8].addModifier(new Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'), 0);
-  notes[9].addModifier(new Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'), 0);
-  notes[10].addModifier(new Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'), 0);
+  notes[0].addModifier(0, new Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'));
+  notes[1].addModifier(0, new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'));
+  notes[1].addModifier(0, new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'));
+  notes[2].addModifier(0, new Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'));
+  notes[3].addModifier(0, new Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'));
+  notes[4].addModifier(0, new Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'));
+  notes[5].addModifier(0, new Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'));
+  notes[6].addModifier(0, new Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'));
+  notes[7].addModifier(0, new Ornament('lineprall').setUpperAccidental('db').setLowerAccidental('db'));
+  notes[8].addModifier(0, new Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'));
+  notes[9].addModifier(0, new Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'));
+  notes[10].addModifier(0, new Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'));
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -239,11 +240,11 @@ function jazzOrnaments(options: TestOptions): void {
     // Helper function to create a StaveNote.
     const note = (keys: string[], duration: string, modifier: Ornament, stemDirection?: number) => {
       const n = new StaveNote({ keys, duration, stem_direction: stemDirection })
-        .addModifier(modifier, 0)
-        .addAccidental(0, new Accidental('b'));
+        .addModifier(0, modifier)
+        .addModifier(0, new Accidental('b'));
       const dot = duration.indexOf('d') >= 0;
       if (dot) {
-        n.addDotToAll();
+        Dot.buildAndAttach([n], { all: true });
       }
       return n;
     };
@@ -258,7 +259,7 @@ function jazzOrnaments(options: TestOptions): void {
     ];
 
     if (modifiers.length > 4) {
-      notes[3].addModifier(modifiers[4], 0);
+      notes[3].addModifier(0, modifiers[4]);
     }
 
     Beam.generateBeams(notes);

@@ -285,7 +285,7 @@ export class Articulation extends Modifier {
         if (position) artic.position = Modifier.PositionString[position];
         return builder.getFactory().Articulation(artic);
       })
-      .map((artic) => note.addModifier(artic, 0));
+      .map((artic) => note.addModifier(0, artic));
   }
 
   /**

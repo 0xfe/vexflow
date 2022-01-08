@@ -5,6 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Dot } from '../src/dot';
 import { Formatter } from '../src/formatter';
 import { Stem } from '../src/stem';
 import { Tuplet } from '../src/tuplet';
@@ -315,7 +316,7 @@ function complex(options: TestOptions): void {
     .map(setStemUp)
     .map(f.StaveNote.bind(f));
 
-  notes1[0].addDotToAll();
+  Dot.buildAndAttach([notes1[0]], { all: true });
 
   const notes2 = [{ keys: ['c/4'] }, { keys: ['c/4'] }, { keys: ['c/4'] }, { keys: ['c/4'] }]
     .map(setDurationToQuarterNote)

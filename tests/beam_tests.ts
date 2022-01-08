@@ -10,6 +10,7 @@ import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import {
   AnnotationVerticalJustify,
   Beam,
+  Dot,
   Font,
   FontStyle,
   FontWeight,
@@ -564,8 +565,7 @@ function tabBeamsDown(options: TestOptions): void {
     return tabNote;
   });
 
-  notes[1].addDot();
-  notes[1].addDot();
+  Dot.buildAndAttach([notes[1], notes[1]]);
 
   f.Beam({ notes: notes.slice(1, 7) });
   f.Beam({ notes: notes.slice(8, 11) });
@@ -748,13 +748,13 @@ function complexWithAnnotation(options: TestOptions): void {
   const notes1 = s1.map((struct) =>
     factory
       .StaveNote(struct) //
-      .addModifier(factory.Annotation({ text: '1', vJustify: AnnotationVerticalJustify.TOP, font }), 0)
+      .addModifier(0, factory.Annotation({ text: '1', vJustify: AnnotationVerticalJustify.TOP, font }))
   );
 
   const notes2 = s2.map((struct) =>
     factory
       .StaveNote(struct) //
-      .addModifier(factory.Annotation({ text: '3', vJustify: AnnotationVerticalJustify.BOTTOM, font }), 0)
+      .addModifier(0, factory.Annotation({ text: '3', vJustify: AnnotationVerticalJustify.BOTTOM, font }))
   );
 
   factory.Beam({ notes: notes1 });
@@ -794,10 +794,10 @@ function complexWithArticulation(options: TestOptions): void {
   ];
 
   const notes1 = s1.map((struct) =>
-    f.StaveNote(struct).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0)
+    f.StaveNote(struct).addModifier(0, f.Articulation({ type: 'am', position: 'above' }))
   );
   const notes2 = s2.map((struct) =>
-    f.StaveNote(struct).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0)
+    f.StaveNote(struct).addModifier(0, f.Articulation({ type: 'a>', position: 'below' }))
   );
 
   f.Beam({ notes: notes1 });

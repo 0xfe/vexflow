@@ -10,6 +10,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import {
   ContextBuilder,
+  Dot,
   Factory,
   Font,
   FontStyle,
@@ -168,16 +169,17 @@ const basic2 = createSingleMeasureTest((f) => {
     ]);
   f.Beam({ notes: voice0.getTickables().slice(1, 8) as StemmableNote[] });
 
-  const voice1 = f
-    .Voice()
-    .addTickables([
-      f.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
-      f.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
-      f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '4', stem_direction: -1 }),
-      f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: -1 }),
-      f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '8d', stem_direction: -1 }).addDotToAll(),
-      f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
-    ]);
+  const notes1 = [
+    f.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '8', stem_direction: -1 }),
+    f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '4', stem_direction: -1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: -1 }),
+    f.StaveNote({ keys: ['d/4/x2', 'c/5'], duration: '8d', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/5'], duration: '16', stem_direction: -1 }),
+  ];
+  Dot.buildAndAttach([notes1[4]], { all: true });
+
+  const voice1 = f.Voice().addTickables(notes1);
 
   f.Beam({ notes: voice1.getTickables().slice(0, 2) as StemmableNote[] });
   f.Beam({ notes: voice1.getTickables().slice(4, 6) as StemmableNote[] });
@@ -194,35 +196,29 @@ const snare0 = createSingleMeasureTest((f) => {
   f.Voice().addTickables([
     f
       .StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 })
-      .addArticulation(0, f.Articulation({ type: 'a>' }))
-      .addModifier(f.Annotation({ text: 'L', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'R', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(f.Annotation({ text: 'L', font }), 0),
+      .addModifier(0, f.Articulation({ type: 'a>' }))
+      .addModifier(0, f.Annotation({ text: 'L', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'R', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'L', font })),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, f.Annotation({ text: 'L', font })),
   ]);
 });
 
 const snare1 = createSingleMeasureTest((f) => {
   f.Voice().addTickables([
-    f
-      .StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 })
-      .addArticulation(0, f.Articulation({ type: 'ah' })),
+    f.StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 }).addModifier(0, f.Articulation({ type: 'ah' })),
     f.StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 }),
-    f
-      .StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 })
-      .addArticulation(0, f.Articulation({ type: 'ah' })),
-    f
-      .StaveNote({ keys: ['a/5/x3'], duration: '4', stem_direction: -1 })
-      .addArticulation(0, f.Articulation({ type: 'a,' })),
+    f.StaveNote({ keys: ['g/5/x2'], duration: '4', stem_direction: -1 }).addModifier(0, f.Articulation({ type: 'ah' })),
+    f.StaveNote({ keys: ['a/5/x3'], duration: '4', stem_direction: -1 }).addModifier(0, f.Articulation({ type: 'a,' })),
   ]);
 });
 
 const snare2 = createSingleMeasureTest((f) => {
   f.Voice().addTickables([
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addArticulation(0, new Tremolo(1)),
-    f.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addArticulation(0, new Tremolo(1)),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addArticulation(0, new Tremolo(3)),
-    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addArticulation(0, new Tremolo(5)),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, new Tremolo(1)),
+    f.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, new Tremolo(1)),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, new Tremolo(3)),
+    f.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: -1 }).addModifier(0, new Tremolo(5)),
   ]);
 });
 
@@ -230,10 +226,10 @@ const snare3 = createSingleMeasureTest((factory) => {
   factory
     .Voice()
     .addTickables([
-      factory.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addArticulation(0, new Tremolo(2)),
-      factory.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addArticulation(0, new Tremolo(2)),
-      factory.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addArticulation(0, new Tremolo(3)),
-      factory.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addArticulation(0, new Tremolo(5)),
+      factory.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addModifier(0, new Tremolo(2)),
+      factory.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addModifier(0, new Tremolo(2)),
+      factory.GraceNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addModifier(0, new Tremolo(3)),
+      factory.StaveNote({ keys: ['c/5'], duration: '4', stem_direction: 1 }).addModifier(0, new Tremolo(5)),
     ]);
 });
 
