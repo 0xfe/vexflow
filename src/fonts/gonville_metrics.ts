@@ -409,5 +409,11 @@ export const GonvilleMetrics = {
         reportedWidth: 5,
       },
     },
+    tuplet: {
+      noteHeadOffset: 20,
+      stemOffset: 10,
+      bottomLine: 4,
+      topModifierOffset: 15,
+    },
   },
 };
