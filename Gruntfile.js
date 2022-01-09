@@ -14,6 +14,8 @@ grunt build:cjs
 grunt build:esm
 grunt build:types
 
+grunt watch:fast
+  - the fastest way to iterate while working on VexFlow.
 grunt watch
 grunt watch:production
 grunt watch:debug
@@ -125,7 +127,7 @@ function webpackConfigs() {
   //   a file name string
   // returns an anonymous function that returns a webpack config object.
   //   this allows the config to be created lazily, so that version file isn't created until it is needed.
-  function config(entryFiles, mode, addBanner, libraryName, customPlugin) {
+  function config(entryFiles, mode, addBanner, libraryName, customPlugin, watch = false) {
     return () => {
       let entry, filename;
       if (Array.isArray(entryFiles)) {
@@ -199,6 +201,7 @@ function webpackConfigs() {
           },
           globalObject,
         },
+        watch,
         resolve: { extensions: ['.ts', '.tsx', '.js', '...'] },
         devtool: DEVTOOL,
         module: {
@@ -280,6 +283,7 @@ function webpackConfigs() {
     // grunt webpack:debugWithTests => build/cjs/vexflow-debug-with-tests.js
     debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'),
     debugWithTests: config(VEX_DEBUG_TESTS, DEVELOPMENT_MODE, true, 'Vex'),
+    debugWithTestsWatch: config(VEX_DEBUG_TESTS, DEVELOPMENT_MODE, true, 'Vex', null, true /* watch */),
   };
 }
 
@@ -447,37 +451,47 @@ module.exports = (grunt) => {
   EventEmitter.defaultMaxListeners = 20;
   grunt.config.set('watch', {
     scripts: {
-      files: ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!node_modules/**', '!build/**'],
+      files: ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!**/node_modules/**', '!build/**'],
       options: {
-        atBegin: true,
-        spawn: false,
-        interrupt: true,
-        debounceDelay: 700,
+        atBegin: false,
+        interrupt: false,
+        debounceDelay: 600,
       },
       tasks: ['clean:build', 'eslint', 'concurrent:all'],
     },
   });
 
-  // grunt watch:debug
-  // Watch for changes and build debug CJS files & esm/*.
-  grunt.registerTask('watch:debug', '', () => {
-    // REPLACE THE DEFAULT WATCH TASKS.
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:debug']);
-    runTask('watch');
+  // On watch events configure eslint to only run on changed file.
+  grunt.event.on('watch', function (action, filePath) {
+    grunt.config.set('eslint.target', [filePath]);
   });
 
   // grunt watch:production
   // Watch for changes and build production CJS files & esm/*.
   grunt.registerTask('watch:production', '', () => {
-    // REPLACE THE DEFAULT WATCH TASKS.
     grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:production']);
     runTask('watch');
+  });
+
+  // grunt watch:debug
+  // Watch for changes and build debug CJS files & esm/*.
+  grunt.registerTask('watch:debug', '', () => {
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:debug']);
+    runTask('watch');
+  });
+
+  // grunt watch:fast
+  // Watch for changes and only emit `build/cjs/vexflow-debug-with-tests.js`
+  // Skips eslint!
+  // This task is the fastest way to iterate while working on VexFlow.
+  grunt.registerTask('watch:fast', '', () => {
+    runTask('clean:build');
+    runTask('webpack:debugWithTestsWatch');
   });
 
   // grunt watch:esm
   // Watch for changes and build esm/*.
   grunt.registerTask('watch:esm', '', () => {
-    // REPLACE THE DEFAULT WATCH TASKS.
     grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'build:esm']);
     runTask('watch');
   });
