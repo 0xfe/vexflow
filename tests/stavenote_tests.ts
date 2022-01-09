@@ -8,11 +8,11 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Dot } from '../src';
 import { Accidental } from '../src/accidental';
 import { Annotation } from '../src/annotation';
 import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { Fraction } from '../src/fraction';

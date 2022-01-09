@@ -442,6 +442,7 @@ module.exports = (grunt) => {
   });
 
   // grunt watch
+  // Watch for changes and build all targets.
   // grunt watch runs many tasks in parallel, so increase the limit (default: 10) to avoid warnings about memory leaks.
   EventEmitter.defaultMaxListeners = 20;
   grunt.config.set('watch', {
@@ -449,15 +450,11 @@ module.exports = (grunt) => {
       files: ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!node_modules/**', '!build/**'],
       options: {
         atBegin: true,
-        spawn: true,
+        spawn: false,
         interrupt: true,
         debounceDelay: 700,
       },
-      tasks: [
-        'clean:build',
-        'eslint', // skip this because it slows down the watch task substantially.
-        'concurrent:all',
-      ],
+      tasks: ['clean:build', 'eslint', 'concurrent:all'],
     },
   });
 
@@ -465,11 +462,7 @@ module.exports = (grunt) => {
   // Watch for changes and build debug CJS files & esm/*.
   grunt.registerTask('watch:debug', '', () => {
     // REPLACE THE DEFAULT WATCH TASKS.
-    grunt.config.set('watch.scripts.tasks', [
-      'clean:build',
-      'eslint', // skip this because it slows down the watch task substantially.
-      'concurrent:debug',
-    ]);
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:debug']);
     runTask('watch');
   });
 
@@ -477,11 +470,15 @@ module.exports = (grunt) => {
   // Watch for changes and build production CJS files & esm/*.
   grunt.registerTask('watch:production', '', () => {
     // REPLACE THE DEFAULT WATCH TASKS.
-    grunt.config.set('watch.scripts.tasks', [
-      'clean:build',
-      'eslint', // skip this because it slows down the watch task substantially.
-      'concurrent:production',
-    ]);
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:production']);
+    runTask('watch');
+  });
+
+  // grunt watch:esm
+  // Watch for changes and build esm/*.
+  grunt.registerTask('watch:esm', '', () => {
+    // REPLACE THE DEFAULT WATCH TASKS.
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'build:esm']);
     runTask('watch');
   });
 
@@ -533,11 +530,13 @@ module.exports = (grunt) => {
     'copy:reference',
   ]);
 
+  // grunt generate:current
   // node ./tools/generate_images.js build ./build/images/current ${VEX_GENERATE_OPTIONS}
   grunt.registerTask('generate:current', 'Create images from the vexflow version in build/.', () => {
     runCommand('node', './tools/generate_images.js', 'build', './build/images/current', ...GENERATE_IMAGES_ARGS);
   });
 
+  // grunt generate:reference
   // node ./tools/generate_images.js reference ./build/images/reference ${VEX_GENERATE_OPTIONS}
   grunt.registerTask('generate:reference', 'Create images from vexflow version in reference/.', () => {
     runCommand('node', './tools/generate_images.js', 'reference', './build/images/reference', ...GENERATE_IMAGES_ARGS);
@@ -589,11 +588,13 @@ module.exports = (grunt) => {
   });
 
   // grunt get:releases:3.0.9:4.0.0   =>   node ./tools/get_releases.mjs 3.0.9 4.0.0
+  // Note: the arguments are separated by colons!
   grunt.registerTask('get:releases', '', () => {
     runCommand('node', './tools/get_releases.mjs', ...grunt.task.current.args);
   });
 
   // grunt release
+  // Release to npm and GitHub.
   grunt.registerTask('release', '', () => {
     runCommand('npx', 'release-it');
   });
@@ -613,7 +614,8 @@ module.exports = (grunt) => {
     runCommand('npx', 'release-it', '--preRelease=rc');
   });
 
-  // grunt release:alpha
+  // grunt release:dry-run
+  // Walk through the release process without actually doing anything.
   grunt.registerTask('release:dry-run', '', () => {
     runCommand('npx', 'release-it', '--dry-run');
   });
