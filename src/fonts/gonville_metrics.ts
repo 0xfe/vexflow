@@ -409,6 +409,14 @@ export const GonvilleMetrics = {
         reportedWidth: 5,
       },
     },
+    tremolo: {
+      default: {
+        shiftY: -10,
+      },
+      grace: {
+        shiftY: -5,
+      },
+    },
     tuplet: {
       noteHeadOffset: 20,
       stemOffset: 10,
