@@ -1,12 +1,21 @@
-// global module, __dirname, process, require
 /*
 This Gruntfile supports these commands:  
 
 grunt
   - build the complete set of VexFlow libraries for production and debug use.
+grunt test
+  - build the VexFlow libraries and run the QUnit command line tests with 'tests/flow-headless-browser.html'.
+grunt reference
+  - build the VexFlow libraries and run the copy:reference task, which copies the 
+    current build/ to the reference/ folder, so that we can compare future builds to the reference/.
+grunt copy:reference
+  - if you have recently run `grunt test` call this to save the current build/ to reference/.
+grunt build:cjs
+grunt build:esm
+grunt build:types
 
-
-
+grunt webpack:allFontLibs
+  - build the VexFlow font libraries that are used for lazy loading by vexflow-core.js.
   
 This Gruntfile supports these optional environment variables:
   VEX_DEBUG_CIRCULAR_DEPENDENCIES
@@ -33,10 +42,7 @@ const { EventEmitter } = require('events');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
-const DEBUG_CIRCULAR_DEPENDENCIES =
-  process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === 'true' || process.env.VEX_DEBUG_CIRCULAR_DEPENDENCIES === '1';
-
-// A module entry file `entry/xxxx.ts` will be mapped to a build output file `build/xxxx.js`.
+// A module entry file `entry/xxxx.ts` will be mapped to a build output file in build/cjs/ or /build/esm/entry/.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
 const VEX = 'vexflow';
 const VEX_BRAVURA = 'vexflow-bravura';
@@ -47,7 +53,6 @@ const VEX_FONT_BRAVURA = 'vexflow-font-bravura';
 const VEX_FONT_GONVILLE = 'vexflow-font-gonville';
 const VEX_FONT_PETALUMA = 'vexflow-font-petaluma';
 const VEX_FONT_CUSTOM = 'vexflow-font-custom';
-
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
@@ -67,6 +72,25 @@ const PRODUCTION_MODE = 'production';
 // const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
+// Read environment variables to configure our scripts.
+let DEBUG_CIRCULAR_DEPENDENCIES, DEVTOOL, GENERATE_IMAGES_ARGS;
+function readEnvironmentVariables() {
+  const env = process.env;
+  let val = env.VEX_DEBUG_CIRCULAR_DEPENDENCIES;
+  DEBUG_CIRCULAR_DEPENDENCIES = val === 'true' || val === '1';
+
+  // Control the type of source maps that will be produced.
+  // See: https://webpack.js.org/configuration/devtool/
+  // In version 3.0.9 this environment variable was called VEX_GENMAP.
+  DEVTOOL = env.VEX_DEVTOOL || false; // false == no source map
+  // DEVTOOL = false;
+  // DEVTOOL = 'source-map';
+
+  val = env.VEX_GENERATE_OPTIONS;
+  GENERATE_IMAGES_ARGS = val ? val.split(' ') : [];
+}
+readEnvironmentVariables();
+
 function generateVersionFile() {
   // Generate version information when we run a build.
   // Save the information in src/version.ts.
@@ -84,19 +108,34 @@ function runCommand(command, ...args) {
 }
 
 function webpackConfigs() {
-  // entryFiles is an array of file names.
+  // entryFiles is one of the following:
+  //   an array of file names
+  //   an object that maps entry names to file names
+  //   a file name string
+  // returns an anonymous function that returns a webpack config object.
+  //   this allows the config to be created lazily, so that version file isn't created until it is needed.
   function config(entryFiles, mode, addBanner, libraryName, customPlugin) {
     return () => {
-      let entry;
+      let entry, filename;
       if (Array.isArray(entryFiles)) {
         entry = {};
-        for (const fileName of entryFiles) {
+        for (const entryFileName of entryFiles) {
           // The entry point is a full path to a typescript file in vexflow/entry/.
-          entry[fileName] = path.join(BASE_DIR, 'entry/', fileName + '.ts');
+          entry[entryFileName] = path.join(BASE_DIR, 'entry/', entryFileName + '.ts');
         }
+        filename = '[name].js'; // output file names are based on the keys of the entry object above.
+      } else if (typeof entryFiles === 'object') {
+        entry = {};
+        for (const k in entryFiles) {
+          const entryFileName = entryFiles[k];
+          entry[k] = path.join(BASE_DIR, 'entry/', entryFileName + '.ts');
+        }
+        filename = '[name].js'; // output file names are based on the keys of the entry object above.
       } else {
-        const fileName = entryFiles;
-        entry = path.join(BASE_DIR, 'entry/', fileName + '.ts');
+        // entryFiles is a string representing a single file name.
+        const entryFileName = entryFiles;
+        entry = path.join(BASE_DIR, 'entry/', entryFileName + '.ts');
+        filename = entryFileName + '.js'; // output file name is the same as the entry file name, but with the js extension.
       }
 
       // Support different ways of loading VexFlow.
@@ -111,35 +150,29 @@ function webpackConfigs() {
       // without the parentheses, code splitting will be broken. Search for `webpackChunkVex` inside the output files.
       let globalObject = `(typeof window !== 'undefined' ? window : typeof globalThis !== 'undefined' ? globalThis : this)`;
 
-      // Control the type of source maps that will be produced.
-      // See: https://webpack.js.org/configuration/devtool/
-      // In version 3.0.9 this was called VEX_GENMAP.
-      const devtool = process.env.VEX_DEVTOOL || false; // false == no source map
-      // const devtool = 'source-map';
+      function getPlugins() {
+        const plugins = [];
 
-      let plugins = [];
+        // Add a banner at the top of the file.
+        const { BUILD_VERSION, BUILD_ID, BUILD_DATE } = generateVersionFile();
+        if (addBanner) {
+          const banner =
+            `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
+            `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
+            `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
+          plugins.push(new webpack.BannerPlugin(banner));
+        }
 
-      // Add a banner at the top of the file.
-      const { BUILD_VERSION, BUILD_ID, BUILD_DATE } = generateVersionFile();
-      if (addBanner) {
-        const banner =
-          `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
-          `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
-          `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
-        plugins.push(new webpack.BannerPlugin(banner));
-      }
+        if (DEBUG_CIRCULAR_DEPENDENCIES) {
+          const CircularDependencyPlugin = require('circular-dependency-plugin');
+          plugins.push(new CircularDependencyPlugin({ cwd: process.cwd() }));
+        }
 
-      if (DEBUG_CIRCULAR_DEPENDENCIES) {
-        const CircularDependencyPlugin = require('circular-dependency-plugin');
-        plugins.push(
-          new CircularDependencyPlugin({
-            cwd: process.cwd(),
-          })
-        );
-      }
+        if (customPlugin) {
+          plugins.push(customPlugin);
+        }
 
-      if (customPlugin) {
-        plugins.push(customPlugin);
+        return plugins;
       }
 
       return {
@@ -147,7 +180,7 @@ function webpackConfigs() {
         entry,
         output: {
           path: BUILD_CJS_DIR,
-          filename: '[name].js', // output file names are based on the keys of the entry object above.
+          filename: filename,
           library: {
             name: libraryName,
             type: 'umd',
@@ -155,18 +188,14 @@ function webpackConfigs() {
           },
           globalObject,
         },
-        resolve: {
-          extensions: ['.ts', '.tsx', '.js', '...'],
-        },
-        devtool,
+        resolve: { extensions: ['.ts', '.tsx', '.js', '...'] },
+        devtool: DEVTOOL,
         module: {
           rules: [
             {
               test: /(\.ts$|\.js$)/,
               exclude: /node_modules/,
-              resolve: {
-                fullySpecified: false,
-              },
+              resolve: { fullySpecified: false },
               use: [
                 {
                   loader: 'ts-loader',
@@ -176,7 +205,7 @@ function webpackConfigs() {
             },
           ],
         },
-        plugins,
+        plugins: getPlugins(),
         optimization: {
           minimizer: [
             // DO NOT extract the banner into a separate file.
@@ -187,16 +216,18 @@ function webpackConfigs() {
     };
   }
 
-  class FixFontModulesPlugin {
+  // After webpack builds the font modules, they will need to be renamed!
+  class RenameFontModulesPlugin {
     apply(compiler) {
-      compiler.hooks.done.tap('String Replace', (stats) => {
-        const xxx = {
-          Bravura: path.join(BUILD_DIR, 'cjs', 'vexflow-font-bravura.js'),
-          Petaluma: path.join(BUILD_DIR, 'cjs', 'vexflow-font-petaluma.js'),
-          Gonville: path.join(BUILD_DIR, 'cjs', 'vexflow-font-gonville.js'),
-          Custom: path.join(BUILD_DIR, 'cjs', 'vexflow-font-custom.js'),
-        };
-        // RENAME THE FILES
+      compiler.hooks.done.tap('RENAME FILES', (stats) => {
+        const filesToRename = ['Bravura.js', 'Gonville.js', 'Petaluma.js', 'Custom.js'];
+        for (const fileName of filesToRename) {
+          const oldPath = path.join(BUILD_CJS_DIR, fileName);
+          const newPath = path.join(BUILD_CJS_DIR, 'vexflow-font-' + fileName.toLowerCase());
+          if (fs.existsSync(oldPath)) {
+            fs.rename(oldPath, newPath);
+          }
+        }
       });
     }
   }
@@ -206,29 +237,33 @@ function webpackConfigs() {
     allProdLibs: config([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, true, 'Vex'),
     allDebugLibs: config([VEX_DEBUG, VEX_DEBUG_TESTS], DEVELOPMENT_MODE, true, 'Vex'),
     allFontLibs: config(
-      [VEX_FONT_BRAVURA, VEX_FONT_PETALUMA, VEX_FONT_GONVILLE, VEX_FONT_CUSTOM],
+      {
+        Bravura: VEX_FONT_BRAVURA,
+        Petaluma: VEX_FONT_PETALUMA,
+        Gonville: VEX_FONT_GONVILLE,
+        Custom: VEX_FONT_CUSTOM,
+      },
       PRODUCTION_MODE,
       false,
-      ['VexFlowFont', '__FONT_NAME__'],
-      new FixFontModulesPlugin(),
-      true /* turn off the source maps */
+      ['VexFlowFont', '[name]'],
+      new RenameFontModulesPlugin()
     ),
     // Individual build targets for production VexFlow libraries.
-    prodAllFonts: config([VEX], PRODUCTION_MODE, true, 'Vex'),
-    prodBravuraOnly: config([VEX_BRAVURA], PRODUCTION_MODE, true, 'Vex'),
-    prodGonvilleOnly: config([VEX_GONVILLE], PRODUCTION_MODE, true, 'Vex'),
-    prodPetalumaOnly: config([VEX_PETALUMA], PRODUCTION_MODE, true, 'Vex'),
-    prodNoFonts: config([VEX_CORE], PRODUCTION_MODE, true, 'Vex'),
+    prodAllFonts: config(VEX, PRODUCTION_MODE, true, 'Vex'),
+    prodBravuraOnly: config(VEX_BRAVURA, PRODUCTION_MODE, true, 'Vex'),
+    prodGonvilleOnly: config(VEX_GONVILLE, PRODUCTION_MODE, true, 'Vex'),
+    prodPetalumaOnly: config(VEX_PETALUMA, PRODUCTION_MODE, true, 'Vex'),
+    prodNoFonts: config(VEX_CORE, PRODUCTION_MODE, true, 'Vex'),
     // Individual build targets for production VexFlow font modules (for dynamic loading).
     // Pass in `false` to disable the MIT license banner for font module files.
-    prodFontBravura: config([VEX_FONT_BRAVURA], PRODUCTION_MODE, false, ['VexFlowFont', 'Bravura']),
-    prodFontPetaluma: config([VEX_FONT_PETALUMA], PRODUCTION_MODE, false, ['VexFlowFont', 'Petaluma']),
-    prodFontGonville: config([VEX_FONT_GONVILLE], PRODUCTION_MODE, false, ['VexFlowFont', 'Gonville']),
-    prodFontCustom: config([VEX_FONT_CUSTOM], PRODUCTION_MODE, false, ['VexFlowFont', 'Custom']),
+    prodFontBravura: config(VEX_FONT_BRAVURA, PRODUCTION_MODE, false, ['VexFlowFont', 'Bravura']),
+    prodFontPetaluma: config(VEX_FONT_PETALUMA, PRODUCTION_MODE, false, ['VexFlowFont', 'Petaluma']),
+    prodFontGonville: config(VEX_FONT_GONVILLE, PRODUCTION_MODE, false, ['VexFlowFont', 'Gonville']),
+    prodFontCustom: config(VEX_FONT_CUSTOM, PRODUCTION_MODE, false, ['VexFlowFont', 'Custom']),
     // Individual build targets for development / debugging.
     // The DEVELOPMENT_MODE flag disables code minification.
-    debug: config([VEX_DEBUG], DEVELOPMENT_MODE, true, 'Vex'),
-    debugWithTests: config([VEX_DEBUG_TESTS], DEVELOPMENT_MODE, true, 'Vex'),
+    debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'),
+    debugWithTests: config(VEX_DEBUG_TESTS, DEVELOPMENT_MODE, true, 'Vex'),
   };
 }
 
@@ -247,10 +282,15 @@ module.exports = (grunt) => {
         logConcurrentOutput: true,
         indent: true,
       },
+      // grunt concurrent:all
       all: ['webpack:allProdLibs', 'webpack:allFontLibs', 'webpack:allDebugLibs', 'build:esm'],
+      // grunt concurrent:debug
       debug: ['webpack:allDebugLibs', 'build:esm'],
+      // grunt concurrent:production
       production: ['webpack:allProdLibs', 'webpack:allFontLibs', 'build:esm'],
+      // grunt concurrent:cjs
       cjs: ['webpack:allProdLibs', 'webpack:allFontLibs', 'webpack:allDebugLibs'],
+      // grunt concurrent:types
       types: ['build:types', 'typedoc'],
     },
     // grunt eslint
@@ -262,9 +302,11 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
     },
     open: {
+      // grunt open:flow_html
       flow_html: {
         path: './tests/flow.html',
       },
+      // grunt open:flow_localhost
       flow_localhost: {
         path: 'http://127.0.0.1:8080/tests/flow.html?esm=true',
       },
@@ -306,6 +348,7 @@ module.exports = (grunt) => {
         ],
       },
     },
+    // grunt typedoc
     typedoc: {
       build: {
         options: {
@@ -318,9 +361,13 @@ module.exports = (grunt) => {
         src: ['./src/index.ts'],
       },
     },
+    // grunt clean
     clean: {
+      // grunt clean:build
       build: { src: [BUILD_DIR] },
+      // grunt clean:reference
       reference: { src: [REFERENCE_DIR] },
+      // grunt clean:reference_images
       reference_images: { src: [REFERENCE_IMAGES_DIR] },
     },
   });
@@ -335,10 +382,9 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-webpack');
 
-  // This task is run when you type one of the following commands:
-  //   grunt
-  //   npm start
-  // Builds all targets for production and debugging.
+  // This task is run when you type:
+  // grunt
+  // Build all targets for production and debugging.
   grunt.registerTask('default', 'Build all VexFlow targets.', [
     'clean:build',
     'eslint',
@@ -346,7 +392,7 @@ module.exports = (grunt) => {
     'concurrent:types',
   ]);
 
-  // `grunt test`
+  // grunt test
   // Run command line qunit tests.
   grunt.registerTask('test', 'Run command line unit tests.', [
     //
@@ -377,6 +423,7 @@ module.exports = (grunt) => {
     runCommand('cp', './tools/esm/package.json', './build/esm/package.json');
   });
 
+  // grunt build:types
   // Output *.d.ts files to build/types/.
   grunt.registerTask('build:types', 'Use tsc to create *.d.ts files in build/types/', () => {
     log('Building *.d.ts files in build/types/');
@@ -477,37 +524,36 @@ module.exports = (grunt) => {
 
   // node ./tools/generate_images.js build ./build/images/current ${VEX_GENERATE_OPTIONS}
   grunt.registerTask('generate:current', 'Create images from the vexflow version in build/.', () => {
-    const options = process.env.VEX_GENERATE_OPTIONS;
-    const args = options ? options.split(' ') : [];
-    runCommand('node', './tools/generate_images.js', 'build', './build/images/current', ...args);
+    runCommand('node', './tools/generate_images.js', 'build', './build/images/current', ...GENERATE_IMAGES_ARGS);
   });
 
   // node ./tools/generate_images.js reference ./build/images/reference ${VEX_GENERATE_OPTIONS}
   grunt.registerTask('generate:reference', 'Create images from vexflow version in reference/.', () => {
-    const options = process.env.VEX_GENERATE_OPTIONS;
-    const args = options ? options.split(' ') : [];
-    runCommand('node', './tools/generate_images.js', 'reference', './build/images/reference', ...args);
+    runCommand('node', './tools/generate_images.js', 'reference', './build/images/reference', ...GENERATE_IMAGES_ARGS);
   });
 
+  // grunt generate:version
   grunt.registerTask('generate:version', '', () => {
     const info = generateVersionFile();
     console.log(info);
   });
 
-  // ./tools/visual_regression.sh reference
+  // grunt diff:reference
   grunt.registerTask('diff:reference', 'Compare ', () => {
     runCommand('./tools/visual_regression.sh');
   });
 
   // grunt test:reference
-  grunt.registerTask('test:reference', '', [
-    //
+  grunt.registerTask('test:reference', 'Generate images from build/ and reference/ and compare them.', [
     'test',
     'generate:current',
     'generate:reference',
     'diff:reference',
   ]);
 
+  // grunt test:reference:cache
+  // Faster than `grunt test:reference` because it reuses the existing reference images.
+  // It skips the 'generate:reference' task.
   grunt.registerTask('test:reference:cache', '', [
     'cache:save:reference',
     'test',
