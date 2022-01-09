@@ -2,6 +2,8 @@
 
 Please help test this beta release and [report issues on GitHub](https://github.com/0xfe/vexflow/issues). Thanks!
 
+Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/ChangeLog-v.-4.0.0
+
 ## Features
 
 - Migrate VexFlow to **TypeScript** with a ES6 target.
