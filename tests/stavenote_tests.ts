@@ -61,6 +61,7 @@ const StaveNoteTests = {
     run('Flag and Dots Placement - Stem Down', dotsAndFlagsStemDown);
     run('Beam and Dot Placement - Stem Up', dotsAndBeamsUp);
     run('Beam and Dot Placement - Stem Down', dotsAndBeamsDown);
+    run('Note Heads Placement - Simple', noteHeadsSimple);
     run('Center Aligned Note', centerAlignedRest);
     run('Center Aligned Note with Articulation', centerAlignedRestFermata);
     run('Center Aligned Note with Annotation', centerAlignedRestAnnotation);
@@ -993,6 +994,43 @@ function dotsAndBeamsDown(options: TestOptions, contextBuilder: ContextBuilder):
   beam.setContext(ctx).draw();
 
   ok(true, 'Full Dot');
+}
+
+function noteHeadsSimple(options: TestOptions): void {
+  const vf = VexFlowTests.makeFactory(options, 800, 250);
+  const score = vf.EasyScore();
+
+  const system1 = vf.System({ y: 100, x: 50, width: 200 });
+  system1
+    .addStave({
+      voices: [
+        score.voice([...score.beam(score.notes('a4/8, b4/8', { stem: 'up' })), ...score.notes('a4/q/r, a4/h/r')]),
+        score.voice(score.notes('g4/w')),
+      ],
+    })
+    .addClef('treble')
+    .addTimeSignature('4/4');
+
+  const system2 = vf.System({ y: 100, x: 250, width: 150 });
+  system2.addStave({
+    voices: [score.voice(score.notes('b4/h, b4/h/r')), score.voice(score.notes('b4/w'))],
+  });
+
+  const system3 = vf.System({ y: 100, x: 400, width: 150 });
+  system3.addStave({
+    voices: [score.voice(score.notes('d5/h, d5/h/r')), score.voice(score.notes('e4/w'))],
+  });
+
+  const system4 = vf.System({ y: 100, x: 550, width: 150 });
+  system4.addStave({
+    voices: [
+      score.voice(score.notes('e4/q, e4/q/r, e4/h/r')),
+      score.voice(score.notes('e4/8, e4/8/r, e4/q/r, e4/h/r')),
+    ],
+  });
+
+  vf.draw();
+  expect(0);
 }
 
 function centerAlignedRest(options: TestOptions): void {
