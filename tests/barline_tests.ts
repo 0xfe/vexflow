@@ -36,8 +36,8 @@ function simple(options: TestOptions): void {
     f.BarNote({ type: 'single' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
-      .addAccidental(0, f.Accidental({ type: 'n' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'n' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
   ];
 
   const voice = f.Voice().addTickables(notes);
@@ -56,8 +56,8 @@ function style(options: TestOptions): void {
     f.BarNote({ type: 'single' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '2' })
-      .addAccidental(0, f.Accidental({ type: 'n' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'n' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
   ];
   notes[1].setStyle({ shadowBlur: 15, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 

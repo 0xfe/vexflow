@@ -5,6 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Dot } from '../src';
 import { Flow } from '../src/flow';
 import { Font, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
@@ -512,9 +513,7 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
 
   const notes = specs.map((struct) => new TabNote(struct, true /* draw_stem */));
 
-  notes[0].addDot();
-  notes[2].addDot();
-  notes[2].addDot();
+  Dot.buildAndAttach([notes[0], notes[2], notes[2]]);
 
   const voice = new Voice(Flow.TIME4_4).setMode(VoiceMode.SOFT);
   voice.addTickables(notes);

@@ -21,6 +21,32 @@ export class Dot extends Modifier {
   protected radius: number;
   protected dot_shiftY: number;
 
+  /** Returns the dots associated to a Note. */
+  static getDots(note: Note): Dot[] {
+    return note.getModifiersByType(Dot.CATEGORY) as Dot[];
+  }
+
+  /** Add a dot on the specified keys to the notes. */
+  static buildAndAttach(notes: Note[], options?: { index?: number; all?: boolean }): void {
+    for (const note of notes) {
+      if (options?.all) {
+        for (let i = 0; i < note.keys.length; i++) {
+          const dot = new Dot();
+          dot.setDotShiftY(note.glyph.dot_shiftY);
+          note.addModifier(i, dot);
+        }
+      } else if (options?.index != undefined) {
+        const dot = new Dot();
+        dot.setDotShiftY(note.glyph.dot_shiftY);
+        note.addModifier(options?.index, dot);
+      } else {
+        const dot = new Dot();
+        dot.setDotShiftY(note.glyph.dot_shiftY);
+        note.addModifier(0, dot);
+      }
+    }
+  }
+
   // Arrange dots inside a ModifierContext.
   static format(dots: Dot[], state: ModifierContextState): boolean {
     const right_shift = state.right_shift;

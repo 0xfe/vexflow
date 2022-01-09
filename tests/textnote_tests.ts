@@ -34,13 +34,13 @@ function formatTextNotes(options: TestOptions): void {
   const voice1 = score.voice([
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: 'q' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: 'q' })
-      .addAccidental(0, f.Accidental({ type: 'n' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'n' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
   ]);
 
   const voice2 = score.voice([
@@ -118,13 +118,13 @@ function superscriptAndSubscript(options: TestOptions): void {
   const voice1 = score.voice([
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: 'h' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: 1, duration: 'q' }),
     f
       .StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: 1, duration: 'q' })
-      .addAccidental(0, f.Accidental({ type: 'n' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'n' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
   ]);
 
   const voice2 = score.voice([
@@ -158,8 +158,8 @@ function formatTextGlyphs0(options: TestOptions): void {
   const voice1 = score.voice([
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
     f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
     f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
@@ -196,8 +196,8 @@ function formatTextGlyphs1(options: TestOptions): void {
   const voice1 = score.voice([
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: -1, duration: 'h' })
-      .addAccidental(0, f.Accidental({ type: 'b' }))
-      .addAccidental(1, f.Accidental({ type: '#' })),
+      .addModifier(0, f.Accidental({ type: 'b' }))
+      .addModifier(1, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['d/4', 'e/4', 'f/4'], stem_direction: -1, duration: '8' }),
     f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),
     f.StaveNote({ keys: ['c/4', 'f/4', 'a/4'], stem_direction: -1, duration: '8' }),

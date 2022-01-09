@@ -272,9 +272,13 @@ export abstract class Tickable extends Element {
     return this;
   }
 
-  /** Optional, if tickable has modifiers, associate a Modifier. */
+  /**
+   * Optional, if tickable has modifiers, associate a Modifier.
+   * @param index ignored
+   * @param mod the modifier
+   */
   // eslint-disable-next-line
-  addModifier(mod: Modifier, ...optionalArgs: any[]): this {
+  addModifier(index: number, mod: Modifier): this {
     this.modifiers.push(mod);
     this._preFormatted = false;
     return this;

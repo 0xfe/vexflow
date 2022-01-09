@@ -33,6 +33,7 @@ const StaveTests = {
     run('Stave Draw Test', draw);
     run('Open Stave Draw Test', drawOpenStave);
     run('Multiple Stave Barline Test', drawMultipleMeasures);
+    run('Multiple Stave Barline Test (14pt Section)', drawMultipleMeasures, { fontSize: 14 });
     run('Multiple Stave Repeats Test', drawRepeats);
     run('Stave End Modifiers Test', drawEndModifiers);
     run('Multiple Staves Volta Test', drawVolta);
@@ -147,7 +148,7 @@ function drawMultipleMeasures(options: TestOptions, contextBuilder: ContextBuild
   const staveBar1 = new Stave(10, 50, 200);
   staveBar1.setBegBarType(BarlineType.REPEAT_BEGIN);
   staveBar1.setEndBarType(BarlineType.DOUBLE);
-  staveBar1.setSection('A', 0);
+  staveBar1.setSection('A', 0, 0, options.params?.fontSize);
   staveBar1.addClef('treble').setContext(ctx).draw();
   const notesBar1 = [
     new StaveNote({ keys: ['c/4'], duration: 'q' }),
@@ -161,7 +162,7 @@ function drawMultipleMeasures(options: TestOptions, contextBuilder: ContextBuild
 
   // bar 2 - juxtaposing second bar next to first bar
   const staveBar2 = new Stave(staveBar1.getWidth() + staveBar1.getX(), staveBar1.getY(), 300);
-  staveBar2.setSection('B', 0);
+  staveBar2.setSection('B', 0, 0, options.params?.fontSize);
   staveBar2.setEndBarType(BarlineType.END);
   staveBar2.setContext(ctx).draw();
 
@@ -234,9 +235,9 @@ function drawRepeats(options: TestOptions, contextBuilder: ContextBuilder): void
     new StaveNote({ keys: ['g/4'], duration: '8' }),
     new StaveNote({ keys: ['e/4'], duration: '8' }),
   ];
-  notesBar2_part2[0].addAccidental(0, new Accidental('#'));
-  notesBar2_part2[1].addAccidental(0, new Accidental('#'));
-  notesBar2_part2[3].addAccidental(0, new Accidental('b'));
+  notesBar2_part2[0].addModifier(0, new Accidental('#'));
+  notesBar2_part2[1].addModifier(0, new Accidental('#'));
+  notesBar2_part2[3].addModifier(0, new Accidental('b'));
   // create the beams for 8th notes in 2nd measure
   const beam1 = new Beam(notesBar2_part1);
   const beam2 = new Beam(notesBar2_part2);

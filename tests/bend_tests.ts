@@ -52,8 +52,8 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
       ],
       duration: 'q',
     })
-      .addModifier(bendWithText('Full'), 0)
-      .addModifier(bendWithText('1/2'), 1),
+      .addModifier(0, bendWithText('Full'))
+      .addModifier(1, bendWithText('1/2')),
 
     note({
       positions: [
@@ -62,8 +62,8 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
       ],
       duration: 'q',
     })
-      .addModifier(bendWithText('1/4'), 0)
-      .addModifier(bendWithText('1/4'), 1),
+      .addModifier(0, bendWithText('1/4'))
+      .addModifier(1, bendWithText('1/4')),
 
     // This note is not visible because it is pushed off to the right by the ctx.scale(1.5, 1.5) at the top.
     note({
@@ -93,8 +93,8 @@ function doubleBendsWithRelease(options: TestOptions, contextBuilder: ContextBui
       ],
       duration: 'q',
     })
-      .addModifier(bendWithText('1/2', true), 0)
-      .addModifier(bendWithText('Full', true), 1),
+      .addModifier(0, bendWithText('1/2', true))
+      .addModifier(1, bendWithText('Full', true)),
 
     note({
       positions: [
@@ -104,9 +104,9 @@ function doubleBendsWithRelease(options: TestOptions, contextBuilder: ContextBui
       ],
       duration: 'q',
     })
-      .addModifier(bendWithText('1/4', true), 0)
-      .addModifier(bendWithText('Monstrous', true), 1)
-      .addModifier(bendWithText('1/4', true), 2),
+      .addModifier(0, bendWithText('1/4', true))
+      .addModifier(1, bendWithText('Monstrous', true))
+      .addModifier(2, bendWithText('1/4', true)),
 
     note({
       positions: [{ str: 4, fret: 7 }],
@@ -146,8 +146,8 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
       ],
       duration: 'w',
     })
-      .addModifier(bendWithText('Full'), 1)
-      .addModifier(bendWithText('1/2'), 0),
+      .addModifier(1, bendWithText('Full'))
+      .addModifier(0, bendWithText('1/2')),
 
     note({
       positions: [
@@ -156,8 +156,8 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
       ],
       duration: 'w',
     })
-      .addModifier(bendWithText('1/4'), 1)
-      .addModifier(bendWithText('1/4'), 0),
+      .addModifier(1, bendWithText('1/4'))
+      .addModifier(0, bendWithText('1/4')),
 
     note({
       positions: [{ str: 4, fret: 7 }],
@@ -202,7 +202,7 @@ function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void 
     note({
       positions: [{ str: 2, fret: 10 }],
       duration: 'w',
-    }).addModifier(bend1, 0),
+    }).addModifier(0, bend1),
   ];
 
   for (let i = 0; i < notes.length; ++i) {
@@ -254,8 +254,8 @@ function whackoBends(options: TestOptions, contextBuilder: ContextBuilder): void
       ],
       duration: 'q',
     })
-      .addModifier(bendWithPhrase(phrase1), 0)
-      .addModifier(bendWithPhrase(phrase2), 1),
+      .addModifier(0, bendWithPhrase(phrase1))
+      .addModifier(1, bendWithPhrase(phrase2)),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);

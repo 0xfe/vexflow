@@ -44,6 +44,7 @@ export * from './note';
 export * from './notehead';
 export * from './notesubgroup';
 export * from './ornament';
+export * from './parenthesis';
 export * from './parser';
 export * from './pedalmarking';
 export * from './registry';

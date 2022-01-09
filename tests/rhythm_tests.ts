@@ -271,7 +271,7 @@ function drawSlashAndBeamAndRests(options: TestOptions, contextBuilder: ContextB
     new StaveNote({ keys: ['b/4'], duration: '8s', stem_direction: -1 }),
   ];
 
-  notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 2), 0);
+  notesBar1_part1[0].addModifier(0, new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 2));
 
   const notesBar1_part2 = [
     new StaveNote({
@@ -327,7 +327,7 @@ function drawSlashAndBeamAndRests(options: TestOptions, contextBuilder: ContextB
     }),
   ];
 
-  notesBar2[0].addModifier(new Annotation('F').setFont('Times', VexFlowTests.Font.size + 2), 0);
+  notesBar2[0].addModifier(0, new Annotation('F').setFont('Times', VexFlowTests.Font.size + 2));
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
@@ -393,7 +393,7 @@ function drawSixtenthWithScratches(options: TestOptions, contextBuilder: Context
     }),
   ];
 
-  notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
+  notesBar1_part1[0].addModifier(0, new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3));
 
   // create the beams for 8th notes in 2nd measure
   const beam1 = new Beam(notesBar1_part1);
@@ -465,7 +465,7 @@ function drawThirtySecondWithScratches(options: TestOptions, contextBuilder: Con
     }),
   ];
 
-  notesBar1_part1[0].addModifier(new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3), 0);
+  notesBar1_part1[0].addModifier(0, new Annotation('C7').setFont('Times', VexFlowTests.Font.size + 3));
 
   // Create the beams for 8th notes in 2nd measure.
   const beam1 = new Beam(notesBar1_part1);

@@ -81,7 +81,7 @@ function lyrics(options: TestOptions): void {
       const noteGroup = registry.getElementById(noteGroupID) as Tickable;
       const lyricsAnnotation = f.Annotation({ text }).setFont('Roboto Slab', fontSize);
       lyricsAnnotation.setPosition(ModifierPosition.ABOVE);
-      noteGroup.addModifier(lyricsAnnotation, verse);
+      noteGroup.addModifier(verse, lyricsAnnotation);
     });
 
     // Second row doesn't have any lyrics.
@@ -113,13 +113,13 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 4, fret: 9 },
       ],
       duration: 'h',
-    }).addModifier(new Annotation('T'), 0),
+    }).addModifier(0, new Annotation('T')),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('T'), 0)
-      .addModifier(new Bend('Full'), 0),
+      .addModifier(0, new Annotation('T'))
+      .addModifier(0, new Bend('Full')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -136,8 +136,8 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
 
   const notes = [
-    staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addAnnotation(0, annotation('quiet')),
-    staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addAnnotation(2, annotation('Allegro')),
+    staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addModifier(0, annotation('quiet')),
+    staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addModifier(2, annotation('Allegro')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -159,13 +159,13 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 3, fret: 12 },
       ],
       duration: 'h',
-    }).addModifier(new Annotation('Harm.'), 0),
+    }).addModifier(0, new Annotation('Harm.')),
     tabNote({
       positions: [{ str: 2, fret: 9 }],
       duration: 'h',
     })
-      .addModifier(new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC), 0)
-      .addModifier(new Annotation('A.H.'), 0),
+      .addModifier(0, new Annotation('(8va)').setFont(Font.SERIF, FONT_SIZE, FontWeight.NORMAL, FontStyle.ITALIC))
+      .addModifier(0, new Annotation('A.H.')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -193,23 +193,23 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 5, fret: 0 },
       ],
       duration: 'h',
-    }).addModifier(new Vibrato().setVibratoWidth(40)),
+    }).addModifier(0, new Vibrato().setVibratoWidth(40)),
     tabNote({
       positions: [{ str: 6, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('p'), 0),
+    }).addModifier(0, annotation('p')),
     tabNote({
       positions: [{ str: 3, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('i'), 0),
+    }).addModifier(0, annotation('i')),
     tabNote({
       positions: [{ str: 2, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('m'), 0),
+    }).addModifier(0, annotation('m')),
     tabNote({
       positions: [{ str: 1, fret: 9 }],
       duration: '8',
-    }).addModifier(annotation('a'), 0),
+    }).addModifier(0, annotation('a')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -227,10 +227,10 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
     new Annotation(text).setFont(Font.SERIF, FONT_SIZE).setVerticalJustification(Annotation.VerticalJustify.BOTTOM);
 
   const notes = [
-    staveNote({ keys: ['f/4'], duration: 'w' }).addAnnotation(0, annotation('F')),
-    staveNote({ keys: ['a/4'], duration: 'w' }).addAnnotation(0, annotation('A')),
-    staveNote({ keys: ['c/5'], duration: 'w' }).addAnnotation(0, annotation('C')),
-    staveNote({ keys: ['e/5'], duration: 'w' }).addAnnotation(0, annotation('E')),
+    staveNote({ keys: ['f/4'], duration: 'w' }).addModifier(0, annotation('F')),
+    staveNote({ keys: ['a/4'], duration: 'w' }).addModifier(0, annotation('A')),
+    staveNote({ keys: ['c/5'], duration: 'w' }).addModifier(0, annotation('C')),
+    staveNote({ keys: ['e/5'], duration: 'w' }).addModifier(0, annotation('E')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -246,20 +246,20 @@ function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): v
 
   const notes = [
     new StaveNote({ keys: ['a/3'], duration: '8' }).addModifier(
-      new Annotation('good').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('good').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['g/3'], duration: '8' }).addModifier(
-      new Annotation('even').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('even').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['c/4'], duration: '8' }).addModifier(
-      new Annotation('under').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('under').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
     new StaveNote({ keys: ['d/4'], duration: '8' }).addModifier(
-      new Annotation('beam').setVerticalJustification(Annotation.VerticalJustify.BOTTOM),
-      0
+      0,
+      new Annotation('beam').setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
     ),
   ];
 
@@ -286,10 +286,10 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
     const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      staveNote({ keys: ['c/3'], duration: 'q' }).addAnnotation(0, annotation('Text', 1, v)),
-      staveNote({ keys: ['c/4'], duration: 'q' }).addAnnotation(0, annotation('Text', 2, v)),
-      staveNote({ keys: ['c/5'], duration: 'q' }).addAnnotation(0, annotation('Text', 3, v)),
-      staveNote({ keys: ['c/6'], duration: 'q' }).addAnnotation(0, annotation('Text', 4, v)),
+      staveNote({ keys: ['c/3'], duration: 'q' }).addModifier(0, annotation('Text', 1, v)),
+      staveNote({ keys: ['c/4'], duration: 'q' }).addModifier(0, annotation('Text', 2, v)),
+      staveNote({ keys: ['c/5'], duration: 'q' }).addModifier(0, annotation('Text', 3, v)),
+      staveNote({ keys: ['c/6'], duration: 'q' }).addModifier(0, annotation('Text', 4, v)),
     ];
 
     Formatter.FormatAndDraw(ctx, stave, notes);
@@ -313,10 +313,10 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
   for (let v = 1; v <= 4; ++v) {
     const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
     const notes = [
-      staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 1, v)),
-      staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 2, v)),
-      staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 3, v)),
-      staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addAnnotation(0, annotation('Text', 4, v)),
+      staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 1, v)),
+      staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 2, v)),
+      staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 3, v)),
+      staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addModifier(0, annotation('Text', 4, v)),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
@@ -377,20 +377,20 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-  notes1[0].addModifier(new Annotation('Text').setJustification(1).setVerticalJustification(1), 0); // U
-  notes1[1].addModifier(new Annotation('Text').setJustification(2).setVerticalJustification(2), 0); // D
-  notes1[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-  notes1[3].addModifier(new Annotation('Text').setJustification(4).setVerticalJustification(4), 0); // D
+  notes1[0].addModifier(0, new Annotation('Text').setJustification(1).setVerticalJustification(1)); // U
+  notes1[1].addModifier(0, new Annotation('Text').setJustification(2).setVerticalJustification(2)); // D
+  notes1[2].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(3)); // U
+  notes1[3].addModifier(0, new Annotation('Text').setJustification(4).setVerticalJustification(4)); // D
 
-  notes2[0].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(1), 0); // U
-  notes2[1].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(2), 0); // D
-  notes2[2].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(3), 0); // U
-  notes2[3].addModifier(new Annotation('Text').setJustification(3).setVerticalJustification(4), 0); // D
+  notes2[0].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(1)); // U
+  notes2[1].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(2)); // D
+  notes2[2].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(3)); // U
+  notes2[3].addModifier(0, new Annotation('Text').setJustification(3).setVerticalJustification(4)); // D
 
-  notes3[0].addModifier(new Annotation('Text').setVerticalJustification(1), 0); // U
-  notes3[1].addModifier(new Annotation('Text').setVerticalJustification(2), 0); // D
-  notes3[2].addModifier(new Annotation('Text').setVerticalJustification(3), 0); // U
-  notes3[3].addModifier(new Annotation('Text').setVerticalJustification(4), 0); // D
+  notes3[0].addModifier(0, new Annotation('Text').setVerticalJustification(1)); // U
+  notes3[1].addModifier(0, new Annotation('Text').setVerticalJustification(2)); // D
+  notes3[2].addModifier(0, new Annotation('Text').setVerticalJustification(3)); // U
+  notes3[3].addModifier(0, new Annotation('Text').setVerticalJustification(4)); // D
 
   const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 

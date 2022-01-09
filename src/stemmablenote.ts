@@ -128,6 +128,13 @@ export abstract class StemmableNote extends Note {
 
     this.stem_direction = direction;
 
+    // Reset and reformat everything. Flag has to be built before calling getStemExtension.
+    this.reset();
+    if (this.hasFlag()) {
+      this.buildFlag();
+    }
+    this.beam = undefined;
+
     if (this.stem) {
       this.stem.setDirection(direction);
       this.stem.setExtension(this.getStemExtension());
@@ -153,12 +160,6 @@ export abstract class StemmableNote extends Note {
       });
     }
 
-    // Reset and reformat everything.
-    this.reset();
-    if (this.hasFlag()) {
-      this.buildFlag();
-    }
-    this.beam = undefined;
     if (this.preFormatted) {
       this.preFormat();
     }

@@ -364,11 +364,9 @@ function drawParenthesisedTest(options: TestOptions): void {
   const { voice, notes } = createShortcuts(score);
 
   const notes1 = notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' });
-  Parenthesis.addParentheses(notes1[0]);
-  Parenthesis.addParentheses(notes1[3]);
+  Parenthesis.buildAndAttach([notes1[0], notes1[3]]);
   const notes2 = notes('c#5/h., c5/q', { stem: 'down' });
-  Parenthesis.addParentheses(notes2[0]);
-  Parenthesis.addParentheses(notes2[1]);
+  Parenthesis.buildAndAttach([notes2[0], notes2[1]]);
 
   system
     .addStave({
@@ -377,10 +375,7 @@ function drawParenthesisedTest(options: TestOptions): void {
     .addClef('treble');
 
   const notes3 = notes('c#3/q, cn3/q, bb3/q, d##3/q', { stem: 'down' });
-  Parenthesis.addParentheses(notes3[0]);
-  Parenthesis.addParentheses(notes3[1]);
-  Parenthesis.addParentheses(notes3[2]);
-  Parenthesis.addParentheses(notes3[3]);
+  Parenthesis.buildAndAttach(notes3);
   system
     .addStave({
       voices: [voice(notes3)],
