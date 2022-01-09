@@ -1,6 +1,4 @@
 /************************************************************************************************************
-This Gruntfile supports these commands:  
-
 grunt
   - build the complete set of VexFlow libraries for production and debug use.
 grunt test
@@ -10,9 +8,15 @@ grunt reference
     current build/ to the reference/ folder, so that we can compare future builds to the reference/.
 grunt copy:reference
   - if you have recently run `grunt test` call this to save the current build/ to reference/.
+grunt release
+  - run the release script to publish to npm and GitHub.
 grunt build:cjs
 grunt build:esm
 grunt build:types
+
+grunt watch
+grunt watch:production
+grunt watch:debug
 
 grunt get:releases:versionX:versionY:...
 grunt get:releases:3.0.9:4.0.0
@@ -20,8 +24,10 @@ grunt get:releases:3.0.9:4.0.0
 grunt webpack:allFontLibs
   - build the VexFlow font libraries that are used for lazy loading by vexflow-core.js.
 
+Search this file for `grunt ` (the word grunt followed by a single space) to see what else is supported.
+
 *************************************************************************************************************
-This Gruntfile supports these optional environment variables:
+Optional environment variables:
 
 VEX_DEBUG_CIRCULAR_DEPENDENCIES
     if true, we display a list of circular dependencies in the code.
@@ -34,10 +40,10 @@ VEX_GENERATE_OPTIONS
 
 To pass in environment variables, you can use your ~/.bash_profile or do something like:
   export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
-  export VEX_DEVTOOL=eval
+  export VEX_DEVTOOL=source-map
   grunt
 You can also do it all on one line:
-  VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=eval grunt
+  VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=source-map grunt
 *************************************************************************************************************/
 
 const path = require('path');
@@ -230,7 +236,7 @@ function webpackConfigs() {
           const oldPath = path.join(BUILD_CJS_DIR, fileName);
           const newPath = path.join(BUILD_CJS_DIR, 'vexflow-font-' + fileName.toLowerCase());
           if (fs.existsSync(oldPath)) {
-            fs.rename(oldPath, newPath);
+            fs.rename(oldPath, newPath, (err) => {});
           }
         }
       });
@@ -254,11 +260,14 @@ function webpackConfigs() {
       new RenameFontModulesPlugin()
     ),
     // Individual build targets for production VexFlow libraries.
-    prodAllFonts: config(VEX, PRODUCTION_MODE, true, 'Vex'), // grunt webpack:prodAllFonts => build/cjs/vexflow.js
+    // grunt webpack:prodAllFonts => build/cjs/vexflow.js
+    // ...
+    // grunt webpack:prodNoFonts  => build/cjs/vexflow-core.js
+    prodAllFonts: config(VEX, PRODUCTION_MODE, true, 'Vex'),
     prodBravuraOnly: config(VEX_BRAVURA, PRODUCTION_MODE, true, 'Vex'),
     prodGonvilleOnly: config(VEX_GONVILLE, PRODUCTION_MODE, true, 'Vex'),
     prodPetalumaOnly: config(VEX_PETALUMA, PRODUCTION_MODE, true, 'Vex'),
-    prodNoFonts: config(VEX_CORE, PRODUCTION_MODE, true, 'Vex'), // grunt webpack:prodNoFonts => build/cjs/vexflow-core.js
+    prodNoFonts: config(VEX_CORE, PRODUCTION_MODE, true, 'Vex'),
     // Individual build targets for production VexFlow font modules (for dynamic loading).
     // Pass in `false` to disable the MIT license banner for font module files.
     prodFontBravura: config(VEX_FONT_BRAVURA, PRODUCTION_MODE, false, ['VexFlowFont', 'Bravura']),
@@ -267,7 +276,9 @@ function webpackConfigs() {
     prodFontCustom: config(VEX_FONT_CUSTOM, PRODUCTION_MODE, false, ['VexFlowFont', 'Custom']),
     // Individual build targets for development / debugging.
     // The DEVELOPMENT_MODE flag disables code minification.
-    debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'), // grunt webpack:debug => build/cjs/vexflow-core.js
+    // grunt webpack:debug          => build/cjs/vexflow-debug.js
+    // grunt webpack:debugWithTests => build/cjs/vexflow-debug-with-tests.js
+    debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'),
     debugWithTests: config(VEX_DEBUG_TESTS, DEVELOPMENT_MODE, true, 'Vex'),
   };
 }
@@ -303,18 +314,14 @@ module.exports = (grunt) => {
       target: ['./src', './tests'],
       options: { fix: true, cache: true },
     },
-    qunit: {
-      files: ['tests/flow-headless-browser.html'],
-    },
+    // grunt qunit
+    // Runs unit tests on the command line by using flow-headless-browser.html.
+    qunit: { files: ['tests/flow-headless-browser.html'] },
     open: {
       // grunt open:flow_html
-      flow_html: {
-        path: './tests/flow.html',
-      },
+      flow_html: { path: './tests/flow.html' },
       // grunt open:flow_localhost
-      flow_localhost: {
-        path: 'http://127.0.0.1:8080/tests/flow.html?esm=true',
-      },
+      flow_localhost: { path: 'http://127.0.0.1:8080/tests/flow.html?esm=true' },
     },
     copy: {
       // grunt copy:reference
@@ -387,7 +394,6 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-webpack');
 
-  // This task is run when you type:
   // grunt
   // Build all targets for production and debugging.
   grunt.registerTask('default', 'Build all VexFlow targets.', [
@@ -557,8 +563,7 @@ module.exports = (grunt) => {
   ]);
 
   // grunt test:reference:cache
-  // Faster than `grunt test:reference` because it reuses the existing reference images.
-  // It skips the 'generate:reference' task.
+  // Faster than `grunt test:reference` because it reuses the existing reference images if available.
   grunt.registerTask('test:reference:cache', '', [
     'cache:save:reference',
     'test',
@@ -568,16 +573,13 @@ module.exports = (grunt) => {
   ]);
 
   grunt.registerTask('cache:save:reference', '', () => {
-    if (!fs.existsSync(REFERENCE_IMAGES_DIR)) {
-      fs.mkdirSync(REFERENCE_IMAGES_DIR, { recursive: true });
-    }
-
     if (fs.existsSync(BUILD_IMAGES_REFERENCE_DIR)) {
       runTask('clean:reference_images');
       runTask('copy:save_reference_images');
     }
   });
 
+  // If the reference images are not available, run the 'generate:reference' task.
   grunt.registerTask('cache:restore:reference', '', () => {
     if (fs.existsSync(REFERENCE_IMAGES_DIR)) {
       runTask('copy:restore_reference_images');
