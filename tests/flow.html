@@ -43,9 +43,9 @@
       }
 
       // Support a query param to choose which VexFlow version to load.
-      // ver=(build/cjs | reference | releases | etc...)
+      // ver=(build/cjs | reference | releases/3.0.9 | etc...)
       // If omitted, `ver` defaults to 'build/cjs'.
-      // `ver` can also specify a version hosted on unpkg.com / jsdelivr.com:
+      // ver can also specify a version hosted on unpkg.com / jsdelivr.com:
       // ver=unpkg@3.0.9     => https://unpkg.com/vexflow@3.0.9/releases/vexflow-debug.js
       // ver=unpkg@1.2.77    => https://unpkg.com/vexflow@1.2.77/releases/vexflow-debug.js
       // ver=jsdelivr@4.0.0  => https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
@@ -83,12 +83,13 @@
         // We are loading from the local filesystem (vexflow/build/ | vexflow/reference | vexflow/releases/).
         const path = ver;
 
-        // We assume the 'releases' folder is version 3.0.9 or older, since 4.0.0 moved to the build/ folder.
-        // TODO/RONYEH: This is not a good assumption. We should download releases into versioned subdirectories,
-        // e.g., vexflow/releases/4.0.1/ so we can parse the version correctly.
+        // file://.../vexflow/tests/flow.html?ver=releases/3.0.9
         if (path.startsWith('releases')) {
-          isVersionFourOrNewer = false;
+          const pathParts = path.split('/');
+          const version = parseFloat(pathParts[1]);
+          isVersionFourOrNewer = version >= 4;
         }
+        // TODO RONYEH: For versions 4.0.0 or higher, we need to consider the cjs/ and esm/ directories.
         vexURL = '../' + path + '/vexflow-debug.js';
         testsURL = '../' + path + '/vexflow-tests.js';
         vexPlusTestsURL = '../' + path + '/vexflow-debug-with-tests.js';

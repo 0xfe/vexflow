@@ -1,4 +1,4 @@
-/*
+/************************************************************************************************************
 This Gruntfile supports these commands:  
 
 grunt
@@ -14,26 +14,31 @@ grunt build:cjs
 grunt build:esm
 grunt build:types
 
+grunt get:releases:versionX:versionY:...
+grunt get:releases:3.0.9:4.0.0
+  - retrieve previous releases for regression testing purposes.
 grunt webpack:allFontLibs
   - build the VexFlow font libraries that are used for lazy loading by vexflow-core.js.
-  
-This Gruntfile supports these optional environment variables:
-  VEX_DEBUG_CIRCULAR_DEPENDENCIES
-      if true, we display a list of circular dependencies in the code.
-  VEX_DEVTOOL
-      specify webpack's devtool config (e.g., 'source-map' to create source maps).
-      https://webpack.js.org/configuration/devtool/
-  VEX_GENERATE_OPTIONS
-      options for controlling the ./tools/generate_images.js script.
-      see the 'generate:current' and 'generate:reference' tasks.
 
-  To pass in environment variables, you can use your ~/.bash_profile or do something like:
-    export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
-    export VEX_DEVTOOL=eval
-    grunt
-  You can also do it all on one line:
-    VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=eval grunt
-*/
+*************************************************************************************************************
+This Gruntfile supports these optional environment variables:
+
+VEX_DEBUG_CIRCULAR_DEPENDENCIES
+    if true, we display a list of circular dependencies in the code.
+VEX_DEVTOOL
+    specify webpack's devtool config (e.g., 'source-map' to create source maps).
+    https://webpack.js.org/configuration/devtool/
+VEX_GENERATE_OPTIONS
+    options for controlling the ./tools/generate_images.js script.
+    see the 'generate:current' and 'generate:reference' tasks.
+
+To pass in environment variables, you can use your ~/.bash_profile or do something like:
+  export VEX_DEBUG_CIRCULAR_DEPENDENCIES=true
+  export VEX_DEVTOOL=eval
+  grunt
+You can also do it all on one line:
+  VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=eval grunt
+*************************************************************************************************************/
 
 const path = require('path');
 const fs = require('fs');
@@ -249,11 +254,11 @@ function webpackConfigs() {
       new RenameFontModulesPlugin()
     ),
     // Individual build targets for production VexFlow libraries.
-    prodAllFonts: config(VEX, PRODUCTION_MODE, true, 'Vex'),
+    prodAllFonts: config(VEX, PRODUCTION_MODE, true, 'Vex'), // grunt webpack:prodAllFonts => build/cjs/vexflow.js
     prodBravuraOnly: config(VEX_BRAVURA, PRODUCTION_MODE, true, 'Vex'),
     prodGonvilleOnly: config(VEX_GONVILLE, PRODUCTION_MODE, true, 'Vex'),
     prodPetalumaOnly: config(VEX_PETALUMA, PRODUCTION_MODE, true, 'Vex'),
-    prodNoFonts: config(VEX_CORE, PRODUCTION_MODE, true, 'Vex'),
+    prodNoFonts: config(VEX_CORE, PRODUCTION_MODE, true, 'Vex'), // grunt webpack:prodNoFonts => build/cjs/vexflow-core.js
     // Individual build targets for production VexFlow font modules (for dynamic loading).
     // Pass in `false` to disable the MIT license banner for font module files.
     prodFontBravura: config(VEX_FONT_BRAVURA, PRODUCTION_MODE, false, ['VexFlowFont', 'Bravura']),
@@ -262,7 +267,7 @@ function webpackConfigs() {
     prodFontCustom: config(VEX_FONT_CUSTOM, PRODUCTION_MODE, false, ['VexFlowFont', 'Custom']),
     // Individual build targets for development / debugging.
     // The DEVELOPMENT_MODE flag disables code minification.
-    debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'),
+    debug: config(VEX_DEBUG, DEVELOPMENT_MODE, true, 'Vex'), // grunt webpack:debug => build/cjs/vexflow-core.js
     debugWithTests: config(VEX_DEBUG_TESTS, DEVELOPMENT_MODE, true, 'Vex'),
   };
 }
