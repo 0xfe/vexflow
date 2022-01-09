@@ -2,23 +2,19 @@
 
 Please help test this beta release and [report issues on GitHub](https://github.com/0xfe/vexflow/issues). Thanks!
 
-Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/ChangeLog-v.-4.0.0
+Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/Changelog-ver-4.0
 
 ## Features
 
 - Migrate VexFlow to **TypeScript** with a ES6 target.
+- Support ES module in addition to CommonJS.
 - Improve handling of music fonts and text fonts.
 - Optional lazy loading of music fonts.
-- `setFont(...)` method can be called in these ways:
-  - `setFont(family, size, weight, style)`
-  - `setFont(cssShorthand)`
-    - e.g., `setFont('bold 10pt Arial')`
-  - `setFont(fontInfoObject)`
-    - e.g., `setFont({ family: 'Times', size: 12 })`
+- Improve `setFont(...)` method in Element class.
 
 ## Breaking
 
-- The tsconfig.json `compilerOptions.target` has been updated to ES6 / ES2015. If you are targeting an older environment, you will need to build directly from source code (and change the target back to ES5).
+- The tsconfig.json `compilerOptions.target` has been updated to ES6 / ES2015.
 - `Stave.setNumLines(n: number)` requires a number. Previously, a string would also work. See: [stave.ts](https://github.com/0xfe/vexflow/blob/master/src/stave.ts) and [#1083](https://github.com/0xfe/vexflow/issues/1083).
 - `Note.addModifier(modifier: Modifier, index?: number): this` now throws a RuntimeError if the parameters are reversed.
 - `TickContext.getTickableForVoice(voiceIndex: number): Tickable` was previously named `getTickablesForVoice(voiceIndex: number): Note`. We removed the `s` because the method returns a single Tickable. You will need to update calls to this function if you are upgrading from a build from between April 2020 to August 2021.
@@ -31,7 +27,6 @@ Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/Ch
   - `ChordSymbol.metrics` was previously named `ChordSymbol.chordSymbolMetrics`.
 - `StaveNote.LEDGER_LINE_OFFSET` was previously named `StaveNote.DEFAULT_LEDGER_LINE_OFFSET`.
 - **Fonts**
-
   - `TextFontMetrics` has been merged into `FontGlyph` due to substantial overlap.
   - `Flow.NOTATION_FONT_SCALE` was previously named `Flow.DEFAULT_NOTATION_FONT_SCALE`.
   - `setFont(...)` in `CanvasContext` and `SVGContext` previously took arguments: `family`, `size`, `weight`. The `weight` argument allowed strings like `'italic bold'`. This no longer works, and `'italic'` must now be passed into the `style` argument.
