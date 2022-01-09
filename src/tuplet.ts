@@ -96,6 +96,8 @@ export class Tuplet extends Element {
   static get NESTING_OFFSET(): number {
     return 15;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static get metrics(): any {
     return Tables.currentMusicFont().getMetrics().glyphs.tuplet;
   }
