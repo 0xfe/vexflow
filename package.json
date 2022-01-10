@@ -69,7 +69,6 @@
     "build",
     "src",
     "entry",
-    "!entry/vexflow-debug-with-tests.ts",
     "tests/flow.html",
     "tests/flow.css",
     "tests/support",
