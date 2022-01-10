@@ -185,7 +185,7 @@ export class SVGContext extends RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls: string, id?: string, attrs?: GroupAttributes): SVGGElement {
+  openGroup(cls?: string, id?: string, attrs?: GroupAttributes): SVGGElement {
     const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
