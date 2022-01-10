@@ -143,6 +143,14 @@ export const PetalumaMetrics = {
     },
   },
 
+  staveRepetition: {
+    default: {
+      offsetY: 25,
+      offsetSymbol: 12,
+      spacing: 5,
+    },
+  },
+
   noteHead: {
     displaced: {
       shiftX: -2,
