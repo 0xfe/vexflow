@@ -117,16 +117,16 @@ export const GonvilleMetrics = {
     default: {
       point: 25,
       spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      offsetYStemUp: -7,
+      offsetYStemDown: 7,
       offsetXStemUp: 9,
       offsetXStemDown: -0.5,
     },
     grace: {
       point: 15,
       spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      offsetYStemUp: -7,
+      offsetYStemDown: 7,
       offsetXStemUp: 6.5,
       offsetXStemDown: -0.5,
     },
@@ -407,6 +407,14 @@ export const GonvilleMetrics = {
         yOffset: -4,
         stemUpYOffset: 0,
         reportedWidth: 5,
+      },
+    },
+    tremolo: {
+      default: {
+        shiftY: -10,
+      },
+      grace: {
+        shiftY: -5,
       },
     },
     tuplet: {
