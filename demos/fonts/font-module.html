@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <!--
+    Test to make sure the font module makes its data available at VexFlowFonts.XXXX.
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        font: 16px 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        margin: 20px;
+      }
+      #output {
+        min-height: 220px;
+        background-color: #fbfbf0;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../../build/cjs/vexflow-font-bravura.js"></script>
+    <script src="../../build/cjs/vexflow-font-petaluma.js"></script>
+    <script src="../../build/cjs/vexflow-font-gonville.js"></script>
+    <script src="../../build/cjs/vexflow-font-custom.js"></script>
+    <script>
+      console.log(VexFlowFont);
+    </script>
+  </body>
+</html>

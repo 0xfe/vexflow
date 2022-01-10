@@ -223,22 +223,16 @@ function webpackConfigs() {
   }
 
   function prodConfig() {
-    return getConfig(
-      [
-        VEX,
-        VEX_BRAVURA,
-        VEX_GONVILLE,
-        VEX_PETALUMA,
-        VEX_CORE,
-        VEX_FONT_BRAVURA,
-        VEX_FONT_PETALUMA,
-        VEX_FONT_GONVILLE,
-        VEX_FONT_CUSTOM,
-      ],
-      PRODUCTION_MODE,
-      BANNER,
-      'Vex'
-    );
+    return getConfig([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, BANNER, 'Vex');
+  }
+
+  function fontConfigs() {
+    return [
+      getConfig([VEX_FONT_BRAVURA], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura']),
+      getConfig([VEX_FONT_PETALUMA], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma']),
+      getConfig([VEX_FONT_GONVILLE], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville']),
+      getConfig([VEX_FONT_CUSTOM], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom']),
+    ];
   }
 
   function debugConfig() {
@@ -254,8 +248,8 @@ function webpackConfigs() {
 
   const BANNER = true;
   return {
-    prodAndDebug: () => [prodConfig(), debugConfig()],
-    prod: () => prodConfig(),
+    prodAndDebug: () => [prodConfig(), ...fontConfigs(), debugConfig()],
+    prod: () => [prodConfig(), ...fontConfigs()],
     debug: () => debugConfig(),
     debugWatch: () => debugWatchConfig(),
   };
