@@ -87,6 +87,7 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "fork-ts-checker-webpack-plugin": "^6.5.0",
     "glob": "^7.2.0",
     "grunt": "^1.4.1",
     "grunt-bump": "^0.8.0",
@@ -98,7 +99,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^24.0.0",
     "grunt-open": "^0.2.4",
-    "grunt-typedoc": "^0.2.4",
     "grunt-webpack": "^5.0.0",
     "jsdom": "^19.0.0",
     "jspdf": "^2.5.0",
@@ -121,7 +121,8 @@
     "test": "grunt test",
     "reference": "grunt reference",
     "test:reference": "grunt test:reference",
-    "test:reference:cache": "grunt test:reference:cache"
+    "test:reference:cache": "grunt test:reference:cache",
+    "postinstall": "grunt clean:webpack_cache"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [

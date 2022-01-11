@@ -55,10 +55,6 @@
         "no-unused-vars": "off",
         "no-undef": "off"
       }
-    },
-    {
-      "files": ["src/**/*.js"],
-      "extends": ["eslint:recommended", "prettier"]
     }
   ]
 }

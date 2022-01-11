@@ -9,8 +9,16 @@ grunt reference
     current build/ to the reference/ folder, so that we can compare future builds to the reference/.
 grunt release
   - run the release script to publish to npm and GitHub.
-
+    this assumes you have run already `grunt` and have fully tested the build.
 *************************************************************************************************************
+
+grunt dev
+  - the fastest way to iterate while working on VexFlow. It skips eslint, and only produces the debug CJS libraries.
+grunt watch
+grunt watch:prod
+grunt watch:debug
+
+grunt qunit
 
 grunt copy:reference
   - if you have recently run `grunt test` call this to save the current build/ to reference/.
@@ -18,11 +26,6 @@ grunt build:cjs
 grunt build:esm
 grunt build:types
 
-grunt watch:fast
-  - the fastest way to iterate while working on VexFlow.
-grunt watch
-grunt watch:prod
-grunt watch:debug
 
 grunt get:releases:versionX:versionY:...
 grunt get:releases:3.0.9:4.0.0
@@ -48,16 +51,23 @@ To pass in environment variables, you can use your ~/.bash_profile or do somethi
   grunt
 You can also do it all on one line:
   VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=source-map grunt
-*************************************************************************************************************/
 
-console.log('GRUNTFILE START');
+*************************************************************************************************************
+
+If you are adding a new music engraving font, search for instances of ADD_MUSIC_FONT in the code base.
+In this Gruntfile, you can export a font module which can be dynamically loaded by vexflow-core.js.
+To include your new font into the complete vexflow.js, take a look at src/fonts/load_all.ts
+
+*************************************************************************************************************/
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const { spawnSync, execSync } = require('child_process');
 const { EventEmitter } = require('events');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file in build/cjs/ or /build/esm/entry/.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
@@ -70,6 +80,9 @@ const VEX_FONT_BRAVURA = 'vexflow-font-bravura';
 const VEX_FONT_GONVILLE = 'vexflow-font-gonville';
 const VEX_FONT_PETALUMA = 'vexflow-font-petaluma';
 const VEX_FONT_CUSTOM = 'vexflow-font-custom';
+// [ADD_MUSIC_FONT]
+// Provide the base name of your font entry file: entry/vexflow-font-xxx.ts => vexflow-font-xxx
+// const VEX_FONT_XXX = 'vexflow-font-xxx';
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
@@ -81,12 +94,12 @@ const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
 const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 const REFERENCE_IMAGES_DIR = path.join(REFERENCE_DIR, 'images');
+const WEBPACK_CACHE_DIR = path.join(BASE_DIR, 'node_modules', '.cache', 'webpack');
 
-// PRODUCTION_MODE will enable minification, etc.
+// Flags for setting the webpack mode.
 // See: https://webpack.js.org/configuration/mode/
+// PRODUCTION_MODE enables minification and DEVELOPMENT_MODE disables code minification.
 const PRODUCTION_MODE = 'production';
-// FOR DEBUGGING PURPOSES, you can temporarily comment out the line above and use the line below to disable minification.
-// const PRODUCTION_MODE = 'development';
 const DEVELOPMENT_MODE = 'development';
 
 // Read environment variables to configure our scripts.
@@ -128,7 +141,7 @@ function webpackConfigs() {
   //   an object that maps entry names to file names
   //   a file name string
   // returns a webpack config object.
-  function getConfig(entryFiles, mode, addBanner, libraryName) {
+  function getConfig(entryFiles, mode, addBanner, libraryName, watch = false) {
     let entry, filename;
     if (Array.isArray(entryFiles)) {
       entry = {};
@@ -181,12 +194,44 @@ function webpackConfigs() {
         plugins.push(new CircularDependencyPlugin({ cwd: process.cwd() }));
       }
 
+      plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+          typescript: {
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true,
+              declaration: true,
+              global: true,
+            },
+          },
+          eslint: {
+            files: ['./src/**/*.ts', './entry/**/*.ts', './tests/**/*.ts'],
+            options: { fix: true, cache: true },
+          },
+        })
+      );
       return plugins;
     }
+
+    let optimization;
+    if (mode === PRODUCTION_MODE) {
+      optimization = {
+        minimizer: [
+          new TerserPlugin({
+            extractComments: false, // DO NOT extract the banner into a separate file.
+            parallel: os.cpus().length,
+          }),
+        ],
+      };
+    }
+
+    const cache = mode === DEVELOPMENT_MODE ? { type: 'filesystem' } : false;
 
     return {
       mode,
       entry,
+      cache,
+      watch,
       output: {
         path: BUILD_CJS_DIR,
         filename: filename,
@@ -207,65 +252,122 @@ function webpackConfigs() {
             resolve: { fullySpecified: false },
             use: [
               {
+                // https://webpack.js.org/guides/build-performance/#typescript-loader
+                // https://www.npmjs.com/package/fork-ts-checker-webpack-plugin
                 loader: 'ts-loader',
-                options: { configFile: 'tsconfig.json' },
+                options: {
+                  configFile: 'tsconfig.json',
+                  transpileOnly: true,
+                },
               },
             ],
           },
         ],
       },
       plugins: getPlugins(),
-      optimization: {
-        // DO NOT extract the banner into a separate file.
-        minimizer: [new TerserPlugin({ extractComments: false })],
-      },
+      optimization,
     };
   }
 
-  function prodConfig() {
-    return getConfig([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, BANNER, 'Vex');
+  // Friendly names for boolean flags that we willet use below.
+  const BANNER = true;
+  const WATCH = true;
+
+  function prodConfig(watch = false) {
+    return getConfig([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, BANNER, 'Vex', watch);
   }
 
-  function fontConfigs() {
+  function fontConfigs(watch = false) {
     return [
-      getConfig([VEX_FONT_BRAVURA], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura']),
-      getConfig([VEX_FONT_PETALUMA], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma']),
-      getConfig([VEX_FONT_GONVILLE], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville']),
-      getConfig([VEX_FONT_CUSTOM], PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom']),
+      getConfig(VEX_FONT_BRAVURA, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura'], watch),
+      getConfig(VEX_FONT_PETALUMA, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma'], watch),
+      getConfig(VEX_FONT_GONVILLE, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville'], watch),
+      getConfig(VEX_FONT_CUSTOM, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom'], watch),
+      // [ADD_MUSIC_FONT]
+      // Add a webpack config for exporting your font module.
+      // getConfig(VEX_FONT_XXX, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'XXX'], watch),
     ];
   }
 
-  function debugConfig() {
-    // The DEVELOPMENT_MODE flag disables code minification.
-    return getConfig([VEX_DEBUG, VEX_DEBUG_TESTS], DEVELOPMENT_MODE, BANNER, 'Vex');
+  function debugConfig(watch = false) {
+    return getConfig([VEX_DEBUG, VEX_DEBUG_TESTS], DEVELOPMENT_MODE, BANNER, 'Vex', watch);
   }
 
-  function debugWatchConfig() {
-    const config = debugConfig();
-    config.watch = true;
-    return config;
-  }
-
-  const BANNER = true;
   return {
     prodAndDebug: () => [prodConfig(), ...fontConfigs(), debugConfig()],
     prod: () => [prodConfig(), ...fontConfigs()],
     debug: () => debugConfig(),
-    debugWatch: () => debugWatchConfig(),
+    watchProd: () => [prodConfig(WATCH), ...fontConfigs(WATCH)],
+    watchDebug: () => debugConfig(WATCH),
   };
 }
 
 module.exports = (grunt) => {
   const log = grunt.log.writeln;
 
+  // Fail the grunt task if there are uncommitted changes (other than the auto-generated `src/version.ts` file).
+  function verifyGitWorkingDirectory() {
+    const output = execSync('git status -s').toString();
+    const lines = output.split('\n');
+    let numDirtyFiles = 0;
+    for (const ln in lines) {
+      const line = lines[ln].trim();
+      if (line === '') {
+        continue;
+      } else if (line.includes('src/version.ts')) {
+        console.log('OK', line);
+      } else {
+        console.log('!!', line);
+        numDirtyFiles++;
+      }
+    }
+
+    if (numDirtyFiles > 0) {
+      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.', 1);
+    }
+  }
+
+  // Some tasks can be run in parallel to improve performance.
+  function runTasksConcurrently(done, ...tasks) {
+    const numTasksToComplete = tasks.length;
+    let completedTasks = 0;
+    function taskComplete() {
+      completedTasks++;
+      if (completedTasks === numTasksToComplete) {
+        done(true);
+      }
+    }
+
+    for (const task of tasks) {
+      let args = task;
+      if (typeof task === 'string') {
+        args = [task];
+      } else {
+        // task is an array of task strings.
+        args = task;
+      }
+      grunt.util.spawn(
+        {
+          grunt: true,
+          args: args,
+          opts: { stdio: 'inherit' },
+        },
+        (error, result, code) => {
+          const output = String(result);
+          if (error) {
+            grunt.log.error(output);
+          } else {
+            grunt.log.ok(output);
+          }
+          taskComplete();
+        }
+      );
+    }
+  }
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     webpack: webpackConfigs(),
-    // grunt eslint
-    eslint: {
-      target: ['./src', './tests'],
-      options: { fix: true, cache: true },
-    },
     // grunt qunit
     // Runs unit tests on the command line by using flow-headless-browser.html.
     qunit: { files: ['tests/flow-headless-browser.html'] },
@@ -312,19 +414,6 @@ module.exports = (grunt) => {
         ],
       },
     },
-    // grunt typedoc
-    typedoc: {
-      build: {
-        options: {
-          out: 'docs/api',
-          name: 'vexflow',
-          excludeProtected: true,
-          excludePrivate: true,
-          disableSources: true,
-        },
-        src: ['./src/index.ts'],
-      },
-    },
     // grunt clean
     clean: {
       // grunt clean:build
@@ -333,6 +422,9 @@ module.exports = (grunt) => {
       reference: { src: [REFERENCE_DIR] },
       // grunt clean:reference_images
       reference_images: { src: [REFERENCE_IMAGES_DIR] },
+      // grunt clean:webpack_cache
+      // https://webpack.js.org/guides/build-performance/#persistent-cache
+      webpack_cache: { src: [WEBPACK_CACHE_DIR] },
     },
   });
 
@@ -340,27 +432,28 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-open');
-  grunt.loadNpmTasks('grunt-typedoc');
   grunt.loadNpmTasks('grunt-webpack');
+
+  // We will use the 'watch' task name for native webpack watch instead.
+  grunt.renameTask('watch', 'watch:esm');
 
   // grunt
   // Build all targets for production and debugging.
   grunt.registerTask('default', 'Build all VexFlow targets.', [
     'clean:build',
-    'eslint',
     'webpack:prodAndDebug',
-    'build:esm',
-    'build:types',
-    'typedoc',
+    'default_esm_types_api',
   ]);
+  // Internal task used by the above 'default' task to improve build performance.
+  grunt.registerTask('default_esm_types_api', 'Build other targets.', function () {
+    runTasksConcurrently(this.async(), 'build:esm', 'build:types', 'typedoc');
+  });
 
   // grunt test
   // Run command line qunit tests.
   grunt.registerTask('test', 'Run command line unit tests.', [
     'clean:build',
-    'eslint',
     'webpack:prodAndDebug',
     'build:esm',
     'qunit',
@@ -374,28 +467,36 @@ module.exports = (grunt) => {
   // Also fixes the imports and exports so that they all end in .js.
   grunt.registerTask('build:esm', 'Use tsc to create ES module files in build/esm/', () => {
     generateVersionFile();
-    log('ESM: Build to build/esm/');
-    runCommand('tsc', '-p', 'tsconfig.esm.json');
-    log('ESM: Fix Imports/Exports');
-    runCommand('node', './tools/esm/fix-imports-and-exports.js', './build/esm/');
+    log('ESM: Building to build/esm/');
+    execSync('tsc -p tsconfig.esm.json');
+    // Add .js file extensions to ESM imports and re-exports.
+    execSync('node ./tools/esm/fix-imports-and-exports.js ./build/esm/');
     // The build/esm/ folder needs a package.json that says "type": "module".
-    log('ESM: Add package.json with "type": "module"');
-    runCommand('cp', './tools/esm/package.json', './build/esm/package.json');
+    execSync('cp ./tools/esm/package.json ./build/esm/package.json');
   });
 
   // grunt build:types
   // Output *.d.ts files to build/types/.
   grunt.registerTask('build:types', 'Use tsc to create *.d.ts files in build/types/', () => {
-    log('Building *.d.ts files in build/types/');
-    runCommand('tsc', '-p', 'tsconfig.types.json');
+    log('Types: Building *.d.ts files in build/types/');
+    execSync('tsc -p tsconfig.types.json');
   });
 
-  // grunt watch runs many tasks in parallel, so you might need to increase the limit (default: 10) to avoid warnings about memory leaks.
-  // EventEmitter.defaultMaxListeners = 20;
-
   // grunt watch
-  // Watch for changes and build all targets.
-  grunt.config.set('watch', {
+  // Watch for changes and builds debug CJS files.
+  grunt.registerTask('watch', 'The fastest way to iterate while working on VexFlow', () => {
+    grunt.task.run(['clean:build', 'webpack:watchDebug']);
+  });
+
+  // grunt watch:prod
+  // Watch for changes and build production CJS files.
+  grunt.registerTask('watch:prod', '', () => {
+    grunt.task.run(['clean:build', 'webpack:watchProd']);
+  });
+
+  // grunt watch:esm
+  // Watch for changes and build esm/*.
+  grunt.config.set('watch:esm', {
     scripts: {
       files: ['src/**', 'entry/**', 'tests/**', '!src/version.ts', '!**/node_modules/**', '!build/**'],
       options: {
@@ -403,43 +504,11 @@ module.exports = (grunt) => {
         interrupt: false,
         debounceDelay: 600,
       },
-      tasks: ['clean:build', 'eslint', 'webpack:prodAndDebug', 'build:esm'],
+      tasks: ['clean:build', 'build:esm'],
     },
   });
 
-  // During `grunt watch` configure eslint to only run on the changed file.
-  grunt.event.on('watch', function (action, filePath) {
-    grunt.config.set('eslint.target', [filePath]);
-  });
-
-  // grunt watch:prod
-  // Watch for changes and build production CJS files.
-  grunt.registerTask('watch:prod', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'webpack:prod']);
-    grunt.task.run('watch');
-  });
-
-  // grunt watch:debug
-  // Watch for changes and build debug CJS files.
-  grunt.registerTask('watch:debug', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'webpack:debug']);
-    grunt.task.run('watch');
-  });
-
-  // grunt watch:esm
-  // Watch for changes and build esm/*.
-  grunt.registerTask('watch:esm', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'build:esm']);
-    grunt.task.run('watch');
-  });
-
-  // grunt watch:fast
-  // Watch for changes and only emit `build/cjs/vexflow-debug-with-tests.js`
-  // Skips eslint!
-  // This task is the fastest way to iterate while working on VexFlow.
-  grunt.registerTask('watch:fast', '', () => {
-    grunt.task.run(['clean:build', 'webpack:debugWatch']);
-  });
+  grunt.registerTask('test:cmd', 'Run command line unit tests.', 'qunit');
 
   // grunt test:browser:cjs
   // Open the default browser to the flow.html test page.
@@ -449,10 +518,11 @@ module.exports = (grunt) => {
     () => {
       // If the CJS build doesn't exist, build it.
       if (!fs.existsSync(BUILD_CJS_DIR)) {
-        grunt.task.run('webpack:prodAndDebug'); // TODO: RONYEH Just debug?
-        grunt.log.write('Build the CJS files.');
+        log('Building the CJS files.');
+        grunt.task.run('webpack:debug');
       } else {
-        grunt.log.write('CJS files already exist. Skipping the build step.');
+        log('CJS files already exist. Skipping the build step. To rebuild, run:');
+        log('grunt clean && grunt test:browser:cjs');
       }
       grunt.task.run('open:flow_html');
     }
@@ -467,11 +537,13 @@ module.exports = (grunt) => {
     () => {
       // If the ESM build doesn't exist, build it.
       if (!fs.existsSync(BUILD_ESM_DIR)) {
+        log('Building the ESM files.');
         grunt.task.run('build:esm');
-        log('Build the ESM files.');
       } else {
-        log('ESM files already exist. Skipping the build step.');
+        log('ESM files already exist. Skipping the build step. To rebuild, run:');
+        log('grunt clean && grunt test:browser:esm');
       }
+
       grunt.task.run('open:flow_localhost');
       log('Remember to launch http-server in the vexflow/ directory!');
       log('npx http-server');
@@ -508,9 +580,23 @@ module.exports = (grunt) => {
   });
 
   // grunt diff:reference
-  grunt.registerTask('diff:reference', 'Compare ', () => {
-    runCommand('./tools/visual_regression.sh');
-  });
+  grunt.registerTask(
+    'diff:reference',
+    'Compare images created by the build/ and reference/ versions of VexFlow.',
+    () => {
+      execSync('./tools/visual_regression.sh');
+    }
+  );
+
+  // grunt diff:version:xxxx
+  grunt.registerTask(
+    'diff:version',
+    'Compare images created by the build/ and releases/xxxx/ versions of VexFlow',
+    (versionNumber) => {
+      console.log(versionNumber);
+      // TODO: Update ./tools/visual_regression.sh to accept a version number and use the correct files.
+    }
+  );
 
   // grunt test:reference
   grunt.registerTask('test:reference', 'Generate images from build/ and reference/ and compare them.', [
@@ -548,148 +634,69 @@ module.exports = (grunt) => {
 
   // grunt get:releases:3.0.9:4.0.0   =>   node ./tools/get_releases.mjs 3.0.9 4.0.0
   // Note: the arguments are separated by colons!
-  grunt.registerTask('get:releases', '', () => {
-    runCommand('node', './tools/get_releases.mjs', ...grunt.task.current.args);
+  grunt.registerTask('get:releases', '', (...args) => {
+    runCommand('node', './tools/get_releases.mjs', ...args);
   });
 
   // grunt release
   // Release to npm and GitHub.
   grunt.registerTask('release', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it');
+    execSync('npx release-it');
   });
 
   // grunt release:alpha
   grunt.registerTask('release:alpha', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--preRelease=alpha');
+    execSync('npx release-it --preRelease=alpha');
   });
 
   // grunt release:beta
   grunt.registerTask('release:beta', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--preRelease=beta');
+    runCommand('npx release-it --preRelease=beta');
   });
 
   // grunt release:rc
   grunt.registerTask('release:rc', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--preRelease=rc');
+    runCommand('npx release-it --preRelease=rc');
   });
 
   // grunt release:dry-run
   // Walk through the release process without actually doing anything.
   grunt.registerTask('release:dry-run', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--dry-run');
+    runCommand('npx release-it --dry-run');
   });
 
   // grunt release:dry-run:alpha
   grunt.registerTask('release:dry-run:alpha', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--dry-run', '--preRelease=alpha');
+    runCommand('npx release-it --dry-run --preRelease=alpha');
   });
 
   // grunt release:dry-run:beta
   grunt.registerTask('release:dry-run:beta', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--dry-run', '--preRelease=beta');
+    runCommand('npx release-it --dry-run --preRelease=beta');
   });
 
   // grunt release:dry-run:rc
   grunt.registerTask('release:dry-run:rc', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx', 'release-it', '--dry-run', '--preRelease=rc');
+    runCommand('npx release-it --dry-run --preRelease=rc');
   });
 
   // grunt build-test-release
   grunt.registerTask('build-test-release', '', () => {
     grunt.task.run('default');
     grunt.task.run('qunit');
-    verifyGitWorkingDirectory();
     grunt.task.run('release:dry-run'); // TODO: remove dry-run!
   });
 
-  // @return true if the git working directory is clean, other than the auto-generated `src/version.ts` file.
-  function verifyGitWorkingDirectory() {
-    const output = execSync('git status -s').toString();
-    console.log('The Output Was');
-    const lines = output.split('\n');
-    let numDirtyFiles = 0;
-    for (const ln in lines) {
-      const line = lines[ln].trim();
-      if (line === '') {
-        continue;
-      } else if (line.includes('src/version.ts')) {
-        console.log('OK', line);
-      } else {
-        console.log('!!', line);
-        numDirtyFiles++;
-      }
-    }
-
-    if (numDirtyFiles > 0) {
-      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.', 1);
-      return false;
-    } else {
-      console.log('The git working directory is clean.');
-      return true;
-    }
-  }
-
-  // grunt.registerTask('xxx', '', function () {
-  //   const done = this.async();
-  //   grunt.util.spawn(
-  //     {
-  //       grunt: true,
-  //       args: ['yyy'],
-  //       opts: { stdio: 'inherit' },
-  //     },
-  //     (error, result) => {
-  //       if (error) {
-  //         grunt.log.error().error(result.stdout).writeln();
-  //       } else {
-  //         grunt.log.ok().verbose.ok(result.stdout);
-  //         done(true);
-  //       }
-  //     }
-  //   );
-  //   grunt.util.spawn(
-  //     {
-  //       grunt: true,
-  //       args: ['zzz'],
-  //       opts: { stdio: 'inherit' },
-  //     },
-  //     (error, result) => {
-  //       if (error) {
-  //         grunt.log.error().error(result.stdout).writeln();
-  //       } else {
-  //         grunt.log.ok().verbose.ok(result.stdout);
-  //         done(true);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // grunt.registerTask('yyy', '', function () {
-  //   const done = this.async();
-  //   const id = setInterval(() => {
-  //     console.log('YYY ' + Math.random());
-  //   }, 1000);
-  //   setTimeout(() => {
-  //     clearInterval(id);
-  //     done(true);
-  //   }, 5100);
-  // });
-
-  // grunt.registerTask('zzz', '', function () {
-  //   const done = this.async();
-  //   const id = setInterval(() => {
-  //     console.log('ZZZ ' + Math.random());
-  //   }, 1000);
-  //   setTimeout(() => {
-  //     clearInterval(id);
-  //     done(true);
-  //   }, 5100);
-  // });
+  grunt.registerTask('typedoc', '', function () {
+    const output = execSync('npx typedoc').toString();
+    console.log('TypeDoc:', output);
+  });
 };
