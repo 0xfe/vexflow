@@ -2,7 +2,7 @@
   "hooks": {
     "before:init": [],
     "after:bump": [
-      "echo add build/ folder",
+      "echo Adding build/ folder...",
       "git add -f build/",
       "git commit -m 'Add build/ for release version ${version}.'"
     ],
@@ -11,16 +11,15 @@
     "after:github:release": [],
     "after:release": [
       "echo Successfully released ${name} ver. ${version} to ${repo.repository}.",
-      "echo remove build/ folder",
+      "echo Removing build/ folder...",
       "git rm -r build/",
       "git commit -m 'Remove build/ after the release.'",
       "git push"
     ]
   },
   "git": {
-    "changelog": false,
     "commitMessage": "release VexFlow ${version}",
-    "requireUpstream": false
+    "requireCleanWorkingDir": false
   },
   "github": {
     "release": true

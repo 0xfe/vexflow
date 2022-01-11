@@ -21,7 +21,7 @@ grunt build:types
 grunt watch:fast
   - the fastest way to iterate while working on VexFlow.
 grunt watch
-grunt watch:production
+grunt watch:prod
 grunt watch:debug
 
 grunt get:releases:versionX:versionY:...
@@ -36,7 +36,7 @@ Optional environment variables:
 VEX_DEBUG_CIRCULAR_DEPENDENCIES
     if true, we display a list of circular dependencies in the code.
 VEX_DEVTOOL
-    specify webpack's devtool config (e.g., 'source-map' to create source maps).
+    specify webpack's devtool config (the default is 'source-map').
     https://webpack.js.org/configuration/devtool/
 VEX_GENERATE_OPTIONS
     options for controlling the ./tools/generate_images.js script.
@@ -54,7 +54,7 @@ console.log('GRUNTFILE START');
 
 const path = require('path');
 const fs = require('fs');
-const { spawnSync } = require('child_process');
+const { spawnSync, execSync } = require('child_process');
 const { EventEmitter } = require('events');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -261,20 +261,6 @@ module.exports = (grunt) => {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     webpack: webpackConfigs(),
-    concurrent: {
-      options: {
-        logConcurrentOutput: true,
-        indent: true,
-      },
-      // grunt concurrent:all
-      all: ['webpack:prodAndDebug', 'build:esm'],
-      // grunt concurrent:production
-      production: ['webpack:prod', 'build:esm'],
-      // grunt concurrent:debug
-      debug: ['webpack:debug', 'build:esm'],
-      // grunt concurrent:types
-      types: ['build:types', 'typedoc'],
-    },
     // grunt eslint
     eslint: {
       target: ['./src', './tests'],
@@ -350,7 +336,6 @@ module.exports = (grunt) => {
     },
   });
 
-  grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -365,17 +350,19 @@ module.exports = (grunt) => {
   grunt.registerTask('default', 'Build all VexFlow targets.', [
     'clean:build',
     'eslint',
-    'concurrent:all',
-    'concurrent:types',
+    'webpack:prodAndDebug',
+    'build:esm',
+    'build:types',
+    'typedoc',
   ]);
 
   // grunt test
   // Run command line qunit tests.
   grunt.registerTask('test', 'Run command line unit tests.', [
-    //
     'clean:build',
     'eslint',
-    'concurrent:all',
+    'webpack:prodAndDebug',
+    'build:esm',
     'qunit',
   ]);
 
@@ -416,7 +403,7 @@ module.exports = (grunt) => {
         interrupt: false,
         debounceDelay: 600,
       },
-      tasks: ['clean:build', 'eslint', 'concurrent:all'],
+      tasks: ['clean:build', 'eslint', 'webpack:prodAndDebug', 'build:esm'],
     },
   });
 
@@ -425,17 +412,24 @@ module.exports = (grunt) => {
     grunt.config.set('eslint.target', [filePath]);
   });
 
-  // grunt watch:production
-  // Watch for changes and build production CJS files & esm/*.
-  grunt.registerTask('watch:production', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:production']);
+  // grunt watch:prod
+  // Watch for changes and build production CJS files.
+  grunt.registerTask('watch:prod', '', () => {
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'webpack:prod']);
     grunt.task.run('watch');
   });
 
   // grunt watch:debug
-  // Watch for changes and build debug CJS files & esm/*.
+  // Watch for changes and build debug CJS files.
   grunt.registerTask('watch:debug', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'concurrent:debug']);
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'webpack:debug']);
+    grunt.task.run('watch');
+  });
+
+  // grunt watch:esm
+  // Watch for changes and build esm/*.
+  grunt.registerTask('watch:esm', '', () => {
+    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'build:esm']);
     grunt.task.run('watch');
   });
 
@@ -447,13 +441,6 @@ module.exports = (grunt) => {
     grunt.task.run(['clean:build', 'webpack:debugWatch']);
   });
 
-  // grunt watch:esm
-  // Watch for changes and build esm/*.
-  grunt.registerTask('watch:esm', '', () => {
-    grunt.config.set('watch.scripts.tasks', ['clean:build', 'eslint', 'build:esm']);
-    grunt.task.run('watch');
-  });
-
   // grunt test:browser:cjs
   // Open the default browser to the flow.html test page.
   grunt.registerTask(
@@ -462,7 +449,7 @@ module.exports = (grunt) => {
     () => {
       // If the CJS build doesn't exist, build it.
       if (!fs.existsSync(BUILD_CJS_DIR)) {
-        grunt.task.run('concurrent:all');
+        grunt.task.run('webpack:prodAndDebug'); // TODO: RONYEH Just debug?
         grunt.log.write('Build the CJS files.');
       } else {
         grunt.log.write('CJS files already exist. Skipping the build step.');
@@ -496,9 +483,9 @@ module.exports = (grunt) => {
   // After developing new features or fixing a bug, you can compare the current
   // working tree against the reference with: grunt test:reference
   grunt.registerTask('reference', 'Build to reference/.', [
-    //
     'clean',
-    'concurrent:all',
+    'webpack:prodAndDebug',
+    'build:esm',
     'copy:reference',
   ]);
 
@@ -568,42 +555,50 @@ module.exports = (grunt) => {
   // grunt release
   // Release to npm and GitHub.
   grunt.registerTask('release', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it');
   });
 
   // grunt release:alpha
   grunt.registerTask('release:alpha', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--preRelease=alpha');
   });
 
   // grunt release:beta
   grunt.registerTask('release:beta', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--preRelease=beta');
   });
 
   // grunt release:rc
   grunt.registerTask('release:rc', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--preRelease=rc');
   });
 
   // grunt release:dry-run
   // Walk through the release process without actually doing anything.
   grunt.registerTask('release:dry-run', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--dry-run');
   });
 
   // grunt release:dry-run:alpha
   grunt.registerTask('release:dry-run:alpha', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--dry-run', '--preRelease=alpha');
   });
 
   // grunt release:dry-run:beta
   grunt.registerTask('release:dry-run:beta', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--dry-run', '--preRelease=beta');
   });
 
   // grunt release:dry-run:rc
   grunt.registerTask('release:dry-run:rc', '', () => {
+    verifyGitWorkingDirectory();
     runCommand('npx', 'release-it', '--dry-run', '--preRelease=rc');
   });
 
@@ -611,7 +606,90 @@ module.exports = (grunt) => {
   grunt.registerTask('build-test-release', '', () => {
     grunt.task.run('default');
     grunt.task.run('qunit');
-    // TODO: commit the version file as part of the release-it script.
-    grunt.task.run('release:dry-run');
+    verifyGitWorkingDirectory();
+    grunt.task.run('release:dry-run'); // TODO: remove dry-run!
   });
+
+  // @return true if the git working directory is clean, other than the auto-generated `src/version.ts` file.
+  function verifyGitWorkingDirectory() {
+    const output = execSync('git status -s').toString();
+    console.log('The Output Was');
+    const lines = output.split('\n');
+    let numDirtyFiles = 0;
+    for (const ln in lines) {
+      const line = lines[ln].trim();
+      if (line === '') {
+        continue;
+      } else if (line.includes('src/version.ts')) {
+        console.log('OK', line);
+      } else {
+        console.log('!!', line);
+        numDirtyFiles++;
+      }
+    }
+
+    if (numDirtyFiles > 0) {
+      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.', 1);
+      return false;
+    } else {
+      console.log('The git working directory is clean.');
+      return true;
+    }
+  }
+
+  // grunt.registerTask('xxx', '', function () {
+  //   const done = this.async();
+  //   grunt.util.spawn(
+  //     {
+  //       grunt: true,
+  //       args: ['yyy'],
+  //       opts: { stdio: 'inherit' },
+  //     },
+  //     (error, result) => {
+  //       if (error) {
+  //         grunt.log.error().error(result.stdout).writeln();
+  //       } else {
+  //         grunt.log.ok().verbose.ok(result.stdout);
+  //         done(true);
+  //       }
+  //     }
+  //   );
+  //   grunt.util.spawn(
+  //     {
+  //       grunt: true,
+  //       args: ['zzz'],
+  //       opts: { stdio: 'inherit' },
+  //     },
+  //     (error, result) => {
+  //       if (error) {
+  //         grunt.log.error().error(result.stdout).writeln();
+  //       } else {
+  //         grunt.log.ok().verbose.ok(result.stdout);
+  //         done(true);
+  //       }
+  //     }
+  //   );
+  // });
+
+  // grunt.registerTask('yyy', '', function () {
+  //   const done = this.async();
+  //   const id = setInterval(() => {
+  //     console.log('YYY ' + Math.random());
+  //   }, 1000);
+  //   setTimeout(() => {
+  //     clearInterval(id);
+  //     done(true);
+  //   }, 5100);
+  // });
+
+  // grunt.registerTask('zzz', '', function () {
+  //   const done = this.async();
+  //   const id = setInterval(() => {
+  //     console.log('ZZZ ' + Math.random());
+  //   }, 1000);
+  //   setTimeout(() => {
+  //     clearInterval(id);
+  //     done(true);
+  //   }, 5100);
+  // });
 };
