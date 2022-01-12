@@ -508,20 +508,25 @@ module.exports = (grunt) => {
   });
 
   // grunt watch
-  // Watch for changes and builds debug CJS files.
-  grunt.registerTask('watch', 'The fastest way to iterate while working on VexFlow', () => {
-    grunt.task.run(['clean:build', 'webpack:watchDebug']);
-  });
+  // Watch for changes and build debug CJS files.
+  grunt.registerTask('watch', 'The fastest way to iterate while working on VexFlow', [
+    'clean:build',
+    'webpack:watchDebug',
+  ]);
 
   // grunt watch:prod
-  // Watch for changes and build production CJS files.
-  grunt.registerTask('watch:prod', '', () => {
-    grunt.task.run(['clean:build', 'webpack:watchProd']);
-  });
+  // Watch for changes and build production CJS files. This might be slow!
+  grunt.registerTask('watch:prod', 'Watch for changes and build production CJS files.', [
+    'clean:build',
+    'webpack:watchProd',
+  ]);
 
   // grunt watch:esm
   // Watch for changes and build esm/*.
-  grunt.registerTask('watch:esm', '', ['clean:build', 'build:esm:watch']);
+  grunt.registerTask('watch:esm', 'Watch for changes and build ESM files to build/esm/*', [
+    'clean:build',
+    'build:esm:watch',
+  ]);
 
   // grunt test:cmd
   // An alias for `grunt qunit`
@@ -601,7 +606,7 @@ module.exports = (grunt) => {
     'diff:reference',
     'Compare images created by the build/ and reference/ versions of VexFlow.',
     () => {
-      execSync('./tools/visual_regression.sh');
+      runCommand('./tools/visual_regression.sh');
     }
   );
 
@@ -659,13 +664,13 @@ module.exports = (grunt) => {
   // Release to npm and GitHub.
   grunt.registerTask('release', '', () => {
     verifyGitWorkingDirectory();
-    execSync('npx release-it');
+    runCommand('npx', 'release-it');
   });
 
   // grunt release:alpha
   grunt.registerTask('release:alpha', '', () => {
     verifyGitWorkingDirectory();
-    execSync('npx release-it --preRelease=alpha');
+    runCommand('npx', 'release-it', '--preRelease=alpha');
   });
 
   // grunt release:beta
