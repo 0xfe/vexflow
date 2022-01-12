@@ -36,6 +36,9 @@ const StaveTests = {
     run('Multiple Stave Barline Test (14pt Section)', drawMultipleMeasures, { fontSize: 14 });
     run('Multiple Stave Repeats Test', drawRepeats);
     run('Stave End Modifiers Test', drawEndModifiers);
+    run('Stave Repetition (CODA) Positioning', drawStaveRepetition, { yShift: 0 });
+    run('Stave Repetition (CODA) Positioning (-20)', drawStaveRepetition, { yShift: -20 });
+    run('Stave Repetition (CODA) Positioning (+10)', drawStaveRepetition, { yShift: +10 });
     run('Multiple Staves Volta Test', drawVolta);
     run('Volta + Modifier Measure Test', drawVoltaModifier);
     run('Tempo Test', drawTempo);
@@ -401,6 +404,70 @@ function drawEndModifiers(options: TestOptions, contextBuilder: ContextBuilder):
   drawStavesInTwoLines(BarlineType.REPEAT_BOTH);
 }
 
+function drawStaveRepetition(options: TestOptions, contextBuilder: ContextBuilder): void {
+  expect(0);
+
+  // Get the rendering context
+  const ctx = contextBuilder(options.elementId, 725, 200);
+
+  // bar 1
+  const mm1 = new Stave(10, 50, 150);
+  mm1.addClef('treble');
+  mm1.setRepetitionType(Repetition.type.DS_AL_FINE, options.params.yShift);
+  mm1.setMeasure(1);
+  mm1.setContext(ctx).draw();
+  const notesmm1 = [
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+  ];
+  // Helper function to justify and draw a 4/4 voice
+  Formatter.FormatAndDraw(ctx, mm1, notesmm1);
+
+  // bar 2 - juxtapose second measure
+  const mm2 = new Stave(mm1.getWidth() + mm1.getX(), mm1.getY(), 150);
+  mm2.setRepetitionType(Repetition.type.TO_CODA, options.params.yShift);
+  mm2.setMeasure(2);
+  mm2.setContext(ctx).draw();
+  const notesmm2 = [
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+  ];
+  // Helper function to justify and draw a 4/4 voice
+  Formatter.FormatAndDraw(ctx, mm2, notesmm2);
+
+  // bar 3 - juxtapose third measure
+  const mm3 = new Stave(mm2.getWidth() + mm2.getX(), mm1.getY(), 150);
+  mm3.setRepetitionType(Repetition.type.DS_AL_CODA, options.params.yShift);
+  mm3.setMeasure(3);
+  mm3.setContext(ctx).draw();
+  const notesmm3 = [
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+  ];
+  // Helper function to justify and draw a 4/4 voice
+  Formatter.FormatAndDraw(ctx, mm3, notesmm3);
+
+  // bar 4 - juxtapose fourth measure
+  const mm4 = new Stave(mm3.getWidth() + mm3.getX(), mm1.getY(), 150);
+  mm4.setRepetitionType(Repetition.type.CODA_LEFT, options.params.yShift);
+  mm4.setMeasure(4);
+  mm4.setContext(ctx).draw();
+  const notesmm4 = [
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['f/4'], duration: 'q' }),
+    new StaveNote({ keys: ['a/4'], duration: 'q' }),
+  ];
+  // Helper function to justify and draw a 4/4 voice
+  Formatter.FormatAndDraw(ctx, mm4, notesmm4);
+}
+
 function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
   expect(0);
 
@@ -410,7 +477,7 @@ function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
   // bar 1
   const mm1 = new Stave(10, 50, 125);
   mm1.setBegBarType(BarlineType.REPEAT_BEGIN);
-  mm1.setRepetitionTypeLeft(Repetition.type.SEGNO_LEFT, -18);
+  mm1.setRepetitionType(Repetition.type.SEGNO_LEFT);
   mm1.addClef('treble');
   mm1.addKeySignature('A');
   mm1.setMeasure(1);
@@ -422,7 +489,7 @@ function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   // bar 2 - juxtapose second measure
   const mm2 = new Stave(mm1.getWidth() + mm1.getX(), mm1.getY(), 60);
-  mm2.setRepetitionTypeRight(Repetition.type.CODA_RIGHT, 0);
+  mm2.setRepetitionType(Repetition.type.CODA_RIGHT);
   mm2.setMeasure(2);
   mm2.setContext(ctx).draw();
   const notesmm2 = [new StaveNote({ keys: ['d/4'], duration: 'w' })];
@@ -479,7 +546,7 @@ function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
   // bar 8 - juxtapose eighth measure
   const mm8 = new Stave(mm7.getWidth() + mm7.getX(), mm1.getY(), 60);
   mm8.setEndBarType(BarlineType.DOUBLE);
-  mm8.setRepetitionTypeRight(Repetition.type.DS_AL_CODA, 25);
+  mm8.setRepetitionType(Repetition.type.DS_AL_CODA);
   mm8.setMeasure(8);
   mm8.setContext(ctx).draw();
   const notesmm8 = [new StaveNote({ keys: ['c/5'], duration: 'w' })];
@@ -489,7 +556,7 @@ function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
   // bar 9 - juxtapose ninth measure
   const mm9 = new Stave(mm8.getWidth() + mm8.getX() + 20, mm1.getY(), 125);
   mm9.setEndBarType(BarlineType.END);
-  mm9.setRepetitionTypeLeft(Repetition.type.CODA_LEFT, 25);
+  mm9.setRepetitionType(Repetition.type.CODA_LEFT);
   mm9.addClef('treble');
   mm9.addKeySignature('A');
   mm9.setMeasure(9);
@@ -522,7 +589,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   // bar 2: volta begin_mid, with modifiers (clef, keysignature)
   const mm2 = new Stave(mm1.getX() + mm1.getWidth(), mm1.getY(), 175);
   mm2.setBegBarType(BarlineType.REPEAT_BEGIN);
-  mm2.setRepetitionTypeRight(Repetition.type.DS, 25);
+  mm2.setRepetitionType(Repetition.type.DS);
   mm2.setVoltaType(VoltaType.BEGIN, '2.', -5);
   mm2.addClef('treble');
   mm2.addKeySignature('A');
@@ -534,7 +601,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   // bar 3: volta mid, with modifiers (clef, keysignature)
   const mm3 = new Stave(mm2.getX() + mm2.getWidth(), mm2.getY(), 175);
   mm3.setVoltaType(VoltaType.MID, '', -5);
-  mm3.setRepetitionTypeRight(Repetition.type.DS, 25);
+  mm3.setRepetitionType(Repetition.type.DS);
   mm3.addClef('treble');
   mm3.addKeySignature('B');
   mm3.setMeasure(3);
@@ -546,7 +613,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   // bar 4: volta end, with modifiers (clef, keysignature)
   const mm4 = new Stave(mm3.getX() + mm3.getWidth(), mm3.getY(), 175);
   mm4.setVoltaType(VoltaType.END, '1.', -5);
-  mm4.setRepetitionTypeRight(Repetition.type.DS, 25);
+  mm4.setRepetitionType(Repetition.type.DS);
   mm4.addClef('treble');
   mm4.addKeySignature('A');
   mm4.setMeasure(4);
@@ -559,7 +626,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   const mm5 = new Stave(mm4.getX() + mm4.getWidth(), mm4.getY(), 175);
   // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
   mm5.setEndBarType(BarlineType.DOUBLE);
-  mm5.setRepetitionTypeRight(Repetition.type.DS, 25);
+  mm5.setRepetitionType(Repetition.type.DS);
   mm5.addClef('treble');
   mm5.addKeySignature('A');
   mm5.setMeasure(5);
@@ -571,7 +638,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
   // bar 6: d.s. without modifiers
   const mm6 = new Stave(mm5.getX() + mm5.getWidth(), mm5.getY(), 175);
   // mm5.addModifier(new Repetition(Repetition.type.DS, mm4.getX() + mm4.getWidth(), 50), StaveModifierPosition.RIGHT);
-  mm6.setRepetitionTypeRight(Repetition.type.DS, 25);
+  mm6.setRepetitionType(Repetition.type.DS);
   mm6.setMeasure(6);
   mm6.setSection('E', 0);
   mm6.setContext(ctx).draw();

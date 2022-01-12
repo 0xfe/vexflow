@@ -142,6 +142,14 @@ export const BravuraMetrics = {
     },
   },
 
+  staveRepetition: {
+    default: {
+      offsetY: 25,
+      offsetSymbol: 12,
+      spacing: 5,
+    },
+  },
+
   // noteHead: {
   // },
 
@@ -514,6 +522,12 @@ export const BravuraMetrics = {
         stemUpYOffset: 0,
         reportedWidth: 5,
       },
+    },
+    tuplet: {
+      noteHeadOffset: 20,
+      stemOffset: 10,
+      bottomLine: 4,
+      topModifierOffset: 15,
     },
   },
 };
