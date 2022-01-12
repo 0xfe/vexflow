@@ -14,6 +14,9 @@ global.document = dom.window.document;
 
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
+console.log('Script Dir:', scriptDir);
+console.log('Image Dir:', imageDir);
+
 const runOptions = {
   jobs: 1,
   job: 0,
@@ -99,7 +102,7 @@ if (!global.QUnit) {
 // We use file detection to determine which file(s) to include.
 const vexflowDebugWithTestsJS = path.join(scriptDir, 'vexflow-debug-with-tests.js');
 if (fs.existsSync(path.resolve(__dirname, vexflowDebugWithTestsJS))) {
-  // Version 4.0.0.
+  console.log('Generating Images for version >= 4.0.0');
   global.Vex = require(vexflowDebugWithTestsJS);
 } else {
   console.log('Generating Images for version <= 3.0.9');

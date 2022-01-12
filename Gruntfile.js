@@ -1,32 +1,33 @@
 /************************************************************************************************************
 
-grunt
+!grunt
   - Build the complete set of VexFlow libraries (with source-maps) for production and debug use.
     This is the 'default' grunt task.
 
 
 
 
-grunt test
+!grunt test
   - Build the VexFlow libraries and run the QUnit command line tests with 'tests/flow-headless-browser.html'.
-grunt reference
+!grunt reference
   - build the VexFlow libraries and run the copy:reference task, which copies the 
     current build/ to the reference/ folder, so that we can compare future builds to the reference/.
-grunt release
+!grunt release
   - run the release script to publish to npm and GitHub.
     this assumes you have run already `grunt` and have fully tested the build.
 *************************************************************************************************************
 
-grunt watch
+!grunt watch
   - The fastest way to iterate while working on VexFlow. It only produces the debug CJS libraries in build/cjs/.
-grunt watch:prod
+!grunt watch:prod
   - If you need to build production libraries while coding, use this task. However, it can be slow.
-grunt watch:esm
+!grunt watch:esm
   - Watch for changes and build the ESM libraries in build/esm/.
 
-grunt test:cmd
-grunt test:browser:cjs
-grunt test:browser:esm
+!grunt test:cmd
+  - Run the QUnit command line tests with 'tests/flow-headless-browser.html'.
+!grunt test:browser:cjs
+!grunt test:browser:esm
 
 grunt copy:reference
   - if you have recently run `grunt test` call this to save the current build/ to reference/.
@@ -102,6 +103,7 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
+const BUILD_IMAGES_CURRENT_DIR = path.join(BUILD_DIR, 'images', 'current');
 const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 const REFERENCE_IMAGES_DIR = path.join(REFERENCE_DIR, 'images');
@@ -317,7 +319,7 @@ function webpackConfigs() {
 module.exports = (grunt) => {
   const log = grunt.log.writeln;
 
-  // Fail the grunt task if there are uncommitted changes (other than the auto-generated `src/version.ts` file).
+  // Fail the `grunt release` task if there are uncommitted changes (other than the auto-generated `src/version.ts` file).
   function verifyGitWorkingDirectory() {
     const output = execSync('git status -s').toString();
     const lines = output.split('\n');
@@ -335,7 +337,7 @@ module.exports = (grunt) => {
     }
 
     if (numDirtyFiles > 0) {
-      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.', 1);
+      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.');
     }
   }
 
@@ -355,25 +357,17 @@ module.exports = (grunt) => {
       if (typeof task === 'string') {
         args = [task];
       } else {
-        // task is an array of task strings.
+        // `task` is already an array of task strings.
         args = task;
       }
-      grunt.util.spawn(
-        {
-          grunt: true,
-          args: args,
-          opts: { stdio: 'inherit' },
-        },
-        (error, result, code) => {
-          const output = String(result);
-          if (error) {
-            grunt.log.error(output);
-          } else {
-            grunt.log.ok(output);
-          }
-          taskComplete();
+      grunt.util.spawn({ grunt: true, args, opts: { stdio: 'inherit' } }, (error, result) => {
+        if (error) {
+          grunt.log.error(String(result));
+        } else {
+          grunt.log.ok(String(result));
         }
-      );
+        taskComplete();
+      });
     }
   }
 
@@ -450,24 +444,15 @@ module.exports = (grunt) => {
 
   // grunt
   // Build all targets for production and debugging.
-  grunt.registerTask('default', 'Build all VexFlow targets.', [
-    'clean:build',
-    'webpack:prodAndDebug',
-    'default_esm_types_api',
-  ]);
-  // Internal task used by the above 'default' task to improve build performance.
-  grunt.registerTask('default_esm_types_api', 'Build other targets.', function () {
-    runTasksConcurrently(this.async(), 'build:esm', 'build:types', 'typedoc');
+  grunt.registerTask('default', 'Build all VexFlow targets.', function () {
+    grunt.task.run('clean:build', 'webpack:prodAndDebug');
+    const doneCallback = this.async();
+    runTasksConcurrently(doneCallback, 'build:esm', 'build:types', 'typedoc');
   });
 
   // grunt test
   // Run command line qunit tests.
-  grunt.registerTask('test', 'Run command line unit tests.', [
-    'clean:build',
-    'webpack:prodAndDebug',
-    'build:esm',
-    'qunit',
-  ]);
+  grunt.registerTask('test', 'Run command line unit tests.', ['clean:build', 'webpack:debug', 'qunit']);
 
   // grunt build:cjs
   grunt.registerTask('build:cjs', 'Use webpack to create CJS files in build/cjs/', ['webpack:prodAndDebug']);
@@ -528,15 +513,20 @@ module.exports = (grunt) => {
     'build:esm:watch',
   ]);
 
+  // If you have already compiled the libraries, you can use the three tasks below to
+  // test the existing build:
   // grunt test:cmd
-  // An alias for `grunt qunit`
+  // grunt test:browser:cjs
+  // grunt test:browser:esm
+
+  // grunt test:cmd
   grunt.registerTask('test:cmd', 'Run command line unit tests.', 'qunit');
 
   // grunt test:browser:cjs
   // Open the default browser to the flow.html test page.
   grunt.registerTask(
     'test:browser:cjs',
-    'Test the CJS build by loading the flow.html file in the default browser.', //
+    'Test the CJS build by loading the flow.html file in the default browser.',
     () => {
       // If the CJS build doesn't exist, build it.
       if (!fs.existsSync(BUILD_CJS_DIR)) {
@@ -595,6 +585,20 @@ module.exports = (grunt) => {
     runCommand('node', './tools/generate_images.js', 'reference', './build/images/reference', ...GENERATE_IMAGES_ARGS);
   });
 
+  // grunt generate:release:X.Y.Z
+  // node ./tools/generate_images.js reference ./build/images/reference ${VEX_GENERATE_OPTIONS}
+  grunt.registerTask('generate:release', 'Create images from vexflow version in releases/X.Y.Z/', (ver) => {
+    console.log(`Creating images with VexFlow version ${ver}.`);
+    console.log('Saving images to build/images/X.Y.Z/');
+    runCommand(
+      'node',
+      './tools/generate_images.js',
+      'releases/' + ver,
+      './build/images/' + ver,
+      ...GENERATE_IMAGES_ARGS
+    );
+  });
+
   // grunt generate:version
   grunt.registerTask('generate:version', '', () => {
     const info = generateVersionFile();
@@ -606,17 +610,26 @@ module.exports = (grunt) => {
     'diff:reference',
     'Compare images created by the build/ and reference/ versions of VexFlow.',
     () => {
-      runCommand('./tools/visual_regression.sh');
+      runCommand('./tools/visual_regression.sh', 'reference');
     }
   );
 
-  // grunt diff:version:xxxx
+  // grunt diff:ver:X.Y.Z
   grunt.registerTask(
-    'diff:version',
-    'Compare images created by the build/ and releases/xxxx/ versions of VexFlow',
-    (versionNumber) => {
-      console.log(versionNumber);
-      // TODO: Update ./tools/visual_regression.sh to accept a version number and use the correct files.
+    'diff:ver',
+    'Compare images created by the build/ and releases/X.Y.Z/ versions of VexFlow',
+    (version) => {
+      // Make sure the folder exists.
+      const dirA = path.join(BUILD_DIR, 'images', version);
+      const dirB = BUILD_IMAGES_CURRENT_DIR;
+      if (!fs.existsSync(dirA)) {
+        grunt.fail.fatal('Missing images directory.\n' + dirA);
+      }
+      if (!fs.existsSync(dirB)) {
+        grunt.fail.fatal('Missing images directory\n' + dirB);
+      }
+
+      runCommand('./tools/visual_regression.sh', version);
     }
   );
 
@@ -676,45 +689,45 @@ module.exports = (grunt) => {
   // grunt release:beta
   grunt.registerTask('release:beta', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --preRelease=beta');
+    runCommand('npx', 'release-it', '--preRelease=beta');
   });
 
   // grunt release:rc
   grunt.registerTask('release:rc', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --preRelease=rc');
+    runCommand('npx', 'release-it', '--preRelease=rc');
   });
 
   // grunt release:dry-run
   // Walk through the release process without actually doing anything.
   grunt.registerTask('release:dry-run', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --dry-run');
+    runCommand('npx', 'release-it', '--dry-run');
   });
 
   // grunt release:dry-run:alpha
   grunt.registerTask('release:dry-run:alpha', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --dry-run --preRelease=alpha');
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=alpha');
   });
 
   // grunt release:dry-run:beta
   grunt.registerTask('release:dry-run:beta', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --dry-run --preRelease=beta');
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=beta');
   });
 
   // grunt release:dry-run:rc
   grunt.registerTask('release:dry-run:rc', '', () => {
     verifyGitWorkingDirectory();
-    runCommand('npx release-it --dry-run --preRelease=rc');
+    runCommand('npx', 'release-it', '--dry-run', '--preRelease=rc');
   });
 
-  // grunt build-test-release
+  // GITHUB_TOKEN=XXXX grunt build-test-release
   grunt.registerTask('build-test-release', '', () => {
     grunt.task.run('default');
     grunt.task.run('qunit');
-    grunt.task.run('release:dry-run'); // TODO: remove dry-run!
+    grunt.task.run('release');
   });
 
   grunt.registerTask('typedoc', '', function () {

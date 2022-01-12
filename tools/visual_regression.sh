@@ -9,13 +9,15 @@
 #
 # Usage:
 #
-#  First generate the PNG images from the tests into build/images.
+#  First generate the PNG images from the tests into build/images/.
 #
-#    $ ./tools/generate_png_images.js
+#    ./tools/generate_images.js build          ./build/images/current
+#    ./tools/generate_images.js reference      ./build/images/reference
+#    ./tools/generate_images.js releases/3.0.9 ./build/images/3.0.9
 #
-#  Run the regression tests against the reference images.
+#  Run the visual regression tests against the reference images.
 #
-#    $ ./tools/visual_regression.sh [prefix]
+#    ./tools/visual_regression.sh ( reference | 3.0.9 | X.Y.Z ) [prefix]
 #
 #  The optional argument allows you to compare a subset of the images
 #  (only those with names starting with the specified prefix).
@@ -41,18 +43,19 @@ THRESHOLD=0.01
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
 BASE=.
-ADIR=$BASE/build/images/reference
-ANAME=Reference
+ADIR=$BASE/build/images/$1
+ANAME=$1
 BDIR=$BASE/build/images/current
-BNAME=Current
+BNAME=current
 DIFF=$BASE/build/images/diff
 
 
-# All results are stored here.
+# All results are stored in the build/images/diff directory
+# The results.txt and warnings.txt contain the output.
+mkdir -p $DIFF
 RESULTS=$DIFF/results.txt
 WARNINGS=$DIFF/warnings.txt
 
-mkdir -p $DIFF
 if [ -e "$RESULTS" ]
 then
   rm $DIFF/*
@@ -96,7 +99,7 @@ fi
 # check that #ImagesA == #ImagesB (will continue anyways)
 if [ ! "$totalImagesA" -eq "$totalImagesB" ]
 then
-  echo "Warning: Number of (matching) $BNAME images ($totalImagesB) is not the same as $ANAME images ($totalImagesA). Continuing anyways."
+  echo "Warning: Number of (matching) [$BNAME] images ($totalImagesB) is not the same as [$ANAME] images ($totalImagesA). Continuing anyways."
 fi
 # ----------------- end of sanity checks -----------------
 
