@@ -5,6 +5,9 @@
     "outDir": "./build/esm/",
     "declaration": false,
     "removeComments": true
+    // Avoid using incremental builds for now: https://github.com/microsoft/TypeScript/issues/30602
+    // "incremental": true,
+    // "tsBuildInfoFile": "./node_modules/.cache/typescript/tsbuildinfo.json"
   },
   "include": ["./src", "./entry", "./tests"]
 }

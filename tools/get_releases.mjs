@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import child_process from 'child_process';
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path, { dirname } from 'path';
 import copy from 'recursive-copy';
@@ -88,7 +88,13 @@ async function getReleasesForVersion3OrEarlier() {
   for (const ver of versions3OrEarlier) {
     const worktreePath = path.join(RELEASES_DIR, ver + TEMP_SUFFIX);
     worktrees.push(worktreePath);
-    const output = child_process.execSync(`git worktree add ${worktreePath} ${ver}`).toString();
+
+    if (fs.existsSync(worktreePath)) {
+      console.log('Removing existing worktree:', worktreePath);
+      execSync(`git worktree remove ${worktreePath}`).toString();
+    }
+
+    const output = execSync(`git worktree add --detach ${worktreePath} ${ver}`).toString();
     console.log(output);
   }
 
@@ -107,11 +113,11 @@ async function getReleasesForVersion3OrEarlier() {
 
   console.log('\nRemove temporary worktrees.');
   for (const worktreePath of worktrees) {
-    child_process.execSync(`git worktree remove ${worktreePath} --force`).toString();
+    execSync(`git worktree remove ${worktreePath} --force`).toString();
   }
 
   // Prune worktree information.
-  child_process.execSync(`git worktree prune`).toString();
+  execSync(`git worktree prune`).toString();
 }
 await getReleasesForVersion3OrEarlier();
 
@@ -120,14 +126,18 @@ async function getReleasesForVersion4OrLater() {
   for (const ver of versions4OrLater) {
     // Download & extract the package in a temporary directory.
     const tempDir = path.join(RELEASES_DIR, ver + TEMP_SUFFIX);
+    // Remove the temporary directory if it already exists.
+    if (fs.existsSync(tempDir)) {
+      fs.rmdirSync(tempDir, { recursive: true });
+    }
 
     console.log('\nDownload', ver, 'from npm.');
-    child_process.execSync(`npm pack vexflow@${ver} --pack-destination ${tempDir} 2> /dev/null`).toString();
+    execSync(`npm pack vexflow@${ver} --pack-destination ${tempDir} 2> /dev/null`).toString();
 
     const packageFile = `vexflow-${ver}.tgz`;
     console.log('Extract', packageFile);
     const tgzFile = path.join(tempDir, packageFile);
-    child_process.execSync(`tar -xf ${tgzFile} -C ${tempDir}`).toString();
+    execSync(`tar -xf ${tgzFile} -C ${tempDir}`).toString();
 
     // Copy the files from the temporary directory to the target directory.
     const sourceDir = path.join(tempDir, 'package', 'build');

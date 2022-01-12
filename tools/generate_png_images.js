@@ -14,9 +14,6 @@ global.document = dom.window.document;
 
 const [scriptDir, imageDir] = process.argv.slice(2, 4);
 
-console.log('Script Dir:', scriptDir);
-console.log('Image Dir:', imageDir);
-
 const runOptions = {
   jobs: 1,
   job: 0,

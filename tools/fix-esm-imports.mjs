@@ -1,7 +1,10 @@
 // Author: Ron B. Yeh
 
-// node ./tools/esm/fix-imports-and-exports.js ./build/esm/
+// node ./tools/fix-esm-imports.mjs ./build/esm/
 // See the `build:esm` task in Gruntfile.js.
+
+// Used by Gruntfile.js to add .js extensions to all imports and exports under the `vexflow/build/esm/` directory.
+// ES module import statements do not work without the .js extension.
 
 // This script recursively walks `build/esm/` and fixes imports & exports in every JS file.
 // It adds a .js extension to every import / export of a file, fixing files in place. For example:

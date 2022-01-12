@@ -144,6 +144,8 @@ const appMain = async () => {
   const { numTests, pptrJobs, ver } = resolveJobsOption(childArgs.ver);
   const { imageDir, args } = childArgs;
 
+  console.log(numTests, pptrJobs, ver);
+
   const backendDefs = {
     jsdom: {
       path: './tools/generate_png_images.js',
