@@ -96,7 +96,6 @@
     "grunt-contrib-concat": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-qunit": "^5.1.1",
-    "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^24.0.0",
     "grunt-open": "^0.2.4",
     "grunt-webpack": "^5.0.0",
@@ -112,6 +111,7 @@
     "sharp": "^0.29.3",
     "svg2pdf.js": "^2.2.0",
     "ts-loader": "^9.2.6",
+    "tsc-watch": "^4.6.0",
     "typedoc": "^0.22.10",
     "typescript": "^4.5.4",
     "webpack": "^5.65.0"
