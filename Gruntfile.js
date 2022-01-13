@@ -127,7 +127,8 @@ const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
 const REFERENCE_IMAGES_DIR = path.join(REFERENCE_DIR, 'images');
 const WEBPACK_CACHE_DIR = path.join(BASE_DIR, 'node_modules', '.cache', 'webpack');
-const BUILD_ESM_PACKAGE_JSON = path.join(BUILD_ESM_DIR, 'package.json');
+const ESLINT_CACHE_FILE = path.join(BASE_DIR, 'node_modules', '.cache', 'eslint.json');
+const BUILD_ESM_PACKAGE_JSON_FILE = path.join(BUILD_ESM_DIR, 'package.json');
 
 const LOCALHOST = 'http://127.0.0.1:8080';
 
@@ -255,7 +256,7 @@ function webpackConfigs() {
           },
           eslint: {
             files: ['./src/**/*.ts', './entry/**/*.ts', './tests/**/*.ts'],
-            options: { fix: true, cache: true },
+            options: { fix: true, cache: true, cacheLocation: ESLINT_CACHE_FILE },
           },
         });
         plugins.push(pluginFork);
@@ -483,6 +484,8 @@ module.exports = (grunt) => {
       // For debug builds, we use a webpack cache to speed up rebuilds.
       // https://webpack.js.org/guides/build-performance/#persistent-cache
       webpack_cache: { src: [WEBPACK_CACHE_DIR] },
+      // grunt clean:eslint_cache
+      eslint_cache: { src: [ESLINT_CACHE_FILE] },
     },
   });
 
@@ -516,7 +519,7 @@ module.exports = (grunt) => {
     fs.mkdirSync(BUILD_ESM_DIR, { recursive: true });
     // The build/esm/ folder needs a package.json that specifies { "type": "module" }.
     // This indicates that all *.js files in `vexflow/build/esm/` are ES modules.
-    fs.writeFileSync(BUILD_ESM_PACKAGE_JSON, '{\n  "type": "module"\n}\n');
+    fs.writeFileSync(BUILD_ESM_PACKAGE_JSON_FILE, '{\n  "type": "module"\n}\n');
     if (arg === 'watch') {
       this.async(); // Set grunt's async mode to keep the task running forever.
       const TscWatchClient = require('tsc-watch/client');
@@ -791,6 +794,7 @@ module.exports = (grunt) => {
       if (arg2) {
         release.push(arg2);
       }
+
       verifyGitWorkingDirectory();
       grunt.task.run([
         'clean',
