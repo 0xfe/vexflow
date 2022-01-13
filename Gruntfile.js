@@ -95,12 +95,6 @@ To pass in environment variables, you can use your ~/.bash_profile or do somethi
 You can also do it all on one line:
   VEX_DEBUG_CIRCULAR_DEPENDENCIES=true VEX_DEVTOOL=eval grunt
 
-*************************************************************************************************************
-
-If you are adding a new music engraving font, search for instances of ADD_MUSIC_FONT in the code base.
-In this Gruntfile, you can export a font module which can be dynamically loaded by vexflow-core.js.
-To include your new font into the complete vexflow.js, take a look at src/fonts/load_all.ts
-
 *************************************************************************************************************/
 
 const path = require('path');
@@ -120,13 +114,6 @@ const VEX_BRAVURA = 'vexflow-bravura';
 const VEX_GONVILLE = 'vexflow-gonville';
 const VEX_PETALUMA = 'vexflow-petaluma';
 const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules below.
-const VEX_FONT_BRAVURA = 'vexflow-font-bravura';
-const VEX_FONT_GONVILLE = 'vexflow-font-gonville';
-const VEX_FONT_PETALUMA = 'vexflow-font-petaluma';
-const VEX_FONT_CUSTOM = 'vexflow-font-custom';
-// [ADD_MUSIC_FONT]
-// Provide the base name of your font entry file: entry/vexflow-font-xxx.ts => vexflow-font-xxx
-// const VEX_FONT_XXX = 'vexflow-font-xxx';
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
@@ -347,13 +334,16 @@ function webpackConfigs() {
   // exported library name (e.g., VexFlowFont.Bravura instead of Vex).
   function fontConfigs(watch = false) {
     return [
-      getConfig(VEX_FONT_BRAVURA, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura'], watch),
-      getConfig(VEX_FONT_PETALUMA, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma'], watch),
-      getConfig(VEX_FONT_GONVILLE, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville'], watch),
-      getConfig(VEX_FONT_CUSTOM, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom'], watch),
-      // [ADD_MUSIC_FONT]
+      getConfig('vexflow-font-bravura', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura'], watch),
+      getConfig('vexflow-font-petaluma', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma'], watch),
+      getConfig('vexflow-font-gonville', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville'], watch),
+      getConfig('vexflow-font-custom', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom'], watch),
+      // ADD_MUSIC_FONT
       // Add a webpack config for exporting your font module.
-      // getConfig(VEX_FONT_XXX, PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'XXX'], watch),
+      // Provide the base name of your font entry file.
+      // For an entry file at `entry/vexflow-font-xxx.ts`, use the string 'vexflow-font-xxx'.
+      // Webpack will use this config to generate a CJS font module at `build/cjs/vexflow-font-xxx.js`.
+      // getConfig('vexflow-font-xxx', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'XXX'], watch),
     ];
   }
 
@@ -364,16 +354,12 @@ function webpackConfigs() {
   return {
     // grunt webpack:prodAndDebug
     prodAndDebug: () => [prodConfig(), ...fontConfigs(), debugConfig()],
-
     // grunt webpack:prod
     prod: () => [prodConfig(), ...fontConfigs()],
-
     // grunt webpack:debug
     debug: () => debugConfig(),
-
     // grunt webpack:watchProd
     watchProd: () => [prodConfig(WATCH), ...fontConfigs(WATCH)],
-
     // grunt webpack:watchDebug
     watchDebug: () => debugConfig(WATCH),
   };
