@@ -496,7 +496,7 @@ export class SVGContext extends RenderContext {
     return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
   }
 
-  fill(attributes: Attributes): this {
+  fill(attributes?: Attributes): this {
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
       attributes = { ...this.attributes, stroke: 'none' };
