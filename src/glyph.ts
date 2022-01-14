@@ -26,8 +26,6 @@ export interface GlyphProps {
   flag: boolean;
   width: number;
   text: string;
-  tabnote_stem_down_extension: number;
-  tabnote_stem_up_extension: number;
   beam_count: number;
   shift_y: number;
   getWidth(a?: number): number;
@@ -257,7 +255,7 @@ export class Glyph extends Element {
     y_pos: number,
     point: number,
     code: string,
-    options?: { category: string }
+    options?: { category?: string; scale?: number }
   ): GlyphMetrics {
     const data = Glyph.cache.lookup(code, options?.category);
     const metrics = data.metrics;
@@ -265,9 +263,16 @@ export class Glyph extends Element {
       point = data.point;
     }
 
-    const scale = (point * 72.0) / (metrics.font.getResolution() * 100.0);
+    const customScale = options?.scale ?? 1;
+    const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
-    Glyph.renderOutline(ctx, metrics.outline, scale * metrics.scale, x_pos + metrics.x_shift, y_pos + metrics.y_shift);
+    Glyph.renderOutline(
+      ctx,
+      metrics.outline,
+      scale,
+      x_pos + metrics.x_shift * customScale,
+      y_pos + metrics.y_shift * customScale
+    );
     return metrics;
   }
 

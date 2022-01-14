@@ -84,6 +84,17 @@ export const PetalumaMetrics = {
     },
   },
 
+  parenthesis: {
+    default: {
+      point: 39,
+      width: 7,
+    },
+    gracenote: {
+      point: (39 * 3) / 5,
+      width: 3,
+    },
+  },
+
   pedalMarking: {
     up: {
       point: 40,
@@ -129,6 +140,14 @@ export const PetalumaMetrics = {
       offsetYStemDown: 5,
       offsetXStemUp: 8,
       offsetXStemDown: 1,
+    },
+  },
+
+  staveRepetition: {
+    default: {
+      offsetY: 25,
+      offsetSymbol: 12,
+      spacing: 5,
     },
   },
 
@@ -531,6 +550,12 @@ export const PetalumaMetrics = {
         stemUpYOffset: 0,
         reportedWidth: 5,
       },
+    },
+    tuplet: {
+      noteHeadOffset: 20,
+      stemOffset: 10,
+      bottomLine: 4,
+      topModifierOffset: 20,
     },
   },
 };

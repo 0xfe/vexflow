@@ -6,6 +6,7 @@
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 import { Beam } from '../src/beam';
+import { Dot } from '../src/dot';
 import { Flow } from '../src/flow';
 import { Formatter } from '../src/formatter';
 import { RenderContext } from '../src/rendercontext';
@@ -67,15 +68,16 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   const { context, stave } = setupContext(options, contextBuilder, 700);
 
   const notes = [
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '4r' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '8r' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }).addDotToAll(),
-    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }).addDotToAll(),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '4r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '8r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '16r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }),
   ];
+  Dot.buildAndAttach(notes, { all: true });
 
   Formatter.FormatAndDraw(context, stave, notes);
 

@@ -292,14 +292,9 @@ export class Stave extends Element {
     return start_x;
   }
 
-  // Coda & Segno Symbol functions
-  setRepetitionTypeLeft(type: number, y: number): this {
-    this.modifiers.push(new Repetition(type, this.x, y));
-    return this;
-  }
-
-  setRepetitionTypeRight(type: number, y: number): this {
-    this.modifiers.push(new Repetition(type, this.x, y));
+  /** Coda & Segno Symbol functions */
+  setRepetitionType(type: number, yShift: number = 0): this {
+    this.modifiers.push(new Repetition(type, this.x, yShift));
     return this;
   }
 
@@ -310,8 +305,10 @@ export class Stave extends Element {
   }
 
   // Section functions
-  setSection(section: string, y: number): this {
-    this.modifiers.push(new StaveSection(section, this.x, y));
+  setSection(section: string, y: number, xOffset = 0, fontSize?: number) {
+    const staveSection = new StaveSection(section, this.x + xOffset, y);
+    if (fontSize) staveSection.setFontSize(fontSize);
+    this.modifiers.push(staveSection);
     return this;
   }
 

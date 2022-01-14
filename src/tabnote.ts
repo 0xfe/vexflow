@@ -7,7 +7,7 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { Dot, isDot } from './dot';
+import { isDot } from './dot';
 import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -190,6 +190,7 @@ export class TabNote extends StemmableNote {
   }
 
   reset(): this {
+    super.reset();
     if (this.stave) this.setStave(this.stave);
     return this;
   }
@@ -210,24 +211,15 @@ export class TabNote extends StemmableNote {
 
   // Get the default stem extension for the note
   getStemExtension(): number {
-    const glyph = this.getGlyph();
-
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
-    if (glyph) {
-      return this.getStemDirection() === 1 ? glyph.tabnote_stem_up_extension : glyph.tabnote_stem_down_extension;
+    if (this.flag) {
+      return this.getStemDirection() === 1 ? -this.flag.checkMetrics().y_shift : this.flag.checkMetrics().y_shift;
     }
 
     return 0;
-  }
-
-  // Add a dot to the note
-  addDot(): this {
-    const dot = new Dot();
-    this.dots += 1;
-    return this.addModifier(dot, 0);
   }
 
   // Calculate and store the width of the note

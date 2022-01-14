@@ -84,6 +84,17 @@ export const GonvilleMetrics = {
     },
   },
 
+  parenthesis: {
+    default: {
+      point: 39,
+      width: 7,
+    },
+    gracenote: {
+      point: (39 * 3) / 5,
+      width: 3,
+    },
+  },
+
   pedalMarking: {
     up: {
       point: 40,
@@ -106,18 +117,26 @@ export const GonvilleMetrics = {
     default: {
       point: 25,
       spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      offsetYStemUp: -7,
+      offsetYStemDown: 7,
       offsetXStemUp: 9,
       offsetXStemDown: -0.5,
     },
     grace: {
       point: 15,
       spacing: 4,
-      offsetYStemUp: -17,
-      offsetYStemDown: -2,
+      offsetYStemUp: -7,
+      offsetYStemDown: 7,
       offsetXStemUp: 6.5,
       offsetXStemDown: -0.5,
+    },
+  },
+
+  staveRepetition: {
+    default: {
+      offsetY: 25,
+      offsetSymbol: 12,
+      spacing: 5,
     },
   },
 
@@ -397,6 +416,20 @@ export const GonvilleMetrics = {
         stemUpYOffset: 0,
         reportedWidth: 5,
       },
+    },
+    tremolo: {
+      default: {
+        shiftY: -10,
+      },
+      grace: {
+        shiftY: -5,
+      },
+    },
+    tuplet: {
+      noteHeadOffset: 20,
+      stemOffset: 10,
+      bottomLine: 4,
+      topModifierOffset: 15,
     },
   },
 };

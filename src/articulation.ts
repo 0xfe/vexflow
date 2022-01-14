@@ -9,7 +9,7 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Stave } from './stave';
-import { isStaveNote, StaveNote } from './stavenote';
+import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
@@ -285,7 +285,7 @@ export class Articulation extends Modifier {
         if (position) artic.position = Modifier.PositionString[position];
         return builder.getFactory().Articulation(artic);
       })
-      .map((artic) => note.addModifier(artic, 0));
+      .map((artic) => note.addModifier(0, artic));
   }
 
   /**

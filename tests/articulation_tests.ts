@@ -68,10 +68,10 @@ function drawArticulations(options: TestOptions): void {
     f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
     f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
   ];
-  notesBar1[0].addArticulation(0, new Articulation(sym1).setPosition(4));
-  notesBar1[1].addArticulation(0, new Articulation(sym1).setPosition(4));
-  notesBar1[2].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar1[3].addArticulation(0, new Articulation(sym1).setPosition(3));
+  notesBar1[0].addModifier(0, new Articulation(sym1).setPosition(4));
+  notesBar1[1].addModifier(0, new Articulation(sym1).setPosition(4));
+  notesBar1[2].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar1[3].addModifier(0, new Articulation(sym1).setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
   x += formatAndDrawToWidth(x, y, width, notesBar1, Barline.type.NONE);
@@ -83,10 +83,10 @@ function drawArticulations(options: TestOptions): void {
     f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
     f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
-  notesBar2[0].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar2[1].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar2[2].addArticulation(0, new Articulation(sym1).setPosition(4));
-  notesBar2[3].addArticulation(0, new Articulation(sym1).setPosition(4));
+  notesBar2[0].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar2[1].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar2[2].addModifier(0, new Articulation(sym1).setPosition(4));
+  notesBar2[3].addModifier(0, new Articulation(sym1).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
   x += formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.DOUBLE);
@@ -98,10 +98,10 @@ function drawArticulations(options: TestOptions): void {
     f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
     f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: 1 }),
   ];
-  notesBar3[0].addArticulation(0, new Articulation(sym2).setPosition(4));
-  notesBar3[1].addArticulation(0, new Articulation(sym2).setPosition(4));
-  notesBar3[2].addArticulation(0, new Articulation(sym2).setPosition(3));
-  notesBar3[3].addArticulation(0, new Articulation(sym2).setPosition(3));
+  notesBar3[0].addModifier(0, new Articulation(sym2).setPosition(4));
+  notesBar3[1].addModifier(0, new Articulation(sym2).setPosition(4));
+  notesBar3[2].addModifier(0, new Articulation(sym2).setPosition(3));
+  notesBar3[3].addModifier(0, new Articulation(sym2).setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
   x += formatAndDrawToWidth(x, y, width, notesBar3, Barline.type.NONE);
@@ -112,10 +112,10 @@ function drawArticulations(options: TestOptions): void {
     f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
     f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
-  notesBar4[0].addArticulation(0, new Articulation(sym2).setPosition(3));
-  notesBar4[1].addArticulation(0, new Articulation(sym2).setPosition(3));
-  notesBar4[2].addArticulation(0, new Articulation(sym2).setPosition(4));
-  notesBar4[3].addArticulation(0, new Articulation(sym2).setPosition(4));
+  notesBar4[0].addModifier(0, new Articulation(sym2).setPosition(3));
+  notesBar4[1].addModifier(0, new Articulation(sym2).setPosition(3));
+  notesBar4[2].addModifier(0, new Articulation(sym2).setPosition(4));
+  notesBar4[3].addModifier(0, new Articulation(sym2).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
   formatAndDrawToWidth(x, y, width, notesBar4, Barline.type.END);
@@ -154,10 +154,10 @@ function drawFermata(options: TestOptions): void {
     f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }),
     f.StaveNote({ keys: ['a/4'], duration: 'q', stem_direction: -1 }),
   ];
-  notesBar1[0].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar1[1].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar1[2].addArticulation(0, new Articulation(sym2).setPosition(4));
-  notesBar1[3].addArticulation(0, new Articulation(sym2).setPosition(4));
+  notesBar1[0].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar1[1].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar1[2].addModifier(0, new Articulation(sym2).setPosition(4));
+  notesBar1[3].addModifier(0, new Articulation(sym2).setPosition(4));
   x += formatAndDrawToWidth(x, y, width, notesBar1, Barline.type.NONE);
 
   // bar 2 - juxtaposing second bar next to first bar
@@ -167,10 +167,10 @@ function drawFermata(options: TestOptions): void {
     f.StaveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }),
     f.StaveNote({ keys: ['a/5'], duration: 'q', stem_direction: -1 }),
   ];
-  notesBar2[0].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar2[1].addArticulation(0, new Articulation(sym1).setPosition(3));
-  notesBar2[2].addArticulation(0, new Articulation(sym2).setPosition(4));
-  notesBar2[3].addArticulation(0, new Articulation(sym2).setPosition(4));
+  notesBar2[0].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar2[1].addModifier(0, new Articulation(sym1).setPosition(3));
+  notesBar2[2].addModifier(0, new Articulation(sym2).setPosition(4));
+  notesBar2[3].addModifier(0, new Articulation(sym2).setPosition(4));
 
   // Helper function to justify and draw a 4/4 voice
   formatAndDrawToWidth(x, y, width, notesBar2, Barline.type.DOUBLE);
@@ -185,57 +185,53 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
 
   const notes = [
     staveNote({ keys: ['f/4'], duration: 'q' })
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
-    staveNote({ keys: ['g/5'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
-    staveNote({ keys: ['c/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
-    staveNote({ keys: ['f/4'], duration: 'q' })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
     staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
     staveNote({ keys: ['c/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
-      .addArticulation(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['f/4'], duration: 'q' })
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
+    staveNote({ keys: ['c/5'], duration: 'q' })
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW)),
     staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
     staveNote({ keys: ['f/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
     staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
     staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
     staveNote({ keys: ['f/5'], duration: 'q' })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
-    staveNote({ keys: ['d/4'], duration: 'q' })
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
     staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addArticulation(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
-      .addArticulation(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a-').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a@a').setPosition(ModifierPosition.ABOVE)),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -299,11 +295,11 @@ function drawArticulations2(options: TestOptions): void {
   ];
   let i;
   for (i = 0; i < 16; i++) {
-    notesBar1[i].addArticulation(0, new Articulation('a.').setPosition(4));
-    notesBar1[i].addArticulation(0, new Articulation('a>').setPosition(4));
+    notesBar1[i].addModifier(0, new Articulation('a.').setPosition(4));
+    notesBar1[i].addModifier(0, new Articulation('a>').setPosition(4));
 
     if (i === 15) {
-      notesBar1[i].addArticulation(0, new Articulation('a@u').setPosition(4));
+      notesBar1[i].addModifier(0, new Articulation('a@u').setPosition(4));
     }
   }
   const beam1 = new Beam(notesBar1.slice(0, 8));
@@ -334,11 +330,11 @@ function drawArticulations2(options: TestOptions): void {
     f.StaveNote({ keys: ['g/5'], duration: '16', stem_direction: -1 }),
   ];
   for (i = 0; i < 16; i++) {
-    notesBar2[i].addArticulation(0, new Articulation('a-').setPosition(3));
-    notesBar2[i].addArticulation(0, new Articulation('a^').setPosition(3));
+    notesBar2[i].addModifier(0, new Articulation('a-').setPosition(3));
+    notesBar2[i].addModifier(0, new Articulation('a^').setPosition(3));
 
     if (i === 15) {
-      notesBar2[i].addArticulation(0, new Articulation('a@u').setPosition(4));
+      notesBar2[i].addModifier(0, new Articulation('a@u').setPosition(4));
     }
   }
   const beam3 = new Beam(notesBar2.slice(0, 8));
@@ -347,9 +343,9 @@ function drawArticulations2(options: TestOptions): void {
 
   // bar 3 - juxtaposing second bar next to first bar
   const notesBar3 = [f.StaveNote({ keys: ['c/4'], duration: 'w', stem_direction: 1 })];
-  notesBar3[0].addArticulation(0, new Articulation('a-').setPosition(3));
-  notesBar3[0].addArticulation(0, new Articulation('a>').setPosition(3));
-  notesBar3[0].addArticulation(0, new Articulation('a@a').setPosition(3));
+  notesBar3[0].addModifier(0, new Articulation('a-').setPosition(3));
+  notesBar3[0].addModifier(0, new Articulation('a>').setPosition(3));
+  notesBar3[0].addModifier(0, new Articulation('a@a').setPosition(3));
 
   // Helper function to justify and draw a 4/4 voice
   x += formatAndDrawToWidth(x, y, width, notesBar3, Barline.type.NONE, []);
@@ -366,7 +362,7 @@ function drawArticulations2(options: TestOptions): void {
     if (i > 1) {
       position1 = 4;
     }
-    notesBar4[i].addArticulation(0, new Articulation('a-').setPosition(position1));
+    notesBar4[i].addModifier(0, new Articulation('a-').setPosition(position1));
   }
 
   // Helper function to justify and draw a 4/4 voice
@@ -426,20 +422,20 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   const notes3 = specs.map((noteSpec) => new TabNote(noteSpec));
 
-  notes1[0].addModifier(new Articulation('a>').setPosition(3), 0); // U
-  notes1[1].addModifier(new Articulation('a>').setPosition(4), 0); // D
-  notes1[2].addModifier(new Articulation('a.').setPosition(3), 0); // U
-  notes1[3].addModifier(new Articulation('a.').setPosition(4), 0); // D
+  notes1[0].addModifier(0, new Articulation('a>').setPosition(3)); // U
+  notes1[1].addModifier(0, new Articulation('a>').setPosition(4)); // D
+  notes1[2].addModifier(0, new Articulation('a.').setPosition(3)); // U
+  notes1[3].addModifier(0, new Articulation('a.').setPosition(4)); // D
 
-  notes2[0].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes2[1].addModifier(new Articulation('a>').setPosition(4), 0);
-  notes2[2].addModifier(new Articulation('a.').setPosition(3), 0);
-  notes2[3].addModifier(new Articulation('a.').setPosition(4), 0);
+  notes2[0].addModifier(0, new Articulation('a>').setPosition(3));
+  notes2[1].addModifier(0, new Articulation('a>').setPosition(4));
+  notes2[2].addModifier(0, new Articulation('a.').setPosition(3));
+  notes2[3].addModifier(0, new Articulation('a.').setPosition(4));
 
-  notes3[0].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes3[1].addModifier(new Articulation('a>').setPosition(4), 0);
-  notes3[2].addModifier(new Articulation('a.').setPosition(3), 0);
-  notes3[3].addModifier(new Articulation('a.').setPosition(4), 0);
+  notes3[0].addModifier(0, new Articulation('a>').setPosition(3));
+  notes3[1].addModifier(0, new Articulation('a>').setPosition(4));
+  notes3[2].addModifier(0, new Articulation('a.').setPosition(3));
+  notes3[3].addModifier(0, new Articulation('a.').setPosition(4));
 
   const voice = new Voice(Flow.TIME4_4).setMode(Voice.Mode.SOFT);
 

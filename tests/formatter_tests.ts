@@ -11,6 +11,7 @@ import {
   Articulation,
   Beam,
   Bend,
+  Dot,
   Flow,
   Font,
   FontGlyph,
@@ -249,8 +250,9 @@ function unalignedNoteDurations1(options: TestOptions): void {
   const notes21 = [
     new StaveNote({ keys: ['a/4'], duration: '16' }),
     new StaveNote({ keys: ['b/4.'], duration: '4' }),
-    new StaveNote({ keys: ['a/4'], duration: '8d' }).addDotToAll(),
+    new StaveNote({ keys: ['a/4'], duration: '8d' }),
   ];
+  Dot.buildAndAttach([notes21[2]], { all: true });
 
   const ctx = f.getContext();
   const voice11 = score.voice(notes11, { time: '2/4' }).setMode(Voice.Mode.SOFT);
@@ -332,17 +334,17 @@ function alignedMixedElements(options: TestOptions): void {
   const stave = new Stave(10, 40, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addAccidental(0, new Accidental('##'))
-      .addModifier(new FretHandFinger('4').setPosition(4), 0)
-      .addModifier(new StringNumber('3').setPosition(4), 0)
-      .addArticulation(0, new Articulation('a.').setPosition(4))
-      .addArticulation(0, new Articulation('a>').setPosition(4))
-      .addArticulation(0, new Articulation('a^').setPosition(4))
-      .addArticulation(0, new Articulation('am').setPosition(4))
-      .addArticulation(0, new Articulation('a@u').setPosition(4))
-      .addModifier(new Annotation('yyyy').setVerticalJustification(3), 0)
-      .addModifier(new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0)
-      .addModifier(new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0),
+      .addModifier(0, new Accidental('##'))
+      .addModifier(0, new FretHandFinger('4').setPosition(4))
+      .addModifier(0, new StringNumber('3').setPosition(4))
+      .addModifier(0, new Articulation('a.').setPosition(4))
+      .addModifier(0, new Articulation('a>').setPosition(4))
+      .addModifier(0, new Articulation('a^').setPosition(4))
+      .addModifier(0, new Articulation('am').setPosition(4))
+      .addModifier(0, new Articulation('a@u').setPosition(4))
+      .addModifier(0, new Annotation('yyyy').setVerticalJustification(3))
+      .addModifier(0, new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''))
+      .addModifier(0, new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, '')),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
@@ -413,7 +415,7 @@ function notesWithTab(options: TestOptions): void {
     f.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
 
     const tabVoice = score.voice([
-      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new Bend('Full'), 0),
+      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(0, new Bend('Full')),
       f
         .TabNote({
           positions: [
@@ -422,7 +424,7 @@ function notesWithTab(options: TestOptions): void {
           ],
           duration: '8',
         })
-        .addModifier(new Bend('Unison'), 1),
+        .addModifier(1, new Bend('Unison')),
       f.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
       f.TabNote({
         positions: [
@@ -759,10 +761,10 @@ function annotations(options: TestOptions): void {
     durations.forEach((dd) => {
       const note = new StaveNote({ keys: ['b/4'], duration: dd });
       if (dd.indexOf('d') >= 0) {
-        note.addDotToAll();
+        Dot.buildAndAttach([note], { all: true });
       }
       if (sm.lyrics.length > iii) {
-        note.addAnnotation(
+        note.addModifier(
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
@@ -775,7 +777,7 @@ function annotations(options: TestOptions): void {
 
     notes.forEach((note) => {
       if (note.getDuration().indexOf('d') >= 0) {
-        note.addDotToAll();
+        Dot.buildAndAttach([note], { all: true });
       }
     });
 

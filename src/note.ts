@@ -1,9 +1,7 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Accidental } from './accidental';
 import { Beam } from './beam';
-import { Dot } from './dot';
 import { Font } from './font';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
@@ -241,7 +239,6 @@ export abstract class Note extends Tickable {
     stroke_px: number;
   };
   protected duration: string;
-  protected dots: number;
   protected leftDisplacedHeadPx: number;
   protected rightDisplacedHeadPx: number;
   protected noteType: string;
@@ -276,7 +273,6 @@ export abstract class Note extends Tickable {
     this.keyProps = [];
 
     this.duration = parsedNoteStruct.duration;
-    this.dots = parsedNoteStruct.dots;
     this.noteType = parsedNoteStruct.type;
     this.customTypes = parsedNoteStruct.customTypes;
 
@@ -496,7 +492,7 @@ export abstract class Note extends Tickable {
 
   /** Accessor to isDotted. */
   isDotted(): boolean {
-    return this.dots > 0;
+    return this.getModifiersByType('Dot').length > 0;
   }
 
   /** Accessor to hasStem. */
@@ -536,7 +532,7 @@ export abstract class Note extends Tickable {
    * @param index of the key to modify.
    * @returns this
    */
-  addModifier(modifier: Modifier, index: number = 0): this {
+  addModifier(index: number, modifier: Modifier): this {
     // Backwards compatibility with 3.0.9.
     if (typeof index === 'string') {
       index = parseInt(index);
@@ -563,45 +559,9 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Helper function to add an accidental to a key
-  addAccidental(index: number, accidental: Modifier): this {
-    return this.addModifier(accidental, index);
-  }
-
-  // Helper function to add an articulation to a key
-  addArticulation(index: number, articulation: Modifier): this {
-    return this.addModifier(articulation, index);
-  }
-
-  // Helper function to add an annotation to a key
-  addAnnotation(index: number, annotation: Modifier): this {
-    return this.addModifier(annotation, index);
-  }
-
-  // Helper function to add a dot on a specific key
-  addDot(index: number): this {
-    const dot = new Dot();
-    dot.setDotShiftY(this.glyph.dot_shiftY);
-    this.dots++;
-    return this.addModifier(dot, index);
-  }
-
-  // Convenience method to add dot to all keys in note
-  addDotToAll(): this {
-    for (let i = 0; i < this.keys.length; ++i) {
-      this.addDot(i);
-    }
-    return this;
-  }
-
-  // Get all accidentals in the `ModifierContext`
-  getAccidentals(): Accidental[] {
-    return this.checkModifierContext().getMembers(Accidental.CATEGORY) as Accidental[];
-  }
-
-  // Get all dots in the `ModifierContext`
-  getDots(): Dot[] {
-    return this.checkModifierContext().getMembers(Dot.CATEGORY) as Dot[];
+  // Get all modifiers of a specific type in the `ModifierContext`
+  getModifiersByType(type: string): Modifier[] {
+    return this.checkModifierContext().getMembers(type) as Modifier[];
   }
 
   /** Get the coordinates for where modifiers begin. */

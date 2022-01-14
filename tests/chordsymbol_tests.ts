@@ -32,7 +32,7 @@ const subscript = { symbolModifier: ChordSymbol.symbolModifiers.SUBSCRIPT };
 
 // Helper function for creating StaveNotes.
 const note = (factory: Factory, keys: string[], duration: string, chordSymbol: ChordSymbol) =>
-  factory.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
+  factory.StaveNote({ keys, duration }).addModifier(0, chordSymbol);
 
 function fontSize(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 750, 580);
@@ -199,7 +199,7 @@ function top(options: TestOptions): void {
   function draw(c1: ChordSymbol, c2: ChordSymbol, y: number) {
     const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble').setContext(ctx).draw();
     const notes = [
-      note(f, ['e/4', 'a/4', 'd/5'], 'h', c1).addAccidental(0, new Accidental('b')),
+      note(f, ['e/4', 'a/4', 'd/5'], 'h', c1).addModifier(0, new Accidental('b')),
       note(f, ['c/4', 'e/4', 'b/4'], 'h', c2),
     ];
     const score = f.EasyScore();
@@ -253,7 +253,7 @@ function topJustify(options: TestOptions): void {
     const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
 
     const notes = [
-      note(f, ['e/4', 'a/4', 'd/5'], 'h', chord1).addAccidental(0, new Accidental('b')),
+      note(f, ['e/4', 'a/4', 'd/5'], 'h', chord1).addModifier(0, new Accidental('b')),
       note(f, ['c/4', 'e/4', 'B/4'], 'h', chord2),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
@@ -304,9 +304,9 @@ function bottom(options: TestOptions): void {
 
     const notes = [
       note(f, ['c/4', 'f/4', 'a/4'], 'q', chords[0]),
-      note(f, ['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
+      note(f, ['c/4', 'e/4', 'b/4'], 'q', chords[1]).addModifier(2, new Accidental('b')),
       note(f, ['c/4', 'e/4', 'g/4'], 'q', chords[2]),
-      note(f, ['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
+      note(f, ['c/4', 'f/4', 'a/4'], 'q', chords[3]).addModifier(1, new Accidental('#')),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
@@ -332,14 +332,14 @@ function bottomStemDown(options: TestOptions): void {
   function draw(chords: ChordSymbol[], y: number) {
     // Helper function to create a StaveNote with a ChordSymbol and the stem pointing down.
     const note = (keys: string[], duration: string, chordSymbol: ChordSymbol) =>
-      new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(chordSymbol, 0);
+      new StaveNote({ keys, duration, stem_direction: -1 }).addModifier(0, chordSymbol);
 
     const stave = new Stave(10, y, 400).addClef('treble').setContext(ctx).draw();
     const notes = [
       note(['c/4', 'f/4', 'a/4'], 'q', chords[0]),
-      note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addAccidental(2, new Accidental('b')),
+      note(['c/4', 'e/4', 'b/4'], 'q', chords[1]).addModifier(2, new Accidental('b')),
       note(['c/4', 'e/4', 'g/4'], 'q', chords[2]),
-      note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addAccidental(1, new Accidental('#')),
+      note(['c/4', 'f/4', 'a/4'], 'q', chords[3]).addModifier(1, new Accidental('#')),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
@@ -365,14 +365,14 @@ function doubleBottom(options: TestOptions): void {
   function draw(chords: ChordSymbol[], chords2: ChordSymbol[], y: number) {
     // Helper function to create a StaveNote with two ChordSymbols attached.
     const note = (keys: string[], duration: string, chordSymbol1: ChordSymbol, chordSymbol2: ChordSymbol) =>
-      new StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
+      new StaveNote({ keys, duration }).addModifier(0, chordSymbol1).addModifier(0, chordSymbol2);
 
     const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
     const notes = [
       note(['c/4', 'f/4', 'a/4'], 'q', chords[0], chords2[0]),
-      note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addAccidental(2, new Accidental('b')),
+      note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addModifier(2, new Accidental('b')),
       note(['c/4', 'e/4', 'g/4'], 'q', chords[2], chords2[2]),
-      note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addAccidental(1, new Accidental('#')),
+      note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addModifier(1, new Accidental('#')),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }

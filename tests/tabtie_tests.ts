@@ -192,7 +192,7 @@ function tap(options: TestOptions, contextBuilder: ContextBuilder): void {
   options.contextBuilder = contextBuilder;
   const { context, stave } = setupContext(options);
 
-  const note1 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(new Annotation('T'), 0);
+  const note1 = tabNote({ positions: [{ str: 4, fret: 12 }], duration: 'h' }).addModifier(0, new Annotation('T'));
   const note2 = tabNote({ positions: [{ str: 4, fret: 10 }], duration: 'h' });
   tieNotes([note1, note2], [0], stave, context, 'P');
 

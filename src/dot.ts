@@ -21,6 +21,32 @@ export class Dot extends Modifier {
   protected radius: number;
   protected dot_shiftY: number;
 
+  /** Returns the dots associated to a Note. */
+  static getDots(note: Note): Dot[] {
+    return note.getModifiersByType(Dot.CATEGORY) as Dot[];
+  }
+
+  /** Add a dot on the specified keys to the notes. */
+  static buildAndAttach(notes: Note[], options?: { index?: number; all?: boolean }): void {
+    for (const note of notes) {
+      if (options?.all) {
+        for (let i = 0; i < note.keys.length; i++) {
+          const dot = new Dot();
+          dot.setDotShiftY(note.glyph.dot_shiftY);
+          note.addModifier(i, dot);
+        }
+      } else if (options?.index != undefined) {
+        const dot = new Dot();
+        dot.setDotShiftY(note.glyph.dot_shiftY);
+        note.addModifier(options?.index, dot);
+      } else {
+        const dot = new Dot();
+        dot.setDotShiftY(note.glyph.dot_shiftY);
+        note.addModifier(0, dot);
+      }
+    }
+  }
+
   // Arrange dots inside a ModifierContext.
   static format(dots: Dot[], state: ModifierContextState): boolean {
     const right_shift = state.right_shift;
@@ -40,10 +66,12 @@ export class Dot extends Modifier {
       if (isStaveNote(note)) {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
-        shift = note.getRightDisplacedHeadPx();
+        // consider right displaced head with no previous modifier
+        if (right_shift === 0) shift = note.getRightDisplacedHeadPx();
+        else shift = right_shift;
       } else if (note.getCategory() === 'TabNote') {
         props = { line: 0.5 }; // Shim key props for dot placement
-        shift = 0;
+        shift = right_shift;
       } else {
         // note object is not StaveNote or TabNote.
         throw new RuntimeError('Internal', 'Unexpected instance.');

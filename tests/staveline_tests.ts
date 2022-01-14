@@ -5,6 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Dot } from '../src/dot';
 import { Font, FontStyle } from '../src/font';
 
 const StaveLineTests = {
@@ -60,19 +61,21 @@ function simple1(options: TestOptions): void {
   const stave = f.Stave().addClef('treble');
 
   const notes = [
-    f.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }).addDotToAll(),
-    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, f.Accidental({ type: '#' })),
+    f.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
+    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(0, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', clef: 'treble' }),
     f
       .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
-      .addAccidental(2, f.Accidental({ type: '#' })),
-    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addAccidental(0, f.Accidental({ type: '#' })),
+      .addModifier(2, f.Accidental({ type: '#' })),
+    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(0, f.Accidental({ type: '#' })),
     f.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
     f.StaveNote({ keys: ['c/4', 'd/4', 'g/4'], duration: '4', clef: 'treble' }),
     f
       .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
-      .addAccidental(2, f.Accidental({ type: '#' })),
+      .addModifier(2, f.Accidental({ type: '#' })),
   ];
+  Dot.buildAndAttach([notes[0]], { all: true });
+
   const voice = f.Voice().setStrict(false).addTickables(notes);
 
   const staveLine0 = f.StaveLine({
