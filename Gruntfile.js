@@ -759,6 +759,13 @@ module.exports = (grunt) => {
   // GITHUB_TOKEN=XYZ grunt release:dry-run:beta
   // GITHUB_TOKEN=XYZ grunt release:dry-run:rc
   grunt.registerTask('release', 'Release to npm and GitHub.', (...args) => {
+    // For now, we require the GITHUB_TOKEN environment variable to be set.
+    // In the future, we might consider skipping the GitHub release if GITHUB_TOKEN is missing.
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    if (!GITHUB_TOKEN) {
+      grunt.fail.fatal('GITHUB_TOKEN environment variable is missing.');
+    }
+
     const release = ['release-it'];
     if (args.includes('dry-run')) {
       release.push('--dry-run');
