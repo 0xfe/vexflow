@@ -607,11 +607,11 @@ module.exports = (grunt) => {
     'Test the ESM build in a web server by navigating to http://localhost:8080/tests/flow.html?esm=true',
     () => {
       log('Remember to launch http-server in the vexflow/ directory!');
-      log('npx http-server');
-      log('Building the ESM files in watch mode...');
+      log('    npx http-server');
+      log('\nBuilding the ESM files in watch mode...');
       grunt.task.run('clean:build_esm');
       open(LOCALHOST + '/tests/flow.html?esm=true');
-      grunt.task.run('watch:esm');
+      grunt.task.run('build:esm:watch');
     }
   );
 
