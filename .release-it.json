@@ -13,12 +13,12 @@
       "echo Successfully released ${name} ver. ${version} to ${repo.repository}.",
       "echo Removing build/ folder...",
       "git rm -r build/",
-      "git commit -m 'Remove build/ after the release.'",
+      "git commit -m 'Remove build/ after releasing version ${version}.'",
       "git push"
     ]
   },
   "git": {
-    "commitMessage": "release VexFlow ${version}",
+    "commitMessage": "Release VexFlow ${version}",
     "requireCleanWorkingDir": false
   },
   "github": {

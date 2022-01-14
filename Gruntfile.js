@@ -758,13 +758,11 @@ module.exports = (grunt) => {
   // GITHUB_TOKEN=XYZ grunt release:dry-run:alpha
   // GITHUB_TOKEN=XYZ grunt release:dry-run:beta
   // GITHUB_TOKEN=XYZ grunt release:dry-run:rc
-  grunt.registerTask('release', 'Release to npm and GitHub.', (arg1, arg2) => {
+  grunt.registerTask('release', 'Release to npm and GitHub.', (...args) => {
     const release = ['release-it'];
-    const args = [arg1, arg2];
     if (args.includes('dry-run')) {
       release.push('--dry-run');
     }
-
     if (args.includes('alpha')) {
       release.push('--preRelease=alpha');
     } else if (args.includes('beta')) {
@@ -786,25 +784,11 @@ module.exports = (grunt) => {
   grunt.registerTask(
     'build-test-release',
     'Produce the complete build. Run command line tests as a sanity check. Release to npm and GitHub.',
-    (arg1, arg2) => {
-      const release = ['release'];
-      if (arg1) {
-        release.push(arg1);
-      }
-      if (arg2) {
-        release.push(arg2);
-      }
-
+    (...args) => {
+      // Forward any incoming arguments on to the release task.
+      const release = ['release', ...args].join(':');
       verifyGitWorkingDirectory();
-      grunt.task.run([
-        'clean',
-        'webpack:prodAndDebug',
-        'build:esm',
-        'build:types',
-        'build:docs',
-        'qunit',
-        release.join(':'),
-      ]);
+      grunt.task.run(['clean', 'webpack:prodAndDebug', 'build:esm', 'build:types', 'build:docs', 'qunit', release]);
     }
   );
 };
