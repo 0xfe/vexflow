@@ -82,6 +82,7 @@
     "@typescript-eslint/parser": "^5.8.1",
     "canvas": "^2.8.0",
     "circular-dependency-plugin": "^5.2.2",
+    "concurrently": "^7.0.0",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",

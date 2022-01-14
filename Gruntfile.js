@@ -15,11 +15,6 @@ grunt reference
 
 DEVELOPMENT
 
-First, run `npx http-server` from the vexflow/ directory to serve tests/flow.html and build/esm/.
-Then run `grunt test:browser:esm` from the vexflow/ directory.
-  This will watch for changes and build the ESM libraries as you code.
-  It also opens http://localhost:8080/tests/flow.html?esm=true to run the tests with the ESM build.
-
 grunt watch
   - The fastest way to iterate while working on VexFlow. 
     Watch for changes and produces the debug CJS libraries in build/cjs/.
@@ -29,6 +24,7 @@ grunt watch:prod
 
 grunt watch:esm
   - Watch for changes and build the ESM libraries in build/esm/.
+  - Also see `grunt test:browser:esm` below.
 
 *************************************************************************************************************
 
@@ -61,7 +57,8 @@ grunt test:cmd
 grunt test:browser:cjs
   - Opens flow.html in the default browser. Loads the CJS build.
 
-grunt test:browser:esm` from the vexflow/ directory.
+grunt test:browser:esm
+  - Runs `npx http-server` from the vexflow/ directory to serve tests/flow.html and build/esm/.
   - Watches for changes and builds the ESM libraries.
   - Opens http://localhost:8080/tests/flow.html?esm=true to run the tests with the ESM build
 
@@ -104,6 +101,7 @@ const { spawnSync, execSync } = require('child_process');
 
 const webpack = require('webpack');
 const open = require('opener');
+const concurrently = require('concurrently');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
@@ -391,36 +389,6 @@ module.exports = (grunt) => {
     }
   }
 
-  // Some tasks can be run in parallel to improve performance.
-  function runTasksConcurrently(done, ...tasks) {
-    const numTasksToComplete = tasks.length;
-    let completedTasks = 0;
-    function taskComplete() {
-      completedTasks++;
-      if (completedTasks === numTasksToComplete) {
-        done(true);
-      }
-    }
-
-    for (const task of tasks) {
-      let args = task;
-      if (typeof task === 'string') {
-        args = [task];
-      } else {
-        // `task` is already an array of task strings.
-        args = task;
-      }
-      grunt.util.spawn({ grunt: true, args, opts: { stdio: 'inherit' } }, (error, result) => {
-        if (error) {
-          grunt.log.error(String(result)).writeln();
-        } else {
-          grunt.log.ok(String(result)).writeln();
-        }
-        taskComplete();
-      });
-    }
-  }
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     webpack: webpackConfigs(),
@@ -497,14 +465,33 @@ module.exports = (grunt) => {
   // grunt
   // Build all targets for production and debugging.
   grunt.registerTask('default', 'Build all VexFlow targets.', ['clean:build', 'build:all']);
-  // Helper method for the default task above. Runs build tasks concurrently for better performance.
-  grunt.registerTask('build:all', 'Build all VexFlow targets.', function () {
-    runTasksConcurrently(this.async(), 'webpack:prodAndDebug', 'build:esm', 'build:types', 'build:docs');
-  });
 
   // grunt test
   // Run command line qunit tests.
   grunt.registerTask('test', 'Run command line unit tests.', ['clean:build', 'webpack:debug', 'qunit']);
+
+  // grunt build:all
+  grunt.registerTask('build:all', 'Build all VexFlow targets.', function () {
+    const done = this.async(); // keep this grunt task alive.
+    concurrently(
+      [
+        { command: 'grunt webpack:prodAndDebug', name: 'cjs' },
+        { command: 'grunt build:esm', name: 'esm' },
+        { command: 'grunt build:types', name: 'd.ts' },
+        { command: 'grunt build:docs', name: 'docs/api' },
+      ],
+      { timings: true }
+    ).result.then(
+      // SUCCESS
+      (...args) => {
+        done();
+      },
+      // FAILURE
+      (...args) => {
+        done();
+      }
+    );
+  });
 
   // grunt build:cjs
   grunt.registerTask('build:cjs', 'Use webpack to create CJS files in build/cjs/', 'webpack:prodAndDebug');
@@ -514,6 +501,11 @@ module.exports = (grunt) => {
   // Output individual ES module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
   grunt.registerTask('build:esm', 'Use tsc to create ES module files in build/esm/', function (arg) {
+    function fixESMImports() {
+      // Add .js file extensions to ESM imports and re-exports.
+      runCommand('node', './tools/fix-esm-imports.mjs', './build/esm/');
+    }
+
     generateVersionFile();
     log('ESM: Building to ./build/esm/');
     fs.mkdirSync(BUILD_ESM_DIR, { recursive: true });
@@ -534,11 +526,6 @@ module.exports = (grunt) => {
       fixESMImports();
     }
   });
-
-  function fixESMImports() {
-    // Add .js file extensions to ESM imports and re-exports.
-    runCommand('node', './tools/fix-esm-imports.mjs', './build/esm/');
-  }
 
   // grunt build:types
   // Output *.d.ts files to build/types/.
@@ -605,13 +592,15 @@ module.exports = (grunt) => {
   grunt.registerTask(
     'test:browser:esm',
     'Test the ESM build in a web server by navigating to http://localhost:8080/tests/flow.html?esm=true',
-    () => {
-      log('Remember to launch http-server in the vexflow/ directory!');
-      log('    npx http-server');
-      log('\nBuilding the ESM files in watch mode...');
+    function () {
+      log('Launching http-server...');
+      log('Building the ESM files in watch mode...');
       grunt.task.run('clean:build_esm');
-      open(LOCALHOST + '/tests/flow.html?esm=true');
-      grunt.task.run('build:esm:watch');
+      this.async(); // keep this grunt task alive.
+      concurrently([
+        { command: 'npx http-server -o /tests/flow.html?esm=true', name: 'server' },
+        { command: 'grunt build:esm:watch', name: 'watch:esm' },
+      ]);
     }
   );
 
