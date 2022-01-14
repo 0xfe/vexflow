@@ -38,12 +38,13 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
     return;
   }
 
-  if (fontName in fontModules) {
-    fontModuleOrPath = fontModules[fontName];
-  }
-
   if (!fontModuleOrPath) {
-    throw new RuntimeError('UnknownFont', `Music font ${fontName} does not exist at path [${fontModuleOrPath}].`);
+    // Determine the font module path.
+    if (fontName in fontModules) {
+      fontModuleOrPath = fontModules[fontName];
+    } else {
+      throw new RuntimeError('UnknownFont', `Music font ${fontName} does not exist.`);
+    }
   }
 
   let fontModule: FontModule;
