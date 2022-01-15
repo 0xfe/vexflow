@@ -5,7 +5,9 @@ import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { Stave } from './stave';
 import { Tables } from './tables';
+import { TabNote } from './tabnote';
 import { RuntimeError } from './util';
 
 export interface BendPhrase {
@@ -38,15 +40,19 @@ export class Bend extends Modifier {
     if (!bends || bends.length === 0) return false;
 
     let last_width = 0;
-    // Bends are always on top.
-    const text_line = state.top_text_line;
-
     // Format Bends
     for (let i = 0; i < bends.length; ++i) {
       const bend = bends[i];
+      const note = bend.checkAttachedNote();
+      if (note instanceof TabNote) {
+        const stringPos = (note as TabNote).leastString() - 1;
+        if (state.top_text_line < stringPos) {
+          state.top_text_line = stringPos;
+        }
+      }
       bend.setXShift(last_width);
       last_width = bend.getWidth();
-      bend.setTextLine(text_line);
+      bend.setTextLine(state.top_text_line);
     }
 
     state.right_shift += last_width;
@@ -179,8 +185,11 @@ export class Bend extends Modifier {
     const x_shift = this.x_shift;
 
     const stave = note.checkStave();
-    const bend_height = stave.getYForTopText(this.text_line) + 3;
-    const annotation_y = stave.getYForTopText(this.text_line) - 1;
+    const spacing = stave.getSpacingBetweenLines();
+    const lowestY = note.getYs().reduce((a, b) => a < b ? a : b);
+    // this.text_line is relative to top string in the group.
+    const bend_height = start.y - ((this.text_line + 1) * spacing + start.y - lowestY) + 3;
+    const annotation_y = start.y - ((this.text_line + 1) * spacing + start.y - lowestY) - 1;
 
     const renderBend = (x: number, y: number, width: number, height: number) => {
       const cp_x = x + width;
