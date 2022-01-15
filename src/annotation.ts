@@ -10,7 +10,7 @@ import { Modifier, ModifierPosition } from './modifier';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { TabNote, TabNotePosition } from './tabnote';
+import { TabNote } from './tabnote';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
