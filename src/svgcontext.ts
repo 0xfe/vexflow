@@ -185,7 +185,7 @@ export class SVGContext extends RenderContext {
   }
 
   // Allow grouping elements in containers for interactivity.
-  openGroup(cls: string, id?: string, attrs?: GroupAttributes): SVGGElement {
+  openGroup(cls?: string, id?: string, attrs?: GroupAttributes): SVGGElement {
     const group = this.create('g');
     this.groups.push(group);
     this.parent.appendChild(group);
@@ -496,7 +496,7 @@ export class SVGContext extends RenderContext {
     return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
   }
 
-  fill(attributes: Attributes): this {
+  fill(attributes?: Attributes): this {
     const path = this.create('path');
     if (typeof attributes === 'undefined') {
       attributes = { ...this.attributes, stroke: 'none' };

@@ -180,6 +180,14 @@ export class TabNote extends StemmableNote {
     this.ghost = false;
     this.updateWidth();
   }
+  // Return the number of the greatest string, which is the string lowest on the display
+  greatestString = (): number => {
+    return this.positions.map((x) => x.str).reduce((a, b) => a > b ? a : b);
+  }
+  // Return the number of the least string, which is the string highest on the display
+  leastString = (): number => {
+    return this.positions.map((x) => x.str).reduce((a, b) => a < b ? a : b);
+  }
 
   reset(): this {
     super.reset();

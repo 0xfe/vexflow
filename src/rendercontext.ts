@@ -50,7 +50,7 @@ export abstract class RenderContext {
   abstract save(): this;
   abstract restore(): this;
   // eslint-disable-next-line
-  abstract openGroup(cls: string, id?: string, attrs?: GroupAttributes): any;
+  abstract openGroup(cls?: string, id?: string, attrs?: GroupAttributes): any;
   abstract closeGroup(): void;
   // eslint-disable-next-line
   abstract add(child: any): void;
