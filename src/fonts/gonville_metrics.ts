@@ -218,6 +218,12 @@ export const GonvilleMetrics = {
         shiftY: -22,
       },
     },
+    stringNumber: {
+      verticalPadding: 5,
+      stemPadding: 2,
+      leftPadding: 5,
+      rightPadding: 6
+    },
     textNote: {
       point: 40,
       default: {},

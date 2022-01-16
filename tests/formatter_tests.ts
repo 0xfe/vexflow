@@ -5,31 +5,28 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import {
-  Accidental,
-  Annotation,
-  Articulation,
-  Beam,
-  Bend,
-  Dot,
-  Flow,
-  Font,
-  FontGlyph,
-  FontWeight,
-  Formatter,
-  FretHandFinger,
-  Note,
-  Registry,
-  Stave,
-  StaveConnector,
-  StaveNote,
-  StemmableNote,
-  StringNumber,
-  TextBracket,
-  Tuplet,
-  Voice,
-  VoiceTime,
-} from '../src/index';
+import { Accidental } from '../src/accidental';
+import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
+import { Articulation } from '../src/articulation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Dot } from '../src/dot';
+import { Flow } from '../src/flow';
+import { Font, FontGlyph, FontWeight } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { FretHandFinger } from '../src/frethandfinger';
+import { ModifierPosition } from '../src/modifier';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { Stave } from '../src/stave';
+import { StaveConnector } from '../src/staveconnector';
+import { StaveNote } from '../src/stavenote';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
+import { StringNumber } from '../src/stringnumber';
+import { Tuplet } from '../src/tuplet';
+import { Voice } from '../src/voice';
+import { VoiceTime } from '../src/voice';
 
 import { Tables } from '../src/tables';
 import { MockTickable } from './mocks';
@@ -40,6 +37,7 @@ const FormatterTests = {
     test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
+    run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
     run('Whitespace and justify', rightJustify);
     run('Notehead padding', noteHeadPadding);
     run('Justification and alignment with accidentals', accidentalJustification);
@@ -329,41 +327,61 @@ function unalignedNoteDurations2(options: TestOptions): void {
 }
 
 function alignedMixedElements(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 750, 280);
+  const f = VexFlowTests.makeFactory(options, 800, 500);
   const context = f.getContext();
-  const stave = new Stave(10, 40, 400);
+  const stave = new Stave(10, 200, 400);
+  const stave2 = new Stave(410, 200, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addModifier(0, new Accidental('##'))
-      .addModifier(0, new FretHandFinger('4').setPosition(4))
-      .addModifier(0, new StringNumber('3').setPosition(4))
-      .addModifier(0, new Articulation('a.').setPosition(4))
-      .addModifier(0, new Articulation('a>').setPosition(4))
-      .addModifier(0, new Articulation('a^').setPosition(4))
-      .addModifier(0, new Articulation('am').setPosition(4))
-      .addModifier(0, new Articulation('a@u').setPosition(4))
-      .addModifier(0, new Annotation('yyyy').setVerticalJustification(3))
-      .addModifier(0, new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''))
-      .addModifier(0, new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, '')),
+      .addModifier(0, new Accidental('##'))      
+      .addModifier(0, new FretHandFinger('4').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a^').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('am').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.BOTTOM))
+      .addModifier(
+        0, new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, ''))
+      .addModifier(0,
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')),
+    new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
+      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
+      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.BELOW)),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
+  ];
+  const notes2 = [
+    new StaveNote({ keys: ['c/5'], duration: '8' })
+      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP)),
+    new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
+      .addModifier(0, new FretHandFinger('4').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a^').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('am').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.ABOVE))
+      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP))
+      .addModifier(0,
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, ''))
+      .addModifier(0,
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
 
   const tuplet = new Tuplet(notes).setTupletLocation(-1);
-
-  const bracket = new TextBracket({
-    start: notes[0],
-    stop: notes[2],
-    position: -1,
-    text: '8',
-    superscript: 'vb',
-  });
+  const tuplet2 = new Tuplet(notes2).setTupletLocation(1);
 
   Formatter.FormatAndDraw(context, stave, notes);
-
+  Formatter.FormatAndDraw(context, stave2, notes2);
   stave.setContext(context).draw();
+  stave2.setContext(context).draw();
   tuplet.setContext(context).draw();
-  bracket.setContext(context).draw();
+  tuplet2.setContext(context).draw();
 
   ok(true);
 }
