@@ -35,17 +35,13 @@ Generate one here: https://github.com/settings/tokens/new?scopes=repo&descriptio
 
 Also, make sure your authenticator app is ready to generate a 2FA one time password for npm.
 
-GITHUB_TOKEN=XYZ grunt build-test-release
-  - If you're feeling lucky, you can build, test, and release in a single command!
-
 grunt && npm pack
   - Create a *.tgz that can be emailed to a friend or uploaded to a test server.
     npm install from the *.tgz file or test server URL to verify your project works.
 
 GITHUB_TOKEN=XYZ grunt release
-  - Run the release script to publish to npm and GitHub.
-    This assumes you have already run `grunt` and have fully tested the build.
-
+  - Run the release script to build, commit, and publish to npm and GitHub.
+    This assumes you have fully tested the build.
 
 *************************************************************************************************************
 
@@ -97,7 +93,7 @@ You can also do it all on one line:
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { spawnSync, execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -116,7 +112,12 @@ const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules 
 const VEX_DEBUG = 'vexflow-debug';
 const VEX_DEBUG_TESTS = 'vexflow-debug-with-tests';
 
-let banner;
+const versionInfo = require('./tools/version_info');
+// Add a banner to the top of some CJS output files.
+const banner =
+  `VexFlow ${versionInfo.VERSION}   ${versionInfo.DATE}   ${versionInfo.ID}\n` +
+  `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
+  `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
 
 // Output directories & files.
 const BASE_DIR = __dirname;
@@ -255,9 +256,11 @@ function webpackConfigs() {
         pluginTerser = new TerserPlugin({
           extractComments: false, // DO NOT extract the banner into a separate file.
           parallel: os.cpus().length - 1,
+          terserOptions: { compress: true },
         });
       }
       optimization = {
+        minimize: true,
         minimizer: [pluginTerser],
       };
     }
@@ -284,6 +287,17 @@ function webpackConfigs() {
       devtool: DEVTOOL,
       module: {
         rules: [
+          {
+            test: /version\.ts$/,
+            loader: 'string-replace-loader',
+            options: {
+              multiple: [
+                { search: '__VF_VERSION__', replace: versionInfo.VERSION },
+                { search: '__VF_GIT_COMMIT_ID__', replace: versionInfo.ID },
+                { search: '__VF_BUILD_DATE__', replace: versionInfo.DATE },
+              ],
+            },
+          },
           {
             test: /(\.ts$|\.js$)/,
             exclude: /node_modules/,
@@ -352,28 +366,6 @@ function webpackConfigs() {
 
 module.exports = (grunt) => {
   const log = grunt.log.writeln;
-
-  // Fail the `grunt release` task if there are uncommitted changes (other than the auto-generated `src/version.ts` file).
-  function verifyGitWorkingDirectory() {
-    const output = execSync('git status -s').toString();
-    const lines = output.split('\n');
-    let numDirtyFiles = 0;
-    for (const ln in lines) {
-      const line = lines[ln].trim();
-      if (line === '') {
-        continue;
-      } else if (line.includes('src/version.ts')) {
-        console.log('OK', line);
-      } else {
-        console.log('!!', line);
-        numDirtyFiles++;
-      }
-    }
-
-    if (numDirtyFiles > 0) {
-      grunt.fail.fatal('Please commit or stash your changes before releasing to npm and GitHub.');
-    }
-  }
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -450,34 +442,17 @@ module.exports = (grunt) => {
 
   // grunt
   // Build all targets for production and debugging.
-  grunt.registerTask('default', 'Build all VexFlow targets.', ['clean:build', 'build:all']);
+  grunt.registerTask('default', 'Build all VexFlow targets.', [
+    'clean:build',
+    'webpack:prodAndDebug',
+    'build:esm',
+    'build:types',
+    'build:docs',
+  ]);
 
   // grunt test
   // Run command line qunit tests.
   grunt.registerTask('test', 'Run command line unit tests.', ['clean:build', 'webpack:debug', 'qunit']);
-
-  // grunt build:all
-  grunt.registerTask('build:all', 'Build all VexFlow targets.', function () {
-    const done = this.async(); // keep this grunt task alive.
-    concurrently(
-      [
-        { command: 'grunt webpack:prodAndDebug', name: 'cjs' },
-        { command: 'grunt build:esm', name: 'esm' },
-        { command: 'grunt build:types', name: 'd.ts' },
-        { command: 'grunt build:docs', name: 'docs/api' },
-      ],
-      { timings: true }
-    ).result.then(
-      // SUCCESS
-      (...args) => {
-        done();
-      },
-      // FAILURE
-      (...args) => {
-        done();
-      }
-    );
-  });
 
   // grunt build:cjs
   grunt.registerTask('build:cjs', 'Use webpack to create CJS files in build/cjs/', 'webpack:prodAndDebug');
@@ -487,9 +462,11 @@ module.exports = (grunt) => {
   // Output individual ES module files to build/esm/.
   // Also fixes the imports and exports so that they all end in .js.
   grunt.registerTask('build:esm', 'Use tsc to create ES module files in build/esm/', function (arg) {
-    function fixESMImports() {
+    function fixESM() {
       // Add .js file extensions to ESM imports and re-exports.
       runCommand('node', './tools/fix-esm-imports.mjs', './build/esm/');
+      // Update the version.js file.
+      versionInfo.saveESMVersionFile();
     }
 
     log('ESM: Building to ./build/esm/');
@@ -504,11 +481,11 @@ module.exports = (grunt) => {
       watch.on('started', () => {
         console.log('Press CTRL + C to quit.');
       });
-      watch.on('success', fixESMImports);
+      watch.on('success', fixESM);
       watch.start('-p', 'tsconfig.esm.json', '--noClear');
     } else {
       runCommand('tsc', '-p', 'tsconfig.esm.json');
-      fixESMImports();
+      fixESM();
     }
   });
 
@@ -630,19 +607,6 @@ module.exports = (grunt) => {
     );
   });
 
-  grunt.registerTask('generate:version-file', 'Updates src/version.ts with the newest build information.', () => {
-    // Generate version information when we run a build.
-    // Save the information in src/version.ts.
-    const { VERSION, ID, DATE, writeFile } = require('./tools/generate_version_file');
-    writeFile();
-    const info = {
-      BUILD_VERSION: VERSION,
-      BUILD_ID: ID,
-      BUILD_DATE: DATE,
-    };
-    console.log(info);
-  });
-
   // grunt diff:reference
   // Visual regression test compares images from the current build vs images from the reference build.
   grunt.registerTask(
@@ -739,111 +703,81 @@ module.exports = (grunt) => {
   // GITHUB_TOKEN=XYZ grunt release:dry-run:beta
   // GITHUB_TOKEN=XYZ grunt release:dry-run:rc
 
-  // grunt build-test-release
-  // GITHUB_TOKEN=XYZ grunt build-test-release
-  // GITHUB_TOKEN=XYZ grunt build-test-release:alpha
-  // GITHUB_TOKEN=XYZ grunt build-test-release:beta
-  // GITHUB_TOKEN=XYZ grunt build-test-release:rc
-  // GITHUB_TOKEN=XYZ grunt build-test-release:rc:dry-run
-  grunt.registerTask(
-    'release',
-    'Produce the complete build. Run command line tests as a sanity check. Release to npm and GitHub.',
-    function (...args) {
-      // For now, we require the GITHUB_TOKEN environment variable to be set.
-      // In the future, we might consider just skipping the GitHub release step if GITHUB_TOKEN is missing.
-      // const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-      // if (!GITHUB_TOKEN) {
-      //   console.log('GITHUB_TOKEN=XYZABC grunt release');
-      //   grunt.fail.fatal('GITHUB_TOKEN environment variable is missing.');
-      // }
-
-      // verifyGitWorkingDirectory();
-      const done = this.async();
-
-      // See the full list of options at:
-      // https://github.com/release-it/release-it
-      // https://github.com/release-it/release-it/blob/master/config/release-it.json
-      const options = {
-        'dry-run': true, // TODO: RONYEH REMOVE true
-        // verbose: 1, // Might be useful to see the output of each hook (especially the build-for-release and test:cmd tasks).
-        // verbose: 2, // Only for debugging.
-        // increment: false, // Used with github.update: true to just update the GitHub release.
-        hooks: {
-          'before:init': [],
-          'after:bump': [
-            'grunt build-for-release',
-            'grunt test:cmd',
-            'echo Adding build/ folder...',
-            'git add -f build/',
-            "git commit -m 'Add build/ for release version ${version}.'",
-          ],
-          'after:npm:release': [],
-          'after:git:release': [],
-          'after:github:release': [],
-          'after:release': [
-            'echo Successfully released ${name} ${version} to ${repo.repository}.',
-            'echo Removing build/ folder...',
-            'git rm -r build/',
-            "git commit -m 'Remove build/ after releasing version ${version}.'",
-            'git push',
-          ],
-        },
-        git: {
-          changelog: false, // After releasing 4.0, remove this line to start publishing our git commit history as a changelog for each release.
-          commitMessage: 'Release VexFlow ${version}',
-          requireCleanWorkingDir: false,
-          // "commit": true,
-          commit: false,
-          // "tag": true,
-          tag: false,
-          // push: true,
-          push: false,
-        },
-        github: {
-          // release: true,
-          release: false,
-          // update: true, // Update the GitHub release. Used with increment: false.
-        },
-        npm: {
-          // publish: true,
-          publish: false,
-        },
-      };
-
-      const isDryRun = args.includes('dry-run');
-      if (isDryRun) {
-        options['dry-run'] = true;
-      }
-      const isAlpha = args.includes('alpha');
-      if (isAlpha) {
-        options['preRelease'] = 'alpha';
-      }
-      const isBeta = args.includes('beta');
-      if (isBeta) {
-        options['preRelease'] = 'beta';
-      }
-      const isReleaseCandidate = args.includes('rc');
-      if (isReleaseCandidate) {
-        options['preRelease'] = 'rc';
-      }
-
-      release(options).then((output) => {
-        // console.log(output);
-        // { version, latestVersion, name, changelog }
-        done();
-      });
+  grunt.registerTask('release', 'Produce the complete build. Release to npm and GitHub.', function (...args) {
+    // For now, we require the GITHUB_TOKEN environment variable to be set.
+    // In the future, we might consider just skipping the GitHub release step if GITHUB_TOKEN is missing.
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    if (!GITHUB_TOKEN) {
+      console.log('GITHUB_TOKEN=XYZABC grunt release');
+      grunt.fail.fatal('GITHUB_TOKEN environment variable is missing.');
     }
-  );
 
-  // Helper task for the 'release' task above.
-  grunt.registerTask('build-for-release', 'Produce the complete build.', (...args) => {
-    // Add a banner at the top of the file.
-    const { BUILD_VERSION, BUILD_ID, BUILD_DATE } = generateVersionFile();
-    banner =
-      `VexFlow ${BUILD_VERSION}   ${BUILD_DATE}   ${BUILD_ID}\n` +
-      `Copyright (c) 2010 Mohit Muthanna Cheppudira <mohit@muthanna.com>\n` +
-      `https://www.vexflow.com   https://github.com/0xfe/vexflow`;
+    const done = this.async();
 
-    grunt.task.run(['clean', 'webpack:prodAndDebug', 'build:esm', 'build:types', 'build:docs']);
+    // See the full list of options at:
+    // https://github.com/release-it/release-it
+    // https://github.com/release-it/release-it/blob/master/config/release-it.json
+    const options = {
+      // verbose: 1, // Might be useful to see the output of each hook.
+      // verbose: 2, // Only for debugging.
+      // increment: false, // Used with options.github.update: true to just update the GitHub release.
+      hooks: {
+        'before:init': ['grunt clean'],
+        'after:bump': [
+          'grunt',
+          'echo Adding build/ folder...',
+          'git add -f build/',
+          "git commit -m 'Add build/ for release version ${version}.'",
+        ],
+        'after:npm:release': [],
+        'after:git:release': [],
+        'after:github:release': [],
+        'after:release': [
+          'echo Successfully released ${name} ${version} to ${repo.repository}.',
+          'echo Removing build/ folder...',
+          'git rm -r build/',
+          "git commit -m 'Remove build/ after releasing version ${version}.'",
+          'git push',
+        ],
+      },
+      git: {
+        changelog: false, // After releasing 4.0, set to true to start publishing recent git commit history as a changelog for each release.
+        commitMessage: 'Release VexFlow ${version}',
+        requireCleanWorkingDir: true,
+        commit: true,
+        tag: true,
+        push: true,
+      },
+      github: {
+        release: true,
+        // update: true, // Update the GitHub release. Used with options.increment: false.
+      },
+      npm: {
+        publish: true,
+      },
+    };
+
+    const isDryRun = args.includes('dry-run');
+    if (isDryRun) {
+      options['dry-run'] = true;
+    }
+    const isAlpha = args.includes('alpha');
+    if (isAlpha) {
+      options['preRelease'] = 'alpha';
+    }
+    const isBeta = args.includes('beta');
+    if (isBeta) {
+      options['preRelease'] = 'beta';
+    }
+    const isReleaseCandidate = args.includes('rc');
+    if (isReleaseCandidate) {
+      options['preRelease'] = 'rc';
+    }
+
+    release(options).then((output) => {
+      // console.log(output);
+      // { version, latestVersion, name, changelog }
+      done();
+    });
   });
 };
