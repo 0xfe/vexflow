@@ -58,7 +58,7 @@ export class StringNumber extends Modifier {
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];
       const mc = note.getModifierContext();
-      const verticalSpaceNeeded = (num.radius * 2) / Tables.STAVE_LINE_DISTANCE;
+      const verticalSpaceNeeded = (num.radius * 2) / Tables.STAVE_LINE_DISTANCE + 0.5;
 
       if (mc) {
         if (pos === ModifierPosition.ABOVE) {
