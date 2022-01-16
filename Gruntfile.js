@@ -5,10 +5,10 @@ grunt
     This is the 'default' grunt task.
 
 grunt test
-  - Build the VexFlow libraries and run the QUnit command line tests with 'tests/flow-headless-browser.html'.
+  - Build the VexFlow debug libraries and run the QUnit command line tests with 'tests/flow-headless-browser.html'.
 
 grunt reference
-  - Build VexFlow and run the copy:reference task, which copies the current build/ to the reference/ folder,
+  - Build VexFlow and copy the current build/ to the reference/ folder (the copy:reference task),
     so that we can compare future builds to the reference/ via `grunt test:reference`.
 
 *************************************************************************************************************
@@ -37,9 +37,9 @@ Also, make sure your authenticator app is ready to generate a 2FA one time passw
 
 grunt && npm pack
   - Create a *.tgz that can be emailed to a friend or uploaded to a test server.
-    npm install from the *.tgz file or test server URL to verify your project works.
+    npm install from the *.tgz file or test server URL to verify your project works with this build of VexFlow.
 
-GITHUB_TOKEN=XYZ grunt release
+grunt release
   - Run the release script to build, commit, and publish to npm and GitHub.
     This assumes you have fully tested the build.
 
@@ -685,31 +685,26 @@ module.exports = (grunt) => {
     runCommand('node', './tools/get_releases.mjs', ...args);
   });
 
-  // grunt release
-  // grunt release:beta
-  // grunt release:dry-run
-  // grunt release:dry-run:rc
-  //
   // Release to npm and GitHub.
-  // Specify dry-run to walk through the release process without actually doing anything.
+  // Specify "dry-run" to walk through the release process without actually doing anything.
   // Optionally provide a preRelease tag ( alpha | beta | rc ).
   // Remember to use your GitHub personal access token:
-  // GITHUB_TOKEN=XYZ grunt release
-  // GITHUB_TOKEN=XYZ grunt release:alpha
-  // GITHUB_TOKEN=XYZ grunt release:beta
-  // GITHUB_TOKEN=XYZ grunt release:rc
-  // GITHUB_TOKEN=XYZ grunt release:dry-run
-  // GITHUB_TOKEN=XYZ grunt release:dry-run:alpha
-  // GITHUB_TOKEN=XYZ grunt release:dry-run:beta
-  // GITHUB_TOKEN=XYZ grunt release:dry-run:rc
-
+  //   GITHUB_TOKEN=XYZ grunt release
+  //   GITHUB_TOKEN=XYZ grunt release:alpha
+  //   GITHUB_TOKEN=XYZ grunt release:beta
+  //   GITHUB_TOKEN=XYZ grunt release:rc
+  //   GITHUB_TOKEN=XYZ grunt release:dry-run
+  //   GITHUB_TOKEN=XYZ grunt release:dry-run:alpha
+  //   GITHUB_TOKEN=XYZ grunt release:dry-run:beta
+  //   GITHUB_TOKEN=XYZ grunt release:dry-run:rc
+  // See the wiki for information on how to run a manual release:
+  //   https://github.com/0xfe/vexflow/wiki/Build,-Test,-Release#publish-manually
   grunt.registerTask('release', 'Produce the complete build. Release to npm and GitHub.', function (...args) {
-    // For now, we require the GITHUB_TOKEN environment variable to be set.
-    // In the future, we might consider just skipping the GitHub release step if GITHUB_TOKEN is missing.
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-    if (!GITHUB_TOKEN) {
-      console.log('GITHUB_TOKEN=XYZABC grunt release');
-      grunt.fail.fatal('GITHUB_TOKEN environment variable is missing.');
+    if (!process.env.GITHUB_TOKEN) {
+      console.warn(
+        'GITHUB_TOKEN environment variable is missing.' +
+          'Release to GitHub at https://github.com/0xfe/vexflow/releases/new'
+      );
     }
 
     const done = this.async();
@@ -718,9 +713,8 @@ module.exports = (grunt) => {
     // https://github.com/release-it/release-it
     // https://github.com/release-it/release-it/blob/master/config/release-it.json
     const options = {
-      // verbose: 1, // Might be useful to see the output of each hook.
+      // verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
-      // increment: false, // Used with options.github.update: true to just update the GitHub release.
       hooks: {
         'before:init': ['grunt clean'],
         'after:bump': [
@@ -729,54 +723,45 @@ module.exports = (grunt) => {
           'git add -f build/',
           "git commit -m 'Add build/ for release version ${version}.'",
         ],
-        'after:npm:release': [],
-        'after:git:release': [],
-        'after:github:release': [],
+        'after:npm:release': ['echo COMPLETE: Published to npm.'],
+        'after:git:release': ['echo COMPLETE: Committed to git repository.'],
+        'after:github:release': ['echo COMPLETE: Released to GitHub.'],
         'after:release': [
-          'echo Successfully released ${name} ${version} to ${repo.repository}.',
           'echo Removing build/ folder...',
           'git rm -r build/',
           "git commit -m 'Remove build/ after releasing version ${version}.'",
           'git push',
+          'echo Successfully released ${name} ${version} to ${repo.repository}.',
         ],
       },
       git: {
-        changelog: false, // After releasing 4.0, set to true to start publishing recent git commit history as a changelog for each release.
+        changelog: false, // After 4.0: set to true to start publishing recent git commit history as a mini changelog.
         commitMessage: 'Release VexFlow ${version}',
         requireCleanWorkingDir: true,
         commit: true,
         tag: true,
         push: true,
       },
-      github: {
-        release: true,
-        // update: true, // Update the GitHub release. Used with options.increment: false.
-      },
-      npm: {
-        publish: true,
-      },
+      github: { release: true },
+      npm: { publish: true },
     };
 
-    const isDryRun = args.includes('dry-run');
-    if (isDryRun) {
+    if (args.includes('dry-run')) {
       options['dry-run'] = true;
+      console.log('====== DRY RUN MODE ======');
     }
-    const isAlpha = args.includes('alpha');
-    if (isAlpha) {
+    // Handle preRelease tags: alpha | beta | rc.
+    if (args.includes('alpha')) {
       options['preRelease'] = 'alpha';
     }
-    const isBeta = args.includes('beta');
-    if (isBeta) {
+    if (args.includes('beta')) {
       options['preRelease'] = 'beta';
     }
-    const isReleaseCandidate = args.includes('rc');
-    if (isReleaseCandidate) {
+    if (args.includes('rc')) {
       options['preRelease'] = 'rc';
     }
 
     release(options).then((output) => {
-      // console.log(output);
-      // { version, latestVersion, name, changelog }
       done();
     });
   });
