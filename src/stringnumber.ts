@@ -52,15 +52,9 @@ export class StringNumber extends Modifier {
       const num = nums[i];
       const note = num.getNote();
       const pos = num.getPosition();
-      let lines =  5;
       if (!isStaveNote(note)) {
         throw new RuntimeError('NoStaveNote');
       }
-      const stave: Stave | undefined = note.getStave();
-      if (stave) {
-        lines = stave.getNumLines();
-      }
-
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];
       const mc = note.getModifierContext();
@@ -215,14 +209,15 @@ export class StringNumber extends Modifier {
     let dot_y = start.y + this.y_shift + this.y_offset;
 
     switch (this.position) {
-      case Modifier.Position.ABOVE:
-        const ys = note.getYs();
-        dot_y = ys.reduce((a, b) => a < b ? a : b);
-        if (note.hasStem() && stemDirection == Stem.UP) {
-          dot_y = stem_ext.topY + StringNumber.metrics.stemPadding;
+      case Modifier.Position.ABOVE: {
+          const ys = note.getYs();
+          dot_y = ys.reduce((a, b) => a < b ? a : b);
+          if (note.hasStem() && stemDirection == Stem.UP) {
+            dot_y = stem_ext.topY + StringNumber.metrics.stemPadding;
+          }
+          dot_y -= this.radius + StringNumber.metrics.verticalPadding
+            + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
-        dot_y -= this.radius + StringNumber.metrics.verticalPadding
-          + this.text_line * Tables.STAVE_LINE_DISTANCE;
         break;
       case Modifier.Position.BELOW: {
         const ys: number[] = note.getYs();
@@ -232,8 +227,8 @@ export class StringNumber extends Modifier {
         }
         dot_y += this.radius + StringNumber.metrics.verticalPadding
           + this.text_line * Tables.STAVE_LINE_DISTANCE;
-        break;
-      }
+        }
+        break;        
       case Modifier.Position.LEFT:
         dot_x -= this.radius / 2 + StringNumber.metrics.leftPadding;
         break;
