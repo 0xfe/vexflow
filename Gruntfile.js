@@ -733,7 +733,7 @@ module.exports = (grunt) => {
           'git rm -r build/',
           "git commit -m 'Remove build/ after releasing version ${version}.'",
           'git push',
-          'echo Successfully released ${name} ${version} to ${repo.repository}.',
+          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
         ],
       },
       git: {
