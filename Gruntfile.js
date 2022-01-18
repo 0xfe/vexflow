@@ -689,6 +689,16 @@ module.exports = (grunt) => {
     runCommand('node', './tools/get_releases.mjs', ...args);
   });
 
+  // grunt test:release:X.Y.Z
+  // Visual regression test to compare the current build/ and releases/X.Y.Z/ versions of VexFlow.
+  // Assume the release has already been retrieved with the 'get:releases' task above.
+  grunt.registerTask('test:release', 'Generate images from build/ and releases/X.Y.Z and compare them.', (ver) => {
+    if (!ver) {
+      grunt.fail.fatal('Missing version number.\nUsage: grunt test:release:X.Y.Z');
+    }
+    grunt.task.run('test', 'generate:current', 'generate:release:' + ver, 'diff:ver:' + ver);
+  });
+
   // Release to npm and GitHub.
   // Specify "dry-run" to walk through the release process without actually doing anything.
   // Optionally provide a preRelease tag ( alpha | beta | rc ).
