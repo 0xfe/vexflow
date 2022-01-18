@@ -6,10 +6,17 @@ const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const PACKAGE_JSON = JSON.parse(fs.readFileSync('package.json'));
-const VEXFLOW_VERSION = PACKAGE_JSON.version;
-const GIT_COMMIT_ID = execSync('git rev-parse HEAD').toString().trim();
-const DATE = new Date().toISOString();
+let VEXFLOW_VERSION;
+let GIT_COMMIT_ID;
+let DATE;
+
+function updateInfo() {
+  VEXFLOW_VERSION = JSON.parse(fs.readFileSync('package.json')).version;
+  GIT_COMMIT_ID = execSync('git rev-parse HEAD').toString().trim();
+  DATE = new Date().toISOString();
+}
+
+updateInfo();
 
 module.exports = {
   VERSION: VEXFLOW_VERSION,
@@ -24,4 +31,6 @@ module.exports = {
     const D = `export const DATE = '${DATE}';`;
     fs.writeFileSync(outputFile, `${V}\n${I}\n${D}`);
   },
+
+  update: updateInfo,
 };
