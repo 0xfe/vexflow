@@ -16,10 +16,10 @@ import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 import { defined, RuntimeError } from './util';
 
-export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNote);
+export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, Category.TabNote);
 
 export interface TabNotePosition {
   // For example, on a six stringed instrument, `str` ranges from 1 to 6.
@@ -128,7 +128,7 @@ function getPartialStemLines(stem_y: number, unused_strings: number[][], stave: 
 
 export class TabNote extends StemmableNote {
   static get CATEGORY(): string {
-    return 'TabNote';
+    return Category.TabNote;
   }
 
   protected ghost: boolean;
@@ -182,12 +182,12 @@ export class TabNote extends StemmableNote {
   }
   // Return the number of the greatest string, which is the string lowest on the display
   greatestString = (): number => {
-    return this.positions.map((x) => x.str).reduce((a, b) => a > b ? a : b);
-  }
+    return this.positions.map((x) => x.str).reduce((a, b) => (a > b ? a : b));
+  };
   // Return the number of the least string, which is the string highest on the display
   leastString = (): number => {
-    return this.positions.map((x) => x.str).reduce((a, b) => a < b ? a : b);
-  }
+    return this.positions.map((x) => x.str).reduce((a, b) => (a < b ? a : b));
+  };
 
   reset(): this {
     super.reset();

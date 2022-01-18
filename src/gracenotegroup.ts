@@ -16,11 +16,11 @@ import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabTie } from './tabtie';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 import { log } from './util';
 import { Voice } from './voice';
 
-export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, GraceNoteGroup);
+export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, Category.GraceNoteGroup);
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -33,7 +33,7 @@ export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'GraceNoteGroup';
+    return Category.GraceNoteGroup;
   }
 
   protected readonly voice: Voice;

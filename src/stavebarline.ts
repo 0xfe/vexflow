@@ -5,9 +5,9 @@
 import { Stave } from './stave';
 import { LayoutMetrics, StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 
-export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Barline);
+export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Category.Barline);
 
 export enum BarlineType {
   SINGLE = 1,
@@ -21,7 +21,7 @@ export enum BarlineType {
 
 export class Barline extends StaveModifier {
   static get CATEGORY(): string {
-    return 'Barline';
+    return Category.Barline;
   }
 
   protected widths: Record<string, number>;

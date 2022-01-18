@@ -12,11 +12,11 @@ import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
-export const isNote = (obj: unknown): obj is Note => isCategory(obj, Note);
+export const isNote = (obj: unknown): obj is Note => isCategory(obj, Category.Note);
 
 export interface KeyProps {
   stem_down_x_offset: number;
@@ -91,7 +91,7 @@ export abstract class Note extends Tickable {
   // STATIC MEMBERS
 
   static get CATEGORY(): string {
-    return 'Note';
+    return Category.Note;
   }
 
   /** Debug helper. Displays various note metrics for the given note. */

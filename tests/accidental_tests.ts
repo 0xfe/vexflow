@@ -5,7 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Accidental } from '../src/accidental';
+import { Accidental, isAccidental } from '../src/accidental';
 import { Beam } from '../src/beam';
 import { Dot } from '../src/dot';
 import { Factory } from '../src/factory';
@@ -20,7 +20,6 @@ import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 import { Stem } from '../src/stem';
 import { TickContext } from '../src/tickcontext';
 import { TimeSigNote } from '../src/timesignote';
-import { isCategory } from '../src/typeguard';
 import { Voice } from '../src/voice';
 
 const AccidentalTests = {
@@ -53,7 +52,7 @@ const AccidentalTests = {
 
 // Check that at least one of the note's modifiers is an Accidental.
 function hasAccidental(note: StaveNote) {
-  return note.getModifiers().some((modifier) => isCategory(modifier, Accidental));
+  return note.getModifiers().some((modifier) => isAccidental(modifier));
 }
 
 // Return a convenience function for building accidentals from a string.

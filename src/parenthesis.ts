@@ -3,6 +3,7 @@
 // MIT License
 
 import { Glyph } from './glyph';
+import { isGraceNote } from './gracenote';
 import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
@@ -79,7 +80,7 @@ export class Parenthesis extends Modifier {
     this.note = note;
     this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
     this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
-    if (note.getCategory() === 'GraceNote') {
+    if (isGraceNote(note)) {
       this.point = Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.point');
       this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.width'));
     }

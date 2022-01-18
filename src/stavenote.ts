@@ -19,10 +19,10 @@ import { Stave } from './stave';
 import { Stem, StemOptions } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 import { defined, log, midLine, RuntimeError, warn } from './util';
 
-export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, StaveNote);
+export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, Category.StaveNote);
 
 function showDeprecationWarningForNoteHeads(): void {
   // eslint-disable-next-line
@@ -105,7 +105,7 @@ export class StaveNote extends StemmableNote {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'StaveNote';
+    return Category.StaveNote;
   }
 
   /**

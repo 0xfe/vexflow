@@ -3,10 +3,10 @@
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { isCategory } from './typeguard';
+import { Category, isCategory } from './typeguard';
 import { RuntimeError } from './util';
 
-export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, GraceNote);
+export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, Category.GraceNote);
 
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash?: boolean;
@@ -14,7 +14,7 @@ export interface GraceNoteStruct extends StaveNoteStruct {
 
 export class GraceNote extends StaveNote {
   static get CATEGORY(): string {
-    return 'GraceNote';
+    return Category.GraceNote;
   }
 
   static get LEDGER_LINE_OFFSET(): number {
