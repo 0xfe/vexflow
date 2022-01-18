@@ -9,14 +9,14 @@ import { isHTMLCanvas } from './web';
 // https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/offscreencanvas
 // https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/types/offscreencanvas/index.d.ts
 
-interface OffscreenCanvas extends EventTarget {
+export interface OffscreenCanvas extends EventTarget {
   width: number;
   height: number;
   // ...more stuff that we removed.
 }
 
 // https://html.spec.whatwg.org/multipage/canvas.html#offscreencanvasrenderingcontext2d
-interface OffscreenCanvasRenderingContext2D
+export interface OffscreenCanvasRenderingContext2D
   extends CanvasState,
     CanvasTransform,
     CanvasCompositing,
