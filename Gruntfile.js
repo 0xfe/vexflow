@@ -744,7 +744,7 @@ module.exports = (grunt) => {
         'after:github:release': ['echo COMPLETE: Released to GitHub.'],
         'after:release': [
           'echo Removing build/ folder...',
-          'git rm -r build/',
+          'git rm -rf build/',
           "git commit -m 'Remove build/ after releasing version ${version}.'",
           'git push',
           'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
