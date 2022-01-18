@@ -186,7 +186,7 @@ export class Bend extends Modifier {
 
     const stave = note.checkStave();
     const spacing = stave.getSpacingBetweenLines();
-    const lowestY = note.getYs().reduce((a, b) => a < b ? a : b);
+    const lowestY = note.getYs().reduce((a, b) => (a < b ? a : b));
     // this.text_line is relative to top string in the group.
     const bend_height = start.y - ((this.text_line + 1) * spacing + start.y - lowestY) + 3;
     const annotation_y = start.y - ((this.text_line + 1) * spacing + start.y - lowestY) - 1;

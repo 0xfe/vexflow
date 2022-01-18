@@ -697,13 +697,15 @@ module.exports = (grunt) => {
   //   GITHUB_TOKEN=XYZ grunt release:dry-run:alpha
   //   GITHUB_TOKEN=XYZ grunt release:dry-run:beta
   //   GITHUB_TOKEN=XYZ grunt release:dry-run:rc
-  // See the wiki for information on how to run a manual release:
-  //   https://github.com/0xfe/vexflow/wiki/Build,-Test,-Release#publish-manually
+  // See the wiki for information on manual releases:
+  //   https://github.com/0xfe/vexflow/wiki/Build,-Test,-Release#publish-manually-to-npm-and-github
   grunt.registerTask('release', 'Produce the complete build. Release to npm and GitHub.', function (...args) {
     if (!process.env.GITHUB_TOKEN) {
       console.warn(
-        'GITHUB_TOKEN environment variable is missing.' +
-          'Release to GitHub at https://github.com/0xfe/vexflow/releases/new'
+        'GITHUB_TOKEN environment variable is missing.\n' +
+          'You can manually release to GitHub at https://github.com/0xfe/vexflow/releases/new\n' +
+          'Or use the GitHub CLI:\n' +
+          'gh release create 4.0.0 --title "Release 4.0.0"'
       );
     }
 
