@@ -133,26 +133,28 @@ export class ModifierContext {
     if (this.preFormatted) return;
     L('Preformatting ModifierContext');
 
-    // The ordering is significant -- lower members are formatted and rendered before higher ones [TODO: RONYEH is this true???].
     const state = this.state;
-    StaveNote.format(this.getMembers(Category.StaveNote) as StaveNote[], state);
-    Parenthesis.format(this.getMembers(Category.Parenthesis) as Parenthesis[], state);
-    Dot.format(this.getMembers(Category.Dot) as Dot[], state);
-    FretHandFinger.format(this.getMembers(Category.FretHandFinger) as FretHandFinger[], state);
-    Accidental.format(this.getMembers(Category.Accidental) as Accidental[], state);
-    Stroke.format(this.getMembers(Category.Stroke) as Stroke[], state);
-    GraceNoteGroup.format(this.getMembers(Category.GraceNoteGroup) as GraceNoteGroup[], state);
-    NoteSubGroup.format(this.getMembers(Category.NoteSubGroup) as NoteSubGroup[], state);
-    StringNumber.format(this.getMembers(Category.StringNumber) as StringNumber[], state);
-    Articulation.format(this.getMembers(Category.Articulation) as Articulation[], state);
-    Ornament.format(this.getMembers(Category.Ornament) as Ornament[], state);
-    Annotation.format(this.getMembers(Category.Annotation) as Annotation[], state);
-    ChordSymbol.format(this.getMembers(Category.ChordSymbol) as ChordSymbol[], state);
-    Bend.format(this.getMembers(Category.Bend) as Bend[], state);
-    Vibrato.format(this.getMembers(Category.Vibrato) as Vibrato[], state, this);
+    const members = this.members;
+
+    // The ordering below determines when different members are formatted and rendered.
+    StaveNote.format(members[Category.StaveNote] as StaveNote[], state);
+    Parenthesis.format(members[Category.Parenthesis] as Parenthesis[], state);
+    Dot.format(members[Category.Dot] as Dot[], state);
+    FretHandFinger.format(members[Category.FretHandFinger] as FretHandFinger[], state);
+    Accidental.format(members[Category.Accidental] as Accidental[], state);
+    Stroke.format(members[Category.Stroke] as Stroke[], state);
+    GraceNoteGroup.format(members[Category.GraceNoteGroup] as GraceNoteGroup[], state);
+    NoteSubGroup.format(members[Category.NoteSubGroup] as NoteSubGroup[], state);
+    StringNumber.format(members[Category.StringNumber] as StringNumber[], state);
+    Articulation.format(members[Category.Articulation] as Articulation[], state);
+    Ornament.format(members[Category.Ornament] as Ornament[], state);
+    Annotation.format(members[Category.Annotation] as Annotation[], state);
+    ChordSymbol.format(members[Category.ChordSymbol] as ChordSymbol[], state);
+    Bend.format(members[Category.Bend] as Bend[], state);
+    Vibrato.format(members[Category.Vibrato] as Vibrato[], state, this);
 
     // Update width of this member context
-    this.width = this.state.left_shift + this.state.right_shift;
+    this.width = state.left_shift + state.right_shift;
     this.preFormatted = true;
   }
 
