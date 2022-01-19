@@ -216,6 +216,7 @@ export class Flow {
     // Convert the array of font names into an array of Font objects.
     const fonts = fontNames.map((fontName) => Font.load(fontName));
     Tables.MUSIC_FONT_STACK = fonts;
+    Glyph.MUSIC_FONT_STACK = fonts.slice();
     Glyph.CURRENT_CACHE_KEY = fontNames.join(',');
     return fonts;
   }

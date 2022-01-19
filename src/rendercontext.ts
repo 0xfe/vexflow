@@ -2,6 +2,7 @@
 // MIT License
 
 import { FontInfo } from './font';
+import { Category } from './typeguard';
 
 export interface TextMeasure {
   x: number;
@@ -15,6 +16,10 @@ export interface GroupAttributes {
 }
 
 export abstract class RenderContext {
+  static get CATEGORY(): string {
+    return Category.RenderContext;
+  }
+
   abstract clear(): void;
   abstract setFillStyle(style: string): this;
   abstract setBackgroundFillStyle(style: string): this;
