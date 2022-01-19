@@ -5,11 +5,12 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export class StaveText extends StaveModifier {
   static get CATEGORY(): string {
-    return 'StaveText';
+    return Category.StaveText;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

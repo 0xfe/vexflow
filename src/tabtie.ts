@@ -5,10 +5,11 @@
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
 import { StaveTie, TieNotes } from './stavetie';
+import { Category } from './typeguard';
 
 export class TabTie extends StaveTie {
   static get CATEGORY(): string {
-    return 'TabTie';
+    return Category.TabTie;
   }
 
   static createHammeron(notes: TieNotes): TabTie {

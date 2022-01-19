@@ -5,6 +5,7 @@ import { Bend } from './bend';
 import { Modifier } from './modifier';
 import { ModifierContext, ModifierContextState } from './modifiercontext';
 import { RenderContext } from './rendercontext';
+import { Category } from './typeguard';
 
 export interface VibratoRenderOptions {
   wave_height: number;
@@ -17,7 +18,7 @@ export interface VibratoRenderOptions {
 /** `Vibrato` implements diverse vibratos. */
 export class Vibrato extends Modifier {
   static get CATEGORY(): string {
-    return 'Vibrato';
+    return Category.Vibrato;
   }
 
   public render_options: VibratoRenderOptions;

@@ -5,12 +5,11 @@ import { Element } from './element';
 import { Fraction } from './fraction';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
-import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
-import { Tuplet } from './tuplet';
+import { Tuplet, TupletLocation } from './tuplet';
+import { Category, isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
@@ -45,7 +44,7 @@ const BEAM_BOTH = 'B';
 /** `Beams` span over a set of `StemmableNotes`. */
 export class Beam extends Element {
   static get CATEGORY(): string {
-    return 'Beam';
+    return Category.Beam;
   }
 
   public render_options: {
@@ -420,7 +419,7 @@ export class Beam extends Element {
     allTuplets.forEach((tuplet) => {
       // Set the tuplet location based on the stem direction
       const direction =
-        (tuplet.notes[0] as StemmableNote).stem_direction === Stem.DOWN ? Tuplet.LOCATION_BOTTOM : Tuplet.LOCATION_TOP;
+        (tuplet.notes[0] as StemmableNote).stem_direction === Stem.DOWN ? TupletLocation.BOTTOM : TupletLocation.TOP;
       tuplet.setTupletLocation(direction);
 
       // If any of the notes in the tuplet are not beamed, draw a bracket.

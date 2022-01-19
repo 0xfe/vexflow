@@ -51,6 +51,7 @@ import { Note } from './note';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface TupletOptions {
@@ -63,9 +64,14 @@ export interface TupletOptions {
   y_offset?: number;
 }
 
+export const enum TupletLocation {
+  BOTTOM = -1,
+  TOP = +1,
+}
+
 export class Tuplet extends Element {
   static get CATEGORY(): string {
-    return 'Tuplet';
+    return Category.Tuplet;
   }
 
   notes: Note[];
@@ -88,10 +94,10 @@ export class Tuplet extends Element {
   protected denom_glyphs: Glyph[] = [];
 
   static get LOCATION_TOP(): number {
-    return 1;
+    return TupletLocation.TOP;
   }
   static get LOCATION_BOTTOM(): number {
-    return -1;
+    return TupletLocation.BOTTOM;
   }
   static get NESTING_OFFSET(): number {
     return 15;

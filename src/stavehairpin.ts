@@ -10,6 +10,7 @@ import { Element } from './element';
 import { Modifier } from './modifier';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface StaveHairpinRenderOptions {
@@ -23,7 +24,7 @@ export interface StaveHairpinRenderOptions {
 
 export class StaveHairpin extends Element {
   static get CATEGORY(): string {
-    return 'StaveHairpin';
+    return Category.StaveHairpin;
   }
 
   protected hairpin: number;

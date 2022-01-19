@@ -10,10 +10,11 @@
 
 import { Font } from './font';
 import { TabNote, TabNoteStruct } from './tabnote';
+import { Category } from './typeguard';
 
 export class GraceTabNote extends TabNote {
   static get CATEGORY(): string {
-    return 'GraceTabNote';
+    return Category.GraceTabNote;
   }
 
   constructor(noteStruct: TabNoteStruct) {

@@ -3,16 +3,16 @@
 // MIT License
 
 import { Glyph } from './glyph';
-import { isGraceNote } from './gracenote';
 import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Tables } from './tables';
+import { Category, isGraceNote } from './typeguard';
 
 /** Parenthesis implements parenthesis modifiers for notes. */
 export class Parenthesis extends Modifier {
   static get CATEGORY(): string {
-    return 'Parenthesis';
+    return Category.Parenthesis;
   }
 
   protected point: number;

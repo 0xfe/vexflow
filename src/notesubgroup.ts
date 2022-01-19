@@ -13,11 +13,12 @@ import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { Voice } from './voice';
 
 export class NoteSubGroup extends Modifier {
   static get CATEGORY(): string {
-    return 'NoteSubGroup';
+    return Category.NoteSubGroup;
   }
 
   // Arrange groups inside a `ModifierContext`

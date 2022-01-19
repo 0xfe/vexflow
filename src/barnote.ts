@@ -4,6 +4,7 @@
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
 import { Barline, BarlineType } from './stavebarline';
+import { Category } from './typeguard';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -23,7 +24,7 @@ export class BarNote extends Note {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'BarNote';
+    return Category.BarNote;
   }
 
   protected metrics: { widths: Record<string, number> };

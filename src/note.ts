@@ -12,11 +12,9 @@ import { Stroke } from './strokes';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
-import { Category, isCategory } from './typeguard';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
-
-export const isNote = (obj: unknown): obj is Note => isCategory(obj, Category.Note);
 
 export interface KeyProps {
   stem_down_x_offset: number;
@@ -583,8 +581,8 @@ export abstract class Note extends Tickable {
       throw new RuntimeError('UnformattedNote', "Can't call getMetrics on an unformatted note.");
     }
 
-    const modLeftPx = this.modifierContext ? this.modifierContext.state.left_shift : 0;
-    const modRightPx = this.modifierContext ? this.modifierContext.state.right_shift : 0;
+    const modLeftPx = this.modifierContext ? this.modifierContext.getState().left_shift : 0;
+    const modRightPx = this.modifierContext ? this.modifierContext.getState().right_shift : 0;
     const width = this.getWidth();
     const glyphWidth = this.getGlyphWidth();
     const notePx =

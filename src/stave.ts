@@ -6,7 +6,7 @@ import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
-import { Barline, BarlineType, isBarline } from './stavebarline';
+import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Repetition } from './staverepetition';
 import { StaveSection } from './stavesection';
@@ -15,6 +15,7 @@ import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
+import { Category, isBarline } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -54,7 +55,7 @@ const SORT_ORDER_END_MODIFIERS = {
 
 export class Stave extends Element {
   static get CATEGORY(): string {
-    return 'Stave';
+    return Category.Stave;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

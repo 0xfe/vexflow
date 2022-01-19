@@ -8,11 +8,12 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
-    return 'FretHandFinger';
+    return Category.FretHandFinger;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

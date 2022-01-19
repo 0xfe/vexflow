@@ -4,6 +4,7 @@
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
+import { Category } from './typeguard';
 
 export enum VoltaType {
   NONE = 1,
@@ -15,7 +16,7 @@ export enum VoltaType {
 
 export class Volta extends StaveModifier {
   static get CATEGORY(): string {
-    return 'Volta';
+    return Category.Volta;
   }
 
   static get type(): typeof VoltaType {

@@ -9,11 +9,10 @@
 
 import { VexFlowTests } from './vexflow_test_helpers';
 
-import { isNote } from '../src/note';
-import { isStaveNote, StaveNote } from '../src/stavenote';
-import { isStemmableNote, StemmableNote } from '../src/stemmablenote';
-import { isTabNote, TabNote } from '../src/tabnote';
-import { isCategory } from '../src/typeguard';
+import { StaveNote } from '../src/stavenote';
+import { StemmableNote } from '../src/stemmablenote';
+import { TabNote } from '../src/tabnote';
+import { isCategory, isNote, isStaveNote, isStemmableNote, isTabNote } from '../src/typeguard';
 
 const TypeGuardTests = {
   Start(): void {

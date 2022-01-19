@@ -8,6 +8,7 @@ import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface VoiceTime {
@@ -28,7 +29,7 @@ export enum VoiceMode {
  */
 export class Voice extends Element {
   static get CATEGORY(): string {
-    return 'Voice';
+    return Category.Voice;
   }
 
   /**

@@ -5,6 +5,7 @@
 
 import { Element } from './element';
 import { Note } from './note';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface CurveOptions {
@@ -25,7 +26,7 @@ export enum CurvePosition {
 
 export class Curve extends Element {
   static get CATEGORY(): string {
-    return 'Curve';
+    return Category.Curve;
   }
 
   public render_options: Required<CurveOptions>;

@@ -2,6 +2,16 @@
 // Author: Ron B. Yeh
 // MIT License
 
+import { Accidental } from './accidental.js';
+import { Dot } from './dot.js';
+import { GraceNote } from './gracenote.js';
+import { GraceNoteGroup } from './gracenotegroup.js';
+import { Note } from './note.js';
+import { Barline } from './stavebarline.js';
+import { StaveNote } from './stavenote.js';
+import { StemmableNote } from './stemmablenote.js';
+import { TabNote } from './tabnote.js';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
@@ -42,16 +52,82 @@ export function isCategory<T>(obj: any, category: string, checkAncestors: boolea
   }
 }
 
+export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, Category.StemmableNote);
+export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, Category.StaveNote);
+export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Category.Barline);
+export const isAccidental = (obj: unknown): obj is Accidental => isCategory(obj, Category.Accidental);
+export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, Category.GraceNote);
+export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, Category.GraceNoteGroup);
+export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, Category.TabNote);
+export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Category.Dot);
+export const isNote = (obj: unknown): obj is Note => isCategory(obj, Category.Note);
+
 // 'const' enums are erased by the TypeScript compiler. The string values are inlined at all the use sites.
 // See: https://www.typescriptlang.org/docs/handbook/enums.html#const-enums
 export const enum Category {
   Accidental = 'Accidental',
+  Annotation = 'Annotation',
+  Articulation = 'Articulation',
   Barline = 'Barline',
+  BarNote = 'BarNote',
+  Beam = 'Beam',
+  Bend = 'Bend',
+  ChordSymbol = 'ChordSymbol',
+  Clef = 'Clef',
+  ClefNote = 'ClefNote',
+  Crescendo = 'Crescendo',
+  Curve = 'Curve',
   Dot = 'Dot',
+  Element = 'Element',
+  Fraction = 'Fraction',
+  FretHandFinger = 'FretHandFinger',
+  GhostNote = 'GhostNote',
+  Glyph = 'Glyph',
+  GlyphNote = 'GlyphNote',
   GraceNote = 'GraceNote',
   GraceNoteGroup = 'GraceNoteGroup',
+  GraceTabNote = 'GraceTabNote',
+  KeySignature = 'KeySignature',
+  KeySigNote = 'KeySigNote',
+  Modifier = 'Modifier',
+  MultiMeasureRest = 'MultiMeasureRest',
   Note = 'Note',
+  NoteHead = 'NoteHead',
+  NoteSubGroup = 'NoteSubGroup',
+  Ornament = 'Ornament',
+  Parenthesis = 'Parenthesis',
+  PedalMarking = 'PedalMarking',
+  RepeatNote = 'RepeatNote',
+  Repetition = 'Repetition',
+  Stave = 'Stave',
+  StaveConnector = 'StaveConnector',
+  StaveHairpin = 'StaveHairpin',
+  StaveLine = 'StaveLine',
+  StaveModifier = 'StaveModifier',
   StaveNote = 'StaveNote',
+  StaveSection = 'StaveSection',
+  StaveTempo = 'StaveTempo',
+  StaveText = 'StaveText',
+  StaveTie = 'StaveTie',
+  Stem = 'Stem',
   StemmableNote = 'StemmableNote',
+  StringNumber = 'StringNumber',
+  Stroke = 'Stroke',
+  System = 'System',
   TabNote = 'TabNote',
+  TabSlide = 'TabSlide',
+  TabStave = 'TabStave',
+  TabTie = 'TabTie',
+  TextBracket = 'TextBracket',
+  TextDynamics = 'TextDynamics',
+  TextNote = 'TextNote',
+  Tickable = 'Tickable',
+  TimeSignature = 'TimeSignature',
+  TimeSigNote = 'TimeSigNote',
+  Tremolo = 'Tremolo',
+  Tuplet = 'Tuplet',
+  Vibrato = 'Vibrato',
+  VibratoBracket = 'VibratoBracket',
+  Voice = 'Voice',
+  Volta = 'Volta',
 }

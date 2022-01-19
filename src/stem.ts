@@ -7,6 +7,7 @@
 import { BoundingBox } from './boundingbox';
 import { Element } from './element';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -35,7 +36,7 @@ export class Stem extends Element {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'Stem';
+    return Category.Stem;
   }
 
   // Stem directions

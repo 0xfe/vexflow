@@ -3,10 +3,8 @@
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { Tables } from './tables';
-import { Category, isCategory } from './typeguard';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
-
-export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, Category.GraceNote);
 
 export interface GraceNoteStruct extends StaveNoteStruct {
   slash?: boolean;

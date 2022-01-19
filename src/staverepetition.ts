@@ -6,10 +6,11 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 
 export class Repetition extends StaveModifier {
   static get CATEGORY(): string {
-    return 'Repetition';
+    return Category.Repetition;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

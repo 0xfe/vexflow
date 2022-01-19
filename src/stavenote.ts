@@ -19,10 +19,8 @@ import { Stave } from './stave';
 import { Stem, StemOptions } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { Category, isCategory } from './typeguard';
+import { Category } from './typeguard';
 import { defined, log, midLine, RuntimeError, warn } from './util';
-
-export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, Category.StaveNote);
 
 function showDeprecationWarningForNoteHeads(): void {
   // eslint-disable-next-line

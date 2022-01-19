@@ -9,6 +9,7 @@ import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave, StaveOptions } from './stave';
 import { StaveConnector } from './staveconnector';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
@@ -59,7 +60,7 @@ export interface SystemOptions {
  */
 export class System extends Element {
   static get CATEGORY(): string {
-    return 'System';
+    return Category.System;
   }
 
   protected options!: Required<SystemOptions>;

@@ -122,7 +122,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
       duration: 'h',
     })
       .addModifier(0, new Annotation('T').setVerticalJustification(AnnotationVerticalJustify.TOP))
-      .addModifier(0, new Bend('Full'))
+      .addModifier(0, new Bend('Full')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);

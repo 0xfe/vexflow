@@ -4,12 +4,13 @@
 // Author: Joshua Koo / @zz85
 // Author: @incompleteopus
 
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 /** Fraction represents a rational number. */
 export class Fraction {
   static get CATEGORY(): string {
-    return 'Fraction';
+    return Category.Fraction;
   }
 
   // Cached objects for comparisons.

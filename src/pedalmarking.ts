@@ -7,6 +7,7 @@ import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -37,7 +38,7 @@ export class PedalMarking extends Element {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'PedalMarking';
+    return Category.PedalMarking;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

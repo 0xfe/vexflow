@@ -6,6 +6,7 @@
 import { Element } from './element';
 import { FontInfo } from './font';
 import { Note } from './note';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 // For backwards compatibility with 3.0.9, first_note and/or last_note can be undefined or null.
@@ -20,7 +21,7 @@ export interface TieNotes {
 
 export class StaveTie extends Element {
   static get CATEGORY(): string {
-    return 'StaveTie';
+    return Category.StaveTie;
   }
 
   /** Default text font. */

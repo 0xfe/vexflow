@@ -8,10 +8,8 @@ import { Glyph, GlyphProps } from './glyph';
 import { Note, NoteStruct } from './note';
 import { Stem, StemOptions } from './stem';
 import { Tables } from './tables';
-import { Category, isCategory } from './typeguard';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
-
-export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, Category.StemmableNote);
 
 export abstract class StemmableNote extends Note {
   static get CATEGORY(): string {

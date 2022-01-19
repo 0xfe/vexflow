@@ -5,7 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Accidental, isAccidental } from '../src/accidental';
+import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
 import { Dot } from '../src/dot';
 import { Factory } from '../src/factory';
@@ -20,6 +20,7 @@ import { StaveNote, StaveNoteStruct } from '../src/stavenote';
 import { Stem } from '../src/stem';
 import { TickContext } from '../src/tickcontext';
 import { TimeSigNote } from '../src/timesignote';
+import { isAccidental } from '../src/typeguard';
 import { Voice } from '../src/voice';
 
 const AccidentalTests = {

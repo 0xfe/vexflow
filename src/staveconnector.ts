@@ -7,6 +7,7 @@ import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
@@ -32,7 +33,7 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
 /** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
   static get CATEGORY(): string {
-    return 'StaveConnector';
+    return Category.StaveConnector;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

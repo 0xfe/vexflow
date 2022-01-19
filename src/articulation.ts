@@ -4,16 +4,14 @@
 
 import { Builder } from './easyscore';
 import { Glyph } from './glyph';
-import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Stave } from './stave';
-import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
+import { Category, isGraceNote, isStaveNote, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
@@ -171,7 +169,7 @@ export class Articulation extends Modifier {
 
   /** Articulations category string. */
   static get CATEGORY(): string {
-    return 'Articulation';
+    return Category.Articulation;
   }
 
   protected static readonly INITIAL_OFFSET: number = -0.5;

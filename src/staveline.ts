@@ -13,6 +13,7 @@ import { FontInfo } from './font';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface StaveLineNotes {
@@ -49,7 +50,7 @@ function drawArrowHead(
 
 export class StaveLine extends Element {
   static get CATEGORY(): string {
-    return 'StaveLine';
+    return Category.StaveLine;
   }
 
   /** Default text font. */

@@ -9,6 +9,7 @@ import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
@@ -159,7 +160,7 @@ export class Glyph extends Element {
   // STATIC MEMBERS
 
   static get CATEGORY(): string {
-    return 'Glyph';
+    return Category.Glyph;
   }
 
   protected static cache = new GlyphCache();
