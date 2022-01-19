@@ -11,7 +11,7 @@ import { Stave } from './stave';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { Category, isGraceNote, isStaveNote, isTabNote } from './typeguard';
+import { Category, isGraceNote, isStaveNote, isStemmableNote, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
@@ -218,8 +218,9 @@ export class Articulation extends Modifier {
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
       // Decide if we need to consider beam direction in placement.
-      if (note instanceof StemmableNote) {
-        const stem = (note as StemmableNote).getStem();
+
+      if (isStemmableNote(note)) {
+        const stem = note.getStem();
         if (stem) {
           stemHeight = Math.abs(stem.getHeight()) / Tables.STAVE_LINE_DISTANCE;
         }

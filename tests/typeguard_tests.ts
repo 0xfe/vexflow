@@ -37,6 +37,12 @@ function real(): void {
   ok(isNote(s), 'StaveNote extends StemmableNote which extends Note, so s is a Note');
   ok(isStemmableNote(t), 'TabNote extends StemmableNote');
   ok(isNote(t), 'TabNote extends StemmableNote which extends Note, so t is a Note');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 400;
+  const ctx = new CanvasContext(canvas.getContext('2d') as CanvasRenderingContext2D);
+  ok(isRenderContext(ctx), 'ctx is a RenderContext');
 }
 
 /**

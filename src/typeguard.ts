@@ -2,19 +2,19 @@
 // Author: Ron B. Yeh
 // MIT License
 
-import { Accidental } from './accidental.js';
-import { Dot } from './dot.js';
-import { GraceNote } from './gracenote.js';
-import { GraceNoteGroup } from './gracenotegroup.js';
-import { Note } from './note.js';
-import { Barline } from './stavebarline.js';
-import { StaveNote } from './stavenote.js';
-import { StemmableNote } from './stemmablenote.js';
-import { TabNote } from './tabnote.js';
+import { Accidental } from './accidental';
+import { Annotation } from './annotation';
+import { Dot } from './dot';
+import { GraceNote } from './gracenote';
+import { GraceNoteGroup } from './gracenotegroup';
+import { Note } from './note';
+import { RenderContext } from './rendercontext.js';
+import { Barline } from './stavebarline';
+import { StaveNote } from './stavenote';
+import { StemmableNote } from './stemmablenote';
+import { TabNote } from './tabnote';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/ban-types */
 
 /**
  * Use instead of `instanceof` as a more flexible type guard.
@@ -52,15 +52,17 @@ export function isCategory<T>(obj: any, category: string, checkAncestors: boolea
   }
 }
 
-export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, Category.StemmableNote);
-export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, Category.StaveNote);
-export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Category.Barline);
 export const isAccidental = (obj: unknown): obj is Accidental => isCategory(obj, Category.Accidental);
+export const isAnnotation = (obj: unknown): obj is Annotation => isCategory(obj, Category.Annotation);
+export const isBarline = (obj: unknown): obj is Barline => isCategory(obj, Category.Barline);
+export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Category.Dot);
 export const isGraceNote = (obj: unknown): obj is GraceNote => isCategory(obj, Category.GraceNote);
 export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, Category.GraceNoteGroup);
-export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, Category.TabNote);
-export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Category.Dot);
 export const isNote = (obj: unknown): obj is Note => isCategory(obj, Category.Note);
+export const isRenderContext = (obj: unknown): obj is RenderContext => isCategory(obj, Category.RenderContext);
+export const isStaveNote = (obj: unknown): obj is StaveNote => isCategory(obj, Category.StaveNote);
+export const isStemmableNote = (obj: unknown): obj is StemmableNote => isCategory(obj, Category.StemmableNote);
+export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, Category.TabNote);
 
 // 'const' enums are erased by the TypeScript compiler. The string values are inlined at all the use sites.
 // See: https://www.typescriptlang.org/docs/handbook/enums.html#const-enums
@@ -97,6 +99,7 @@ export const enum Category {
   Ornament = 'Ornament',
   Parenthesis = 'Parenthesis',
   PedalMarking = 'PedalMarking',
+  RenderContext = 'RenderContext',
   RepeatNote = 'RepeatNote',
   Repetition = 'Repetition',
   Stave = 'Stave',

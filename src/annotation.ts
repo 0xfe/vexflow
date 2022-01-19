@@ -8,9 +8,8 @@ import { Stave } from './stave';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TabNote } from './tabnote';
 import { TextFormatter } from './textformatter';
-import { Category } from './typeguard';
+import { Category, isStemmableNote, isTabNote } from './typeguard';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -86,7 +85,8 @@ export class Annotation extends Modifier {
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
       let lines = 5;
-      if (note instanceof TabNote) {
+
+      if (isTabNote(note)) {
         if (note.render_options.draw_stem) {
           const stem = (note as StemmableNote).getStem();
           if (stem) {
@@ -95,8 +95,8 @@ export class Annotation extends Modifier {
         } else {
           stemHeight = 0;
         }
-      } else if (note instanceof StemmableNote) {
-        const stem = (note as StemmableNote).getStem();
+      } else if (isStemmableNote(note)) {
+        const stem = note.getStem();
         if (stem && note.getNoteType() === 'n') {
           stemHeight = Math.abs(stem.getHeight()) / Tables.STAVE_LINE_DISTANCE;
         }
@@ -110,8 +110,8 @@ export class Annotation extends Modifier {
 
       if (annotation.verticalJustification === this.VerticalJustify.TOP) {
         let noteLine = note.getLineNumber(true);
-        if (note instanceof TabNote) {
-          noteLine = lines - ((note as TabNote).leastString() - 0.5);
+        if (isTabNote(note)) {
+          noteLine = lines - (note.leastString() - 0.5);
         }
         if (stemDirection === Stem.UP) {
           noteLine += stemHeight;
@@ -127,8 +127,8 @@ export class Annotation extends Modifier {
         }
       } else if (annotation.verticalJustification === this.VerticalJustify.BOTTOM) {
         let noteLine = lines - note.getLineNumber();
-        if (note instanceof TabNote) {
-          noteLine = (note as TabNote).greatestString() - 1;
+        if (isTabNote(note)) {
+          noteLine = note.greatestString() - 1;
         }
         if (stemDirection === Stem.DOWN) {
           noteLine += stemHeight;

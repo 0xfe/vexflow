@@ -6,8 +6,7 @@ import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Tables } from './tables';
-import { TabNote } from './tabnote';
-import { Category } from './typeguard';
+import { Category, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface BendPhrase {
@@ -44,8 +43,9 @@ export class Bend extends Modifier {
     for (let i = 0; i < bends.length; ++i) {
       const bend = bends[i];
       const note = bend.checkAttachedNote();
-      if (note instanceof TabNote) {
-        const stringPos = (note as TabNote).leastString() - 1;
+
+      if (isTabNote(note)) {
+        const stringPos = note.leastString() - 1;
         if (state.top_text_line < stringPos) {
           state.top_text_line = stringPos;
         }
