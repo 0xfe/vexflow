@@ -2,10 +2,9 @@ reference
 releases
 build
 demos/node/output
-
-.DS_Store
 node_modules
-
+.eslintcache
+.DS_Store
 *.lock
 ruby_sess.*
 .*.swp
