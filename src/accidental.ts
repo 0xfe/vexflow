@@ -456,7 +456,7 @@ export class Accidental extends Modifier {
             const accidental = new Accidental(accidentalString);
 
             // Attach the accidental to the StaveNote
-            staveNote.addModifier(keyIndex, accidental);
+            staveNote.addModifier(accidental, keyIndex);
 
             // Add the pitch to list of pitches that modified accidentals
             modifiedPitches.push(keyString);

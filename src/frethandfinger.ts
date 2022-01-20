@@ -111,7 +111,7 @@ export class FretHandFinger extends Modifier {
         if (split[1]) params.position = split[1];
         return builder.getFactory().Fingering(params);
       })
-      .map((fingering: Modifier, index: number) => note.addModifier(index, fingering));
+      .map((fingering: Modifier, index: number) => note.addModifier(fingering, index));
   }
 
   protected finger: string;

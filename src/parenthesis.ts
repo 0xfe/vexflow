@@ -20,8 +20,8 @@ export class Parenthesis extends Modifier {
   static buildAndAttach(notes: Note[]): void {
     for (const note of notes) {
       for (let i = 0; i < note.keys.length; i++) {
-        note.addModifier(i, new Parenthesis(ModifierPosition.LEFT));
-        note.addModifier(i, new Parenthesis(ModifierPosition.RIGHT));
+        note.addModifier(new Parenthesis(ModifierPosition.LEFT), i);
+        note.addModifier(new Parenthesis(ModifierPosition.RIGHT), i);
       }
     }
   }

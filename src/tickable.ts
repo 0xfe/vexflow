@@ -278,7 +278,7 @@ export abstract class Tickable extends Element {
    * @param mod the modifier
    */
   // eslint-disable-next-line
-  addModifier(index: number, mod: Modifier): this {
+  addModifier(mod: Modifier, index: number = 0): this {
     this.modifiers.push(mod);
     this._preFormatted = false;
     return this;

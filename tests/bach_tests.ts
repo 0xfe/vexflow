@@ -64,7 +64,7 @@ function minuet1(options: TestOptions): void {
   system.addConnector('singleRight');
   system.addConnector('singleLeft');
 
-  id('m1a').addModifier(0, f.Fingering({ number: '5' }));
+  id('m1a').addModifier(f.Fingering({ number: '5' }), 0);
 
   /*  Measure 2 */
   system = appendSystem(150);
@@ -72,9 +72,9 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('B3/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m2a').addModifier(0, f.Articulation({ type: 'a.', position: 'above' }));
-  id('m2b').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
-  id('m2c').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
+  id('m2a').addModifier(f.Articulation({ type: 'a.', position: 'above' }), 0);
+  id('m2b').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
+  id('m2c').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
 
   f.Curve({
     from: id('m1a'),
@@ -92,7 +92,7 @@ function minuet1(options: TestOptions): void {
   system.addStave({
     voices: [voice([notes('E5/q[id="m3a"]'), beam(notes('C5/8, D5, E5, F5', { stem: 'down' }))].reduce(concat))],
   });
-  id('m3a').addModifier(0, f.Fingering({ number: '3', position: 'above' }));
+  id('m3a').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
   system.addStave({ voices: [voice(notes('C4/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
@@ -104,9 +104,9 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('B3/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m4a').addModifier(0, f.Articulation({ type: 'a.', position: 'above' }));
-  id('m4b').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
-  id('m4c').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
+  id('m4a').addModifier(f.Articulation({ type: 'a.', position: 'above' }), 0);
+  id('m4b').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
+  id('m4c').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
 
   f.Curve({
     from: id('m3a'),
@@ -124,7 +124,7 @@ function minuet1(options: TestOptions): void {
   system.addStave({
     voices: [voice([notes('C5/q[id="m5a"]'), beam(notes('D5/8, C5, B4, A4', { stem: 'down' }))].reduce(concat))],
   });
-  id('m5a').addModifier(0, f.Fingering({ number: '4', position: 'above' }));
+  id('m5a').addModifier(f.Fingering({ number: '4', position: 'above' }), 0);
 
   system.addStave({ voices: [voice(notes('A3/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
@@ -174,9 +174,9 @@ function minuet1(options: TestOptions): void {
   system.addConnector('singleRight');
   system.addConnector('singleLeft');
 
-  id('m7a').addModifier(0, f.Fingering({ number: '2', position: 'below' }));
-  id('m7b').addModifier(0, f.Fingering({ number: '1' }));
-  id('m7c').addModifier(0, f.Fingering({ number: '3', position: 'above' }));
+  id('m7a').addModifier(f.Fingering({ number: '2', position: 'below' }), 0);
+  id('m7b').addModifier(f.Fingering({ number: '1' }), 0);
+  id('m7c').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
   /*  Measure 8 */
   system = appendSystem(180);
@@ -192,8 +192,8 @@ function minuet1(options: TestOptions): void {
   });
   system.addConnector('singleRight');
 
-  id('m8b').addModifier(0, f.Fingering({ number: '1', position: 'above' }));
-  id('m8c').addModifier(0, f.GraceNoteGroup({ notes: [grace] }));
+  id('m8b').addModifier(f.Fingering({ number: '1', position: 'above' }), 0);
+  id('m8c').addModifier(f.GraceNoteGroup({ notes: [grace] }), 0);
 
   f.Curve({
     from: id('m7a'),
@@ -224,7 +224,7 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('B3/h, A3/q', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m9a').addModifier(0, f.Fingering({ number: '5' }));
+  id('m9a').addModifier(f.Fingering({ number: '5' }), 0);
 
   /*  Measure 10 */
   system = appendSystem(170);
@@ -232,10 +232,10 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('G3/q[id="m10d"], B3, G3', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m10a').addModifier(0, f.Articulation({ type: 'a.', position: 'above' }));
-  id('m10b').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
-  id('m10c').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
-  id('m10d').addModifier(0, f.Fingering({ number: '4' }));
+  id('m10a').addModifier(f.Articulation({ type: 'a.', position: 'above' }), 0);
+  id('m10b').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
+  id('m10c').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
+  id('m10d').addModifier(f.Fingering({ number: '4' }), 0);
 
   f.Curve({
     from: id('m9a'),
@@ -253,7 +253,7 @@ function minuet1(options: TestOptions): void {
   system.addStave({
     voices: [voice([notes('E5/q[id="m11a"]'), beam(notes('C5/8, D5, E5, F5', { stem: 'down' }))].reduce(concat))],
   });
-  id('m11a').addModifier(0, f.Fingering({ number: '3', position: 'above' }));
+  id('m11a').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
   system.addStave({ voices: [voice(notes('C4/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
@@ -271,12 +271,12 @@ function minuet1(options: TestOptions): void {
   });
   system.addConnector('singleRight');
 
-  id('m12a').addModifier(0, f.Articulation({ type: 'a.', position: 'above' }));
-  id('m12b').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
-  id('m12c').addModifier(0, f.Articulation({ type: 'a.', position: 'below' }));
+  id('m12a').addModifier(f.Articulation({ type: 'a.', position: 'above' }), 0);
+  id('m12b').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
+  id('m12c').addModifier(f.Articulation({ type: 'a.', position: 'below' }), 0);
 
-  id('m12d').addModifier(0, f.Fingering({ number: '2', position: 'above' }));
-  id('m12e').addModifier(0, f.Fingering({ number: '4', position: 'above' }));
+  id('m12d').addModifier(f.Fingering({ number: '2', position: 'above' }), 0);
+  id('m12e').addModifier(f.Fingering({ number: '4', position: 'above' }), 0);
 
   f.Curve({
     from: id('m11a'),
@@ -314,9 +314,9 @@ function minuet1(options: TestOptions): void {
   system.addConnector('singleRight');
   system.addConnector('singleLeft');
 
-  id('m13a').addModifier(0, f.Fingering({ number: '4', position: 'above' }));
-  id('m13b').addModifier(0, f.Fingering({ number: '1' }));
-  id('m13c').addModifier(0, f.Fingering({ number: '3', position: 'above' }));
+  id('m13a').addModifier(f.Fingering({ number: '4', position: 'above' }), 0);
+  id('m13b').addModifier(f.Fingering({ number: '1' }), 0);
+  id('m13c').addModifier(f.Fingering({ number: '3', position: 'above' }), 0);
 
   /*  Measure 14 */
   system = appendSystem(180);
@@ -331,8 +331,8 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('g3/h[id="m14a"], b3/q[id="m14b"]', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m14a').addModifier(0, f.Fingering({ number: '2' }));
-  id('m14b').addModifier(0, f.Fingering({ number: '1' }));
+  id('m14a').addModifier(f.Fingering({ number: '2' }), 0);
+  id('m14b').addModifier(f.Fingering({ number: '1' }), 0);
 
   /*  Measure 15 */
   system = appendSystem(180);
@@ -347,8 +347,8 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('c4/q[id="m15b"], d4, d3', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m15a').addModifier(0, f.Fingering({ number: '2' }));
-  id('m15b').addModifier(0, f.Fingering({ number: '2' }));
+  id('m15a').addModifier(f.Fingering({ number: '2' }), 0);
+  id('m15b').addModifier(f.Fingering({ number: '2' }), 0);
 
   /*  Measure 16 */
   system = appendSystem(130);
@@ -363,8 +363,8 @@ function minuet1(options: TestOptions): void {
     .setEndBarType(BarlineType.REPEAT_END);
   system.addConnector('boldDoubleRight');
 
-  id('m16a').addModifier(0, f.Fingering({ number: '1' }));
-  id('m16b').addModifier(0, f.Fingering({ number: '1' }));
+  id('m16a').addModifier(f.Fingering({ number: '1' }), 0);
+  id('m16b').addModifier(f.Fingering({ number: '1' }), 0);
 
   f.Curve({
     from: id('m13a'),
@@ -397,7 +397,7 @@ function minuet1(options: TestOptions): void {
   system.addConnector('boldDoubleLeft');
   system.addConnector('singleRight');
 
-  id('m17a').addModifier(0, f.Fingering({ number: '5', position: 'above' }));
+  id('m17a').addModifier(f.Fingering({ number: '5', position: 'above' }), 0);
 
   /* Measure 18 */
   system = appendSystem(180);
@@ -412,7 +412,7 @@ function minuet1(options: TestOptions): void {
   system.addStave({ voices: [voice(notes('f3/h.', { clef: 'bass' }))] });
   system.addConnector('singleRight');
 
-  id('m18a').addModifier(0, f.Fingering({ number: '4', position: 'above' }));
+  id('m18a').addModifier(f.Fingering({ number: '4', position: 'above' }), 0);
 
   f.Curve({
     from: id('m17a'),

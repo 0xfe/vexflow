@@ -38,11 +38,11 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 4, fret: 9 },
       ],
       duration: 'h',
-    }).addModifier(0, new Vibrato()),
+    }).addModifier(new Vibrato(), 0),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
-    }).addModifier(0, new Vibrato()),
+    }).addModifier(new Vibrato(), 0),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -69,11 +69,11 @@ function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
         { str: 4, fret: 9 },
       ],
       duration: 'h',
-    }).addModifier(0, new Vibrato().setHarsh(true)),
+    }).addModifier(new Vibrato().setHarsh(true), 0),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
-    }).addModifier(0, new Vibrato().setHarsh(true)),
+    }).addModifier(new Vibrato().setHarsh(true), 0),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -96,19 +96,19 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
       ],
       duration: 'q',
     })
-      .addModifier(0, new Bend('1/2', true))
-      .addModifier(1, new Bend('1/2', true))
-      .addModifier(0, new Vibrato()),
+      .addModifier(new Bend('1/2', true), 0)
+      .addModifier(new Bend('1/2', true), 1)
+      .addModifier(new Vibrato(), 0),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'q',
     })
-      .addModifier(0, new Bend('Full', false))
-      .addModifier(0, new Vibrato().setVibratoWidth(60)),
+      .addModifier(new Bend('Full', false), 0)
+      .addModifier(new Vibrato().setVibratoWidth(60), 0),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
-    }).addModifier(0, new Vibrato().setVibratoWidth(120).setHarsh(true)),
+    }).addModifier(new Vibrato().setVibratoWidth(120).setHarsh(true), 0),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);

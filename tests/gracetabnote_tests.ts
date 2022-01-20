@@ -66,10 +66,10 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   gracenotes2[0].setGhost(true);
   const gracenotes3 = gracenote_group3.map(graceTabNote);
 
-  note0.addModifier(0, new GraceNoteGroup(gracenotes0));
-  note1.addModifier(0, new GraceNoteGroup(gracenotes1));
-  note2.addModifier(0, new GraceNoteGroup(gracenotes2));
-  note3.addModifier(0, new GraceNoteGroup(gracenotes3));
+  note0.addModifier(new GraceNoteGroup(gracenotes0), 0);
+  note1.addModifier(new GraceNoteGroup(gracenotes1), 0);
+  note2.addModifier(new GraceNoteGroup(gracenotes2), 0);
+  note3.addModifier(new GraceNoteGroup(gracenotes3), 0);
 
   const voice = new Voice(Flow.TIME4_4);
   voice.addTickables([note0, note1, note2, note3]);
@@ -101,8 +101,8 @@ function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
   const gracenotes0 = gracenote_group0.map(graceTabNote);
   const gracenotes1 = gracenote_group1.map(graceTabNote);
 
-  note0.addModifier(0, new GraceNoteGroup(gracenotes0, true));
-  note1.addModifier(0, new GraceNoteGroup(gracenotes1, true));
+  note0.addModifier(new GraceNoteGroup(gracenotes0, true), 0);
+  note1.addModifier(new GraceNoteGroup(gracenotes1, true), 0);
 
   const voice = new Voice(Flow.TIME4_4);
   voice.addTickables([note0, note1]);

@@ -161,11 +161,11 @@ function formatAccidentalSpaces(options: TestOptions): void {
     new StaveNote({
       keys: ['e##/5'],
       duration: '8d',
-    }).addModifier(0, new Accidental('##')),
+    }).addModifier(new Accidental('##'), 0),
     new StaveNote({
       keys: ['b/4'],
       duration: '16',
-    }).addModifier(0, new Accidental('b')),
+    }).addModifier(new Accidental('b'), 0),
     new StaveNote({
       keys: ['f/3'],
       duration: '8',
@@ -178,8 +178,8 @@ function formatAccidentalSpaces(options: TestOptions): void {
       keys: ['e/4', 'g/4'],
       duration: '16',
     })
-      .addModifier(0, new Accidental('bb'))
-      .addModifier(1, new Accidental('bb')),
+      .addModifier(new Accidental('bb'), 0)
+      .addModifier(new Accidental('bb'), 1),
     new StaveNote({
       keys: ['d/4'],
       duration: '16',
@@ -188,8 +188,8 @@ function formatAccidentalSpaces(options: TestOptions): void {
       keys: ['e/4', 'g/4'],
       duration: '16',
     })
-      .addModifier(0, new Accidental('#'))
-      .addModifier(1, new Accidental('#')),
+      .addModifier(new Accidental('#'), 0)
+      .addModifier(new Accidental('#'), 1),
     new StaveNote({
       keys: ['g/4'],
       duration: '32',
@@ -236,37 +236,37 @@ function basic(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addModifier(0, accid('b'))
-      .addModifier(1, accid('#')),
+      .addModifier(accid('b'), 0)
+      .addModifier(accid('#'), 1),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addModifier(0, accid('##'))
-      .addModifier(1, accid('n'))
-      .addModifier(2, accid('bb'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('#'))
-      .addModifier(5, accid('n'))
-      .addModifier(6, accid('bb')),
+      .addModifier(accid('##'), 0)
+      .addModifier(accid('n'), 1)
+      .addModifier(accid('bb'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('#'), 4)
+      .addModifier(accid('n'), 5)
+      .addModifier(accid('bb'), 6),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addModifier(0, accid('n'))
-      .addModifier(1, accid('#'))
-      .addModifier(2, accid('#'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb'))
-      .addModifier(5, accid('##'))
-      .addModifier(6, accid('#')),
+      .addModifier(accid('n'), 0)
+      .addModifier(accid('#'), 1)
+      .addModifier(accid('#'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb'), 4)
+      .addModifier(accid('##'), 5)
+      .addModifier(accid('#'), 6),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('##').setAsCautionary())
-      .addModifier(2, accid('#').setAsCautionary())
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb').setAsCautionary())
-      .addModifier(5, accid('b').setAsCautionary()),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('##').setAsCautionary(), 1)
+      .addModifier(accid('#').setAsCautionary(), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb').setAsCautionary(), 4)
+      .addModifier(accid('b').setAsCautionary(), 5),
   ];
 
   Formatter.SimpleFormat(notes, 10, { paddingBetween: 45 });
@@ -307,7 +307,7 @@ function cautionary(options: TestOptions): void {
     const notes = rowMap.map((accidType: string) =>
       f
         .StaveNote({ keys: ['a/4'], duration: '4', stem_direction: Stem.UP })
-        .addModifier(0, f.Accidental({ type: accidType }))
+        .addModifier(f.Accidental({ type: accidType }), 0)
     );
     const voice = score.voice(notes, { time: rowMap.length + '/4' });
     voice.getTickables().forEach((tickable) => {
@@ -330,40 +330,40 @@ function specialCases(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['f/4', 'd/5'], duration: '1' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('b')),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('b'), 1),
 
     f
       .StaveNote({ keys: ['c/4', 'g/4'], duration: '2' })
-      .addModifier(0, accid('##'))
-      .addModifier(1, accid('##')),
+      .addModifier(accid('##'), 0)
+      .addModifier(accid('##'), 1),
 
     f
       .StaveNote({ keys: ['b/3', 'd/4', 'f/4'], duration: '16' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('#'))
-      .addModifier(2, accid('##')),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('#'), 1)
+      .addModifier(accid('##'), 2),
 
     f
       .StaveNote({ keys: ['g/4', 'a/4', 'c/5', 'e/5'], duration: '16' })
-      .addModifier(0, accid('b'))
-      .addModifier(1, accid('b'))
-      .addModifier(3, accid('n')),
+      .addModifier(accid('b'), 0)
+      .addModifier(accid('b'), 1)
+      .addModifier(accid('n'), 3),
 
     f
       .StaveNote({ keys: ['e/4', 'g/4', 'b/4', 'c/5'], duration: '4' })
-      .addModifier(0, accid('b').setAsCautionary())
-      .addModifier(1, accid('b').setAsCautionary())
-      .addModifier(2, accid('bb'))
-      .addModifier(3, accid('b')),
+      .addModifier(accid('b').setAsCautionary(), 0)
+      .addModifier(accid('b').setAsCautionary(), 1)
+      .addModifier(accid('bb'), 2)
+      .addModifier(accid('b'), 3),
 
     f
       .StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5', 'g/5'], duration: '8' })
-      .addModifier(0, accid('bb'))
-      .addModifier(1, accid('b').setAsCautionary())
-      .addModifier(2, accid('n').setAsCautionary())
-      .addModifier(3, accid('#'))
-      .addModifier(4, accid('n').setAsCautionary()),
+      .addModifier(accid('bb'), 0)
+      .addModifier(accid('b').setAsCautionary(), 1)
+      .addModifier(accid('n').setAsCautionary(), 2)
+      .addModifier(accid('#'), 3)
+      .addModifier(accid('n').setAsCautionary(), 4),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 20 });
@@ -391,28 +391,28 @@ function basicStemDown(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w', stem_direction: -1 })
-      .addModifier(0, accid('b'))
-      .addModifier(1, accid('#')),
+      .addModifier(accid('b'), 0)
+      .addModifier(accid('#'), 1),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2', stem_direction: -1 })
-      .addModifier(0, accid('##'))
-      .addModifier(1, accid('n'))
-      .addModifier(2, accid('bb'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('#'))
-      .addModifier(5, accid('n'))
-      .addModifier(6, accid('bb')),
+      .addModifier(accid('##'), 0)
+      .addModifier(accid('n'), 1)
+      .addModifier(accid('bb'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('#'), 4)
+      .addModifier(accid('n'), 5)
+      .addModifier(accid('bb'), 6),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16', stem_direction: -1 })
-      .addModifier(0, accid('n'))
-      .addModifier(1, accid('#'))
-      .addModifier(2, accid('#'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb'))
-      .addModifier(5, accid('##'))
-      .addModifier(6, accid('#')),
+      .addModifier(accid('n'), 0)
+      .addModifier(accid('#'), 1)
+      .addModifier(accid('#'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb'), 4)
+      .addModifier(accid('##'), 5)
+      .addModifier(accid('#'), 6),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 30 });
@@ -457,44 +457,44 @@ function multiVoice(options: TestOptions): void {
 
   let note1 = f
     .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '2', stem_direction: -1 })
-    .addModifier(0, accid('b'))
-    .addModifier(1, accid('n'))
-    .addModifier(2, accid('#'))
+    .addModifier(accid('b'), 0)
+    .addModifier(accid('n'), 1)
+    .addModifier(accid('#'), 2)
     .setStave(stave);
 
   let note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '2', stem_direction: 1 })
-    .addModifier(0, accid('b'))
-    .addModifier(1, accid('bb'))
-    .addModifier(2, accid('##'))
+    .addModifier(accid('b'), 0)
+    .addModifier(accid('bb'), 1)
+    .addModifier(accid('##'), 2)
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 60);
 
   note1 = f
     .StaveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: '2', stem_direction: -1 })
-    .addModifier(0, accid('b'))
-    .addModifier(1, accid('n'))
-    .addModifier(2, accid('#'))
+    .addModifier(accid('b'), 0)
+    .addModifier(accid('n'), 1)
+    .addModifier(accid('#'), 2)
     .setStave(stave);
 
   note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-    .addModifier(0, accid('b'))
+    .addModifier(accid('b'), 0)
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 150);
 
   note1 = f
     .StaveNote({ keys: ['d/4', 'c/5', 'd/5'], duration: '2', stem_direction: -1 })
-    .addModifier(0, accid('b'))
-    .addModifier(1, accid('n'))
-    .addModifier(2, accid('#'))
+    .addModifier(accid('b'), 0)
+    .addModifier(accid('n'), 1)
+    .addModifier(accid('#'), 2)
     .setStave(stave);
 
   note2 = f
     .StaveNote({ keys: ['d/5', 'a/5', 'b/5'], duration: '4', stem_direction: 1 })
-    .addModifier(0, accid('b'))
+    .addModifier(accid('b'), 0)
     .setStave(stave);
 
   showNotes(note1, note2, stave, ctx, 250);
@@ -512,46 +512,46 @@ function microtonal(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addModifier(0, accid('db'))
-      .addModifier(1, accid('d')),
+      .addModifier(accid('db'), 0)
+      .addModifier(accid('d'), 1),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addModifier(0, accid('bbs'))
-      .addModifier(1, accid('++'))
-      .addModifier(2, accid('+'))
-      .addModifier(3, accid('d'))
-      .addModifier(4, accid('db'))
-      .addModifier(5, accid('+'))
-      .addModifier(6, accid('##')),
+      .addModifier(accid('bbs'), 0)
+      .addModifier(accid('++'), 1)
+      .addModifier(accid('+'), 2)
+      .addModifier(accid('d'), 3)
+      .addModifier(accid('db'), 4)
+      .addModifier(accid('+'), 5)
+      .addModifier(accid('##'), 6),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addModifier(0, accid('++'))
-      .addModifier(1, accid('bbs'))
-      .addModifier(2, accid('+'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('db'))
-      .addModifier(5, accid('##'))
-      .addModifier(6, accid('#')),
+      .addModifier(accid('++'), 0)
+      .addModifier(accid('bbs'), 1)
+      .addModifier(accid('+'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('db'), 4)
+      .addModifier(accid('##'), 5)
+      .addModifier(accid('#'), 6),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('db').setAsCautionary())
-      .addModifier(2, accid('bbs').setAsCautionary())
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('++').setAsCautionary())
-      .addModifier(5, accid('d').setAsCautionary()),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('db').setAsCautionary(), 1)
+      .addModifier(accid('bbs').setAsCautionary(), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('++').setAsCautionary(), 4)
+      .addModifier(accid('d').setAsCautionary(), 5),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'd/5', 'g/5'], duration: '16' })
-      .addModifier(0, accid('++-'))
-      .addModifier(1, accid('+-'))
-      .addModifier(2, accid('bs'))
-      .addModifier(3, accid('bss'))
-      .addModifier(4, accid('afhf'))
-      .addModifier(5, accid('ashs')),
+      .addModifier(accid('++-'), 0)
+      .addModifier(accid('+-'), 1)
+      .addModifier(accid('bs'), 2)
+      .addModifier(accid('bss'), 3)
+      .addModifier(accid('afhf'), 4)
+      .addModifier(accid('ashs'), 5),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -579,43 +579,43 @@ function microtonal_iranian(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
-      .addModifier(0, accid('k'))
-      .addModifier(1, accid('o')),
+      .addModifier(accid('k'), 0)
+      .addModifier(accid('o'), 1),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addModifier(0, accid('b'))
-      .addModifier(1, accid('k'))
-      .addModifier(2, accid('n'))
-      .addModifier(3, accid('o'))
-      .addModifier(4, accid('#'))
-      .addModifier(5, accid('bb'))
-      .addModifier(6, accid('##')),
+      .addModifier(accid('b'), 0)
+      .addModifier(accid('k'), 1)
+      .addModifier(accid('n'), 2)
+      .addModifier(accid('o'), 3)
+      .addModifier(accid('#'), 4)
+      .addModifier(accid('bb'), 5)
+      .addModifier(accid('##'), 6),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addModifier(0, accid('o'))
-      .addModifier(1, accid('k'))
-      .addModifier(2, accid('n'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb'))
-      .addModifier(5, accid('##'))
-      .addModifier(6, accid('#')),
+      .addModifier(accid('o'), 0)
+      .addModifier(accid('k'), 1)
+      .addModifier(accid('n'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb'), 4)
+      .addModifier(accid('##'), 5)
+      .addModifier(accid('#'), 6),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('o').setAsCautionary())
-      .addModifier(2, accid('n').setAsCautionary())
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('k').setAsCautionary()),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('o').setAsCautionary(), 1)
+      .addModifier(accid('n').setAsCautionary(), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('k').setAsCautionary(), 4),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4'], duration: '16' })
-      .addModifier(0, accid('k'))
-      .addModifier(1, accid('k'))
-      .addModifier(2, accid('k'))
-      .addModifier(3, accid('k')),
+      .addModifier(accid('k'), 0)
+      .addModifier(accid('k'), 1)
+      .addModifier(accid('k'), 2)
+      .addModifier(accid('k'), 3),
   ];
 
   Formatter.SimpleFormat(notes, 0, { paddingBetween: 35 });
@@ -643,39 +643,39 @@ function sagittal(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-      .addModifier(1, accid('accSagittal11MediumDiesisUp'))
-      .addModifier(2, accid('accSagittal5CommaDown'))
-      .addModifier(3, accid('b'))
-      .addModifier(3, accid('accSagittal7CommaDown')),
+      .addModifier(accid('accSagittal11MediumDiesisUp'), 1)
+      .addModifier(accid('accSagittal5CommaDown'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('accSagittal7CommaDown'), 3),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-      .addModifier(2, accid('accSagittal35LargeDiesisDown')),
+      .addModifier(accid('accSagittal35LargeDiesisDown'), 2),
 
-    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(1, accid('accSagittal5CommaDown')),
+    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(accid('accSagittal5CommaDown'), 1),
 
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-      .addModifier(1, accid('b'))
-      .addModifier(1, accid('accSagittal7CommaDown'))
-      .addModifier(3, accid('accSagittal11LargeDiesisDown')),
+      .addModifier(accid('b'), 1)
+      .addModifier(accid('accSagittal7CommaDown'), 1)
+      .addModifier(accid('accSagittal11LargeDiesisDown'), 3),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'b/4', 'b/4'], duration: '4' })
-      .addModifier(1, accid('accSagittal11MediumDiesisUp'))
-      .addModifier(2, accid('accSagittal5CommaDown'))
-      .addModifier(3, accid('accSagittalFlat7CDown')),
+      .addModifier(accid('accSagittal11MediumDiesisUp'), 1)
+      .addModifier(accid('accSagittal5CommaDown'), 2)
+      .addModifier(accid('accSagittalFlat7CDown'), 3),
 
     f
       .StaveNote({ keys: ['d/4', 'f/4', 'a/4', 'b/4'], duration: '4' })
-      .addModifier(2, accid('accSagittal35LargeDiesisDown')),
+      .addModifier(accid('accSagittal35LargeDiesisDown'), 2),
 
-    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(1, accid('accSagittal5CommaDown')),
+    f.StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'c/5'], duration: '8' }).addModifier(accid('accSagittal5CommaDown'), 1),
 
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'g/4', 'b/4'], duration: '8' })
-      .addModifier(1, accid('accSagittalFlat7CDown'))
-      .addModifier(3, accid('accSagittal11LargeDiesisDown')),
+      .addModifier(accid('accSagittalFlat7CDown'), 1)
+      .addModifier(accid('accSagittal11LargeDiesisDown'), 3),
   ];
 
   f.StaveTie({
@@ -751,7 +751,7 @@ function automaticAccidentals0(options: TestOptions): void {
   ].map(f.StaveNote.bind(f));
 
   const gracenotes = [{ keys: ['d#/4'], duration: '16', slash: true }].map(f.GraceNote.bind(f));
-  notes[0].addModifier(0, f.GraceNoteGroup({ notes: gracenotes }).beamNotes());
+  notes[0].addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0);
 
   const voice = f
     .Voice()
@@ -1149,37 +1149,37 @@ function factoryAPI(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' })
-      .addModifier(0, accid('b'))
-      .addModifier(1, accid('#')),
+      .addModifier(accid('b'), 0)
+      .addModifier(accid('#'), 1),
 
     f
       .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: 'h' })
-      .addModifier(0, accid('##'))
-      .addModifier(1, accid('n'))
-      .addModifier(2, accid('bb'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('#'))
-      .addModifier(5, accid('n'))
-      .addModifier(6, accid('bb')),
+      .addModifier(accid('##'), 0)
+      .addModifier(accid('n'), 1)
+      .addModifier(accid('bb'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('#'), 4)
+      .addModifier(accid('n'), 5)
+      .addModifier(accid('bb'), 6),
 
     f
       .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
-      .addModifier(0, accid('n'))
-      .addModifier(1, accid('#'))
-      .addModifier(2, accid('#'))
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb'))
-      .addModifier(5, accid('##'))
-      .addModifier(6, accid('#')),
+      .addModifier(accid('n'), 0)
+      .addModifier(accid('#'), 1)
+      .addModifier(accid('#'), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb'), 4)
+      .addModifier(accid('##'), 5)
+      .addModifier(accid('#'), 6),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: 'w' })
-      .addModifier(0, accid('#'))
-      .addModifier(1, accid('##').setAsCautionary())
-      .addModifier(2, accid('#').setAsCautionary())
-      .addModifier(3, accid('b'))
-      .addModifier(4, accid('bb').setAsCautionary())
-      .addModifier(5, accid('b').setAsCautionary()),
+      .addModifier(accid('#'), 0)
+      .addModifier(accid('##').setAsCautionary(), 1)
+      .addModifier(accid('#').setAsCautionary(), 2)
+      .addModifier(accid('b'), 3)
+      .addModifier(accid('bb').setAsCautionary(), 4)
+      .addModifier(accid('b').setAsCautionary(), 5),
   ];
 
   Formatter.SimpleFormat(notes);

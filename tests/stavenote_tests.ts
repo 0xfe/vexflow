@@ -666,7 +666,7 @@ function drawKeyStyles(options: TestOptions, contextBuilder: ContextBuilder): vo
 
   const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
     .setStave(stave)
-    .addModifier(1, new Accidental('b'))
+    .addModifier(new Accidental('b'), 1)
     .setKeyStyle(1, { shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue' });
 
   new TickContext().addTickable(note).preFormat().setX(25);
@@ -685,7 +685,7 @@ function drawNoteStyles(options: TestOptions, contextBuilder: ContextBuilder): v
 
   const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
     .setStave(stave)
-    .addModifier(1, new Accidental('b'));
+    .addModifier(new Accidental('b'), 1);
 
   note.setStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
@@ -705,7 +705,7 @@ function drawNoteStemStyles(options: TestOptions, contextBuilder: ContextBuilder
 
   const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: 'q' })
     .setStave(stave)
-    .addModifier(1, new Accidental('b'));
+    .addModifier(new Accidental('b'), 1);
 
   note.setStemStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
@@ -778,7 +778,7 @@ function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBui
 
   const note = new StaveNote({ keys: ['g/4', 'bb/4', 'd/5'], duration: '8' })
     .setStave(stave)
-    .addModifier(1, new Accidental('b'));
+    .addModifier(new Accidental('b'), 1);
 
   note.setFlagStyle({ shadowBlur: 2, shadowColor: 'blue', fillStyle: 'blue', strokeStyle: 'blue' });
 
@@ -1012,7 +1012,7 @@ function centerAlignedRestFermata(options: TestOptions): void {
 
   const note = f
     .StaveNote({ keys: ['b/4'], duration: '1r', align_center: true })
-    .addModifier(0, new Articulation('a@a').setPosition(3));
+    .addModifier(new Articulation('a@a').setPosition(3), 0);
 
   const voice = f.Voice().setStrict(false).addTickables([note]);
 
@@ -1030,7 +1030,7 @@ function centerAlignedRestAnnotation(options: TestOptions): void {
 
   const note = f
     .StaveNote({ keys: ['b/4'], duration: '1r', align_center: true })
-    .addModifier(0, new Annotation('Whole measure rest').setVerticalJustification(AnnotationVerticalJustify.TOP));
+    .addModifier(new Annotation('Whole measure rest').setVerticalJustification(AnnotationVerticalJustify.TOP), 0);
 
   const voice = f.Voice().setStrict(false).addTickables([note]);
 
@@ -1052,13 +1052,13 @@ function centerAlignedNoteMultiModifiers(options: TestOptions): void {
 
   const note = f
     .StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', align_center: true })
-    .addModifier(0, new Annotation('Test').setPosition(3))
+    .addModifier(new Annotation('Test').setPosition(3), 0)
     .addStroke(0, new Stroke(2))
-    .addModifier(1, new Accidental('#'))
-    .addModifier(0, newFinger('3', Modifier.Position.LEFT))
-    .addModifier(2, newFinger('2', Modifier.Position.LEFT))
-    .addModifier(1, newFinger('1', Modifier.Position.RIGHT))
-    .addModifier(2, new StringNumber('4').setPosition(Modifier.Position.BELOW));
+    .addModifier(new Accidental('#'), 1)
+    .addModifier(newFinger('3', Modifier.Position.LEFT), 0)
+    .addModifier(newFinger('2', Modifier.Position.LEFT), 2)
+    .addModifier(newFinger('1', Modifier.Position.RIGHT), 1)
+    .addModifier(new StringNumber('4').setPosition(Modifier.Position.BELOW), 2);
   Dot.buildAndAttach([note], { all: true });
 
   const voice = f.Voice().setStrict(false).addTickables([note]);
@@ -1094,7 +1094,7 @@ function centerAlignedMultiVoice(options: TestOptions): void {
     { keys: ['b/4'], duration: '8' },
   ].map(createStaveNote);
 
-  notes1[1].addModifier(0, f.Accidental({ type: '#' }));
+  notes1[1].addModifier(f.Accidental({ type: '#' }), 0);
 
   f.Beam({ notes: notes1 });
 

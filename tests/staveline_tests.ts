@@ -62,17 +62,17 @@ function simple1(options: TestOptions): void {
 
   const notes = [
     f.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
-    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(0, f.Accidental({ type: '#' })),
+    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(f.Accidental({ type: '#' }), 0),
     f.StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '4', clef: 'treble' }),
     f
       .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
-      .addModifier(2, f.Accidental({ type: '#' })),
-    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(0, f.Accidental({ type: '#' })),
+      .addModifier(f.Accidental({ type: '#' }), 2),
+    f.StaveNote({ keys: ['c/4'], duration: '4', clef: 'treble' }).addModifier(f.Accidental({ type: '#' }), 0),
     f.StaveNote({ keys: ['c#/5', 'd/5'], duration: '4', clef: 'treble', stem_direction: -1 }),
     f.StaveNote({ keys: ['c/4', 'd/4', 'g/4'], duration: '4', clef: 'treble' }),
     f
       .StaveNote({ keys: ['f/4', 'a/4', 'c/5'], duration: '4', clef: 'treble' })
-      .addModifier(2, f.Accidental({ type: '#' })),
+      .addModifier(f.Accidental({ type: '#' }), 2),
   ];
   Dot.buildAndAttach([notes[0]], { all: true });
 

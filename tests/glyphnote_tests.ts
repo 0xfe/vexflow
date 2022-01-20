@@ -55,8 +55,8 @@ function chordChanges(options: TestOptions): void {
     .addGlyphOrText('#11', { symbolModifier: ChordSymbol.symbolModifiers.SUPERSCRIPT })
     .addGlyphOrText('b9', { symbolModifier: ChordSymbol.symbolModifiers.SUBSCRIPT });
 
-  notes[0].addModifier(0, chord1);
-  notes[2].addModifier(0, chord2);
+  notes[0].addModifier(chord1, 0);
+  notes[2].addModifier(chord2, 0);
   const voice = score.voice(notes);
   system.addStave({ voices: [voice], debugNoteMetrics: options.params.debug });
   system.addConnector().setType(StaveConnector.type.BRACKET);
