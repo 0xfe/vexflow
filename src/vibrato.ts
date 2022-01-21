@@ -34,7 +34,9 @@ export class Vibrato extends Modifier {
     // If there's a bend, drop the text line
     const bends = context.getMembers(Bend.CATEGORY) as Bend[];
     if (bends && bends.length > 0) {
-      text_line--;
+      text_line = text_line - 2;
+    } else {
+      state.top_text_line += 1;
     }
 
     // Format Vibratos
@@ -47,7 +49,6 @@ export class Vibrato extends Modifier {
     }
 
     state.right_shift += width;
-    state.top_text_line += 1;
     return true;
   }
 

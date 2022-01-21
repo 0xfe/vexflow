@@ -88,7 +88,7 @@ function getConfig(file, mode = PRODUCTION_MODE, addBanner = true, libraryName =
   // If not specified, production builds will get high quality source maps, and development/debug builds will get nothing.
   // See: https://webpack.js.org/configuration/devtool/
   // In version 3.0.9 this was called VEX_GENMAP.
-  const devtool = process.env.VEX_DEVTOOL || (mode === DEVELOPMENT_MODE ? false : 'source-map');
+  const devtool = 'source-map';
 
   let plugins = [];
 
