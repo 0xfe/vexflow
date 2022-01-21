@@ -5,6 +5,7 @@ import { Bend } from './bend';
 import { Modifier } from './modifier';
 import { ModifierContext, ModifierContextState } from './modifiercontext';
 import { RenderContext } from './rendercontext';
+import { Tables } from './tables';
 
 export interface VibratoRenderOptions {
   wave_height: number;
@@ -34,7 +35,8 @@ export class Vibrato extends Modifier {
     // If there's a bend, drop the text line
     const bends = context.getMembers(Bend.CATEGORY) as Bend[];
     if (bends && bends.length > 0) {
-      text_line = text_line - 2;
+      const bendHeight = bends.map((bb) => bb.getTextHeight()).reduce((a, b) => a > b ? a : b) / Tables.STAVE_LINE_DISTANCE;
+      text_line = text_line - (bendHeight + 1);
     } else {
       state.top_text_line += 1;
     }

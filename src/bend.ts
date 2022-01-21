@@ -147,18 +147,16 @@ export class Bend extends Modifier {
   getText(): string {
     return this.text;
   }
+  getTextHeight(): number {
+    const textFormatter = TextFormatter.create(this.textFont);
+    return textFormatter.maxHeight;
+  }
 
   /** Recalculate width. */
   protected updateWidth(): this {
+    const textFormatter = TextFormatter.create(this.textFont);
     const measureText = (text: string) => {
-      let textWidth: number;
-      const ctx = this.getContext();
-      if (ctx) {
-        textWidth = ctx.measureText(text).width;
-      } else {
-        textWidth = Tables.textWidth(text);
-      }
-      return textWidth;
+      return textFormatter.getWidthForTextInPx(text);
     };
 
     let totalWidth = 0;
