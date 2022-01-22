@@ -6,7 +6,6 @@ import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { TextFormatter } from './textformatter';
-import { Tables } from './tables';
 import { TabNote } from './tabnote';
 import { RuntimeError } from './util';
 

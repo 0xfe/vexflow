@@ -11,7 +11,6 @@ const VibratoTests = {
   Start(): void {
     QUnit.module('Vibrato');
     const run = VexFlowTests.runTests;
-    run('Vibrato with Bend', withBend);
     run('Simple Vibrato', simple);
     run('Harsh Vibrato', harsh);
     run('Vibrato with Bend', withBend);
@@ -104,8 +103,8 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
       positions: [{ str: 2, fret: 10 }],
       duration: 'q',
     })
-      .addModifier(0, new Vibrato().setVibratoWidth(60))
-      .addModifier(0, new Bend('Full', false)),
+      .addModifier(0, new Bend('Full', false))
+      .addModifier(0, new Vibrato().setVibratoWidth(60)),
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
