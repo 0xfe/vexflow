@@ -2,3 +2,5 @@ Branched from 44605d07e6fe27eed4f10c4ec94bfb0e9b12f692
 The goal of this branch is to:
 - Explore ways to simplify SVG handling.
 - Update the fonts.
+
+PR: https://github.com/0xfe/vexflow/pull/1158
