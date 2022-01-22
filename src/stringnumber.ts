@@ -14,7 +14,6 @@ import { Stem } from './stem';
 import { isStemmableNote, StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { RuntimeError } from './util';
-import { Stave } from './stave';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
@@ -196,7 +195,6 @@ export class StringNumber extends Modifier {
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
-    const stave = note.checkStave();
     this.setRendered();
     const start = note.getModifierStartXY(this.position, this.index);
     const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;

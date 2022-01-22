@@ -37,7 +37,6 @@ const FormatterTests = {
     test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
-    run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
     run('Whitespace and justify', rightJustify);
     run('Notehead padding', noteHeadPadding);
     run('Justification and alignment with accidentals', accidentalJustification);
