@@ -8,7 +8,6 @@ import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Tables } from './tables';
 import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
