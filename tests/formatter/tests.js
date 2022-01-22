@@ -262,4 +262,6 @@ const Tests = {
   },
 };
 
-module.exports = Tests;
+if (typeof module != 'undefined') {
+  module.exports = Tests;
+}

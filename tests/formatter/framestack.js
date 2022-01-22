@@ -77,4 +77,6 @@ class FrameStack {
   }
 }
 
-module.exports = { FrameStack };
+if (typeof module != 'undefined') {
+  module.exports = { FrameStack };
+}
