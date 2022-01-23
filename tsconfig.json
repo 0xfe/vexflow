@@ -13,6 +13,7 @@
     "moduleResolution": "node",
     "lib": ["dom", "es2017"],
     "removeComments": false
+    // "noImplicitOverride": true, /* Introduce in the future for more type safety. Will cause >= 217 errors due to lack of "override" keyword. */
   },
-  "exclude": ["./tools/fonts/legacy", "./releases", "./reference", "./build"]
+  "exclude": ["node_modules/**/*", "tools/fonts/legacy", "releases", "reference", "build"]
 }

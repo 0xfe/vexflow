@@ -5,9 +5,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Font } from '../src';
 import { Crescendo } from '../src/crescendo';
 import { Flow } from '../src/flow';
+import { Font } from '../src/font';
 import { Note } from '../src/note';
 import { Stave } from '../src/stave';
 import { TextNote } from '../src/textnote';

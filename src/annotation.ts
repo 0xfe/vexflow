@@ -1,16 +1,16 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 import { Element } from './element';
-import { log } from './util';
 import { FontInfo } from './font';
-import { ModifierContextState  } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
-import { TextFormatter } from './textformatter';
 import { Modifier, ModifierPosition } from './modifier';
+import { ModifierContextState } from './modifiercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabNote } from './tabnote';
+import { TextFormatter } from './textformatter';
+import { log } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -90,7 +90,7 @@ export class Annotation extends Modifier {
           const stem = (note as StemmableNote).getStem();
           if (stem) {
             stemHeight = Math.abs(stem.getHeight()) / Tables.STAVE_LINE_DISTANCE;
-          }  
+          }
         } else {
           stemHeight = 0;
         }
@@ -243,7 +243,7 @@ export class Annotation extends Modifier {
     if (this.verticalJustification === AnnotationVerticalJustify.BOTTOM) {
       // Use the largest (lowest) Y value
       const ys: number[] = note.getYs();
-      y = ys.reduce((a, b) => a > b ? a : b);
+      y = ys.reduce((a, b) => (a > b ? a : b));
       y += (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE + text_height;
       if (has_stem && stemDirection === Stem.DOWN) {
         y = Math.max(y, stem_ext.topY + text_height + spacing * this.text_line);

@@ -120,7 +120,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
     tabNote({
       positions: [{ str: 2, fret: 10 }],
       duration: 'h',
-    }).addModifier(0, new Bend('Full').setTap('T'))
+    }).addModifier(0, new Bend('Full').setTap('T')),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
