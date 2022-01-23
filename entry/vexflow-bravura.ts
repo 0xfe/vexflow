@@ -18,3 +18,11 @@ loadTextFonts();
 
 export * from '../src/index';
 export default Vex;
+
+// ADD_MUSIC_FONT
+// To make a vexflow-xxx.js build that ONLY loads your new music font, copy this file and name it vexflow-xxx.ts.
+// Replace these lines:
+//     import { loadXXX } from '../src/fonts/load_xxx';
+//     loadXXX();
+//     Flow.setMusicFont('XXX', 'Custom');
+// Feel free to remove references to Custom if you are not using those glyphs.

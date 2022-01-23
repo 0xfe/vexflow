@@ -47,18 +47,14 @@
       }
     },
     {
-      // disable some eslint rules in the demos and tools folders.
-      "files": ["{demos,tools}/**/*.{js,cjs,mjs}"],
+      // Disable some eslint rules in the Gruntfile, demos/*, tools/*.
+      "files": ["Gruntfile.js", "{demos,tools}/**/*.{js,cjs,mjs}"],
       "extends": ["eslint:recommended", "prettier"],
       "rules": {
         "no-console": "off",
         "no-unused-vars": "off",
         "no-undef": "off"
       }
-    },
-    {
-      "files": ["src/**/*.js"],
-      "extends": ["eslint:recommended", "prettier"]
     }
   ]
 }

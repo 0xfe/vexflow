@@ -1,13 +1,13 @@
-// Build the ES module JS files for the src/ and entry/ folders.
-// It ignores the tests/ folder because users of our NPM package don't need
-// to have the compiled tests.
+// Build the ES module JS files for src/ entry/ and tests/ folders.
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./build/esm/",
     "declaration": false,
     "removeComments": true
+    // Avoid using incremental builds for now: https://github.com/microsoft/TypeScript/issues/30602
+    // "incremental": true,
+    // "tsBuildInfoFile": "./node_modules/.cache/typescript/tsbuildinfo.json"
   },
-  "include": ["./src", "./entry"],
-  "exclude": ["./entry/vexflow-debug-with-tests.ts"]
+  "include": ["./src", "./entry", "./tests"]
 }

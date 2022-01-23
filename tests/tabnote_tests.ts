@@ -5,7 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Dot } from '../src';
+import { Dot } from '../src/dot';
 import { Flow } from '../src/flow';
 import { Font, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';

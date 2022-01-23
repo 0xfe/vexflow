@@ -38,12 +38,13 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
     return;
   }
 
-  if (fontName in fontModules) {
-    fontModuleOrPath = fontModules[fontName];
-  }
-
   if (!fontModuleOrPath) {
-    throw new RuntimeError('UnknownFont', `Music font ${fontName} does not exist at path [${fontModuleOrPath}].`);
+    // Determine the font module path.
+    if (fontName in fontModules) {
+      fontModuleOrPath = fontModules[fontName];
+    } else {
+      throw new RuntimeError('UnknownFont', `Music font ${fontName} does not exist.`);
+    }
   }
 
   let fontModule: FontModule;
@@ -51,10 +52,10 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
     const module = await import(/* webpackIgnore: true */ fontModuleOrPath);
 
     const g = globalObject();
-    const moduleCJS = g['VexFlowFont' + fontName];
-    if (typeof moduleCJS !== 'undefined') {
-      // CJS font modules will set a global variable named: VexFlowFontBravura | VexFlowFontGonville | VexFlowFontPetaluma | etc.
-      fontModule = moduleCJS;
+    const VexFlowFont = g['VexFlowFont'];
+    if (typeof VexFlowFont !== 'undefined' && typeof VexFlowFont[fontName] !== 'undefined') {
+      // CJS font modules will set a global variable named: VexFlowFont.Bravura | VexFlowFont.Gonville | VexFlowFont.Petaluma | etc.
+      fontModule = VexFlowFont[fontName];
     } else {
       // ESM font modules will export an object named "Font" with properties named "data" and "metrics".
       // See vexflow-font-bravura.ts for an example.

@@ -1,5 +1,5 @@
 // Emit the *.d.ts files for the src/ and entry/ folders.
-// It ignores the tests/ folder because users of our NPM package don't need
+// It ignores the tests/ folder because users of our npm package don't need
 // to have the type definitions for tests.
 {
   "extends": "./tsconfig.json",

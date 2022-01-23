@@ -5,8 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Font } from '../src';
 import { Bend, BendPhrase } from '../src/bend';
+import { Font } from '../src/font';
 import { Formatter } from '../src/formatter';
 import { ModifierContext } from '../src/modifiercontext';
 import { Note } from '../src/note';
