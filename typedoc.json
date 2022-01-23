@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs/api",
+  "name": "vexflow",
+  "excludeProtected": true,
+  "excludePrivate": true,
+  "disableSources": true,
+  "hideGenerator": true,
+  "intentionallyNotExported": ["OffscreenCanvas", "OffscreenCanvasRenderingContext2D"]
+}

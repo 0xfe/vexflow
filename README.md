@@ -21,7 +21,7 @@ Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial)
 
 ## Quick Start
 
-### Using NPM
+### Using npm
 
 To install version 4.0.0-beta:
 
