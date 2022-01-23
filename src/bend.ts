@@ -5,8 +5,8 @@ import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { TextFormatter } from './textformatter';
 import { TabNote } from './tabnote';
+import { TextFormatter } from './textformatter';
 import { RuntimeError } from './util';
 
 export interface BendPhrase {
