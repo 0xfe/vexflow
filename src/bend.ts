@@ -5,8 +5,8 @@ import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { Tables } from './tables';
 import { TabNote } from './tabnote';
+import { TextFormatter } from './textformatter';
 import { RuntimeError } from './util';
 
 export interface BendPhrase {
@@ -60,6 +60,7 @@ export class Bend extends Modifier {
   }
 
   protected text: string;
+  protected tap: string;
   protected release: boolean;
   protected phrase: BendPhrase[];
 
@@ -109,6 +110,7 @@ export class Bend extends Modifier {
     this.text = text;
     this.x_shift = 0;
     this.release = release;
+    this.tap = '';
     this.resetFont();
     this.render_options = {
       line_width: 1.5,
@@ -135,22 +137,25 @@ export class Bend extends Modifier {
     return this;
   }
 
+  setTap(value: string): this {
+    this.tap = value;
+    return this;
+  }
+
   /** Get text provided in the constructor. */
   getText(): string {
     return this.text;
   }
+  getTextHeight(): number {
+    const textFormatter = TextFormatter.create(this.textFont);
+    return textFormatter.maxHeight;
+  }
 
   /** Recalculate width. */
   protected updateWidth(): this {
+    const textFormatter = TextFormatter.create(this.textFont);
     const measureText = (text: string) => {
-      let textWidth: number;
-      const ctx = this.getContext();
-      if (ctx) {
-        textWidth = ctx.measureText(text).width;
-      } else {
-        textWidth = Tables.textWidth(text);
-      }
-      return textWidth;
+      return textFormatter.getWidthForTextInPx(text);
     };
 
     let totalWidth = 0;
@@ -240,6 +245,11 @@ export class Bend extends Modifier {
     let last_bend = undefined;
     let last_bend_draw_width = 0;
     let last_drawn_width = 0;
+    if (this.tap?.length) {
+      const tapStart = note.getModifierStartXY(Modifier.Position.CENTER, this.index);
+      renderText(tapStart.x, this.tap);
+    }
+
     for (let i = 0; i < this.phrase.length; ++i) {
       const bend = this.phrase[i];
       if (!bend.draw_width) bend.draw_width = 0;
