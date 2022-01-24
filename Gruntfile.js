@@ -758,7 +758,7 @@ module.exports = (grunt) => {
         tag: true,
         push: true,
       },
-      github: { release: true },
+      github: { release: true, skipChecks: true },
       npm: { publish: true },
     };
 
