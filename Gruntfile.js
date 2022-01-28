@@ -376,7 +376,14 @@ module.exports = (grunt) => {
     // Run unit tests on the command line by loading tests/flow-headless-browser.html.
     // Requires the CJS build to be present in the `build/cjs/` directory (See: grunt build:cjs).
     // The grunt-contrib-qunit package uses puppeteer to load the test page.
-    qunit: { files: ['tests/flow-headless-browser.html'] },
+    qunit: {
+      options: {
+        puppeteer: {
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+      files: ['tests/flow-headless-browser.html'],
+    },
     copy: {
       // grunt copy:reference
       // After `grunt test` call this to save the current build/ to reference/.
