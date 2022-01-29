@@ -67,8 +67,7 @@ export class Dot extends Modifier {
         const index = dot.checkIndex();
         props = note.getKeyProps()[index];
         // consider right displaced head with no previous modifier
-        if (note.checkModifierContext().getMembers('Parenthesis').length === 0) shift = note.getRightDisplacedHeadPx();
-        else shift = right_shift;
+        shift = note.getFirstDotPx();
       } else if (note.getCategory() === 'TabNote') {
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = right_shift;
