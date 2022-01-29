@@ -27,10 +27,10 @@ export class StringNumber extends Modifier {
     style: FontStyle.NORMAL,
   };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static get metrics(): any {
-      return Tables.currentMusicFont().getMetrics().glyphs.stringNumber;
-    }  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static get metrics(): any {
+    return Tables.currentMusicFont().getMetrics().glyphs.stringNumber;
+  }
 
   // ## Static Methods
   // Arrange string numbers inside a `ModifierContext`
@@ -45,7 +45,7 @@ export class StringNumber extends Modifier {
     let prev_note = null;
     let shift_left = 0;
     let shift_right = 0;
-    let modLines = 0;
+    const modLines = 0;
 
     for (let i = 0; i < nums.length; ++i) {
       const num = nums[i];
@@ -81,7 +81,7 @@ export class StringNumber extends Modifier {
         prev_note = note;
       }
 
-      const glyphLine = (modLines === 0) ? props.line : modLines;
+      const glyphLine = modLines === 0 ? props.line : modLines;
 
       nums_list.push({
         pos,
@@ -207,26 +207,26 @@ export class StringNumber extends Modifier {
     let dot_y = start.y + this.y_shift + this.y_offset;
 
     switch (this.position) {
-      case Modifier.Position.ABOVE: {
+      case Modifier.Position.ABOVE:
+        {
           const ys = note.getYs();
-          dot_y = ys.reduce((a, b) => a < b ? a : b);
+          dot_y = ys.reduce((a, b) => (a < b ? a : b));
           if (note.hasStem() && stemDirection == Stem.UP) {
             dot_y = stem_ext.topY + StringNumber.metrics.stemPadding;
           }
-          dot_y -= this.radius + StringNumber.metrics.verticalPadding
-            + this.text_line * Tables.STAVE_LINE_DISTANCE;
+          dot_y -= this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
         break;
-      case Modifier.Position.BELOW: {
-        const ys: number[] = note.getYs();
-        dot_y = ys.reduce((a, b) => a > b ? a : b);
-        if (note.hasStem() && stemDirection == Stem.DOWN) {
-          dot_y = stem_ext.topY - StringNumber.metrics.stemPadding;
+      case Modifier.Position.BELOW:
+        {
+          const ys: number[] = note.getYs();
+          dot_y = ys.reduce((a, b) => (a > b ? a : b));
+          if (note.hasStem() && stemDirection == Stem.DOWN) {
+            dot_y = stem_ext.topY - StringNumber.metrics.stemPadding;
+          }
+          dot_y += this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
-        dot_y += this.radius + StringNumber.metrics.verticalPadding
-          + this.text_line * Tables.STAVE_LINE_DISTANCE;
-        }
-        break;        
+        break;
       case Modifier.Position.LEFT:
         dot_x -= this.radius / 2 + StringNumber.metrics.leftPadding;
         break;

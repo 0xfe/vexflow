@@ -24,11 +24,9 @@ import { StaveNote } from '../src/stavenote';
 import { Stem } from '../src/stem';
 import { StemmableNote } from '../src/stemmablenote';
 import { StringNumber } from '../src/stringnumber';
-import { Tuplet } from '../src/tuplet';
-import { Voice } from '../src/voice';
-import { VoiceTime } from '../src/voice';
-
 import { Tables } from '../src/tables';
+import { Tuplet } from '../src/tuplet';
+import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 
 const FormatterTests = {
@@ -332,7 +330,7 @@ function alignedMixedElements(options: TestOptions): void {
   const stave2 = new Stave(410, 200, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addModifier(0, new Accidental('##'))      
+      .addModifier(0, new Accidental('##'))
       .addModifier(0, new FretHandFinger('4').setPosition(ModifierPosition.BELOW))
       .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
       .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
@@ -342,9 +340,13 @@ function alignedMixedElements(options: TestOptions): void {
       .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
       .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.BOTTOM))
       .addModifier(
-        0, new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, ''))
-      .addModifier(0,
-        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')),
+        0,
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')
+      )
+      .addModifier(
+        0,
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')
+      ),
     new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
       .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
       .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
@@ -365,10 +367,14 @@ function alignedMixedElements(options: TestOptions): void {
       .addModifier(0, new Articulation('am').setPosition(ModifierPosition.ABOVE))
       .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.ABOVE))
       .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP))
-      .addModifier(0,
-        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, ''))
-      .addModifier(0,
-        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')),
+      .addModifier(
+        0,
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')
+      )
+      .addModifier(
+        0,
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')
+      ),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
 
