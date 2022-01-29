@@ -577,6 +577,24 @@ export abstract class Note extends Tickable {
     };
   }
 
+  getRightParenthesisPx(index: number): number {
+    const props = this.getKeyProps()[index];
+    return props.displaced ? this.getRightDisplacedHeadPx() : 0;
+  }
+
+  getLeftParenthesisPx(index: number): number {
+    const props = this.getKeyProps()[index];
+    return props.displaced ? this.getLeftDisplacedHeadPx() : 0;
+  }
+
+  getFirstDotPx(): number {
+    let px = this.getRightDisplacedHeadPx();
+
+    if (this.checkModifierContext().getMembers('Parenthesis').length !== 0)
+      px += Tables.currentMusicFont().lookupMetric('parenthesis.default.width');
+    return px;
+  }
+
   /** Get the metrics for this note. */
   getMetrics(): NoteMetrics {
     if (!this.preFormatted) {
