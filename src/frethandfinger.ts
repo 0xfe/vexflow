@@ -5,10 +5,12 @@
 
 import { Builder } from './easyscore';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
-import { Modifier } from './modifier';
+import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { RuntimeError } from './util';
+import { TextFormatter } from './textformatter';
+import { Tables } from './tables';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
@@ -40,6 +42,15 @@ export class FretHandFinger extends Modifier {
       const pos = num.getPosition();
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];
+      const textFormatter = TextFormatter.create(num.textFont);
+      const textHeight = textFormatter.maxHeight;
+      if (num.position === ModifierPosition.ABOVE) {
+        state.top_text_line += (textHeight / Tables.STAVE_LINE_DISTANCE) + 0.5;
+      }
+      if (num.position === ModifierPosition.BELOW) {
+        state.text_line += (textHeight / Tables.STAVE_LINE_DISTANCE) + 0.5;
+      }
+
       if (note !== prev_note) {
         for (let n = 0; n < note.keys.length; ++n) {
           if (left_shift === 0) {
