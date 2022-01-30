@@ -5,33 +5,28 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import {
-  Accidental,
-  Annotation,
-  Articulation,
-  Beam,
-  Bend,
-  Dot,
-  Flow,
-  Font,
-  FontGlyph,
-  FontWeight,
-  Formatter,
-  FretHandFinger,
-  Note,
-  Registry,
-  Stave,
-  StaveConnector,
-  StaveNote,
-  StemmableNote,
-  StringNumber,
-  TextBracket,
-  Tuplet,
-  Voice,
-  VoiceTime,
-} from '../src/index';
-
+import { Accidental } from '../src/accidental';
+import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
+import { Articulation } from '../src/articulation';
+import { Beam } from '../src/beam';
+import { Bend } from '../src/bend';
+import { Dot } from '../src/dot';
+import { Flow } from '../src/flow';
+import { Font, FontGlyph, FontWeight } from '../src/font';
+import { Formatter } from '../src/formatter';
+import { FretHandFinger } from '../src/frethandfinger';
+import { ModifierPosition } from '../src/modifier';
+import { Note } from '../src/note';
+import { Registry } from '../src/registry';
+import { Stave } from '../src/stave';
+import { StaveConnector } from '../src/staveconnector';
+import { StaveNote } from '../src/stavenote';
+import { Stem } from '../src/stem';
+import { StemmableNote } from '../src/stemmablenote';
+import { StringNumber } from '../src/stringnumber';
 import { Tables } from '../src/tables';
+import { Tuplet } from '../src/tuplet';
+import { Voice, VoiceTime } from '../src/voice';
 import { MockTickable } from './mocks';
 
 const FormatterTests = {
@@ -329,41 +324,70 @@ function unalignedNoteDurations2(options: TestOptions): void {
 }
 
 function alignedMixedElements(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 750, 280);
+  const f = VexFlowTests.makeFactory(options, 800, 500);
   const context = f.getContext();
-  const stave = new Stave(10, 40, 400);
+  const stave = new Stave(10, 200, 400);
+  const stave2 = new Stave(410, 200, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
       .addModifier(new Accidental('##'), 0)
-      .addModifier(new FretHandFinger('4').setPosition(4), 0)
-      .addModifier(new StringNumber('3').setPosition(4), 0)
-      .addModifier(new Articulation('a.').setPosition(4), 0)
-      .addModifier(new Articulation('a>').setPosition(4), 0)
-      .addModifier(new Articulation('a^').setPosition(4), 0)
-      .addModifier(new Articulation('am').setPosition(4), 0)
-      .addModifier(new Articulation('a@u').setPosition(4), 0)
-      .addModifier(new Annotation('yyyy').setVerticalJustification(3), 0)
-      .addModifier(new Annotation('xxxx').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0)
-      .addModifier(new Annotation('ttt').setVerticalJustification(3).setFont('Sans-serif', 20, ''), 0),
+      .addModifier(new FretHandFinger('4').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a^').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('am').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a@u').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.BOTTOM), 0)
+      .addModifier(
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('sans-serif', 20),
+        0
+      )
+      .addModifier(
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('sans-serif', 20),
+        0
+      ),
+    new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.BELOW), 0),
+
     new StaveNote({ keys: ['c/5'], duration: '8' }),
+  ];
+  const notes2 = [
+    new StaveNote({ keys: ['c/5'], duration: '8' })
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
+    new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
+      .addModifier(new FretHandFinger('4').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a^').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('am').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a@u').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP), 0)
+      .addModifier(
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('sans-serif', 20),
+        0
+      )
+      .addModifier(
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('sans-serif', 20),
+        0
+      ),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
 
   const tuplet = new Tuplet(notes).setTupletLocation(-1);
-
-  const bracket = new TextBracket({
-    start: notes[0],
-    stop: notes[2],
-    position: -1,
-    text: '8',
-    superscript: 'vb',
-  });
+  const tuplet2 = new Tuplet(notes2).setTupletLocation(1);
 
   Formatter.FormatAndDraw(context, stave, notes);
-
+  Formatter.FormatAndDraw(context, stave2, notes2);
   stave.setContext(context).draw();
+  stave2.setContext(context).draw();
   tuplet.setContext(context).draw();
-  bracket.setContext(context).draw();
+  tuplet2.setContext(context).draw();
 
   ok(true);
 }

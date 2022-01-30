@@ -241,6 +241,12 @@ export const BravuraMetrics = {
         scale: 1.2,
       },
     },
+    stringNumber: {
+      verticalPadding: 8,
+      stemPadding: 2,
+      leftPadding: 5,
+      rightPadding: 6,
+    },
     stroke: {
       arrowheadBlackDown: {
         straight: {
