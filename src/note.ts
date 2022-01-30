@@ -548,7 +548,7 @@ export abstract class Note extends Tickable {
     }
     modifier.setNote(this);
     modifier.setIndex(index);
-    super.addModifier(modifier, index);
+    super.addModifier(modifier);
     return this;
   }
 
