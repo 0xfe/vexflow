@@ -8,14 +8,13 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { isNote, Note } from './note';
-import { isStaveNote } from './stavenote';
-import { isTabNote } from './tabnote';
+import { Note } from './note';
+import { Category, isNote, isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 
 export class Stroke extends Modifier {
   static get CATEGORY(): string {
-    return 'Stroke';
+    return Category.Stroke;
   }
 
   static readonly Type = {

@@ -9,15 +9,15 @@ import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Renderer } from './renderer';
-import { isStaveNote } from './stavenote';
 import { Stem } from './stem';
-import { isStemmableNote, StemmableNote } from './stemmablenote';
+import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
+import { Category, isStaveNote, isStemmableNote } from './typeguard';
 import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
-    return 'StringNumber';
+    return Category.StringNumber;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

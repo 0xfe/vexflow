@@ -6,6 +6,7 @@
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
+import { Category } from './typeguard';
 import { defined } from './util';
 
 export interface LayoutMetrics {
@@ -27,7 +28,7 @@ export enum StaveModifierPosition {
 
 export class StaveModifier extends Element {
   static get CATEGORY(): string {
-    return 'StaveModifier';
+    return Category.StaveModifier;
   }
 
   static get Position(): typeof StaveModifierPosition {

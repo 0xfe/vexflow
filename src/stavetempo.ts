@@ -6,6 +6,7 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 
 export interface StaveTempoOptions {
   bpm?: number;
@@ -16,7 +17,7 @@ export interface StaveTempoOptions {
 
 export class StaveTempo extends StaveModifier {
   static get CATEGORY(): string {
-    return 'StaveTempo';
+    return Category.StaveTempo;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

@@ -11,6 +11,7 @@ import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { log, RuntimeError } from './util';
 
 export interface TextBracketParams {
@@ -36,7 +37,7 @@ export class TextBracket extends Element {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'TextBracket';
+    return Category.TextBracket;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

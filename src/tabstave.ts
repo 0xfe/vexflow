@@ -1,10 +1,11 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
 import { Stave, StaveOptions } from './stave';
+import { Category } from './typeguard';
 
 export class TabStave extends Stave {
   static get CATEGORY(): string {
-    return 'TabStave';
+    return Category.TabStave;
   }
 
   constructor(x: number, y: number, width: number, options?: StaveOptions) {

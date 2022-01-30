@@ -4,6 +4,7 @@
 import { Element } from './element';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export enum ModifierPosition {
@@ -35,7 +36,7 @@ export class Modifier extends Element {
    * The `ModifierContext` uses this to determine the type and order of the modifiers.
    */
   static get CATEGORY(): string {
-    return 'Modifier';
+    return Category.Modifier;
   }
 
   /** Modifiers can be positioned almost anywhere, relative to a note. */

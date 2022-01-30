@@ -4,6 +4,7 @@ import { Glyph } from './glyph';
 import { GlyphNote, GlyphNoteOptions } from './glyphnote';
 import { NoteStruct } from './note';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 
 // Map `type` to SMuFL glyph code.
 const CODES: Record<string, string> = {
@@ -15,7 +16,7 @@ const CODES: Record<string, string> = {
 
 export class RepeatNote extends GlyphNote {
   static get CATEGORY(): string {
-    return 'RepeatNote';
+    return Category.RepeatNote;
   }
 
   constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {

@@ -3,19 +3,15 @@
 //
 // This class implements dot modifiers for notes.
 
-import { isGraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
-import { isStaveNote } from './stavenote';
-import { isCategory } from './typeguard';
+import { Category, isGraceNote, isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
-
-export const isDot = (obj: unknown): obj is Dot => isCategory(obj, Dot);
 
 export class Dot extends Modifier {
   static get CATEGORY(): string {
-    return 'Dot';
+    return Category.Dot;
   }
 
   protected radius: number;
@@ -68,7 +64,7 @@ export class Dot extends Modifier {
         props = note.getKeyProps()[index];
         // consider right displaced head with no previous modifier
         shift = note.getFirstDotPx();
-      } else if (note.getCategory() === 'TabNote') {
+      } else if (isTabNote(note)) {
         props = { line: 0.5 }; // Shim key props for dot placement
         shift = right_shift;
       } else {
@@ -171,7 +167,8 @@ export class Dot extends Modifier {
     const start = note.getModifierStartXY(this.position, this.index, { forceFlagRight: true });
 
     // Set the starting y coordinate to the base of the stem for TabNotes.
-    if (note.getCategory() === 'TabNote') {
+
+    if (isTabNote(note)) {
       start.y = note.getStemExtents().baseY;
     }
 

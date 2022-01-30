@@ -3,6 +3,7 @@
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
+import { Category } from './typeguard';
 
 export interface GlyphNoteOptions {
   ignoreTicks?: boolean;
@@ -11,7 +12,7 @@ export interface GlyphNoteOptions {
 
 export class GlyphNote extends Note {
   static get CATEGORY(): string {
-    return 'GlyphNote';
+    return Category.GlyphNote;
   }
 
   protected options: Required<GlyphNoteOptions>;

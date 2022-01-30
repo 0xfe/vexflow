@@ -4,6 +4,7 @@
 import { CanvasContext } from './canvascontext';
 import { RenderContext } from './rendercontext';
 import { SVGContext } from './svgcontext';
+import { isRenderContext } from './typeguard';
 import { RuntimeError } from './util';
 import { isHTMLCanvas, isHTMLDiv } from './web';
 
@@ -112,10 +113,8 @@ export class Renderer {
   constructor(context: RenderContext);
   constructor(canvas: string | HTMLCanvasElement | HTMLDivElement, backend: number);
   constructor(arg0: string | HTMLCanvasElement | HTMLDivElement | RenderContext, arg1?: number) {
-    if (arg0 instanceof RenderContext) {
+    if (isRenderContext(arg0)) {
       // The user has provided what looks like a RenderContext, let's just use it.
-      // TODO(tommadams): RenderContext is an interface, can we introduce a context base class
-      // to make this check more robust?
       this.ctx = arg0;
     } else {
       if (arg1 === undefined) {

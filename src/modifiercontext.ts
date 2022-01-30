@@ -23,6 +23,7 @@ import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
 import { TabNote } from './tabnote';
 import { Tickable } from './tickable';
+import { Category } from './typeguard';
 import { log, RuntimeError } from './util';
 import { Vibrato } from './vibrato';
 
@@ -49,57 +50,23 @@ function L(...args: any[]) {
 export class ModifierContext {
   static DEBUG: boolean = false;
 
-  state: ModifierContextState;
+  // Formatting data.
+  protected state: ModifierContextState = {
+    left_shift: 0,
+    right_shift: 0,
+    text_line: 0,
+    top_text_line: 0,
+  };
 
-  protected spacing: number;
-  protected members: Record<string, ModifierContextMember[]>;
+  // Current members
+  protected members: Record<string, ModifierContextMember[]> = {};
 
   protected preFormatted: boolean = false;
   protected postFormatted: boolean = false;
-  protected width: number;
-  protected formatted?: boolean;
-  // eslint-disable-next-line
-  protected PREFORMAT: any[];
-  // eslint-disable-next-line
-  protected POSTFORMAT: any[];
+  protected formatted: boolean = false;
 
-  constructor() {
-    // Current members
-    this.members = {};
-
-    // Formatting data.
-    this.width = 0;
-    this.spacing = 0;
-    this.state = {
-      left_shift: 0,
-      right_shift: 0,
-      text_line: 0,
-      top_text_line: 0,
-    };
-
-    // Add new members to this array. The ordering is significant -- lower
-    // members are formatted and rendered before higher ones.
-    this.PREFORMAT = [
-      StaveNote,
-      Parenthesis,
-      Dot,
-      FretHandFinger,
-      Accidental,
-      Stroke,
-      GraceNoteGroup,
-      NoteSubGroup,
-      StringNumber,
-      Articulation,
-      Ornament,
-      Annotation,
-      ChordSymbol,
-      Bend,
-      Vibrato,
-    ];
-
-    // If post-formatting is required for an element, add it to this array.
-    this.POSTFORMAT = [StaveNote];
-  }
+  protected width: number = 0;
+  protected spacing: number = 0;
 
   addModifier(member: ModifierContextMember): this {
     L('addModifier is deprecated, use addMember instead.');
@@ -164,21 +131,38 @@ export class ModifierContext {
 
   preFormat(): void {
     if (this.preFormatted) return;
-    this.PREFORMAT.forEach((member) => {
-      L('Preformatting ModifierContext: ', member.CATEGORY);
-      member.format(this.getMembers(member.CATEGORY), this.state, this);
-    });
+    L('Preformatting ModifierContext');
+
+    const state = this.state;
+    const members = this.members;
+
+    // The ordering below determines when different members are formatted and rendered.
+    StaveNote.format(members[Category.StaveNote] as StaveNote[], state);
+    Parenthesis.format(members[Category.Parenthesis] as Parenthesis[], state);
+    Dot.format(members[Category.Dot] as Dot[], state);
+    FretHandFinger.format(members[Category.FretHandFinger] as FretHandFinger[], state);
+    Accidental.format(members[Category.Accidental] as Accidental[], state);
+    Stroke.format(members[Category.Stroke] as Stroke[], state);
+    GraceNoteGroup.format(members[Category.GraceNoteGroup] as GraceNoteGroup[], state);
+    NoteSubGroup.format(members[Category.NoteSubGroup] as NoteSubGroup[], state);
+    StringNumber.format(members[Category.StringNumber] as StringNumber[], state);
+    Articulation.format(members[Category.Articulation] as Articulation[], state);
+    Ornament.format(members[Category.Ornament] as Ornament[], state);
+    Annotation.format(members[Category.Annotation] as Annotation[], state);
+    ChordSymbol.format(members[Category.ChordSymbol] as ChordSymbol[], state);
+    Bend.format(members[Category.Bend] as Bend[], state);
+    Vibrato.format(members[Category.Vibrato] as Vibrato[], state, this);
 
     // Update width of this member context
-    this.width = this.state.left_shift + this.state.right_shift;
+    this.width = state.left_shift + state.right_shift;
     this.preFormatted = true;
   }
 
   postFormat(): void {
     if (this.postFormatted) return;
-    this.POSTFORMAT.forEach((member) => {
-      L('Postformatting ModifierContext: ', member.CATEGORY);
-      member.postFormat(this.getMembers(member.CATEGORY) as Note[]);
-    });
+    L('Postformatting ModifierContext');
+
+    // If post-formatting is required for an element, add more lines below.
+    StaveNote.postFormat(this.getMembers(Category.StaveNote) as Note[]);
   }
 }

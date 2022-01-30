@@ -4,10 +4,11 @@
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
 import { TimeSignature, TimeSignatureInfo } from './timesignature';
+import { Category } from './typeguard';
 
 export class TimeSigNote extends Note {
   static get CATEGORY(): string {
-    return 'TimeSigNote';
+    return Category.TimeSigNote;
   }
 
   protected timeSigInfo: TimeSignatureInfo;

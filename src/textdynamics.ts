@@ -4,6 +4,7 @@
 import { Glyph } from './glyph';
 import { Note } from './note';
 import { TextNoteStruct } from './textnote';
+import { Category } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -23,7 +24,7 @@ export class TextDynamics extends Note {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'TextDynamics';
+    return Category.TextDynamics;
   }
 
   protected sequence: string;

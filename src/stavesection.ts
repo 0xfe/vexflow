@@ -4,10 +4,11 @@
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
+import { Category } from './typeguard';
 
 export class StaveSection extends StaveModifier {
   static get CATEGORY(): string {
-    return 'StaveSection';
+    return Category.StaveSection;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

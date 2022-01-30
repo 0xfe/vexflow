@@ -3,15 +3,16 @@
 // MIT License
 
 import { Glyph } from './glyph';
-import { GraceNote, isGraceNote } from './gracenote';
+import { GraceNote } from './gracenote';
 import { Modifier } from './modifier';
 import { Stem } from './stem';
 import { Tables } from './tables';
+import { Category, isGraceNote } from './typeguard';
 
 /** Tremolo implements tremolo notation. */
 export class Tremolo extends Modifier {
   static get CATEGORY(): string {
-    return 'Tremolo';
+    return Category.Tremolo;
   }
 
   protected readonly code: string;

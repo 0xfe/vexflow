@@ -8,7 +8,7 @@ import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
@@ -88,8 +88,7 @@ class GlyphCache {
     const key = category ? `${code}%${category}` : code;
     let entry = entries[key];
     if (entry === undefined) {
-      const musicFontStack = Tables.MUSIC_FONT_STACK.slice();
-      entry = new GlyphCacheEntry(musicFontStack, code, category);
+      entry = new GlyphCacheEntry(Glyph.MUSIC_FONT_STACK, code, category);
       entries[key] = entry;
     }
     return entry;
@@ -159,15 +158,19 @@ export class Glyph extends Element {
   // STATIC MEMBERS
 
   static get CATEGORY(): string {
-    return 'Glyph';
+    return Category.Glyph;
   }
 
   protected static cache = new GlyphCache();
 
   // The current cache key for GlyphCache above.
-  // Computed whenever the Flow.setMusicFont(...) is called.
+  // Computed when Flow.setMusicFont(...) is called.
   // It is set to a comma separated list of font names.
   public static CURRENT_CACHE_KEY: string = '';
+
+  // Used by the GlyphCache above.
+  // Set when Flow.setMusicFont(...) is called.
+  public static MUSIC_FONT_STACK: Font[] = [];
 
   /**
    * Pass a key of the form `glyphs.{category}.{code}.{key}` to Font.lookupMetric(). If the initial lookup fails,

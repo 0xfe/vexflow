@@ -5,8 +5,8 @@ import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { TabNote } from './tabnote';
 import { TextFormatter } from './textformatter';
+import { Category, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 
 export interface BendPhrase {
@@ -20,7 +20,7 @@ export interface BendPhrase {
 /** Bend implements tablature bends. */
 export class Bend extends Modifier {
   static get CATEGORY(): string {
-    return 'Bend';
+    return Category.Bend;
   }
 
   static get UP(): number {
@@ -43,8 +43,9 @@ export class Bend extends Modifier {
     for (let i = 0; i < bends.length; ++i) {
       const bend = bends[i];
       const note = bend.checkAttachedNote();
-      if (note instanceof TabNote) {
-        const stringPos = (note as TabNote).leastString() - 1;
+
+      if (isTabNote(note)) {
+        const stringPos = note.leastString() - 1;
         if (state.top_text_line < stringPos) {
           state.top_text_line = stringPos;
         }

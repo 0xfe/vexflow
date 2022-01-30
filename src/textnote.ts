@@ -4,6 +4,7 @@
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export enum Justification {
@@ -30,7 +31,7 @@ export interface TextNoteStruct extends NoteStruct {
  */
 export class TextNote extends Note {
   static get CATEGORY(): string {
-    return 'TextNote';
+    return Category.TextNote;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

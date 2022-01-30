@@ -6,6 +6,7 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined, log } from './util';
 
 export interface ClefType {
@@ -29,7 +30,7 @@ export class Clef extends StaveModifier {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'Clef';
+    return Category.Clef;
   }
 
   annotation?: {

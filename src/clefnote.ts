@@ -8,11 +8,12 @@ import { Glyph } from './glyph';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { Category } from './typeguard';
 
 /** ClefNote implements clef annotations in measures. */
 export class ClefNote extends Note {
   static get CATEGORY(): string {
-    return 'ClefNote';
+    return Category.ClefNote;
   }
 
   protected clef_obj: Clef;

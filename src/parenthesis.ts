@@ -7,11 +7,12 @@ import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { Tables } from './tables';
+import { Category, isGraceNote } from './typeguard';
 
 /** Parenthesis implements parenthesis modifiers for notes. */
 export class Parenthesis extends Modifier {
   static get CATEGORY(): string {
-    return 'Parenthesis';
+    return Category.Parenthesis;
   }
 
   protected point: number;
@@ -76,7 +77,7 @@ export class Parenthesis extends Modifier {
     this.note = note;
     this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
     this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
-    if (note.getCategory() === 'GraceNote') {
+    if (isGraceNote(note)) {
       this.point = Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.point');
       this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.width'));
     }

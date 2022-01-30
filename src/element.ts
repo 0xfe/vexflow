@@ -6,6 +6,7 @@ import { BoundingBox } from './boundingbox';
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
+import { Category } from './typeguard';
 import { defined } from './util';
 
 /** Element attributes. */
@@ -63,7 +64,7 @@ export interface ElementStyle {
  */
 export abstract class Element {
   static get CATEGORY(): string {
-    return 'Element';
+    return Category.Element;
   }
 
   protected static ID: number = 1000;

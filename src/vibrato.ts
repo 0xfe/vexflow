@@ -6,6 +6,7 @@ import { Modifier } from './modifier';
 import { ModifierContext, ModifierContextState } from './modifiercontext';
 import { RenderContext } from './rendercontext';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 
 export interface VibratoRenderOptions {
   wave_height: number;
@@ -18,7 +19,7 @@ export interface VibratoRenderOptions {
 /** `Vibrato` implements diverse vibratos. */
 export class Vibrato extends Modifier {
   static get CATEGORY(): string {
-    return 'Vibrato';
+    return Category.Vibrato;
   }
 
   public render_options: VibratoRenderOptions;

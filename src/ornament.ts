@@ -8,8 +8,8 @@ import { ModifierContextState } from './modifiercontext';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isTabNote } from './tabnote';
 import { TickContext } from './tickcontext';
+import { Category, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -30,7 +30,7 @@ export class Ornament extends Modifier {
 
   /** Ornaments category string. */
   static get CATEGORY(): string {
-    return 'Ornament';
+    return Category.Ornament;
   }
 
   protected ornament: {

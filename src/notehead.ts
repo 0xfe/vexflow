@@ -9,6 +9,7 @@ import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -99,7 +100,7 @@ export class NoteHead extends Note {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'NoteHead';
+    return Category.NoteHead;
   }
 
   glyph_code: string;

@@ -10,11 +10,12 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
+import { Category } from './typeguard';
 import { defined } from './util';
 
 export class KeySignature extends StaveModifier {
   static get CATEGORY(): string {
-    return 'KeySignature';
+    return Category.KeySignature;
   }
 
   protected glyphFontScale: number;

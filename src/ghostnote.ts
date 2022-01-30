@@ -2,18 +2,18 @@
 //
 // ## Description
 
-import { Annotation } from './annotation';
 import { ModifierContext } from './modifiercontext';
 import { NoteStruct } from './note';
 import { Stave } from './stave';
 import { StemmableNote } from './stemmablenote';
+import { Category, isAnnotation } from './typeguard';
 import { RuntimeError } from './util';
 
 const ERROR_MSG = 'Ghost note must have valid initialization data to identify duration.';
 
 export class GhostNote extends StemmableNote {
   static get CATEGORY(): string {
-    return 'GhostNote';
+    return Category.GhostNote;
   }
 
   constructor(parameter: string | NoteStruct) {
@@ -66,7 +66,7 @@ export class GhostNote extends StemmableNote {
     this.setRendered();
     for (let i = 0; i < this.modifiers.length; ++i) {
       const modifier = this.modifiers[i];
-      if (modifier instanceof Annotation) {
+      if (isAnnotation(modifier)) {
         modifier.setContext(this.getContext());
         modifier.drawWithStyle();
       }

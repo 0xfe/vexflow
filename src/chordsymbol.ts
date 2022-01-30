@@ -16,6 +16,7 @@ import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFormatter } from './textformatter';
+import { Category } from './typeguard';
 import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -67,7 +68,7 @@ export class ChordSymbol extends Modifier {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'ChordSymbol';
+    return Category.ChordSymbol;
   }
 
   // Chord symbols can be positioned and justified relative to the note.

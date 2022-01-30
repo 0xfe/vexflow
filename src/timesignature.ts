@@ -9,6 +9,7 @@ import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
 import { TimeSignatureGlyph } from './timesigglyph';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface TimeSignatureInfo {
@@ -37,7 +38,7 @@ const assertIsValidTimeSig = (timeSpec: string) => {
 
 export class TimeSignature extends StaveModifier {
   static get CATEGORY(): string {
-    return 'TimeSignature';
+    return Category.TimeSignature;
   }
 
   static get glyphs(): Record<string, { code: string; point: number; line: number }> {

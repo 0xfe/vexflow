@@ -5,16 +5,13 @@
 
 import { Fraction } from './fraction';
 import { Glyph } from './glyph';
-import { isGraceNote } from './gracenote';
-import { isGraceNoteGroup } from './gracenotegroup';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Music } from './music';
 import { Note } from './note';
-import { isStaveNote } from './stavenote';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
-import { isCategory } from './typeguard';
+import { Category, isAccidental, isGraceNote, isGraceNoteGroup, isStaveNote } from './typeguard';
 import { defined, log } from './util';
 import { Voice } from './voice';
 
@@ -62,7 +59,7 @@ export class Accidental extends Modifier {
 
   /** Accidentals category string. */
   static get CATEGORY(): string {
-    return 'Accidental';
+    return Category.Accidental;
   }
 
   /** Arrange accidentals inside a ModifierContext. */
@@ -437,11 +434,7 @@ export class Accidental extends Modifier {
 
           // Remove accidentals
           staveNote.getModifiers().forEach((modifier, index) => {
-            if (
-              isCategory(modifier, Accidental) &&
-              modifier.type == accidentalString &&
-              modifier.getIndex() == keyIndex
-            ) {
+            if (isAccidental(modifier) && modifier.type == accidentalString && modifier.getIndex() == keyIndex) {
               staveNote.getModifiers().splice(index, 1);
             }
           });

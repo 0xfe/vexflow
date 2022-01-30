@@ -4,10 +4,11 @@
 import { KeySignature } from './keysignature';
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
+import { Category } from './typeguard';
 
 export class KeySigNote extends Note {
   static get CATEGORY(): string {
-    return 'KeySigNote';
+    return Category.KeySigNote;
   }
 
   protected keySignature: KeySignature;

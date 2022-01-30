@@ -9,6 +9,7 @@ import { Stave } from './stave';
 import { Tables } from './tables';
 import { TickContext } from './tickcontext';
 import { Tuplet } from './tuplet';
+import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
@@ -33,7 +34,7 @@ export interface FormatterMetrics {
  */
 export abstract class Tickable extends Element {
   static get CATEGORY(): string {
-    return 'Tickable';
+    return Category.Tickable;
   }
 
   protected ignore_ticks: boolean;

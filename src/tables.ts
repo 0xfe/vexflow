@@ -862,9 +862,7 @@ export class Tables {
 
     // The default implementation of getWidth() calls Glyph.getWidth(code_head, scale).
     // This can be overridden by an individual glyph type (see slash noteheads below: Tables.SLASH_NOTEHEAD_WIDTH).
-    const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number | undefined => {
-      return Glyph.getWidth(code_head, scale);
-    };
+    const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number | undefined => Glyph.getWidth(code_head, scale);
 
     // Merge duration props for 'duration' with the note head properties.
     return { ...code.common, getWidth: getWidth, ...glyphTypeProperties };

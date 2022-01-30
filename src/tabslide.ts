@@ -8,11 +8,12 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { TieNotes } from './stavetie';
 import { TabNote } from './tabnote';
 import { TabTie } from './tabtie';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export class TabSlide extends TabTie {
   static get CATEGORY(): string {
-    return 'TabSlide';
+    return Category.TabSlide;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

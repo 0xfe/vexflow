@@ -9,6 +9,7 @@
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';
 import { TickContext } from './tickcontext';
+import { Category } from './typeguard';
 import { log } from './util';
 
 export interface CrescendoParams {
@@ -53,7 +54,7 @@ export class Crescendo extends Note {
 
   /** Crescendo category string. */
   static get CATEGORY(): string {
-    return 'Crescendo';
+    return Category.Crescendo;
   }
 
   protected decrescendo: boolean;

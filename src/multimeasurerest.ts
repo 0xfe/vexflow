@@ -8,10 +8,10 @@ import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
-import { isBarline } from './stavebarline';
 import { StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
+import { Category, isBarline } from './typeguard';
 import { defined } from './util';
 
 export interface MultimeasureRestRenderOptions {
@@ -71,7 +71,7 @@ function get_semibreve_rest() {
 
 export class MultiMeasureRest extends Element {
   static get CATEGORY(): string {
-    return 'MultiMeasureRest';
+    return Category.MultiMeasureRest;
   }
 
   public render_options: Required<MultimeasureRestRenderOptions>;

@@ -7,7 +7,6 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { isDot } from './dot';
 import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
@@ -16,10 +15,8 @@ import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { isCategory } from './typeguard';
+import { Category, isDot } from './typeguard';
 import { defined, RuntimeError } from './util';
-
-export const isTabNote = (obj: unknown): obj is TabNote => isCategory(obj, TabNote);
 
 export interface TabNotePosition {
   // For example, on a six stringed instrument, `str` ranges from 1 to 6.
@@ -128,7 +125,7 @@ function getPartialStemLines(stem_y: number, unused_strings: number[][], stave: 
 
 export class TabNote extends StemmableNote {
   static get CATEGORY(): string {
-    return 'TabNote';
+    return Category.TabNote;
   }
 
   protected ghost: boolean;

@@ -4,6 +4,7 @@
 
 import { Element } from './element';
 import { Note } from './note';
+import { Category } from './typeguard';
 import { log } from './util';
 import { Vibrato } from './vibrato';
 
@@ -18,7 +19,7 @@ export class VibratoBracket extends Element {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'VibratoBracket';
+    return Category.VibratoBracket;
   }
 
   protected line: number;

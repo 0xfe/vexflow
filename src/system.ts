@@ -9,6 +9,7 @@ import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave, StaveOptions } from './stave';
 import { StaveConnector } from './staveconnector';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
 
@@ -59,7 +60,7 @@ export interface SystemOptions {
  */
 export class System extends Element {
   static get CATEGORY(): string {
-    return 'System';
+    return Category.System;
   }
 
   protected options!: Required<SystemOptions>;
@@ -79,7 +80,10 @@ export class System extends Element {
 
   /** Set formatting options. */
   setOptions(options: SystemOptions = {}): void {
-    this.factory = options.factory ?? new Factory({ renderer: { elementId: null, width: 0, height: 0 } });
+    if (!options.factory) {
+      throw new RuntimeError('NoFactory', 'System.setOptions(options) requires a factory.');
+    }
+    this.factory = options.factory;
     this.options = {
       factory: this.factory,
       x: 10,
@@ -127,21 +131,18 @@ export class System extends Element {
   }
 
   /**
-   * Add stave to the system.
+   * Add a stave to the system.
    *
-   * Examples:
-   *
-   *  (one voice)
+   * Example (one voice):
    *
    * `system.addStave({voices: [score.voice(score.notes('C#5/q, B4, A4, G#4'))]});`
    *
-   *  (two voices)
+   * Example (two voices):
    *
    * `system.addStave({voices: [`
-   *
-   *  `score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),`
-   *
-   *  `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))]});`
+   *   `score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),`
+   *   `score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))`
+   * `]});`
    */
   addStave(params: SystemStave): Stave {
     const staveOptions: StaveOptions = { left_bar: false, ...params.options };

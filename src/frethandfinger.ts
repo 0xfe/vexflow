@@ -10,11 +10,12 @@ import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFormatter } from './textformatter';
+import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
-    return 'FretHandFinger';
+    return Category.FretHandFinger;
   }
 
   static TEXT_FONT: Required<FontInfo> = {

@@ -11,16 +11,13 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
-import { isStaveNote } from './stavenote';
 import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TabTie } from './tabtie';
-import { isCategory } from './typeguard';
+import { Category, isStaveNote } from './typeguard';
 import { log } from './util';
 import { Voice } from './voice';
-
-export const isGraceNoteGroup = (obj: unknown): obj is GraceNoteGroup => isCategory(obj, GraceNoteGroup);
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 // eslint-disable-next-line
@@ -33,7 +30,7 @@ export class GraceNoteGroup extends Modifier {
   static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
-    return 'GraceNoteGroup';
+    return Category.GraceNoteGroup;
   }
 
   protected readonly voice: Voice;
@@ -41,7 +38,7 @@ export class GraceNoteGroup extends Modifier {
   protected readonly show_slur?: boolean;
 
   protected preFormatted: boolean = false;
-  protected formatter: Formatter;
+  protected formatter?: Formatter;
   public render_options: { slur_y_shift: number };
   protected slur?: StaveTie | TabTie;
   protected beams: Beam[];
@@ -105,7 +102,6 @@ export class GraceNoteGroup extends Modifier {
     this.show_slur = show_slur;
     this.slur = undefined;
 
-    this.formatter = new Formatter();
     this.voice = new Voice({
       num_beats: 4,
       beat_value: 4,
@@ -126,6 +122,9 @@ export class GraceNoteGroup extends Modifier {
   preFormat(): void {
     if (this.preFormatted) return;
 
+    if (!this.formatter) {
+      this.formatter = new Formatter();
+    }
     this.formatter.joinVoices([this.voice]).format([this.voice], 0, {});
     this.setWidth(this.formatter.getMinTotalWidth());
     this.preFormatted = true;
