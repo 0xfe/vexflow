@@ -330,50 +330,51 @@ function alignedMixedElements(options: TestOptions): void {
   const stave2 = new Stave(410, 200, 400);
   const notes = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addModifier(0, new Accidental('##'))
-      .addModifier(0, new FretHandFinger('4').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a^').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('am').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.BOTTOM))
+      .addModifier(new Accidental('##'), 0)
+      .addModifier(new FretHandFinger('4').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a^').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('am').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a@u').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.BOTTOM), 0)
       .addModifier(
-        0,
-        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('sans-serif', 20),
+        0
       )
       .addModifier(
-        0,
-        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('Sans-serif', 20, '')
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.BOTTOM).setFont('sans-serif', 20),
+        0
       ),
     new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
-      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.BELOW))
-      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.BELOW)),
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.BELOW), 0),
+
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
   const notes2 = [
     new StaveNote({ keys: ['c/5'], duration: '8' })
-      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP)),
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP), 0),
     new StaveNote({ keys: ['c/5'], duration: '8', stem_direction: Stem.DOWN })
-      .addModifier(0, new FretHandFinger('4').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new StringNumber('3').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('a.').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('a>').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('a^').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('am').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Articulation('a@u').setPosition(ModifierPosition.ABOVE))
-      .addModifier(0, new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP))
+      .addModifier(new FretHandFinger('4').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new StringNumber('3').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a.').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a>').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a^').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('am').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Articulation('a@u').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new Annotation('yyyy').setVerticalJustification(AnnotationVerticalJustify.TOP), 0)
       .addModifier(
-        0,
-        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')
+        new Annotation('xxxx').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('sans-serif', 20),
+        0
       )
       .addModifier(
-        0,
-        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('Sans-serif', 20, '')
+        new Annotation('ttt').setVerticalJustification(AnnotationVerticalJustify.TOP).setFont('sans-serif', 20),
+        0
       ),
     new StaveNote({ keys: ['c/5'], duration: '8' }),
   ];
@@ -438,7 +439,7 @@ function notesWithTab(options: TestOptions): void {
     f.TabStave({ y: y }).addTabGlyph().setNoteStartX(stave.getNoteStartX());
 
     const tabVoice = score.voice([
-      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(0, new Bend('Full')),
+      f.TabNote({ positions: [{ str: 3, fret: 6 }], duration: '2' }).addModifier(new Bend('Full'), 0),
       f
         .TabNote({
           positions: [
@@ -447,7 +448,7 @@ function notesWithTab(options: TestOptions): void {
           ],
           duration: '8',
         })
-        .addModifier(1, new Bend('Unison')),
+        .addModifier(new Bend('Unison'), 1),
       f.TabNote({ positions: [{ str: 3, fret: 7 }], duration: '8' }),
       f.TabNote({
         positions: [
@@ -788,7 +789,6 @@ function annotations(options: TestOptions): void {
       }
       if (sm.lyrics.length > iii) {
         note.addModifier(
-          0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
             .setFont(Font.SERIF, 12, FontWeight.NORMAL)

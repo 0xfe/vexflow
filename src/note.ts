@@ -532,30 +532,23 @@ export abstract class Note extends Tickable {
    * @param index of the key to modify.
    * @returns this
    */
-  addModifier(index: number, modifier: Modifier): this {
+  addModifier(modifier: Modifier, index: number = 0): this {
+    const signature = 'Note.addModifier(modifier: Modifier, index: number=0)';
     // Backwards compatibility with 3.0.9.
     if (typeof index === 'string') {
       index = parseInt(index);
       // eslint-disable-next-line
-      console.warn(
-        'Note.addModifier(modifier: Modifier, index?: number) ' +
-          'expected a number for `index`, but received a string. ' +
-          'Please provide a number for the `index` argument.'
-      );
+      console.warn(signature + ' expected a number for `index`, but received a string.');
     }
 
-    // Legacy versions of VexFlow had the two parameters swapped.
-    // We check here and throw an error if the argument types are not correct.
+    // Some versions of VexFlow had the two parameters reversed.
+    // Check here and throw an error if the argument types are not correct.
     if (typeof modifier !== 'object' || typeof index !== 'number') {
-      throw new RuntimeError(
-        'WrongParams',
-        'Call signature to addModifier not supported, use addModifier(modifier: Modifier, index) instead.'
-      );
+      throw new RuntimeError('WrongParams', 'Incorrect call signature. Use ' + signature + ' instead.');
     }
     modifier.setNote(this);
     modifier.setIndex(index);
-    this.modifiers.push(modifier);
-    this.preFormatted = false;
+    super.addModifier(modifier);
     return this;
   }
 

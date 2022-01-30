@@ -372,7 +372,7 @@ export class Builder {
       const accid = notePiece.accid;
       if (typeof accid === 'string') {
         const accidental = factory.Accidental({ type: accid });
-        note.addModifier(index, accidental);
+        note.addModifier(accidental, index);
         accidentals.push(accidental);
       } else {
         accidentals.push(undefined);

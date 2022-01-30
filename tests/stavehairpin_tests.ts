@@ -57,8 +57,8 @@ function createTest(drawTwoHairpins: (ctx: RenderContext, notes: StaveNote[]) =>
     const notes = [
       factory
         .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], stem_direction: 1, duration: '4' })
-        .addModifier(0, factory.Accidental({ type: 'b' }))
-        .addModifier(1, factory.Accidental({ type: '#' })),
+        .addModifier(factory.Accidental({ type: 'b' }), 0)
+        .addModifier(factory.Accidental({ type: '#' }), 1),
       factory.StaveNote({ keys: ['d/4'], stem_direction: 1, duration: '4' }),
       factory.StaveNote({ keys: ['e/4'], stem_direction: 1, duration: '4' }),
       factory.StaveNote({ keys: ['f/4'], stem_direction: 1, duration: '4' }),

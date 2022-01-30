@@ -33,9 +33,9 @@ function brushRollRasquedo(options: TestOptions): void {
   notes1[0].addStroke(0, new Stroke(1));
   notes1[1]
     .addStroke(0, new Stroke(2))
-    .addModifier(1, f.Accidental({ type: '#' }))
-    .addModifier(2, f.Accidental({ type: '#' }))
-    .addModifier(0, f.Accidental({ type: '#' }));
+    .addModifier(f.Accidental({ type: '#' }), 1)
+    .addModifier(f.Accidental({ type: '#' }), 2)
+    .addModifier(f.Accidental({ type: '#' }), 0);
   notes1[2].addStroke(0, new Stroke(1));
   notes1[3].addStroke(0, new Stroke(2));
 
@@ -55,9 +55,9 @@ function brushRollRasquedo(options: TestOptions): void {
   notes2[2].addStroke(0, new Stroke(5));
   notes2[3]
     .addStroke(0, new Stroke(6))
-    .addModifier(0, f.Accidental({ type: 'bb' }))
-    .addModifier(1, f.Accidental({ type: 'bb' }))
-    .addModifier(2, f.Accidental({ type: 'bb' }));
+    .addModifier(f.Accidental({ type: 'bb' }), 0)
+    .addModifier(f.Accidental({ type: 'bb' }), 1)
+    .addModifier(f.Accidental({ type: 'bb' }), 2);
 
   const voice2 = score.voice(notes2);
 
@@ -90,19 +90,19 @@ function arpeggioDirectionless(options: TestOptions): void {
   notes1[0].addStroke(0, new Stroke(7));
   notes1[1]
     .addStroke(0, new Stroke(7))
-    .addModifier(0, f.Accidental({ type: '#' }))
-    .addModifier(1, f.Accidental({ type: '#' }))
-    .addModifier(2, f.Accidental({ type: '#' }))
-    .addModifier(3, f.Accidental({ type: '#' }));
+    .addModifier(f.Accidental({ type: '#' }), 0)
+    .addModifier(f.Accidental({ type: '#' }), 1)
+    .addModifier(f.Accidental({ type: '#' }), 2)
+    .addModifier(f.Accidental({ type: '#' }), 3);
   notes1[2]
     .addStroke(0, new Stroke(7))
-    .addModifier(1, f.Accidental({ type: 'b' }))
-    .addModifier(0, graceNoteGroup);
+    .addModifier(f.Accidental({ type: 'b' }), 1)
+    .addModifier(graceNoteGroup, 0);
   notes1[3].addStroke(0, new Stroke(7)).addModifier(
-    0,
     f.NoteSubGroup({
       notes: [f.ClefNote({ type: 'treble', options: { size: 'default', annotation: '8va' } })],
-    })
+    }),
+    0
   );
 
   const voice1 = score.voice(notes1);
@@ -124,8 +124,8 @@ function multiVoice(options: TestOptions): void {
   notes1[0].addStroke(0, new Stroke(5));
   notes1[1]
     .addStroke(0, new Stroke(6))
-    .addModifier(0, f.Accidental({ type: '#' }))
-    .addModifier(2, f.Accidental({ type: '#' }));
+    .addModifier(f.Accidental({ type: '#' }), 0)
+    .addModifier(f.Accidental({ type: '#' }), 2);
   notes1[2].addStroke(0, new Stroke(2));
   notes1[3].addStroke(0, new Stroke(1));
 
@@ -315,18 +315,18 @@ function notesWithTab(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['b/4', 'd/5', 'g/5'], stem_direction: -1, duration: '4' })
-      .addModifier(1, f.Accidental({ type: 'b' }))
-      .addModifier(0, f.Accidental({ type: 'b' })),
+      .addModifier(f.Accidental({ type: 'b' }), 1)
+      .addModifier(f.Accidental({ type: 'b' }), 0),
     f.StaveNote({ keys: ['c/5', 'd/5'], stem_direction: -1, duration: '4' }),
     f.StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5'], stem_direction: 1, duration: '8' }),
     f
       .StaveNote({ keys: ['a/3', 'e/4', 'a/4', 'c/5', 'e/5', 'a/5'], stem_direction: 1, duration: '8' })
-      .addModifier(3, f.Accidental({ type: '#' })),
+      .addModifier(f.Accidental({ type: '#' }), 3),
     f.StaveNote({ keys: ['b/3', 'e/4', 'a/4', 'd/5'], stem_direction: 1, duration: '8' }),
     f
       .StaveNote({ keys: ['a/3', 'e/4', 'a/4', 'c/5', 'f/5', 'a/5'], stem_direction: 1, duration: '8' })
-      .addModifier(3, f.Accidental({ type: '#' }))
-      .addModifier(4, f.Accidental({ type: '#' })),
+      .addModifier(f.Accidental({ type: '#' }), 3)
+      .addModifier(f.Accidental({ type: '#' }), 4),
   ];
 
   const tabstave = f
@@ -344,7 +344,7 @@ function notesWithTab(options: TestOptions): void {
         ],
         duration: '4',
       })
-      .addModifier(0, new Bend('Full')),
+      .addModifier(new Bend('Full'), 0),
     f
       .TabNote({
         positions: [
@@ -353,7 +353,7 @@ function notesWithTab(options: TestOptions): void {
         ],
         duration: '4',
       })
-      .addModifier(1, new Bend('Unison')),
+      .addModifier(new Bend('Unison'), 1),
     f.TabNote({
       positions: [
         { str: 3, fret: 7 },

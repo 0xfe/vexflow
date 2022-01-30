@@ -748,13 +748,13 @@ function complexWithAnnotation(options: TestOptions): void {
   const notes1 = s1.map((struct) =>
     factory
       .StaveNote(struct) //
-      .addModifier(0, factory.Annotation({ text: '1', vJustify: AnnotationVerticalJustify.TOP, font }))
+      .addModifier(factory.Annotation({ text: '1', vJustify: AnnotationVerticalJustify.TOP, font }), 0)
   );
 
   const notes2 = s2.map((struct) =>
     factory
       .StaveNote(struct) //
-      .addModifier(0, factory.Annotation({ text: '3', vJustify: AnnotationVerticalJustify.BOTTOM, font }))
+      .addModifier(factory.Annotation({ text: '3', vJustify: AnnotationVerticalJustify.BOTTOM, font }), 0)
   );
 
   factory.Beam({ notes: notes1 });
@@ -794,10 +794,10 @@ function complexWithArticulation(options: TestOptions): void {
   ];
 
   const notes1 = s1.map((struct) =>
-    f.StaveNote(struct).addModifier(0, f.Articulation({ type: 'am', position: 'above' }))
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0)
   );
   const notes2 = s2.map((struct) =>
-    f.StaveNote(struct).addModifier(0, f.Articulation({ type: 'a>', position: 'below' }))
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0)
   );
 
   f.Beam({ notes: notes1 });

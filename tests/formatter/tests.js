@@ -50,10 +50,10 @@ function subgroup(el, iterations, params) {
   f.StaveConnector({ top_stave: stave1, bottom_stave: stave2, type: 'singleRight' });
 
   function addAccidental(note, acc) {
-    return note.addModifier(0, f.Accidental({ type: acc }));
+    return note.addModifier(f.Accidental({ type: acc }), 0);
   }
   function addSubGroup(note, subNotes) {
-    return note.addModifier(0, f.NoteSubGroup({ notes: subNotes }));
+    return note.addModifier(f.NoteSubGroup({ notes: subNotes }), 0);
   }
 
   f.Beam({ notes: notes3.slice(1, 4) });
@@ -262,4 +262,6 @@ const Tests = {
   },
 };
 
-module.exports = Tests;
+if (typeof module != 'undefined') {
+  module.exports = Tests;
+}
