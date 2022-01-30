@@ -8,9 +8,9 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
-import { RuntimeError } from './util';
-import { TextFormatter } from './textformatter';
 import { Tables } from './tables';
+import { TextFormatter } from './textformatter';
+import { RuntimeError } from './util';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
@@ -45,10 +45,10 @@ export class FretHandFinger extends Modifier {
       const textFormatter = TextFormatter.create(num.textFont);
       const textHeight = textFormatter.maxHeight;
       if (num.position === ModifierPosition.ABOVE) {
-        state.top_text_line += (textHeight / Tables.STAVE_LINE_DISTANCE) + 0.5;
+        state.top_text_line += textHeight / Tables.STAVE_LINE_DISTANCE + 0.5;
       }
       if (num.position === ModifierPosition.BELOW) {
-        state.text_line += (textHeight / Tables.STAVE_LINE_DISTANCE) + 0.5;
+        state.text_line += textHeight / Tables.STAVE_LINE_DISTANCE + 0.5;
       }
 
       if (note !== prev_note) {

@@ -245,7 +245,7 @@ export const BravuraMetrics = {
       verticalPadding: 8,
       stemPadding: 2,
       leftPadding: 5,
-      rightPadding: 6
+      rightPadding: 6,
     },
     stroke: {
       arrowheadBlackDown: {
