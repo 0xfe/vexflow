@@ -376,7 +376,14 @@ module.exports = (grunt) => {
     // Run unit tests on the command line by loading tests/flow-headless-browser.html.
     // Requires the CJS build to be present in the `build/cjs/` directory (See: grunt build:cjs).
     // The grunt-contrib-qunit package uses puppeteer to load the test page.
-    qunit: { files: ['tests/flow-headless-browser.html'] },
+    qunit: {
+      files: ['tests/flow-headless-browser.html'],
+      options: {
+        puppeteer: {
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
+    },
     copy: {
       // grunt copy:reference
       // After `grunt test` call this to save the current build/ to reference/.
@@ -601,7 +608,7 @@ module.exports = (grunt) => {
   // node ./tools/generate_images.js releases/X.Y.Z ./build/images/X.Y.Z ${VEX_GENERATE_OPTIONS}
   grunt.registerTask('generate:release', 'Create images from the VexFlow version in releases/X.Y.Z/', (ver) => {
     console.log(`Creating images with VexFlow version ${ver}.`);
-    console.log('Saving images to build/images/X.Y.Z/');
+    console.log(`Saving images to build/images/${ver}/`);
     runCommand(
       'node',
       './tools/generate_images.js',
@@ -733,51 +740,74 @@ module.exports = (grunt) => {
       // verbose: 2, // Only for debugging.
       hooks: {
         'before:init': ['grunt clean'],
-        'after:bump': [
-          'grunt',
-          'echo Adding build/ folder...',
-          'git add -f build/',
-          "git commit -m 'Add build/ for release version ${version}.'",
-        ],
-        'after:npm:release': ['echo COMPLETE: Published to npm.'],
-        'after:git:release': ['echo COMPLETE: Committed to git repository.'],
-        'after:github:release': ['echo COMPLETE: Released to GitHub.'],
-        'after:release': [
-          'echo Removing build/ folder...',
-          'git rm -rf build/',
-          "git commit -m 'Remove build/ after releasing version ${version}.'",
-          'git push',
-          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
-        ],
+        'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
+        'after:npm:release': ['echo Published to npm.'],
+        'after:git:release': ['echo Committed to git repository.'],
+        'after:github:release': ['echo Released to GitHub.'],
+        'after:release': ['echo Successfully released ${name} ${version} to https://github.com/${repo.repository}'],
       },
       git: {
-        changelog: false, // After 4.0: set to true to start publishing recent git commit history as a mini changelog.
         commitMessage: 'Release VexFlow ${version}',
-        requireCleanWorkingDir: true,
+        changelog: false, // After 4.0: set to true to start publishing recent git commit history as a mini changelog.
+        requireCleanWorkingDir: false,
         commit: true,
         tag: true,
         push: true,
+        pushRepo: 'git@github.com:0xfe/vexflow.git',
       },
-      github: { release: true },
+      github: {
+        release: true,
+        skipChecks: false,
+      },
       npm: { publish: true },
+      'disable-metrics': true,
     };
 
-    if (args.includes('dry-run')) {
-      options['dry-run'] = true;
-      console.log('====== DRY RUN MODE ======');
-    }
-    // Handle preRelease tags: alpha | beta | rc.
-    if (args.includes('alpha')) {
-      options['preRelease'] = 'alpha';
-    }
-    if (args.includes('beta')) {
-      options['preRelease'] = 'beta';
-    }
-    if (args.includes('rc')) {
-      options['preRelease'] = 'rc';
+    // Support boolean flags (e.g., 'git.commit=false').
+    function setBooleanFlag(arg) {
+      // 'git.commit=false' => ['git.commit', 'false']
+      const parts = arg.split('=');
+      if (parts.length !== 2) {
+        return;
+      }
+      // 'git.commit' => ['git', 'commit']
+      const [key_0, key_1] = parts[0].split('.');
+      const val = parts[1] === 'true'; // any other value === false
+      options[key_0][key_1] = val;
     }
 
+    args.forEach((arg) => {
+      if (arg === 'dry-run') {
+        options['dry-run'] = true;
+        log('====== DRY RUN MODE ======');
+      } else if (arg === 'alpha' || arg === 'beta' || arg === 'rc') {
+        // Handle preRelease tags: alpha | beta | rc.
+        options['preRelease'] = arg;
+      } else if (arg.startsWith('verbose')) {
+        // verbose=1  =>  See the output of each hook.
+        // verbose=2  =>  For debugging the release script.
+        const parts = arg.split('=');
+        if (parts.length === 2) {
+          const val = parseInt(parts[1]) === 1 ? 1 : 2;
+          options.verbose = val;
+        }
+      } else if (arg.startsWith('git.') || arg.startsWith('github.') || arg.startsWith('npm.')) {
+        setBooleanFlag(arg);
+      }
+    });
+
     release(options).then((output) => {
+      try {
+        // If the build/ folder is currently checked in to the repo, we remove it.
+        const hideOutput = { stdio: 'pipe' }; // Hide the output of the following two execSync() calls.
+        execSync('git show HEAD:build/', hideOutput);
+        log('Removing build/ folder...');
+        execSync('git rm -rf build/', hideOutput);
+        execSync(`git commit -m 'Remove build/ after releasing version ${output.version} to npm and GitHub.'`);
+        runCommand('git', 'push');
+      } catch (e) {
+        // If the build/ folder is not checked in, we do nothing.
+      }
       done();
     });
   });

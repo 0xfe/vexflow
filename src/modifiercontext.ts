@@ -99,7 +99,7 @@ export class ModifierContext {
   }
 
   getMembers(category: string): ModifierContextMember[] {
-    return this.members[category];
+    return this.members[category] ?? [];
   }
 
   getWidth(): number {

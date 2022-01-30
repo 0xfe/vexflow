@@ -29,8 +29,6 @@ export class Parenthesis extends Modifier {
 
   /** Arrange parentheses inside a ModifierContext. */
   static format(parentheses: Parenthesis[], state: ModifierContextState): boolean {
-    const { right_shift, left_shift } = state;
-
     if (!parentheses || parentheses.length === 0) return false;
 
     let x_widthL = 0;
@@ -41,17 +39,16 @@ export class Parenthesis extends Modifier {
       const note = parenthesis.getNote();
       const pos = parenthesis.getPosition();
       const index = parenthesis.checkIndex();
-      const props = note.getKeyProps()[index];
 
       let shift = 0;
 
       if (pos === ModifierPosition.RIGHT) {
-        shift = (props.displaced ? note.getRightDisplacedHeadPx() : 0) + right_shift;
-        x_widthR += shift + parenthesis.width;
+        shift = note.getRightParenthesisPx(index);
+        x_widthR = x_widthR > shift + parenthesis.width ? x_widthR : shift + parenthesis.width;
       }
       if (pos === ModifierPosition.LEFT) {
-        shift = (props.displaced ? note.getLeftDisplacedHeadPx() : 0) + left_shift;
-        x_widthL += shift + parenthesis.width;
+        shift = note.getLeftParenthesisPx(index);
+        x_widthL = x_widthL > shift + parenthesis.width ? x_widthL : shift + parenthesis.width;
       }
       parenthesis.setXShift(shift);
     }
