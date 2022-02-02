@@ -97,7 +97,7 @@ export class Accidental extends Modifier {
       if (note !== prevNote) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
-          shiftL = Math.max(note.getLeftDisplacedHeadPx(), shiftL);
+          shiftL = Math.max(note.getLeftDisplacedHeadPx() - note.getXShift(), shiftL);
         }
         prevNote = note;
       }
