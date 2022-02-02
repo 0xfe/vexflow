@@ -722,7 +722,7 @@ module.exports = (grunt) => {
   //   https://github.com/0xfe/vexflow/wiki/Build,-Test,-Release#publish-manually-to-npm-and-github
   grunt.registerTask('release', 'Produce the complete build. Release to npm and GitHub.', function (...args) {
     if (!process.env.GITHUB_TOKEN) {
-      console.warn(
+      console.log(
         'GITHUB_TOKEN environment variable is missing.\n' +
           'You can manually release to GitHub at https://github.com/0xfe/vexflow/releases/new\n' +
           'Or use the GitHub CLI:\n' +
@@ -736,14 +736,14 @@ module.exports = (grunt) => {
     // https://github.com/release-it/release-it
     // https://github.com/release-it/release-it/blob/master/config/release-it.json
     const options = {
-      // verbose: 1, // See the output of each hook.
+      verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
       hooks: {
-        'before:init': ['grunt clean'],
+        'before:init': ['npx patch-package', 'grunt clean'],
         'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
-        'after:npm:release': ['echo Published to npm.'],
-        'after:git:release': ['echo Committed to git repository.'],
-        'after:github:release': ['echo Released to GitHub.'],
+        'after:npm:release': [],
+        'after:git:release': [],
+        'after:github:release': [],
         'after:release': ['echo Successfully released ${name} ${version} to https://github.com/${repo.repository}'],
       },
       git: {
@@ -797,6 +797,7 @@ module.exports = (grunt) => {
     });
 
     release(options).then((output) => {
+      console.log(output);
       try {
         // If the build/ folder is currently checked in to the repo, we remove it.
         const hideOutput = { stdio: 'pipe' }; // Hide the output of the following two execSync() calls.
