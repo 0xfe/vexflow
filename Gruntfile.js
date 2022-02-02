@@ -726,7 +726,7 @@ module.exports = (grunt) => {
         'GITHUB_TOKEN environment variable is missing.\n' +
           'You can manually release to GitHub at https://github.com/0xfe/vexflow/releases/new\n' +
           'Or use the GitHub CLI:\n' +
-          'gh release create 4.0.0 --title "Release 4.0.0"'
+          'gh release create 4.0.0 --title "Release 4.0.0"\n\n'
       );
     }
 
