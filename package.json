@@ -121,8 +121,7 @@
     "test": "grunt test",
     "reference": "grunt reference",
     "test:reference": "grunt test:reference",
-    "test:reference:cache": "grunt test:reference:cache",
-    "postinstall": "patch-package"
+    "test:reference:cache": "grunt test:reference:cache"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [

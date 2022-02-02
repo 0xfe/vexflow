@@ -222,7 +222,10 @@ rm -f  $BDIR/*.fail
 # Sort results by PHASH
 sort -r -n -k 2 $RESULTS.fail >$RESULTS
 sort -r -n -k 2 $BDIR/*.pass 1>>$RESULTS 2>/dev/null
-rm -f $BDIR/*.pass $RESULTS.fail
+
+# The previous cleanup approach (rm -f) triggered the error: Argument list too long.
+find $BDIR -name '*-temp.pass' -type f -delete
+rm -f $RESULTS.fail
 
 echo
 echo Results stored in $DIFF/results.txt

@@ -99,10 +99,10 @@ if (!global.QUnit) {
 // We use file detection to determine which file(s) to include.
 const vexflowDebugWithTestsJS = path.join(scriptDir, 'vexflow-debug-with-tests.js');
 if (fs.existsSync(path.resolve(__dirname, vexflowDebugWithTestsJS))) {
-  console.log('Generating Images for version >= 4.0.0');
+  // console.log('Generating Images for version >= 4.0.0');
   global.Vex = require(vexflowDebugWithTestsJS);
 } else {
-  console.log('Generating Images for version <= 3.0.9');
+  // console.log('Generating Images for version <= 3.0.9');
   const vexflowTests = require(path.join(scriptDir, 'vexflow-tests.js'));
   if (typeof vexflowTests.Flow === 'object') {
     // During the migration of 3.0.9 => 4.0.0.

@@ -94,7 +94,7 @@ You can also do it all on one line:
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { spawnSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -722,11 +722,11 @@ module.exports = (grunt) => {
   //   https://github.com/0xfe/vexflow/wiki/Build,-Test,-Release#publish-manually-to-npm-and-github
   grunt.registerTask('release', 'Produce the complete build. Release to npm and GitHub.', function (...args) {
     if (!process.env.GITHUB_TOKEN) {
-      console.warn(
+      console.log(
         'GITHUB_TOKEN environment variable is missing.\n' +
           'You can manually release to GitHub at https://github.com/0xfe/vexflow/releases/new\n' +
           'Or use the GitHub CLI:\n' +
-          'gh release create 4.0.0 --title "Release 4.0.0"'
+          'gh release create 4.0.0 --title "Release 4.0.0"\n\n'
       );
     }
 
@@ -736,14 +736,14 @@ module.exports = (grunt) => {
     // https://github.com/release-it/release-it
     // https://github.com/release-it/release-it/blob/master/config/release-it.json
     const options = {
-      // verbose: 1, // See the output of each hook.
+      verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
       hooks: {
-        'before:init': ['grunt clean'],
+        'before:init': ['npx patch-package', 'grunt clean'],
         'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
-        'after:npm:release': ['echo Published to npm.'],
-        'after:git:release': ['echo Committed to git repository.'],
-        'after:github:release': ['echo Released to GitHub.'],
+        'after:npm:release': [],
+        'after:git:release': [],
+        'after:github:release': [],
         'after:release': ['echo Successfully released ${name} ${version} to https://github.com/${repo.repository}'],
       },
       git: {
@@ -798,15 +798,12 @@ module.exports = (grunt) => {
 
     release(options).then((output) => {
       try {
-        // If the build/ folder is currently checked in to the repo, we remove it.
-        const hideOutput = { stdio: 'pipe' }; // Hide the output of the following two execSync() calls.
-        execSync('git show HEAD:build/', hideOutput);
         log('Removing build/ folder...');
-        execSync('git rm -rf build/', hideOutput);
+        execSync('git rm -rf build/', { stdio: 'pipe' }); // { stdio: 'pipe' } hides the output.
         execSync(`git commit -m 'Remove build/ after releasing version ${output.version} to npm and GitHub.'`);
         runCommand('git', 'push');
       } catch (e) {
-        // If the build/ folder is not checked in, we do nothing.
+        // If the build/ folder was not added/checked in, we do nothing.
       }
       done();
     });
