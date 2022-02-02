@@ -94,7 +94,7 @@ You can also do it all on one line:
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const { spawnSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -797,17 +797,13 @@ module.exports = (grunt) => {
     });
 
     release(options).then((output) => {
-      console.log(output);
       try {
-        // If the build/ folder is currently checked in to the repo, we remove it.
-        const hideOutput = { stdio: 'pipe' }; // Hide the output of the following two execSync() calls.
-        execSync('git show HEAD:build/', hideOutput);
         log('Removing build/ folder...');
-        execSync('git rm -rf build/', hideOutput);
+        execSync('git rm -rf build/', { stdio: 'pipe' }); // { stdio: 'pipe' } hides the output.
         execSync(`git commit -m 'Remove build/ after releasing version ${output.version} to npm and GitHub.'`);
         runCommand('git', 'push');
       } catch (e) {
-        // If the build/ folder is not checked in, we do nothing.
+        // If the build/ folder was not added/checked in, we do nothing.
       }
       done();
     });
