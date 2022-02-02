@@ -18,14 +18,12 @@ export abstract class StemmableNote extends Note {
 
   stem_direction?: number;
   stem?: Stem;
-  renderFlag: boolean;
 
   protected flag?: Glyph;
   protected stem_extension_override?: number;
 
   constructor(noteStruct: NoteStruct) {
     super(noteStruct);
-    this.renderFlag = true;
   }
 
   // Get and set the note's `Stem`
@@ -245,7 +243,7 @@ export abstract class StemmableNote extends Note {
   }
 
   hasFlag(): boolean {
-    return this.renderFlag && Tables.getGlyphProps(this.duration).flag && !this.beam;
+    return Tables.getGlyphProps(this.duration).flag && !this.beam;
   }
 
   /** Post formats the note. */

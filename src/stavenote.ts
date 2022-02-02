@@ -190,21 +190,29 @@ export class StaveNote extends StemmableNote {
         } else if (noteL.isrest) {
           // shift rest down
           shiftRestVertical(noteL, noteU, -1);
-        } else if (noteU.stemDirection === noteL.stemDirection) {
-          // upper voice is middle voice, so shift it right
-          xShift = voiceXShift + 2;
-          noteU.note.setXShift(xShift);
         } else {
-          //Vexflowpatch: Instead of shifting notes, remove the appropriate flag
+          //Instead of shifting notes, remove the appropriate flag
           //If we are sharing a line, switch one notes stem direction.
           //If we are sharing a line and in the same voice, only then offset one note
           const lineDiff = Math.abs(noteU.line - noteL.line);
           if (noteU.note.hasStem() && noteL.note.hasStem()) {
             //If we have different dot values, must offset
-            //Or If we have a non-filled in mixed with a filled in notehead, must offset
+            //Or If we have a white mixed with a black notehead, must offset
+            let whiteNoteHeadCount = 0;
+            let blackNoteHeadCount = 0;
+            if (Tables.durationToNumber(noteU.note.duration) === 2) {
+              whiteNoteHeadCount++;
+            } else if (Tables.durationToNumber(noteU.note.duration) > 2) {
+              blackNoteHeadCount++;
+            }
+            if (Tables.durationToNumber(noteL.note.duration) === 2) {
+              whiteNoteHeadCount++;
+            } else if (Tables.durationToNumber(noteL.note.duration) > 2) {
+              blackNoteHeadCount++;
+            }
             if (
-              noteU.note.duration !== noteL.note.duration ||
-              noteU.note.getModifiersByType('Dot').length !== noteL.note.getModifiersByType('Dot').length
+              (whiteNoteHeadCount !== 2 && blackNoteHeadCount !== 2) ||
+              noteU.note.getModifiersByType(Category.Dot).length !== noteL.note.getModifiersByType(Category.Dot).length
             ) {
               xShift = voiceXShift + 2;
               if (noteU.stemDirection === noteL.stemDirection) {
@@ -214,20 +222,11 @@ export class StaveNote extends StemmableNote {
                 // shift lower voice right
                 noteL.note.setXShift(xShift);
               }
-              if (noteU.note.getModifiersByType('Dot').length > 0) {
-                let foundDots = 0;
-                for (const modifier of noteU.note.modifiers) {
-                  if (modifier.getCategory() === 'Dot') {
-                    foundDots++;
-                    //offset dot(s) above the shifted note
-                    //lines + 1 to negative pixels
-                    modifier.setYShift(-10 * (noteL.maxLine - noteU.line + 1));
-                    if (foundDots === noteU.note.getModifiersByType('Dot').length) {
-                      break;
-                    }
-                  }
-                }
-              }
+              //offset dot(s) above the shifted note
+              //lines + 1 to negative pixels
+              noteU.note.getModifiersByType(Category.Dot).forEach((dot) => {
+                dot.setYShift(-10 * (noteL.maxLine - noteU.line + 1));
+              });
             } else if (lineDiff < 1 && lineDiff > 0) {
               //if the notes are quite close but not on the same line, shift
               xShift = voiceXShift + 2;
@@ -241,20 +240,9 @@ export class StaveNote extends StemmableNote {
             } else if (noteU.note.voice !== noteL.note.voice) {
               //If we are not in the same voice
               if (noteU.stemDirection === noteL.stemDirection) {
-                if (noteU.line > noteL.line) {
-                  //noteU is above noteL
-                  if (noteU.stemDirection === 1) {
-                    noteL.note.renderFlag = false;
-                  } else {
-                    noteU.note.renderFlag = false;
-                  }
-                } else if (noteL.line > noteU.line) {
-                  //note L is above noteU
-                  if (noteL.stemDirection === 1) {
-                    noteU.note.renderFlag = false;
-                  } else {
-                    noteL.note.renderFlag = false;
-                  }
+                if (noteU.line != noteL.line) {
+                  xShift = voiceXShift + 2;
+                  noteU.note.setXShift(xShift);
                 } else {
                   //same line, swap stem direction for one note
                   if (noteL.stemDirection === 1) {
@@ -689,7 +677,7 @@ export class StaveNote extends StemmableNote {
   }
 
   hasFlag(): boolean {
-    return super.hasFlag() && !this.isRest() && this.renderFlag;
+    return super.hasFlag() && !this.isRest();
   }
 
   getStemX(): number {
@@ -1098,7 +1086,7 @@ export class StaveNote extends StemmableNote {
     const hasStem = this.stem !== undefined;
     const hasFlag = this.glyph.flag as boolean; // specified in tables.js
     const hasNoBeam = this.beam === undefined;
-    return hasStem && hasFlag && hasNoBeam && this.renderFlag;
+    return hasStem && hasFlag && hasNoBeam;
   }
 
   // Draw the flag for the note

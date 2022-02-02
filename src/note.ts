@@ -550,9 +550,9 @@ export abstract class Note extends Tickable {
     return this;
   }
 
-  // Get all modifiers of a specific type in the `ModifierContext`
+  /** Get all modifiers of a specific type in `this.modifiers`. */
   getModifiersByType(type: string): Modifier[] {
-    return this.checkModifierContext().getMembers(type) as Modifier[];
+    return this.modifiers.filter((modifier) => modifier.getCategory() === type);
   }
 
   /** Get the coordinates for where modifiers begin. */
