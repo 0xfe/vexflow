@@ -3,6 +3,7 @@ releases
 build
 demos/node/output
 node_modules
+graphs
 .eslintcache
 .DS_Store
 *.lock
