@@ -59,7 +59,6 @@ export class GraceNote extends StaveNote {
     return 0;
   }
 
-  // FIXME: move this to more basic class.
   getStaveNoteScale(): number {
     return this.render_options.glyph_font_scale / Tables.NOTATION_FONT_SCALE;
   }
@@ -95,8 +94,12 @@ export class GraceNote extends StaveNote {
             ? noteHeadBounds.y_top - noteStemHeight
             : noteHeadBounds.y_bottom - noteStemHeight;
 
+        const defaultStemExtention =
+          stem_direction === Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
+
         let defaultOffsetY = Tables.STEM_HEIGHT;
         defaultOffsetY -= defaultOffsetY / 2.8;
+        defaultOffsetY += defaultStemExtention;
         y += defaultOffsetY * staveNoteScale * stem_direction;
 
         const offsets =

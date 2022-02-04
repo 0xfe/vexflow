@@ -245,9 +245,6 @@ export const PetalumaMetrics = {
       flag128thDown: {
         shiftX: -1.2,
       },
-      tabStem: {
-        shiftX: -1.75,
-      },
       staveTempo: {
         shiftX: -1,
       },

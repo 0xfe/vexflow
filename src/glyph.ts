@@ -19,6 +19,8 @@ export interface GlyphProps {
   line_below: number;
   line_above: number;
   stem_beam_extension: number;
+  stem_up_extension: number;
+  stem_down_extension: number;
   stem: Stem;
   code: string;
   code_flag_upstem: string;
@@ -26,6 +28,8 @@ export interface GlyphProps {
   flag: boolean;
   width: number;
   text: string;
+  tabnote_stem_down_extension: number;
+  tabnote_stem_up_extension: number;
   beam_count: number;
   shift_y: number;
   getWidth(a?: number): number;

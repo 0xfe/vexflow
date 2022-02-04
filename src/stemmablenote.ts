@@ -191,9 +191,11 @@ export abstract class StemmableNote extends Note {
       return glyph.stem_beam_extension;
     }
 
-    const flagCode =
-      this.getStemDirection() === Stem.DOWN ? this.glyph.code_flag_downstem : this.glyph.code_flag_upstem;
-    return Math.abs(Tables.currentMusicFont().lookupMetric(`glyphs.flag.${flagCode}.shiftY`, 0));
+    if (glyph) {
+      return this.getStemDirection() === Stem.UP ? glyph.stem_up_extension : glyph.stem_down_extension;
+    }
+
+    return 0;
   }
 
   // Set the stem length to a specific. Will override the default length.
@@ -203,7 +205,7 @@ export abstract class StemmableNote extends Note {
   }
 
   // Get the top and bottom `y` values of the stem.
-  getStemExtents(): Record<string, number> {
+  getStemExtents(): { topY: number; baseY: number } {
     if (!this.stem) throw new RuntimeError('NoStem', 'No stem attached to this note.');
     return this.stem.getExtents();
   }

@@ -208,12 +208,14 @@ export class TabNote extends StemmableNote {
 
   // Get the default stem extension for the note
   getStemExtension(): number {
+    const glyph = this.getGlyph();
+
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
-    if (this.flag) {
-      return this.getStemDirection() === 1 ? -this.flag.checkMetrics().y_shift : this.flag.checkMetrics().y_shift;
+    if (glyph) {
+      return this.getStemDirection() === Stem.UP ? glyph.tabnote_stem_up_extension : glyph.tabnote_stem_down_extension;
     }
 
     return 0;
@@ -339,7 +341,7 @@ export class TabNote extends StemmableNote {
   }
 
   // Get the stem extents for the tabnote
-  getStemExtents(): Record<string, number> {
+  getStemExtents(): { topY: number; baseY: number } {
     return this.checkStem().getExtents();
   }
 
@@ -348,8 +350,7 @@ export class TabNote extends StemmableNote {
     const {
       beam,
       glyph,
-      stem_direction,
-      render_options: { draw_stem, glyph_font_scale },
+      render_options: { draw_stem },
     } = this;
     const context = this.checkContext();
 
@@ -357,16 +358,18 @@ export class TabNote extends StemmableNote {
 
     // Now it's the flag's turn.
     if (glyph.flag && shouldDrawFlag) {
-      const flag_x = this.getStemX() + 1;
-      const flag_y = this.getStemY() - this.checkStem().getHeight();
-
-      const flag_code =
-        stem_direction === Stem.DOWN
-          ? glyph.code_flag_downstem // Down stems have flags on the left.
-          : glyph.code_flag_upstem;
+      const flag_x = this.getStemX();
+      const flag_y =
+        this.getStemDirection() === Stem.DOWN
+          ? // Down stems are below the note head and have flags on the right.
+            this.getStemY() - this.checkStem().getHeight() - (this.glyph ? this.glyph.stem_down_extension : 0)
+          : // Up stems are above the note head and have flags on the right.
+            this.getStemY() - this.checkStem().getHeight() + (this.glyph ? this.glyph.stem_up_extension : 0);
 
       // Draw the Flag
-      Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code, { category: 'flag.tabStem' });
+      //this.flag?.setOptions({ category: 'flag.tabStem' });
+      this.flag?.render(context, flag_x, flag_y);
+      //Glyph.renderGlyph(context, flag_x, flag_y, glyph_font_scale, flag_code, { category: 'flag.tabStem' });
     }
   }
 

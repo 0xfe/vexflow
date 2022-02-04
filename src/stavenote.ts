@@ -373,7 +373,7 @@ export class StaveNote extends StemmableNote {
   setBeam(beam: Beam): this {
     this.beam = beam;
     this.calcNoteDisplacements();
-    // Update stem extension is a beam is assigned.
+    // Update stem extension if a beam is assigned.
     if (this.stem) {
       this.stem.setExtension(this.getStemExtension());
     }
@@ -1037,17 +1037,24 @@ export class StaveNote extends StemmableNote {
       // eslint-disable-next-line
       const noteStemHeight = this.stem!.getHeight();
       const flagX = this.getStemX();
-      // FIXME: What's with the magic +/- 2
+      // What's with the magic +/- 2
       // ANSWER: a corner of the note stem pokes out beyond the tip of the flag.
       // The extra +/- 2 pushes the flag glyph outward so it covers the stem entirely.
       // Alternatively, we could shorten the stem.
-      const extension = this.flag !== undefined ? this.flag.checkMetrics().y_shift : 0;
       const flagY =
         this.getStemDirection() === Stem.DOWN
           ? // Down stems are below the note head and have flags on the right.
-            y_top - noteStemHeight + 2 - extension
+            y_top -
+            noteStemHeight +
+            2 -
+            (this.glyph ? this.glyph.stem_down_extension : 0) * this.getStaveNoteScale() -
+            (this.flag?.getMetrics().y_shift ?? 0) * (1 - this.getStaveNoteScale())
           : // Up stems are above the note head and have flags on the right.
-            y_bottom - noteStemHeight - 2 - extension;
+            y_bottom -
+            noteStemHeight -
+            2 +
+            (this.glyph ? this.glyph.stem_up_extension : 0) * this.getStaveNoteScale() -
+            (this.flag?.getMetrics().y_shift ?? 0) * (1 - this.getStaveNoteScale());
 
       // Draw the Flag
       ctx.openGroup('flag', undefined, { pointerBBox: true });
@@ -1087,6 +1094,10 @@ export class StaveNote extends StemmableNote {
     ctx.openGroup('stem', undefined, { pointerBBox: true });
     this.stem?.setContext(ctx).draw();
     ctx.closeGroup();
+  }
+
+  getStaveNoteScale(): number {
+    return 1.0;
   }
 
   /**
