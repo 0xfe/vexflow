@@ -133,10 +133,16 @@ export const GonvilleMetrics = {
   },
 
   staveRepetition: {
-    default: {
+    symbolText: {
+      offsetX: 12,
       offsetY: 25,
-      offsetSymbol: 12,
       spacing: 5,
+    },
+    coda: {
+      offsetY: 25,
+    },
+    segno: {
+      offsetY: 0,
     },
   },
 

@@ -114,7 +114,7 @@ export class Repetition extends StaveModifier {
     Glyph.renderGlyph(
       stave.checkContext(),
       this.x + x + this.x_shift,
-      y + Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetY'),
+      y + Tables.currentMusicFont().lookupMetric('staveRepetition.coda.offsetY'),
       40,
       'coda',
       { category: 'coda' }
@@ -127,7 +127,7 @@ export class Repetition extends StaveModifier {
     Glyph.renderGlyph(
       stave.checkContext(),
       this.x + x + this.x_shift,
-      y + Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetY'),
+      y + Tables.currentMusicFont().lookupMetric('staveRepetition.segno.offsetY'),
       30,
       'segno',
       { category: 'segno' }
@@ -152,7 +152,7 @@ export class Repetition extends StaveModifier {
         symbol_x =
           text_x +
           ctx.measureText(text).width +
-          Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetSymbol');
+          Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.offsetX');
         break;
       // To the right without symbol
       case Repetition.type.DC:
@@ -165,7 +165,7 @@ export class Repetition extends StaveModifier {
           x +
           this.x_shift +
           stave.getWidth() -
-          Tables.currentMusicFont().lookupMetric('staveRepetition.default.spacing') -
+          Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.spacing') -
           modifierWidth -
           ctx.measureText(text).width;
         break;
@@ -176,21 +176,21 @@ export class Repetition extends StaveModifier {
           x +
           this.x_shift +
           stave.getWidth() -
-          Tables.currentMusicFont().lookupMetric('staveRepetition.default.spacing') -
+          Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.spacing') -
           modifierWidth -
           ctx.measureText(text).width -
-          Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetSymbol');
+          Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.offsetX');
         symbol_x =
           text_x +
           ctx.measureText(text).width +
-          Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetSymbol');
+          Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.offsetX');
         break;
     }
 
     const y =
       stave.getYForTopText(stave.getNumLines()) +
       this.y_shift +
-      Tables.currentMusicFont().lookupMetric('staveRepetition.default.offsetY');
+      Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.offsetY');
     if (draw_coda) {
       Glyph.renderGlyph(ctx, symbol_x, y, 40, 'coda', { category: 'coda' });
     }
