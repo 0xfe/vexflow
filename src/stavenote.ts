@@ -1096,6 +1096,7 @@ export class StaveNote extends StemmableNote {
     ctx.closeGroup();
   }
 
+  /** Primarily used as the scaling factor for grace notes, GraceNote will return the required scale. */
   getStaveNoteScale(): number {
     return 1.0;
   }
