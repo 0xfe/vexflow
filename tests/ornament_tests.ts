@@ -217,7 +217,6 @@ function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: Cont
 
   notes[0].addModifier(new Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'), 0);
   notes[1].addModifier(new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
   notes[2].addModifier(new Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'), 0);
   notes[3].addModifier(new Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'), 0);
   notes[4].addModifier(new Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'), 0);
