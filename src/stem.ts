@@ -147,7 +147,7 @@ export class Stem extends Element {
 
   // Get the y coordinates for the very base of the stem to the top of
   // the extension
-  getExtents(): Record<string, number> {
+  getExtents(): { topY: number; baseY: number } {
     const isStemUp = this.stem_direction === Stem.UP;
     const ys = [this.y_top, this.y_bottom];
     const stemHeight = Stem.HEIGHT + this.stem_extension;
