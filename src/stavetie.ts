@@ -152,12 +152,20 @@ export class StaveTie extends Element {
       const top_cp_y = (first_y_px + last_y_px) / 2 + cp1 * params.direction;
       const bottom_cp_y = (first_y_px + last_y_px) / 2 + cp2 * params.direction;
 
+      // id probably unnecessary if we save the group to 'el' via setAttribute
+      // let id: string = "";
+      // if (this.notes.first_note) {
+      //   id = this.notes.first_note.getAttribute('id') + '-tie';
+      // }
+      // this.setAttribute('el', ctx.openGroup('stavetie', id));
+      this.setAttribute('el', ctx.openGroup('stavetie'));
       ctx.beginPath();
       ctx.moveTo(params.first_x_px + first_x_shift, first_y_px);
       ctx.quadraticCurveTo(cp_x, top_cp_y, params.last_x_px + last_x_shift, last_y_px);
       ctx.quadraticCurveTo(cp_x, bottom_cp_y, params.first_x_px + first_x_shift, first_y_px);
       ctx.closePath();
       ctx.fill();
+      ctx.closeGroup();
     }
   }
 
