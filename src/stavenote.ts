@@ -10,6 +10,7 @@
 
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
+import { Dot } from './dot';
 import { ElementStyle } from './element';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -182,7 +183,8 @@ export class StaveNote extends StemmableNote {
 
     // Test for two voice note intersection
     if (voices === 2) {
-      const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
+      const lineSpacing =
+        noteU.note.hasStem() && noteL.note.hasStem() && noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
       if (noteU.minLine <= noteL.maxLine + lineSpacing) {
         if (noteU.isrest) {
           // shift rest up
@@ -225,7 +227,7 @@ export class StaveNote extends StemmableNote {
               //offset dot(s) above the shifted note
               //lines + 1 to negative pixels
               noteU.note.getModifiersByType(Category.Dot).forEach((dot) => {
-                dot.setYShift(-10 * (noteL.maxLine - noteU.line + 1));
+                (dot as Dot).setDotShiftY(-noteL.maxLine + noteU.line - 1);
               });
             } else if (lineDiff < 1 && lineDiff > 0) {
               //if the notes are quite close but not on the same line, shift
