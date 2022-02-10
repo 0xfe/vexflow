@@ -10,7 +10,6 @@
 
 import { Beam } from './beam';
 import { BoundingBox } from './boundingbox';
-import { Dot } from './dot';
 import { ElementStyle } from './element';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
@@ -224,11 +223,6 @@ export class StaveNote extends StemmableNote {
                 // shift lower voice right
                 noteL.note.setXShift(xShift);
               }
-              //offset dot(s) above the shifted note
-              //lines + 1 to negative pixels
-              noteU.note.getModifiersByType(Category.Dot).forEach((dot) => {
-                (dot as Dot).setDotShiftY(-noteL.maxLine + noteU.line - 1);
-              });
             } else if (lineDiff < 1 && lineDiff > 0) {
               //if the notes are quite close but not on the same line, shift
               xShift = voiceXShift + 2;

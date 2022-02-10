@@ -73,8 +73,7 @@ export class Dot extends Modifier {
       }
 
       const note_id = note.getAttribute('id');
-      const line = props.line - dot.dot_shiftY; // + (stave ? dot.y_shift / stave.getSpacingBetweenLines() : 0);
-      dot_list.push({ line, note, note_id, dot });
+      dot_list.push({ line: props.line, note, note_id, dot });
       max_shift_map[note_id] = Math.max(max_shift_map[note_id] || shift, shift);
     }
 
@@ -113,7 +112,12 @@ export class Dot extends Modifier {
         }
       }
 
-      dot.dot_shiftY += -half_shiftY;
+      // convert half_shiftY to a multiplier for dots.draw()
+      if (note.isRest()) {
+        dot.dot_shiftY += -half_shiftY;
+      } else {
+        dot.dot_shiftY = -half_shiftY;
+      }
       prev_dotted_space = line + half_shiftY;
 
       dot.setXShift(dot_shift);
