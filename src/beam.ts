@@ -851,7 +851,9 @@ export class Beam extends Element {
     this.notes.forEach((note) => {
       const stem = note.getStem();
       if (stem) {
+        ctx.openGroup('stem', note.getAttribute('id') + '-stem');
         stem.setContext(ctx).draw();
+        ctx.closeGroup();
       }
     }, this);
   }
