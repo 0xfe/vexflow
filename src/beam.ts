@@ -851,7 +851,9 @@ export class Beam extends Element {
     this.notes.forEach((note) => {
       const stem = note.getStem();
       if (stem) {
+        ctx.openGroup('stem', note.getAttribute('id') + '-stem');
         stem.setContext(ctx).draw();
+        ctx.closeGroup();
       }
     }, this);
   }
@@ -879,6 +881,7 @@ export class Beam extends Element {
         if (lastBeamX) {
           const lastBeamY = this.getSlopeY(lastBeamX, firstStemX, beamY, this.slope);
 
+          this.setAttribute('el', ctx.openGroup('beam'));
           ctx.beginPath();
           ctx.moveTo(startBeamX, startBeamY);
           ctx.lineTo(startBeamX, startBeamY + beamThickness);
@@ -886,6 +889,7 @@ export class Beam extends Element {
           ctx.lineTo(lastBeamX + 1, lastBeamY);
           ctx.closePath();
           ctx.fill();
+          ctx.closeGroup();
         } else {
           throw new RuntimeError('NoLastBeamX', 'lastBeamX undefined.');
         }
