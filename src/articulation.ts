@@ -263,7 +263,10 @@ export class Articulation extends Modifier {
     const width = articulations
       .map((articulation) => articulation.getWidth())
       .reduce((maxWidth, articWidth) => Math.max(articWidth, maxWidth));
-    const overlap = Math.min(Math.max(width - maxGlyphWidth, 0), Math.max(width - state.left_shift * 2, 0));
+    const overlap = Math.min(
+      Math.max(width - maxGlyphWidth, 0),
+      Math.max(width - (state.left_shift + state.right_shift), 0)
+    );
 
     state.left_shift += overlap / 2;
     state.right_shift += overlap / 2;
