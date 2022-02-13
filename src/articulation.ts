@@ -258,6 +258,12 @@ export class Articulation extends Modifier {
       }
     });
 
+    const width = articulations
+      .map((articulation) => articulation.getWidth())
+      .reduce((maxWidth, articWidth) => Math.max(articWidth, maxWidth));
+
+    state.left_shift += width / 2;
+    state.right_shift += width / 2;
     return true;
   }
 

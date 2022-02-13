@@ -33,7 +33,6 @@ const ArticulationTests = {
     run('Articulation - Fermata Above/Below', drawFermata, { sym1: 'a@a', sym2: 'a@u' });
     run('Articulation - Inline/Multiple', drawArticulations2, { sym1: 'a.', sym2: 'a.' });
     run('TabNote Articulation', tabNotes, { sym1: 'a.', sym2: 'a.' });
-    run('GraceNote Articulation', graceNotes);
   },
 };
 // Helper function for creating StaveNotes.
@@ -426,42 +425,6 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
   voice.draw(ctx, stave);
 
   ok(true, 'TabNotes successfully drawn');
-}
-
-function graceNotes(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 700, 130);
-  const stave = f.Stave({ x: 10, y: 10, width: 650 });
-
-  const gracenotes = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f));
-
-  const notes = [
-    f
-      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
-    f
-      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
-    f
-      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
-    f
-      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
-  ];
-  notes[1].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[2].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[2].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a@a').setPosition(3), 0);
-
-  const voice = f.Voice().setStrict(false).addTickables(notes);
-
-  new Formatter().joinVoices([voice]).formatToStave([voice], stave);
-
-  f.draw();
-
-  ok(true, 'GraceNoteBasic');
 }
 
 VexFlowTests.register(ArticulationTests);
