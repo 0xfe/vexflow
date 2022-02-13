@@ -7,6 +7,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Accidental } from '../src/accidental';
+import { Annotation } from '../src/annotation';
+import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Dot } from '../src/dot';
 import { Factory } from '../src/factory';
@@ -43,6 +46,7 @@ const GraceNoteTests = {
     run('Grace Note Slash with Beams', slashWithBeams);
     run('Grace Notes Multiple Voices', multipleVoices);
     run('Grace Notes Multiple Voices Multiple Draws', multipleVoicesMultipleDraws);
+    run('Grace Notes Modifiers', modifiers);
   },
 };
 
@@ -496,6 +500,52 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
   f.draw();
 
   ok(true, 'Seventeenth Test');
+}
+
+function modifiers(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 130);
+  const stave = f.Stave({ x: 10, y: 10, width: 650 });
+
+  const gracenotes = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f));
+
+  const notes = [
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Accidental('#')),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Annotation('words')),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Articulation('a>').setPosition(3), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Articulation('a>').setPosition(3), 0)
+      .addModifier(new Articulation('a@a').setPosition(3), 0),
+  ];
+
+  const voice = f.Voice().setStrict(false).addTickables(notes);
+
+  new Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+  f.draw();
+
+  ok(true, 'Modifiers Test');
 }
 
 VexFlowTests.register(GraceNoteTests);
