@@ -73,6 +73,7 @@ export class Annotation extends Modifier {
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
     if (!annotations || annotations.length === 0) return false;
     let width = 0;
+    let maxGlyphWidth = 0;
     for (let i = 0; i < annotations.length; ++i) {
       const annotation = annotations[i];
       const textFormatter = TextFormatter.create(annotation.textFont);
@@ -81,6 +82,8 @@ export class Annotation extends Modifier {
       let verticalSpaceNeeded = textLines;
 
       const note = annotation.checkAttachedNote();
+      maxGlyphWidth = Math.max(note.getGlyph().getWidth(), maxGlyphWidth);
+
       const stave: Stave | undefined = note.getStave();
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
@@ -146,8 +149,9 @@ export class Annotation extends Modifier {
         annotation.setTextLine(state.text_line);
       }
     }
-    state.left_shift += width / 2;
-    state.right_shift += width / 2;
+    const overlap = Math.min(Math.max(width - maxGlyphWidth, 0), Math.max(width - state.left_shift * 2, 0));
+    state.left_shift += overlap / 2;
+    state.right_shift += overlap / 2;
     return true;
   }
 

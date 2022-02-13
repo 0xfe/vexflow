@@ -5,6 +5,8 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Annotation } from '../src';
+import { Accidental } from '../src/accidental';
 import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Flow } from '../src/flow';
@@ -24,6 +26,7 @@ const ArticulationTests = {
   Start(): void {
     QUnit.module('Articulation');
     const run = VexFlowTests.runTests;
+    run('Articulation - Grace Notes', graceNotes);
     run('Articulation - Vertical Placement', verticalPlacement);
     run('Articulation - Staccato/Staccatissimo', drawArticulations, { sym1: 'a.', sym2: 'av' });
     run('Articulation - Accent/Tenuto', drawArticulations, { sym1: 'a>', sym2: 'a-' });
@@ -35,6 +38,44 @@ const ArticulationTests = {
     run('TabNote Articulation', tabNotes, { sym1: 'a.', sym2: 'a.' });
   },
 };
+
+function graceNotes(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 700, 130);
+  const stave = f.Stave({ x: 10, y: 10, width: 650 });
+
+  const gracenotes = [{ keys: ['b/4'], duration: '8', slash: false }].map(f.GraceNote.bind(f));
+
+  const notes = [
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0)
+      .addModifier(new Accidental('#')),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '8', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+  ];
+  notes[0].addModifier(new Articulation('a-').setPosition(3), 0);
+  notes[1].addModifier(new Articulation('a-').setPosition(3), 0).addModifier(new Annotation('words'));
+  notes[2].addModifier(new Articulation('a-').setPosition(3), 0);
+  notes[3].addModifier(new Articulation('a-').setPosition(3), 0);
+  notes[2].addModifier(new Articulation('a>').setPosition(3), 0);
+  notes[3].addModifier(new Articulation('a>').setPosition(3), 0);
+  notes[3].addModifier(new Articulation('a@a').setPosition(3), 0);
+
+  const voice = f.Voice().setStrict(false).addTickables(notes);
+
+  new Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+  f.draw();
+
+  ok(true, 'GraceNoteBasic');
+}
 // Helper function for creating StaveNotes.
 function drawArticulations(options: TestOptions): void {
   const sym1 = options.params.sym1;
