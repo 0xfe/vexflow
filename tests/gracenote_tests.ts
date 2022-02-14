@@ -119,25 +119,33 @@ function graceNoteModifiers(options: TestOptions): void {
   const notes = [
     f
       .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0)
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0),
+    f
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
       .addModifier(new Accidental('#')),
     f
-      .StaveNote({ keys: ['c/5'], duration: '8', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+      .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Annotation('words')),
     f
       .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Articulation('a>').setPosition(3), 0),
     f
       .StaveNote({ keys: ['c/5'], duration: '4', auto_stem: true })
-      .addModifier(f.GraceNoteGroup({ notes: gracenotes }).beamNotes(), 0),
+      .addModifier(f.GraceNoteGroup({ notes: gracenotes }), 0)
+      .addModifier(new Articulation('a-').setPosition(3), 0)
+      .addModifier(new Articulation('a>').setPosition(3), 0)
+      .addModifier(new Articulation('a@a').setPosition(3), 0),
   ];
-  notes[0].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[1].addModifier(new Articulation('a-').setPosition(3), 0).addModifier(new Annotation('words'));
-  notes[2].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a-').setPosition(3), 0);
-  notes[2].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a>').setPosition(3), 0);
-  notes[3].addModifier(new Articulation('a@a').setPosition(3), 0);
 
   const voice = f.Voice().setStrict(false).addTickables(notes);
 
@@ -145,7 +153,7 @@ function graceNoteModifiers(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteBasic');
+  ok(true, 'GraceNoteModifiers');
 }
 function basicSlurred(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 700, 130);
