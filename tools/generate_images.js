@@ -181,7 +181,7 @@ const appMain = async () => {
       });
 
       child.on('close', (code) => {
-        log(`${proc} closed with code ${code}`);
+        log(`\n${proc} closed with code ${code}`);
         resolve({ key, code });
       });
     });
