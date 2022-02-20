@@ -125,6 +125,7 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
+const BUILD_ESM_SRC_DIR = path.join(BUILD_ESM_DIR, 'src');
 const BUILD_IMAGES_CURRENT_DIR = path.join(BUILD_DIR, 'images', 'current');
 const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
@@ -478,7 +479,7 @@ module.exports = (grunt) => {
     }
 
     log('ESM: Building to ./build/esm/');
-    fs.mkdirSync(BUILD_ESM_DIR, { recursive: true });
+    fs.mkdirSync(BUILD_ESM_SRC_DIR, { recursive: true });
     // The build/esm/ folder needs a package.json that specifies { "type": "module" }.
     // This indicates that all *.js files in `vexflow/build/esm/` are ES modules.
     fs.writeFileSync(BUILD_ESM_PACKAGE_JSON_FILE, '{\n  "type": "module"\n}\n');

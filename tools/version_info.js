@@ -29,6 +29,8 @@ module.exports = {
     const V = `export const VERSION = '${VEXFLOW_VERSION}';`;
     const I = `export const ID = '${GIT_COMMIT_ID}';`;
     const D = `export const DATE = '${DATE}';`;
+
+    console.log(`Writing ESM version data to ${outputFile}`);
     fs.writeFileSync(outputFile, `${V}\n${I}\n${D}`);
   },
 
