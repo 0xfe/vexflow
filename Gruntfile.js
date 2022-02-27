@@ -100,9 +100,28 @@ const ts = require('typescript');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const release = require('release-it');
 const open = require('opener');
 const concurrently = require('concurrently');
+
+// There is a bug in one of our dependencies. See: https://github.com/release-it/release-it/issues/864
+// vexflow
+// └─┬ release-it@14.12.3         github.com/release-it/release-it
+//   └─┬ git-url-parse@11.6.0     github.com/IonicaBizau/git-url-parse
+//     └─┬ git-up@4.0.5           github.com/IonicaBizau/git-up
+//       └─┬ parse-url@6.0.0      github.com/IonicaBizau/parse-url
+//         └── parse-path@4.0.3   github.com/IonicaBizau/parse-path    <<< The bug is here!!!
+// Our fix has already been merged into the parse-path repo, but we need to wait for 5 projects to be updated on npm
+// for the fix to be available to us. In the meantime, we check if the bug is present, and apply a patch if necessary.
+let parsePath = require('parse-path');
+if (parsePath('git@github.com:0xfe/vexflow.git').pathname === '/vexflow.git') {
+  // The .pathname should be '/0xfe/vexflow.git' instead, but the buggy version of parse-path thinks :0xfe is a port number.
+  // See: https://github.com/IonicaBizau/parse-path/pull/32
+  runCommand('npx', 'patch-package');
+  delete require.cache[require.resolve('parse-path')];
+  parsePath = require('parse-path');
+}
+// We require() the release-it package AFTER patching parse-path.
+const release = require('release-it');
 
 // A module entry file `entry/xxxx.ts` will be mapped to a build output file in build/cjs/ or /build/esm/entry/.
 // Also see the package.json `exports` field, which is one way for projects to specify which entry file to import.
@@ -741,7 +760,7 @@ module.exports = (grunt) => {
       verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
       hooks: {
-        'before:init': ['npx patch-package', 'grunt clean'],
+        'before:init': ['grunt clean'],
         'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
         'after:npm:release': [],
         'after:git:release': [],
