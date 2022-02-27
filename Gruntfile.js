@@ -502,6 +502,7 @@ module.exports = (grunt) => {
     log('ESM: Building to ./build/esm/');
     // The build/esm/ folder needs a package.json that specifies { "type": "module" }.
     // This indicates that all *.js files in `vexflow/build/esm/` are ES modules.
+    fs.mkdirSync(BUILD_ESM_DIR, { recursive: true });
     fs.writeFileSync(BUILD_ESM_PACKAGE_JSON_FILE, '{\n  "type": "module"\n}\n');
     if (arg === 'watch') {
       this.async(); // Set grunt's async mode to keep the task running forever.
@@ -831,9 +832,11 @@ module.exports = (grunt) => {
   });
 };
 
-// Call tsc programmatically.
-class TypeScript {
-  static reportDiagnostics(diagnostics) {
+// Call tsc programmatically:
+// TypeScript.compile(pathToTSConfigFile);
+const TypeScript = (() => {
+  function logErrors(diagnostics) {
+    // Print each ts.Diagnostic object to the console.
     diagnostics.forEach((diagnostic) => {
       let message = 'Error';
       if (diagnostic.file) {
@@ -845,33 +848,41 @@ class TypeScript {
     });
   }
 
-  static readConfigFile(configFileName) {
-    const configFileText = fs.readFileSync(configFileName).toString();
-
-    const result = ts.parseConfigFileTextToJson(configFileName, configFileText);
-    const configObject = result.config;
+  function readConfigFile(configFile) {
+    const configFileText = fs.readFileSync(configFile).toString();
+    const configFileJSON = ts.parseConfigFileTextToJson(configFile, configFileText);
+    const configObject = configFileJSON.config;
     if (!configObject) {
-      TypeScript.reportDiagnostics([result.error]);
+      logErrors([configFileJSON.error]);
       process.exit(1);
     }
 
-    const configParseResult = ts.parseJsonConfigFileContent(configObject, ts.sys, path.dirname(configFileName));
-    if (configParseResult.errors.length > 0) {
-      TypeScript.reportDiagnostics(configParseResult.errors);
+    const configParsed = ts.parseJsonConfigFileContent(configObject, ts.sys, path.dirname(configFile));
+    if (configParsed.errors.length > 0) {
+      logErrors(configParsed.errors);
       process.exit(1);
     }
-    return configParseResult;
+
+    return configParsed;
   }
 
-  static compile(configFileName) {
-    const config = TypeScript.readConfigFile(configFileName);
+  // Return true if the command was successful (the compilation returned no errors).
+  function compile(tsConfigFile) {
+    const config = readConfigFile(tsConfigFile);
 
+    console.log('TypeScript: Compiling ' + config.fileNames.length + ' files...');
     const program = ts.createProgram(config.fileNames, config.options);
     const emitResult = program.emit();
 
-    TypeScript.reportDiagnostics(ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics));
+    logErrors(ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics));
 
-    const exitCode = emitResult.emitSkipped ? 1 : 0;
-    process.exit(exitCode);
+    if (emitResult.emitSkipped) {
+      return false; // FAIL
+    } else {
+      return true; // SUCCESS!
+    }
   }
-}
+
+  // Expose a single public function.
+  return { compile };
+})();
