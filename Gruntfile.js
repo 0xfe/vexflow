@@ -96,6 +96,7 @@ const fs = require('fs');
 const os = require('os');
 const { execSync, spawnSync } = require('child_process');
 
+const ts = require('typescript');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -125,7 +126,6 @@ const BASE_DIR = __dirname;
 const BUILD_DIR = path.join(BASE_DIR, 'build');
 const BUILD_CJS_DIR = path.join(BUILD_DIR, 'cjs');
 const BUILD_ESM_DIR = path.join(BUILD_DIR, 'esm');
-const BUILD_ESM_SRC_DIR = path.join(BUILD_ESM_DIR, 'src');
 const BUILD_IMAGES_CURRENT_DIR = path.join(BUILD_DIR, 'images', 'current');
 const BUILD_IMAGES_REFERENCE_DIR = path.join(BUILD_DIR, 'images', 'reference');
 const REFERENCE_DIR = path.join(BASE_DIR, 'reference');
@@ -478,8 +478,9 @@ module.exports = (grunt) => {
       versionInfo.saveESMVersionFile();
     }
 
+    let configFile = 'tsconfig.esm.json';
+
     log('ESM: Building to ./build/esm/');
-    fs.mkdirSync(BUILD_ESM_SRC_DIR, { recursive: true });
     // The build/esm/ folder needs a package.json that specifies { "type": "module" }.
     // This indicates that all *.js files in `vexflow/build/esm/` are ES modules.
     fs.writeFileSync(BUILD_ESM_PACKAGE_JSON_FILE, '{\n  "type": "module"\n}\n');
@@ -494,9 +495,9 @@ module.exports = (grunt) => {
         versionInfo.update();
         fixESM();
       });
-      watch.start('-p', 'tsconfig.esm.json', '--noClear');
+      watch.start('-p', configFile, '--noClear');
     } else {
-      runCommand('tsc', '-p', 'tsconfig.esm.json');
+      TypeScript.compile(configFile);
       fixESM();
     }
   });
@@ -505,7 +506,7 @@ module.exports = (grunt) => {
   // Output *.d.ts files to build/types/.
   grunt.registerTask('build:types', 'Use tsc to create *.d.ts files in build/types/', () => {
     log('Types: Building *.d.ts files in build/types/');
-    runCommand('tsc', '-p', 'tsconfig.types.json');
+    TypeScript.compile('tsconfig.types.json');
   });
 
   // grunt build:docs
@@ -810,3 +811,48 @@ module.exports = (grunt) => {
     });
   });
 };
+
+// Call tsc programmatically.
+class TypeScript {
+  static reportDiagnostics(diagnostics) {
+    diagnostics.forEach((diagnostic) => {
+      let message = 'Error';
+      if (diagnostic.file) {
+        const where = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+        message += ' ' + diagnostic.file.fileName + ' ' + where.line + ', ' + where.character + 1;
+      }
+      message += ': ' + ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+      console.log(message);
+    });
+  }
+
+  static readConfigFile(configFileName) {
+    const configFileText = fs.readFileSync(configFileName).toString();
+
+    const result = ts.parseConfigFileTextToJson(configFileName, configFileText);
+    const configObject = result.config;
+    if (!configObject) {
+      TypeScript.reportDiagnostics([result.error]);
+      process.exit(1);
+    }
+
+    const configParseResult = ts.parseJsonConfigFileContent(configObject, ts.sys, path.dirname(configFileName));
+    if (configParseResult.errors.length > 0) {
+      TypeScript.reportDiagnostics(configParseResult.errors);
+      process.exit(1);
+    }
+    return configParseResult;
+  }
+
+  static compile(configFileName) {
+    const config = TypeScript.readConfigFile(configFileName);
+
+    const program = ts.createProgram(config.fileNames, config.options);
+    const emitResult = program.emit();
+
+    TypeScript.reportDiagnostics(ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics));
+
+    const exitCode = emitResult.emitSkipped ? 1 : 0;
+    process.exit(exitCode);
+  }
+}
