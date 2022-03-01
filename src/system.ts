@@ -191,13 +191,7 @@ export class System extends Element {
     this.parts.forEach((part) => {
       y = y + part.stave.space(part.spaceAbove);
       part.stave.setY(y);
-      if (this.options.autoWidth) {
-        part.voices.forEach((voice) => {
-          formatter.joinVoices([voice]);
-        });
-      } else {
-        formatter.joinVoices(part.voices);
-      }
+      formatter.joinVoices(part.voices);
       y = y + part.stave.space(part.spaceBelow);
       y = y + part.stave.space(this.options.spaceBetweenStaves);
       if (part.debugNoteMetrics) {
