@@ -575,7 +575,7 @@ export abstract class Note extends Tickable {
 
   getLeftParenthesisPx(index: number): number {
     const props = this.getKeyProps()[index];
-    return props.displaced ? this.getLeftDisplacedHeadPx() : 0;
+    return props.displaced ? this.getLeftDisplacedHeadPx() - this.x_shift : -this.x_shift;
   }
 
   getFirstDotPx(): number {
