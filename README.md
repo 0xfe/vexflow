@@ -1,57 +1,35 @@
-# VexFlow 4 (beta)
+# VexFlow 4
 
-A JavaScript / TypeScript library for rendering music notation.
-
-Copyright (c) 2010 Mohit Muthanna Cheppudira
+VexFlow is an open-source music notation rendering library. It is written in TypeScript and compiled to ES6. VexFlow supports HTML
+Canvas and SVG and runs right in the browser.
 
 ## Sponsor this Project
 
-If you use VexFlow in your app, startup, institution, and find it useful, please consider sponsoring its development here: https://github.com/sponsors/0xfe.
-
-## Need Help?
-
-Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
-
-## What is VexFlow?
-
-VexFlow is an open-source web-based music notation rendering API. It is written in TypeScript, and runs right in the browser. VexFlow supports HTML
-Canvas and SVG, and runs on all modern browsers.
-
-Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial) to learn how to use VexFlow.
+If you use VexFlow and find it useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
 
 ## Quick Start
 
-### Using npm
-
-To install version 4.0.0-beta:
-
-```shell
-$ npm install vexflow@beta
-```
-
-To install version 3.0.9:
-
-```shell
-$ npm install vexflow
-```
-
-### Using the HTML `script` Tag
-
-Releases are served via CDN:
+You can add VexFlow via a `<script>` tag. Use one of the following CDN URLs.
 
 **unpkg**
 
-- Minified: https://unpkg.com/vexflow@4.0.0/build/vexflow.js
-- Debug: https://unpkg.com/vexflow@4.0.0/build/vexflow-debug.js
+- Minified: https://unpkg.com/vexflow@4.0.1-beta.2/build/cjs/vexflow.js
+- Debug: https://unpkg.com/vexflow@4.0.1-beta.2/build/cjs/vexflow-debug.js
 
 **jsdelivr**
 
-- Minified: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.js
-- Debug: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
+- Minified: https://cdn.jsdelivr.net/npm/vexflow@4.0.1-beta.2/build/cjs/vexflow.js
+- Debug: https://cdn.jsdelivr.net/npm/vexflow@4.0.1-beta.2/build/cjs/vexflow-debug.js
 
-### Using EasyScore
+If your project uses a bundler, you can install VexFlow from npm:
 
-The EasyScore API is a quick way to create simple music notation in VexFlow. See a running example in [this jsfiddle](https://jsfiddle.net/2pbh9xq0/).
+```sh
+$ npm install vexflow
+```
+
+### EasyScore
+
+The EasyScore API is a quick way to create music notation in VexFlow. See a running example in [this jsfiddle](https://jsfiddle.net/2pbh9xq0/).
 
 ```javascript
 import Vex from 'vexflow';
@@ -78,9 +56,9 @@ vf.draw();
 
 Learn the EasyScore API in the [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore) guide.
 
-### Using the Native API
+### Native API
 
-The example code below renders a VexFlow stave using SVG. See a running example in this [jsfiddle](https://jsfiddle.net/j6dpazx2/).
+The example code below renders a VexFlow stave using SVG. See [a running example here](https://jsfiddle.net/j6dpazx2/).
 
 ```javascript
 import Vex from 'vexflow';
@@ -106,13 +84,25 @@ stave.addClef('treble').addTimeSignature('4/4');
 stave.setContext(context).draw();
 ```
 
+## More Examples
+
+Take a look at [the VexFlow tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial).
+
+Dig into [the unit tests](https://github.com/0xfe/vexflow/tree/master/tests).
+
+## Need Help?
+
+Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
+
 ## Resources
 
 To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
 
-To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build-And-Release-Instructions).
+To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
 
-Sponsor Vexflow: https://github.com/sponsors/0xfe
+[VexFlow Home](https://vexflow.com)
+
+[Mohit Muthanna Cheppudira](https://muthanna.com)
 
 ## MIT License
 
@@ -136,8 +126,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-## Links
-
-- [VexFlow Home](https://vexflow.com)
-- [Me](https://muthanna.com)
