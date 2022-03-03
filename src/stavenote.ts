@@ -184,7 +184,9 @@ export class StaveNote extends StemmableNote {
     if (voices === 2) {
       const lineSpacing =
         noteU.note.hasStem() && noteL.note.hasStem() && noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
-      if (noteU.minLine <= noteL.maxLine + lineSpacing) {
+      if (noteL.isrest && noteU.isrest && noteU.note.duration === noteL.note.duration) {
+        noteL.note.render_options.draw = false;
+      } else if (noteU.minLine <= noteL.maxLine + lineSpacing) {
         if (noteU.isrest) {
           // shift rest up
           shiftRestVertical(noteU, noteL, 1);
@@ -299,10 +301,10 @@ export class StaveNote extends StemmableNote {
 
     // Special case 2 :: all voices are rests
     if (noteU.isrest && noteM.isrest && noteL.isrest) {
-      // Shift upper voice rest up
-      shiftRestVertical(noteU, noteM, 1);
-      // Shift lower voice rest down
-      shiftRestVertical(noteL, noteM, -1);
+      // Hide upper voice rest
+      noteU.note.render_options.draw = false;
+      // Hide lower voice rest
+      noteL.note.render_options.draw = false;
       // format complete
       state.right_shift += xShift;
       return true;
@@ -310,12 +312,12 @@ export class StaveNote extends StemmableNote {
 
     // Test if any other rests can be repositioned
     if (noteM.isrest && noteU.isrest && noteM.minLine <= noteL.maxLine) {
-      // Shift middle voice rest up
-      shiftRestVertical(noteM, noteL, 1);
+      // Hide middle voice rest
+      noteM.note.render_options.draw = false;
     }
     if (noteM.isrest && noteL.isrest && noteU.minLine <= noteM.maxLine) {
-      // Shift middle voice rest down
-      shiftRestVertical(noteM, noteU, -1);
+      // Hide middle voice rest
+      noteM.note.render_options.draw = false;
     }
     if (noteU.isrest && noteU.minLine <= noteM.maxLine) {
       // shift upper voice rest up;
@@ -1206,6 +1208,8 @@ export class StaveNote extends StemmableNote {
 
   // Draws all the `StaveNote` parts. This is the main drawing method.
   draw(): void {
+    if (this.render_options.draw === false) return;
+
     if (this.ys.length === 0) {
       throw new RuntimeError('NoYValues', "Can't draw note without Y values.");
     }
