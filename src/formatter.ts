@@ -774,19 +774,6 @@ export class Formatter {
     let targetWidth = adjustedJustifyWidth;
     const distances = calculateIdealDistances(targetWidth);
     let actualWidth = shiftToIdealDistances(distances);
-    // Calculate right justification by finding max of (configured value, min distance between tickables)
-    // so measures with lots of white space use it evenly, and crowded measures use at least the configured
-    // space.
-    const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
-      let mdCalc = targetWidth / 2;
-      if (distances.length > 1) {
-        for (let di = 1; di < distances.length; ++di) {
-          mdCalc = Math.min(distances[di].expectedDistance / 2, mdCalc);
-        }
-      }
-      return mdCalc;
-    };
-    const minDistance = calcMinDistance(targetWidth, distances);
 
     // Just one context. Done formatting.
     if (contextList.length === 1) return 0;
@@ -794,8 +781,16 @@ export class Formatter {
     // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
     // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
     // existing visual regression tests.
-    const paddingMax = configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
-    const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
+    const paddingMaxCalc = (curTargetWidth: number) => {
+      let lastTickablePadding = configMaxPadding * 2;
+      const lastTickable = lastContext && lastContext.getMaxTickable();
+      if (lastTickable) {
+        lastTickablePadding = lastTickable.getVoice().softmax(lastContext.getMaxTicks().value()) * curTargetWidth;
+      }
+      return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
+    };
+    let paddingMax = paddingMaxCalc(targetWidth);
+    let paddingMin = paddingMax - (configMaxPadding - configMinPadding);
     const maxX = adjustedJustifyWidth - paddingMin;
 
     let iterations = maxIterations;
@@ -803,6 +798,8 @@ export class Formatter {
     // without going over
     while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
       targetWidth -= actualWidth - maxX;
+      paddingMax = paddingMaxCalc(targetWidth);
+      paddingMin = paddingMax - (configMaxPadding - configMinPadding);
       actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
