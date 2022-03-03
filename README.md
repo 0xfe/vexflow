@@ -1,7 +1,7 @@
 # VexFlow 4
 
-VexFlow is an open-source music notation rendering library. It is written in TypeScript and compiled to ES6. VexFlow supports HTML
-Canvas and SVG and runs right in the browser.
+VexFlow is an open-source library for rendering music notation. It is written in TypeScript (compiled to ES6), and outputs scores to HTML
+Canvas and SVG, right in the browser. It , and also in command line node projects.
 
 ## Sponsor this Project
 
@@ -9,17 +9,14 @@ If you use VexFlow and find it useful, please consider sponsoring its developmen
 
 ## Quick Start
 
-You can add VexFlow via a `<script>` tag. Use one of the following CDN URLs.
+The quickest way to add VexFlow to an HTML page is via a `<script>` tag.
 
-**unpkg**
-
-- Minified: https://unpkg.com/vexflow@4.0.1-beta.2/build/cjs/vexflow.js
-- Debug: https://unpkg.com/vexflow@4.0.1-beta.2/build/cjs/vexflow-debug.js
-
-**jsdelivr**
-
-- Minified: https://cdn.jsdelivr.net/npm/vexflow@4.0.1-beta.2/build/cjs/vexflow.js
-- Debug: https://cdn.jsdelivr.net/npm/vexflow@4.0.1-beta.2/build/cjs/vexflow-debug.js
+```html
+<script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+<script>
+  // YOUR CODE GOES HERE
+</script>
+```
 
 If your project uses a bundler, you can install VexFlow from npm:
 
@@ -27,19 +24,22 @@ If your project uses a bundler, you can install VexFlow from npm:
 $ npm install vexflow
 ```
 
-### EasyScore
+[More details on integrating with VexFlow 4.](https://github.com/0xfe/vexflow/wiki/VexFlow-4-Tutorial)
 
-The EasyScore API is a quick way to create music notation in VexFlow. See a running example in [this jsfiddle](https://jsfiddle.net/2pbh9xq0/).
+Note: if you still need to work with the previous version, visit the [tutorial for version 3.0.9.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
+
+## EasyScore
+
+EasyScore is VexFlow's high-level API for creating music notation.
+[See a running example here.](https://jsfiddle.net/2pbh9xq0/)
 
 ```javascript
-import Vex from 'vexflow';
-
-const vf = new Vex.Flow.Factory({
+const f = new Vex.Flow.Factory({
   renderer: { elementId: 'boo', width: 500, height: 200 },
 });
 
-const score = vf.EasyScore();
-const system = vf.System();
+const score = f.EasyScore();
+const system = f.System();
 
 system
   .addStave({
@@ -51,22 +51,21 @@ system
   .addClef('treble')
   .addTimeSignature('4/4');
 
-vf.draw();
+f.draw();
 ```
 
-Learn the EasyScore API in the [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore) guide.
+[Learn more about EasyScore here.](https://github.com/0xfe/vexflow/wiki/Using-EasyScore)
 
-### Native API
+## Native API
 
-The example code below renders a VexFlow stave using SVG. See [a running example here](https://jsfiddle.net/j6dpazx2/).
+If you need more control, you can use the low-level VexFlow API.
+Below, we render a stave using SVG. [See a running example here.](https://jsfiddle.net/j6dpazx2/)
 
 ```javascript
-import Vex from 'vexflow';
-
 const VF = Vex.Flow;
 
-// Create an SVG renderer and attach it to the DIV element named "vf".
-const div = document.getElementById('vf');
+// Create an SVG renderer and attach it to the DIV element named "output".
+const div = document.getElementById('output');
 const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
 // Configure the rendering context.
@@ -104,7 +103,7 @@ To build VexFlow from scratch, read the [Build Instructions](https://github.com/
 
 [Mohit Muthanna Cheppudira](https://muthanna.com)
 
-## MIT License
+# MIT License
 
 Copyright (c) Mohit Muthanna Cheppudira 2010 <br/>
 0xFE <mohit@muthanna.com> https://www.vexflow.com
