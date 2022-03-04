@@ -39,6 +39,7 @@ const BeamTests = {
     run('Lengthy Beam', lenghty);
     run('Outlier Beam', outlier);
     run('Break Secondary Beams', breakSecondaryBeams);
+    run('Partial Beam Direction Test', partialBeamDirection);
     run('TabNote Beams Up', tabBeamsUp);
     run('TabNote Beams Down', tabBeamsDown);
     run('TabNote Auto Create Beams', autoTabBeams);
@@ -164,6 +165,36 @@ function breakSecondaryBeams(options: TestOptions): void {
   f.draw();
 
   ok(true, 'Breaking Secondary Beams Test');
+}
+
+function partialBeamDirection(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 600, 200);
+  const stave = f.Stave({ y: 20 });
+  const score = f.EasyScore();
+
+  const voice = score.voice.bind(score);
+  const beam = score.beam.bind(score);
+  const notes = score.notes.bind(score);
+
+  const voices = [
+    voice(
+      [
+        // Default beaming:
+        beam(notes('f4/8, f4/16, f4/8, f4/16', { stem: 'up' })),
+        // Force first 16th beam right
+        beam(notes('f4/8, f4/16, f4/8, f4/16', { stem: 'up' }), { partialBeamDirections: { '1': 'R' } }),
+        // Force first 16th beam left
+        beam(notes('f4/8, f4/16, f4/8, f4/16', { stem: 'up' }), { partialBeamDirections: { '1': 'L' } }),
+      ].reduce(concat),
+      { time: '9/8' }
+    ),
+  ];
+
+  f.Formatter().joinVoices(voices).formatToStave(voices, stave);
+
+  f.draw();
+
+  ok(true, 'Partial beam direction test');
 }
 
 function slopey(options: TestOptions): void {
