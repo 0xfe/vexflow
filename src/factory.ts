@@ -2,7 +2,6 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { PartialBeamDirection } from '.';
 import { Accidental } from './accidental';
 import { Annotation, AnnotationHorizontalJustify, AnnotationVerticalJustify } from './annotation';
 import { Articulation } from './articulation';
@@ -495,23 +494,9 @@ export class Factory {
     return tuplet;
   }
 
-  Beam(params: {
-    notes: StemmableNote[];
-    options?: {
-      autoStem?: boolean;
-      secondaryBeamBreaks?: number[];
-      partialBeamDirections?: {
-        [noteIndex: number]: PartialBeamDirection;
-      };
-    };
-  }): Beam {
+  Beam(params: { notes: StemmableNote[]; options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] } }): Beam {
     const beam = new Beam(params.notes, params.options?.autoStem).setContext(this.context);
     beam.breakSecondaryAt(params.options?.secondaryBeamBreaks ?? []);
-    if (params.options?.partialBeamDirections) {
-      Object.entries(params.options?.partialBeamDirections).forEach(([noteIndex, direction]) => {
-        beam.setPartialBeamSideAt(Number(noteIndex), direction);
-      });
-    }
     this.renderQ.push(beam);
     return beam;
   }
