@@ -771,6 +771,7 @@ export class Formatter {
     const musicFont = Tables.currentMusicFont();
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
+    const leftPadding = musicFont.lookupMetric('stave.padding');
     let targetWidth = adjustedJustifyWidth;
     const distances = calculateIdealDistances(targetWidth);
     let actualWidth = shiftToIdealDistances(distances);
@@ -782,10 +783,13 @@ export class Formatter {
     // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
     // existing visual regression tests.
     const paddingMaxCalc = (curTargetWidth: number) => {
-      let lastTickablePadding = configMaxPadding * 2;
+      let lastTickablePadding = 0;
       const lastTickable = lastContext && lastContext.getMaxTickable();
       if (lastTickable) {
-        lastTickablePadding = lastTickable.getVoice().softmax(lastContext.getMaxTicks().value()) * curTargetWidth;
+        const tickWidth = lastTickable.getWidth();
+        lastTickablePadding =
+          lastTickable.getVoice().softmax(lastContext.getMaxTicks().value()) * curTargetWidth -
+          (tickWidth + leftPadding);
       }
       return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
     };
