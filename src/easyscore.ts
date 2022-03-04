@@ -1,6 +1,7 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { PartialBeamDirection } from '.';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Dot } from './dot';
@@ -501,7 +502,16 @@ export class EasyScore {
     return result;
   }
 
-  beam(notes: StemmableNote[], options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] }): StemmableNote[] {
+  beam(
+    notes: StemmableNote[],
+    options?: {
+      autoStem?: boolean;
+      secondaryBeamBreaks?: number[];
+      partialBeamDirections?: {
+        [noteIndex: number]: PartialBeamDirection;
+      };
+    }
+  ): StemmableNote[] {
     this.factory.Beam({ notes, options });
     return notes;
   }
