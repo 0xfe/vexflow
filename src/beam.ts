@@ -81,7 +81,7 @@ export class Beam extends Element {
    * connect to any other note. See further explanation at
    * `setPartialBeamSideAt`
    */
-  private forced_partial_directions: {
+  private forcedPartialDirections: {
     [noteIndex: number]: PartialBeamDirection;
   } = {};
 
@@ -552,7 +552,7 @@ export class Beam extends Element {
    * ```
    */
   setPartialBeamSideAt(noteIndex: number, side: PartialBeamDirection) {
-    this.forced_partial_directions[noteIndex] = side;
+    this.forcedPartialDirections[noteIndex] = side;
     return this;
   }
 
@@ -561,7 +561,7 @@ export class Beam extends Element {
    * that does not connect to any other notes).
    */
   unsetPartialBeamSideAt(noteIndex: number) {
-    delete this.forced_partial_directions[noteIndex];
+    delete this.forcedPartialDirections[noteIndex];
     return this;
   }
 
@@ -761,7 +761,7 @@ export class Beam extends Element {
       return BEAM_LEFT;
     }
 
-    const forcedBeamDirection = this.forced_partial_directions[noteIndex];
+    const forcedBeamDirection = this.forcedPartialDirections[noteIndex];
     if (forcedBeamDirection) return forcedBeamDirection;
 
     const lookup_duration = `${Tables.durationToNumber(duration) / 2}`;
