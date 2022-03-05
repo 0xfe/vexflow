@@ -39,7 +39,7 @@ const BeamTests = {
     run('Lengthy Beam', lenghty);
     run('Outlier Beam', outlier);
     run('Break Secondary Beams', breakSecondaryBeams);
-    run('Partial Beam Direction Test', partialBeamDirection);
+    run('Partial Beam Direction', partialBeamDirection);
     run('TabNote Beams Up', tabBeamsUp);
     run('TabNote Beams Down', tabBeamsDown);
     run('TabNote Auto Create Beams', autoTabBeams);
