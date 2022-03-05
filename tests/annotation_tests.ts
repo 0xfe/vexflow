@@ -13,6 +13,7 @@ import { Annotation, AnnotationVerticalJustify } from '../src/annotation';
 import { Articulation } from '../src/articulation';
 import { Beam } from '../src/beam';
 import { Bend } from '../src/bend';
+import { ElementStyle } from '../src/element';
 import { Flow } from '../src/flow';
 import { Font, FontStyle, FontWeight } from '../src/font';
 import { Formatter } from '../src/formatter';
@@ -35,6 +36,7 @@ const AnnotationTests = {
     run('Placement', placement);
     run('Lyrics', lyrics);
     run('Simple Annotation', simple);
+    run('Styled Annotation', styling);
     run('Standard Notation Annotation', standard);
     run('Harmonics', harmonic);
     run('Fingerpicking', picking);
@@ -139,6 +141,26 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   const notes = [
     staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addModifier(annotation('quiet'), 0),
     staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addModifier(annotation('Allegro'), 2),
+  ];
+
+  Formatter.FormatAndDraw(ctx, stave, notes);
+  ok(true, 'Standard Notation Annotation');
+}
+
+function styling(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 500, 240);
+  ctx.scale(1.5, 1.5);
+  const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
+
+  const annotation = (text: string, style: ElementStyle) =>
+    new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic').setStyle(style);
+
+  const notes = [
+    staveNote({ keys: ['c/4', 'e/4'], duration: 'h' }).addModifier(annotation('quiet', { fillStyle: '#0F0' }), 0),
+    staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'h' }).addModifier(
+      annotation('Allegro', { fillStyle: '#00F' }),
+      2
+    ),
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
