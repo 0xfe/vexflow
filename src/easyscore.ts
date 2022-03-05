@@ -1,9 +1,9 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { PartialBeamDirection } from '.';
 import { Accidental } from './accidental';
 import { Articulation } from './articulation';
+import { PartialBeamDirection } from './beam';
 import { Dot } from './dot';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';

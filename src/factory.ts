@@ -2,12 +2,11 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { PartialBeamDirection } from '.';
 import { Accidental } from './accidental';
 import { Annotation, AnnotationHorizontalJustify, AnnotationVerticalJustify } from './annotation';
 import { Articulation } from './articulation';
 import { BarNote } from './barnote';
-import { Beam } from './beam';
+import { Beam, PartialBeamDirection } from './beam';
 import { ChordSymbol } from './chordsymbol';
 import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
