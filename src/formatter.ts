@@ -786,10 +786,15 @@ export class Formatter {
       let lastTickablePadding = 0;
       const lastTickable = lastContext && lastContext.getMaxTickable();
       if (lastTickable) {
+        const voice = lastTickable.getVoice();
+        // If the number of actual ticks in the measure <> configured ticks, right-justify
+        // because the softmax won't yield the correct value
+        if (voice.getTicksUsed().value() !== voice.getTotalTicks().value()) {
+          return configMaxPadding;
+        }
         const tickWidth = lastTickable.getWidth();
         lastTickablePadding =
-          lastTickable.getVoice().softmax(lastContext.getMaxTicks().value()) * curTargetWidth -
-          (tickWidth + leftPadding);
+          voice.softmax(lastContext.getMaxTicks().value()) * curTargetWidth - (tickWidth + leftPadding);
       }
       return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
     };
