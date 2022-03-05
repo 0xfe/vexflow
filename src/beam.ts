@@ -41,6 +41,8 @@ const BEAM_LEFT = 'L';
 const BEAM_RIGHT = 'R';
 const BEAM_BOTH = 'B';
 
+export type PartialBeamDirection = typeof BEAM_LEFT | typeof BEAM_RIGHT | typeof BEAM_BOTH;
+
 /** `Beams` span over a set of `StemmableNotes`. */
 export class Beam extends Element {
   static get CATEGORY(): string {
@@ -73,6 +75,15 @@ export class Beam extends Element {
   private break_on_indices: number[];
   private beam_count: number;
   private unbeamable?: boolean;
+
+  /**
+   * Overrides to default beam directions for secondary-level beams that do not
+   * connect to any other note. See further explanation at
+   * `setPartialBeamSideAt`
+   */
+  private forcedPartialDirections: {
+    [noteIndex: number]: PartialBeamDirection;
+  } = {};
 
   /** Get the direction of the beam */
   getStemDirection(): number {
@@ -527,6 +538,33 @@ export class Beam extends Element {
     return this;
   }
 
+  /**
+   * Forces the direction of a partial beam (a secondary-level beam that exists
+   * on one note only of the beam group). This is useful in rhythms such as 6/8
+   * eighth-sixteenth-eighth-sixteenth, where the direction of the beam on the
+   * first sixteenth note can help imply whether the rhythm is to be felt as
+   * three groups of eighth notes (typical) or as two groups of three-sixteenths
+   * (less common):
+   * ```
+   *  ┌───┬──┬──┐      ┌──┬──┬──┐
+   *  │   ├─ │ ─┤  vs  │ ─┤  │ ─┤
+   *  │   │  │  │      │  │  │  │
+   * ```
+   */
+  setPartialBeamSideAt(noteIndex: number, side: PartialBeamDirection) {
+    this.forcedPartialDirections[noteIndex] = side;
+    return this;
+  }
+
+  /**
+   * Restore the default direction of a partial beam (a secondary-level beam
+   * that does not connect to any other notes).
+   */
+  unsetPartialBeamSideAt(noteIndex: number) {
+    delete this.forcedPartialDirections[noteIndex];
+    return this;
+  }
+
   /** Return the y coordinate for linear function. */
   getSlopeY(x: number, first_x_px: number, first_y_px: number, slope: number): number {
     return first_y_px + (x - first_x_px) * slope;
@@ -712,10 +750,19 @@ export class Beam extends Element {
   }
 
   /** Return upper level beam direction. */
-  lookupBeamDirection(duration: string, prev_tick: number, tick: number, next_tick: number): string {
+  lookupBeamDirection(
+    duration: string,
+    prev_tick: number,
+    tick: number,
+    next_tick: number,
+    noteIndex: number
+  ): PartialBeamDirection {
     if (duration === '4') {
       return BEAM_LEFT;
     }
+
+    const forcedBeamDirection = this.forcedPartialDirections[noteIndex];
+    if (forcedBeamDirection) return forcedBeamDirection;
 
     const lookup_duration = `${Tables.durationToNumber(duration) / 2}`;
     const prev_note_gets_beam = prev_tick < Tables.durationToTicks(lookup_duration);
@@ -730,7 +777,7 @@ export class Beam extends Element {
       return BEAM_RIGHT;
     }
 
-    return this.lookupBeamDirection(lookup_duration, prev_tick, tick, next_tick);
+    return this.lookupBeamDirection(lookup_duration, prev_tick, tick, next_tick, noteIndex);
   }
 
   /** Get the x coordinates for the beam lines of specific `duration`. */
@@ -803,7 +850,7 @@ export class Beam extends Element {
             const prev_tick = prev_note.getIntrinsicTicks();
             const next_tick = next_note.getIntrinsicTicks();
             const tick = note.getIntrinsicTicks();
-            const beam_direction = this.lookupBeamDirection(duration, prev_tick, tick, next_tick);
+            const beam_direction = this.lookupBeamDirection(duration, prev_tick, tick, next_tick, i);
 
             if ([BEAM_LEFT, BEAM_BOTH].includes(beam_direction)) {
               current_beam.end = current_beam.start - partial_beam_length;
