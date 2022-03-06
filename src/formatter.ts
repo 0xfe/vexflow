@@ -778,6 +778,16 @@ export class Formatter {
 
     // Just one context. Done formatting.
     if (contextList.length === 1) return 0;
+    const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
+      let mdCalc = targetWidth / 2;
+      if (distances.length > 1) {
+        for (let di = 1; di < distances.length; ++di) {
+          mdCalc = Math.min(distances[di].expectedDistance / 2, mdCalc);
+        }
+      }
+      return mdCalc;
+    };
+    const minDistance = calcMinDistance(targetWidth, distances);
 
     // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
     // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
@@ -790,7 +800,7 @@ export class Formatter {
         // If the number of actual ticks in the measure <> configured ticks, right-justify
         // because the softmax won't yield the correct value
         if (voice.getTicksUsed().value() > voice.getTotalTicks().value()) {
-          return configMaxPadding;
+          return configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
         }
         const tickWidth = lastTickable.getWidth();
         lastTickablePadding =
