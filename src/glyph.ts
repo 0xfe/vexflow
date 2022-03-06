@@ -427,9 +427,17 @@ export class Glyph extends Element {
     return this;
   }
 
+  getXShift() {
+    return this.x_shift;
+  }
+
   setXShift(x_shift: number): this {
     this.x_shift = x_shift;
     return this;
+  }
+
+  getYshift() {
+    return this.y_shift;
   }
 
   setYShift(y_shift: number): this {
