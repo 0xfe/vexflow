@@ -30,6 +30,13 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
+/**
+ * see {@link StaveConnector.type} & {@link StaveConnector.typeString}
+ */
+export type StaveConnectorType =
+  | typeof StaveConnector['type'][keyof typeof StaveConnector['type']]
+  | keyof typeof StaveConnector['typeString'];
+
 /** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
   static get CATEGORY(): string {
@@ -59,7 +66,7 @@ export class StaveConnector extends Element {
     BOLD_DOUBLE_RIGHT: 6,
     THIN_DOUBLE: 7,
     NONE: 8,
-  };
+  } as const;
 
   /**
    * Connector type:
@@ -74,7 +81,7 @@ export class StaveConnector extends Element {
    * * "thinDouble"
    * * "none"
    */
-  static readonly typeString: Record<string, number> = {
+  static readonly typeString = {
     singleRight: StaveConnector.type.SINGLE_RIGHT,
     singleLeft: StaveConnector.type.SINGLE_LEFT,
     single: StaveConnector.type.SINGLE,
@@ -85,7 +92,7 @@ export class StaveConnector extends Element {
     boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
     thinDouble: StaveConnector.type.THIN_DOUBLE,
     none: StaveConnector.type.NONE,
-  };
+  } as const;
 
   protected width: number;
   protected texts: {
@@ -93,7 +100,7 @@ export class StaveConnector extends Element {
     options: { shift_x: number; shift_y: number };
   }[];
 
-  protected type: number;
+  protected type: typeof StaveConnector['type'][keyof typeof StaveConnector['type']];
 
   readonly top_stave: Stave;
   readonly bottom_stave: Stave;
@@ -121,13 +128,23 @@ export class StaveConnector extends Element {
    * Set type.
    * @param type see {@link StaveConnector.type} & {@link StaveConnector.typeString}
    */
-  setType(type: number | string): this {
-    type = typeof type === 'string' ? StaveConnector.typeString[type] : type;
+  setType(type: StaveConnectorType): this {
+    const newType = typeof type === 'string' ? StaveConnector.typeString[type] : type;
 
-    if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
-      this.type = type;
+    // Be certain that the type is a valid type:
+    if (Object.values(StaveConnector.type).includes(newType)) {
+      this.type = newType;
     }
+
     return this;
+  }
+
+  /**
+   * Get type.
+   * @returns number {@link StaveConnector.type}
+   */
+  getType(): number {
+    return this.type;
   }
 
   /** Set optional associated Text. */

@@ -8,7 +8,7 @@ import { FormatParams, Formatter, FormatterOptions } from './formatter';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave, StaveOptions } from './stave';
-import { StaveConnector } from './staveconnector';
+import { StaveConnector, StaveConnectorType } from './staveconnector';
 import { Category } from './typeguard';
 import { RuntimeError } from './util';
 import { Voice } from './voice';
@@ -121,7 +121,7 @@ export class System extends Element {
    * Add connector between staves.
    * @param type see {@link StaveConnector.typeString}
    */
-  addConnector(type: string = 'double'): StaveConnector {
+  addConnector(type: StaveConnectorType = 'double'): StaveConnector {
     this.connector = this.factory.StaveConnector({
       top_stave: this.parts[0].stave,
       bottom_stave: this.parts[this.parts.length - 1].stave,
