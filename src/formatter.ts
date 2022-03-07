@@ -16,19 +16,11 @@ import { TabStave } from './tabstave';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { isNote, isStaveNote } from './typeguard';
-import { defined, log, midLine, RuntimeError } from './util';
+import { log, midLine, RuntimeError } from './util';
 import { Voice } from './voice';
 
-interface Distance {
-  maxNegativeShiftPx: number;
-  expectedDistance: number;
-  fromTickable?: Tickable;
-  errorPx?: number;
-  fromTickablePx?: number;
-}
-
 export interface FormatterOptions {
-  /** Defaults to 100. */
+  /** Defaults to 200. */
   softmaxFactor?: number;
 
   /** Defaults to `false`. */
@@ -396,7 +388,7 @@ export class Formatter {
   constructor(options?: FormatterOptions) {
     this.formatterOptions = {
       globalSoftmax: false,
-      softmaxFactor: 100,
+      softmaxFactor: 200,
       maxIterations: 5,
       ...options,
     };
@@ -612,201 +604,46 @@ export class Formatter {
     let x = 0;
     let shift = 0;
     this.minTotalWidth = 0;
-    let totalTicks = 0;
+    let factor = 1;
+    let prevFactor = 1;
+    let slack = 0;
+    let iteration = 0;
 
-    // Pass 1: Give each note maximum width requested by context.
-    contextList.forEach((tick) => {
-      const context = contextMap[tick];
+    do {
+      x = 0;
+      shift = 0;
+      slack = 0;
+      // Pass 1: Give each note maximum width requested by context.
+      contextList.forEach((tick) => {
+        const context = contextMap[tick];
 
-      // Make sure that all tickables in this context have calculated their
-      // space requirements.
-      context.preFormat();
+        // Make sure that all tickables in this context have calculated their
+        // space requirements.
+        context.preFormat();
 
-      const width = context.getWidth();
-      this.minTotalWidth += width;
+        const metrics = context.getMetrics();
+        x = x + shift + (metrics.totalLeftPx > slack ? metrics.totalLeftPx - slack : 0);
+        context.setX(x);
 
-      const maxTicks = context.getMaxTicks().value();
-      totalTicks += maxTicks;
-
-      const metrics = context.getMetrics();
-      x = x + shift + metrics.totalLeftPx;
-      context.setX(x);
-
-      // Calculate shift for the next tick.
-      shift = width - metrics.totalLeftPx;
-    });
-
-    // Use softmax based on all notes across all staves. (options.globalSoftmax)
-    const { globalSoftmax, softmaxFactor, maxIterations } = this.formatterOptions;
-
-    const exp = (tick: number) => softmaxFactor ** (contextMap[tick].getMaxTicks().value() / totalTicks);
-    const expTicksUsed = sumArray(contextList.map(exp));
+        // Calculate shift for the next tick.
+        const minTicks = context.getMinTicks()?.value() ?? context.getMaxTicks().value();
+        shift = Math.max(
+          metrics.width - metrics.totalLeftPx,
+          (factor * minTicks) / this.formatterOptions.softmaxFactor
+        );
+        slack = shift - metrics.width + metrics.totalLeftPx;
+      });
+      prevFactor = factor;
+      factor *= justifyWidth / (x + shift);
+      iteration++;
+    } while (
+      iteration < this.formatterOptions.maxIterations &&
+      justifyWidth >= 0 &&
+      Math.abs(factor - prevFactor) > 0.1
+    );
 
     this.minTotalWidth = x + shift;
     this.hasMinTotalWidth = true;
-
-    // No justification needed. End formatting.
-    if (justifyWidth <= 0) return this.evaluate();
-
-    // Start justification. Subtract the right extra pixels of the final context because the formatter
-    // justifies based on the context's X position, which is the left-most part of the note head.
-    const firstContext = contextMap[contextList[0]];
-    const lastContext = contextMap[contextList[contextList.length - 1]];
-
-    // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
-    // the softmax of the ticks.
-    function calculateIdealDistances(adjustedJustifyWidth: number): Distance[] {
-      const distances: Distance[] = contextList.map((tick: number, i: number) => {
-        const context: TickContext = contextMap[tick];
-        const voices = context.getTickablesByVoice();
-        let backTickable: Tickable | undefined;
-        if (i > 0) {
-          const prevContext: TickContext = contextMap[contextList[i - 1]];
-          // Go through each tickable and search backwards for another tickable
-          // in the same voice. If found, use that duration (ticks) to calculate
-          // the expected distance.
-          for (let j = i - 1; j >= 0; j--) {
-            const backTick: TickContext = contextMap[contextList[j]];
-            const backVoices = backTick.getTickablesByVoice();
-
-            // Look for matching voices between tick contexts.
-            const matchingVoices: string[] = [];
-            Object.keys(voices).forEach((v) => {
-              if (backVoices[v]) {
-                matchingVoices.push(v);
-              }
-            });
-
-            if (matchingVoices.length > 0) {
-              // Found matching voices, get largest duration
-              let maxTicks = 0;
-              let maxNegativeShiftPx = Infinity;
-              let expectedDistance = 0;
-
-              matchingVoices.forEach((v) => {
-                const ticks = backVoices[v].getTicks().value();
-                if (ticks > maxTicks) {
-                  backTickable = backVoices[v];
-                  maxTicks = ticks;
-                }
-
-                // Calculate the limits of the shift based on modifiers, etc.
-                const thisTickable = voices[v];
-                const insideLeftEdge =
-                  thisTickable.getX() -
-                  (thisTickable.getMetrics().modLeftPx + thisTickable.getMetrics().leftDisplacedHeadPx);
-
-                const backMetrics = backVoices[v].getMetrics();
-                const insideRightEdge =
-                  backVoices[v].getX() + backMetrics.notePx + backMetrics.modRightPx + backMetrics.rightDisplacedHeadPx;
-
-                // Don't allow shifting if notes in the same voice can collide
-                maxNegativeShiftPx = Math.min(maxNegativeShiftPx, insideLeftEdge - insideRightEdge);
-              });
-
-              // Don't shift further left than the notehead of the last context. Actually, stay at most 5% to the right
-              // so that two different tick contexts don't align across staves.
-              maxNegativeShiftPx = Math.min(
-                maxNegativeShiftPx,
-                context.getX() - (prevContext.getX() + adjustedJustifyWidth * 0.05)
-              );
-
-              // Calculate the expected distance of the current context from the last matching tickable. The
-              // distance is scaled down by the softmax for the voice.
-              if (globalSoftmax) {
-                const t = totalTicks;
-                expectedDistance = (softmaxFactor ** (maxTicks / t) / expTicksUsed) * adjustedJustifyWidth;
-              } else if (typeof backTickable !== 'undefined') {
-                expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
-              }
-              return {
-                expectedDistance,
-                maxNegativeShiftPx,
-                fromTickable: backTickable,
-              };
-            }
-          }
-        }
-
-        return { expectedDistance: 0, fromTickablePx: 0, maxNegativeShiftPx: 0 };
-      });
-      return distances;
-    }
-
-    function shiftToIdealDistances(idealDistances: Distance[]): number {
-      // Distribute ticks to the contexts based on the calculated distance error.
-      const centerX = adjustedJustifyWidth / 2;
-      let spaceAccum = 0;
-
-      contextList.forEach((tick, index) => {
-        const context = contextMap[tick];
-        if (index > 0) {
-          const contextX = context.getX();
-          const ideal = idealDistances[index];
-          const errorPx = defined(ideal.fromTickable).getX() + ideal.expectedDistance - (contextX + spaceAccum);
-
-          let negativeShiftPx = 0;
-          if (errorPx > 0) {
-            spaceAccum += errorPx;
-          } else if (errorPx < 0) {
-            negativeShiftPx = Math.min(ideal.maxNegativeShiftPx, Math.abs(errorPx));
-            spaceAccum += -negativeShiftPx;
-          }
-          context.setX(contextX + spaceAccum);
-        }
-        // Move center aligned tickables to middle
-        context.getCenterAlignedTickables().forEach((tickable: Tickable) => {
-          tickable.setCenterXShift(centerX - context.getX());
-        });
-      });
-
-      return lastContext.getX() - firstContext.getX();
-    }
-
-    const adjustedJustifyWidth =
-      justifyWidth -
-      lastContext.getMetrics().notePx -
-      lastContext.getMetrics().totalRightPx -
-      firstContext.getMetrics().totalLeftPx;
-    const musicFont = Tables.currentMusicFont();
-    const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
-    const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
-    let targetWidth = adjustedJustifyWidth;
-    const distances = calculateIdealDistances(targetWidth);
-    let actualWidth = shiftToIdealDistances(distances);
-    // Calculate right justification by finding max of (configured value, min distance between tickables)
-    // so measures with lots of white space use it evenly, and crowded measures use at least the configured
-    // space.
-    const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
-      let mdCalc = targetWidth / 2;
-      if (distances.length > 1) {
-        for (let di = 1; di < distances.length; ++di) {
-          mdCalc = Math.min(distances[di].expectedDistance / 2, mdCalc);
-        }
-      }
-      return mdCalc;
-    };
-    const minDistance = calcMinDistance(targetWidth, distances);
-
-    // Just one context. Done formatting.
-    if (contextList.length === 1) return 0;
-
-    // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
-    // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
-    // existing visual regression tests.
-    const paddingMax = configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
-    const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
-    const maxX = adjustedJustifyWidth - paddingMin;
-
-    let iterations = maxIterations;
-    // Adjust justification width until the right margin is as close as possible to the calculated padding,
-    // without going over
-    while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
-      targetWidth -= actualWidth - maxX;
-      actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
-      iterations--;
-    }
-
     this.justifyWidth = justifyWidth;
     return this.evaluate();
   }
@@ -901,61 +738,6 @@ export class Formatter {
     this.totalCost = Math.sqrt(totalDeviation);
     this.lossHistory.push(this.totalCost);
     return this.totalCost;
-  }
-
-  /**
-   * Run a single iteration of rejustification. At a high level, this method calculates
-   * the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
-   * attempt to reduce the cost. You can call this method multiple times until it finds
-   * and oscillates around a global minimum.
-   * @param alpha the "learning rate" for the formatter. It determines how much of a shift
-   * the formatter should make based on its cost function.
-   */
-  tune(options?: { alpha?: number }): number {
-    const contexts = this.tickContexts;
-    if (!contexts) {
-      return 0;
-    }
-
-    const alpha = options?.alpha ?? 0.5;
-
-    // Move `current` tickcontext by `shift` pixels, and adjust the freedom
-    // on adjacent tickcontexts.
-    function move(current: TickContext, shift: number, prev?: TickContext, next?: TickContext) {
-      current.setX(current.getX() + shift);
-      current.getFormatterMetrics().freedom.left += shift;
-      current.getFormatterMetrics().freedom.right -= shift;
-
-      if (prev) prev.getFormatterMetrics().freedom.right += shift;
-      if (next) next.getFormatterMetrics().freedom.left -= shift;
-    }
-
-    let shift = 0;
-    this.totalShift = 0;
-    contexts.list.forEach((tick, index, list) => {
-      const context = contexts.map[tick];
-      const prevContext = index > 0 ? contexts.map[list[index - 1]] : undefined;
-      const nextContext = index < list.length - 1 ? contexts.map[list[index + 1]] : undefined;
-
-      move(context, shift, prevContext, nextContext);
-
-      const cost = -sumArray(context.getTickables().map((t) => t.getFormatterMetrics().space.deviation));
-
-      if (cost > 0) {
-        shift = -Math.min(context.getFormatterMetrics().freedom.right, Math.abs(cost));
-      } else if (cost < 0) {
-        if (nextContext) {
-          shift = Math.min(nextContext.getFormatterMetrics().freedom.right, Math.abs(cost));
-        } else {
-          shift = 0;
-        }
-      }
-
-      shift *= alpha;
-      this.totalShift += shift;
-    });
-
-    return this.evaluate();
   }
 
   /**

@@ -223,10 +223,6 @@ export class System extends Element {
     }
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth, this.options.formatOptions);
 
-    for (let i = 0; i < this.options.formatIterations; i++) {
-      formatter.tune(options_details);
-    }
-
     this.startX = startX;
     this.debugNoteMetricsYs = debugNoteMetricsYs;
     this.lastY = y;

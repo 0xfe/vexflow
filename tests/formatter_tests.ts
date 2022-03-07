@@ -109,7 +109,7 @@ function buildTickContexts(): void {
 
   formatter.preFormat();
 
-  equal(formatter.getMinTotalWidth(), 88, 'Minimum total width');
+  equal(formatter.getMinTotalWidth(), 80, 'Minimum total width');
   equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
   equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
   ok(
