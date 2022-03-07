@@ -427,7 +427,7 @@ export class Glyph extends Element {
     return this;
   }
 
-  getXShift() {
+  getXShift(): number {
     return this.x_shift;
   }
 
@@ -436,7 +436,7 @@ export class Glyph extends Element {
     return this;
   }
 
-  getYshift() {
+  getYshift(): number {
     return this.y_shift;
   }
 
