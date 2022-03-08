@@ -1,11 +1,15 @@
-# VexFlow 4
+# VexFlow
 
 VexFlow is an open-source library for rendering music notation. It is written in TypeScript (compiled to ES6), and outputs scores to HTML
-Canvas and SVG, right in the browser. It , and also in command line node projects.
+Canvas and SVG, right in the browser. It also works in Node.js projects (e.g., a command line script to save a score as a PDF).
 
 ## Sponsor this Project
 
-If you use VexFlow and find it useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
+If you find VexFlow useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
+
+## Version 3 &#x2192; 4
+
+As of this writing (March 2022), we are nearing the release of a new major version of VexFlow. The guide below refers to VexFlow 4 (the new version). If you need to work with the previous version, follow the [version 3.0.9 tutorial.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
 
 ## Quick Start
 
@@ -18,15 +22,29 @@ The quickest way to add VexFlow to an HTML page is via a `<script>` tag.
 </script>
 ```
 
+The URL above will work once VexFlow 4 is released. For now, insert `@beta` into the URL:
+
+```html
+<!-- BETA URL BELOW -->
+<script src="https://cdn.jsdelivr.net/npm/vexflow@beta/build/cjs/vexflow.js"></script>
+<script>
+  // YOUR CODE GOES HERE
+</script>
+```
+
 If your project uses a bundler, you can install VexFlow from npm:
 
 ```sh
-$ npm install vexflow
+npm install vexflow
+```
+
+The command above currently installs the previous version (3.0.9). At the moment, add `@beta` to get VexFlow 4:
+
+```sh
+npm install vexflow@beta
 ```
 
 [More details on integrating with VexFlow 4.](https://github.com/0xfe/vexflow/wiki/VexFlow-4-Tutorial)
-
-Note: if you still need to work with the previous version, visit the [tutorial for version 3.0.9.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
 
 ## EasyScore
 
@@ -83,25 +101,25 @@ stave.addClef('treble').addTimeSignature('4/4');
 stave.setContext(context).draw();
 ```
 
-## More Examples
+## Examples
 
-Take a look at [the VexFlow tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial).
+- Take a look at [the VexFlow tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial).
 
-Dig into [the unit tests](https://github.com/0xfe/vexflow/tree/master/tests).
+- Dig into [the unit tests](https://github.com/0xfe/vexflow/tree/master/tests).
 
 ## Need Help?
 
 Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
 
-## Resources
+## More Resources
 
-To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
+- Learn and contribute. Check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
 
-To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
+- Build VexFlow from scratch. Read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
 
-[VexFlow Home](https://vexflow.com)
+- [VexFlow Home](https://vexflow.com)
 
-[Mohit Muthanna Cheppudira](https://muthanna.com)
+- VexFlow Founder: [Mohit Muthanna Cheppudira](https://muthanna.com)
 
 # MIT License
 
