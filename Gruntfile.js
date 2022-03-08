@@ -582,8 +582,9 @@ module.exports = (grunt) => {
   );
 
   // grunt test:browser:esm
-  // Open the default browser to http://localhost:8080/tests/flow.html?esm=true
-  // Requires a web server (e.g., `npx http-server`).
+  // Starts a web server (e.g., `npx http-server`) and opens the default browser to
+  // http://localhost:8080/tests/flow.html?esm=true  The -c-1 option disables caching.
+  // Testing ES module code requires a web server.
   grunt.registerTask(
     'test:browser:esm',
     'Test the ESM build in a web server by navigating to http://localhost:8080/tests/flow.html?esm=true',
@@ -593,8 +594,8 @@ module.exports = (grunt) => {
       grunt.task.run('clean:build_esm');
       this.async(); // keep this grunt task alive.
       concurrently([
-        { command: 'npx http-server -o /tests/flow.html?esm=true', name: 'server' },
         { command: 'grunt build:esm:watch', name: 'watch:esm' },
+        { command: 'npx http-server -c-1 -o /tests/flow.html?esm=true', name: 'server' },
       ]);
     }
   );
