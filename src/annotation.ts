@@ -231,6 +231,10 @@ export class Annotation extends Modifier {
 
     // We're changing context parameters. Save current state.
     ctx.save();
+    // Apply style might not save context, if this.style is undefined, so we
+    // still need to save context state just before this, since we will be
+    // changing ctx parameters below.
+    this.applyStyle();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
     ctx.setFont(this.textFont);
@@ -290,6 +294,7 @@ export class Annotation extends Modifier {
     L('Rendering annotation: ', this.text, x, y);
     ctx.fillText(this.text, x, y);
     ctx.closeGroup();
+    this.restoreStyle();
     ctx.restore();
   }
 }
