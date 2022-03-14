@@ -6,7 +6,7 @@ import { Accidental } from './accidental';
 import { Annotation, AnnotationHorizontalJustify, AnnotationVerticalJustify } from './annotation';
 import { Articulation } from './articulation';
 import { BarNote } from './barnote';
-import { Beam } from './beam';
+import { Beam, PartialBeamDirection } from './beam';
 import { ChordSymbol } from './chordsymbol';
 import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
@@ -494,9 +494,23 @@ export class Factory {
     return tuplet;
   }
 
-  Beam(params: { notes: StemmableNote[]; options?: { autoStem?: boolean; secondaryBeamBreaks?: number[] } }): Beam {
+  Beam(params: {
+    notes: StemmableNote[];
+    options?: {
+      autoStem?: boolean;
+      secondaryBeamBreaks?: number[];
+      partialBeamDirections?: {
+        [noteIndex: number]: PartialBeamDirection;
+      };
+    };
+  }): Beam {
     const beam = new Beam(params.notes, params.options?.autoStem).setContext(this.context);
     beam.breakSecondaryAt(params.options?.secondaryBeamBreaks ?? []);
+    if (params.options?.partialBeamDirections) {
+      Object.entries(params.options?.partialBeamDirections).forEach(([noteIndex, direction]) => {
+        beam.setPartialBeamSideAt(Number(noteIndex), direction);
+      });
+    }
     this.renderQ.push(beam);
     return beam;
   }

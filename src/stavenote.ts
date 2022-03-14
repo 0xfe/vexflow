@@ -182,7 +182,8 @@ export class StaveNote extends StemmableNote {
 
     // Test for two voice note intersection
     if (voices === 2) {
-      const lineSpacing = noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
+      const lineSpacing =
+        noteU.note.hasStem() && noteL.note.hasStem() && noteU.stemDirection === noteL.stemDirection ? 0.0 : 0.5;
       if (noteU.minLine <= noteL.maxLine + lineSpacing) {
         if (noteU.isrest) {
           // shift rest up
@@ -190,14 +191,73 @@ export class StaveNote extends StemmableNote {
         } else if (noteL.isrest) {
           // shift rest down
           shiftRestVertical(noteL, noteU, -1);
-        } else if (noteU.stemDirection === noteL.stemDirection) {
-          // upper voice is middle voice, so shift it right
-          xShift = voiceXShift + 2;
-          noteU.note.setXShift(xShift);
         } else {
-          // shift lower voice right
-          xShift = voiceXShift + 2;
-          noteL.note.setXShift(xShift);
+          //Instead of shifting notes, remove the appropriate flag
+          //If we are sharing a line, switch one notes stem direction.
+          //If we are sharing a line and in the same voice, only then offset one note
+          const lineDiff = Math.abs(noteU.line - noteL.line);
+          if (noteU.note.hasStem() && noteL.note.hasStem()) {
+            //If we have different dot values, must offset
+            //Or If we have a white mixed with a black notehead, must offset
+            let whiteNoteHeadCount = 0;
+            let blackNoteHeadCount = 0;
+            if (Tables.durationToNumber(noteU.note.duration) === 2) {
+              whiteNoteHeadCount++;
+            } else if (Tables.durationToNumber(noteU.note.duration) > 2) {
+              blackNoteHeadCount++;
+            }
+            if (Tables.durationToNumber(noteL.note.duration) === 2) {
+              whiteNoteHeadCount++;
+            } else if (Tables.durationToNumber(noteL.note.duration) > 2) {
+              blackNoteHeadCount++;
+            }
+            if (
+              (whiteNoteHeadCount !== 2 && blackNoteHeadCount !== 2) ||
+              noteU.note.getModifiersByType(Category.Dot).length !== noteL.note.getModifiersByType(Category.Dot).length
+            ) {
+              xShift = voiceXShift + 2;
+              if (noteU.stemDirection === noteL.stemDirection) {
+                // upper voice is middle voice, so shift it right
+                noteU.note.setXShift(xShift);
+              } else {
+                // shift lower voice right
+                noteL.note.setXShift(xShift);
+              }
+            } else if (lineDiff < 1 && lineDiff > 0) {
+              //if the notes are quite close but not on the same line, shift
+              xShift = voiceXShift + 2;
+              if (noteU.stemDirection === noteL.stemDirection) {
+                // upper voice is middle voice, so shift it right
+                noteU.note.setXShift(xShift);
+              } else {
+                // shift lower voice right
+                noteL.note.setXShift(xShift);
+              }
+            } else if (noteU.note.voice !== noteL.note.voice) {
+              //If we are not in the same voice
+              if (noteU.stemDirection === noteL.stemDirection) {
+                if (noteU.line != noteL.line) {
+                  xShift = voiceXShift + 2;
+                  noteU.note.setXShift(xShift);
+                } else {
+                  //same line, swap stem direction for one note
+                  if (noteL.stemDirection === 1) {
+                    noteL.stemDirection = -1;
+                    noteL.note.setStemDirection(-1);
+                  }
+                }
+              }
+            } //Very close whole notes
+          } else {
+            xShift = voiceXShift + 2;
+            if (noteU.stemDirection === noteL.stemDirection) {
+              // upper voice is middle voice, so shift it right
+              noteU.note.setXShift(xShift);
+            } else {
+              // shift lower voice right
+              noteL.note.setXShift(xShift);
+            }
+          }
         }
       }
 
@@ -748,13 +808,13 @@ export class StaveNote extends StemmableNote {
   setStyle(style: ElementStyle): this {
     super.setStyle(style);
     this._noteHeads.forEach((notehead) => notehead.setStyle(style));
-    this.stem?.setStyle(style);
+    if (this.stem) this.stem.setStyle(style);
     return this;
   }
 
   setStemStyle(style: ElementStyle): this {
     const stem = this.getStem();
-    stem?.setStyle(style);
+    if (stem) stem.setStyle(style);
     return this;
   }
   getStemStyle(): ElementStyle | undefined {
@@ -1091,9 +1151,11 @@ export class StaveNote extends StemmableNote {
       this.stem.adjustHeightForFlag();
     }
 
-    ctx.openGroup('stem', undefined, { pointerBBox: true });
-    this.stem?.setContext(ctx).draw();
-    ctx.closeGroup();
+    if (this.stem) {
+      ctx.openGroup('stem', undefined, { pointerBBox: true });
+      this.stem.setContext(ctx).draw();
+      ctx.closeGroup();
+    }
   }
 
   /** Primarily used as the scaling factor for grace notes, GraceNote will return the required scale. */
@@ -1155,9 +1217,11 @@ export class StaveNote extends StemmableNote {
     // Format note head x positions
     this._noteHeads.forEach((notehead) => notehead.setX(xBegin));
 
-    // Format stem x positions
-    const stemX = this.getStemX();
-    this.stem?.setNoteHeadXBounds(stemX, stemX);
+    if (this.stem) {
+      // Format stem x positions
+      const stemX = this.getStemX();
+      this.stem.setNoteHeadXBounds(stemX, stemX);
+    }
 
     L('Rendering ', this.isChord() ? 'chord :' : 'note :', this.keys);
 

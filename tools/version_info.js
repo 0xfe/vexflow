@@ -25,10 +25,15 @@ module.exports = {
 
   // Save the build information to build/esm/src/version.js
   saveESMVersionFile() {
-    const outputFile = path.join(__dirname, '..', 'build', 'esm', 'src', 'version.js');
+    const parentDir = path.join(__dirname, '..', 'build', 'esm', 'src');
+    const outputFile = path.join(parentDir, 'version.js');
+
     const V = `export const VERSION = '${VEXFLOW_VERSION}';`;
     const I = `export const ID = '${GIT_COMMIT_ID}';`;
     const D = `export const DATE = '${DATE}';`;
+
+    console.log(`Writing ESM version data to ${outputFile}`);
+    fs.mkdirSync(parentDir, { recursive: true });
     fs.writeFileSync(outputFile, `${V}\n${I}\n${D}`);
   },
 

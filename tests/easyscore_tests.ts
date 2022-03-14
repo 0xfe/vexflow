@@ -555,11 +555,16 @@ function drawFingeringsTest(options: TestOptions): void {
 }
 
 function keys(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 500, 200);
+  const f = VexFlowTests.makeFactory(options, 700, 200);
   const score = f.EasyScore();
+  const system = f.System();
   const notes = score.notes(
-    'c#3/q, c##3, cb3, cbb3, cn3, c3, cbbs3, cbss3, cbs3, cdb3, cd3, c++-3, c++3, c+-3, c+3, co3, ck3'
+    'c#3/q, c##3, cb3, cbb3, cn3, c3, cbbs3, cbss3, cbs3, cdb3, cd3, c++-3, c++3, c+-3, c+3, co3, ck3',
+    { clef: 'bass' }
   );
+
+  system.addStave({ voices: [f.Voice().setStrict(false).addTickables(notes)] }).addClef('bass');
+  f.draw();
 
   equal(notes[0].keys, 'c#/3');
   equal(notes[1].keys, 'c##/3');

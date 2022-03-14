@@ -72,7 +72,10 @@ export class Annotation extends Modifier {
   /** Arrange annotations within a `ModifierContext` */
   static format(annotations: Annotation[], state: ModifierContextState): boolean {
     if (!annotations || annotations.length === 0) return false;
-    let width = 0;
+    let leftWidth = 0;
+    let rightWidth = 0;
+    let maxLeftGlyphWidth = 0;
+    let maxRightGlyphWidth = 0;
     for (let i = 0; i < annotations.length; ++i) {
       const annotation = annotations[i];
       const textFormatter = TextFormatter.create(annotation.textFont);
@@ -81,6 +84,22 @@ export class Annotation extends Modifier {
       let verticalSpaceNeeded = textLines;
 
       const note = annotation.checkAttachedNote();
+      const glyphWidth = note.getGlyph().getWidth();
+      // Get the text width from the font metrics.
+      const textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      if (annotation.horizontalJustification === AnnotationHorizontalJustify.LEFT) {
+        maxLeftGlyphWidth = Math.max(glyphWidth, maxLeftGlyphWidth);
+        leftWidth = Math.max(leftWidth, textWidth);
+      } else if (annotation.horizontalJustification === AnnotationHorizontalJustify.RIGHT) {
+        maxRightGlyphWidth = Math.max(glyphWidth, maxLeftGlyphWidth);
+        rightWidth = Math.max(rightWidth, textWidth);
+      } else {
+        leftWidth = Math.max(leftWidth, textWidth / 2);
+        rightWidth = Math.max(rightWidth, textWidth / 2);
+        maxLeftGlyphWidth = Math.max(glyphWidth / 2, maxLeftGlyphWidth);
+        maxRightGlyphWidth = Math.max(glyphWidth / 2, maxRightGlyphWidth);
+      }
+
       const stave: Stave | undefined = note.getStave();
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
@@ -104,9 +123,6 @@ export class Annotation extends Modifier {
       if (stave) {
         lines = stave.getNumLines();
       }
-      // Get the text width from the font metrics.
-      const textWidth = textFormatter.getWidthForTextInPx(annotation.text);
-      width = Math.max(width, textWidth);
 
       if (annotation.verticalJustification === this.VerticalJustify.TOP) {
         let noteLine = note.getLineNumber(true);
@@ -146,8 +162,13 @@ export class Annotation extends Modifier {
         annotation.setTextLine(state.text_line);
       }
     }
-    state.left_shift += width / 2;
-    state.right_shift += width / 2;
+    const rightOverlap = Math.min(
+      Math.max(rightWidth - maxRightGlyphWidth, 0),
+      Math.max(rightWidth - state.right_shift, 0)
+    );
+    const leftOverlap = Math.min(Math.max(leftWidth - maxLeftGlyphWidth, 0), Math.max(leftWidth - state.left_shift, 0));
+    state.left_shift += leftOverlap / 2;
+    state.right_shift += rightOverlap / 2;
     return true;
   }
 
@@ -210,6 +231,10 @@ export class Annotation extends Modifier {
 
     // We're changing context parameters. Save current state.
     ctx.save();
+    // Apply style might not save context, if this.style is undefined, so we
+    // still need to save context state just before this, since we will be
+    // changing ctx parameters below.
+    this.applyStyle();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
     ctx.setFont(this.textFont);
@@ -269,6 +294,7 @@ export class Annotation extends Modifier {
     L('Rendering annotation: ', this.text, x, y);
     ctx.fillText(this.text, x, y);
     ctx.closeGroup();
+    this.restoreStyle();
     ctx.restore();
   }
 }

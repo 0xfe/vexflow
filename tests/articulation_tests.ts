@@ -35,6 +35,7 @@ const ArticulationTests = {
     run('TabNote Articulation', tabNotes, { sym1: 'a.', sym2: 'a.' });
   },
 };
+
 // Helper function for creating StaveNotes.
 function drawArticulations(options: TestOptions): void {
   const sym1 = options.params.sym1;

@@ -1,67 +1,63 @@
-# VexFlow 4 (beta)
+# VexFlow
 
-A JavaScript / TypeScript library for rendering music notation.
-
-Copyright (c) 2010 Mohit Muthanna Cheppudira
+VexFlow is an open-source library for rendering music notation. It is written in TypeScript (compiled to ES6), and outputs scores to HTML
+Canvas and SVG, right in the browser. It also works in Node.js projects (e.g., a command line script to save a score as a PDF).
 
 ## Sponsor this Project
 
-If you use VexFlow in your app, startup, institution, and find it useful, please consider sponsoring its development here: https://github.com/sponsors/0xfe.
+If you find VexFlow useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
 
-## Need Help?
+## Version 3 &#x2192; 4
 
-Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
-
-## What is VexFlow?
-
-VexFlow is an open-source web-based music notation rendering API. It is written in TypeScript, and runs right in the browser. VexFlow supports HTML
-Canvas and SVG, and runs on all modern browsers.
-
-Go try out [The VexFlow Tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial) to learn how to use VexFlow.
+As of this writing (March 2022), we are nearing the release of a new major version of VexFlow. The guide below refers to VexFlow 4 (the new version). If you need to work with the previous version, follow the [version 3.0.9 tutorial.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
 
 ## Quick Start
 
-### Using npm
+The quickest way to add VexFlow to an HTML page is via a `<script>` tag.
 
-To install version 4.0.0-beta:
-
-```shell
-$ npm install vexflow@beta
+```html
+<script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+<script>
+  // YOUR CODE GOES HERE
+</script>
 ```
 
-To install version 3.0.9:
+The URL above will work once VexFlow 4 is released. For now, insert `@beta` into the URL:
 
-```shell
-$ npm install vexflow
+```html
+<!-- BETA URL BELOW -->
+<script src="https://cdn.jsdelivr.net/npm/vexflow@beta/build/cjs/vexflow.js"></script>
+<script>
+  // YOUR CODE GOES HERE
+</script>
 ```
 
-### Using the HTML `script` Tag
+If your project uses a bundler, you can install VexFlow from npm:
 
-Releases are served via CDN:
+```sh
+npm install vexflow
+```
 
-**unpkg**
+The command above currently installs the previous version (3.0.9). At the moment, add `@beta` to get VexFlow 4:
 
-- Minified: https://unpkg.com/vexflow@4.0.0/build/vexflow.js
-- Debug: https://unpkg.com/vexflow@4.0.0/build/vexflow-debug.js
+```sh
+npm install vexflow@beta
+```
 
-**jsdelivr**
+[More details on integrating with VexFlow 4.](https://github.com/0xfe/vexflow/wiki/VexFlow-4-Tutorial)
 
-- Minified: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow.js
-- Debug: https://cdn.jsdelivr.net/npm/vexflow@4.0.0/build/vexflow-debug.js
+## EasyScore
 
-### Using EasyScore
-
-The EasyScore API is a quick way to create simple music notation in VexFlow. See a running example in [this jsfiddle](https://jsfiddle.net/2pbh9xq0/).
+EasyScore is VexFlow's high-level API for creating music notation.
+[See a running example here.](https://jsfiddle.net/2pbh9xq0/)
 
 ```javascript
-import Vex from 'vexflow';
-
-const vf = new Vex.Flow.Factory({
+const f = new Vex.Flow.Factory({
   renderer: { elementId: 'boo', width: 500, height: 200 },
 });
 
-const score = vf.EasyScore();
-const system = vf.System();
+const score = f.EasyScore();
+const system = f.System();
 
 system
   .addStave({
@@ -73,22 +69,21 @@ system
   .addClef('treble')
   .addTimeSignature('4/4');
 
-vf.draw();
+f.draw();
 ```
 
-Learn the EasyScore API in the [Using EasyScore](https://github.com/0xfe/vexflow/wiki/Using-EasyScore) guide.
+[Learn more about EasyScore here.](https://github.com/0xfe/vexflow/wiki/Using-EasyScore)
 
-### Using the Native API
+## Native API
 
-The example code below renders a VexFlow stave using SVG. See a running example in this [jsfiddle](https://jsfiddle.net/j6dpazx2/).
+If you need more control, you can use the low-level VexFlow API.
+Below, we render a stave using SVG. [See a running example here.](https://jsfiddle.net/j6dpazx2/)
 
 ```javascript
-import Vex from 'vexflow';
-
 const VF = Vex.Flow;
 
-// Create an SVG renderer and attach it to the DIV element named "vf".
-const div = document.getElementById('vf');
+// Create an SVG renderer and attach it to the DIV element named "output".
+const div = document.getElementById('output');
 const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
 // Configure the rendering context.
@@ -106,15 +101,27 @@ stave.addClef('treble').addTimeSignature('4/4');
 stave.setContext(context).draw();
 ```
 
-## Resources
+## Examples
 
-To learn and contribute, check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
+- Take a look at [the VexFlow tutorial](https://github.com/0xfe/vexflow/wiki/Tutorial).
 
-To build VexFlow from scratch, read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build-And-Release-Instructions).
+- Dig into [the unit tests](https://github.com/0xfe/vexflow/tree/master/tests).
 
-Sponsor Vexflow: https://github.com/sponsors/0xfe
+## Need Help?
 
-## MIT License
+Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
+
+## More Resources
+
+- Learn and contribute. Check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
+
+- Build VexFlow from scratch. Read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
+
+- [VexFlow Home](https://vexflow.com)
+
+- VexFlow Founder: [Mohit Muthanna Cheppudira](https://muthanna.com)
+
+# MIT License
 
 Copyright (c) Mohit Muthanna Cheppudira 2010 <br/>
 0xFE <mohit@muthanna.com> https://www.vexflow.com
@@ -136,8 +143,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-## Links
-
-- [VexFlow Home](https://vexflow.com)
-- [Me](https://muthanna.com)

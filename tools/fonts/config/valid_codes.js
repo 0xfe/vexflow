@@ -185,7 +185,7 @@ module.exports = {
   brassSmear: 'vxx',
 
   // string techniques (e610-e62f)
-  stringsDownBow: 'v94',
+  stringsDownBow: 'v97',
   stringsUpBow: 'v75',
   stringsHarmonic: 'vb9',
 

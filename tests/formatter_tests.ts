@@ -141,8 +141,8 @@ function rightJustify(options: TestOptions): void {
   };
   renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 2, '2', 10, 300);
   renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 1, 'w', 310, 300);
-  renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 3, '4', 610, 300);
-  renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 6, '8', 910, 300);
+  renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 4, '4', 610, 300);
+  renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 8, '8', 910, 300);
   ok(true);
 }
 

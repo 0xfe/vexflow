@@ -205,6 +205,7 @@ export class Articulation extends Modifier {
     if (!articulations || articulations.length === 0) return false;
 
     const margin = 0.5;
+    let maxGlyphWidth = 0;
 
     const getIncrement = (articulation: Articulation, line: number, position: number) =>
       roundToNearestHalf(
@@ -214,6 +215,7 @@ export class Articulation extends Modifier {
 
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
+      maxGlyphWidth = Math.max(note.getGlyph().getWidth(), maxGlyphWidth);
       let lines = 5;
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;
@@ -261,9 +263,13 @@ export class Articulation extends Modifier {
     const width = articulations
       .map((articulation) => articulation.getWidth())
       .reduce((maxWidth, articWidth) => Math.max(articWidth, maxWidth));
+    const overlap = Math.min(
+      Math.max(width - maxGlyphWidth, 0),
+      Math.max(width - (state.left_shift + state.right_shift), 0)
+    );
 
-    state.left_shift += width / 2;
-    state.right_shift += width / 2;
+    state.left_shift += overlap / 2;
+    state.right_shift += overlap / 2;
     return true;
   }
 
