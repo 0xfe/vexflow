@@ -224,6 +224,7 @@ export abstract class Note extends Tickable {
   protected stave?: Stave;
   public render_options: {
     draw_stem_through_stave?: boolean;
+    draw?: boolean;
     draw_dots?: boolean;
     draw_stem?: boolean;
     y_shift: number;
