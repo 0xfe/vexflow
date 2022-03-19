@@ -771,12 +771,13 @@ export class Formatter {
     const musicFont = Tables.currentMusicFont();
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
+    const leftPadding = musicFont.lookupMetric('stave.padding');
     let targetWidth = adjustedJustifyWidth;
     const distances = calculateIdealDistances(targetWidth);
     let actualWidth = shiftToIdealDistances(distances);
-    // Calculate right justification by finding max of (configured value, min distance between tickables)
-    // so measures with lots of white space use it evenly, and crowded measures use at least the configured
-    // space.
+
+    // Just one context. Done formatting.
+    if (contextList.length === 1) return 0;
     const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
       let mdCalc = targetWidth / 2;
       if (distances.length > 1) {
@@ -788,14 +789,27 @@ export class Formatter {
     };
     const minDistance = calcMinDistance(targetWidth, distances);
 
-    // Just one context. Done formatting.
-    if (contextList.length === 1) return 0;
-
     // right justify to either the configured padding, or the min distance between notes, whichever is greatest.
     // This * 2 keeps the existing formatting unless there is 'a lot' of extra whitespace, which won't break
     // existing visual regression tests.
-    const paddingMax = configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
-    const paddingMin = paddingMax - (configMaxPadding - configMinPadding);
+    const paddingMaxCalc = (curTargetWidth: number) => {
+      let lastTickablePadding = 0;
+      const lastTickable = lastContext && lastContext.getMaxTickable();
+      if (lastTickable) {
+        const voice = lastTickable.getVoice();
+        // If the number of actual ticks in the measure <> configured ticks, right-justify
+        // because the softmax won't yield the correct value
+        if (voice.getTicksUsed().value() > voice.getTotalTicks().value()) {
+          return configMaxPadding * 2 < minDistance ? minDistance : configMaxPadding;
+        }
+        const tickWidth = lastTickable.getWidth();
+        lastTickablePadding =
+          voice.softmax(lastContext.getMaxTicks().value()) * curTargetWidth - (tickWidth + leftPadding);
+      }
+      return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
+    };
+    let paddingMax = paddingMaxCalc(targetWidth);
+    let paddingMin = paddingMax - (configMaxPadding - configMinPadding);
     const maxX = adjustedJustifyWidth - paddingMin;
 
     let iterations = maxIterations;
@@ -803,6 +817,8 @@ export class Formatter {
     // without going over
     while ((actualWidth > maxX && iterations > 0) || (actualWidth + paddingMax < maxX && iterations > 1)) {
       targetWidth -= actualWidth - maxX;
+      paddingMax = paddingMaxCalc(targetWidth);
+      paddingMin = paddingMax - (configMaxPadding - configMinPadding);
       actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
       iterations--;
     }
