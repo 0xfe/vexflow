@@ -74,7 +74,7 @@ function lyrics(options: TestOptions): void {
     system.addStave({
       voices: [
         score.voice(
-          score.notes('(C4 F4)/2[id="n0"]').concat(score.beam(score.notes('(C4 A4)/8[id="n1"], (C#4 A4)/8[id="n2"]')))
+          score.notes('(C4 F4)/2[id="n0"]').concat(score.beam(score.notes('(C4 A4)/8[id="n1"], (C4 A4)/8[id="n2"]')))
         ),
       ],
     });
