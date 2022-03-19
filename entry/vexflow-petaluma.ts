@@ -16,5 +16,7 @@ loadCustom();
 Flow.setMusicFont('Petaluma', 'Custom');
 loadTextFonts();
 
+// Re-export all exports from index.ts.
 export * from '../src/index';
-export default Vex;
+// Also collect all exports into a default export for CJS projects.
+export * as default from '../src/index';

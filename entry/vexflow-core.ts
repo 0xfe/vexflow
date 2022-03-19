@@ -9,8 +9,6 @@
 // All music fonts will be loaded dynamically via: `Flow.fetchMusicFont(fontName)`
 // Remember to call `Flow.setMusicFont(fontName)` after fetching the font module.
 
-import { Vex } from '../src/vex';
-
 import { Flow } from '../src/flow';
 import { Font, FontModule } from '../src/font';
 import { loadTextFonts } from '../src/fonts/textfonts';
@@ -71,5 +69,7 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
 // Load the two text fonts that ChordSymbol & Annotation use.
 loadTextFonts();
 
+// Re-export all exports from index.ts.
 export * from '../src/index';
-export default Vex;
+// Also collect all exports into a default export for CJS projects.
+export * as default from '../src/index';
