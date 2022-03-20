@@ -8,6 +8,13 @@ const Vex5 = require('vexflow/bravura'); // This only includes the Bravura font.
 const Vex6 = require('vexflow/petaluma'); // This only includes the Petaluma font.
 const Vex7 = require('vexflow/gonville'); // This only includes the Gonville font.
 
+console.log(Vex2.StaveNote);
+console.log(Vex3.StaveNote);
+console.log(Vex4.StaveNote);
+console.log(Vex5.StaveNote);
+console.log(Vex6.StaveNote);
+console.log(Vex7.StaveNote);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // The following statements return true:
 console.log(Vex.Flow === Flow);
