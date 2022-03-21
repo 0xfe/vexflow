@@ -366,10 +366,6 @@ export class Font {
     }
   }
 
-  static loadTextFonts(): void {
-    //
-  }
-
   /**
    * @param fontName
    * @param data optionally set the Font object's `.data` property.
