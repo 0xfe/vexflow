@@ -75,7 +75,7 @@ import { TabTie } from './tabtie';
 import { TextBracket, TextBracketPosition } from './textbracket';
 import { TextDynamics } from './textdynamics';
 import { TextFormatter } from './textformatter';
-import { Justification, TextNote } from './textnote';
+import { TextJustification, TextNote } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSignature } from './timesignature';
 import { TimeSigNote } from './timesignote';
@@ -198,7 +198,7 @@ export class Flow {
   static StaveModifierPosition = StaveModifierPosition;
   static VoltaType = VoltaType;
   static TextBracketPosition = TextBracketPosition;
-  static Justification = Justification;
+  static TextJustification = TextJustification;
   static VoiceMode = VoiceMode;
 
   /**
