@@ -34,8 +34,25 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
  * see {@link StaveConnector.type} & {@link StaveConnector.typeString}
  */
 export type StaveConnectorType =
-  | typeof StaveConnector['type'][keyof typeof StaveConnector['type']]
-  | keyof typeof StaveConnector['typeString'];
+  | 'singleRight'
+  | 'singleLeft'
+  | 'single'
+  | 'double'
+  | 'brace'
+  | 'bracket'
+  | 'boldDoubleLeft'
+  | 'boldDoubleRight'
+  | 'thinDouble'
+  | 'none'
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8;
 
 /** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
@@ -55,7 +72,7 @@ export class StaveConnector extends Element {
    * with older versions of vexflow which didn't have right sided
    * stave connectors.
    */
-  static readonly type = {
+  static readonly type: Record<string, Exclude<StaveConnectorType, string>> = {
     SINGLE_RIGHT: 0,
     SINGLE_LEFT: 1,
     SINGLE: 1,
@@ -81,7 +98,7 @@ export class StaveConnector extends Element {
    * * "thinDouble"
    * * "none"
    */
-  static readonly typeString = {
+  static readonly typeString: Record<Exclude<StaveConnectorType, number>, Exclude<StaveConnectorType, string>> = {
     singleRight: StaveConnector.type.SINGLE_RIGHT,
     singleLeft: StaveConnector.type.SINGLE_LEFT,
     single: StaveConnector.type.SINGLE,
