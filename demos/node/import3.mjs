@@ -8,6 +8,11 @@ const Vex3 = await import('vexflow'); // dynamic import. The imported object is 
 import { Vex } from 'vexflow'; // named export for convenience. Same as Vex0.default.Vex.
 import { StaveNote as StaveNoteAlias } from 'vexflow'; // provide an alias for the named import.
 
+// Instead of importing from 'vexflow', you can also import from:
+// vexflow/core
+// vexflow/bravura
+// vexflow/petaluma
+// vexflow/gonville
 /*
 import * as Vex0 from 'vexflow/core'; // the entire module, which looks like { default: ... }. Same as Vex3 below.
 import { default as Vex1 } from 'vexflow/core'; // extract the default export. Same as Vex0.default.
