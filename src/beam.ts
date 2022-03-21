@@ -37,9 +37,9 @@ function getStemSlope(firstNote: StemmableNote, lastNote: StemmableNote) {
   return (lastStemTipY - firstStemTipY) / (lastStemX - firstStemX);
 }
 
-const BEAM_LEFT = 'L';
-const BEAM_RIGHT = 'R';
-const BEAM_BOTH = 'B';
+export const BEAM_LEFT = 'L';
+export const BEAM_RIGHT = 'R';
+export const BEAM_BOTH = 'B';
 
 export type PartialBeamDirection = typeof BEAM_LEFT | typeof BEAM_RIGHT | typeof BEAM_BOTH;
 
