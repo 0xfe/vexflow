@@ -1,5 +1,5 @@
 import { Accidental } from './accidental';
-import { Annotation } from './annotation';
+import { Annotation, AnnotationHorizontalJustify, AnnotationVerticalJustify } from './annotation';
 import { Articulation } from './articulation';
 import { BarNote } from './barnote';
 import { Beam } from './beam';
@@ -7,16 +7,22 @@ import { Bend } from './bend';
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { CanvasContext } from './canvascontext';
-import { ChordSymbol } from './chordsymbol';
+import {
+  ChordSymbol,
+  ChordSymbolHorizontalJustify,
+  ChordSymbolVerticalJustify,
+  SymbolModifiers,
+  SymbolTypes,
+} from './chordsymbol';
 import { Clef } from './clef';
 import { ClefNote } from './clefnote';
 import { Crescendo } from './crescendo';
-import { Curve } from './curve';
+import { Curve, CurvePosition } from './curve';
 import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, FontModule } from './font';
+import { Font, FontModule, FontStyle, FontWeight } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -42,20 +48,20 @@ import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
-import { Renderer } from './renderer';
+import { Renderer, RendererBackends, RendererLineEndType } from './renderer';
 import { RepeatNote } from './repeatnote';
 import { Stave } from './stave';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveConnector } from './staveconnector';
 import { StaveHairpin } from './stavehairpin';
 import { StaveLine } from './staveline';
-import { StaveModifier } from './stavemodifier';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { StaveNote } from './stavenote';
 import { Repetition } from './staverepetition';
 import { StaveTempo } from './stavetempo';
 import { StaveText } from './stavetext';
 import { StaveTie } from './stavetie';
-import { Volta } from './stavevolta';
+import { Volta, VoltaType } from './stavevolta';
 import { Stem } from './stem';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
@@ -66,10 +72,10 @@ import { TabNote } from './tabnote';
 import { TabSlide } from './tabslide';
 import { TabStave } from './tabstave';
 import { TabTie } from './tabtie';
-import { TextBracket } from './textbracket';
+import { TextBracket, TextBracketPosition } from './textbracket';
 import { TextDynamics } from './textdynamics';
 import { TextFormatter } from './textformatter';
-import { TextNote } from './textnote';
+import { Justification, TextNote } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSignature } from './timesignature';
 import { TimeSigNote } from './timesignote';
@@ -79,7 +85,7 @@ import { Tuplet } from './tuplet';
 import { DATE, ID, VERSION } from './version';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
-import { Voice } from './voice';
+import { Voice, VoiceMode } from './voice';
 
 export class Flow {
   static get BUILD() {
@@ -112,13 +118,6 @@ export class Flow {
   static EasyScore = EasyScore;
   static Element = Element;
   static Factory = Factory;
-  static get Flow() {
-    // This (circular reference) provides a handy shortcut for importing VexFlow via `require()`.
-    // For example:
-    // const Vex = require('vexflow');
-    // const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
-    return Flow;
-  }
   static Font = Font;
   static Formatter = Formatter;
   static Fraction = Fraction;
@@ -181,10 +180,26 @@ export class Flow {
   static Voice = Voice;
   static Volta = Volta;
 
-  // enums need to be exported too!
-  static BarlineType = BarlineType;
+  // Exported Enums.
+  // Sorted by the module / file they are exported from.
+  static AnnotationHorizontalJustify = AnnotationHorizontalJustify;
+  static AnnotationVerticalJustify = AnnotationVerticalJustify;
+  static ChordSymbolHorizontalJustify = ChordSymbolHorizontalJustify;
+  static ChordSymbolVerticalJustify = ChordSymbolVerticalJustify;
+  static SymbolTypes = SymbolTypes;
+  static SymbolModifiers = SymbolModifiers;
+  static CurvePosition = CurvePosition;
+  static FontWeight = FontWeight;
+  static FontStyle = FontStyle;
   static ModifierPosition = ModifierPosition;
-  // ... more to come ...
+  static RendererBackends = RendererBackends;
+  static RendererLineEndType = RendererLineEndType;
+  static BarlineType = BarlineType;
+  static StaveModifierPosition = StaveModifierPosition;
+  static VoltaType = VoltaType;
+  static TextBracketPosition = TextBracketPosition;
+  static Justification = Justification;
+  static VoiceMode = VoiceMode;
 
   /**
    * Examples:

@@ -1,8 +1,6 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Vex } from './vex';
-
 export * from './accidental';
 export * from './annotation';
 export * from './articulation';
@@ -89,12 +87,9 @@ export * from './tuning';
 export * from './tuplet';
 export * from './typeguard';
 export * from './util';
-// Do not export './version'. It is accessible via Vex.Flow.VERSION & Vex.Flow.BUILD.
+// Do not export './version'. It is accessible via Vex.Flow.BUILD.
+export * from './vex';
 export * from './vibrato';
 export * from './vibratobracket';
 export * from './voice';
 export * from './web';
-
-// Export Vex as a named export AND as a default export, to support both ways of importing.
-export { Vex };
-export default Vex;

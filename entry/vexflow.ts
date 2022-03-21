@@ -7,8 +7,6 @@
 
 // The webpack config inside Gruntfile.js sets the mode to 'production' to produce a minified build.
 
-import { Vex } from '../src/vex';
-
 import { Flow } from '../src/flow';
 import { loadAllMusicFonts } from '../src/fonts/load_all';
 import { loadTextFonts } from '../src/fonts/textfonts';
@@ -17,5 +15,7 @@ loadAllMusicFonts();
 Flow.setMusicFont('Bravura', 'Gonville', 'Custom');
 loadTextFonts();
 
+// Re-export all exports from index.ts.
 export * from '../src/index';
-export default Vex;
+// Also collect all exports into a default export for CJS projects.
+export * as default from '../src/index';

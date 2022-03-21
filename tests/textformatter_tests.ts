@@ -15,7 +15,7 @@ const TextFormatterTests = {
 };
 
 function basic(): void {
-  // See: src/fonts/loadTextFonts.ts
+  // See: src/fonts/textfonts.ts > loadTextFonts()
   const registeredFamilies = TextFormatter.getFontFamilies();
   equal(registeredFamilies.length, 2, `There are two registered font families: 'Roboto Slab' & 'PetalumaScript'`);
 

@@ -4,8 +4,6 @@
 // vexflow-gonville.ts is the entry point for vexflow-gonville.js.
 // This version bundles the Gonville music engraving font.
 
-import { Vex } from '../src/vex';
-
 import { Flow } from '../src/flow';
 import { loadCustom } from '../src/fonts/load_custom';
 import { loadGonville } from '../src/fonts/load_gonville';
@@ -16,5 +14,7 @@ loadCustom();
 Flow.setMusicFont('Gonville', 'Custom');
 loadTextFonts();
 
+// Re-export all exports from index.ts.
 export * from '../src/index';
-export default Vex;
+// Also collect all exports into a default export for CJS projects.
+export * as default from '../src/index';
