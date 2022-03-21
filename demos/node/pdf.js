@@ -17,9 +17,9 @@ if (!fs.existsSync('./output/')) {
   fs.mkdirSync('./output/');
 }
 
-const { Flow, Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
+const { Stave, StaveNote, Formatter, Renderer } = Vex.Flow;
 
-console.log('VexFlow Build: ' + Flow.BUILD.ID);
+console.log('VexFlow Build: ' + Vex.Flow.BUILD.ID);
 
 const dom = new JSDOM('<!DOCTYPE html><html><body><div id="container"></div><body></html>');
 global.window = dom.window;

@@ -14,11 +14,11 @@ const Vex = require('../../build/cjs/vexflow');
 // const Vex = require('../../build/cjs/vexflow-gonville');
 // const Vex = require('../../build/cjs/vexflow-petaluma');
 
-const { Flow, Stave, Accidental, Font } = Vex.Flow;
+const { Stave, Accidental, Font } = Vex.Flow;
 
-console.log('VexFlow BUILD ID: ' + Flow.BUILD.ID);
+console.log('VexFlow BUILD ID: ' + Vex.Flow.BUILD.ID);
 
-console.log('The music font stack is: ' + Flow.getMusicFont());
+console.log('The music font stack is: ' + Vex.Flow.getMusicFont());
 
 console.log("Stave's default TEXT_FONT is [" + Font.toCSSString(Stave.TEXT_FONT) + ']');
 
