@@ -4,7 +4,7 @@
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
-import { Justification, TextNote } from './textnote';
+import { TextJustification, TextNote } from './textnote';
 import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
@@ -94,9 +94,9 @@ export class StaveText extends StaveModifier {
       case StaveModifierPosition.ABOVE:
       case StaveModifierPosition.BELOW:
         x = stave.getX() + this.options.shift_x;
-        if (this.options.justification === Justification.CENTER) {
+        if (this.options.justification === TextJustification.CENTER) {
           x += stave.getWidth() / 2 - text_width / 2;
-        } else if (this.options.justification === Justification.RIGHT) {
+        } else if (this.options.justification === TextJustification.RIGHT) {
           x += stave.getWidth() - text_width;
         }
 

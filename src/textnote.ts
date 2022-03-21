@@ -7,7 +7,7 @@ import { Note, NoteStruct } from './note';
 import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
-export enum Justification {
+export enum TextJustification {
   LEFT = 1,
   CENTER = 2,
   RIGHT = 3,
@@ -41,9 +41,7 @@ export class TextNote extends Note {
     style: FontStyle.NORMAL,
   };
 
-  static get Justification(): typeof Justification {
-    return Justification;
-  }
+  static readonly Justification = TextJustification;
 
   /** Glyph data. */
   static get GLYPHS(): Record<string, { code: string }> {
@@ -112,7 +110,7 @@ export class TextNote extends Note {
   protected superscript?: string;
   protected subscript?: string;
   protected smooth: boolean;
-  protected justification: Justification;
+  protected justification: TextJustification;
   protected line: number;
 
   constructor(noteStruct: TextNoteStruct) {
@@ -125,7 +123,7 @@ export class TextNote extends Note {
     this.line = noteStruct.line || 0;
     this.smooth = noteStruct.smooth || false;
     this.ignore_ticks = noteStruct.ignore_ticks || false;
-    this.justification = Justification.LEFT;
+    this.justification = TextJustification.LEFT;
 
     // Determine and set initial note width. Note that the text width is
     // an approximation and isn't very accurate. The only way to accurately
@@ -142,7 +140,7 @@ export class TextNote extends Note {
   }
 
   /** Set the horizontal justification of the TextNote. */
-  setJustification(just: Justification): this {
+  setJustification(just: TextJustification): this {
     this.justification = just;
     return this;
   }
@@ -170,9 +168,9 @@ export class TextNote extends Note {
       }
     }
 
-    if (this.justification === Justification.CENTER) {
+    if (this.justification === TextJustification.CENTER) {
       this.leftDisplacedHeadPx = this.width / 2;
-    } else if (this.justification === Justification.RIGHT) {
+    } else if (this.justification === TextJustification.RIGHT) {
       this.leftDisplacedHeadPx = this.width;
     }
 
@@ -198,9 +196,9 @@ export class TextNote extends Note {
     // Align based on tick-context width.
     const width = this.getWidth();
 
-    if (this.justification === Justification.CENTER) {
+    if (this.justification === TextJustification.CENTER) {
       x -= width / 2;
-    } else if (this.justification === Justification.RIGHT) {
+    } else if (this.justification === TextJustification.RIGHT) {
       x -= width;
     }
 

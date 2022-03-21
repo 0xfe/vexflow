@@ -13,6 +13,7 @@ import { FontInfo } from './font';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { Tables } from './tables';
+import { TextJustification } from './textnote';
 import { Category } from './typeguard';
 import { RuntimeError } from './util';
 
@@ -62,11 +63,7 @@ export class StaveLine extends Element {
     BOTTOM: 2,
   };
 
-  static readonly TextJustification = {
-    LEFT: 1,
-    CENTER: 2,
-    RIGHT: 3,
-  };
+  static readonly TextJustification = TextJustification;
 
   public render_options: {
     padding_left: number;
