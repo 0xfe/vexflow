@@ -1,32 +1,15 @@
 # VexFlow
 
-VexFlow is an open-source library for rendering music notation. It is written in TypeScript (compiled to ES6), and outputs scores to HTML
-Canvas and SVG, right in the browser. It also works in Node.js projects (e.g., a command line script to save a score as a PDF).
+VexFlow is an open-source library for rendering music notation. It is written in TypeScript (compiled to ES6), and outputs scores to HTML Canvas and SVG. It works in browsers and also in Node.js projects (e.g., a command line script to save a score as a PDF).
 
-## Sponsor this Project
-
-If you find VexFlow useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
-
-## Version 3 &#x2192; 4
-
-As of this writing (March 2022), we are nearing the release of a new major version of VexFlow. The guide below refers to VexFlow 4 (the new version). If you need to work with the previous version, follow the [version 3.0.9 tutorial.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
+The guide below refers to VexFlow 4. If you need to work with the previous version, follow the [version 3.0.9 tutorial.](https://github.com/0xfe/vexflow/wiki/VexFlow-3.0.9-Tutorial)
 
 ## Quick Start
 
-The quickest way to add VexFlow to an HTML page is via a `<script>` tag.
+The quickest way to add VexFlow to a web page is via a `<script>` tag.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
-<script>
-  // YOUR CODE GOES HERE
-</script>
-```
-
-The URL above will work once VexFlow 4 is released. For now, insert `@beta` into the URL:
-
-```html
-<!-- BETA URL BELOW -->
-<script src="https://cdn.jsdelivr.net/npm/vexflow@beta/build/cjs/vexflow.js"></script>
 <script>
   // YOUR CODE GOES HERE
 </script>
@@ -38,26 +21,21 @@ If your project uses a bundler, you can install VexFlow from npm:
 npm install vexflow
 ```
 
-The command above currently installs the previous version (3.0.9). At the moment, add `@beta` to get VexFlow 4:
-
-```sh
-npm install vexflow@beta
-```
-
-[More details on integrating with VexFlow 4.](https://github.com/0xfe/vexflow/wiki/VexFlow-4-Tutorial)
+Read our detailed guide on [integrating with VexFlow.](https://github.com/0xfe/vexflow/wiki/VexFlow-4-Tutorial)
 
 ## EasyScore
 
-EasyScore is VexFlow's high-level API for creating music notation.
-[See a running example here.](https://jsfiddle.net/2pbh9xq0/)
+EasyScore is VexFlow's high-level API for creating music notation. On a web page containing a `<div id="output"></div>`, the following code displays a score:
 
 ```javascript
-const f = new Vex.Flow.Factory({
-  renderer: { elementId: 'boo', width: 500, height: 200 },
+const { Factory, EasyScore, System } = Vex.Flow;
+
+const vf = new Factory({
+  renderer: { elementId: 'output', width: 500, height: 200 },
 });
 
-const score = f.EasyScore();
-const system = f.System();
+const score = vf.EasyScore();
+const system = vf.System();
 
 system
   .addStave({
@@ -69,30 +47,31 @@ system
   .addClef('treble')
   .addTimeSignature('4/4');
 
-f.draw();
+vf.draw();
 ```
+
+[See a running example of EasyScore here.](https://jsfiddle.net/t1672wza/)
 
 [Learn more about EasyScore here.](https://github.com/0xfe/vexflow/wiki/Using-EasyScore)
 
 ## Native API
 
-If you need more control, you can use the low-level VexFlow API.
-Below, we render a stave using SVG. [See a running example here.](https://jsfiddle.net/j6dpazx2/)
+If you need more control, you can use the low-level VexFlow API. Below, we render a stave using SVG. [See a running example of the low-level API here.](https://jsfiddle.net/vbu1nto7/)
 
 ```javascript
-const VF = Vex.Flow;
+const { Renderer, Stave } = Vex.Flow;
 
-// Create an SVG renderer and attach it to the DIV element named "output".
+// Create an SVG renderer and attach it to the DIV element with id="output".
 const div = document.getElementById('output');
-const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+const renderer = new Renderer(div, Renderer.Backends.SVG);
 
 // Configure the rendering context.
 renderer.resize(500, 500);
 const context = renderer.getContext();
 context.setFont('Arial', 10);
 
-// Create a stave of width 400 at position 10, 40 on the canvas.
-const stave = new VF.Stave(10, 40, 400);
+// Create a stave of width 400 at position 10, 40.
+const stave = new Stave(10, 40, 400);
 
 // Add a clef and time signature.
 stave.addClef('treble').addTimeSignature('4/4');
@@ -107,19 +86,21 @@ stave.setContext(context).draw();
 
 - Dig into [the unit tests](https://github.com/0xfe/vexflow/tree/master/tests).
 
-## Need Help?
-
-Ask on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
-
 ## More Resources
 
-- Learn and contribute. Check out the [VexFlow Wiki](https://github.com/0xfe/vexflow/wiki).
+- If you need help, come join us on the [Vexflow Google Group](https://groups.google.com/forum/?fromgroups#!forum/vexflow).
 
-- Build VexFlow from scratch. Read the [Build Instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
+- Learn more on the [VexFlow wiki](https://github.com/0xfe/vexflow/wiki).
 
-- [VexFlow Home](https://vexflow.com)
+- Build VexFlow from scratch by following the [build instructions](https://github.com/0xfe/vexflow/wiki/Build%2C-Test%2C-Release).
 
-- VexFlow Founder: [Mohit Muthanna Cheppudira](https://muthanna.com)
+- [VexFlow](https://vexflow.com) was created by [Mohit Muthanna Cheppudira](https://muthanna.com) in 2010. Since then, many have contributed with code, documentation, bug reports, and feature requests. See the [list of contributors to the repository](https://github.com/0xfe/vexflow/graphs/contributors).
+
+- [Projects Using VexFlow](https://github.com/0xfe/vexflow/wiki/Project-Gallery)
+
+## Sponsor this Project
+
+If you find VexFlow useful, please consider sponsoring its development: https://github.com/sponsors/0xfe.
 
 # MIT License
 

@@ -1,16 +1,15 @@
-# 4.0.0 / beta
-
-Please help test this beta release and [report issues on GitHub](https://github.com/0xfe/vexflow/issues). Thanks!
+# 4.0.1
 
 Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/Changelog-ver-4.0
 
 ## Features
 
-- Migrate VexFlow to **TypeScript** with a ES6 target.
-- Support ES module in addition to CommonJS.
-- Improve handling of music fonts and text fonts.
-- Optional lazy loading of music fonts.
-- Improve `setFont(...)` method in Element class.
+- VexFlow is written in **TypeScript** with a ES6 target.
+- Supports ES module in addition to CommonJS environments.
+- Improved automatic layout of notes.
+- Improved handling of music fonts and text fonts.
+- Supports lazy loading of music fonts.
+- Improved `setFont(...)` method in Element class.
 
 ## Breaking
 
@@ -27,6 +26,7 @@ Detailed changes are listed on the wiki: https://github.com/0xfe/vexflow/wiki/Ch
   - `ChordSymbol.metrics` was previously named `ChordSymbol.chordSymbolMetrics`.
 - `StaveNote.LEDGER_LINE_OFFSET` was previously named `StaveNote.DEFAULT_LEDGER_LINE_OFFSET`.
 - **Fonts**
+
   - `TextFontMetrics` has been merged into `FontGlyph` due to substantial overlap.
   - `Flow.NOTATION_FONT_SCALE` was previously named `Flow.DEFAULT_NOTATION_FONT_SCALE`.
   - `setFont(...)` in `CanvasContext` and `SVGContext` previously took arguments: `family`, `size`, `weight`. The `weight` argument allowed strings like `'italic bold'`. This no longer works, and `'italic'` must now be passed into the `style` argument.
