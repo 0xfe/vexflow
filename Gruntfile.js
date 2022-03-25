@@ -771,7 +771,7 @@ module.exports = (grunt) => {
       },
       git: {
         commitMessage: 'Release VexFlow ${version}',
-        changelog: false, // After 4.0: set to true to start publishing recent git commit history as a mini changelog.
+        changelog: true,
         requireCleanWorkingDir: false,
         commit: true,
         tag: true,
