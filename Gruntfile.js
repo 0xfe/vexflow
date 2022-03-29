@@ -836,12 +836,13 @@ module.exports = (grunt) => {
     });
   });
 
-  // VexFlow examples on JSFiddles and other websites broke because VexFlow 4 removed these URLs:
+  // VexFlow examples on JSFiddle and other websites broke because VexFlow 4 removed these URLs:
   //   https://unpkg.com/vexflow/releases/vexflow-debug.js
   //   https://unpkg.com/vexflow/releases/vexflow-min.js
-  // This command restores version 3.0.9 to the correct location, but adds a console.log() to the JS file to alert developers
+  // This command restores version 3.0.9 to those locations, but adds a console.warn(...) to the JS file to alert developers
   // that a new version has been released.
-  // For now, use this command during the release script, so that we can publish version 3.0.9 to npm alongside version 4.x.
+  //
+  // Use this command during the release script, so we can publish legacy version 3.0.9 to npm alongside version 4.x.
   //
   // grunt v309:add
   // grunt v309:remove

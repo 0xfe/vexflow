@@ -50,13 +50,13 @@ system
 vf.draw();
 ```
 
-[See a running example of EasyScore here.](https://jsfiddle.net/t1672wza/)
+[See a running example of EasyScore here.](https://jsfiddle.net/xure9svb/)
 
 [Learn more about EasyScore here.](https://github.com/0xfe/vexflow/wiki/Using-EasyScore)
 
 ## Native API
 
-If you need more control, you can use the low-level VexFlow API. Below, we render a stave using SVG. [See a running example of the low-level API here.](https://jsfiddle.net/vbu1nto7/)
+If you need more control, you can use the low-level VexFlow API. Below, we render a stave using SVG. [See a running example of the low-level API here.](https://jsfiddle.net/5zgf03un/)
 
 ```javascript
 const { Renderer, Stave } = Vex.Flow;
