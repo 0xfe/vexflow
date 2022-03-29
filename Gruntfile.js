@@ -762,12 +762,15 @@ module.exports = (grunt) => {
       verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
       hooks: {
-        'before:init': ['grunt clean'],
+        'before:init': ['grunt clean', 'grunt v309:add'],
         'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
         'after:npm:release': [],
         'after:git:release': [],
         'after:github:release': [],
-        'after:release': ['echo Successfully released ${name} ${version} to https://github.com/${repo.repository}'],
+        'after:release': [
+          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
+          'grunt v309:remove',
+        ],
       },
       git: {
         commitMessage: 'Release VexFlow ${version}',
@@ -780,6 +783,7 @@ module.exports = (grunt) => {
       },
       github: {
         release: true,
+        releaseName: '${version}',
         skipChecks: false,
       },
       npm: { publish: true },
@@ -830,6 +834,34 @@ module.exports = (grunt) => {
       }
       done();
     });
+  });
+
+  // VexFlow examples on JSFiddles and other websites broke because VexFlow 4 removed these URLs:
+  //   https://unpkg.com/vexflow/releases/vexflow-debug.js
+  //   https://unpkg.com/vexflow/releases/vexflow-min.js
+  // This command restores version 3.0.9 to the correct location, but adds a console.log() to the JS file to alert developers
+  // that a new version has been released.
+  // For now, use this command during the release script, so that we can publish version 3.0.9 to npm alongside version 4.x.
+  //
+  // grunt v309:add
+  // grunt v309:remove
+  grunt.registerTask('v309', '', function (command) {
+    if (command === 'add') {
+      const message =
+        '\n' +
+        'console.warn("VexFlow 4 has been released.\\nSee: https://github.com/0xfe/vexflow for more information.\\n' +
+        'This page is running version 3.0.9, which is no longer supported.");';
+
+      // Commit ID 00ec15c67ff333ea49f4d3defbd9e22374c03684 is version 3.0.9.
+      runCommand('git', 'checkout', '00ec15c67ff333ea49f4d3defbd9e22374c03684', 'releases/vexflow-min.js');
+      fs.appendFileSync('releases/vexflow-min.js', message);
+
+      runCommand('git', 'checkout', '00ec15c67ff333ea49f4d3defbd9e22374c03684', 'releases/vexflow-debug.js');
+      fs.appendFileSync('releases/vexflow-debug.js', message);
+    } else {
+      runCommand('git', 'rm', '-f', 'releases/vexflow-min.js');
+      runCommand('git', 'rm', '-f', 'releases/vexflow-debug.js');
+    }
   });
 };
 
