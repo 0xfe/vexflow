@@ -39,7 +39,7 @@ export abstract class StemmableNote extends Note {
   }
 
   setStem(stem: Stem): this {
-    this.stem = stem;
+    this.stem = stem.setParent(this);
     return this;
   }
 
