@@ -250,7 +250,7 @@ export class StaveNote extends StemmableNote {
                 }
               }
             } //Very close whole notes
-          } else {
+          } else if (lineDiff < 1) {
             xShift = voiceXShift + 2;
             if (noteU.stemDirection === noteL.stemDirection) {
               // upper voice is middle voice, so shift it right
@@ -259,6 +259,12 @@ export class StaveNote extends StemmableNote {
               // shift lower voice right
               noteL.note.setXShift(xShift);
             }
+          } else if (noteU.note.hasStem()) {
+            noteU.stemDirection = -noteU.note.getStemDirection();
+            noteU.note.setStemDirection(noteU.stemDirection);
+          } else if (noteL.note.hasStem()) {
+            noteL.stemDirection = -noteL.note.getStemDirection();
+            noteL.note.setStemDirection(noteL.stemDirection);
           }
         }
       }
