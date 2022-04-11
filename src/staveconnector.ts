@@ -30,6 +30,30 @@ function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY
   ctx.fillRect(topX - thickLineOffset, topY, variableWidth, botY - topY);
 }
 
+/**
+ * see {@link StaveConnector.type} & {@link StaveConnector.typeString}
+ */
+export type StaveConnectorType =
+  | 'singleRight'
+  | 'singleLeft'
+  | 'single'
+  | 'double'
+  | 'brace'
+  | 'bracket'
+  | 'boldDoubleLeft'
+  | 'boldDoubleRight'
+  | 'thinDouble'
+  | 'none'
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8;
+
 /** StaveConnector implements the connector lines between staves of a system. */
 export class StaveConnector extends Element {
   static get CATEGORY(): string {
@@ -48,7 +72,7 @@ export class StaveConnector extends Element {
    * with older versions of vexflow which didn't have right sided
    * stave connectors.
    */
-  static readonly type = {
+  static readonly type: Record<string, Exclude<StaveConnectorType, string>> = {
     SINGLE_RIGHT: 0,
     SINGLE_LEFT: 1,
     SINGLE: 1,
@@ -59,7 +83,7 @@ export class StaveConnector extends Element {
     BOLD_DOUBLE_RIGHT: 6,
     THIN_DOUBLE: 7,
     NONE: 8,
-  };
+  } as const;
 
   /**
    * Connector type:
@@ -74,7 +98,7 @@ export class StaveConnector extends Element {
    * * "thinDouble"
    * * "none"
    */
-  static readonly typeString: Record<string, number> = {
+  static readonly typeString: Record<Exclude<StaveConnectorType, number>, Exclude<StaveConnectorType, string>> = {
     singleRight: StaveConnector.type.SINGLE_RIGHT,
     singleLeft: StaveConnector.type.SINGLE_LEFT,
     single: StaveConnector.type.SINGLE,
@@ -85,7 +109,7 @@ export class StaveConnector extends Element {
     boldDoubleRight: StaveConnector.type.BOLD_DOUBLE_RIGHT,
     thinDouble: StaveConnector.type.THIN_DOUBLE,
     none: StaveConnector.type.NONE,
-  };
+  } as const;
 
   protected width: number;
   protected texts: {
@@ -93,7 +117,7 @@ export class StaveConnector extends Element {
     options: { shift_x: number; shift_y: number };
   }[];
 
-  protected type: number;
+  protected type: typeof StaveConnector['type'][keyof typeof StaveConnector['type']];
 
   readonly top_stave: Stave;
   readonly bottom_stave: Stave;
@@ -121,13 +145,23 @@ export class StaveConnector extends Element {
    * Set type.
    * @param type see {@link StaveConnector.type} & {@link StaveConnector.typeString}
    */
-  setType(type: number | string): this {
-    type = typeof type === 'string' ? StaveConnector.typeString[type] : type;
+  setType(type: StaveConnectorType): this {
+    const newType = typeof type === 'string' ? StaveConnector.typeString[type] : type;
 
-    if (type >= StaveConnector.type.SINGLE_RIGHT && type <= StaveConnector.type.NONE) {
-      this.type = type;
+    // Be certain that the type is a valid type:
+    if (Object.values(StaveConnector.type).includes(newType)) {
+      this.type = newType;
     }
+
     return this;
+  }
+
+  /**
+   * Get type.
+   * @returns number {@link StaveConnector.type}
+   */
+  getType(): number {
+    return this.type;
   }
 
   /** Set optional associated Text. */

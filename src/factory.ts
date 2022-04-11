@@ -31,7 +31,7 @@ import { Renderer } from './renderer';
 import { RepeatNote } from './repeatnote';
 import { Stave, StaveOptions } from './stave';
 import { BarlineType } from './stavebarline';
-import { StaveConnector } from './staveconnector';
+import { StaveConnector, StaveConnectorType } from './staveconnector';
 import { StaveLine } from './staveline';
 import { StaveNote, StaveNoteStruct } from './stavenote';
 import { StaveTie } from './stavetie';
@@ -471,7 +471,7 @@ export class Factory {
     return voice;
   }
 
-  StaveConnector(params: { top_stave: Stave; bottom_stave: Stave; type: string }): StaveConnector {
+  StaveConnector(params: { top_stave: Stave; bottom_stave: Stave; type: StaveConnectorType }): StaveConnector {
     const connector = new StaveConnector(params.top_stave, params.bottom_stave);
     connector.setType(params.type).setContext(this.context);
     this.renderQ.push(connector);
