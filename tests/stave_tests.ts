@@ -151,7 +151,7 @@ function drawMultipleMeasures(options: TestOptions, contextBuilder: ContextBuild
   const staveBar1 = new Stave(10, 50, 200);
   staveBar1.setBegBarType(BarlineType.REPEAT_BEGIN);
   staveBar1.setEndBarType(BarlineType.DOUBLE);
-  staveBar1.setSection('A', 0, 0, options.params?.fontSize);
+  staveBar1.setSection('A', 0, 0, options.params?.fontSize, false);
   staveBar1.addClef('treble').setContext(ctx).draw();
   const notesBar1 = [
     new StaveNote({ keys: ['c/4'], duration: 'q' }),

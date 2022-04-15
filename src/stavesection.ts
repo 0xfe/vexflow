@@ -21,8 +21,9 @@ export class StaveSection extends StaveModifier {
   protected section: string;
   protected shift_x: number;
   protected shift_y: number;
+  protected drawRect: boolean;
 
-  constructor(section: string, x: number, shift_y: number) {
+  constructor(section: string, x: number, shift_y: number, drawRect = true) {
     super();
 
     this.setWidth(16);
@@ -30,6 +31,7 @@ export class StaveSection extends StaveModifier {
     this.x = x;
     this.shift_x = 0;
     this.shift_y = shift_y;
+    this.drawRect = drawRect;
     this.resetFont();
   }
 
@@ -66,12 +68,14 @@ export class StaveSection extends StaveModifier {
     const height = textHeight + 2 * paddingY; // add top & bottom padding
 
     //  Seems to be a good default y
-    const y = stave.getYForTopText(2) + this.shift_y;
+    const y = stave.getYForTopText(1.5) + this.shift_y;
     const x = this.x + shift_x;
-    ctx.beginPath();
-    ctx.setLineWidth(rectWidth);
-    ctx.rect(x, y + textMeasurements.y - paddingY, width, height);
-    ctx.stroke();
+    if (this.drawRect) {
+      ctx.beginPath();
+      ctx.setLineWidth(rectWidth);
+      ctx.rect(x, y + textMeasurements.y - paddingY, width, height);
+      ctx.stroke();
+    }
     ctx.fillText(this.section, x + paddingX, y);
     ctx.restore();
     return this;
