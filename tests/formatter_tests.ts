@@ -152,6 +152,7 @@ function rightJustify(options: TestOptions): void {
 function penultimateNote(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 500, 550);
   const score = f.EasyScore();
+  const staffWidth = 310;
   let system: System | undefined = undefined;
   let voices: Voice[] = [];
   let notes: StemmableNote[] = [];
@@ -159,7 +160,12 @@ function penultimateNote(options: TestOptions): void {
   let stave: Stave | undefined = undefined;
   let y = 10;
   const draw = (softmax: number) => {
-    system = f.System({ width: 309.87, y, formatOptions: { align_rests: true }, details: { softmaxFactor: softmax } });
+    system = f.System({
+      width: staffWidth,
+      y,
+      formatOptions: { align_rests: true },
+      details: { softmaxFactor: softmax },
+    });
     notes = [];
     voices = [];
     note = score.notes('C4/8/r', { clef: 'bass' })[0];
@@ -181,6 +187,7 @@ function penultimateNote(options: TestOptions): void {
     stave.addTimeSignature('2/4');
     voices = [];
     f.draw();
+    f.getContext().fillText(`softmax: ${softmax.toString()}`, staffWidth + 20, y + 50);
     y += 100;
   };
   draw(100);
@@ -649,6 +656,7 @@ function proportional(options: TestOptions): void {
 
 function softMax(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 550, 500);
+  const textX = 450 / 0.8;
   f.getContext().scale(0.8, 0.8);
 
   function draw(y: number, factor: number): void {
@@ -676,6 +684,7 @@ function softMax(options: TestOptions): void {
       .addTimeSignature('5/4');
 
     f.draw();
+    f.getContext().fillText(`softmax: ${factor.toString()}`, textX, y + 50);
     ok(true);
   }
 
