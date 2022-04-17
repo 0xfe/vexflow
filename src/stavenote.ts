@@ -164,11 +164,64 @@ export class StaveNote extends StemmableNote {
       });
     }
 
-    const voices = notesList.length;
+    let voices = notesList.length;
+    if (voices < 2) return true;
 
     let noteU = notesList[0];
-    const noteM = voices > 2 ? notesList[1] : undefined;
-    let noteL = voices > 2 ? notesList[2] : notesList[1];
+    let noteM = undefined;
+    let noteL = undefined;
+    let draw = noteU.note.render_options.draw ? noteU.note.render_options.draw : true;
+
+    if (voices === 2) {
+      // 2 voices & notesList[0] hidden, return
+      if (!draw) return true;
+      noteL = notesList[1];
+      draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
+      // 2 voices & notesList[1] hidden, return
+      if (!draw) return true;
+      // 2 voices to process
+      voices = 2;
+    } else if (!draw) {
+      // notesList[0] hidden
+      noteU = notesList[1];
+      draw = noteU.note.render_options.draw ? noteU.note.render_options.draw : true;
+      // notesList[0 & 1] hidden, return
+      if (!draw) return true;
+      // only notesList[0] hidden, voices == 2
+      else {
+        noteL = notesList[2];
+        voices = 2;
+        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
+        // notesList[0 & 2] hidden, return
+        if (!draw) return true;
+        // else 2 voices to process
+      }
+    } else {
+      noteM = notesList[1];
+      draw = noteM.note.render_options.draw ? noteM.note.render_options.draw : true;
+      // notesList[1] hidden
+      if (!draw) {
+        noteL = notesList[2];
+        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
+        // notesList[1 & 2] hidden, return
+        if (!draw) return true;
+        // else 2 voices to process
+        voices = 2;
+      } else {
+        noteL = notesList[2];
+        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
+        // notesList[2] hidden, 2 voices
+        if (!draw) {
+          // 2 voices to process
+          noteL = notesList[1];
+          noteM = undefined;
+          voices = 2;
+        }
+        // three notes to process
+      }
+    }
+    noteM = voices > 2 ? notesList[1] : undefined;
+    noteL = voices > 2 ? notesList[2] : notesList[1];
 
     // for two voice backward compatibility, ensure upper voice is stems up
     // for three voices, the voices must be in order (upper, middle, lower)
