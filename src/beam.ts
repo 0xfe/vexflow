@@ -898,6 +898,8 @@ export class Beam extends Element {
     this.notes.forEach((note) => {
       const stem = note.getStem();
       if (stem) {
+        const stem_x = note.getStemX();
+        stem.setNoteHeadXBounds(stem_x, stem_x);
         ctx.openGroup('stem', note.getAttribute('id') + '-stem');
         stem.setContext(ctx).draw();
         ctx.closeGroup();
