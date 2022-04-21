@@ -768,8 +768,8 @@ module.exports = (grunt) => {
         'after:git:release': [],
         'after:github:release': [],
         'after:release': [
-          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
           'grunt v309:remove',
+          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
         ],
       },
       git: {
@@ -842,26 +842,29 @@ module.exports = (grunt) => {
   // This command restores version 3.0.9 to those locations, but adds a console.warn(...) to the JS file to alert developers
   // that a new version has been released.
   //
-  // Use this command during the release script, so we can publish legacy version 3.0.9 to npm alongside version 4.x.
-  //
-  // grunt v309:add
-  // grunt v309:remove
-  grunt.registerTask('v309', '', function (command) {
+  // Use this command during the release script to publish version 3.0.9 to npm alongside version 4.x.
+  //   grunt v309:add
+  //   grunt v309:remove
+  grunt.registerTask('v309', 'Include the legacy version when publishing to npm.', function (command) {
+    const minifiedFile = 'releases/vexflow-min.js';
+    const debugFile = 'releases/vexflow-debug.js';
+
     if (command === 'add') {
-      const message =
-        '\n' +
-        'console.warn("VexFlow 4 has been released.\\nSee: https://github.com/0xfe/vexflow for more information.\\n' +
-        'This page is running version 3.0.9, which is no longer supported.");';
-
       // Commit ID 00ec15c67ff333ea49f4d3defbd9e22374c03684 is version 3.0.9.
-      runCommand('git', 'checkout', '00ec15c67ff333ea49f4d3defbd9e22374c03684', 'releases/vexflow-min.js');
-      fs.appendFileSync('releases/vexflow-min.js', message);
+      const commitID = '00ec15c67ff333ea49f4d3defbd9e22374c03684';
+      runCommand('git', 'checkout', commitID, minifiedFile);
+      runCommand('git', 'checkout', commitID, debugFile);
 
-      runCommand('git', 'checkout', '00ec15c67ff333ea49f4d3defbd9e22374c03684', 'releases/vexflow-debug.js');
-      fs.appendFileSync('releases/vexflow-debug.js', message);
+      const message =
+        '\nconsole.warn("Please upgrade to the newest release of VexFlow.\\n' +
+        'See: https://github.com/0xfe/vexflow for more information.\\nThis page uses version 3.0.9, which is no longer supported.");\n\n' +
+        '// YOU ARE LOOKING AT VEXFLOW LEGACY VERSION 3.0.9.\n' +
+        '// SEE THE `build/` FOLDER FOR THE NEWEST RELEASE.\n';
+      fs.appendFileSync(minifiedFile, message);
+      fs.appendFileSync(debugFile, message);
     } else {
-      runCommand('git', 'rm', '-f', 'releases/vexflow-min.js');
-      runCommand('git', 'rm', '-f', 'releases/vexflow-debug.js');
+      runCommand('git', 'rm', '-f', minifiedFile);
+      runCommand('git', 'rm', '-f', debugFile);
     }
   });
 };

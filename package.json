@@ -72,6 +72,8 @@
     "tests/flow.html",
     "tests/flow.css",
     "tests/support",
+    "releases/vexflow-min.js",
+    "releases/vexflow-debug.js",
     "AUTHORS.md"
   ],
   "bugs": {
