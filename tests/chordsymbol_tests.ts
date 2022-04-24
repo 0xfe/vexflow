@@ -8,14 +8,18 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Accidental } from '../src/accidental';
 import { ChordSymbol } from '../src/chordsymbol';
 import { Factory } from '../src/factory';
+import { Font, FontGlyph } from '../src/font';
 import { Formatter } from '../src/formatter';
+import { Ornament } from '../src/ornament';
 import { Stave } from '../src/stave';
 import { StaveNote } from '../src/stavenote';
+import { Tables } from '../src/tables';
 
 const ChordSymbolTests = {
   Start(): void {
     QUnit.module('ChordSymbol');
     const run = VexFlowTests.runTests;
+    run('Chord Symbol With Modifiers', withModifiers);
     run('Chord Symbol Font Size Tests', fontSize);
     run('Chord Symbol Kerning Tests', kern);
     run('Top Chord Symbols', top);
@@ -33,6 +37,114 @@ const subscript = { symbolModifier: ChordSymbol.symbolModifiers.SUBSCRIPT };
 // Helper function for creating StaveNotes.
 const note = (factory: Factory, keys: string[], duration: string, chordSymbol: ChordSymbol) =>
   factory.StaveNote({ keys, duration }).addModifier(chordSymbol, 0);
+
+/** Calculate the glyph's width in the current music font. */
+// How is this different from Glyph.getWidth()? The numbers don't match up.
+function getGlyphWidth(glyphName: string): number {
+  // `38` seems to be the `font_scale` specified in many classes, such as
+  // Accidental, Articulation, Ornament, Strokes. Does this mean `38pt`???
+  //
+  // However, tables.ts specifies:
+  //   NOTATION_FONT_SCALE: 39,
+  //   TABLATURE_FONT_SCALE: 39,
+  const musicFont = Tables.currentMusicFont();
+  const glyph: FontGlyph = musicFont.getGlyphs()[glyphName];
+  const widthInEm = (glyph.x_max - glyph.x_min) / musicFont.getResolution();
+  return widthInEm * 38 * Font.scaleToPxFrom.pt;
+}
+function withModifiers(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 750, 580);
+  const ctx = f.getContext();
+  ctx.scale(1.5, 1.5);
+  ctx.fillStyle = '#221';
+  ctx.strokeStyle = '#221';
+
+  function draw(chords: ChordSymbol[], y: number) {
+    const notes = [
+      note(f, ['c/4'], 'q', chords[0]).addModifier(new Ornament('doit')),
+      note(f, ['c/4'], 'q', chords[1]),
+      note(f, ['c/4'], 'q', chords[2]).addModifier(new Ornament('fall')),
+      note(f, ['c/4'], 'q', chords[3]),
+    ];
+    const score = f.EasyScore();
+    const voice = score.voice(notes, { time: '4/4' });
+    const formatter = f.Formatter();
+    formatter.joinVoices([voice]);
+    const voiceW = formatter.preCalculateMinTotalWidth([voice]);
+    const staffW = voiceW + Stave.defaultPadding + getGlyphWidth('gClef');
+    formatter.format([voice], voiceW);
+    const staff = f.Stave({ x: 10, y, width: staffW }).addClef('treble').draw();
+    voice.draw(ctx, staff);
+  }
+
+  let chords = [];
+  chords.push(
+    f
+      .ChordSymbol({ fontSize: 10 })
+      .addText('F7')
+      .addGlyph('leftParenTall')
+      .addGlyphOrText('b9', superscript)
+      .addGlyphOrText('#11', subscript)
+      .addGlyph('rightParenTall')
+  );
+  chords.push(
+    f.ChordSymbol({ fontSize: 12 }).addText('F7').addGlyphOrText('b9', superscript).addGlyphOrText('#11', subscript)
+  );
+  chords.push(
+    f
+      .ChordSymbol({ fontSize: 14 })
+      .addText('F7')
+      .addGlyph('leftParenTall')
+      .addGlyphOrText('add 3', superscript)
+      .addGlyphOrText('omit 9', subscript)
+      .addGlyph('rightParenTall')
+  );
+  chords.push(
+    f
+      .ChordSymbol({ fontSize: 16 })
+      .addText('F7')
+      .addGlyph('leftParenTall')
+      .addGlyphOrText('b9', superscript)
+      .addGlyphOrText('#11', subscript)
+      .addGlyph('rightParenTall')
+  );
+  draw(chords, 40);
+
+  chords = [];
+  chords.push(
+    f
+      .ChordSymbol({ fontSize: 10 })
+      .setFontSize(10)
+      .addText('F7')
+      .addGlyphOrText('#11', superscript)
+      .addGlyphOrText('b9', subscript)
+  );
+  chords.push(
+    f.ChordSymbol({ fontSize: 12 }).addText('F7').addGlyphOrText('#11', superscript).addGlyphOrText('b9', subscript)
+  );
+  chords.push(
+    f.ChordSymbol({ fontSize: 14 }).addText('F7').addGlyphOrText('#11', superscript).addGlyphOrText('b9', subscript)
+  );
+  chords.push(
+    f
+      .ChordSymbol({ fontSize: 16 })
+      .setFontSize(16)
+      .addText('F7')
+      .addGlyphOrText('#11', superscript)
+      .addGlyphOrText('b9', subscript)
+  );
+  draw(chords, 140);
+
+  chords = [
+    f.ChordSymbol({ fontSize: 10 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript),
+    f.ChordSymbol({ fontSize: 14 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript),
+    f.ChordSymbol({ fontSize: 16 }).addGlyphOrText('Ab').addGlyphOrText('7(#11b9)', superscript),
+    f.ChordSymbol({ fontSize: 18 }).addGlyphOrText('C#').addGlyphOrText('7(#11b9)', superscript),
+  ];
+  draw(chords, 240);
+
+  ok(true, 'Font Size Chord Symbol');
+}
 
 function fontSize(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 750, 580);
