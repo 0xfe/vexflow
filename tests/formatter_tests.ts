@@ -24,6 +24,7 @@ import { StaveNote } from '../src/stavenote';
 import { Stem } from '../src/stem';
 import { StemmableNote } from '../src/stemmablenote';
 import { StringNumber } from '../src/stringnumber';
+import { System } from '../src/system';
 import { Tables } from '../src/tables';
 import { Tuplet } from '../src/tuplet';
 import { Voice, VoiceTime } from '../src/voice';
@@ -35,6 +36,7 @@ const FormatterTests = {
     test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
+    run('Penultimate Note Padding', penultimateNote);
     run('Whitespace and justify', rightJustify);
     run('Notehead padding', noteHeadPadding);
     run('Justification and alignment with accidentals', accidentalJustification);
@@ -119,7 +121,7 @@ function buildTickContexts(): void {
 }
 
 function rightJustify(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 1200, 300);
+  const f = VexFlowTests.makeFactory(options, 1200, 150);
   const getTickables = (time: VoiceTime, n: number, duration: string, duration2: string): Voice => {
     const tickar: StaveNote[] = [];
     let i = 0;
@@ -132,7 +134,7 @@ function rightJustify(options: TestOptions): void {
   const renderTest = (time: VoiceTime, n: number, duration: string, duration2: string, x: number, width: number) => {
     const formatter = f.Formatter();
 
-    const stave = f.Stave({ x, y: 40, width });
+    const stave = f.Stave({ x, y: 20, width });
     // stave.addClef('treble').addTimeSignature('4/4');
 
     const voice = getTickables(time, n, duration, duration2);
@@ -144,6 +146,55 @@ function rightJustify(options: TestOptions): void {
   renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 1, 'w', 'w', 310, 300);
   renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 3, '4', '4', 610, 300);
   renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 6, '8', '8', 910, 300);
+  ok(true);
+}
+
+function penultimateNote(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 500, 550);
+  const score = f.EasyScore();
+  const staffWidth = 310;
+  let system: System | undefined = undefined;
+  let voices: Voice[] = [];
+  let notes: StemmableNote[] = [];
+  let note: StemmableNote | undefined = undefined;
+  let stave: Stave | undefined = undefined;
+  let y = 10;
+  const draw = (softmax: number) => {
+    system = f.System({
+      width: staffWidth,
+      y,
+      formatOptions: { align_rests: true },
+      details: { softmaxFactor: softmax },
+    });
+    notes = [];
+    voices = [];
+    note = score.notes('C4/8/r', { clef: 'bass' })[0];
+    notes.push(note);
+    note = score.notes('A3/8', { stem: 'up', clef: 'bass' })[0];
+    notes.push(note);
+    note = score.notes('C4/4', { stem: 'up', clef: 'bass' })[0];
+    notes.push(note);
+    voices.push(score.voice(notes).setMode(2));
+    notes = [];
+    note = score.notes('( F3 A3 )/4', { stem: 'down', clef: 'bass' })[0];
+    notes.push(note);
+    note = score.notes('B4/4/r', {})[0];
+    notes.push(note);
+    voices.push(score.voice(notes).setMode(2));
+    notes = [];
+    stave = system.addStave({ voices: voices });
+    stave.addClef('bass');
+    stave.addTimeSignature('2/4');
+    voices = [];
+    f.draw();
+    f.getContext().fillText(`softmax: ${softmax.toString()}`, staffWidth + 20, y + 50);
+    y += 100;
+  };
+  draw(100);
+  draw(10);
+  draw(5);
+  draw(2);
+  draw(1.5);
   ok(true);
 }
 
@@ -605,6 +656,7 @@ function proportional(options: TestOptions): void {
 
 function softMax(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 550, 500);
+  const textX = 450 / 0.8;
   f.getContext().scale(0.8, 0.8);
 
   function draw(y: number, factor: number): void {
@@ -632,6 +684,7 @@ function softMax(options: TestOptions): void {
       .addTimeSignature('5/4');
 
     f.draw();
+    f.getContext().fillText(`softmax: ${factor.toString()}`, textX, y + 50);
     ok(true);
   }
 
