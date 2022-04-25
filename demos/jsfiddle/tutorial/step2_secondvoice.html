@@ -1,0 +1,87 @@
+<!DOCTYPE >
+<!-- 
+This example is available at: https://jsfiddle.net/awe4vdms/
+It is included in the VexFlow Tutorial: https://github.com/0xfe/vexflow/wiki/Tutorial
+-->
+<html>
+  <style>
+    body {
+      font-family: Arial, 'sans-serif';
+    }
+  </style>
+  <body>
+    <div id="output"></div>
+    <!--
+    On JSFiddle.net, we pin the dependency to an exact version number,
+    to prevent a future release from accidentally breaking the example. 
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+    <script>
+      const { Renderer, Stave, StaveNote, Voice, Formatter } = Vex.Flow;
+
+      // Create an SVG renderer and attach it to the DIV element named "boo".
+      const div = document.getElementById('output');
+      const renderer = new Renderer(div, Renderer.Backends.SVG);
+
+      // Configure the rendering context.
+      renderer.resize(500, 500);
+      const context = renderer.getContext();
+
+      // Create a stave of width 400 at position 10, 40 on the canvas.
+      const stave = new Stave(10, 40, 400);
+
+      // Add a clef and time signature.
+      stave.addClef('treble').addTimeSignature('4/4');
+
+      // Connect it to the rendering context and draw!
+      stave.setContext(context).draw();
+
+      // Create the notes
+      const notes = [
+        new StaveNote({
+          keys: ['c/5'],
+          duration: 'q',
+        }),
+        new StaveNote({
+          keys: ['d/4'],
+          duration: 'q',
+        }),
+        new StaveNote({
+          keys: ['b/4'],
+          duration: 'qr',
+        }),
+        new StaveNote({
+          keys: ['c/4', 'e/4', 'g/4'],
+          duration: 'q',
+        }),
+      ];
+
+      const notes2 = [
+        new StaveNote({
+          keys: ['c/4'],
+          duration: 'w',
+        }),
+      ];
+
+      // Create a voice in 4/4 and add above notes
+      const voices = [
+        new Voice({
+          num_beats: 4,
+          beat_value: 4,
+        }).addTickables(notes),
+        new Voice({
+          num_beats: 4,
+          beat_value: 4,
+        }).addTickables(notes2),
+      ];
+
+      // Format and justify the notes to 400 pixels.
+      new Formatter().joinVoices(voices).format(voices, 350);
+
+      // Render voices.
+      voices.forEach(function (v) {
+        v.draw(context, stave);
+      });
+    </script>
+  </body>
+</html>
