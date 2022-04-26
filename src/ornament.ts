@@ -32,6 +32,10 @@ export class Ornament extends Modifier {
   static get CATEGORY(): string {
     return Category.Ornament;
   }
+  static get minPadding(): number {
+    const musicFont = Tables.currentMusicFont();
+    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+  }
 
   protected ornament: {
     code: string;
@@ -74,8 +78,8 @@ export class Ornament extends Modifier {
       }
       if (ornament.reportedWidth && ornament.x_shift < 0) {
         left_shift += ornament.reportedWidth;
-      } else if (ornament.reportedWidth && ornament.x_shift > 0) {
-        right_shift += ornament.reportedWidth;
+      } else if (ornament.reportedWidth && ornament.x_shift >= 0) {
+        right_shift += ornament.reportedWidth + Ornament.minPadding;
       } else {
         width = Math.max(ornament.getWidth(), width);
       }

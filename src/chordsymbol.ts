@@ -362,6 +362,7 @@ export class ChordSymbol extends Modifier {
           maxRightGlyphWidth = Math.max(glyphWidth / 2, maxRightGlyphWidth);
         }
       }
+      width = 0; // reset symbol width
     }
     const rightOverlap = Math.min(
       Math.max(rightWidth - maxRightGlyphWidth, 0),

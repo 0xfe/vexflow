@@ -19,6 +19,7 @@ const ChordSymbolTests = {
   Start(): void {
     QUnit.module('ChordSymbol');
     const run = VexFlowTests.runTests;
+    run('Double Bottom Chord Symbols', doubleBottom);
     run('Chord Symbol With Modifiers', withModifiers);
     run('Chord Symbol Font Size Tests', fontSize);
     run('Chord Symbol Kerning Tests', kern);

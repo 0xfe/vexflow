@@ -804,7 +804,7 @@ export class Formatter {
         }
         const tickWidth = lastTickable.getWidth();
         lastTickablePadding =
-          voice.softmax(lastContext.getMaxTicks().value()) * curTargetWidth - (tickWidth + leftPadding);
+          voice.softmax(lastContext.getMaxTicks().value()) * (curTargetWidth - tickWidth) + leftPadding;
       }
       return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
     };
