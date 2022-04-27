@@ -164,64 +164,41 @@ export class StaveNote extends StemmableNote {
       });
     }
 
-    let voices = notesList.length;
-    if (voices < 2) return true;
-
-    let noteU = notesList[0];
+    let voices = 0;
+    let noteU = undefined;
     let noteM = undefined;
     let noteL = undefined;
-    let draw = noteU.note.render_options.draw ? noteU.note.render_options.draw : true;
+    const draw = [false, false, false];
 
-    if (voices === 2) {
-      // 2 voices & notesList[0] hidden, return
-      if (!draw) return true;
-      noteL = notesList[1];
-      draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
-      // 2 voices & notesList[1] hidden, return
-      if (!draw) return true;
-      // 2 voices to process
-      voices = 2;
-    } else if (!draw) {
-      // notesList[0] hidden
-      noteU = notesList[1];
-      draw = noteU.note.render_options.draw ? noteU.note.render_options.draw : true;
-      // notesList[0 & 1] hidden, return
-      if (!draw) return true;
-      // only notesList[0] hidden, voices == 2
-      else {
-        noteL = notesList[2];
-        voices = 2;
-        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
-        // notesList[0 & 2] hidden, return
-        if (!draw) return true;
-        // else 2 voices to process
-      }
-    } else {
-      noteM = notesList[1];
-      draw = noteM.note.render_options.draw ? noteM.note.render_options.draw : true;
-      // notesList[1] hidden
-      if (!draw) {
-        noteL = notesList[2];
-        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
-        // notesList[1 & 2] hidden, return
-        if (!draw) return true;
-        // else 2 voices to process
-        voices = 2;
-      } else {
-        noteL = notesList[2];
-        draw = noteL.note.render_options.draw ? noteL.note.render_options.draw : true;
-        // notesList[2] hidden, 2 voices
-        if (!draw) {
-          // 2 voices to process
-          noteL = notesList[1];
-          noteM = undefined;
-          voices = 2;
-        }
-        // three notes to process
-      }
+    for (let i = 0; i < notesList.length; i++) {
+      draw[i] = notesList[i].note.render_options.draw == false ? false : true;
     }
-    noteM = voices > 2 ? notesList[1] : undefined;
-    noteL = voices > 2 ? notesList[2] : notesList[1];
+
+    if (draw[0] && draw[1] && draw[2]) {
+      // Three visible notes
+      voices = 3;
+      noteU = notesList[0];
+      noteM = notesList[1];
+      noteL = notesList[2];
+    } else if (draw[0] && draw[1]) {
+      // Two visible notes, 0 & 1
+      voices = 2;
+      noteU = notesList[0];
+      noteL = notesList[1];
+    } else if (draw[0] && draw[2]) {
+      // Two visible notes, 0 & 2
+      voices = 2;
+      noteU = notesList[0];
+      noteL = notesList[2];
+    } else if (draw[1] && draw[2]) {
+      // Two visible notes, 1 & 2
+      voices = 2;
+      noteU = notesList[1];
+      noteL = notesList[2];
+    } else {
+      // No shift required for less than 2 visible notes
+      return true;
+    }
 
     // for two voice backward compatibility, ensure upper voice is stems up
     // for three voices, the voices must be in order (upper, middle, lower)
