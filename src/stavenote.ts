@@ -13,14 +13,14 @@ import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { Note, NoteStruct } from './note';
+import { KeyProps, Note, NoteStruct } from './note';
 import { NoteHead } from './notehead';
 import { Stave } from './stave';
 import { Stem, StemOptions } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { Category } from './typeguard';
-import { defined, log, midLine, RuntimeError, warn } from './util';
+import { defined, log, midLine, RuntimeError } from './util';
 
 function showDeprecationWarningForNoteHeads(): void {
   // eslint-disable-next-line
@@ -133,9 +133,9 @@ export class StaveNote extends StemmableNote {
     const notesList: StaveNoteFormatSettings[] = [];
 
     for (let i = 0; i < notes.length; i++) {
-      const props = notes[i].getKeyProps();
-      const line = props[0].line;
-      let minL = props[props.length - 1].line;
+      const props = notes[i].sortedKeyProps;
+      const line = props[0].keyProps.line;
+      let minL = props[props.length - 1].keyProps.line;
       const stemDirection = notes[i].getStemDirection();
       const stemMax = notes[i].getStemLength() / 10;
       const stemMin = notes[i].getStemMinimumLength() / 10;
@@ -145,13 +145,14 @@ export class StaveNote extends StemmableNote {
         maxL = line + notes[i].glyph.line_above;
         minL = line - notes[i].glyph.line_below;
       } else {
-        maxL = stemDirection === 1 ? props[props.length - 1].line + stemMax : props[props.length - 1].line;
+        maxL =
+          stemDirection === 1 ? props[props.length - 1].keyProps.line + stemMax : props[props.length - 1].keyProps.line;
 
-        minL = stemDirection === 1 ? props[0].line : props[0].line - stemMax;
+        minL = stemDirection === 1 ? props[0].keyProps.line : props[0].keyProps.line - stemMax;
       }
 
       notesList.push({
-        line: props[0].line, // note/rest base line
+        line: props[0].keyProps.line, // note/rest base line
         maxLine: maxL, // note/rest upper bounds line
         minLine: minL, // note/rest lower bounds line
         isrest: notes[i].isRest(),
@@ -405,6 +406,7 @@ export class StaveNote extends StemmableNote {
   protected ledgerLineStyle: ElementStyle;
   protected flagStyle?: ElementStyle;
   private _noteHeads: NoteHead[];
+  private sortedKeyProps: { keyProps: KeyProps; index: number }[] = [];
 
   constructor(noteStruct: StaveNoteStruct) {
     super(noteStruct);
@@ -511,7 +513,7 @@ export class StaveNote extends StemmableNote {
     }
 
     for (let i = start; i !== end; i += step) {
-      const noteProps = this.keyProps[i];
+      const noteProps = this.sortedKeyProps[i].keyProps;
       const line = noteProps.line;
 
       // Keep track of last line with a note head, so that consecutive heads
@@ -543,7 +545,7 @@ export class StaveNote extends StemmableNote {
       });
 
       this.addChildElement(notehead);
-      this._noteHeads[i] = notehead;
+      this._noteHeads[this.sortedKeyProps[i].index] = notehead;
     }
   }
 
@@ -554,8 +556,8 @@ export class StaveNote extends StemmableNote {
 
   calculateOptimalStemDirection(): number {
     // Figure out optimal stem direction based on given notes
-    this.minLine = this.keyProps[0].line;
-    this.maxLine = this.keyProps[this.keyProps.length - 1].line;
+    this.minLine = this.sortedKeyProps[0].keyProps.line;
+    this.maxLine = this.sortedKeyProps[this.keyProps.length - 1].keyProps.line;
 
     const MIDDLE_LINE = 3;
     const decider = (this.minLine + this.maxLine) / 2;
@@ -610,16 +612,11 @@ export class StaveNote extends StemmableNote {
       lastLine = line;
       this.keyProps.push(props);
     }
-
     // Sort the notes from lowest line to highest line
-    lastLine = undefined;
-    this.keyProps.forEach((key) => {
-      if (lastLine && key.line < lastLine) {
-        warn('Unsorted keys in note will be sorted. ' + 'See https://github.com/0xfe/vexflow/issues/104 for details.');
-      }
-      lastLine = key.line;
+    this.keyProps.forEach((keyProps, index) => {
+      this.sortedKeyProps.push({ keyProps, index });
     });
-    this.keyProps.sort((a, b) => a.line - b.line);
+    this.sortedKeyProps.sort((a, b) => a.keyProps.line - b.keyProps.line);
   }
 
   // Get the `BoundingBox` for the entire note
