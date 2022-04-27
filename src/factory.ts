@@ -403,6 +403,7 @@ export class Factory {
     articulation.setContext(this.context);
     return articulation;
   }
+
   Ornament(
     type: string,
     params?: { position?: string | number; upperAccidental?: string; lowerAccidental?: string; delayed?: boolean }
@@ -413,18 +414,19 @@ export class Factory {
       accidental: '',
       ...params,
     };
-    const ooo = new Ornament(type);
-    ooo.setPosition(options.position);
+    const ornament = new Ornament(type);
+    ornament.setPosition(options.position);
     if (options.upperAccidental) {
-      ooo.setUpperAccidental(options.upperAccidental);
+      ornament.setUpperAccidental(options.upperAccidental);
     }
     if (options.lowerAccidental) {
-      ooo.setLowerAccidental(options.lowerAccidental);
+      ornament.setLowerAccidental(options.lowerAccidental);
     }
     if (typeof options.delayed !== 'undefined') {
-      ooo.setDelayed(options.delayed);
+      ornament.setDelayed(options.delayed);
     }
-    return ooo;
+    ornament.setContext(this.context);
+    return ornament;
   }
 
   TextDynamics(params?: { text?: string; duration?: string; dots?: number; line?: number }): TextDynamics {
