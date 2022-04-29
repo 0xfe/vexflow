@@ -655,7 +655,7 @@ export class Formatter {
 
     // Calculate the "distance error" between the tick contexts. The expected distance is the spacing proportional to
     // the softmax of the ticks.
-    function calculateIdealDistances(adjustedJustifyWidth: number): Distance[] {
+    function calculateIdealDistances(adjustedJustifyWidth: number, softmaxFactor: number): Distance[] {
       const distances: Distance[] = contextList.map((tick: number, i: number) => {
         const context: TickContext = contextMap[tick];
         const voices = context.getTickablesByVoice();
@@ -717,7 +717,7 @@ export class Formatter {
                 const t = totalTicks;
                 expectedDistance = (softmaxFactor ** (maxTicks / t) / expTicksUsed) * adjustedJustifyWidth;
               } else if (typeof backTickable !== 'undefined') {
-                expectedDistance = backTickable.getVoice().softmax(maxTicks) * adjustedJustifyWidth;
+                expectedDistance = backTickable.getVoice().softmax(maxTicks, softmaxFactor) * adjustedJustifyWidth;
               }
               return {
                 expectedDistance,
@@ -773,7 +773,7 @@ export class Formatter {
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     const leftPadding = musicFont.lookupMetric('stave.padding');
     let targetWidth = adjustedJustifyWidth;
-    const distances = calculateIdealDistances(targetWidth);
+    const distances = calculateIdealDistances(targetWidth, softmaxFactor);
     let actualWidth = shiftToIdealDistances(distances);
 
     // Just one context. Done formatting.
@@ -804,7 +804,7 @@ export class Formatter {
         }
         const tickWidth = lastTickable.getWidth();
         lastTickablePadding =
-          voice.softmax(lastContext.getMaxTicks().value()) * curTargetWidth - (tickWidth + leftPadding);
+          voice.softmax(lastContext.getMaxTicks().value(), softmaxFactor) * curTargetWidth - (tickWidth + leftPadding);
       }
       return configMaxPadding * 2 < lastTickablePadding ? lastTickablePadding : configMaxPadding;
     };
@@ -819,7 +819,7 @@ export class Formatter {
       targetWidth -= actualWidth - maxX;
       paddingMax = paddingMaxCalc(targetWidth);
       paddingMin = paddingMax - (configMaxPadding - configMinPadding);
-      actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth));
+      actualWidth = shiftToIdealDistances(calculateIdealDistances(targetWidth, softmaxFactor));
       iterations--;
     }
 
@@ -1016,10 +1016,6 @@ export class Formatter {
     };
 
     this.voices = voices;
-    const softmaxFactor = this.formatterOptions.softmaxFactor;
-    if (softmaxFactor) {
-      this.voices.forEach((v) => v.setSoftmaxFactor(softmaxFactor));
-    }
 
     this.alignRests(voices, opts.align_rests);
     this.createTickContexts(voices);

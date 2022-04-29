@@ -48,7 +48,6 @@ export class Voice extends Element {
   protected mode: VoiceMode = VoiceMode.STRICT;
   protected expTicksUsed?: number;
   protected preFormatted: boolean = false;
-  protected options: { softmaxFactor: number };
 
   protected readonly totalTicks: Fraction;
   protected readonly ticksUsed: Fraction = new Fraction(0, 1);
@@ -56,13 +55,8 @@ export class Voice extends Element {
   protected readonly tickables: Tickable[] = [];
   protected readonly time: Required<VoiceTime>;
 
-  constructor(time?: VoiceTime | string, options?: { softmaxFactor: number }) {
+  constructor(time?: VoiceTime | string) {
     super();
-
-    this.options = {
-      softmaxFactor: 100,
-      ...options,
-    };
 
     // Convert the `time` string into a VoiceTime object if necessary.
     let voiceTime: VoiceTime | undefined;
@@ -187,36 +181,24 @@ export class Voice extends Element {
   }
 
   /**
-   * We use softmax to layout the tickables proportional to the exponent of
-   * their duration. The softmax factor is used to determine the 'linearness' of
-   * the layout.
-   *
-   * The softmax of all the tickables in this voice should sum to 1.
-   */
-  setSoftmaxFactor(factor: number): this {
-    this.options.softmaxFactor = factor;
-    return this;
-  }
-
-  /**
    * Calculate the sum of the exponents of all the ticks in this voice to use
    * as the denominator of softmax.
    */
-  protected reCalculateExpTicksUsed(): number {
+  protected reCalculateExpTicksUsed(softmaxFactor: number): number {
     const totalTicks = this.ticksUsed.value();
-    const exp = (tickable: Tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
+    const exp = (tickable: Tickable) => Math.pow(softmaxFactor, tickable.getTicks().value() / totalTicks);
     this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b, 0);
     return this.expTicksUsed;
   }
 
   /** Get the softmax-scaled value of a tick duration. 'tickValue' is a number. */
-  softmax(tickValue: number): number {
+  softmax(tickValue: number, softmaxFactor: number): number {
     if (!this.expTicksUsed) {
-      this.expTicksUsed = this.reCalculateExpTicksUsed();
+      this.expTicksUsed = this.reCalculateExpTicksUsed(softmaxFactor);
     }
 
     const totalTicks = this.ticksUsed.value();
-    const exp = (v: number) => Math.pow(this.options.softmaxFactor, v / totalTicks);
+    const exp = (v: number) => Math.pow(softmaxFactor, v / totalTicks);
     const sm = exp(tickValue) / this.expTicksUsed;
     return sm;
   }
