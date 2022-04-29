@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    canvas {
+      border: 1px solid gray;
+    }
+  </style>
+  <!-- This example is available at: https://jsfiddle.net/smyht3q5/ -->
+  <body>
+    <canvas id="output"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+    <script>
+      const canvas = document.getElementById('output');
+
+      const { Renderer, Stave, StaveNote, Accidental, GraceNote, GraceNoteGroup, Voice, Formatter, Beam, Stem } =
+        Vex.Flow;
+
+      const renderer = new Renderer(canvas, Renderer.Backends.CANVAS);
+      const context = renderer.getContext();
+      renderer.resize(520, 210);
+
+      const TIME4_4 = {
+        num_beats: 4,
+        beat_value: 4,
+        resolution: Vex.Flow.RESOLUTION,
+      };
+
+      // Create and draw the tablature stave
+      const stave = new Stave(10, 40, 500);
+      stave.setContext(context).draw();
+
+      function note(params) {
+        return new StaveNote(params);
+      }
+
+      const notesA = [
+        note({
+          keys: ['f/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['f/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['d/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['c/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['c/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['d/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['f/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+        note({
+          keys: ['e/5'],
+          stem_direction: Stem.UP,
+          duration: '16',
+        }),
+      ];
+
+      const notesB = [
+        note({
+          keys: ['f/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['e/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['d/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['c/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['c/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['d/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['f/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+        note({
+          keys: ['e/4'],
+          stem_direction: Stem.DOWN,
+          duration: '16',
+        }),
+      ];
+
+      const graceNotes1 = [
+        new GraceNote({
+          keys: ['b/4'],
+          duration: '8',
+          slash: true,
+        }),
+      ];
+      const graceNotes2 = [
+        new GraceNote({
+          keys: ['f/4'],
+          duration: '8',
+          slash: true,
+        }),
+      ];
+      const graceNotes3 = [
+        new GraceNote({
+          keys: ['f/4'],
+          duration: '32',
+          stem_direction: Stem.DOWN,
+        }),
+        new GraceNote({
+          keys: ['e/4'],
+          duration: '32',
+          stem_direction: Stem.DOWN,
+        }),
+      ];
+
+      graceNotes2[0].setStemDirection(-1);
+      graceNotes2[0].addModifier(new Accidental('#'));
+
+      notesA[3].addModifier(new GraceNoteGroup(graceNotes1));
+      notesB[1].addModifier(new GraceNoteGroup(graceNotes2).beamNotes());
+      notesB[5].addModifier(new GraceNoteGroup(graceNotes3).beamNotes());
+
+      const voiceA = new Voice(TIME4_4).setStrict(false);
+      const voiceB = new Voice(TIME4_4).setStrict(false);
+      voiceA.addTickables(notesA);
+      voiceB.addTickables(notesB);
+
+      const formatter = new Formatter().joinVoices([voiceA, voiceB]).formatToStave([voiceA, voiceB], stave);
+      const beam1_1 = new Beam(notesA.slice(0, 4));
+      const beam1_2 = new Beam(notesA.slice(4, 8));
+
+      const beam2_1 = new Beam(notesB.slice(0, 4));
+      const beam2_2 = new Beam(notesB.slice(4, 8));
+
+      voiceA.draw(context, stave);
+      voiceB.draw(context, stave);
+      beam1_1.setContext(context).draw();
+      beam1_2.setContext(context).draw();
+
+      beam2_1.setContext(context).draw();
+      beam2_2.setContext(context).draw();
+    </script>
+  </body>
+</html>
