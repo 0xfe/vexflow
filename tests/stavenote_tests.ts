@@ -62,6 +62,7 @@ const StaveNoteTests = {
     run('Beam and Dot Placement - Stem Up', dotsAndBeamsUp);
     run('Beam and Dot Placement - Stem Down', dotsAndBeamsDown);
     run('Note Heads Placement - Simple', noteHeadsSimple);
+    run('Note Heads Placement - Hidden Notes', noteHeadsHidden);
     run('Center Aligned Note', centerAlignedRest);
     run('Center Aligned Note with Articulation', centerAlignedRestFermata);
     run('Center Aligned Note with Annotation', centerAlignedRestAnnotation);
@@ -1027,6 +1028,47 @@ function noteHeadsSimple(options: TestOptions): void {
       score.voice(score.notes('e4/q, e4/q/r, e4/h/r')),
       score.voice(score.notes('e4/8, e4/8/r, e4/q/r, e4/h/r')),
     ],
+  });
+
+  vf.draw();
+  expect(0);
+}
+
+function noteHeadsHidden(options: TestOptions): void {
+  const vf = VexFlowTests.makeFactory(options, 800, 250);
+  const score = vf.EasyScore();
+
+  const system1 = vf.System({ y: 100, x: 50, width: 200 });
+  const notes1 = score.notes('g4/w');
+  notes1[0].render_options.draw = false;
+  system1
+    .addStave({
+      voices: [
+        score.voice([...score.beam(score.notes('a4/8, b4/8', { stem: 'up' })), ...score.notes('a4/q/r, a4/h/r')]),
+        score.voice(notes1),
+      ],
+    })
+    .addClef('treble')
+    .addTimeSignature('4/4');
+
+  const system2 = vf.System({ y: 100, x: 250, width: 150 });
+  const notes2 = score.notes('b4/w');
+  notes2[0].render_options.draw = false;
+  system2.addStave({
+    voices: [score.voice(score.notes('b4/h, b4/h/r')), score.voice(notes2)],
+  });
+
+  const system3 = vf.System({ y: 100, x: 400, width: 150 });
+  system3.addStave({
+    voices: [score.voice(score.notes('d5/h, d5/h/r')), score.voice(score.notes('e4/w'))],
+  });
+
+  const system4 = vf.System({ y: 100, x: 550, width: 150 });
+  const notes4 = score.notes('e4/q, e4/q/r, e4/h/r');
+  notes4[0].render_options.draw = false;
+  notes4[2].render_options.draw = false;
+  system4.addStave({
+    voices: [score.voice(notes4), score.voice(score.notes('e4/8, e4/8/r, e4/q/r, e4/h/r'))],
   });
 
   vf.draw();
