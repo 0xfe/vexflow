@@ -13,10 +13,11 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
+import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
 import { TextFormatter } from './textformatter';
-import { Category } from './typeguard';
+import { Category, isStemmableNote } from './typeguard';
 import { log } from './util';
 
 // To enable logging for this class. Set `Vex.Flow.ChordSymbol.DEBUG` to `true`.
@@ -247,6 +248,10 @@ export class ChordSymbol extends Modifier {
     return block.symbolModifier !== undefined && block.symbolModifier === SymbolModifiers.SUBSCRIPT;
   }
 
+  static get minPadding(): number {
+    const musicFont = Tables.currentMusicFont();
+    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+  }
   /**
    * Estimate the width of the whole chord symbol, based on the sum of the widths of the individual blocks.
    * Estimate how many lines above/below the staff we need.
@@ -256,12 +261,17 @@ export class ChordSymbol extends Modifier {
 
     let width = 0;
     let nonSuperWidth = 0;
-    const reportedWidths = [];
+    let leftWidth = 0;
+    let rightWidth = 0;
+    let maxLeftGlyphWidth = 0;
+    let maxRightGlyphWidth = 0;
 
     for (const symbol of symbols) {
       const fontSize = Font.convertSizeToPointValue(symbol.textFont?.size);
       const fontAdj = Font.scaleSize(fontSize, 0.05);
       const glyphAdj = fontAdj * 2;
+      const note: Note = symbol.checkAttachedNote();
+      let symbolWidth = 0;
       let lineSpaces = 1;
       let vAlign = false;
 
@@ -323,6 +333,7 @@ export class ChordSymbol extends Modifier {
         }
         block.vAlign = vAlign;
         width += block.width;
+        symbolWidth = width;
       }
 
       // make kerning adjustments after computing super/subscripts
@@ -336,17 +347,31 @@ export class ChordSymbol extends Modifier {
         symbol.setTextLine(state.text_line + 1);
         state.text_line += lineSpaces + 1;
       }
-      if (symbol.getReportWidth()) {
-        reportedWidths.push(width);
-      } else {
-        reportedWidths.push(0);
+      if (symbol.getReportWidth() && isStemmableNote(note)) {
+        const glyphWidth = note.getGlyph().getWidth();
+        if (symbol.getHorizontal() === ChordSymbolHorizontalJustify.LEFT) {
+          maxLeftGlyphWidth = Math.max(glyphWidth, maxLeftGlyphWidth);
+          leftWidth = Math.max(leftWidth, symbolWidth) + ChordSymbol.minPadding;
+        } else if (symbol.getHorizontal() === ChordSymbolHorizontalJustify.RIGHT) {
+          maxRightGlyphWidth = Math.max(glyphWidth, maxRightGlyphWidth);
+          rightWidth = Math.max(rightWidth, symbolWidth);
+        } else {
+          leftWidth = Math.max(leftWidth, symbolWidth / 2) + ChordSymbol.minPadding;
+          rightWidth = Math.max(rightWidth, symbolWidth / 2);
+          maxLeftGlyphWidth = Math.max(glyphWidth / 2, maxLeftGlyphWidth);
+          maxRightGlyphWidth = Math.max(glyphWidth / 2, maxRightGlyphWidth);
+        }
       }
+      width = 0; // reset symbol width
     }
+    const rightOverlap = Math.min(
+      Math.max(rightWidth - maxRightGlyphWidth, 0),
+      Math.max(rightWidth - state.right_shift, 0)
+    );
+    const leftOverlap = Math.min(Math.max(leftWidth - maxLeftGlyphWidth, 0), Math.max(leftWidth - state.left_shift, 0));
 
-    width = reportedWidths.reduce((a, b) => a + b, 0);
-
-    state.left_shift += width / 2;
-    state.right_shift += width / 2;
+    state.left_shift += leftOverlap;
+    state.right_shift += rightOverlap;
     return true;
   }
 
