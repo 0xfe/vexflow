@@ -67,7 +67,6 @@ export abstract class Element {
     return Category.Element;
   }
 
-  protected parent?: Element;
   protected children: Element[] = [];
   protected static ID: number = 1000;
   protected static newID(): string {
@@ -113,14 +112,8 @@ export abstract class Element {
     Registry.getDefaultRegistry()?.register(this);
   }
 
-  setParent(parent?: Element): this {
-    if (parent) {
-      this.parent = parent;
-      this.parent.children.push(this);
-    } else if (this.parent) {
-      this.parent.children.splice(this.parent.children.indexOf(this));
-      this.parent = undefined;
-    }
+  addChildElement(child: Element): this {
+    this.children.push(child);
     return this;
   }
 

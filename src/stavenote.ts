@@ -540,8 +540,9 @@ export class StaveNote extends StemmableNote {
         stem_up_x_offset: noteProps.stem_up_x_offset,
         stem_down_x_offset: noteProps.stem_down_x_offset,
         line: noteProps.line,
-      }).setParent(this);
+      });
 
+      this.addChildElement(notehead);
       this._noteHeads[i] = notehead;
     }
   }
