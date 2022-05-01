@@ -464,10 +464,11 @@ export class Factory {
     return fingering;
   }
 
-  StringNumber(params: { number: string; position: string }): StringNumber {
+  StringNumber(params: { number: string; position: string; radius?: number }): StringNumber {
     const stringNumber = new StringNumber(params.number);
     stringNumber.setPosition(params.position);
     stringNumber.setContext(this.context);
+    if (params.radius != undefined) stringNumber.radius = params.radius;
     return stringNumber;
   }
 

@@ -57,7 +57,7 @@ export class StringNumber extends Modifier {
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];
       const mc = note.getModifierContext();
-      const verticalSpaceNeeded = (num.radius * 2) / Tables.STAVE_LINE_DISTANCE + 0.5;
+      const verticalSpaceNeeded = (num.getMinRadius() * 2) / Tables.STAVE_LINE_DISTANCE + 0.5;
 
       if (mc) {
         if (pos === ModifierPosition.ABOVE) {
@@ -160,6 +160,10 @@ export class StringNumber extends Modifier {
     this.resetFont();
   }
 
+  protected getMinRadius(): number {
+    return Math.max(this.radius, 8);
+  }
+
   setLineEndType(leg: number): this {
     if (leg >= Renderer.LineEndType.NONE && leg <= Renderer.LineEndType.DOWN) {
       this.leg = leg;
@@ -214,7 +218,8 @@ export class StringNumber extends Modifier {
           if (note.hasStem() && stemDirection == Stem.UP) {
             dot_y = stem_ext.topY + StringNumber.metrics.stemPadding;
           }
-          dot_y -= this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
+          dot_y -=
+            this.getMinRadius() + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
         break;
       case Modifier.Position.BELOW:
@@ -224,14 +229,15 @@ export class StringNumber extends Modifier {
           if (note.hasStem() && stemDirection == Stem.DOWN) {
             dot_y = stem_ext.topY - StringNumber.metrics.stemPadding;
           }
-          dot_y += this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
+          dot_y +=
+            this.getMinRadius() + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
         break;
       case Modifier.Position.LEFT:
-        dot_x -= this.radius / 2 + StringNumber.metrics.leftPadding;
+        dot_x -= this.getMinRadius() / 2 + StringNumber.metrics.leftPadding;
         break;
       case Modifier.Position.RIGHT:
-        dot_x += this.radius / 2 + StringNumber.metrics.rightPadding;
+        dot_x += this.getMinRadius() / 2 + StringNumber.metrics.rightPadding;
         break;
       default:
         throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid`);
