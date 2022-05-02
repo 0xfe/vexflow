@@ -57,12 +57,11 @@ export class Voice extends Element {
   protected readonly tickables: Tickable[] = [];
   protected readonly time: Required<VoiceTime>;
 
-  constructor(time?: VoiceTime | string, options?: { softmaxFactor: number }) {
+  constructor(time?: VoiceTime | string) {
     super();
 
     this.options = {
       softmaxFactor: softmaxDefault,
-      ...options,
     };
 
     // Convert the `time` string into a VoiceTime object if necessary.
