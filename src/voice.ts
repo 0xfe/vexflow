@@ -3,6 +3,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { Element } from './element';
+import { softmaxDefault } from './formatter';
 import { Fraction } from './fraction';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
