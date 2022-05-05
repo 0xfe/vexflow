@@ -11,6 +11,7 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { StaveNote } from './stavenote';
 import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
@@ -24,10 +25,6 @@ import { Voice } from './voice';
 function L(...args: any) {
   if (GraceNoteGroup.DEBUG) log('Vex.Flow.GraceNoteGroup', args);
 }
-
-// Left padding to avoid that the group collides with the previous note.
-// The value increases the width and the x offset.
-const LEFT_PADDING = 2;
 
 /** GraceNoteGroup is used to format and render grace notes. */
 export class GraceNoteGroup extends Modifier {
@@ -88,7 +85,9 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < group_list.length; ++i) {
       const gracenote_group = group_list[i].gracenote_group;
       formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
-      gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift) + LEFT_PADDING);
+      gracenote_group.setSpacingFromNextModifier(
+        group_shift - Math.min(formatWidth, group_shift) + StaveNote.minNoteheadPadding
+      );
     }
 
     state.left_shift += group_shift;
@@ -154,7 +153,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   getWidth(): number {
-    return this.width + LEFT_PADDING;
+    return this.width + StaveNote.minNoteheadPadding;
   }
 
   getGraceNotes(): Note[] {
