@@ -57,7 +57,7 @@ export class StringNumber extends Modifier {
       const index = num.checkIndex();
       const props = note.getKeyProps()[index];
       const mc = note.getModifierContext();
-      const verticalSpaceNeeded = (num.getMinRadius() * 2) / Tables.STAVE_LINE_DISTANCE + 0.5;
+      const verticalSpaceNeeded = (num.radius * 2) / Tables.STAVE_LINE_DISTANCE + 0.5;
 
       if (mc) {
         if (pos === ModifierPosition.ABOVE) {
@@ -132,7 +132,8 @@ export class StringNumber extends Modifier {
     return true;
   }
 
-  public radius: number;
+  protected radius: number;
+  protected drawCircle: boolean;
   protected last_note?: Note;
   protected string_number: string;
   protected x_offset: number;
@@ -146,7 +147,6 @@ export class StringNumber extends Modifier {
     super();
 
     this.string_number = number;
-    this.setWidth(20); // ???
     this.position = Modifier.Position.ABOVE; // Default position above stem or note head
     this.x_shift = 0;
     this.y_shift = 0;
@@ -157,11 +157,9 @@ export class StringNumber extends Modifier {
     this.dashed = true; // true - draw dashed extension  false - no extension
     this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
+    this.drawCircle = true;
+    this.setWidth(this.radius * 2 + 4);
     this.resetFont();
-  }
-
-  protected getMinRadius(): number {
-    return Math.max(this.radius, 8);
   }
 
   setLineEndType(leg: number): this {
@@ -196,6 +194,11 @@ export class StringNumber extends Modifier {
     return this;
   }
 
+  setDrawCircle(drawCircle: boolean): this {
+    this.drawCircle = drawCircle;
+    return this;
+  }
+
   draw(): void {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
@@ -218,8 +221,7 @@ export class StringNumber extends Modifier {
           if (note.hasStem() && stemDirection == Stem.UP) {
             dot_y = stem_ext.topY + StringNumber.metrics.stemPadding;
           }
-          dot_y -=
-            this.getMinRadius() + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
+          dot_y -= this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
         break;
       case Modifier.Position.BELOW:
@@ -229,25 +231,26 @@ export class StringNumber extends Modifier {
           if (note.hasStem() && stemDirection == Stem.DOWN) {
             dot_y = stem_ext.topY - StringNumber.metrics.stemPadding;
           }
-          dot_y +=
-            this.getMinRadius() + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
+          dot_y += this.radius + StringNumber.metrics.verticalPadding + this.text_line * Tables.STAVE_LINE_DISTANCE;
         }
         break;
       case Modifier.Position.LEFT:
-        dot_x -= this.getMinRadius() / 2 + StringNumber.metrics.leftPadding;
+        dot_x -= this.radius / 2 + StringNumber.metrics.leftPadding;
         break;
       case Modifier.Position.RIGHT:
-        dot_x += this.getMinRadius() / 2 + StringNumber.metrics.rightPadding;
+        dot_x += this.radius / 2 + StringNumber.metrics.rightPadding;
         break;
       default:
         throw new RuntimeError('InvalidPosition', `The position ${this.position} is invalid`);
     }
 
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
-    ctx.setLineWidth(1.5);
-    ctx.stroke();
+    if (this.drawCircle) {
+      ctx.beginPath();
+      ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+      ctx.setLineWidth(1.5);
+      ctx.stroke();
+    }
     ctx.setFont(this.textFont);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);

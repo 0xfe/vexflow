@@ -17,8 +17,7 @@ const StringNumberTests = {
 
     const run = VexFlowTests.runTests;
     run('String Number In Notation', drawMultipleMeasures);
-    run('String Number In Notation - radius 0', drawMultipleMeasures, { radius: 0 });
-    run('String Number In Notation - radius 7', drawMultipleMeasures, { radius: 7 });
+    run('String Number In Notation - no circle', drawMultipleMeasures, { drawCircle: false });
     run('Fret Hand Finger In Notation', drawFretHandFingers);
     run('Multi Voice With Strokes, String & Finger Numbers', multi);
     run('Complex Measure With String & Finger Numbers', drawAccidentals);
@@ -35,31 +34,40 @@ function drawMultipleMeasures(options: TestOptions): void {
   const notes1 = score.notes('(c4 e4 g4)/4., (c5 e5 g5)/8, (c4 f4 g4)/4, (c4 f4 g4)/4', { stem: 'down' });
 
   notes1[0]
-    .addModifier(f.StringNumber({ number: '5', position: 'right', radius: options.params?.radius }), 0)
-    .addModifier(f.StringNumber({ number: '4', position: 'left', radius: options.params?.radius }), 1)
-    .addModifier(f.StringNumber({ number: '3', position: 'right', radius: options.params?.radius }), 2);
+    .addModifier(f.StringNumber({ number: '5', position: 'right', drawCircle: options.params?.drawCircle }), 0)
+    .addModifier(f.StringNumber({ number: '4', position: 'left', drawCircle: options.params?.drawCircle }), 1)
+    .addModifier(f.StringNumber({ number: '3', position: 'right', drawCircle: options.params?.drawCircle }), 2);
 
   notes1[1]
     .addModifier(f.Accidental({ type: '#' }), 0)
-    .addModifier(f.StringNumber({ number: '5', position: 'below', radius: options.params?.radius }), 0)
+    .addModifier(f.StringNumber({ number: '5', position: 'below', drawCircle: options.params?.drawCircle }), 0)
     .addModifier(f.Accidental({ type: '#' }).setAsCautionary(), 1)
     .addModifier(
       f
-        .StringNumber({ number: '3', position: 'above', radius: options.params?.radius })
+        .StringNumber({ number: '3', position: 'above', drawCircle: options.params?.drawCircle })
         .setLastNote(notes1[3])
         .setLineEndType(Renderer.LineEndType.DOWN),
       2
     );
 
   notes1[2]
-    .addModifier(f.StringNumber({ number: '5', position: 'left', radius: options.params?.radius }), 0)
-    .addModifier(f.StringNumber({ number: '3', position: 'left', radius: options.params?.radius }), 2)
+    .addModifier(f.StringNumber({ number: '5', position: 'left', drawCircle: options.params?.drawCircle }), 0)
+    .addModifier(f.StringNumber({ number: '3', position: 'left', drawCircle: options.params?.drawCircle }), 2)
     .addModifier(f.Accidental({ type: '#' }), 1);
 
   notes1[3]
-    .addModifier(f.StringNumber({ number: '5', position: 'right', radius: options.params?.radius }).setOffsetY(7), 0)
-    .addModifier(f.StringNumber({ number: '4', position: 'right', radius: options.params?.radius }).setOffsetY(6), 1)
-    .addModifier(f.StringNumber({ number: '3', position: 'right', radius: options.params?.radius }).setOffsetY(-6), 2);
+    .addModifier(
+      f.StringNumber({ number: '5', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(7),
+      0
+    )
+    .addModifier(
+      f.StringNumber({ number: '4', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(6),
+      1
+    )
+    .addModifier(
+      f.StringNumber({ number: '3', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(-6),
+      2
+    );
 
   const voice1 = score.voice(notes1);
 
@@ -73,30 +81,39 @@ function drawMultipleMeasures(options: TestOptions): void {
   const notes2 = score.notes('(c4 e4 g4)/4, (c5 e5 g5), (c4 f4 g4), (c4 f4 g4)', { stem: 'up' });
 
   notes2[0]
-    .addModifier(f.StringNumber({ number: '5', position: 'right', radius: options.params?.radius }), 0)
-    .addModifier(f.StringNumber({ number: '4', position: 'left', radius: options.params?.radius }), 1)
-    .addModifier(f.StringNumber({ number: '3', position: 'right', radius: options.params?.radius }), 2);
+    .addModifier(f.StringNumber({ number: '5', position: 'right', drawCircle: options.params?.drawCircle }), 0)
+    .addModifier(f.StringNumber({ number: '4', position: 'left', drawCircle: options.params?.drawCircle }), 1)
+    .addModifier(f.StringNumber({ number: '3', position: 'right', drawCircle: options.params?.drawCircle }), 2);
 
   notes2[1]
     .addModifier(f.Accidental({ type: '#' }), 0)
-    .addModifier(f.StringNumber({ number: '5', position: 'below', radius: options.params?.radius }), 0)
+    .addModifier(f.StringNumber({ number: '5', position: 'below', drawCircle: options.params?.drawCircle }), 0)
     .addModifier(f.Accidental({ type: '#' }), 1)
     .addModifier(
       f
-        .StringNumber({ number: '3', position: 'above', radius: options.params?.radius })
+        .StringNumber({ number: '3', position: 'above', drawCircle: options.params?.drawCircle })
         .setLastNote(notes2[3])
         .setDashed(false),
       2
     );
 
   notes2[2]
-    .addModifier(f.StringNumber({ number: '3', position: 'left', radius: options.params?.radius }), 2)
+    .addModifier(f.StringNumber({ number: '3', position: 'left', drawCircle: options.params?.drawCircle }), 2)
     .addModifier(f.Accidental({ type: '#' }), 1);
 
   notes2[3]
-    .addModifier(f.StringNumber({ number: '5', position: 'right', radius: options.params?.radius }).setOffsetY(7), 0)
-    .addModifier(f.StringNumber({ number: '4', position: 'right', radius: options.params?.radius }).setOffsetY(6), 1)
-    .addModifier(f.StringNumber({ number: '3', position: 'right', radius: options.params?.radius }).setOffsetY(-6), 2);
+    .addModifier(
+      f.StringNumber({ number: '5', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(7),
+      0
+    )
+    .addModifier(
+      f.StringNumber({ number: '4', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(6),
+      1
+    )
+    .addModifier(
+      f.StringNumber({ number: '3', position: 'right', drawCircle: options.params?.drawCircle }).setOffsetY(-6),
+      2
+    );
 
   const voice2 = score.voice(notes2);
 
@@ -110,10 +127,10 @@ function drawMultipleMeasures(options: TestOptions): void {
   const notesBar3 = score.notes('(c4 e4 g4 a4)/1.');
 
   notesBar3[0]
-    .addModifier(f.StringNumber({ number: '5', position: 'below', radius: options.params?.radius }), 0)
-    .addModifier(f.StringNumber({ number: '4', position: 'right', radius: options.params?.radius }), 1)
-    .addModifier(f.StringNumber({ number: '3', position: 'left', radius: options.params?.radius }), 2)
-    .addModifier(f.StringNumber({ number: '2', position: 'above', radius: options.params?.radius }), 3);
+    .addModifier(f.StringNumber({ number: '5', position: 'below', drawCircle: options.params?.drawCircle }), 0)
+    .addModifier(f.StringNumber({ number: '4', position: 'right', drawCircle: options.params?.drawCircle }), 1)
+    .addModifier(f.StringNumber({ number: '3', position: 'left', drawCircle: options.params?.drawCircle }), 2)
+    .addModifier(f.StringNumber({ number: '2', position: 'above', drawCircle: options.params?.drawCircle }), 3);
 
   const voice3 = score.voice(notesBar3, { time: '6/4' });
 
