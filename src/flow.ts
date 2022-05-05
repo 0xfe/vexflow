@@ -250,6 +250,14 @@ export class Flow {
     return fonts.map((font) => font.getName());
   }
 
+  static get SOFTMAX_FACTOR(): number {
+    return Tables.SOFTMAX_FACTOR;
+  }
+
+  static set SOFTMAX_FACTOR(factor: number) {
+    Tables.SOFTMAX_FACTOR = factor;
+  }
+
   static get NOTATION_FONT_SCALE(): number {
     return Tables.NOTATION_FONT_SCALE;
   }

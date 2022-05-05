@@ -11,6 +11,7 @@ import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Accidental } from '../src/accidental';
 import { Beam } from '../src/beam';
 import { Dot } from '../src/dot';
+import { Factory } from '../src/factory';
 import { Formatter } from '../src/formatter';
 import { Glyph } from '../src/glyph';
 import { Ornament } from '../src/ornament';
@@ -122,41 +123,43 @@ function drawOrnamentsDisplaced(options: TestOptions, contextBuilder: ContextBui
  * Helper function for the next two tests: drawOrnamentsDelayed and drawOrnamentsDelayedMultipleDraws.
  * setDelayed(true) shifts the turn symbol to the right (after its note).
  */
-const addDelayedTurns = (options: TestOptions, contextBuilder: ContextBuilder) => {
+const addDelayedTurns = (f: Factory) => {
   // Get the rendering context
-  const context = contextBuilder(options.elementId, 550, 195);
+  const context = f.getContext();
 
-  const stave = new Stave(10, 30, 500);
+  const stave = f.Stave({ x: 10, y: 30, width: 500 });
   stave.setContext(context).draw();
 
   const notes = [
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('turn').setDelayed(true), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setDelayed(true), 0);
-  notes[2].addModifier(new Ornament('turn_inverted').setDelayed(true), 0);
-  notes[3].addModifier(new Ornament('turn').setDelayed(true), 0);
+  notes[0].addModifier(f.Ornament('turn', { delayed: true }), 0);
+  notes[1].addModifier(f.Ornament('turn_inverted', { delayed: true }), 0);
+  notes[2].addModifier(f.Ornament('turn_inverted', { delayed: true }), 0);
+  notes[3].addModifier(f.Ornament('turn', { delayed: true }), 0);
 
   return { context, stave, notes };
 };
 
-function drawOrnamentsDelayed(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawOrnamentsDelayed(options: TestOptions): void {
   expect(0);
 
-  const { context, stave, notes } = addDelayedTurns(options, contextBuilder);
+  const f = VexFlowTests.makeFactory(options, 550, 195);
+  const { context, stave, notes } = addDelayedTurns(f);
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(context, stave, notes);
 }
 
-function drawOrnamentsDelayedMultipleDraws(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawOrnamentsDelayedMultipleDraws(options: TestOptions): void {
   expect(0);
+  const f = VexFlowTests.makeFactory(options, 550, 195);
 
-  const { context, stave, notes } = addDelayedTurns(options, contextBuilder);
+  const { context, stave, notes } = addDelayedTurns(f);
 
   // We can FormatAndDraw() two times, and it looks fine.
   // However, if you inspect the SVG element, you will see duplicate paths.
@@ -164,68 +167,70 @@ function drawOrnamentsDelayedMultipleDraws(options: TestOptions, contextBuilder:
   Formatter.FormatAndDraw(context, stave, notes);
 }
 
-function drawOrnamentsStacked(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawOrnamentsStacked(options: TestOptions): void {
   expect(0);
 
   // Get the rendering context
-  const ctx = contextBuilder(options.elementId, 550, 195);
+  const f = VexFlowTests.makeFactory(options, 550, 195);
+  const ctx = f.getContext();
 
-  const stave = new Stave(10, 30, 500);
+  const stave = f.Stave({ x: 10, y: 30, width: 500 });
   stave.setContext(ctx).draw();
   const notes = [
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['a/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted'), 0);
-  notes[2].addModifier(new Ornament('turn'), 0);
-  notes[3].addModifier(new Ornament('turn_inverted'), 0);
+  notes[0].addModifier(f.Ornament('mordent'), 0);
+  notes[1].addModifier(f.Ornament('turn_inverted'), 0);
+  notes[2].addModifier(f.Ornament('turn'), 0);
+  notes[3].addModifier(f.Ornament('turn_inverted'), 0);
 
-  notes[0].addModifier(new Ornament('turn'), 0);
-  notes[1].addModifier(new Ornament('prallup'), 0);
-  notes[2].addModifier(new Ornament('upmordent'), 0);
-  notes[3].addModifier(new Ornament('lineprall'), 0);
+  notes[0].addModifier(f.Ornament('turn'), 0);
+  notes[1].addModifier(f.Ornament('prallup'), 0);
+  notes[2].addModifier(f.Ornament('upmordent'), 0);
+  notes[3].addModifier(f.Ornament('lineprall'), 0);
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
 }
 
-function drawOrnamentsWithAccidentals(options: TestOptions, contextBuilder: ContextBuilder): void {
+function drawOrnamentsWithAccidentals(options: TestOptions): void {
   expect(0);
 
   // Get the rendering context
-  const ctx = contextBuilder(options.elementId, 650, 250);
+  const f = VexFlowTests.makeFactory(options, 650, 250);
+  const ctx = f.getContext();
 
-  const stave = new Stave(10, 60, 600);
+  const stave = f.Stave({ x: 10, y: 60, width: 600 });
   stave.setContext(ctx).draw();
   const notes = [
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
-    new StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
+    f.StaveNote({ keys: ['f/4'], duration: '4', stem_direction: 1 }),
   ];
 
-  notes[0].addModifier(new Ornament('mordent').setUpperAccidental('#').setLowerAccidental('#'), 0);
-  notes[1].addModifier(new Ornament('turn_inverted').setLowerAccidental('b').setUpperAccidental('b'), 0);
-  notes[2].addModifier(new Ornament('turn').setUpperAccidental('##').setLowerAccidental('##'), 0);
-  notes[3].addModifier(new Ornament('mordent_inverted').setLowerAccidental('db').setUpperAccidental('db'), 0);
-  notes[4].addModifier(new Ornament('turn_inverted').setUpperAccidental('++').setLowerAccidental('++'), 0);
-  notes[5].addModifier(new Ornament('tr').setUpperAccidental('n').setLowerAccidental('n'), 0);
-  notes[6].addModifier(new Ornament('prallup').setUpperAccidental('d').setLowerAccidental('d'), 0);
-  notes[7].addModifier(new Ornament('lineprall').setUpperAccidental('db').setLowerAccidental('db'), 0);
-  notes[8].addModifier(new Ornament('upmordent').setUpperAccidental('bbs').setLowerAccidental('bbs'), 0);
-  notes[9].addModifier(new Ornament('prallprall').setUpperAccidental('bb').setLowerAccidental('bb'), 0);
-  notes[10].addModifier(new Ornament('turn_inverted').setUpperAccidental('+').setLowerAccidental('+'), 0);
+  notes[0].addModifier(f.Ornament('mordent', { lowerAccidental: '#', upperAccidental: '#' }), 0);
+  notes[1].addModifier(f.Ornament('turn_inverted', { lowerAccidental: 'b', upperAccidental: 'b' }), 0);
+  notes[2].addModifier(f.Ornament('turn', { upperAccidental: '##', lowerAccidental: '##' }), 0);
+  notes[3].addModifier(f.Ornament('mordent_inverted', { lowerAccidental: 'db', upperAccidental: 'db' }), 0);
+  notes[4].addModifier(f.Ornament('turn_inverted', { upperAccidental: '++', lowerAccidental: '++' }), 0);
+  notes[5].addModifier(f.Ornament('tr', { upperAccidental: 'n', lowerAccidental: 'n' }), 0);
+  notes[6].addModifier(f.Ornament('prallup', { upperAccidental: 'd', lowerAccidental: 'd' }), 0);
+  notes[7].addModifier(f.Ornament('lineprall', { upperAccidental: 'db', lowerAccidental: 'db' }), 0);
+  notes[8].addModifier(f.Ornament('upmordent', { upperAccidental: 'bbs', lowerAccidental: 'bbs' }), 0);
+  notes[9].addModifier(f.Ornament('prallprall', { upperAccidental: 'bb', lowerAccidental: 'bb' }), 0);
+  notes[10].addModifier(f.Ornament('turn_inverted', { upperAccidental: '+', lowerAccidental: '+' }), 0);
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, stave, notes);
@@ -291,10 +296,10 @@ function jazzOrnaments(options: TestOptions): void {
 
   let mods = [
     // measure 1
-    new Ornament('scoop'),
-    new Ornament('doit'),
-    new Ornament('fall'),
-    new Ornament('doitLong'),
+    f.Ornament('scoop'),
+    f.Ornament('doit'),
+    f.Ornament('fall'),
+    f.Ornament('doitLong'),
   ];
 
   draw(mods, ['a/5'], curX, width, curY, -1);
@@ -302,21 +307,21 @@ function jazzOrnaments(options: TestOptions): void {
 
   mods = [
     // measure 2
-    new Ornament('fallLong'),
-    new Ornament('bend'),
-    new Ornament('plungerClosed'),
-    new Ornament('plungerOpen'),
-    new Ornament('bend'),
+    f.Ornament('fallLong'),
+    f.Ornament('bend'),
+    f.Ornament('plungerClosed'),
+    f.Ornament('plungerOpen'),
+    f.Ornament('bend'),
   ];
   draw(mods, ['a/5'], curX, width, curY, -1);
   curX += width;
 
   mods = [
     // measure 3
-    new Ornament('flip'),
-    new Ornament('jazzTurn'),
-    new Ornament('smear'),
-    new Ornament('doit'),
+    f.Ornament('flip'),
+    f.Ornament('jazzTurn'),
+    f.Ornament('smear'),
+    f.Ornament('doit'),
   ];
   draw(mods, ['a/5'], curX, width, curY, 1);
 
@@ -326,10 +331,10 @@ function jazzOrnaments(options: TestOptions): void {
 
   mods = [
     // measure 4
-    new Ornament('scoop'),
-    new Ornament('doit'),
-    new Ornament('fall'),
-    new Ornament('doitLong'),
+    f.Ornament('scoop'),
+    f.Ornament('doit'),
+    f.Ornament('fall'),
+    f.Ornament('doitLong'),
   ];
 
   draw(mods, ['e/5'], curX, width, curY);
@@ -337,21 +342,21 @@ function jazzOrnaments(options: TestOptions): void {
 
   mods = [
     // measure 5
-    new Ornament('fallLong'),
-    new Ornament('bend'),
-    new Ornament('plungerClosed'),
-    new Ornament('plungerOpen'),
-    new Ornament('bend'),
+    f.Ornament('fallLong'),
+    f.Ornament('bend'),
+    f.Ornament('plungerClosed'),
+    f.Ornament('plungerOpen'),
+    f.Ornament('bend'),
   ];
   draw(mods, ['e/5'], curX, width, curY);
   curX += width;
 
   mods = [
     // measure 6
-    new Ornament('flip'),
-    new Ornament('jazzTurn'),
-    new Ornament('smear'),
-    new Ornament('doit'),
+    f.Ornament('flip'),
+    f.Ornament('jazzTurn'),
+    f.Ornament('smear'),
+    f.Ornament('doit'),
   ];
   draw(mods, ['e/5'], curX, width, curY);
 
@@ -361,10 +366,10 @@ function jazzOrnaments(options: TestOptions): void {
 
   mods = [
     // measure 7
-    new Ornament('scoop'),
-    new Ornament('doit'),
-    new Ornament('fall'),
-    new Ornament('doitLong'),
+    f.Ornament('scoop'),
+    f.Ornament('doit'),
+    f.Ornament('fall'),
+    f.Ornament('doitLong'),
   ];
 
   draw(mods, ['e/4'], curX, width, curY);
@@ -372,21 +377,21 @@ function jazzOrnaments(options: TestOptions): void {
 
   mods = [
     // measure 8
-    new Ornament('fallLong'),
-    new Ornament('bend'),
-    new Ornament('plungerClosed'),
-    new Ornament('plungerOpen'),
-    new Ornament('bend'),
+    f.Ornament('fallLong'),
+    f.Ornament('bend'),
+    f.Ornament('plungerClosed'),
+    f.Ornament('plungerOpen'),
+    f.Ornament('bend'),
   ];
   draw(mods, ['e/4'], curX, width, curY);
   curX += width;
 
   mods = [
     // measure 9
-    new Ornament('flip'),
-    new Ornament('jazzTurn'),
-    new Ornament('smear'),
-    new Ornament('doit'),
+    f.Ornament('flip'),
+    f.Ornament('jazzTurn'),
+    f.Ornament('smear'),
+    f.Ornament('doit'),
   ];
   draw(mods, ['e/4'], curX, width, curY);
 }

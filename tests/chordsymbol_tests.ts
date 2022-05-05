@@ -245,7 +245,7 @@ function fontSize(options: TestOptions): void {
 }
 
 function kern(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 650, 650);
+  const f = VexFlowTests.makeFactory(options, 650 * 1.5, 650);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -302,7 +302,7 @@ function kern(options: TestOptions): void {
 }
 
 function top(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 650, 650);
+  const f = VexFlowTests.makeFactory(options, 650 * 1.5, 650);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -355,7 +355,7 @@ function top(options: TestOptions): void {
 }
 
 function topJustify(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 500, 680);
+  const f = VexFlowTests.makeFactory(options, 500 * 1.5, 680);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -405,7 +405,7 @@ function topJustify(options: TestOptions): void {
 }
 
 function bottom(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 600, 230);
+  const f = VexFlowTests.makeFactory(options, 600 * 1.5, 230);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -435,7 +435,7 @@ function bottom(options: TestOptions): void {
 }
 
 function bottomStemDown(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 600, 330);
+  const f = VexFlowTests.makeFactory(options, 600 * 1.5, 330);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -468,7 +468,7 @@ function bottomStemDown(options: TestOptions): void {
 }
 
 function doubleBottom(options: TestOptions): void {
-  const f = VexFlowTests.makeFactory(options, 600, 260);
+  const f = VexFlowTests.makeFactory(options, 600 * 1.5, 260);
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
@@ -479,12 +479,12 @@ function doubleBottom(options: TestOptions): void {
     const note = (keys: string[], duration: string, chordSymbol1: ChordSymbol, chordSymbol2: ChordSymbol) =>
       new StaveNote({ keys, duration }).addModifier(chordSymbol1, 0).addModifier(chordSymbol2, 0);
 
-    const stave = new Stave(10, y, 450).addClef('treble').setContext(ctx).draw();
+    const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble').setContext(ctx).draw();
     const notes = [
       note(['c/4', 'f/4', 'a/4'], 'q', chords[0], chords2[0]),
-      note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addModifier(new Accidental('b'), 2),
+      note(['c/4', 'e/4', 'b/4'], 'q', chords[1], chords2[1]).addModifier(f.Accidental({ type: 'b' }), 2),
       note(['c/4', 'e/4', 'g/4'], 'q', chords[2], chords2[2]),
-      note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addModifier(new Accidental('#'), 1),
+      note(['c/4', 'f/4', 'a/4'], 'q', chords[3], chords2[3]).addModifier(f.Accidental({ type: '#' }), 1),
     ];
     Formatter.FormatAndDraw(ctx, stave, notes);
   }

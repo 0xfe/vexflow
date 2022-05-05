@@ -406,7 +406,7 @@ export class Formatter {
   constructor(options?: FormatterOptions) {
     this.formatterOptions = {
       globalSoftmax: false,
-      softmaxFactor: softmaxDefault,
+      softmaxFactor: Tables.SOFTMAX_FACTOR,
       maxIterations: 5,
       ...options,
     };

@@ -25,6 +25,7 @@ import { ModifierContext } from './modifiercontext';
 import { MultiMeasureRest, MultimeasureRestRenderOptions } from './multimeasurerest';
 import { Note, NoteStruct } from './note';
 import { NoteSubGroup } from './notesubgroup';
+import { Ornament } from './ornament';
 import { PedalMarking } from './pedalmarking';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
@@ -401,6 +402,31 @@ export class Factory {
     articulation.setPosition(p.position);
     articulation.setContext(this.context);
     return articulation;
+  }
+
+  Ornament(
+    type: string,
+    params?: { position?: string | number; upperAccidental?: string; lowerAccidental?: string; delayed?: boolean }
+  ) {
+    const options = {
+      type,
+      position: 0,
+      accidental: '',
+      ...params,
+    };
+    const ornament = new Ornament(type);
+    ornament.setPosition(options.position);
+    if (options.upperAccidental) {
+      ornament.setUpperAccidental(options.upperAccidental);
+    }
+    if (options.lowerAccidental) {
+      ornament.setLowerAccidental(options.lowerAccidental);
+    }
+    if (typeof options.delayed !== 'undefined') {
+      ornament.setDelayed(options.delayed);
+    }
+    ornament.setContext(this.context);
+    return ornament;
   }
 
   TextDynamics(params?: { text?: string; duration?: string; dots?: number; line?: number }): TextDynamics {

@@ -61,7 +61,7 @@ export class Voice extends Element {
     super();
 
     this.options = {
-      softmaxFactor: softmaxDefault,
+      softmaxFactor: Tables.SOFTMAX_FACTOR,
     };
 
     // Convert the `time` string into a VoiceTime object if necessary.
