@@ -19,16 +19,6 @@ import { isNote, isStaveNote } from './typeguard';
 import { defined, log, midLine, RuntimeError } from './util';
 import { Voice } from './voice';
 
-// Default softmax.  Can be set on measure level with FormatterOptions
-// or globally by changing the default
-export let softmaxDefault = 100;
-export const setSoftmaxDefault = (value: number) => {
-  softmaxDefault = value;
-};
-export const getSoftmaxDefault = () => {
-  return softmaxDefault;
-};
-
 interface Distance {
   maxNegativeShiftPx: number;
   expectedDistance: number;
