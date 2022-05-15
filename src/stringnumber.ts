@@ -132,7 +132,8 @@ export class StringNumber extends Modifier {
     return true;
   }
 
-  public radius: number;
+  protected radius: number;
+  protected drawCircle: boolean;
   protected last_note?: Note;
   protected string_number: string;
   protected x_offset: number;
@@ -146,7 +147,6 @@ export class StringNumber extends Modifier {
     super();
 
     this.string_number = number;
-    this.setWidth(20); // ???
     this.position = Modifier.Position.ABOVE; // Default position above stem or note head
     this.x_shift = 0;
     this.y_shift = 0;
@@ -157,6 +157,8 @@ export class StringNumber extends Modifier {
     this.dashed = true; // true - draw dashed extension  false - no extension
     this.leg = Renderer.LineEndType.NONE; // draw upward/downward leg at the of extension line
     this.radius = 8;
+    this.drawCircle = true;
+    this.setWidth(this.radius * 2 + 4);
     this.resetFont();
   }
 
@@ -189,6 +191,11 @@ export class StringNumber extends Modifier {
 
   setDashed(dashed: boolean): this {
     this.dashed = dashed;
+    return this;
+  }
+
+  setDrawCircle(drawCircle: boolean): this {
+    this.drawCircle = drawCircle;
     return this;
   }
 
@@ -238,10 +245,12 @@ export class StringNumber extends Modifier {
     }
 
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
-    ctx.setLineWidth(1.5);
-    ctx.stroke();
+    if (this.drawCircle) {
+      ctx.beginPath();
+      ctx.arc(dot_x, dot_y, this.radius, 0, Math.PI * 2, false);
+      ctx.setLineWidth(1.5);
+      ctx.stroke();
+    }
     ctx.setFont(this.textFont);
     const x = dot_x - ctx.measureText(this.string_number).width / 2;
     ctx.fillText('' + this.string_number, x, dot_y + 4.5);
