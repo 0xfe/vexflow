@@ -67,6 +67,7 @@ export abstract class Element {
     return Category.Element;
   }
 
+  protected children: Element[] = [];
   protected static ID: number = 1000;
   protected static newID(): string {
     return `auto${Element.ID++}`;
@@ -111,7 +112,11 @@ export abstract class Element {
     Registry.getDefaultRegistry()?.register(this);
   }
 
-  /** Get element category string. */
+  addChildElement(child: Element): this {
+    this.children.push(child);
+    return this;
+  }
+
   getCategory(): string {
     return (<typeof Element>this.constructor).CATEGORY;
   }
@@ -140,6 +145,13 @@ export abstract class Element {
    */
   setStyle(style: ElementStyle): this {
     this.style = style;
+    return this;
+  }
+
+  /** Set the element & associated children style used for rendering. */
+  setGroupStyle(style: ElementStyle): this {
+    this.style = style;
+    this.children.forEach((child) => child.setGroupStyle(style));
     return this;
   }
 

@@ -40,6 +40,7 @@ export abstract class StemmableNote extends Note {
 
   setStem(stem: Stem): this {
     this.stem = stem;
+    this.addChildElement(stem);
     return this;
   }
 

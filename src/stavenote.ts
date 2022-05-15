@@ -542,6 +542,7 @@ export class StaveNote extends StemmableNote {
         line: noteProps.line,
       });
 
+      this.addChildElement(notehead);
       this._noteHeads[i] = notehead;
     }
   }
@@ -844,10 +845,7 @@ export class StaveNote extends StemmableNote {
   // Sets the style of the complete StaveNote, including all keys
   // and the stem.
   setStyle(style: ElementStyle): this {
-    super.setStyle(style);
-    this._noteHeads.forEach((notehead) => notehead.setStyle(style));
-    if (this.stem) this.stem.setStyle(style);
-    return this;
+    return super.setGroupStyle(style);
   }
 
   setStemStyle(style: ElementStyle): this {
