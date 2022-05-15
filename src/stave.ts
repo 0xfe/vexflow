@@ -165,8 +165,6 @@ export class Stave extends Element {
     if (!this.formatted) this.format();
 
     this.start_x = x;
-    const begBarline = this.modifiers[0];
-    begBarline.setX(this.start_x - begBarline.getWidth());
     return this;
   }
 
@@ -842,5 +840,47 @@ export class Stave extends Element {
     this.options.line_config = lines_configuration;
 
     return this;
+  }
+
+  static formatBegModifiers(staves: Stave[]): void {
+    let maxX = 0;
+    // align note start
+    staves.forEach((stave) => {
+      if (stave.getNoteStartX() > maxX) maxX = stave.getNoteStartX();
+    });
+    staves.forEach((stave) => {
+      stave.setNoteStartX(maxX);
+    });
+
+    maxX = 0;
+    // align REPEAT_BEGIN
+    staves.forEach((stave) => {
+      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.Barline);
+      modifiers.forEach((modifier) => {
+        if ((modifier as Barline).getType() == BarlineType.REPEAT_BEGIN)
+          if (modifier.getX() > maxX) maxX = modifier.getX();
+      });
+    });
+    staves.forEach((stave) => {
+      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.Barline);
+      modifiers.forEach((modifier) => {
+        if ((modifier as Barline).getType() == BarlineType.REPEAT_BEGIN) modifier.setX(maxX);
+      });
+    });
+
+    maxX = 0;
+    // Align time signatures
+    staves.forEach((stave) => {
+      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.TimeSignature);
+      modifiers.forEach((modifier) => {
+        if (modifier.getX() > maxX) maxX = modifier.getX();
+      });
+    });
+    staves.forEach((stave) => {
+      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.TimeSignature);
+      modifiers.forEach((modifier) => {
+        modifier.setX(maxX);
+      });
+    });
   }
 }

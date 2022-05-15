@@ -11,6 +11,7 @@ import { concat, TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Beam } from '../src/beam';
 import { EasyScore } from '../src/easyscore';
 import { Fraction } from '../src/fraction';
+import { Stave } from '../src/stave';
 import { Stem } from '../src/stem';
 import { StemmableNote } from '../src/stemmablenote';
 
@@ -433,6 +434,7 @@ function autoOddBeamGroups(options: TestOptions): void {
   ];
 
   f.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
+  Stave.formatBegModifiers([stave1, stave2, stave3]);
 
   f.draw();
 
@@ -467,6 +469,7 @@ function customBeamGroups(options: TestOptions): void {
   ];
 
   f.Formatter().formatToStave([voice1], stave1).formatToStave([voice2], stave2).formatToStave([voice3], stave3);
+  Stave.formatBegModifiers([stave1, stave2, stave3]);
 
   f.draw();
 

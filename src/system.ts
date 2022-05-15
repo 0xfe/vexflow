@@ -185,6 +185,7 @@ export class System extends Element {
     let y = this.options.y;
     let startX = 0;
     let allVoices: Voice[] = [];
+    let allStaves: Stave[] = [];
     const debugNoteMetricsYs: { y: number; voice: Voice }[] = [];
 
     // Join the voices for each stave.
@@ -199,6 +200,7 @@ export class System extends Element {
         y += 15;
       }
       allVoices = allVoices.concat(part.voices);
+      allStaves = allStaves.concat(part.stave);
 
       startX = Math.max(startX, part.stave.getNoteStartX());
     });
@@ -225,6 +227,7 @@ export class System extends Element {
     this.debugNoteMetricsYs = debugNoteMetricsYs;
     this.lastY = y;
     this.boundingBox = new BoundingBox(this.options.x, this.options.y, this.options.width, this.lastY - this.options.y);
+    Stave.formatBegModifiers(allStaves);
   }
 
   /** Render the system. */
