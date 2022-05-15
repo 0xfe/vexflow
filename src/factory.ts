@@ -487,12 +487,12 @@ export class Factory {
     return multiMeasureRest;
   }
 
-  Voice(params?: { time?: VoiceTime | string; options?: { softmaxFactor: number } }): Voice {
+  Voice(params?: { time?: VoiceTime | string }): Voice {
     const p = {
       time: '4/4',
       ...params,
     };
-    const voice = new Voice(p.time, p.options);
+    const voice = new Voice(p.time);
     this.voices.push(voice);
     return voice;
   }
