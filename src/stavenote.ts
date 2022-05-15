@@ -133,6 +133,7 @@ export class StaveNote extends StemmableNote {
     const notesList: StaveNoteFormatSettings[] = [];
 
     for (let i = 0; i < notes.length; i++) {
+      // formating relys on sortedKeyNotes in order to calculate line & minL
       const props = notes[i].sortedKeyProps;
       const line = props[0].keyProps.line;
       let minL = props[props.length - 1].keyProps.line;
@@ -406,6 +407,7 @@ export class StaveNote extends StemmableNote {
   protected ledgerLineStyle: ElementStyle;
   protected flagStyle?: ElementStyle;
   private _noteHeads: NoteHead[];
+  // Sorted variant of keyProps used internally
   private sortedKeyProps: { keyProps: KeyProps; index: number }[] = [];
 
   constructor(noteStruct: StaveNoteStruct) {
@@ -513,6 +515,7 @@ export class StaveNote extends StemmableNote {
     }
 
     for (let i = start; i !== end; i += step) {
+      // Building noteheads rely on sortedKeNotes in order to calculate the displacements
       const noteProps = this.sortedKeyProps[i].keyProps;
       const line = noteProps.line;
 
@@ -556,6 +559,7 @@ export class StaveNote extends StemmableNote {
 
   calculateOptimalStemDirection(): number {
     // Figure out optimal stem direction based on given notes
+    // minLine & maxLine rely on sortedKeyProps
     this.minLine = this.sortedKeyProps[0].keyProps.line;
     this.maxLine = this.sortedKeyProps[this.keyProps.length - 1].keyProps.line;
 
@@ -612,7 +616,8 @@ export class StaveNote extends StemmableNote {
       lastLine = line;
       this.keyProps.push(props);
     }
-    // Sort the notes from lowest line to highest line
+    // Sort the notes from lowest line to highest line in sortedKeyProps
+    // Warn no longer required as keyProps remains unsorted
     this.keyProps.forEach((keyProps, index) => {
       this.sortedKeyProps.push({ keyProps, index });
     });

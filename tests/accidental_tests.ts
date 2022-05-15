@@ -238,7 +238,7 @@ function basic(options: TestOptions): void {
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
       .addModifier(accid('b'), 0)
       .addModifier(accid('#'), 1),
-
+    // Notes keys out of alphabetic order
     f
       .StaveNote({ keys: ['e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5', 'd/4'], duration: '2' })
       .addModifier(accid('##'), 6)
@@ -249,6 +249,7 @@ function basic(options: TestOptions): void {
       .addModifier(accid('n'), 4)
       .addModifier(accid('bb'), 5),
 
+    // Notes keys out of alphabetic order
     f
       .StaveNote({ keys: ['g/5', 'f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5'], duration: '16' })
       .addModifier(accid('n'), 1)
