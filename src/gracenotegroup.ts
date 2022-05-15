@@ -11,6 +11,7 @@ import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
+import { StaveNote } from './stavenote';
 import { StaveTie } from './stavetie';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
@@ -84,7 +85,9 @@ export class GraceNoteGroup extends Modifier {
     for (let i = 0; i < group_list.length; ++i) {
       const gracenote_group = group_list[i].gracenote_group;
       formatWidth = gracenote_group.getWidth() + group_list[i].spacing;
-      gracenote_group.setSpacingFromNextModifier(group_shift - Math.min(formatWidth, group_shift));
+      gracenote_group.setSpacingFromNextModifier(
+        group_shift - Math.min(formatWidth, group_shift) + StaveNote.minNoteheadPadding
+      );
     }
 
     state.left_shift += group_shift;
@@ -150,7 +153,7 @@ export class GraceNoteGroup extends Modifier {
   }
 
   getWidth(): number {
-    return this.width;
+    return this.width + StaveNote.minNoteheadPadding;
   }
 
   getGraceNotes(): Note[] {
