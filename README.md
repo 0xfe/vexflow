@@ -9,11 +9,13 @@ The guide below refers to VexFlow 4. If you need to work with the previous versi
 The quickest way to add VexFlow to a web page is via a `<script>` tag.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
 <script>
   // YOUR CODE GOES HERE
 </script>
 ```
+
+The URL above includes a version number <code>vexflow@x.y.z</code>. Specifying a particular version is good practice, to prevent rare issues with a future update breaking your deployment. During development &amp; testing, feel free to use the latest release by omitting the version number: https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js
 
 If your project uses a bundler, you can install VexFlow from npm:
 

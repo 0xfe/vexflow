@@ -774,7 +774,6 @@ module.exports = (grunt) => {
       },
       git: {
         commitMessage: 'Release VexFlow ${version}',
-        changelog: true,
         requireCleanWorkingDir: false,
         commit: true,
         tag: true,
