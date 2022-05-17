@@ -26,6 +26,7 @@ const EasyScoreTests = {
     test('Options', options);
     const run = VexFlowTests.runTests;
     run('Draw Basic', drawBasicTest);
+    run('Draw Different KeySignature', drawDiffKeysig);
     run('Draw Basic Muted', drawBasicMutedTest);
     run('Draw Basic Harmonic', drawBasicHarmonicTest);
     run('Draw Basic Slash', drawBasicSlashTest);
@@ -213,6 +214,36 @@ function drawBasicTest(options: TestOptions): void {
       voices: [voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', { clef: 'bass' }))],
     })
     .addClef('bass');
+  system.addConnector().setType(StaveConnector.type.BRACKET);
+
+  f.draw();
+  expect(0);
+}
+
+function drawDiffKeysig(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 600, 350);
+  const score = f.EasyScore();
+  const system = f.System();
+
+  const { voice, notes } = createShortcuts(score);
+
+  system
+    .addStave({
+      voices: [
+        voice(notes('(d4 e4 g4)/q, c4/q, c4/q/r, c4/q', { stem: 'down' })),
+        voice(notes('c5/h., c5/q', { stem: 'up' })),
+      ],
+    })
+    .addClef('treble')
+    .addTimeSignature('4/4')
+    .addKeySignature('D');
+
+  system
+    .addStave({
+      voices: [voice(notes('c#3/q, cn3/q, bb3/q, d##3/q', { clef: 'bass' }))],
+    })
+    .addClef('bass')
+    .addTimeSignature('4/4');
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
