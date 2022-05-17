@@ -128,6 +128,12 @@ module.exports = {
   // holds and pauses (e4c0-e4df)
   fermataAbove: 'v43',
   fermataBelow: 'v5b',
+  fermataLongAbove: 've',
+  fermataLongBelow: 'v5f',
+  fermataVeryLongAbove: 'v32',
+  fermataVeryLongBelow: 'vbd',
+  fermataShortAbove: 'vac',
+  fermataShortBelow: 'v7e',
   breathMarkComma: 'v6c',
   breathMarkUpbow: 'v8a', // looks better than current upbow
   caesura: 'v34',

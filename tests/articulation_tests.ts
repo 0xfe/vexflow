@@ -31,6 +31,9 @@ const ArticulationTests = {
     run('Articulation - Snap Pizzicato/Fermata', drawArticulations, { sym1: 'ao', sym2: 'ao' });
     run('Articulation - Up-stroke/Down-Stroke', drawArticulations, { sym1: 'a|', sym2: 'am' });
     run('Articulation - Fermata Above/Below', drawFermata, { sym1: 'a@a', sym2: 'a@u' });
+    run('Articulation - Fermata Short Above/Below', drawFermata, { sym1: 'a@as', sym2: 'a@us' });
+    run('Articulation - Fermata Long Above/Below', drawFermata, { sym1: 'a@al', sym2: 'a@ul' });
+    run('Articulation - Fermata Very Long Above/Below', drawFermata, { sym1: 'a@avl', sym2: 'a@uvl' });
     run('Articulation - Inline/Multiple', drawArticulations2, { sym1: 'a.', sym2: 'a.' });
     run('TabNote Articulation', tabNotes, { sym1: 'a.', sym2: 'a.' });
   },
