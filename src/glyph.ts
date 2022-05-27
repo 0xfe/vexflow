@@ -110,13 +110,13 @@ class GlyphOutline {
     return this.i >= this.outline.length;
   }
   next(): number {
-    return this.outline[this.i++];
+    return Math.round((this.outline[this.i++] * 100) / 100);
   }
   nextX(): number {
-    return this.originX + this.outline[this.i++] * this.scale;
+    return Math.round((this.originX + this.outline[this.i++] * this.scale) * 100) / 100;
   }
   nextY(): number {
-    return this.originY - this.outline[this.i++] * this.scale;
+    return Math.round((this.originY - this.outline[this.i++] * this.scale) * 100) / 100;
   }
 
   static parse(str: string): number[] {
