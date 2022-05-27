@@ -1176,7 +1176,7 @@ module.exports = {
   ascender: 1903,
   underlinePosition: -125,
   cssFontStyle: 'normal',
-  boundingBox: { yMin: -2065.375, xMin: -695.53125, yMax: 1901.578125, xMax: 1159.671875 },
+  boundingBox: { yMin: -2065, xMin: -696, yMax: 1902, xMax: 1160 },
   resolution: 1000,
   original_font_information: {
     postscript_name: 'Gonville-18',

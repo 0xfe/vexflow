@@ -56,8 +56,22 @@ Object.keys(VALID_CODES).forEach((code) => {
 
   usedGlyphs[VALID_CODES[code]] = true;
 
-  gonvilleOutput.glyphs[code] = gonvilleGlyphs.glyphs[VALID_CODES[code]];
-  customOutput.glyphs[code] = customGlyphs.glyphs[VALID_CODES[code]];
+  if (gonvilleGlyphs.glyphs[VALID_CODES[code]]) {
+    gonvilleOutput.glyphs[code] = {
+      x_min: Math.round(gonvilleGlyphs.glyphs[VALID_CODES[code]].x_min),
+      x_max: Math.round(gonvilleGlyphs.glyphs[VALID_CODES[code]].x_max),
+      ha: gonvilleGlyphs.glyphs[VALID_CODES[code]].ha,
+      o: gonvilleGlyphs.glyphs[VALID_CODES[code]].o
+    };
+  }
+  if (customGlyphs.glyphs[VALID_CODES[code]]) {
+    customOutput.glyphs[code] = {
+      x_min: Math.round(customGlyphs.glyphs[VALID_CODES[code]].x_min),
+      x_max: Math.round(customGlyphs.glyphs[VALID_CODES[code]].x_max),
+      ha: customGlyphs.glyphs[VALID_CODES[code]].ha,
+      o: customGlyphs.glyphs[VALID_CODES[code]].o
+    };
+  }
   if (!gonvilleOutput.glyphs[code] && !customOutput.glyphs[code]) {
     LogError('no outline for:', code);
   }
