@@ -109,14 +109,14 @@ const SVG_TEST_CONFIG = {
   backend: Renderer.Backends.SVG,
   tagName: 'div',
   testType: 'SVG',
-  fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
+  fontStacks: ['Bravura', 'Gonville', 'Petaluma', 'Leland'],
 };
 
 const NODE_TEST_CONFIG = {
   backend: Renderer.Backends.CANVAS,
   tagName: 'canvas',
   testType: 'NodeCanvas',
-  fontStacks: ['Bravura', 'Gonville', 'Petaluma'],
+  fontStacks: ['Bravura', 'Gonville', 'Petaluma', 'Leland'],
 };
 
 interface Test {
@@ -185,6 +185,7 @@ export class VexFlowTests {
     Bravura: ['Bravura', 'Gonville', 'Custom'],
     Gonville: ['Gonville', 'Bravura', 'Custom'],
     Petaluma: ['Petaluma', 'Gonville', 'Bravura', 'Custom'],
+    Leland: ['Leland', 'Bravura', 'Gonville', 'Custom'],
   };
 
   static set NODE_FONT_STACKS(fontStacks: string[]) {
