@@ -8,6 +8,7 @@ import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { Tables } from './tables';
 import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
@@ -110,13 +111,17 @@ class GlyphOutline {
     return this.i >= this.outline.length;
   }
   next(): number {
-    return Math.round((this.outline[this.i++] * 100) / 100);
+    return Math.round((this.outline[this.i++] * Tables.GLYPH_PRECISION) / Tables.GLYPH_PRECISION);
   }
   nextX(): number {
-    return Math.round((this.originX + this.outline[this.i++] * this.scale) * 100) / 100;
+    return (
+      Math.round((this.originX + this.outline[this.i++] * this.scale) * Tables.GLYPH_PRECISION) / Tables.GLYPH_PRECISION
+    );
   }
   nextY(): number {
-    return Math.round((this.originY - this.outline[this.i++] * this.scale) * 100) / 100;
+    return (
+      Math.round((this.originY - this.outline[this.i++] * this.scale) * Tables.GLYPH_PRECISION) / Tables.GLYPH_PRECISION
+    );
   }
 
   static parse(str: string): number[] {
