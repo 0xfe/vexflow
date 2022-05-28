@@ -238,26 +238,27 @@ function basic(options: TestOptions): void {
       .StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: '1' })
       .addModifier(accid('b'), 0)
       .addModifier(accid('#'), 1),
-
+    // Notes keys out of alphabetic order
     f
-      .StaveNote({ keys: ['d/4', 'e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5'], duration: '2' })
-      .addModifier(accid('##'), 0)
-      .addModifier(accid('n'), 1)
-      .addModifier(accid('bb'), 2)
-      .addModifier(accid('b'), 3)
-      .addModifier(accid('#'), 4)
-      .addModifier(accid('n'), 5)
-      .addModifier(accid('bb'), 6),
-
-    f
-      .StaveNote({ keys: ['f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5', 'g/5'], duration: '16' })
+      .StaveNote({ keys: ['e/4', 'f/4', 'a/4', 'c/5', 'e/5', 'g/5', 'd/4'], duration: '2' })
+      .addModifier(accid('##'), 6)
       .addModifier(accid('n'), 0)
-      .addModifier(accid('#'), 1)
+      .addModifier(accid('bb'), 1)
+      .addModifier(accid('b'), 2)
+      .addModifier(accid('#'), 3)
+      .addModifier(accid('n'), 4)
+      .addModifier(accid('bb'), 5),
+
+    // Notes keys out of alphabetic order
+    f
+      .StaveNote({ keys: ['g/5', 'f/4', 'g/4', 'a/4', 'b/4', 'c/5', 'e/5'], duration: '16' })
+      .addModifier(accid('n'), 1)
       .addModifier(accid('#'), 2)
-      .addModifier(accid('b'), 3)
-      .addModifier(accid('bb'), 4)
-      .addModifier(accid('##'), 5)
-      .addModifier(accid('#'), 6),
+      .addModifier(accid('#'), 3)
+      .addModifier(accid('b'), 4)
+      .addModifier(accid('bb'), 5)
+      .addModifier(accid('##'), 6)
+      .addModifier(accid('#'), 0),
 
     f
       .StaveNote({ keys: ['a/3', 'c/4', 'e/4', 'b/4', 'd/5', 'g/5'], duration: '1' })
