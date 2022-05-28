@@ -517,6 +517,15 @@ const articulations: Record<string, ArticulationStruct> = {
   'a@': { aboveCode: 'fermataAbove', belowCode: 'fermataBelow', between_lines: false }, // Fermata
   'a@a': { code: 'fermataAbove', between_lines: false }, // Fermata above staff
   'a@u': { code: 'fermataBelow', between_lines: false }, // Fermata below staff
+  'a@s': { aboveCode: 'fermataShortAbove', belowCode: 'fermataShortBelow', between_lines: false }, // Fermata short
+  'a@as': { code: 'fermataShortAbove', between_lines: false }, // Fermata short above staff
+  'a@us': { code: 'fermataShortBelow', between_lines: false }, // Fermata short below staff
+  'a@l': { aboveCode: 'fermataLongAbove', belowCode: 'fermataLongBelow', between_lines: false }, // Fermata long
+  'a@al': { code: 'fermataLongAbove', between_lines: false }, // Fermata long above staff
+  'a@ul': { code: 'fermataLongBelow', between_lines: false }, // Fermata long below staff
+  'a@vl': { aboveCode: 'fermataVeryLongAbove', belowCode: 'fermataVeryLongBelow', between_lines: false }, // Fermata very long
+  'a@avl': { code: 'fermataVeryLongAbove', between_lines: false }, // Fermata very long above staff
+  'a@uvl': { code: 'fermataVeryLongBelow', between_lines: false }, // Fermata very long below staff
   'a|': { code: 'stringsUpBow', between_lines: false }, // Bow up - up stroke
   am: { code: 'stringsDownBow', between_lines: false }, // Bow down - down stroke
   'a,': { code: 'pictChokeCymbal', between_lines: false }, // Choked
