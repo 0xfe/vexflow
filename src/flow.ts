@@ -250,12 +250,12 @@ export class Flow {
     return fonts.map((font) => font.getName());
   }
 
-  static get GLYPH_PRECISION(): number {
-    return Tables.GLYPH_PRECISION;
+  static get RENDER_PRECISION_PLACES(): number {
+    return Tables.RENDER_PRECISION_PLACES;
   }
 
-  static set GLYPH_PRECISION(precision: number) {
-    Tables.GLYPH_PRECISION = precision;
+  static set RENDER_PRECISION_PLACES(precision: number) {
+    Tables.RENDER_PRECISION_PLACES = precision;
   }
 
   static get SOFTMAX_FACTOR(): number {

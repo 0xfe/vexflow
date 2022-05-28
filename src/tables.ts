@@ -559,11 +559,11 @@ const ornaments: Record<string, { code: string }> = {
 };
 
 export class Tables {
-  static GLYPH_PRECISION = 100;
   static SOFTMAX_FACTOR = 100;
   static STEM_WIDTH = 1.5;
   static STEM_HEIGHT = 35;
   static STAVE_LINE_THICKNESS = 1;
+  static RENDER_PRECISION_PLACES = 3;
   static RESOLUTION = RESOLUTION;
 
   /**
