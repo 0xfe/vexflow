@@ -133,7 +133,7 @@ export class StaveNote extends StemmableNote {
     const notesList: StaveNoteFormatSettings[] = [];
 
     for (let i = 0; i < notes.length; i++) {
-      // formating relys on sortedKeyNotes in order to calculate line & minL
+      // Formatting uses sortedKeyProps to calculate line and minL.
       const props = notes[i].sortedKeyProps;
       const line = props[0].keyProps.line;
       let minL = props[props.length - 1].keyProps.line;
