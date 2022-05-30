@@ -128,6 +128,7 @@ const release = require('release-it');
 const VEX = 'vexflow';
 const VEX_BRAVURA = 'vexflow-bravura';
 const VEX_GONVILLE = 'vexflow-gonville';
+const VEX_LELAND = 'vexflow-leland';
 const VEX_PETALUMA = 'vexflow-petaluma';
 const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules below.
 const VEX_DEBUG = 'vexflow-debug';
@@ -347,7 +348,7 @@ function webpackConfigs() {
   const WATCH = true;
 
   function prodConfig(watch = false) {
-    return getConfig([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, BANNER, 'Vex', watch);
+    return getConfig([VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_LELAND, VEX_PETALUMA, VEX_CORE], PRODUCTION_MODE, BANNER, 'Vex', watch);
   }
 
   // The font modules need to have different webpack configs because they have a different
@@ -355,6 +356,7 @@ function webpackConfigs() {
   function fontConfigs(watch = false) {
     return [
       getConfig('vexflow-font-bravura', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Bravura'], watch),
+      getConfig('vexflow-font-leland', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Leland'], watch),
       getConfig('vexflow-font-petaluma', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma'], watch),
       getConfig('vexflow-font-gonville', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville'], watch),
       getConfig('vexflow-font-custom', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom'], watch),
