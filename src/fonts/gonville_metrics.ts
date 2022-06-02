@@ -241,9 +241,6 @@ export const GonvilleMetrics = {
     noteHead: {
       minPadding: 2,
       custom: {
-        noteheadDiamondWholeStemUp: {
-          shiftX: -6,
-        },
         noteheadCircleXStemUp: {
           shiftX: -1.5,
         },

@@ -336,8 +336,8 @@ export class Flow {
     return Tables.clefProperties(clef);
   }
   // eslint-disable-next-line
-  static keyProperties(key: string, clef?: string, params?: any): any {
-    return Tables.keyProperties(key, clef, params);
+  static keyProperties(duration:string, key: string, clef?: string, params?: any): any {
+    return Tables.keyProperties(duration, key, clef, params);
   }
   static durationToTicks(duration: string): number {
     return Tables.durationToTicks(duration);

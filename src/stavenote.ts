@@ -581,7 +581,7 @@ export class StaveNote extends StemmableNote {
       if (this.glyph.rest) this.glyph.position = key;
 
       const options = { octave_shift: this.octave_shift || 0 };
-      const props = Tables.keyProperties(key, this.clef, options);
+      const props = Tables.keyProperties(this.duration, key, this.clef, options);
 
       if (!props) {
         throw new RuntimeError('BadArguments', `Invalid key for note properties: ${key}`);
