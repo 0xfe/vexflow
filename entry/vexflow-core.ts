@@ -14,10 +14,13 @@ import { Font, FontModule } from '../src/font';
 import { loadTextFonts } from '../src/fonts/textfonts';
 import { globalObject, RuntimeError } from '../src/util';
 
+// fontModules maps font names => font module paths, which can be loaded at runtime by vexflow-core.js.
+// ADD_MUSIC_FONT
 const fontModules: Record<string, string> = {
   Bravura: './vexflow-font-bravura.js',
   Gonville: './vexflow-font-gonville.js',
   Petaluma: './vexflow-font-petaluma.js',
+  Leland: './vexflow-font-leland.js',
   Custom: './vexflow-font-custom.js',
 };
 
