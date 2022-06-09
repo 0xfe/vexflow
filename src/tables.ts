@@ -157,9 +157,14 @@ const validNoteTypes: Record<string, { name: string }> = {
   s: { name: 'slash' },
   g: { name: 'ghost' },
   d: { name: 'diamond' },
+  x: { name: 'x' },
+  ci: { name: 'circled' },
   cx: { name: 'circle x' },
+  sf: { name: 'slashed' },
+  sb: { name: 'slashed backward' },
+  sq: { name: 'square' },
   tu: { name: 'triangle up' },
-  td: { name: 'triangle down' },
+  td: { name: 'triangle down' }, 
 };
 
 const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: number }> = {
@@ -588,12 +593,12 @@ export class Tables {
    * @returns properties for the specified note.
    */
   // eslint-disable-next-line
-  static keyProperties(duration: string, keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
-    duration = Tables.sanitizeDuration(duration);
-    let options = { octave_shift: 0 };
+  static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
+    let options = { octave_shift: 0, duration: '4' };
     if (typeof params === 'object') {
       options = { ...options, ...params };
     }
+    const duration = Tables.sanitizeDuration(options.duration);
 
     const pieces = keyOctaveGlyph.split('/');
     if (pieces.length < 2) {
