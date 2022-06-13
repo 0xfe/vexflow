@@ -46,6 +46,7 @@ const BeamTests = {
     run('TabNote Beams Auto Stem', tabBeamsAutoStem);
     run('Complex Beams with Annotations', complexWithAnnotation);
     run('Complex Beams with Articulations', complexWithArticulation);
+    run('Complex Beams with Articulations two Staves', complexWithArticulation2);
   },
 };
 
@@ -841,6 +842,60 @@ function complexWithArticulation(options: TestOptions): void {
   f.draw();
 
   ok(true, 'Complex beam articulations');
+}
+
+function complexWithArticulation2(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 500, 200);
+  const system = f.System();
+
+  const s1: StaveNoteStruct[] = [
+    { keys: ['e/4'], duration: '128', stem_direction: 1 },
+    { keys: ['d/4'], duration: '16', stem_direction: 1 },
+    { keys: ['e/4'], duration: '8', stem_direction: 1 },
+    { keys: ['c/4', 'g/4'], duration: '32', stem_direction: 1 },
+    { keys: ['c/4'], duration: '32', stem_direction: 1 },
+    { keys: ['c/4'], duration: '32', stem_direction: 1 },
+    { keys: ['c/4'], duration: '32', stem_direction: 1 },
+  ];
+
+  const s2: StaveNoteStruct[] = [
+    { keys: ['e/5'], duration: '128', stem_direction: -1 },
+    { keys: ['d/5'], duration: '16', stem_direction: -1 },
+    { keys: ['e/5'], duration: '8', stem_direction: -1 },
+    { keys: ['c/5', 'g/5'], duration: '32', stem_direction: -1 },
+    { keys: ['c/5'], duration: '32', stem_direction: -1 },
+    { keys: ['c/5'], duration: '32', stem_direction: -1 },
+    { keys: ['c/5'], duration: '32', stem_direction: -1 },
+  ];
+
+  const notes1 = s1.map((struct) =>
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0)
+  );
+  const notes2 = s2.map((struct) =>
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0)
+  );
+
+  const notes3 = s1.map((struct) =>
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'am', position: 'above' }), 0)
+  );
+  const notes4 = s2.map((struct) =>
+    f.StaveNote(struct).addModifier(f.Articulation({ type: 'a>', position: 'below' }), 0)
+  );
+
+  f.Beam({ notes: notes1 });
+  f.Beam({ notes: notes2 });
+  f.Beam({ notes: notes3 });
+  f.Beam({ notes: notes4 });
+
+  const voice1 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes1).addTickables(notes2);
+  const voice2 = f.Voice().setMode(Voice.Mode.SOFT).addTickables(notes3).addTickables(notes4);
+
+  system.addStave({ voices: [voice1] });
+  system.addStave({ voices: [voice2] });
+
+  f.draw();
+
+  ok(true, 'Complex beam articulations two staves');
 }
 
 VexFlowTests.register(BeamTests);

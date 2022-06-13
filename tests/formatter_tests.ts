@@ -45,6 +45,7 @@ const FormatterTests = {
     run('Vertical alignment - many unaligned beats', unalignedNoteDurations2, { globalSoftmax: false });
     run('Vertical alignment - many unaligned beats (global softmax)', unalignedNoteDurations2, { globalSoftmax: true });
     run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
+    run('Vertical alignment - cross stave', crossStave);
     run('StaveNote - Justification', justifyStaveNotes);
     run('Notes with Tab', notesWithTab);
     run('Multiple Staves - Justified', multiStaves, { debug: true });
@@ -718,6 +719,33 @@ function mixTime(options: TestOptions): void {
     })
     .addClef('treble')
     .addTimeSignature('4/4');
+
+  f.draw();
+  ok(true);
+}
+
+function crossStave(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 400 + Stave.defaultPadding, 250);
+  f.getContext().scale(0.8, 0.8);
+  const score = f.EasyScore();
+  const system = f.System({
+    details: { softmaxFactor: 100 },
+    autoWidth: true,
+    debugFormatter: true,
+  });
+
+  const stave1 = system.addStave({ voices: [] }).addClef('treble').addTimeSignature('4/4');
+  const stave2 = system.addStave({ voices: [] }).addClef('treble').addTimeSignature('4/4');
+
+  const voice = score.voice(score.notes('C#5/q, B4').concat(score.beam(score.notes('A4/8, E4, C4, D4'))));
+  voice.getTickables()[0].setStave(stave1);
+  voice.getTickables()[1].setStave(stave1);
+  voice.getTickables()[2].setStave(stave1);
+  voice.getTickables()[3].setStave(stave1);
+  voice.getTickables()[4].setStave(stave2);
+  voice.getTickables()[5].setStave(stave2);
+
+  system.addVoices([voice]);
 
   f.draw();
   ok(true);
