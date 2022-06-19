@@ -121,6 +121,32 @@ export class System extends Element {
     }
   }
 
+  /** Set origin X. */
+  getX(): number {
+    return this.options.x;
+  }
+
+  /** Get origin X. */
+  setX(x: number) {
+    this.options.x = x;
+    this.partStaves.forEach((s) => {
+      s.stave.setX(x);
+    });
+  }
+
+  /** Set origin y. */
+  getY(): number {
+    return this.options.y;
+  }
+
+  /** Get origin y. */
+  setY(y: number) {
+    this.options.y = y;
+    this.partStaves.forEach((s) => {
+      s.stave.setY(y);
+    });
+  }
+
   /** Set associated context. */
   setContext(context: RenderContext): this {
     super.setContext(context);
@@ -239,8 +265,9 @@ export class System extends Element {
     this.partStaves.forEach((part) => part.stave.setNoteStartX(startX));
     if (this.options.autoWidth && this.partVoices.length > 0) {
       justifyWidth = formatter.preCalculateMinTotalWidth(this.partVoices);
+      this.options.width = justifyWidth + Stave.rightPadding + (startX - this.options.x);
       this.partStaves.forEach((part) => {
-        part.stave.setWidth(justifyWidth + Stave.rightPadding + (startX - this.options.x));
+        part.stave.setWidth(this.options.width);
       });
     } else {
       justifyWidth = this.options.noPadding
