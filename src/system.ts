@@ -28,7 +28,6 @@ export interface SystemStave {
 }
 
 interface StaveInfo {
-  stave: Stave;
   noJustification: boolean;
   options: StaveOptions;
   spaceAbove: number;
@@ -77,7 +76,8 @@ export class System extends Element {
   protected formatter?: Formatter;
   protected startX?: number;
   protected lastY?: number;
-  protected partStaves: StaveInfo[];
+  protected partStaves: Stave[];
+  protected partStaveInfos: StaveInfo[];
   protected partVoices: Voice[];
   protected connector?: StaveConnector;
   protected debugNoteMetricsYs?: { y: number; stave: Stave }[];
@@ -86,6 +86,7 @@ export class System extends Element {
     super();
     this.setOptions(params);
     this.partStaves = [];
+    this.partStaveInfos = [];
     this.partVoices = [];
   }
 
@@ -130,7 +131,7 @@ export class System extends Element {
   setX(x: number) {
     this.options.x = x;
     this.partStaves.forEach((s) => {
-      s.stave.setX(x);
+      s.setX(x);
     });
   }
 
@@ -143,8 +144,18 @@ export class System extends Element {
   setY(y: number) {
     this.options.y = y;
     this.partStaves.forEach((s) => {
-      s.stave.setY(y);
+      s.setY(y);
     });
+  }
+
+  /** Get associated staves. */
+  getStaves(): Stave[] {
+    return this.partStaves;
+  }
+
+  /** Get associated voices. */
+  getVoices(): Voice[] {
+    return this.partVoices;
   }
 
   /** Set associated context. */
@@ -160,8 +171,8 @@ export class System extends Element {
    */
   addConnector(type: StaveConnectorType = 'double'): StaveConnector {
     this.connector = this.factory.StaveConnector({
-      top_stave: this.partStaves[0].stave,
-      bottom_stave: this.partStaves[this.partStaves.length - 1].stave,
+      top_stave: this.partStaves[0],
+      bottom_stave: this.partStaves[this.partStaves.length - 1],
       type,
     });
     return this.connector;
@@ -189,8 +200,6 @@ export class System extends Element {
       this.factory.Stave({ x: this.options.x, y: this.options.y, width: this.options.width, options: staveOptions });
 
     const p = {
-      stave,
-      /* voices: [], */
       spaceAbove: 0, // stave spaces
       spaceBelow: 0, // stave spaces
       debugNoteMetrics: false,
@@ -209,7 +218,8 @@ export class System extends Element {
       this.partVoices.push(voice);
     });
 
-    this.partStaves.push(p);
+    this.partStaves.push(stave);
+    this.partStaveInfos.push(p);
     return stave;
   }
 
@@ -233,21 +243,18 @@ export class System extends Element {
 
     let y = this.options.y;
     let startX = 0;
-    let allStaves: Stave[] = [];
     const debugNoteMetricsYs: { y: number; stave: Stave }[] = [];
 
-    this.partStaves.forEach((part) => {
-      y = y + part.stave.space(part.spaceAbove);
-      part.stave.setY(y);
-      y = y + part.stave.space(part.spaceBelow);
-      y = y + part.stave.space(this.options.spaceBetweenStaves);
-      if (part.debugNoteMetrics) {
-        debugNoteMetricsYs.push({ y, stave: part.stave });
+    this.partStaves.forEach((part, index) => {
+      y = y + part.space(this.partStaveInfos[index].spaceAbove);
+      part.setY(y);
+      y = y + part.space(this.partStaveInfos[index].spaceBelow);
+      y = y + part.space(this.options.spaceBetweenStaves);
+      if (this.partStaveInfos[index].debugNoteMetrics) {
+        debugNoteMetricsYs.push({ y, stave: part });
         y += 15;
       }
-      allStaves = allStaves.concat(part.stave);
-
-      startX = Math.max(startX, part.stave.getNoteStartX());
+      startX = Math.max(startX, part.getNoteStartX());
     });
 
     // Re-assign Stave to update y position
@@ -262,12 +269,12 @@ export class System extends Element {
     formatter.joinVoices(this.partVoices);
 
     // Update the start position of all staves.
-    this.partStaves.forEach((part) => part.stave.setNoteStartX(startX));
+    this.partStaves.forEach((part) => part.setNoteStartX(startX));
     if (this.options.autoWidth && this.partVoices.length > 0) {
       justifyWidth = formatter.preCalculateMinTotalWidth(this.partVoices);
       this.options.width = justifyWidth + Stave.rightPadding + (startX - this.options.x);
       this.partStaves.forEach((part) => {
-        part.stave.setWidth(this.options.width);
+        part.setWidth(this.options.width);
       });
     } else {
       justifyWidth = this.options.noPadding
@@ -287,7 +294,7 @@ export class System extends Element {
     this.debugNoteMetricsYs = debugNoteMetricsYs;
     this.lastY = y;
     this.boundingBox = new BoundingBox(this.options.x, this.options.y, this.options.width, this.lastY - this.options.y);
-    Stave.formatBegModifiers(allStaves);
+    Stave.formatBegModifiers(this.partStaves);
   }
 
   /** Render the system. */
