@@ -156,34 +156,15 @@ const validNoteTypes: Record<string, { name: string }> = {
   m: { name: 'muted' },
   s: { name: 'slash' },
   g: { name: 'ghost' },
-};
-
-const customNoteHeads: Record<string, { code: string }> = {
-  /* Diamond */
-  D0: { code: 'noteheadDiamondWhole' },
-  D1: { code: 'noteheadDiamondHalf' },
-  D2: { code: 'noteheadDiamondBlack' },
-  D3: { code: 'noteheadDiamondBlack' },
-
-  /* Triangle */
-  T0: { code: 'noteheadTriangleUpWhole' },
-  T1: { code: 'noteheadTriangleUpHalf' },
-  T2: { code: 'noteheadTriangleUpBlack' },
-  T3: { code: 'noteheadTriangleUpBlack' },
-
-  /* Cross */
-  X0: { code: 'noteheadXWhole' },
-  X1: { code: 'noteheadXHalf' },
-  X2: { code: 'noteheadXBlack' },
-  X3: { code: 'noteheadCircleX' },
-
-  /* Square */
-  S1: { code: 'noteheadSquareWhite' },
-  S2: { code: 'noteheadSquareBlack' },
-
-  /* Rectangle */
-  R1: { code: 'vexNoteHeadRectWhite' }, // no smufl code
-  R2: { code: 'vexNoteHeadRectBlack' }, // no smufl code
+  d: { name: 'diamond' },
+  x: { name: 'x' },
+  ci: { name: 'circled' },
+  cx: { name: 'circle x' },
+  sf: { name: 'slashed' },
+  sb: { name: 'slashed backward' },
+  sq: { name: 'square' },
+  tu: { name: 'triangle up' },
+  td: { name: 'triangle down' }, 
 };
 
 const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: number }> = {
@@ -613,10 +594,11 @@ export class Tables {
    */
   // eslint-disable-next-line
   static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
-    let options = { octave_shift: 0 };
+    let options = { octave_shift: 0, duration: '4' };
     if (typeof params === 'object') {
       options = { ...options, ...params };
     }
+    const duration = Tables.sanitizeDuration(options.duration);
 
     const pieces = keyOctaveGlyph.split('/');
     if (pieces.length < 2) {
@@ -654,7 +636,7 @@ export class Tables {
     let customNoteHeadProps = {};
     if (pieces.length > 2 && pieces[2]) {
       const glyphName = pieces[2].toUpperCase();
-      customNoteHeadProps = customNoteHeads[glyphName] || {};
+      customNoteHeadProps = { code: this.codeNoteHead(glyphName, duration) } || {};
     }
 
     return {
@@ -837,6 +819,257 @@ export class Tables {
     return ticks;
   }
 
+  static codeNoteHead(type: string, duration: string): string {
+    let code = '';
+    switch (type) {
+      /* Diamond */
+      case 'D0':
+        code = 'noteheadDiamondWhole';
+        break;
+      case 'D1':
+        code = 'noteheadDiamondHalf';
+        break;
+      case 'D2':
+        code = 'noteheadDiamondBlack';
+        break;
+      case 'D3':
+        code = 'noteheadDiamondBlack';
+        break;
+
+      /* Triangle */
+      case 'T0':
+        code = 'noteheadTriangleUpWhole';
+        break;
+      case 'T1':
+        code = 'noteheadTriangleUpHalf';
+        break;
+      case 'T2':
+        code = 'noteheadTriangleUpBlack';
+        break;
+      case 'T3':
+        code = 'noteheadTriangleUpBlack';
+        break;
+
+      /* Cross */
+      case 'X0':
+        code = 'noteheadXWhole';
+        break;
+      case 'X1':
+        code = 'noteheadXHalf';
+        break;
+      case 'X2':
+        code = 'noteheadXBlack';
+        break;
+      case 'X3':
+        code = 'noteheadCircleX';
+        break;
+
+      /* Square */
+      case 'S1':
+        code = 'noteheadSquareWhite';
+        break;
+      case 'S2':
+        code = 'noteheadSquareBlack';
+        break;
+
+      /* Rectangle */
+      case 'R1':
+        code = 'vexNoteHeadRectWhite'; // no smufl code
+        break;
+      case 'R2':
+        code = 'vexNoteHeadRectBlack'; // no smufl code
+        break;
+
+      case 'DO':
+        code = 'noteheadTriangleUpBlack';
+        break;
+      case 'RE':
+        code = 'noteheadMoonBlack';
+        break;
+      case 'MI':
+        code = 'noteheadDiamondBlack';
+        break;
+      case 'FA':
+        code = 'noteheadTriangleLeftBlack';
+        break;
+      case 'FAUP':
+        code = 'noteheadTriangleRightBlack';
+        break;
+      case 'SO':
+        code = 'noteheadBlack';
+        break;
+      case 'LA':
+        code = 'noteheadSquareBlack';
+        break;
+      case 'TI':
+        code = 'noteheadTriangleRoundDownBlack';
+        break;
+
+      case 'D':
+      case 'H': // left for backwards compatibility
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadDiamondDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadDiamondWhole';
+            break;
+          case '2':
+            code = 'noteheadDiamondHalf';
+            break;
+          default:
+            code = 'noteheadDiamondBlack';
+            break;
+        }
+        break;
+      case 'N':
+      case 'G':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadWhole';
+            break;
+          case '2':
+            code = 'noteheadHalf';
+            break;
+          default:
+            code = 'noteheadBlack';
+            break;
+        }
+        break;
+      case 'M': // left for backwards compatibility
+      case 'X':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadXDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadXWhole';
+            break;
+          case '2':
+            code = 'noteheadXHalf';
+            break;
+          default:
+            code = 'noteheadXBlack';
+            break;
+        }
+        break;
+      case 'CX':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadCircleXDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadCircleXWhole';
+            break;
+          case '2':
+            code = 'noteheadCircleXHalf';
+            break;
+          default:
+            code = 'noteheadCircleX';
+            break;
+        }
+        break;
+      case 'CI':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadCircledDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadCircledWhole';
+            break;
+          case '2':
+            code = 'noteheadCircledHalf';
+            break;
+          default:
+            code = 'noteheadCircledBlack';
+            break;
+        }
+        break;
+      case 'SQ':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadDoubleWholeSquare';
+            break;
+          case '1':
+            code = 'noteheadSquareWhite';
+            break;
+          case '2':
+            code = 'noteheadSquareWhite';
+            break;
+          default:
+            code = 'noteheadSquareBlack';
+            break;
+        }
+        break;
+      case 'TU':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadTriangleUpDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadTriangleUpWhole';
+            break;
+          case '2':
+            code = 'noteheadTriangleUpHalf';
+            break;
+          default:
+            code = 'noteheadTriangleUpBlack';
+            break;
+        }
+        break;
+      case 'TD':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadTriangleDownDoubleWhole';
+            break;
+          case '1':
+            code = 'noteheadTriangleDownWhole';
+            break;
+          case '2':
+            code = 'noteheadTriangleDownHalf';
+            break;
+          default:
+            code = 'noteheadTriangleDownBlack';
+            break;
+        }
+        break;
+      case 'SF':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadSlashedDoubleWhole1';
+            break;
+          case '1':
+            code = 'noteheadSlashedWhole1';
+            break;
+          case '2':
+            code = 'noteheadSlashedHalf1';
+            break;
+          default:
+            code = 'noteheadSlashedBlack1';
+        }
+        break;
+      case 'SB':
+        switch (duration) {
+          case '1/2':
+            code = 'noteheadSlashedDoubleWhole2';
+            break;
+          case '1':
+            code = 'noteheadSlashedWhole2';
+            break;
+          case '2':
+            code = 'noteheadSlashedHalf2';
+            break;
+          default:
+            code = 'noteheadSlashedBlack2';
+        }
+        break;
+    }
+    return code;
+  }
+
   // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
   // The default type is a regular note ('n').
   // eslint-disable-next-line
@@ -852,22 +1085,10 @@ export class Tables {
     // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
     let glyphTypeProperties = code.type[type];
 
-    // If this isn't a standard type, then lookup the custom note head map.
-    if (glyphTypeProperties === undefined) {
-      // Try and get it from the custom list of note heads
-      const customGlyphTypeProperties = customNoteHeads[type.toUpperCase()];
-
-      // If not, then return with nothing.
-      if (customGlyphTypeProperties === undefined) {
-        return undefined;
-      }
-
-      // Otherwise set it as the code_head value
-      glyphTypeProperties = {
-        code_head: customGlyphTypeProperties.code,
-        ...customGlyphTypeProperties,
-      };
-    }
+    // Try and get it from the custom list of note heads
+    const codeNoteHead = Tables.codeNoteHead(type.toUpperCase(), duration);
+    if (codeNoteHead != '')
+      glyphTypeProperties = { ...glyphTypeProperties, ...{ code_head: codeNoteHead, code: codeNoteHead } };
 
     const code_head = glyphTypeProperties.code_head;
 
@@ -910,28 +1131,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Breve note
-        code_head: 'noteheadDoubleWhole',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDoubleWhole', scale);
-        // },
-      },
-      h: {
-        // Breve note harmonic
-        code_head: 'unpitchedPercussionClef1',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('unpitchedPercussionClef1', scale);
-        // },
-      },
-      m: {
-        // Breve note muted
-        code_head: 'vexNoteHeadMutedBreve',
-        stem_offset: 0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('vexNoteHeadMutedBreve', scale);
-        // },
-      },
       r: {
         // Breve rest
         code_head: 'restDoubleWhole',
@@ -947,10 +1146,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadDoubleWhole',
       },
     },
   },
@@ -969,28 +1164,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Whole note
-        code_head: 'noteheadWhole',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadWhole', scale);
-        // },
-      },
-      h: {
-        // Whole note harmonic
-        code_head: 'noteheadDiamondWhole',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondWhole', scale);
-        // },
-      },
-      m: {
-        // Whole note muted
-        code_head: 'noteheadXWhole',
-        stem_offset: -3,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXWhole', scale);
-        // },
-      },
       r: {
         // Whole rest
         code_head: 'restWhole',
@@ -1006,10 +1179,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadWhole',
       },
     },
   },
@@ -1028,28 +1197,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Half note
-        code_head: 'noteheadHalf',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadHalf', scale);
-        // },
-      },
-      h: {
-        // Half note harmonic
-        code_head: 'noteheadDiamondHalf',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondHalf', scale);
-        // },
-      },
-      m: {
-        // Half note muted
-        code_head: 'noteheadXHalf',
-        stem_offset: -3,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXHalf', scale);
-        // },
-      },
       r: {
         // Half rest
         code_head: 'restHalf',
@@ -1066,10 +1213,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadHalf',
       },
     },
   },
@@ -1088,27 +1231,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Quarter note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Quarter harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Quarter muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Quarter rest
         code_head: 'restQuarter',
@@ -1127,10 +1249,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1153,27 +1271,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Eighth note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Eighth note harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Eighth note muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Eighth rest
         code_head: 'rest8th',
@@ -1193,10 +1290,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1219,27 +1312,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Sixteenth note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Sixteenth note harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Sixteenth note muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Sixteenth rest
         code_head: 'rest16th',
@@ -1259,10 +1331,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1285,27 +1353,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Thirty-second note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Thirty-second harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Thirty-second muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Thirty-second rest
         code_head: 'rest32nd',
@@ -1325,10 +1372,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1351,27 +1394,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Sixty-fourth note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Sixty-fourth harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Sixty-fourth muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Sixty-fourth rest
         code_head: 'rest64th',
@@ -1391,10 +1413,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },
@@ -1417,27 +1435,6 @@ const durationCodes: Record<string, any> = {
       line_below: 0,
     },
     type: {
-      n: {
-        // Hundred-twenty-eight note
-        code_head: 'noteheadBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadBlack', scale);
-        // },
-      },
-      h: {
-        // Hundred-twenty-eight harmonic
-        code_head: 'noteheadDiamondBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadDiamondBlack', scale);
-        // },
-      },
-      m: {
-        // Hundred-twenty-eight muted
-        code_head: 'noteheadXBlack',
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('noteheadXBlack', scale);
-        // },
-      },
       r: {
         // Hundred-twenty-eight rest
         code_head: 'rest128th',
@@ -1457,10 +1454,6 @@ const durationCodes: Record<string, any> = {
         // Drawn with canvas primitives
         getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
         position: 'B/4',
-      },
-      g: {
-        // Ghostnote
-        code_head: 'noteheadBlack',
       },
     },
   },

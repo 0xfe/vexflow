@@ -25,6 +25,8 @@ const NoteHeadTests = {
     QUnit.module('NoteHead');
     const run = VexFlowTests.runTests;
     run('Basic', basic);
+    run('Various Note Heads 1', variousNoteHeads);
+    run('Various Note Heads 2', variousNoteHeads2);
     run('Various Heads', variousHeads);
     run('Drum Chord Heads', drumChordHeads);
     run('Bounding Boxes', basicBoundingBoxes);
@@ -119,6 +121,100 @@ function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): voi
       ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
       ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
     }
+  }
+}
+
+function variousNoteHeads(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const notes: StaveNoteStruct[] = [
+    { keys: ['g/5/d'], duration: '1/2' },
+    { keys: ['g/5/d'], duration: '1' },
+    { keys: ['g/5/d'], duration: '2' },
+    { keys: ['g/5/d'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/x'], duration: '1/2' },
+    { keys: ['g/5/x'], duration: '1' },
+    { keys: ['g/5/x'], duration: '2' },
+    { keys: ['g/5/x'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/cx'], duration: '1/2' },
+    { keys: ['g/5/cx'], duration: '1' },
+    { keys: ['g/5/cx'], duration: '2' },
+    { keys: ['g/5/cx'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/tu'], duration: '1/2' },
+    { keys: ['g/5/tu'], duration: '1' },
+    { keys: ['g/5/tu'], duration: '2' },
+    { keys: ['g/5/tu'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/td'], duration: '1/2' },
+    { keys: ['g/5/td'], duration: '1' },
+    { keys: ['g/5/td'], duration: '2' },
+    { keys: ['g/5/td'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/sf'], duration: '1/2' },
+    { keys: ['g/5/sf'], duration: '1' },
+    { keys: ['g/5/sf'], duration: '2' },
+    { keys: ['g/5/sf'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/sb'], duration: '1/2' },
+    { keys: ['g/5/sb'], duration: '1' },
+    { keys: ['g/5/sb'], duration: '2' },
+    { keys: ['g/5/sb'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/ci'], duration: '1/2' },
+    { keys: ['g/5/ci'], duration: '1' },
+    { keys: ['g/5/ci'], duration: '2' },
+    { keys: ['g/5/ci'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+    { keys: ['g/5/sq'], duration: '1/2' },
+    { keys: ['g/5/sq'], duration: '1' },
+    { keys: ['g/5/sq'], duration: '2' },
+    { keys: ['g/5/sq'], duration: '4' },
+    { keys: ['x/'], duration: '1' },
+  ];
+
+  const ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+
+  // Draw two staves, one with up-stems and one with down-stems.
+  for (let staveNum = 0; staveNum < 2; ++staveNum) {
+    const stave = new Stave(10, 10 + staveNum * 120, notes.length * 25 + 75)
+      .addClef('percussion')
+      .setContext(ctx)
+      .draw();
+
+    for (let i = 0; i < notes.length; ++i) {
+      const note = notes[i];
+      note.stem_direction = staveNum === 0 ? -1 : 1;
+      const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+
+      ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+      ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+    }
+  }
+}
+
+function variousNoteHeads2(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const notes: StaveNoteStruct[] = [
+    { keys: ['g/5/do'], duration: '4', auto_stem: true },
+    { keys: ['g/5/re'], duration: '4', auto_stem: true },
+    { keys: ['g/5/mi'], duration: '4', auto_stem: true },
+    { keys: ['g/5/fa'], duration: '4', auto_stem: true },
+    { keys: ['e/4/faup'], duration: '4', auto_stem: true },
+    { keys: ['g/5/so'], duration: '4', auto_stem: true },
+    { keys: ['g/5/la'], duration: '4', auto_stem: true },
+    { keys: ['g/5/ti'], duration: '4', auto_stem: true },
+  ];
+
+  const ctx = contextBuilder(options.elementId, notes.length * 25 + 100, 240);
+
+  const stave = new Stave(10, 10, notes.length * 25 + 75).addClef('percussion').setContext(ctx).draw();
+
+  for (let i = 0; i < notes.length; ++i) {
+    const note = notes[i];
+    const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
+
+    ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+    ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 

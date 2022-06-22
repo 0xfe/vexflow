@@ -580,7 +580,7 @@ export class StaveNote extends StemmableNote {
       // if (this.glyph.rest) key = this.glyph.position;
       if (this.glyph.rest) this.glyph.position = key;
 
-      const options = { octave_shift: this.octave_shift || 0 };
+      const options = { octave_shift: this.octave_shift || 0, duration: this.duration };
       const props = Tables.keyProperties(key, this.clef, options);
 
       if (!props) {

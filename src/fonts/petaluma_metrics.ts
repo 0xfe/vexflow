@@ -372,6 +372,12 @@ export const PetalumaMetrics = {
         noteheadXWholeStemDown: {
           shiftX: 1,
         },
+        noteheadXDoubleWholeStemUp: {
+          shiftX: -12,
+        },
+        noteheadXDoubleWholeStemDown: {
+          shiftX: -4,
+        },
         noteheadSquareWhiteStemDown: {
           shiftX: 0.25,
         },

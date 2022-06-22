@@ -344,6 +344,12 @@ export const BravuraMetrics = {
         noteheadXWholeStemDown: {
           shiftX: 1,
         },
+        noteheadXDoubleWholeStemUp: {
+          shiftX: -4,
+        },
+        noteheadXDoubleWholeStemDown: {
+          shiftX: 1,
+        },
         noteheadSquareWhiteStemDown: {
           shiftX: 0.25,
         },
