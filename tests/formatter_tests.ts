@@ -45,7 +45,9 @@ const FormatterTests = {
     run('Vertical alignment - many unaligned beats', unalignedNoteDurations2, { globalSoftmax: false });
     run('Vertical alignment - many unaligned beats (global softmax)', unalignedNoteDurations2, { globalSoftmax: true });
     run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
-    run('Vertical alignment - cross stave', crossStave);
+    run('Vertical alignment - cross stave (beam up)', crossStave, { stem1: 'up', stem2: 'up' });
+    run('Vertical alignment - cross stave (beam down)', crossStave, { stem1: 'down', stem2: 'down' });
+    run('Vertical alignment - cross stave (beam middle)', crossStave, { stem1: 'down', stem2: 'up' });
     run('StaveNote - Justification', justifyStaveNotes);
     run('Notes with Tab', notesWithTab);
     run('Multiple Staves - Justified', multiStaves, { debug: true });
@@ -737,7 +739,17 @@ function crossStave(options: TestOptions): void {
   const stave1 = system.addStave({ voices: [] }).addClef('treble').addTimeSignature('4/4');
   const stave2 = system.addStave({ voices: [] }).addClef('treble').addTimeSignature('4/4');
 
-  const voice = score.voice(score.notes('C#5/q, B4').concat(score.beam(score.notes('A4/8, E4, C4, D4'))));
+  const voice = score.voice(
+    score
+      .notes('C#5/q, B4')
+      .concat(
+        score.beam(
+          score
+            .notes('A4/8, E4', { stem: options.params.stem1 })
+            .concat(score.notes('C4, D4', { stem: options.params.stem2 }))
+        )
+      )
+  );
   voice.getTickables()[0].setStave(stave1);
   voice.getTickables()[1].setStave(stave1);
   voice.getTickables()[2].setStave(stave1);
