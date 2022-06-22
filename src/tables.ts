@@ -164,7 +164,7 @@ const validNoteTypes: Record<string, { name: string }> = {
   sb: { name: 'slashed backward' },
   sq: { name: 'square' },
   tu: { name: 'triangle up' },
-  td: { name: 'triangle down' }, 
+  td: { name: 'triangle down' },
 };
 
 const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: number }> = {
