@@ -61,6 +61,7 @@ const StaveNoteTests = {
     run('Flag and Dots Placement - Stem Down', dotsAndFlagsStemDown);
     run('Beam and Dot Placement - Stem Up', dotsAndBeamsUp);
     run('Beam and Dot Placement - Stem Down', dotsAndBeamsDown);
+    run('No Padding', noPadding);
     run('Note Heads Placement - Simple', noteHeadsSimple);
     run('Note Heads Placement - Hidden Notes', noteHeadsHidden);
     run('Center Aligned Note', centerAlignedRest);
@@ -1030,6 +1031,44 @@ function noteHeadsSimple(options: TestOptions): void {
     ],
   });
 
+  vf.draw();
+  expect(0);
+}
+
+function noPadding(options: TestOptions): void {
+  const vf = VexFlowTests.makeFactory(options, 800, 500);
+  const score = vf.EasyScore();
+
+  function newStave(y: number, noPadding: boolean): void {
+    let system = vf.System({ y, x: 50, width: 200, noPadding });
+    system
+      .addStave({
+        voices: [
+          score.voice([...score.beam(score.notes('a4/8, b4/8', { stem: 'up' })), ...score.notes('a4/q, a4/h')]),
+          score.voice(score.notes('g4/w')),
+        ],
+      })
+      .addClef('treble')
+      .addTimeSignature('4/4');
+
+    system = vf.System({ y, x: 250, width: 150, noPadding });
+    system.addStave({
+      voices: [score.voice(score.notes('b4/h, b4/h')), score.voice(score.notes('b4/w'))],
+    });
+
+    system = vf.System({ y, x: 400, width: 150, noPadding });
+    system.addStave({
+      voices: [score.voice(score.notes('d5/h, d5/h')), score.voice(score.notes('e4/w'))],
+    });
+
+    system = vf.System({ y, x: 550, width: 150, noPadding });
+    system.addStave({
+      voices: [score.voice(score.notes('e4/q, e4/q, e4/h')), score.voice(score.notes('e4/8, e4/8, e4/q, e4/h'))],
+    });
+  }
+
+  newStave(100, true);
+  newStave(200, false);
   vf.draw();
   expect(0);
 }

@@ -214,7 +214,7 @@ export class System extends Element {
       });
     } else {
       justifyWidth = this.options.noPadding
-        ? this.options.width - this.options.x
+        ? this.options.width - (startX - this.options.x)
         : this.options.width - (startX - this.options.x) - Stave.defaultPadding;
     }
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth, this.options.formatOptions);
