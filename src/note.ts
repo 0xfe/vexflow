@@ -65,7 +65,7 @@ export interface NoteStruct {
   /** Array of pitches, e.g: `['c/4', 'e/4', 'g/4']` */
   keys?: string[];
   /** The time length (e.g., `q` for quarter, `h` for half, `8` for eighth etc.). */
-  duration?: string;
+  duration: string;
   line?: number;
   /** The number of dots, which affects the duration. */
   dots?: number;
