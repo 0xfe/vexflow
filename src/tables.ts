@@ -1166,7 +1166,7 @@ const durationCodes: Record<string, any> = {
     type: {
       r: {
         // Whole rest
-        code_head: 'restWhole',
+        code_head: 'restWholeLegerLine',
         rest: true,
         position: 'D/5',
         dot_shiftY: 0.5,
@@ -1199,7 +1199,7 @@ const durationCodes: Record<string, any> = {
     type: {
       r: {
         // Half rest
-        code_head: 'restHalf',
+        code_head: 'restHalfLegerLine',
         stem: false,
         rest: true,
         position: 'B/4',
