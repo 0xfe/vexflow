@@ -22,6 +22,7 @@ const RestsTests = {
     const run = VexFlowTests.runTests;
 
     // TODO: Simplify test names by removing 'Rests - ' or 'Rests '.
+    run('Rests Outside Stave', legerRest);
     run('Rests - Dotted', basic);
     run('Auto Align Rests - Beamed Notes Stems Up', beamsUp);
     run('Auto Align Rests - Beamed Notes Stems Down', beamsDown);
@@ -82,6 +83,25 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   Formatter.FormatAndDraw(context, stave, notes);
 
   ok(true, 'Dotted Rest Test');
+}
+
+/**
+ * Use the leger glyph if the whole or half rest is above/below the staff
+ */
+function legerRest(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const { context, stave } = setupContext(options, contextBuilder, 700);
+
+  const notes = [
+    new StaveNote({ keys: ['a/5'], stem_direction: 1, duration: 'wr' }),
+    new StaveNote({ keys: ['c/6'], stem_direction: 1, duration: 'hr' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }),
+    new StaveNote({ keys: ['a/3'], stem_direction: 1, duration: 'wr' }),
+    new StaveNote({ keys: ['f/3'], stem_direction: 1, duration: 'hr' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }),
+  ];
+  Formatter.FormatAndDraw(context, stave, notes);
+
+  ok(true, 'Leger/Ledger Rest Test');
 }
 
 // Optional: Use a helper function to make your code more concise.
