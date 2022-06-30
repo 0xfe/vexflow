@@ -20,17 +20,15 @@ const RestsTests = {
   Start(): void {
     QUnit.module('Rests');
     const run = VexFlowTests.runTests;
-
-    // TODO: Simplify test names by removing 'Rests - ' or 'Rests '.
-    run('Rests Outside Stave', legerRest);
-    run('Rests - Dotted', basic);
-    run('Auto Align Rests - Beamed Notes Stems Up', beamsUp);
-    run('Auto Align Rests - Beamed Notes Stems Down', beamsDown);
-    run('Auto Align Rests - Tuplets Stems Up', tupletsUp);
-    run('Auto Align Rests - Tuplets Stems Down', tupletsDown);
-    run('Auto Align Rests - Single Voice (Default)', singleVoiceDefaultAlignment);
-    run('Auto Align Rests - Single Voice (Align All)', singleVoiceAlignAll);
-    run('Auto Align Rests - Multi Voice', multiVoice);
+    run('Outside Stave', legerRest);
+    run('Dotted', basic);
+    run('Auto Align - Beamed Notes Stems Up', beamsUp);
+    run('Auto Align - Beamed Notes Stems Down', beamsDown);
+    run('Auto Align - Tuplets Stems Up', tupletsUp);
+    run('Auto Align - Tuplets Stems Down', tupletsDown);
+    run('Auto Align - Single Voice (Default)', singleVoiceDefaultAlignment);
+    run('Auto Align - Single Voice (Align All)', singleVoiceAlignAll);
+    run('Auto Align - Multi Voice', multiVoice);
   },
 };
 
