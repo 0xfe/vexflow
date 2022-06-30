@@ -133,6 +133,10 @@ export class NoteHead extends Note {
     this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
     defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
 
+    // Swap out the glyph with leger lines
+    if ((this.line > 5 || this.line < 0) && this.glyph.leger_code_head) {
+      this.glyph.code_head = this.glyph.leger_code_head;
+    }
     this.glyph_code = this.glyph.code_head;
     this.x_shift = noteStruct.x_shift || 0;
     if (noteStruct.custom_glyph_code) {
@@ -153,7 +157,6 @@ export class NoteHead extends Note {
 
     this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
   }
-
   /** Get the width of the notehead. */
   getWidth(): number {
     return this.width;

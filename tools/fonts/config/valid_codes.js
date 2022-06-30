@@ -174,7 +174,9 @@ module.exports = {
   // need restLonga -- used in multimeasure rests, like above
   restDoubleWhole: 'v31',
   restWhole: 'v5c',
+  restWholeLegerLine: 'v76',
   restHalf: 'vc',
+  restHalfLegerLine: 'v89',
   restQuarter: 'v7c',
   rest8th: 'va5',
   rest16th: 'v3c',
