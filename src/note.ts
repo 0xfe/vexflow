@@ -17,16 +17,16 @@ import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
 export interface KeyProps {
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
+  stem_down_x_offset?: number;
+  stem_up_x_offset?: number;
   key: string;
   octave: number;
   line: number;
-  int_value: number;
-  accidental: string;
-  code: string;
+  int_value?: number;
+  accidental?: string;
+  code?: string;
   stroke: number;
-  shift_right: number;
+  shift_right?: number;
   displaced: boolean;
 }
 

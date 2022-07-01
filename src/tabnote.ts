@@ -257,9 +257,9 @@ export class TabNote extends StemmableNote {
           ctx.setFont(this.render_options.font);
           glyph.width = ctx.measureText(text).width;
           ctx.restore();
-          glyph.getWidth = () => glyph.width;
+          glyph.getWidth = () => glyph.width as number;
         }
-        this.width = Math.max(glyph.getWidth(), this.width);
+        this.width = Math.max(glyph.getWidth ? glyph.getWidth() : 0, this.width);
       }
       this.glyph.getWidth = () => this.width;
     }
@@ -427,17 +427,17 @@ export class TabNote extends StemmableNote {
 
       // Center the fret text beneath the notation note head
       const note_glyph_width = this.glyph.getWidth();
-      const tab_x = x + note_glyph_width / 2 - glyph.getWidth() / 2;
+      const tab_x = x + note_glyph_width / 2 - (glyph.getWidth ? glyph.getWidth() : 0) / 2;
 
       // FIXME: Magic numbers.
-      ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
+      ctx.clearRect(tab_x - 2, y - 3, (glyph.getWidth ? glyph.getWidth() : 0) + 4, 6);
 
       if (glyph.code) {
         Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
       } else {
         ctx.save();
         ctx.setFont(this.render_options.font);
-        const text = glyph.text.toString();
+        const text = glyph.text?.toString() ?? '';
         ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();
       }

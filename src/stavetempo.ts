@@ -99,8 +99,8 @@ export class StaveTempo extends StaveModifier {
       const code = Tables.getGlyphProps(duration);
 
       x += 3 * scale;
-      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
-      x += code.getWidth() * scale;
+      if (code.code_head) Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
+      x += code.getWidth ? code.getWidth() : 0 * scale;
 
       // Draw stem and flags
       if (code.stem) {

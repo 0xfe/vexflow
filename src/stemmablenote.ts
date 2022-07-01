@@ -244,7 +244,7 @@ export abstract class StemmableNote extends Note {
   }
 
   hasFlag(): boolean {
-    return Tables.getGlyphProps(this.duration).flag && !this.beam;
+    return Tables.getGlyphProps(this.duration).flag == true && !this.beam;
   }
 
   /** Post formats the note. */
