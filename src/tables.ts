@@ -1,11 +1,10 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-/* eslint-disable key-spacing */
-
 import { ArticulationStruct } from './articulation';
 import { Font } from './font';
 import { Fraction } from './fraction';
-import { Glyph } from './glyph';
+import { Glyph, GlyphProps } from './glyph';
+import { KeyProps } from './note';
 import { RuntimeError } from './util';
 
 const RESOLUTION = 16384;
@@ -592,8 +591,7 @@ export class Tables {
    * @param params a struct with one option, `octave_shift` for clef ottavation (0 = default; 1 = 8va; -1 = 8vb, etc.).
    * @returns properties for the specified note.
    */
-  // eslint-disable-next-line
-  static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): any {
+  static keyProperties(keyOctaveGlyph: string, clef: string = 'treble', params?: { octave_shift?: number }): KeyProps {
     let options = { octave_shift: 0, duration: '4' };
     if (typeof params === 'object') {
       options = { ...options, ...params };
@@ -1072,18 +1070,17 @@ export class Tables {
 
   // Return a glyph given duration and type. The type can be a custom glyph code from customNoteHeads.
   // The default type is a regular note ('n').
-  // eslint-disable-next-line
-  static getGlyphProps(duration: string, type: string = 'n'): any | undefined {
+  static getGlyphProps(duration: string, type: string = 'n'): GlyphProps {
     duration = Tables.sanitizeDuration(duration);
 
     // Lookup duration for default glyph head code
     const code = durationCodes[duration];
     if (code === undefined) {
-      return undefined;
+      return {};
     }
 
     // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
-    let glyphTypeProperties = code.type[type];
+    let glyphTypeProperties = code[type];
 
     // Try and get it from the custom list of note heads
     const codeNoteHead = Tables.codeNoteHead(type.toUpperCase(), duration);
@@ -1094,10 +1091,13 @@ export class Tables {
 
     // The default implementation of getWidth() calls Glyph.getWidth(code_head, scale).
     // This can be overridden by an individual glyph type (see slash noteheads below: Tables.SLASH_NOTEHEAD_WIDTH).
-    const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number | undefined => Glyph.getWidth(code_head, scale);
-
-    // Merge duration props for 'duration' with the note head properties.
-    return { ...code.common, getWidth: getWidth, ...glyphTypeProperties };
+    if (code_head) {
+      const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number => Glyph.getWidth(code_head, scale);
+      // Merge duration props for 'duration' with the note head properties.
+      return { ...code.common, getWidth: getWidth, ...glyphTypeProperties };
+    } else {
+      return { ...code.common, ...glyphTypeProperties };
+    }
   }
 
   /* The list of valid note types. Used by note.ts during parseNoteStruct(). */
@@ -1115,12 +1115,10 @@ export class Tables {
 // NOTE: There is no 256 here! However, there are other mentions of 256 in this file.
 // For example, in durations has a 256 key, and sanitizeDuration() can return 256.
 // The sanitizeDuration() bit may need to be removed by 0xfe.
-// eslint-disable-next-line
-const durationCodes: Record<string, any> = {
+const durationCodes: Record<string, Record<string, GlyphProps>> = {
   '1/2': {
     common: {
       stem: false,
-      stem_offset: 0,
       flag: false,
       stem_up_extension: -Tables.STEM_HEIGHT,
       stem_down_extension: -Tables.STEM_HEIGHT,
@@ -1130,30 +1128,27 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Breve rest
-        code_head: 'restDoubleWhole',
-        rest: true,
-        position: 'B/5',
-        dot_shiftY: 0.5,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('restDoubleWhole', scale);
-        // },
-      },
-      s: {
-        // Breve note slash -
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Breve rest
+      code_head: 'restDoubleWhole',
+      rest: true,
+      position: 'B/5',
+      dot_shiftY: 0.5,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('restDoubleWhole', scale);
+      // },
+    },
+    s: {
+      // Breve note slash -
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
   1: {
     common: {
       stem: false,
-      stem_offset: 0,
       flag: false,
       stem_up_extension: -Tables.STEM_HEIGHT,
       stem_down_extension: -Tables.STEM_HEIGHT,
@@ -1163,31 +1158,28 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Whole rest
-        code_head: 'restWhole',
-        leger_code_head: 'restWholeLegerLine',
-        rest: true,
-        position: 'D/5',
-        dot_shiftY: 0.5,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('restWhole', scale);
-        // },
-      },
-      s: {
-        // Whole note slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Whole rest
+      code_head: 'restWhole',
+      leger_code_head: 'restWholeLegerLine',
+      rest: true,
+      position: 'D/5',
+      dot_shiftY: 0.5,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('restWhole', scale);
+      // },
+    },
+    s: {
+      // Whole note slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
   2: {
     common: {
       stem: true,
-      stem_offset: 0,
       flag: false,
       stem_up_extension: 0,
       stem_down_extension: 0,
@@ -1197,32 +1189,29 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Half rest
-        code_head: 'restHalf',
-        leger_code_head: 'restHalfLegerLine',
-        stem: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -0.5,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('restHalf', scale);
-        // },
-      },
-      s: {
-        // Half note slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Half rest
+      code_head: 'restHalf',
+      leger_code_head: 'restHalfLegerLine',
+      stem: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -0.5,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('restHalf', scale);
+      // },
+    },
+    s: {
+      // Half note slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
   4: {
     common: {
       stem: true,
-      stem_offset: 0,
       flag: false,
       stem_up_extension: 0,
       stem_down_extension: 0,
@@ -1232,33 +1221,30 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Quarter rest
-        code_head: 'restQuarter',
-        stem: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -0.5,
-        line_above: 1.5,
-        line_below: 1.5,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('restQuarter', scale);
-        // },
-      },
-      s: {
-        // Quarter slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Quarter rest
+      code_head: 'restQuarter',
+      stem: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -0.5,
+      line_above: 1.5,
+      line_below: 1.5,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('restQuarter', scale);
+      // },
+    },
+    s: {
+      // Quarter slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
   8: {
     common: {
       stem: true,
-      stem_offset: 0,
       flag: true,
       beam_count: 1,
       stem_beam_extension: 0,
@@ -1272,27 +1258,25 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Eighth rest
-        code_head: 'rest8th',
-        stem: false,
-        flag: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -0.5,
-        line_above: 1.0,
-        line_below: 1.0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('rest8th', scale);
-        // },
-      },
-      s: {
-        // Eighth slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Eighth rest
+      code_head: 'rest8th',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -0.5,
+      line_above: 1.0,
+      line_below: 1.0,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('rest8th', scale);
+      // },
+    },
+    s: {
+      // Eighth slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
@@ -1301,7 +1285,6 @@ const durationCodes: Record<string, any> = {
       beam_count: 2,
       stem_beam_extension: 0,
       stem: true,
-      stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag16thUp',
       code_flag_downstem: 'flag16thDown',
@@ -1313,27 +1296,25 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Sixteenth rest
-        code_head: 'rest16th',
-        stem: false,
-        flag: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -0.5,
-        line_above: 1.0,
-        line_below: 2.0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('rest16th', scale);
-        // },
-      },
-      s: {
-        // Sixteenth slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Sixteenth rest
+      code_head: 'rest16th',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -0.5,
+      line_above: 1.0,
+      line_below: 2.0,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('rest16th', scale);
+      // },
+    },
+    s: {
+      // Sixteenth slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
@@ -1342,7 +1323,6 @@ const durationCodes: Record<string, any> = {
       beam_count: 3,
       stem_beam_extension: 7.5,
       stem: true,
-      stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag32ndUp',
       code_flag_downstem: 'flag32ndDown',
@@ -1354,27 +1334,25 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Thirty-second rest
-        code_head: 'rest32nd',
-        stem: false,
-        flag: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -1.5,
-        line_above: 2.0,
-        line_below: 2.0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('rest32nd', scale);
-        // },
-      },
-      s: {
-        // Thirty-second slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Thirty-second rest
+      code_head: 'rest32nd',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -1.5,
+      line_above: 2.0,
+      line_below: 2.0,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('rest32nd', scale);
+      // },
+    },
+    s: {
+      // Thirty-second slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
@@ -1383,7 +1361,6 @@ const durationCodes: Record<string, any> = {
       beam_count: 4,
       stem_beam_extension: 15,
       stem: true,
-      stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag64thUp',
       code_flag_downstem: 'flag64thDown',
@@ -1395,27 +1372,25 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Sixty-fourth rest
-        code_head: 'rest64th',
-        stem: false,
-        flag: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -1.5,
-        line_above: 2.0,
-        line_below: 3.0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('rest64th', scale);
-        // },
-      },
-      s: {
-        // Sixty-fourth slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Sixty-fourth rest
+      code_head: 'rest64th',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -1.5,
+      line_above: 2.0,
+      line_below: 3.0,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('rest64th', scale);
+      // },
+    },
+    s: {
+      // Sixty-fourth slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 
@@ -1424,7 +1399,6 @@ const durationCodes: Record<string, any> = {
       beam_count: 5,
       stem_beam_extension: 22.5,
       stem: true,
-      stem_offset: 0,
       flag: true,
       code_flag_upstem: 'flag128thUp',
       code_flag_downstem: 'flag128thDown',
@@ -1436,27 +1410,25 @@ const durationCodes: Record<string, any> = {
       line_above: 0,
       line_below: 0,
     },
-    type: {
-      r: {
-        // Hundred-twenty-eight rest
-        code_head: 'rest128th',
-        stem: false,
-        flag: false,
-        rest: true,
-        position: 'B/4',
-        dot_shiftY: -2.5,
-        line_above: 3.0,
-        line_below: 3.0,
-        // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-        //   return Glyph.getWidth('rest128th', scale);
-        // },
-      },
-      s: {
-        // Hundred-twenty-eight slash
-        // Drawn with canvas primitives
-        getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
-        position: 'B/4',
-      },
+    r: {
+      // Hundred-twenty-eight rest
+      code_head: 'rest128th',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -2.5,
+      line_above: 3.0,
+      line_below: 3.0,
+      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
+      //   return Glyph.getWidth('rest128th', scale);
+      // },
+    },
+    s: {
+      // Hundred-twenty-eight slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
     },
   },
 };

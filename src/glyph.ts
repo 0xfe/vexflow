@@ -7,34 +7,33 @@ import { Element } from './element';
 import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
-import { Stem } from './stem';
 import { Tables } from './tables';
 import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
-  code_head: string;
-  dot_shiftY: number;
-  position: string;
-  rest: boolean;
-  line_below: number;
-  line_above: number;
-  stem_beam_extension: number;
-  stem_up_extension: number;
-  stem_down_extension: number;
-  stem: Stem;
-  code: string;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  flag: boolean;
-  width: number;
-  text: string;
-  tabnote_stem_down_extension: number;
-  tabnote_stem_up_extension: number;
-  beam_count: number;
-  shift_y: number;
-  getWidth(a?: number): number;
-  getMetrics(): GlyphMetrics;
+  code_head?: string;
+  leger_code_head?: string;
+  dot_shiftY?: number;
+  position?: string;
+  rest?: boolean;
+  line_below?: number;
+  line_above?: number;
+  stem_beam_extension?: number;
+  stem_up_extension?: number;
+  stem_down_extension?: number;
+  stem?: boolean;
+  code?: string;
+  code_flag_upstem?: string;
+  code_flag_downstem?: string;
+  flag?: boolean;
+  width?: number;
+  text?: string;
+  tabnote_stem_down_extension?: number;
+  tabnote_stem_up_extension?: number;
+  beam_count?: number;
+  shift_y?: number;
+  getWidth?(a?: number): number;
 }
 
 export interface GlyphOptions {

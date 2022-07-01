@@ -29,7 +29,7 @@ export class Tuning {
 
   /** Return the note number associated to the note string. */
   noteToInteger(noteString: string): number {
-    return Tables.keyProperties(noteString).int_value;
+    return Tables.keyProperties(noteString).int_value ?? -1;
   }
 
   /**
