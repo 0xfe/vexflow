@@ -28,16 +28,16 @@ export class Dot extends Modifier {
       if (options?.all) {
         for (let i = 0; i < note.keys.length; i++) {
           const dot = new Dot();
-          dot.setDotShiftY(note.glyph.dot_shiftY);
+          dot.setDotShiftY(note.glyphProps.dot_shiftY);
           note.addModifier(dot, i);
         }
       } else if (options?.index != undefined) {
         const dot = new Dot();
-        dot.setDotShiftY(note.glyph.dot_shiftY);
+        dot.setDotShiftY(note.glyphProps.dot_shiftY);
         note.addModifier(dot, options?.index);
       } else {
         const dot = new Dot();
-        dot.setDotShiftY(note.glyph.dot_shiftY);
+        dot.setDotShiftY(note.glyphProps.dot_shiftY);
         note.addModifier(dot, 0);
       }
     }

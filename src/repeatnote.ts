@@ -20,12 +20,10 @@ export class RepeatNote extends GlyphNote {
   }
 
   constructor(type: string, noteStruct?: NoteStruct, options?: GlyphNoteOptions) {
-    super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
-
     const glyphCode = CODES[type] || 'repeat1Bar';
     const glyph = new Glyph(glyphCode, Tables.currentMusicFont().lookupMetric('repeatNote.point', 40), {
       category: 'repeatNote',
     });
-    this.setGlyph(glyph);
+    super(glyph, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
   }
 }

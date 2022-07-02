@@ -55,9 +55,9 @@ export interface MultimeasureRestRenderOptions {
   serif_thickness?: number;
 }
 
-let semibreve_rest: { glyph_font_scale: number; glyph_code: string; width: number } | undefined;
+let semibreve_rest: { glyph_font_scale: number; glyph_code?: string; width: number } | undefined;
 
-function get_semibreve_rest() {
+function get_semibreve_rest(): { glyph_font_scale: number; glyph_code?: string; width: number } {
   if (!semibreve_rest) {
     const noteHead = new NoteHead({ duration: 'w', note_type: 'r' });
     semibreve_rest = {
@@ -66,7 +66,7 @@ function get_semibreve_rest() {
       width: noteHead.getWidth(),
     };
   }
-  return semibreve_rest;
+  return semibreve_rest as { glyph_font_scale: number; glyph_code?: string; width: number };
 }
 
 export class MultiMeasureRest extends Element {
@@ -227,7 +227,7 @@ export class MultiMeasureRest extends Element {
       x += glyphs[2].width + spacing;
     }
     for (let i = 0; i < n1; ++i) {
-      Glyph.renderGlyph(ctx, x, yTop, rest_scale, rest.glyph_code);
+      if (rest.glyph_code) Glyph.renderGlyph(ctx, x, yTop, rest_scale, rest.glyph_code);
       x += glyphs[1].width + spacing;
     }
 

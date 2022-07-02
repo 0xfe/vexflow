@@ -107,6 +107,7 @@ export class TextNote extends Note {
   }
 
   protected text: string;
+  protected glyph?: Glyph;
   protected superscript?: string;
   protected subscript?: string;
   protected smooth: boolean;

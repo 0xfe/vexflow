@@ -103,7 +103,7 @@ export class NoteHead extends Note {
     return Category.NoteHead;
   }
 
-  glyph_code: string;
+  glyph_code?: string;
 
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
@@ -130,14 +130,18 @@ export class NoteHead extends Note {
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
-    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
+    this.glyphProps = Tables.getGlyphProps(this.duration, this.noteType);
+    defined(
+      this.glyphProps,
+      'BadArguments',
+      `No glyph found for duration '${this.duration}' and type '${this.noteType}'`
+    );
 
     // Swap out the glyph with leger lines
-    if ((this.line > 5 || this.line < 0) && this.glyph.leger_code_head) {
-      this.glyph.code_head = this.glyph.leger_code_head;
+    if ((this.line > 5 || this.line < 0) && this.glyphProps.leger_code_head) {
+      this.glyphProps.code_head = this.glyphProps.leger_code_head;
     }
-    this.glyph_code = this.glyph.code_head;
+    this.glyph_code = this.glyphProps.code_head;
     this.x_shift = noteStruct.x_shift || 0;
     if (noteStruct.custom_glyph_code) {
       this.custom_glyph = true;
@@ -155,7 +159,7 @@ export class NoteHead extends Note {
       glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
     };
 
-    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
+    this.setWidth(this.glyphProps.getWidth(this.render_options.glyph_font_scale));
   }
   /** Get the width of the notehead. */
   getWidth(): number {
@@ -169,7 +173,7 @@ export class NoteHead extends Note {
 
   /** Get the glyph data. */
   getGlyph(): GlyphProps {
-    return this.glyph;
+    return this.glyphProps;
   }
 
   /** Set the X coordinate. */
@@ -284,9 +288,10 @@ export class NoteHead extends Note {
       const staveSpace = this.checkStave().getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
-      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
-      });
+      if (this.glyph_code)
+        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
+          category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
+        });
     }
 
     if (this.style) {

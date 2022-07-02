@@ -679,10 +679,7 @@ export class Tables {
     return noteValue;
   }
 
-  static tabToGlyph(
-    fret: string,
-    scale: number = 1.0
-  ): { text: string; code?: string; getWidth: () => number; shift_y: number } {
+  static tabToGlyphProps(fret: string, scale: number = 1.0): GlyphProps {
     let glyph = undefined;
     let width = 0;
     let shift_y = 0;
@@ -703,7 +700,7 @@ export class Tables {
       code: glyph,
       getWidth: () => width * scale,
       shift_y,
-    };
+    } as GlyphProps;
   }
 
   // Used by annotation.ts and bend.ts. Clearly this implementation only works for the default font size.
@@ -1074,9 +1071,9 @@ export class Tables {
     duration = Tables.sanitizeDuration(duration);
 
     // Lookup duration for default glyph head code
-    const code = durationCodes[duration];
+    let code = durationCodes[duration];
     if (code === undefined) {
-      return {};
+      code = durationCodes['4'];
     }
 
     // Get glyph properties for 'type' from duration string (note, rest, harmonic, muted, slash)
@@ -1094,9 +1091,9 @@ export class Tables {
     if (code_head) {
       const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number => Glyph.getWidth(code_head, scale);
       // Merge duration props for 'duration' with the note head properties.
-      return { ...code.common, getWidth: getWidth, ...glyphTypeProperties };
+      return { ...code.common, getWidth: getWidth, ...glyphTypeProperties } as GlyphProps;
     } else {
-      return { ...code.common, ...glyphTypeProperties };
+      return { ...code.common, ...glyphTypeProperties } as GlyphProps;
     }
   }
 
@@ -1115,7 +1112,7 @@ export class Tables {
 // NOTE: There is no 256 here! However, there are other mentions of 256 in this file.
 // For example, in durations has a 256 key, and sanitizeDuration() can return 256.
 // The sanitizeDuration() bit may need to be removed by 0xfe.
-const durationCodes: Record<string, Record<string, GlyphProps>> = {
+const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
   '1/2': {
     common: {
       stem: false,
@@ -1134,9 +1131,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       rest: true,
       position: 'B/5',
       dot_shiftY: 0.5,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('restDoubleWhole', scale);
-      // },
     },
     s: {
       // Breve note slash -
@@ -1165,9 +1159,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       rest: true,
       position: 'D/5',
       dot_shiftY: 0.5,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('restWhole', scale);
-      // },
     },
     s: {
       // Whole note slash
@@ -1197,9 +1188,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       rest: true,
       position: 'B/4',
       dot_shiftY: -0.5,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('restHalf', scale);
-      // },
     },
     s: {
       // Half note slash
@@ -1230,9 +1218,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -0.5,
       line_above: 1.5,
       line_below: 1.5,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('restQuarter', scale);
-      // },
     },
     s: {
       // Quarter slash
@@ -1268,9 +1253,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -0.5,
       line_above: 1.0,
       line_below: 1.0,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('rest8th', scale);
-      // },
     },
     s: {
       // Eighth slash
@@ -1306,9 +1288,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -0.5,
       line_above: 1.0,
       line_below: 2.0,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('rest16th', scale);
-      // },
     },
     s: {
       // Sixteenth slash
@@ -1344,9 +1323,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -1.5,
       line_above: 2.0,
       line_below: 2.0,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('rest32nd', scale);
-      // },
     },
     s: {
       // Thirty-second slash
@@ -1382,9 +1358,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -1.5,
       line_above: 2.0,
       line_below: 3.0,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('rest64th', scale);
-      // },
     },
     s: {
       // Sixty-fourth slash
@@ -1420,9 +1393,6 @@ const durationCodes: Record<string, Record<string, GlyphProps>> = {
       dot_shiftY: -2.5,
       line_above: 3.0,
       line_below: 3.0,
-      // getWidth(scale = Tables.NOTATION_FONT_SCALE): number | undefined {
-      //   return Glyph.getWidth('rest128th', scale);
-      // },
     },
     s: {
       // Hundred-twenty-eight slash

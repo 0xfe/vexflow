@@ -206,7 +206,7 @@ export class TextBracket extends Element {
     // Setup initial coordinates for the bracket line
     let start_x = start.x;
     let line_y = super_y;
-    const end_x = stop.x + this.stop.getGlyph().getWidth();
+    const end_x = stop.x + this.stop.getGlyphProps().getWidth();
 
     // Adjust x and y coordinates based on position
     if (this.position === TextBracketPosition.TOP) {

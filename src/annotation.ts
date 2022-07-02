@@ -90,7 +90,7 @@ export class Annotation extends Modifier {
       let verticalSpaceNeeded = textLines;
 
       const note = annotation.checkAttachedNote();
-      const glyphWidth = note.getGlyph().getWidth();
+      const glyphWidth = note.getGlyphProps().getWidth();
       // Get the text width from the font metrics.
       const textWidth = textFormatter.getWidthForTextInPx(annotation.text);
       if (annotation.horizontalJustification === AnnotationHorizontalJustify.LEFT) {

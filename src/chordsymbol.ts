@@ -348,7 +348,7 @@ export class ChordSymbol extends Modifier {
         state.text_line += lineSpaces + 1;
       }
       if (symbol.getReportWidth() && isStemmableNote(note)) {
-        const glyphWidth = note.getGlyph().getWidth();
+        const glyphWidth = note.getGlyphProps().getWidth();
         if (symbol.getHorizontal() === ChordSymbolHorizontalJustify.LEFT) {
           maxLeftGlyphWidth = Math.max(glyphWidth, maxLeftGlyphWidth);
           leftWidth = Math.max(leftWidth, symbolWidth) + ChordSymbol.minPadding;
