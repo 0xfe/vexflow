@@ -517,7 +517,7 @@ export class Beam extends Element {
 
   /** Get the max number of beams in the set of notes. */
   getBeamCount(): number {
-    const beamCounts = this.notes.map((note) => note.getGlyph().beam_count);
+    const beamCounts = this.notes.map((note) => note.getGlyphProps().beam_count);
 
     const maxBeamCount = beamCounts.reduce((max, beamCount) => (beamCount > max ? beamCount : max));
 

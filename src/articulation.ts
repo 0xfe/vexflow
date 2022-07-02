@@ -215,7 +215,7 @@ export class Articulation extends Modifier {
 
     articulations.forEach((articulation) => {
       const note = articulation.checkAttachedNote();
-      maxGlyphWidth = Math.max(note.getGlyph().getWidth(), maxGlyphWidth);
+      maxGlyphWidth = Math.max(note.getGlyphProps().getWidth(), maxGlyphWidth);
       let lines = 5;
       const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
       let stemHeight = 0;

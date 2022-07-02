@@ -19,6 +19,7 @@ export class ClefNote extends Note {
   protected clef_obj: Clef;
   protected type: string;
   protected clef: ClefType;
+  protected glyph: Glyph;
 
   constructor(type: string, size?: string, annotation?: string) {
     super({ duration: 'b' });

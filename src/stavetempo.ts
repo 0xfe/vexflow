@@ -96,17 +96,17 @@ export class StaveTempo extends StaveModifier {
         x += noteTextFormatter.getWidthForTextInPx('(');
       }
 
-      const code = Tables.getGlyphProps(duration);
+      const glyphProps = Tables.getGlyphProps(duration);
 
       x += 3 * scale;
-      if (code.code_head) Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
-      x += code.getWidth ? code.getWidth() : 0 * scale;
+      if (glyphProps.code_head) Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, glyphProps.code_head);
+      x += glyphProps.getWidth ? glyphProps.getWidth() : 0 * scale;
 
       // Draw stem and flags
-      if (code.stem) {
+      if (glyphProps.stem) {
         let stem_height = 30;
 
-        if (code.beam_count) stem_height += 3 * (code.beam_count - 1);
+        if (glyphProps.beam_count) stem_height += 3 * (glyphProps.beam_count - 1);
 
         stem_height *= scale;
 

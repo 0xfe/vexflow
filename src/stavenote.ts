@@ -143,8 +143,8 @@ export class StaveNote extends StemmableNote {
 
       let maxL;
       if (notes[i].isRest()) {
-        maxL = line + notes[i].glyph.line_above;
-        minL = line - notes[i].glyph.line_below;
+        maxL = line + notes[i].glyphProps.line_above;
+        minL = line - notes[i].glyphProps.line_below;
       } else {
         maxL =
           stemDirection === 1 ? props[props.length - 1].keyProps.line + stemMax : props[props.length - 1].keyProps.line;
@@ -418,8 +418,12 @@ export class StaveNote extends StemmableNote {
     this.octave_shift = noteStruct.octave_shift ?? 0;
 
     // Pull note rendering properties.
-    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
-    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
+    this.glyphProps = Tables.getGlyphProps(this.duration, this.noteType);
+    defined(
+      this.glyphProps,
+      'BadArguments',
+      `No glyph found for duration '${this.duration}' and type '${this.noteType}'`
+    );
 
     // if true, displace note to right
     this.displaced = false;
@@ -577,7 +581,7 @@ export class StaveNote extends StemmableNote {
 
       // All rests use the same position on the line.
       // if (this.glyph.rest) key = this.glyph.position;
-      if (this.glyph.rest) this.glyph.position = key;
+      if (this.glyphProps.rest) this.glyphProps.position = key;
 
       const options = { octave_shift: this.octave_shift || 0, duration: this.duration };
       const props = Tables.keyProperties(key, this.clef, options);
@@ -644,10 +648,10 @@ export class StaveNote extends StemmableNote {
         minY = y - halfLineSpacing;
         maxY = y + halfLineSpacing;
       } else {
-        minY = y - this.glyph.line_above * lineSpacing;
-        maxY = y + this.glyph.line_below * lineSpacing;
+        minY = y - this.glyphProps.line_above * lineSpacing;
+        maxY = y + this.glyphProps.line_below * lineSpacing;
       }
-    } else if (this.glyph.stem) {
+    } else if (this.glyphProps.stem) {
       const ys = this.getStemExtents();
       ys.baseY += halfLineSpacing * this.getStemDirection();
       minY = Math.min(ys.topY, ys.baseY);
@@ -699,7 +703,7 @@ export class StaveNote extends StemmableNote {
    * @returns true if this note is a type of rest. Rests don't have pitches, but take up space in the score.
    */
   isRest(): boolean {
-    return this.glyph.rest;
+    return this.glyphProps.rest;
   }
 
   // Determine if the current note is a chord
@@ -709,7 +713,7 @@ export class StaveNote extends StemmableNote {
 
   // Determine if the `StaveNote` has a stem
   hasStem(): boolean {
-    return this.glyph.stem;
+    return this.glyphProps.stem;
   }
 
   hasFlag(): boolean {
@@ -1037,12 +1041,12 @@ export class StaveNote extends StemmableNote {
   drawLedgerLines(): void {
     const stave = this.checkStave();
     const {
-      glyph,
+      glyphProps,
       render_options: { stroke_px },
     } = this;
     const ctx = this.checkContext();
-    const width = glyph.getWidth() + stroke_px * 2;
-    const doubleWidth = 2 * (glyph.getWidth() + stroke_px) - Stem.WIDTH / 2;
+    const width = glyphProps.getWidth() + stroke_px * 2;
+    const doubleWidth = 2 * (glyphProps.getWidth() + stroke_px) - Stem.WIDTH / 2;
 
     if (this.isRest()) return;
     if (!ctx) {
@@ -1117,7 +1121,7 @@ export class StaveNote extends StemmableNote {
 
   shouldDrawFlag(): boolean {
     const hasStem = this.stem !== undefined;
-    const hasFlag = this.glyph.flag as boolean; // specified in tables.js
+    const hasFlag = this.glyphProps.flag as boolean; // specified in tables.js
     const hasNoBeam = this.beam === undefined;
     return hasStem && hasFlag && hasNoBeam;
   }
@@ -1144,13 +1148,13 @@ export class StaveNote extends StemmableNote {
             y_top -
             noteStemHeight +
             2 -
-            (this.glyph ? this.glyph.stem_down_extension : 0) * this.getStaveNoteScale() -
+            (this.glyphProps ? this.glyphProps.stem_down_extension : 0) * this.getStaveNoteScale() -
             (this.flag?.getMetrics().y_shift ?? 0) * (1 - this.getStaveNoteScale())
           : // Up stems are above the note head and have flags on the right.
             y_bottom -
             noteStemHeight -
             2 +
-            (this.glyph ? this.glyph.stem_up_extension : 0) * this.getStaveNoteScale() -
+            (this.glyphProps ? this.glyphProps.stem_up_extension : 0) * this.getStaveNoteScale() -
             (this.flag?.getMetrics().y_shift ?? 0) * (1 - this.getStaveNoteScale());
 
       // Draw the Flag
@@ -1202,7 +1206,7 @@ export class StaveNote extends StemmableNote {
    */
   getStemExtension(): number {
     const super_stem_extension = super.getStemExtension();
-    if (!this.glyph.stem) {
+    if (!this.glyphProps.stem) {
       return super_stem_extension;
     }
 
