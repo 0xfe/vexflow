@@ -1155,7 +1155,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
     r: {
       // Whole rest
       code_head: 'restWhole',
-      leger_code_head: 'restWholeLegerLine',
+      ledger_code_head: 'restWholeLegerLine',
       rest: true,
       position: 'D/5',
       dot_shiftY: 0.5,
@@ -1183,7 +1183,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
     r: {
       // Half rest
       code_head: 'restHalf',
-      leger_code_head: 'restHalfLegerLine',
+      ledger_code_head: 'restHalfLegerLine',
       stem: false,
       rest: true,
       position: 'B/4',

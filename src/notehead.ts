@@ -137,9 +137,9 @@ export class NoteHead extends Note {
       `No glyph found for duration '${this.duration}' and type '${this.noteType}'`
     );
 
-    // Swap out the glyph with leger lines
-    if ((this.line > 5 || this.line < 0) && this.glyphProps.leger_code_head) {
-      this.glyphProps.code_head = this.glyphProps.leger_code_head;
+    // Swap out the glyph with ledger lines
+    if ((this.line > 5 || this.line < 0) && this.glyphProps.ledger_code_head) {
+      this.glyphProps.code_head = this.glyphProps.ledger_code_head;
     }
     this.glyph_code = this.glyphProps.code_head;
     this.x_shift = noteStruct.x_shift || 0;

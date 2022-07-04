@@ -20,7 +20,7 @@ const RestsTests = {
   Start(): void {
     QUnit.module('Rests');
     const run = VexFlowTests.runTests;
-    run('Outside Stave', legerRest);
+    run('Outside Stave', ledgerRest);
     run('Dotted', basic);
     run('Auto Align - Beamed Notes Stems Up', beamsUp);
     run('Auto Align - Beamed Notes Stems Down', beamsDown);
@@ -83,9 +83,9 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 /**
- * Use the leger glyph if the whole or half rest is above/below the staff
+ * Use the ledger glyph if the whole or half rest is above/below the staff
  */
-function legerRest(options: TestOptions, contextBuilder: ContextBuilder): void {
+function ledgerRest(options: TestOptions, contextBuilder: ContextBuilder): void {
   const { context, stave } = setupContext(options, contextBuilder, 700);
 
   const notes = [

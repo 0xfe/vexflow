@@ -13,7 +13,7 @@ import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
   code_head?: string;
-  leger_code_head?: string;
+  ledger_code_head?: string;
   dot_shiftY: number;
   position: string;
   rest: boolean;
