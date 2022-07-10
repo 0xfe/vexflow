@@ -103,7 +103,7 @@ export class NoteHead extends Note {
     return Category.NoteHead;
   }
 
-  glyph_code?: string;
+  glyph_code: string;
 
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
@@ -288,10 +288,9 @@ export class NoteHead extends Note {
       const staveSpace = this.checkStave().getSpacingBetweenLines();
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
-      if (this.glyph_code)
-        Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-          category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
-        });
+      Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
+        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
+      });
     }
 
     if (this.style) {
