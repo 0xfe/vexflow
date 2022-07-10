@@ -355,7 +355,7 @@ export class TabNote extends StemmableNote {
   drawFlag(): void {
     const {
       beam,
-      glyphProps: glyph,
+      glyphProps,
       render_options: { draw_stem },
     } = this;
     const context = this.checkContext();
@@ -363,7 +363,7 @@ export class TabNote extends StemmableNote {
     const shouldDrawFlag = beam == undefined && draw_stem;
 
     // Now it's the flag's turn.
-    if (glyph.flag && shouldDrawFlag) {
+    if (glyphProps.flag && shouldDrawFlag) {
       const flag_x = this.getStemX();
       const flag_y =
         this.getStemDirection() === Stem.DOWN
@@ -449,7 +449,7 @@ export class TabNote extends StemmableNote {
       } else {
         ctx.save();
         ctx.setFont(this.render_options.font);
-        const text = glyphProps.text?.toString() ?? '';
+        const text = glyphProps.text ?? '';
         ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();
       }

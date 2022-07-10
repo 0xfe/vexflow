@@ -731,7 +731,7 @@ export class Beam extends Element {
         // Determine necessary extension for cross-stave notes in the beam group
         let crossStemExtension = 0;
         if (note.getStemDirection() !== this.stem_direction) {
-          const beamCount = note.getGlyph().beam_count;
+          const beamCount = note.getGlyphProps().beam_count;
           crossStemExtension = (1 + (beamCount - 1) * 1.5) * this.render_options.beam_width;
 
           /* This will be required if the partial beams are moved to the note side.

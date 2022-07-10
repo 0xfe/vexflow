@@ -1084,17 +1084,14 @@ export class Tables {
     if (codeNoteHead != '')
       glyphTypeProperties = { ...glyphTypeProperties, ...{ code_head: codeNoteHead, code: codeNoteHead } };
 
-    const code_head = glyphTypeProperties.code_head;
+    const code_head = glyphTypeProperties.code_head as string;
 
     // The default implementation of getWidth() calls Glyph.getWidth(code_head, scale).
     // This can be overridden by an individual glyph type (see slash noteheads below: Tables.SLASH_NOTEHEAD_WIDTH).
-    if (code_head) {
-      const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number => Glyph.getWidth(code_head, scale);
-      // Merge duration props for 'duration' with the note head properties.
-      return { ...code.common, getWidth: getWidth, ...glyphTypeProperties } as GlyphProps;
-    } else {
-      return { ...code.common, ...glyphTypeProperties } as GlyphProps;
-    }
+    const getWidth = (scale = Tables.NOTATION_FONT_SCALE): number => Glyph.getWidth(code_head, scale);
+
+    // Merge duration props for 'duration' with the note head properties.
+    return { ...code.common, getWidth: getWidth, ...glyphTypeProperties } as GlyphProps;
   }
 
   /* The list of valid note types. Used by note.ts during parseNoteStruct(). */
@@ -1115,6 +1112,7 @@ export class Tables {
 const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
   '1/2': {
     common: {
+      code_head: '',
       stem: false,
       flag: false,
       stem_up_extension: -Tables.STEM_HEIGHT,
@@ -1142,6 +1140,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   1: {
     common: {
+      code_head: '',
       stem: false,
       flag: false,
       stem_up_extension: -Tables.STEM_HEIGHT,
@@ -1170,6 +1169,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   2: {
     common: {
+      code_head: '',
       stem: true,
       flag: false,
       stem_up_extension: 0,
@@ -1199,6 +1199,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   4: {
     common: {
+      code_head: '',
       stem: true,
       flag: false,
       stem_up_extension: 0,
@@ -1229,6 +1230,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   8: {
     common: {
+      code_head: '',
       stem: true,
       flag: true,
       beam_count: 1,
@@ -1264,6 +1266,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   16: {
     common: {
+      code_head: '',
       beam_count: 2,
       stem_beam_extension: 0,
       stem: true,
@@ -1299,6 +1302,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   32: {
     common: {
+      code_head: '',
       beam_count: 3,
       stem_beam_extension: 7.5,
       stem: true,
@@ -1334,6 +1338,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   64: {
     common: {
+      code_head: '',
       beam_count: 4,
       stem_beam_extension: 15,
       stem: true,
@@ -1369,6 +1374,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
 
   128: {
     common: {
+      code_head: '',
       beam_count: 5,
       stem_beam_extension: 22.5,
       stem: true,

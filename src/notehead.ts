@@ -3,7 +3,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
-import { Glyph, GlyphProps } from './glyph';
+import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
@@ -103,7 +103,7 @@ export class NoteHead extends Note {
     return Category.NoteHead;
   }
 
-  glyph_code?: string;
+  glyph_code: string;
 
   protected custom_glyph: boolean = false;
   protected stem_up_x_offset: number = 0;
@@ -175,11 +175,6 @@ export class NoteHead extends Note {
   /** Determine if the notehead is displaced. */
   isDisplaced(): boolean {
     return this.displaced === true;
-  }
-
-  /** Get the glyph data. */
-  getGlyph(): GlyphProps {
-    return this.glyphProps;
   }
 
   /** Set the X coordinate. */

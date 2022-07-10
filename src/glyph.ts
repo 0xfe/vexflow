@@ -12,7 +12,7 @@ import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
-  code_head?: string;
+  code_head: string;
   ledger_code_head?: string;
   dot_shiftY: number;
   position: string;

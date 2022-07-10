@@ -99,7 +99,7 @@ export class StaveTempo extends StaveModifier {
       const glyphProps = Tables.getGlyphProps(duration);
 
       x += 3 * scale;
-      if (glyphProps.code_head) Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, glyphProps.code_head);
+      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, glyphProps.code_head);
       x += glyphProps.getWidth ? glyphProps.getWidth() : 0 * scale;
 
       // Draw stem and flags
@@ -113,8 +113,8 @@ export class StaveTempo extends StaveModifier {
         const y_top = y - stem_height;
         ctx.fillRect(x - scale, y_top, scale, stem_height);
 
-        if (code.flag) {
-          const flagMetrics = Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, {
+        if (glyphProps.code && glyphProps.code_flag_upstem) {
+          const flagMetrics = Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, glyphProps.code_flag_upstem, {
             category: 'flag.staveTempo',
           });
           x += (flagMetrics.width * Tables.NOTATION_FONT_SCALE) / flagMetrics.font.getData().resolution;

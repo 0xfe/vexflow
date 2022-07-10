@@ -4,24 +4,27 @@
 
 import { Clef, ClefType } from './clef';
 import { Glyph } from './glyph';
-import { GlyphNote } from './glyphnote';
+import { Note } from './note';
+import { RenderContext } from './rendercontext';
 import { Category } from './typeguard';
 
 /** ClefNote implements clef annotations in measures. */
-export class ClefNote extends GlyphNote {
+export class ClefNote extends Note {
   static get CATEGORY(): string {
     return Category.ClefNote;
   }
 
+  protected glyph: Glyph;
   protected clef: Clef;
   protected type: string;
 
   constructor(type: string, size?: string, annotation?: string) {
-    const clef = new Clef(type, size, annotation);
-    const glyph = new Glyph(clef.clef.code, clef.clef.point);
-    super(glyph, { duration: 'b' });
+    super({ duration: 'b' });
     this.type = type;
-    this.clef = clef;
+    this.clef = new Clef(type, size, annotation);
+    this.glyph = new Glyph(this.clef.clef.code, this.clef.clef.point);
+    this.setWidth(this.glyph.getMetrics().width);
+
     // Note properties
     this.ignore_ticks = true;
   }
@@ -30,12 +33,26 @@ export class ClefNote extends GlyphNote {
   setType(type: string, size: string, annotation: string): this {
     this.type = type;
     this.clef = new Clef(type, size, annotation);
-    return this.setGlyph(new Glyph(this.clef.clef.code, this.clef.clef.point));
+    this.glyph = new Glyph(this.clef.clef.code, this.clef.clef.point);
+    this.setWidth(this.glyph.getMetrics().width);
+    return this;
   }
 
   /** Get associated clef. */
   getClef(): ClefType {
     return this.clef.clef;
+  }
+
+  /** Set associated context. */
+  setContext(context: RenderContext): this {
+    super.setContext(context);
+    this.glyph.setContext(this.getContext());
+    return this;
+  }
+
+  preFormat(): this {
+    this.preFormatted = true;
+    return this;
   }
 
   /** Render clef note. */

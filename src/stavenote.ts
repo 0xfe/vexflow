@@ -1121,7 +1121,7 @@ export class StaveNote extends StemmableNote {
 
   shouldDrawFlag(): boolean {
     const hasStem = this.stem !== undefined;
-    const hasFlag = this.glyphProps.flag as boolean; // specified in tables.js
+    const hasFlag = this.glyphProps.flag == true;
     const hasNoBeam = this.beam === undefined;
     return hasStem && hasFlag && hasNoBeam;
   }
