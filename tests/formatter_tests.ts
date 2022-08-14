@@ -45,9 +45,90 @@ const FormatterTests = {
     run('Vertical alignment - many unaligned beats', unalignedNoteDurations2, { globalSoftmax: false });
     run('Vertical alignment - many unaligned beats (global softmax)', unalignedNoteDurations2, { globalSoftmax: true });
     run('Vertical alignment - many mixed elements', alignedMixedElements, { globalSoftmax: true });
-    run('Vertical alignment - cross stave (beam up)', crossStave, { stem1: 'up', stem2: 'up' });
-    run('Vertical alignment - cross stave (beam down)', crossStave, { stem1: 'down', stem2: 'down' });
-    run('Vertical alignment - cross stave (beam middle)', crossStave, { stem1: 'down', stem2: 'up' });
+    run('Vertical alignment - cross stave (beam up1)', crossStave, {
+      notes0: 'C#5/q, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/8, D4/8',
+      stem1: 'up',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam up2)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/8, D4/8',
+      stem1: 'up',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam up3)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/16, D4/8',
+      stem1: 'up',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam up4)', crossStave, {
+      notes0: 'C#5/q, C5/8, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/16, D4/8',
+      stem1: 'up',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam down1)', crossStave, {
+      notes0: 'C#5/q, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/8, D4/8',
+      stem1: 'down',
+      stem2: 'down',
+    });
+    run('Vertical alignment - cross stave (beam down2)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/8, D4/8',
+      stem1: 'down',
+      stem2: 'down',
+    });
+    run('Vertical alignment - cross stave (beam down3)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/16, D4/8',
+      stem1: 'down',
+      stem2: 'down',
+    });
+    run('Vertical alignment - cross stave (beam down4)', crossStave, {
+      notes0: 'C#5/q, C5/8, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/16, D4/8',
+      stem1: 'down',
+      stem2: 'down',
+    });
+    run('Vertical alignment - cross stave (beam middle1)', crossStave, {
+      notes0: 'C#5/q, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/8, D4/8',
+      stem1: 'down',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam middle2)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/8, D4/8',
+      stem1: 'down',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam middle3)', crossStave, {
+      notes0: 'C#5/q, C5/16, B4/q',
+      notes1: 'A4/8, E4/8',
+      notes2: 'C4/16, D4/8',
+      stem1: 'down',
+      stem2: 'up',
+    });
+    run('Vertical alignment - cross stave (beam middle4)', crossStave, {
+      notes0: 'C#5/q, C5/8, B4/q',
+      notes1: 'A4/8, E4/16',
+      notes2: 'C4/16, D4/8',
+      stem1: 'down',
+      stem2: 'up',
+    });
     run('StaveNote - Justification', justifyStaveNotes);
     run('Notes with Tab', notesWithTab);
     run('Multiple Staves - Justified', multiStaves, { debug: true });
@@ -741,21 +822,20 @@ function crossStave(options: TestOptions): void {
 
   const voice = score.voice(
     score
-      .notes('C#5/q, B4')
+      .notes(options.params.notes0)
       .concat(
         score.beam(
           score
-            .notes('A4/8, E4', { stem: options.params.stem1 })
-            .concat(score.notes('C4, D4', { stem: options.params.stem2 }))
+            .notes(options.params.notes1, { stem: options.params.stem1 })
+            .concat(score.notes(options.params.notes2, { stem: options.params.stem2 }))
         )
       )
   );
-  voice.getTickables()[0].setStave(stave1);
-  voice.getTickables()[1].setStave(stave1);
-  voice.getTickables()[2].setStave(stave1);
-  voice.getTickables()[3].setStave(stave1);
-  voice.getTickables()[4].setStave(stave2);
-  voice.getTickables()[5].setStave(stave2);
+  for (let i = 0; i < voice.getTickables().length; i++) {
+    if (i < options.params.notes0.split(',').length + options.params.notes1.split(',').length)
+      voice.getTickables()[i].setStave(stave1);
+    else voice.getTickables()[i].setStave(stave2);
+  }
 
   system.addVoices([voice]);
 
