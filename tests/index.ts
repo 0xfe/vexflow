@@ -27,6 +27,7 @@ export * from './boundingbox_tests';
 export * from './boundingboxcomputation_tests';
 export * from './chordsymbol_tests';
 export * from './clef_tests';
+export * from './crossbeam_tests';
 export * from './curve_tests';
 export * from './dot_tests';
 export * from './easyscore_tests';
