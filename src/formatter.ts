@@ -586,9 +586,17 @@ export class Formatter {
   }
 
   /**
+   * Get the AlignmentContexts of TickContexts that were created by createTickContexts.
+   * Returns undefined if createTickContexts has not yet been run.
+   */
+  getTickContexts(): AlignmentContexts<TickContext> | undefined {
+    return this.tickContexts;
+  }
+
+  /**
    * This is the core formatter logic. Format voices and justify them
    * to `justifyWidth` pixels. `renderingContext` is required to justify elements
-   * that can't retreive widths without a canvas. This method sets the `x` positions
+   * that can't retrieve widths without a canvas. This method sets the `x` positions
    * of all the tickables/notes in the formatter.
    */
   preFormat(justifyWidth = 0, renderingContext?: RenderContext, voicesParam?: Voice[], stave?: Stave): number {
@@ -926,7 +934,7 @@ export class Formatter {
    * the overall "loss" (or cost) of this layout, and repositions tickcontexts in an
    * attempt to reduce the cost. You can call this method multiple times until it finds
    * and oscillates around a global minimum.
-   * @param alpha the "learning rate" for the formatter. It determines how much of a shift
+   * @param options[alpha] the "learning rate" for the formatter. It determines how much of a shift
    * the formatter should make based on its cost function.
    */
   tune(options?: { alpha?: number }): number {

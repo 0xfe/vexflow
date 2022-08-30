@@ -183,6 +183,13 @@ export class StaveTie extends Element {
     }
   }
 
+  /**
+   * Returns the TieNotes structure of the first and last note this tie connects.
+   */
+  getNotes(): TieNotes {
+    return this.notes;
+  }
+
   draw(): boolean {
     this.checkContext();
     this.setRendered();

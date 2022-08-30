@@ -896,7 +896,7 @@ export class StaveNote extends StemmableNote {
   // Get the width of the note if it is displaced. Used for `Voice`
   // formatting
   getVoiceShiftWidth(): number {
-    // TODO: may need to accomodate for dot here.
+    // TODO: may need to accommodate for dot here.
     return this.getGlyphWidth() * (this.displaced ? 2 : 1);
   }
 

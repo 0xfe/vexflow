@@ -303,6 +303,14 @@ export class KeySignature extends StaveModifier {
     this.formatted = true;
   }
 
+  /**
+   * Return the Glyph objects making up this KeySignature.
+   */
+  getGlyphs(): Glyph[] {
+    if (!this.formatted) this.format();
+    return this.glyphs;
+  }
+
   draw(): void {
     const stave = this.checkStave();
     const ctx = stave.checkContext();

@@ -151,6 +151,16 @@ export class TextNote extends Note {
     return this;
   }
 
+  /** Return the Stave line on which the TextNote is placed. */
+  getLine(): number {
+    return this.line;
+  }
+
+  /** Return the unformatted text of this TextNote. */
+  getText(): string {
+    return this.text;
+  }
+
   /** Pre-render formatting. */
   preFormat(): void {
     if (this.preFormatted) return;
