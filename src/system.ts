@@ -218,6 +218,7 @@ export class System extends Element {
         : this.options.width - (startX - this.options.x) - Stave.defaultPadding;
     }
     formatter.format(allVoices, this.options.noJustification ? 0 : justifyWidth, this.options.formatOptions);
+    formatter.postFormat();
 
     for (let i = 0; i < this.options.formatIterations; i++) {
       formatter.tune(options_details);
