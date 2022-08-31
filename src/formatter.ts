@@ -74,8 +74,6 @@ function createContexts<T>(
   makeContext: makeContextFn<T>,
   addToContext: addToContextFn<T>
 ): AlignmentContexts<T> {
-  let resolutionMultiplier = 0;
-
   // Initialize tick maps.
   const tickToContextMap: Record<number, T> = {};
   const tickList: number[] = [];
@@ -86,9 +84,9 @@ function createContexts<T>(
       map: tickToContextMap,
       array: contexts,
       list: tickList.sort((a, b) => a - b),
-      resolutionMultiplier,
+      resolutionMultiplier: 0,
     };
-  resolutionMultiplier = Formatter.getResolutionMultiplier(voices);
+  const resolutionMultiplier = Formatter.getResolutionMultiplier(voices);
   // For each voice, extract notes and create a context for every
   // new tick that hasn't been seen before.
   voices.forEach((voice, voiceIndex) => {
