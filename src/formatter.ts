@@ -188,7 +188,7 @@ export class Formatter {
   protected justifyWidth: number;
   protected totalCost: number;
   protected totalShift: number;
-  protected tickContexts?: AlignmentContexts<TickContext>;
+  protected tickContexts: AlignmentContexts<TickContext>;
   protected formatterOptions: Required<FormatterOptions>;
   protected modifierContexts: AlignmentModifierContexts[];
   protected voices: Voice[];
@@ -425,7 +425,13 @@ export class Formatter {
     this.hasMinTotalWidth = false;
 
     // Arrays of tick and modifier contexts.
-    this.tickContexts = undefined;
+    this.tickContexts = {
+      map: {},
+      array: [],
+      list: [],
+      resolutionMultiplier: 0,
+    };
+
     this.modifierContexts = [];
 
     // Gaps between contexts, for free movement of notes post
@@ -486,14 +492,12 @@ export class Formatter {
     // Cache results.
     if (this.hasMinTotalWidth) return this.minTotalWidth;
 
-    // Create tick contexts if not already created.
-    if (!this.tickContexts) {
-      if (!voices) {
-        throw new RuntimeError('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
-      }
-
-      this.createTickContexts(voices);
+    // Create tick contexts.
+    if (!voices) {
+      throw new RuntimeError('BadArgument', "'voices' required to run preCalculateMinTotalWidth");
     }
+
+    this.createTickContexts(voices);
 
     // eslint-disable-next-line
     const { list: contextList, map: contextMap } = this.tickContexts!;
@@ -892,7 +896,6 @@ export class Formatter {
 
   /** Calculate the total cost of this formatting decision. */
   evaluate(): number {
-    if (!this.tickContexts) return 0;
     const contexts = this.tickContexts;
     const justifyWidth = this.justifyWidth;
     // Calculate available slack per tick context. This works out how much freedom
@@ -1043,16 +1046,16 @@ export class Formatter {
    * in the voices.
    */
   postFormat(): this {
-    const postFormatContexts = (contexts: AlignmentContexts<ModifierContext> | AlignmentContexts<TickContext>) =>
-      contexts.list.forEach((tick) => contexts.map[tick].postFormat());
-
     this.modifierContexts.forEach((modifierContexts) => {
       modifierContexts.list.forEach((ticks, stave) => {
         const record = modifierContexts.map.get(stave);
         if (record) ticks.forEach((tick) => record[tick].postFormat());
       });
     });
-    if (this.tickContexts) postFormatContexts(this.tickContexts);
+
+    this.tickContexts.list.forEach((tick) => {
+      this.tickContexts.map[tick].postFormat();
+    });
 
     return this;
   }
