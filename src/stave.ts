@@ -255,9 +255,19 @@ export class Stave extends Element {
     };
   }
 
+  /**
+   * Set the measure number of this Stave.
+   */
   setMeasure(measure: number): this {
     this.measure = measure;
     return this;
+  }
+
+  /**
+   * Return the measure number of this Stave.
+   */
+  getMeasure(): number {
+    return this.measure;
   }
 
   /**

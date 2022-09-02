@@ -127,15 +127,17 @@ function superscriptAndSubscript(options: TestOptions): void {
       .addModifier(f.Accidental({ type: '#' }), 1),
   ]);
 
-  const voice2 = score.voice([
+  const notes2 = [
     f.TextNote({ text: Flow.unicode.flat + 'I', superscript: '+5', duration: '8' }),
     f.TextNote({ text: 'D' + Flow.unicode.sharp + '/F', duration: '4d', superscript: 'sus2' }),
     f.TextNote({ text: 'ii', superscript: '6', subscript: '4', duration: '8' }),
     f.TextNote({ text: 'C', superscript: Flow.unicode.triangle + '7', subscript: '', duration: '8' }),
     f.TextNote({ text: 'vii', superscript: Flow.unicode['o-with-slash'] + '7', duration: '8' }),
     f.TextNote({ text: 'V', superscript: '7', duration: '8' }),
-  ]);
+  ];
+  equal(notes2[0].getText(), Flow.unicode.flat + 'I', 'TextNote.getText() return .text');
 
+  const voice2 = score.voice(notes2);
   voice2.getTickables().forEach((note) => {
     const textNote = note as TextNote;
     textNote.setFont({ family: Font.SERIF, size: 15 });

@@ -16,6 +16,9 @@ ruby_sess.*
 *.pyc
 .svn
 .class
+
+# Jetbrains
+.idea/.gitignore
 .idea/VexFlow.iml
 .idea/encodings.xml
 .idea/misc.xml
@@ -23,12 +26,14 @@ ruby_sess.*
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.idea/inspectionProfiles
+
 docs/*.html
 docs/public
 docs/docco.css
 !docs/index.html
 npm-debug.log
 
-#eclipse
+# Eclipse
 .project
 .settings/
