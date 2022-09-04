@@ -53,7 +53,6 @@ export interface AlignmentContexts<T> {
 }
 
 export interface AlignmentModifierContexts {
-  list: Map<Stave | undefined, number[]>;
   map: Map<Stave | undefined, Record<number, ModifierContext>>;
   array: ModifierContext[];
   resolutionMultiplier: number;
@@ -74,18 +73,18 @@ function createContexts<T>(
   makeContext: makeContextFn<T>,
   addToContext: addToContextFn<T>
 ): AlignmentContexts<T> {
+  if (voices.length == 0)
+    return {
+      map: {},
+      array: [],
+      list: [],
+      resolutionMultiplier: 0,
+    };
+
   // Initialize tick maps.
   const tickToContextMap: Record<number, T> = {};
   const tickList: number[] = [];
   const contexts: T[] = [];
-
-  if (voices.length == 0)
-    return {
-      map: tickToContextMap,
-      array: contexts,
-      list: tickList.sort((a, b) => a - b),
-      resolutionMultiplier: 0,
-    };
   const resolutionMultiplier = Formatter.getResolutionMultiplier(voices);
   // For each voice, extract notes and create a context for every
   // new tick that hasn't been seen before.
@@ -583,7 +582,6 @@ export class Formatter {
 
     // Initialize tick maps.
     const tickToContextMap: Map<Stave | undefined, Record<number, ModifierContext>> = new Map();
-    const tickList: Map<Stave | undefined, number[]> = new Map();
     const contexts: ModifierContext[] = [];
 
     // For each voice, extract notes and create a context for every
@@ -596,23 +594,17 @@ export class Formatter {
       voice.getTickables().forEach((tickable) => {
         const integerTicks = ticksUsed.numerator;
         let staveTickToContextMap = tickToContextMap.get(tickable.getStave());
-        let staveTickList = tickList.get(tickable.getStave());
 
         // If we have no tick context for this tick, create one.
         if (!staveTickToContextMap) {
           tickToContextMap.set(tickable.getStave(), {});
-          tickList.set(tickable.getStave(), []);
           staveTickToContextMap = tickToContextMap.get(tickable.getStave());
-          staveTickList = tickList.get(tickable.getStave());
         }
         if (!(staveTickToContextMap ? staveTickToContextMap[integerTicks] : undefined)) {
           const newContext = new ModifierContext();
           contexts.push(newContext);
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           staveTickToContextMap![integerTicks] = newContext;
-          // Maintain a list of unique integerTicks.
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          staveTickList!.push(integerTicks);
         }
 
         // Add this tickable to the TickContext.
@@ -621,14 +613,10 @@ export class Formatter {
         ticksUsed.add(tickable.getTicks());
       });
     });
-    tickList.forEach((instance) => {
-      instance.sort((a, b) => a - b);
-    });
 
     this.modifierContexts.push({
       map: tickToContextMap,
       array: contexts,
-      list: tickList,
       resolutionMultiplier,
     });
   }
@@ -1047,10 +1035,7 @@ export class Formatter {
    */
   postFormat(): this {
     this.modifierContexts.forEach((modifierContexts) => {
-      modifierContexts.list.forEach((ticks, stave) => {
-        const record = modifierContexts.map.get(stave);
-        if (record) ticks.forEach((tick) => record[tick].postFormat());
-      });
+      modifierContexts.array.forEach((mc) => mc.postFormat());
     });
 
     this.tickContexts.list.forEach((tick) => {
