@@ -455,7 +455,7 @@ export class TabNote extends StemmableNote {
     this.setRendered();
     const render_stem = this.beam == undefined && this.render_options.draw_stem;
 
-    ctx.openGroup('tabnote', undefined, { pointerBBox: true });
+    this.setAttribute('el', ctx.openGroup('tabnote', this.getAttribute('id'), { pointerBBox: true }));
     this.drawPositions();
     this.drawStemThrough();
 
