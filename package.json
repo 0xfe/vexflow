@@ -112,7 +112,7 @@
     "puppeteer": "^13.0.1",
     "qunit": "^2.17.2",
     "recursive-copy": "^2.0.13",
-    "release-it": "^14.12.3",
+    "release-it": "^15.4.2",
     "sharp": "^0.29.3",
     "string-replace-loader": "^3.1.0",
     "svg2pdf.js": "^2.2.0",
