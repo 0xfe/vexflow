@@ -100,7 +100,7 @@ export function drawDot(ctx: RenderContext, x: number, y: number, color = '#F55'
 
   // draw a circle
   ctx.beginPath();
-  ctx.arc(x, y, 3, 0, Math.PI * 2, true);
+  ctx.arc(x, y, 3, 0, Math.PI * 2, false);
   ctx.closePath();
   ctx.fill();
   ctx.restore();

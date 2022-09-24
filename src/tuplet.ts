@@ -397,11 +397,11 @@ export class Tuplet extends Element {
       const colon_x = notation_start_x + x_offset + this.point * 0.16;
       const colon_radius = this.point * 0.06;
       ctx.beginPath();
-      ctx.arc(colon_x, this.y_pos - this.point * 0.08, colon_radius, 0, Math.PI * 2, true);
+      ctx.arc(colon_x, this.y_pos - this.point * 0.08, colon_radius, 0, Math.PI * 2, false);
       ctx.closePath();
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(colon_x, this.y_pos + this.point * 0.12, colon_radius, 0, Math.PI * 2, true);
+      ctx.arc(colon_x, this.y_pos + this.point * 0.12, colon_radius, 0, Math.PI * 2, false);
       ctx.closePath();
       ctx.fill();
       x_offset += this.point * 0.32;
