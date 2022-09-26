@@ -442,12 +442,14 @@ export class SVGContext extends RenderContext {
     const x0 = x + radius * Math.cos(startAngle);
     const y0 = y + radius * Math.sin(startAngle);
 
-    // Handle the edge case where arc length is greater than or equal to
-    // the circle's circumference:
-    //   https://html.spec.whatwg.org/multipage/canvas.html#ellipse-method-steps
+    // svg behavior different from canvas.  Don't normalize angles if
+    // we are drawing a circle because they both normalize to 0
+    const tmpStartTest = normalizeAngle(startAngle);
+    const tmpEndTest = normalizeAngle(endAngle);
     if (
       (!counterclockwise && endAngle - startAngle >= TWO_PI) ||
-      (counterclockwise && startAngle - endAngle >= TWO_PI)
+      (counterclockwise && startAngle - endAngle >= TWO_PI) ||
+      tmpStartTest === tmpEndTest
     ) {
       const x1 = x + radius * Math.cos(startAngle + Math.PI);
       const y1 = y + radius * Math.sin(startAngle + Math.PI);
@@ -461,9 +463,8 @@ export class SVGContext extends RenderContext {
       const x1 = x + radius * Math.cos(endAngle);
       const y1 = y + radius * Math.sin(endAngle);
 
-      startAngle = normalizeAngle(startAngle);
-      endAngle = normalizeAngle(endAngle);
-
+      startAngle = tmpStartTest;
+      endAngle = tmpEndTest;
       let large: boolean;
       if (Math.abs(endAngle - startAngle) < Math.PI) {
         large = counterclockwise;
