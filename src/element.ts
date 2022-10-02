@@ -11,13 +11,10 @@ import { defined, prefix } from './util';
 
 /** Element attributes. */
 export interface ElementAttributes {
-  // eslint-disable-next-line
-  [name: string]: any;
+  [name: string]: string | undefined;
   id: string;
-  // eslint-disable-next-line
-  el?: any;
   type: string;
-  classes: Record<string, boolean>;
+  class: string;
 }
 
 /** Element style */
@@ -101,9 +98,8 @@ export abstract class Element {
   constructor() {
     this.attrs = {
       id: Element.newID(),
-      el: undefined,
       type: this.getCategory(),
-      classes: {},
+      class: '',
     };
 
     this.rendered = false;
@@ -205,12 +201,15 @@ export abstract class Element {
 
   /** Check if it has a class label (An element can have multiple class labels).  */
   hasClass(className: string): boolean {
-    return this.attrs.classes[className] === true;
+    if (!this.attrs.class) return false;
+    return this.attrs.class?.split(' ').indexOf(className) != -1;
   }
 
   /** Add a class label (An element can have multiple class labels).  */
   addClass(className: string): this {
-    this.attrs.classes[className] = true;
+    if (this.hasClass(className)) return this;
+    if (!this.attrs.class) this.attrs.class = `${className}`;
+    else this.attrs.class = `${this.attrs.class} ${className}`;
     this.registry?.onUpdate({
       id: this.attrs.id,
       name: 'class',
@@ -222,7 +221,12 @@ export abstract class Element {
 
   /** Remove a class label (An element can have multiple class labels).  */
   removeClass(className: string): this {
-    delete this.attrs.classes[className];
+    if (!this.hasClass(className)) return this;
+    const arr = this.attrs.class?.split(' ');
+    if (arr) {
+      arr.splice(arr.indexOf(className));
+      this.attrs.class = arr.join(' ');
+    }
     this.registry?.onUpdate({
       id: this.attrs.id,
       name: 'class',
@@ -268,8 +272,7 @@ export abstract class Element {
   }
 
   /** Set an attribute. */
-  // eslint-disable-next-line
-  setAttribute(name: string, value: any): this {
+  setAttribute(name: string, value: string | undefined): this {
     const oldID = this.attrs.id;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;
