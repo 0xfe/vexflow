@@ -241,8 +241,7 @@ export class Annotation extends Modifier {
     // still need to save context state just before this, since we will be
     // changing ctx parameters below.
     this.applyStyle();
-    const classString = Object.keys(this.getAttribute('classes')).join(' ');
-    ctx.openGroup(classString, this.getAttribute('id'));
+    ctx.openGroup('annotation', this.getAttribute('id'));
     ctx.setFont(this.textFont);
 
     const text_width = ctx.measureText(this.text).width;

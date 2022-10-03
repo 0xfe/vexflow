@@ -7,7 +7,7 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
 import { Category } from './typeguard';
-import { defined } from './util';
+import { defined, prefix } from './util';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -258,6 +258,13 @@ export abstract class Element {
   // eslint-disable-next-line
   getAttribute(name: string): any {
     return this.attrs[name];
+  }
+
+  /** Return associated SVGElement. */
+  getSVGElement(suffix: string = ''): SVGElement | undefined {
+    const id = prefix(this.attrs.id + suffix);
+    const element = document.getElementById(id);
+    if (element) return element as unknown as SVGElement;
   }
 
   /** Set an attribute. */

@@ -900,9 +900,7 @@ export class Beam extends Element {
       if (stem) {
         const stem_x = note.getStemX();
         stem.setNoteHeadXBounds(stem_x, stem_x);
-        ctx.openGroup('stem', note.getAttribute('id') + '-stem');
         stem.setContext(ctx).draw();
-        ctx.closeGroup();
       }
     }, this);
   }
@@ -930,7 +928,7 @@ export class Beam extends Element {
         if (lastBeamX) {
           const lastBeamY = this.getSlopeY(lastBeamX, firstStemX, beamY, this.slope);
 
-          this.setAttribute('el', ctx.openGroup('beam'));
+          ctx.openGroup('beam', this.getAttribute('id'));
           ctx.beginPath();
           ctx.moveTo(startBeamX, startBeamY);
           ctx.lineTo(startBeamX, startBeamY + beamThickness);
