@@ -210,6 +210,7 @@ export class Stem extends Element {
 
     // Draw the stem
     ctx.save();
+    ctx.openGroup('stem', this.getAttribute('id'), { pointerBBox: true });
     this.applyStyle(ctx);
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
@@ -217,6 +218,7 @@ export class Stem extends Element {
     ctx.lineTo(stem_x, stem_y - stemHeight - this.renderHeightAdjustment * stem_direction);
     ctx.stroke();
     this.restoreStyle(ctx);
+    ctx.closeGroup();
     ctx.restore();
   }
 }

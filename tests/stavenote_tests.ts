@@ -403,9 +403,11 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
     // If this is an interactivity test (ui: true), then attach mouseover & mouseout handlers to the notes.
     if (options.params.ui) {
-      const item = note.getAttribute('el') as SVGElement;
-      item.addEventListener('mouseover', colorDescendants(item, 'green'), false);
-      item.addEventListener('mouseout', colorDescendants(item, 'black'), false);
+      const item = note.getSVGElement();
+      if (item) {
+        item.addEventListener('mouseover', colorDescendants(item, 'green'), false);
+        item.addEventListener('mouseout', colorDescendants(item, 'black'), false);
+      }
     }
     ok(note.getX() > 0, 'Note ' + i + ' has X value');
     ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');

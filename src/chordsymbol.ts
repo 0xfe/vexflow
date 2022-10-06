@@ -706,8 +706,7 @@ export class ChordSymbol extends Modifier {
 
     // We're changing context parameters. Save current state.
     ctx.save();
-    const classString = Object.keys(this.getAttribute('classes')).join(' ');
-    ctx.openGroup(classString, this.getAttribute('id'));
+    ctx.openGroup('chordsymbol', this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
     ctx.setFont(this.textFont);

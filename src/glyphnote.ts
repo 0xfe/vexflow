@@ -52,13 +52,11 @@ export class GlyphNote extends Note {
 
   drawModifiers(): void {
     const ctx = this.checkContext();
-    ctx.openGroup('modifiers');
     for (let i = 0; i < this.modifiers.length; i++) {
       const modifier = this.modifiers[i];
       modifier.setContext(ctx);
       modifier.drawWithStyle();
     }
-    ctx.closeGroup();
   }
 
   draw(): void {
