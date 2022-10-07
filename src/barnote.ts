@@ -85,11 +85,11 @@ export class BarNote extends Note {
   draw(): void {
     const ctx = this.checkContext();
     L('Rendering bar line at: ', this.getAbsoluteX());
-    if (this.style) this.applyStyle(ctx);
+    this.applyStyle(ctx);
     const barline = new Barline(this.type);
     barline.setX(this.getAbsoluteX());
     barline.draw(this.checkStave());
-    if (this.style) this.restoreStyle(ctx);
+    this.restoreStyle(ctx);
     this.setRendered();
   }
 }
