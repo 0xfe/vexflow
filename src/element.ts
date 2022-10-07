@@ -11,7 +11,7 @@ import { defined, prefix } from './util';
 
 /** Element attributes. */
 export interface ElementAttributes {
-  [name: string]: string | undefined;
+  [name: string]: string | number | undefined;
   id: string;
   type: string;
   class: string;
@@ -19,6 +19,7 @@ export interface ElementAttributes {
 
 /** Element style */
 export interface ElementStyle {
+  [name: string]: string | number | undefined;
   /**
    * CSS color used for the shadow.
    *
@@ -83,7 +84,6 @@ export abstract class Element {
 
   private context?: RenderContext;
   protected rendered: boolean;
-  protected style?: ElementStyle;
   private attrs: ElementAttributes;
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
@@ -140,20 +140,31 @@ export abstract class Element {
    * ```
    */
   setStyle(style: ElementStyle | undefined): this {
-    this.style = style;
+    for (const k in style) {
+      this.setAttribute('style_' + k, style[k]);
+    }
     return this;
   }
 
   /** Set the element & associated children style used for rendering. */
-  setGroupStyle(style: ElementStyle): this {
-    this.style = style;
+  setGroupStyle(style: ElementStyle | undefined): this {
+    for (const k in style) {
+      this.setAttribute('style_' + k, style[k]);
+    }
     this.children.forEach((child) => child.setGroupStyle(style));
     return this;
   }
 
   /** Get the element style used for rendering. */
   getStyle(): ElementStyle | undefined {
-    return this.style;
+    const style: ElementStyle = {};
+
+    for (const k in this.attrs) {
+      if (k.startsWith('style_')) {
+        style[k.slice(6)] = this.attrs[k];
+      }
+    }
+    return Object.keys(style).length > 0 ? style : undefined;
   }
 
   /** Apply the element style to `context`. */
@@ -272,7 +283,7 @@ export abstract class Element {
   }
 
   /** Set an attribute. */
-  setAttribute(name: string, value: string | undefined): this {
+  setAttribute(name: string, value: string | number | undefined): this {
     const oldID = this.attrs.id;
     const oldValue = this.attrs[name];
     this.attrs[name] = value;

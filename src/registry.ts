@@ -36,8 +36,8 @@ class Index {
 export interface RegistryUpdate {
   id: string;
   name: string;
-  value: string | undefined;
-  oldValue: string | undefined;
+  value: string | number | undefined;
+  oldValue: string | number | undefined;
 }
 
 export class Registry {
@@ -84,7 +84,7 @@ export class Registry {
       delete this.index[name][oldValue][id];
     }
     if (value && elem) {
-      this.setIndexValue(name, value, elem.getAttribute('id'), elem);
+      this.setIndexValue(name, value as string, elem.getAttribute('id'), elem);
     }
   }
 
