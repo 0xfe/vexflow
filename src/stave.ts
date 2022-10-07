@@ -251,7 +251,7 @@ export class Stave extends Element {
       fillStyle: this.options.fill_style,
       strokeStyle: this.options.fill_style, // yes, this is correct for legacy compatibility
       lineWidth: Tables.STAVE_LINE_THICKNESS,
-      ...this.style,
+      ...super.getStyle(),
     };
   }
 

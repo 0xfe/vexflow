@@ -143,7 +143,7 @@ export abstract class Element {
    * element.drawWithStyle();
    * ```
    */
-  setStyle(style: ElementStyle): this {
+  setStyle(style: ElementStyle | undefined): this {
     this.style = style;
     return this;
   }

@@ -405,7 +405,6 @@ export class StaveNote extends StemmableNote {
   protected dot_shiftY: number;
   protected use_default_head_x: boolean;
   protected ledgerLineStyle: ElementStyle;
-  protected flagStyle?: ElementStyle;
   private _noteHeads: NoteHead[];
   // Sorted variant of keyProps used internally
   private sortedKeyProps: { keyProps: KeyProps; index: number }[] = [];
@@ -868,10 +867,10 @@ export class StaveNote extends StemmableNote {
   }
 
   setFlagStyle(style: ElementStyle): void {
-    this.flagStyle = style;
+    this.flag?.setStyle(style);
   }
   getFlagStyle(): ElementStyle | undefined {
-    return this.flagStyle;
+    return this.flag?.getStyle();
   }
 
   // Sets the notehead at `index` to the provided coloring `style`.
@@ -1155,9 +1154,7 @@ export class StaveNote extends StemmableNote {
             (this.flag?.getMetrics().y_shift ?? 0) * (1 - this.getStaveNoteScale());
 
       // Draw the Flag
-      this.applyStyle(ctx, this.getFlagStyle());
       this.flag?.render(ctx, flagX, flagY);
-      this.restoreStyle(ctx, this.getFlagStyle());
     }
   }
 
