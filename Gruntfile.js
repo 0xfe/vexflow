@@ -814,7 +814,10 @@ module.exports = (grunt) => {
     });
 
     releaseItDynamicImport
-      .then((releaseIt) => releaseIt(options))
+      .then((module) => {
+        const runTasks = module.default;
+        return runTasks(options);
+      })
       .then((output) => {
         try {
           log('Removing build/ folder...');
