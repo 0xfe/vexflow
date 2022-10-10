@@ -1,0 +1,10 @@
+import { Flow } from '../src/flow.js';
+import { loadCustom } from '../src/fonts/load_custom.js';
+import { loadLeland } from '../src/fonts/load_leland.js';
+import { loadTextFonts } from '../src/fonts/textfonts.js';
+loadLeland();
+loadCustom();
+Flow.setMusicFont('Leland', 'Custom');
+loadTextFonts();
+export * from '../src/index.js';
+export * as default from '../src/index.js';
