@@ -39,8 +39,7 @@ const bendWithPhrase = (phrase: BendPhrase[]) => new Bend('', false, phrase);
 function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -132,8 +131,7 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
   const ctx = contextBuilder(options.elementId, 500, 240);
 
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.setFont('10pt Arial');
 
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
@@ -185,8 +183,7 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
 function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = Font.SIZE + 'pt ' + Font.SANS_SERIF; // Optionally use constants defined in Font.
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 

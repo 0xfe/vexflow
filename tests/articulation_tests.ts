@@ -182,8 +182,7 @@ function drawFermata(options: TestOptions): void {
 
 function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 750, 300);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   const staveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
   const stave = new Stave(10, 50, 750).addClef('treble').setContext(ctx).draw();
 

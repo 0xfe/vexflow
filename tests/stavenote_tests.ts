@@ -525,8 +525,6 @@ function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
 function displacements(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 700, 155);
   ctx.scale(0.9, 0.9);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
 
   const stave = new Stave(10, 10, 675);
   stave.setContext(ctx);
@@ -865,8 +863,6 @@ function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): v
 function dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 800, 150);
   ctx.scale(1.0, 1.0);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(10, 10, 975);
 
@@ -899,8 +895,6 @@ function dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder
 function dotsAndFlagsStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 800, 160);
   ctx.scale(1.0, 1.0);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(10, 10, 975);
 
@@ -932,8 +926,6 @@ function dotsAndFlagsStemDown(options: TestOptions, contextBuilder: ContextBuild
 function dotsAndBeamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 800, 150);
   ctx.scale(1.0, 1.0);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(10, 10, 975);
 
@@ -968,8 +960,6 @@ function dotsAndBeamsUp(options: TestOptions, contextBuilder: ContextBuilder): v
 function dotsAndBeamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 800, 160);
   ctx.scale(1.0, 1.0);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(10, 10, 975);
 

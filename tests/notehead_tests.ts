@@ -39,8 +39,7 @@ function setContextStyle(ctx: RenderContext): void {
   // ctx.scale(0.9, 0.9);
   // ctx.scale(2.0, 2.0);
   ctx.scale(1.8, 1.8);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial';
 }
 
