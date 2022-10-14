@@ -139,7 +139,7 @@ export class Renderer {
         if (!isHTMLCanvas(element)) {
           throw new RuntimeError('BadElement', 'CANVAS context requires an HTMLCanvasElement.');
         }
-        const context = element.getContext('2d');
+        const context = element.getContext('2d', { willReadFrequently: true });
         if (!context) {
           throw new RuntimeError('BadElement', "Can't get canvas context");
         }

@@ -59,7 +59,7 @@ module.exports = {
   noteheadCircleXDoubleWhole: 'vxx',
   noteheadCircleXWhole: 'vxx',
   noteheadCircleXHalf: 'vxx',
-  noteheadCircleX: 'vxx',
+  noteheadCircleX: 'v3b',
   noteheadCircledDoubleWhole: 'vxx',
   noteheadCircledWhole: 'vxx',
   noteheadCircledHalf: 'vxx',
