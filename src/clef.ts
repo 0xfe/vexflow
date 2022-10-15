@@ -196,6 +196,7 @@ export class Clef extends StaveModifier {
     const ctx = stave.checkContext();
     this.setRendered();
 
+    this.applyStyle(ctx);
     ctx.openGroup('clef', this.getAttribute('id'));
     glyph.setStave(stave);
     glyph.setContext(ctx);
@@ -211,5 +212,6 @@ export class Clef extends StaveModifier {
       this.attachment.renderToStave(this.x);
     }
     ctx.closeGroup();
+    this.restoreStyle(ctx);
   }
 }

@@ -318,6 +318,7 @@ export class KeySignature extends StaveModifier {
     if (!this.formatted) this.format();
     this.setRendered();
 
+    this.applyStyle(ctx);
     ctx.openGroup('keysignature', this.getAttribute('id'));
     for (let i = 0; i < this.glyphs.length; i++) {
       const glyph = this.glyphs[i];
@@ -327,5 +328,6 @@ export class KeySignature extends StaveModifier {
       glyph.renderToStave(x);
     }
     ctx.closeGroup();
+    this.restoreStyle(ctx);
   }
 }

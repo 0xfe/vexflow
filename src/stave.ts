@@ -727,6 +727,7 @@ export class Stave extends Element {
     const ctx = this.checkContext();
     this.setRendered();
 
+    this.applyStyle();
     ctx.openGroup('stave', this.getAttribute('id'));
     if (!this.formatted) this.format();
 
@@ -739,15 +740,16 @@ export class Stave extends Element {
     for (let line = 0; line < num_lines; line++) {
       y = this.getYForLine(line);
 
-      this.applyStyle();
       if (this.options.line_config[line].visible) {
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(x + width, y);
         ctx.stroke();
       }
-      this.restoreStyle();
     }
+
+    ctx.closeGroup();
+    this.restoreStyle();
 
     // Draw the modifiers (bar lines, coda, segno, repeat brackets, etc.)
     for (let i = 0; i < this.modifiers.length; i++) {
@@ -769,7 +771,6 @@ export class Stave extends Element {
       ctx.fillText('' + this.measure, this.x - textWidth / 2, y);
       ctx.restore();
     }
-    ctx.closeGroup();
     return this;
   }
 

@@ -1162,10 +1162,12 @@ export class StaveNote extends StemmableNote {
   drawNoteHeads(): void {
     const ctx = this.checkContext();
     this._noteHeads.forEach((notehead) => {
+      notehead.applyStyle(ctx);
       ctx.openGroup('notehead', notehead.getAttribute('id'), { pointerBBox: true });
       notehead.setContext(ctx).draw();
       this.drawModifiers(notehead);
       ctx.closeGroup();
+      notehead.restoreStyle(ctx);
     });
   }
 
