@@ -4,6 +4,7 @@
 
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
+import { Tables } from './tables';
 import { normalizeAngle, prefix, RuntimeError } from './util';
 
 // eslint-disable-next-line
@@ -119,6 +120,8 @@ export class SVGContext extends RenderContext {
   // The stack of groups.
   groups: SVGGElement[];
 
+  protected precision = 1;
+
   backgroundFillStyle: string = 'white';
 
   /** Formatted as CSS font shorthand (e.g., 'italic bold 12pt Arial') */
@@ -127,6 +130,8 @@ export class SVGContext extends RenderContext {
   constructor(element: HTMLElement) {
     super();
     this.element = element;
+
+    this.precision = Math.pow(10, Tables.RENDER_PRECISION_PLACES);
 
     // Create a SVG element and add it to the container element.
     const svg = this.create('svg');
@@ -166,6 +171,10 @@ export class SVGContext extends RenderContext {
     };
 
     this.state_stack = [];
+  }
+
+  protected round(n: number): number {
+    return Math.round(n * this.precision) / this.precision;
   }
 
   /**
@@ -379,6 +388,10 @@ export class SVGContext extends RenderContext {
 
     const rectangle = this.create('rect');
     attributes = attributes ?? { fill: 'none', 'stroke-width': this.lineWidth, stroke: 'black' };
+    x = this.round(x);
+    y = this.round(y);
+    width = this.round(width);
+    height = this.round(height);
     this.applyAttributes(rectangle, { x, y, width, height, ...attributes });
     this.add(rectangle);
     return this;
@@ -411,6 +424,8 @@ export class SVGContext extends RenderContext {
   }
 
   moveTo(x: number, y: number): this {
+    x = this.round(x);
+    y = this.round(y);
     this.path += 'M' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
@@ -418,6 +433,8 @@ export class SVGContext extends RenderContext {
   }
 
   lineTo(x: number, y: number): this {
+    x = this.round(x);
+    y = this.round(y);
     this.path += 'L' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
@@ -425,6 +442,12 @@ export class SVGContext extends RenderContext {
   }
 
   bezierCurveTo(x1: number, y1: number, x2: number, y2: number, x: number, y: number): this {
+    x = this.round(x);
+    y = this.round(y);
+    x1 = this.round(x1);
+    y1 = this.round(y1);
+    x2 = this.round(x2);
+    y2 = this.round(y2);
     this.path += 'C' + x1 + ' ' + y1 + ',' + x2 + ' ' + y2 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
@@ -432,6 +455,10 @@ export class SVGContext extends RenderContext {
   }
 
   quadraticCurveTo(x1: number, y1: number, x: number, y: number): this {
+    x = this.round(x);
+    y = this.round(y);
+    x1 = this.round(x1);
+    y1 = this.round(y1);
     this.path += 'Q' + x1 + ' ' + y1 + ',' + x + ' ' + y;
     this.pen.x = x;
     this.pen.y = y;
@@ -439,8 +466,10 @@ export class SVGContext extends RenderContext {
   }
 
   arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, counterclockwise: boolean): this {
-    const x0 = x + radius * Math.cos(startAngle);
-    const y0 = y + radius * Math.sin(startAngle);
+    let x0 = x + radius * Math.cos(startAngle);
+    let y0 = y + radius * Math.sin(startAngle);
+    x0 = this.round(x0);
+    y0 = this.round(y0);
 
     // svg behavior different from canvas.  Don't normalize angles if
     // we are drawing a circle because they both normalize to 0
@@ -451,17 +480,20 @@ export class SVGContext extends RenderContext {
       (counterclockwise && startAngle - endAngle >= TWO_PI) ||
       tmpStartTest === tmpEndTest
     ) {
-      const x1 = x + radius * Math.cos(startAngle + Math.PI);
-      const y1 = y + radius * Math.sin(startAngle + Math.PI);
+      let x1 = x + radius * Math.cos(startAngle + Math.PI);
+      let y1 = y + radius * Math.sin(startAngle + Math.PI);
       // There's no way to specify a completely circular arc in SVG so we have to
       // use two semi-circular arcs.
+      x1 = this.round(x1);
+      y1 = this.round(y1);
+      radius = this.round(radius);
       this.path += `M${x0} ${y0} A${radius} ${radius} 0 0 0 ${x1} ${y1} `;
       this.path += `A${radius} ${radius} 0 0 0 ${x0} ${y0}`;
       this.pen.x = x0;
       this.pen.y = y0;
     } else {
-      const x1 = x + radius * Math.cos(endAngle);
-      const y1 = y + radius * Math.sin(endAngle);
+      let x1 = x + radius * Math.cos(endAngle);
+      let y1 = y + radius * Math.sin(endAngle);
 
       startAngle = tmpStartTest;
       endAngle = tmpEndTest;
@@ -477,6 +509,9 @@ export class SVGContext extends RenderContext {
 
       const sweep = !counterclockwise;
 
+      x1 = this.round(x1);
+      y1 = this.round(y1);
+      radius = this.round(radius);
       this.path += `M${x0} ${y0} A${radius} ${radius} 0 ${+large} ${+sweep} ${x1} ${y1}`;
       this.pen.x = x1;
       this.pen.y = y1;
@@ -539,6 +574,8 @@ export class SVGContext extends RenderContext {
     if (!text || text.length <= 0) {
       return this;
     }
+    x = this.round(x);
+    y = this.round(y);
     const attributes: Attributes = {
       ...this.attributes,
       stroke: 'none',
