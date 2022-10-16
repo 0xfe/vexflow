@@ -392,12 +392,6 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
   expect(noteStructs.length * 2);
 
-  const colorDescendants = (parentItem: SVGElement, color: string) => () =>
-    parentItem.querySelectorAll('*').forEach((child) => {
-      child.setAttribute('fill', color);
-      child.setAttribute('stroke', color);
-    });
-
   for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 25);
 
@@ -405,8 +399,20 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
     if (options.params.ui) {
       const item = note.getSVGElement();
       if (item) {
-        item.addEventListener('mouseover', colorDescendants(item, 'green'), false);
-        item.addEventListener('mouseout', colorDescendants(item, 'black'), false);
+        item.addEventListener(
+          'mouseover',
+          () => {
+            note.setStyle({ fillStyle: 'green' });
+          },
+          false
+        );
+        item.addEventListener(
+          'mouseout',
+          () => {
+            note.setStyle({ fillStyle: 'black' });
+          },
+          false
+        );
       }
     }
     ok(note.getX() > 0, 'Note ' + i + ' has X value');

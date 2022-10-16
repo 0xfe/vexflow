@@ -141,12 +141,26 @@ export abstract class Element {
    */
   setStyle(style: ElementStyle | undefined): this {
     this.style = style;
+    const svg = this.getSVGElement();
+    if (svg) {
+      if (style?.fillStyle) {
+        svg.setAttribute('fill', style.fillStyle);
+        for (let i = 0; i < svg.children.length; i++) svg.children[i].setAttribute('fill', '');
+      }
+    }
     return this;
   }
 
   /** Set the element & associated children style used for rendering. */
   setGroupStyle(style: ElementStyle): this {
     this.style = style;
+    const svg = this.getSVGElement();
+    if (svg) {
+      if (style?.fillStyle) {
+        svg.setAttribute('fill', style.fillStyle);
+        for (let i = 0; i < svg.children.length; i++) svg.children[i].setAttribute('fill', '');
+      }
+    }
     this.children.forEach((child) => child.setGroupStyle(style));
     return this;
   }
