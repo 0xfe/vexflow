@@ -159,7 +159,7 @@ export class Voice extends Element {
       let boundingBox = undefined;
       for (let i = 0; i < this.tickables.length; ++i) {
         const tickable = this.tickables[i];
-        tickable.setStave(stave);
+        if (!tickable.getStave()) tickable.setStave(stave);
         const bb = tickable.getBoundingBox();
         if (bb) {
           boundingBox = boundingBox ? boundingBox.mergeWith(bb) : bb;
