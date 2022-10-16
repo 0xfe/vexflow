@@ -210,15 +210,15 @@ export class Stem extends Element {
 
     // Draw the stem
     ctx.save();
+    this.applyStyle();
     ctx.openGroup('stem', this.getAttribute('id'), { pointerBBox: true });
-    this.applyStyle(ctx);
     ctx.beginPath();
     ctx.setLineWidth(Stem.WIDTH);
     ctx.moveTo(stem_x, stem_y - stemletYOffset + y_base_offset);
     ctx.lineTo(stem_x, stem_y - stemHeight - this.renderHeightAdjustment * stem_direction);
     ctx.stroke();
-    this.restoreStyle(ctx);
     ctx.closeGroup();
+    this.restoreStyle();
     ctx.restore();
   }
 }

@@ -275,8 +275,6 @@ export class NoteHead extends Note {
     const stem_direction = this.stem_direction;
     const glyph_font_scale = this.render_options.glyph_font_scale;
 
-    this.applyStyle(ctx);
-
     const categorySuffix = `${this.glyph_code}Stem${stem_direction === Stem.UP ? 'Up' : 'Down'}`;
     if (this.noteType === 's') {
       const staveSpace = this.checkStave().getSpacingBetweenLines();
@@ -286,7 +284,5 @@ export class NoteHead extends Note {
         category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
       });
     }
-
-    this.restoreStyle(ctx);
   }
 }

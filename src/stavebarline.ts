@@ -130,9 +130,11 @@ export class Barline extends StaveModifier {
 
   // Draw barlines
   draw(stave: Stave): void {
-    stave.checkContext();
+    const ctx = stave.checkContext();
     this.setRendered();
 
+    this.applyStyle(ctx);
+    ctx.openGroup('stavebarline', this.getAttribute('id'));
     switch (this.type) {
       case BarlineType.SINGLE:
         this.drawVerticalBar(stave, this.x, false);
@@ -163,6 +165,8 @@ export class Barline extends StaveModifier {
         // Default is NONE, so nothing to draw
         break;
     }
+    ctx.closeGroup();
+    this.restoreStyle(ctx);
   }
 
   drawVerticalBar(stave: Stave, x: number, double_bar?: boolean): void {

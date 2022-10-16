@@ -249,6 +249,7 @@ export class Ornament extends Modifier {
     const stemDir = note.getStemDirection();
     const stave = note.checkStave();
 
+    this.applyStyle();
     ctx.openGroup('ornament', this.getAttribute('id'));
 
     // Get stem extents
@@ -331,5 +332,6 @@ export class Ornament extends Modifier {
       this.accidentalUpper.render(ctx, glyphX, glyphY);
     }
     ctx.closeGroup();
+    this.restoreStyle();
   }
 }

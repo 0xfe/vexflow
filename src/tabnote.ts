@@ -455,6 +455,7 @@ export class TabNote extends StemmableNote {
     this.setRendered();
     const render_stem = this.beam == undefined && this.render_options.draw_stem;
 
+    this.applyStyle();
     ctx.openGroup('tabnote', this.getAttribute('id'), { pointerBBox: true });
     this.drawPositions();
     this.drawStemThrough();
@@ -468,5 +469,6 @@ export class TabNote extends StemmableNote {
     this.drawFlag();
     this.drawModifiers();
     ctx.closeGroup();
+    this.restoreStyle();
   }
 }

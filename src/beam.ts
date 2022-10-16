@@ -934,7 +934,6 @@ export class Beam extends Element {
         if (lastBeamX) {
           const lastBeamY = this.getSlopeY(lastBeamX, firstStemX, beamY, this.slope);
 
-          ctx.openGroup('beam', this.getAttribute('id'));
           ctx.beginPath();
           ctx.moveTo(startBeamX, startBeamY);
           ctx.lineTo(startBeamX, startBeamY + beamThickness);
@@ -942,7 +941,6 @@ export class Beam extends Element {
           ctx.lineTo(lastBeamX + 1, lastBeamY);
           ctx.closePath();
           ctx.fill();
-          ctx.closeGroup();
         } else {
           throw new RuntimeError('NoLastBeamX', 'lastBeamX undefined.');
         }
@@ -988,7 +986,9 @@ export class Beam extends Element {
 
     this.drawStems(ctx);
     this.applyStyle();
+    ctx.openGroup('beam', this.getAttribute('id'));
     this.drawBeamLines(ctx);
+    ctx.closeGroup();
     this.restoreStyle();
   }
 }

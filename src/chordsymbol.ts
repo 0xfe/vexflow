@@ -706,6 +706,7 @@ export class ChordSymbol extends Modifier {
 
     // We're changing context parameters. Save current state.
     ctx.save();
+    this.applyStyle();
     ctx.openGroup('chordsymbol', this.getAttribute('id'));
 
     const start = note.getModifierStartXY(Modifier.Position.ABOVE, this.index);
@@ -803,6 +804,7 @@ export class ChordSymbol extends Modifier {
       }
     });
     ctx.closeGroup();
+    this.restoreStyle();
     ctx.restore();
   }
 }
