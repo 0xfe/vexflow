@@ -6,11 +6,16 @@ import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { normalizeAngle, prefix, RuntimeError } from './util';
 
-// eslint-disable-next-line
-export type Attributes = Record<string, any>;
+export type Attributes = {
+  [name: string]: string | number | undefined;
+  'font-family'?: string;
+  'font-size'?: string | number;
+  'font-style'?: string;
+  'font-weight'?: string | number;
+};
 
 /** For a particular element type (e.g., rect), we will not apply certain presentation attributes. */
-const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Attributes /* ignored attributes */> = {
+const ATTRIBUTES_TO_IGNORE: Record<string /* element type */, Record<string, boolean> /* ignored attributes */> = {
   path: {
     x: true,
     y: true,
@@ -83,10 +88,10 @@ class MeasureTextCache {
     }
 
     txt.textContent = text;
-    txt.setAttributeNS(null, 'font-family', attributes['font-family']);
-    txt.setAttributeNS(null, 'font-size', attributes['font-size']);
-    txt.setAttributeNS(null, 'font-style', attributes['font-style']);
-    txt.setAttributeNS(null, 'font-weight', attributes['font-weight']);
+    if (attributes['font-family']) txt.setAttributeNS(null, 'font-family', attributes['font-family']);
+    if (attributes['font-size']) txt.setAttributeNS(null, 'font-size', `${attributes['font-size']}`);
+    if (attributes['font-style']) txt.setAttributeNS(null, 'font-style', attributes['font-style']);
+    if (attributes['font-weight']) txt.setAttributeNS(null, 'font-weight', `${attributes['font-weight']}`);
     svg.appendChild(txt);
     const bbox = txt.getBBox();
     svg.removeChild(txt);
@@ -118,6 +123,8 @@ export class SVGContext extends RenderContext {
   parent: SVGGElement;
   // The stack of groups.
   groups: SVGGElement[];
+  // The stack of attributes associated with each group.
+  protected groupAttributes: Attributes[];
 
   backgroundFillStyle: string = 'white';
 
@@ -148,7 +155,8 @@ export class SVGContext extends RenderContext {
     };
 
     this.state = {
-      scale: { x: 1, y: 1 },
+      scaleX: 1,
+      scaleY: 1,
       ...defaultFontAttributes,
     };
 
@@ -159,6 +167,10 @@ export class SVGContext extends RenderContext {
       stroke: 'black',
       ...defaultFontAttributes,
     };
+
+    this.groupAttributes = [];
+    this.applyAttributes(svg, this.attributes);
+    this.groupAttributes.push({ ...this.attributes });
 
     this.shadow_attributes = {
       width: 0,
@@ -196,11 +208,14 @@ export class SVGContext extends RenderContext {
     if (attrs && attrs.pointerBBox) {
       group.setAttribute('pointer-events', 'bounding-box');
     }
+    this.applyAttributes(group, this.attributes);
+    this.groupAttributes.push({ ...this.groupAttributes[this.groupAttributes.length - 1], ...this.attributes });
     return group;
   }
 
   closeGroup(): void {
     this.groups.pop();
+    this.groupAttributes.pop();
     this.parent = this.groups[this.groups.length - 1];
   }
 
@@ -296,7 +311,7 @@ export class SVGContext extends RenderContext {
     };
 
     this.applyAttributes(this.svg, attributes);
-    this.scale(this.state.scale.x, this.state.scale.y);
+    this.scale(this.state.scaleX as number, this.state.scaleY as number);
     return this;
   }
 
@@ -313,7 +328,8 @@ export class SVGContext extends RenderContext {
     // handle internal scaling, am trying to make it possible
     // for us to eventually move in that direction.
 
-    this.state.scale = { x, y };
+    this.state.scaleX = x;
+    this.state.scaleY = y;
     const visibleWidth = this.width / x;
     const visibleHeight = this.height / y;
     this.setViewBox(0, 0, visibleWidth, visibleHeight);
@@ -342,7 +358,12 @@ export class SVGContext extends RenderContext {
       if (attrNamesToIgnore && attrNamesToIgnore[attrName]) {
         continue;
       }
-      element.setAttributeNS(null, attrName, attributes[attrName]);
+      if (
+        attributes[attrName] &&
+        (this.groupAttributes.length == 0 ||
+          attributes[attrName] != this.groupAttributes[this.groupAttributes.length - 1][attrName])
+      )
+        element.setAttributeNS(null, attrName, attributes[attrName] as string);
     }
 
     return element;
@@ -366,7 +387,7 @@ export class SVGContext extends RenderContext {
     }
 
     // Replace the viewbox attribute we just removed.
-    this.scale(this.state.scale.x, this.state.scale.y);
+    this.scale(this.state.scaleX as number, this.state.scaleY as number);
   }
 
   // ## Rectangles:
@@ -385,7 +406,7 @@ export class SVGContext extends RenderContext {
   }
 
   fillRect(x: number, y: number, width: number, height: number): this {
-    const attributes = { fill: this.attributes.fill };
+    const attributes = { fill: this.attributes.fill, stroke: 'none' };
     this.rect(x, y, width, height, attributes);
     return this;
   }
@@ -397,7 +418,7 @@ export class SVGContext extends RenderContext {
     // Since tabNote seems to be the only module that makes use of this
     // it may be worth creating a separate tabStave that would
     // draw lines around locations of tablature fingering.
-    this.rect(x, y, width, height, { 'stroke-width': 0, fill: this.backgroundFillStyle });
+    this.rect(x, y, width, height, { fill: this.backgroundFillStyle, stroke: 'none' });
     return this;
   }
 
@@ -494,7 +515,7 @@ export class SVGContext extends RenderContext {
     // A CSS drop-shadow filter blur looks different than a canvas shadowBlur
     // of the same radius, so we scale the drop-shadow radius here to make it
     // look close to the canvas shadow.
-    return `filter: drop-shadow(0 0 ${sa.width / 1.5}px ${sa.color})`;
+    return `filter: drop-shadow(0 0 ${(sa.width as number) / 1.5}px ${sa.color})`;
   }
 
   fill(attributes?: Attributes): this {
@@ -504,7 +525,7 @@ export class SVGContext extends RenderContext {
     }
 
     attributes.d = this.path;
-    if (this.shadow_attributes.width > 0) {
+    if ((this.shadow_attributes.width as number) > 0) {
       attributes.style = this.getShadowStyle();
     }
 
@@ -521,7 +542,7 @@ export class SVGContext extends RenderContext {
       'stroke-width': this.lineWidth,
       d: this.path,
     };
-    if (this.shadow_attributes.width > 0) {
+    if ((this.shadow_attributes.width as number) > 0) {
       attributes.style = this.getShadowStyle();
     }
 
@@ -616,7 +637,7 @@ export class SVGContext extends RenderContext {
   }
 
   get fillStyle(): string | CanvasGradient | CanvasPattern {
-    return this.attributes.fill;
+    return this.attributes.fill as string;
   }
 
   set strokeStyle(style: string | CanvasGradient | CanvasPattern) {
@@ -624,7 +645,7 @@ export class SVGContext extends RenderContext {
   }
 
   get strokeStyle(): string | CanvasGradient | CanvasPattern {
-    return this.attributes.stroke;
+    return this.attributes.stroke as string;
   }
 
   /**
