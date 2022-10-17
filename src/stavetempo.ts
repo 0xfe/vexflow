@@ -86,12 +86,14 @@ export class StaveTempo extends StaveModifier {
 
     if (duration && bpm) {
       // Override the weight and style.
-      ctx.setFont({ ...this.textFont, weight: 'normal', style: 'normal' });
+      const noteTextFont = { ...this.textFont, weight: 'normal', style: 'normal' };
+      ctx.setFont(noteTextFont);
+      const noteTextFormatter = TextFormatter.create(noteTextFont);
 
       if (name) {
-        x += textFormatter.getWidthForTextInPx('(');
+        x += noteTextFormatter.getWidthForTextInPx('|');
         ctx.fillText('(', x, y);
-        x += textFormatter.getWidthForTextInPx(')');
+        x += noteTextFormatter.getWidthForTextInPx('(');
       }
 
       const code = Tables.getGlyphProps(duration);
@@ -112,11 +114,10 @@ export class StaveTempo extends StaveModifier {
         ctx.fillRect(x - scale, y_top, scale, stem_height);
 
         if (code.flag) {
-          Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, {
+          const flagMetrics = Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, {
             category: 'flag.staveTempo',
           });
-
-          if (!dots) x += 6 * scale;
+          x += (flagMetrics.width * Tables.NOTATION_FONT_SCALE) / flagMetrics.font.getData().resolution;
         }
       }
 
@@ -127,7 +128,6 @@ export class StaveTempo extends StaveModifier {
         ctx.arc(x, y + 2 * scale, 2 * scale, 0, Math.PI * 2, false);
         ctx.fill();
       }
-
       ctx.fillText(' = ' + bpm + (name ? ')' : ''), x + 3 * scale, y);
     }
 
