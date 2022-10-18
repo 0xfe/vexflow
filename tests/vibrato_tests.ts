@@ -26,8 +26,7 @@ const tabNote = (noteStruct: TabNoteStruct) => new TabNote(noteStruct);
 function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -57,8 +56,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
 function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -83,8 +81,7 @@ function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
 function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.3, 1.3);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
+
   ctx.setFont(Font.SANS_SERIF, VexFlowTests.Font.size);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 

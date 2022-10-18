@@ -283,8 +283,6 @@ function jazzOrnaments(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 950, 400);
   const ctx = f.getContext();
   ctx.scale(1, 1);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
 
   const xStart = 10;
   const width = 300;

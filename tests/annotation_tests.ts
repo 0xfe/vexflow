@@ -106,8 +106,7 @@ function lyrics(options: TestOptions): void {
 function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial, sans-serif';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -132,8 +131,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
 function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   const stave = new Stave(10, 10, 450).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string) => new Annotation(text).setFont(Font.SERIF, FONT_SIZE, 'normal', 'italic');
@@ -170,8 +168,7 @@ function styling(options: TestOptions, contextBuilder: ContextBuilder): void {
 function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   ctx.font = '10pt Arial';
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -197,8 +194,7 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
 function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
+
   ctx.setFont(Font.SANS_SERIF, FONT_SIZE);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
@@ -239,8 +235,7 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 function placement(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 750, 300);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   const stave = new Stave(10, 50, 750).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string, fontSize: number, vj: number) =>
@@ -304,8 +299,7 @@ function placement(options: TestOptions, contextBuilder: ContextBuilder): void {
 function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
   const annotation = (text: string) =>
@@ -325,8 +319,7 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
 function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 500, 240);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
+
   const stave = new Stave(10, 10, 300).addClef('treble').setContext(ctx).draw();
 
   const notes = [
@@ -354,8 +347,6 @@ function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): v
 function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 650, 950);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)
@@ -382,8 +373,6 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
 function justificationStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 650, 1000);
   ctx.scale(1.5, 1.5);
-  ctx.fillStyle = '#221';
-  ctx.strokeStyle = '#221';
 
   const annotation = (text: string, hJustification: number, vJustification: number) =>
     new Annotation(text)

@@ -50,8 +50,7 @@ function setupContext(
   // context is SVGContext or CanvasRenderingContext2D (native) or CanvasContext (only if Renderer.USE_CANVAS_PROXY is true).
   const context = contextBuilder(options.elementId, width, height);
   context.scale(0.9, 0.9);
-  context.fillStyle = '#221';
-  context.strokeStyle = '#221';
+
   context.font = '10pt Arial';
 
   const stave = new Stave(10, 30, width).addClef('treble').addTimeSignature('4/4').setContext(context).draw();

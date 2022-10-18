@@ -39,8 +39,6 @@ function showOneNote(note1: StaveNote, stave: Stave, ctx: RenderContext, x: numb
 
 function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 1000, 240);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(10, 10, 975);
   stave.setContext(ctx);
@@ -105,8 +103,6 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
 function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 750, 300);
-  ctx.setFillStyle('#221');
-  ctx.setStrokeStyle('#221');
 
   const stave = new Stave(30, 45, 700).setContext(ctx).draw();
 

@@ -50,8 +50,7 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
   // eslint-disable-next-line
   const context = options.contextBuilder!(options.elementId, 350, 140);
   context.scale(0.9, 0.9);
-  context.fillStyle = '#221';
-  context.strokeStyle = '#221';
+
   context.font = '10pt Arial';
   const stave = new TabStave(10, 10, width || 350).addTabGlyph().setContext(context).draw();
 
