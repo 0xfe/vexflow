@@ -402,14 +402,14 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
         item.addEventListener(
           'mouseover',
           () => {
-            note.setStyle({ fillStyle: 'green' });
+            note.setStyle({ fillStyle: 'green', strokeStyle: 'green' });
           },
           false
         );
         item.addEventListener(
           'mouseout',
           () => {
-            note.setStyle({ fillStyle: 'black' });
+            note.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
           },
           false
         );

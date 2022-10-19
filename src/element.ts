@@ -145,7 +145,9 @@ export abstract class Element {
     if (svg) {
       if (style?.fillStyle) {
         svg.setAttribute('fill', style.fillStyle);
-        for (let i = 0; i < svg.children.length; i++) svg.children[i].setAttribute('fill', '');
+      }
+      if (style?.strokeStyle) {
+        svg.setAttribute('stroke', style.strokeStyle);
       }
     }
     return this;
@@ -158,7 +160,9 @@ export abstract class Element {
     if (svg) {
       if (style?.fillStyle) {
         svg.setAttribute('fill', style.fillStyle);
-        for (let i = 0; i < svg.children.length; i++) svg.children[i].setAttribute('fill', '');
+      }
+      if (style?.strokeStyle) {
+        svg.setAttribute('stroke', style.strokeStyle);
       }
     }
     this.children.forEach((child) => child.setGroupStyle(style));
