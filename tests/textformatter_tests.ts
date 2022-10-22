@@ -43,7 +43,7 @@ function basic(): void {
 }
 
 function accuracy(options: TestOptions, contextBuilder: ContextBuilder): void {
-  const ctx = contextBuilder(options.elementId, 400, 150);
+  const ctx = contextBuilder(options.elementId, 600, 200);
   const font = {
     family: Font.SERIF,
     size: 14,
@@ -53,7 +53,13 @@ function accuracy(options: TestOptions, contextBuilder: ContextBuilder): void {
   const textFormatter = TextFormatter.create(font);
 
   ctx.setFont(font);
-  const texts = ['text', '     text', 'text  text', 'text  text  text  text  text  text'];
+  const texts = [
+    'AVo(i)a',
+    ' AVo(i)a',
+    'iiiiiiiii',
+    '@@@@@@@@',
+    'a very long String with Mixed Case Text,(0123456789)',
+  ];
   for (let i = 0; i < texts.length; i++) {
     ctx.fillText(texts[i], 50, 20 + i * 35);
     ctx.fillRect(50, 25 + i * 35, textFormatter.getWidthForTextInPx(texts[i]), 2);
