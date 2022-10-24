@@ -1,3 +1,4 @@
+import { TextMeasure } from './rendercontext';
 import { defined } from './util';
 
 export interface FontInfo {
@@ -88,6 +89,9 @@ export class Font {
 
   /** Default font size in `pt`. */
   static SIZE: number = 10;
+
+  /** Canvas used to measure text */
+  protected static txtCanvas?: HTMLCanvasElement;
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
@@ -388,6 +392,37 @@ export class Font {
       font.setMetrics(metrics);
     }
     return font;
+  }
+
+  /** Return the text bounding box */
+  static measureText(text: string, fontInfo: FontInfo): TextMeasure {
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    context!.font = Font.toCSSString(Font.validate(fontInfo));
+    const metrics = context!.measureText(text);
+
+    let y = 0;
+    let height = 0;
+    if (metrics.fontBoundingBoxAscent) {
+      y = -metrics.fontBoundingBoxAscent;
+      height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
+    } else {
+      y = -metrics.actualBoundingBoxAscent;
+      height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+    }
+    // Return x, y, width & height in the same manner as svg getBBox
+    return {
+      x: 0,
+      y: y,
+      width: metrics.width,
+      height: height,
+    };
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////

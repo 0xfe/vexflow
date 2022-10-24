@@ -12,6 +12,7 @@ import { Element } from '../src/element';
 import { Flow } from '../src/flow';
 import { Font, FontStyle, FontWeight } from '../src/font';
 import { PedalMarking } from '../src/pedalmarking';
+import { ContextBuilder } from '../src/renderer';
 import { StaveNote } from '../src/stavenote';
 import { TextBracket } from '../src/textbracket';
 import { TextNote } from '../src/textnote';
@@ -26,6 +27,7 @@ const FontTests = {
     const run = VexFlowTests.runTests;
     run('Set Text Font to Georgia', setTextFontToGeorgia);
     run('Set Music Font to Petaluma', setMusicFontToPetaluma);
+    run('MeasureText', measureText);
   },
 };
 
@@ -180,6 +182,29 @@ function setMusicFontToPetaluma(options: TestOptions): void {
   factory.draw();
 
   ok(true);
+}
+
+function measureText(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 600, 200);
+  const font = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
+  ctx.setFont(font);
+  const texts = [
+    'AVo(i)a',
+    ' AVo(i)a',
+    'iiiiiiiii',
+    '@@@@@@@@',
+    'a very long String with Mixed Case Text,(0123456789)',
+  ];
+  for (let i = 0; i < texts.length; i++) {
+    ctx.fillText(texts[i], 50, 20 + i * 35);
+    ctx.fillRect(50, 25 + i * 35, Font.measureText(texts[i], font).width, 2);
+  }
+  ok(true, 'all pass');
 }
 
 VexFlowTests.register(FontTests);
