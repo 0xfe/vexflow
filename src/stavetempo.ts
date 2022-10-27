@@ -6,7 +6,6 @@ import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Tables } from './tables';
-import { TextFormatter } from './textformatter';
 import { Category } from './typeguard';
 
 export interface StaveTempoOptions {
@@ -76,24 +75,22 @@ export class StaveTempo extends StaveModifier {
     const y = stave.getYForTopText(1) + this.shift_y;
 
     ctx.save();
-    const textFormatter = TextFormatter.create(this.textFont);
 
     if (name) {
       ctx.setFont(this.textFont);
       ctx.fillText(name, x, y);
-      x += textFormatter.getWidthForTextInPx(name);
+      x += ctx.measureText(name).width;
     }
 
     if (duration && bpm) {
       // Override the weight and style.
       const noteTextFont = { ...this.textFont, weight: 'normal', style: 'normal' };
       ctx.setFont(noteTextFont);
-      const noteTextFormatter = TextFormatter.create(noteTextFont);
 
       if (name) {
-        x += noteTextFormatter.getWidthForTextInPx('|');
+        x += ctx.measureText(' ').width;
         ctx.fillText('(', x, y);
-        x += noteTextFormatter.getWidthForTextInPx('(');
+        x += ctx.measureText('(').width;
       }
 
       const code = Tables.getGlyphProps(duration);

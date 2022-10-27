@@ -16,7 +16,6 @@ import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFormatter } from './textformatter';
 import { Category, isStemmableNote } from './typeguard';
 import { log } from './util';
 
@@ -290,7 +289,7 @@ export class ChordSymbol extends Modifier {
 
         // If there is a symbol-specific offset, add it but consider font
         // size since font and glyphs will be interspersed.
-        const fontSize = symbol.textFormatter.fontSizeInPixels;
+        const fontSize = Font.convertSizeToPixelValue(symbol.textFont?.size);
         const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
           block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
@@ -384,9 +383,6 @@ export class ChordSymbol extends Modifier {
   protected useKerning: boolean = true;
   protected reportWidth: boolean = true;
 
-  // Initialized by the constructor via this.setFont().
-  protected textFormatter!: TextFormatter;
-
   constructor() {
     super();
     this.resetFont();
@@ -415,11 +411,11 @@ export class ChordSymbol extends Modifier {
    * The offset is specified in `em`. Scale this value by the font size in pixels.
    */
   get superscriptOffset(): number {
-    return ChordSymbol.superscriptOffset * this.textFormatter.fontSizeInPixels;
+    return ChordSymbol.superscriptOffset * Font.convertSizeToPixelValue(this.textFont?.size);
   }
 
   get subscriptOffset(): number {
-    return ChordSymbol.subscriptOffset * this.textFormatter.fontSizeInPixels;
+    return ChordSymbol.subscriptOffset * Font.convertSizeToPixelValue(this.textFont?.size);
   }
 
   setReportWidth(value: boolean): this {
@@ -442,7 +438,7 @@ export class ChordSymbol extends Modifier {
     }
     const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
-    const yoff = 0.25 * this.textFormatter.fontSizeInPixels;
+    const yoff = 0.25 * Font.convertSizeToPixelValue(this.textFont?.size);
     let symIndex = 0;
     for (symIndex === 0; symIndex < barIndex; ++symIndex) {
       const symbol = this.symbolBlocks[symIndex];
@@ -501,7 +497,7 @@ export class ChordSymbol extends Modifier {
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.fontSizeInPixels;
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * Font.convertSizeToPixelValue(this.textFont?.size);
     // TODO: adjust kern for font size.
     // Where should this constant live?
     if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {
@@ -547,7 +543,7 @@ export class ChordSymbol extends Modifier {
       // rv.width = rv.glyph.getMetrics().width;
       // don't set yShift here, b/c we need to do it at formatting time after the font is set.
     } else if (symbolType === SymbolTypes.TEXT) {
-      symbolBlock.width = this.textFormatter.getWidthForTextInEm(symbolBlock.text);
+      symbolBlock.width = Font.measureText(symbolBlock.text, this.textFont!).width / Font.scaleToPxFrom['em'];
     } else if (symbolType === SymbolTypes.LINE) {
       symbolBlock.width = params.width;
     }
@@ -646,7 +642,6 @@ export class ChordSymbol extends Modifier {
    */
   setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
     super.setFont(f, size, weight, style);
-    this.textFormatter = TextFormatter.create(this.textFont);
     return this;
   }
 
@@ -687,15 +682,11 @@ export class ChordSymbol extends Modifier {
     let acc = 0;
     let i = 0;
     for (i = 0; i < text.length; ++i) {
-      const metrics = this.textFormatter.getGlyphMetrics(text[i]);
-      if (metrics) {
-        const yMax = metrics.y_max ?? 0;
-        acc = yMax < acc ? yMax : acc;
-      }
+      const yMax = Font.textMetrics(text[i], this.fontInfo).fontBoundingBoxDescent;
+      acc = yMax < acc ? yMax : acc;
     }
 
-    const resolution = this.textFormatter.getResolution();
-    return i > 0 ? -1 * (acc / resolution) : 0;
+    return -acc;
   }
 
   /** Render text and glyphs above/below the note. */
@@ -749,7 +740,7 @@ export class ChordSymbol extends Modifier {
       // HorizontalJustify.CENTER_STEM
       x = note.getStemX() - this.getWidth() / 2;
     }
-    L('Rendering ChordSymbol: ', this.textFormatter, x, y);
+    L('Rendering ChordSymbol: ', x, y);
 
     this.symbolBlocks.forEach((symbol) => {
       const isSuper = ChordSymbol.isSuperscript(symbol);

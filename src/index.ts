@@ -75,7 +75,6 @@ export * from './tabstave';
 export * from './tabtie';
 export * from './textbracket';
 export * from './textdynamics';
-export * from './textformatter';
 export * from './textnote';
 export * from './tickable';
 export * from './tickcontext';

@@ -71,7 +71,6 @@ export * from './tabslide_tests';
 export * from './tabstave_tests';
 export * from './tabtie_tests';
 export * from './textbracket_tests';
-export * from './textformatter_tests';
 export * from './textnote_tests';
 export * from './threevoice_tests';
 export * from './tickcontext_tests';

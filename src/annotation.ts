@@ -1,14 +1,13 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 import { Element } from './element';
-import { FontInfo } from './font';
+import { Font, FontInfo } from './font';
 import { Modifier, ModifierPosition } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TextFormatter } from './textformatter';
 import { Category, isStemmableNote, isTabNote } from './typeguard';
 import { log } from './util';
 
@@ -84,15 +83,14 @@ export class Annotation extends Modifier {
     let maxRightGlyphWidth = 0;
     for (let i = 0; i < annotations.length; ++i) {
       const annotation = annotations[i];
-      const textFormatter = TextFormatter.create(annotation.textFont);
       // Text height is expressed in fractional stave spaces.
-      const textLines = (5 + textFormatter.maxHeight) / Tables.STAVE_LINE_DISTANCE;
+      const textLines = (5 + Font.convertSizeToPointValue(annotation.textFont?.size)) / Tables.STAVE_LINE_DISTANCE;
       let verticalSpaceNeeded = textLines;
 
       const note = annotation.checkAttachedNote();
       const glyphWidth = note.getGlyph().getWidth();
       // Get the text width from the font metrics.
-      const textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      const textWidth = Font.measureText(annotation.text, annotation.textFont!).width;
       if (annotation.horizontalJustification === AnnotationHorizontalJustify.LEFT) {
         maxLeftGlyphWidth = Math.max(glyphWidth, maxLeftGlyphWidth);
         leftWidth = Math.max(leftWidth, textWidth) + Annotation.minAnnotationPadding;
@@ -230,7 +228,6 @@ export class Annotation extends Modifier {
     const ctx = this.checkContext();
     const note = this.checkAttachedNote();
     const stemDirection = note.hasStem() ? note.getStemDirection() : Stem.UP;
-    const textFormatter = TextFormatter.create(this.textFont);
     const start = note.getModifierStartXY(ModifierPosition.ABOVE, this.index);
 
     this.setRendered();
@@ -245,7 +242,7 @@ export class Annotation extends Modifier {
     ctx.setFont(this.textFont);
 
     const text_width = ctx.measureText(this.text).width;
-    const text_height = textFormatter.maxHeight + 2;
+    const text_height = Font.convertSizeToPointValue(this.textFont?.size) + 2;
     let x;
     let y;
 

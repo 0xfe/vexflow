@@ -393,6 +393,18 @@ export class Font {
     }
     return font;
   }
+  static textMetrics(text: string, fontInfo: FontInfo): TextMetrics {
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    context!.font = Font.toCSSString(Font.validate(fontInfo));
+    return context!.measureText(text);
+  }
 
   /** Return the text bounding box */
   static measureText(text: string, fontInfo: FontInfo): TextMeasure {
