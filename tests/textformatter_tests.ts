@@ -17,7 +17,11 @@ const TextFormatterTests = {
 function basic(): void {
   // See: src/fonts/textfonts.ts > loadTextFonts()
   const registeredFamilies = TextFormatter.getFontFamilies();
-  equal(registeredFamilies.length, 2, `There are two registered font families: 'Roboto Slab' & 'PetalumaScript'`);
+  equal(
+    registeredFamilies.length,
+    4,
+    `There are two registered font families: 'Roboto Slab' & 'PetalumaScript' and default 'Serif' and 'Sans'`
+  );
 
   // Verify the advanceWidth and other metrics by opening the font file with a glyph inspector:
   // https://fontdrop.info/

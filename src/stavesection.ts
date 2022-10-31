@@ -4,6 +4,7 @@
 import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Stave } from './stave';
 import { StaveModifier } from './stavemodifier';
+import { TextFormatter } from './textformatter';
 import { Category } from './typeguard';
 
 export class StaveSection extends StaveModifier {
@@ -51,32 +52,30 @@ export class StaveSection extends StaveModifier {
   }
 
   draw(stave: Stave, shift_x: number): this {
+    const borderWidth = 2;
+    const padding = 3;
     const ctx = stave.checkContext();
     this.setRendered();
 
     ctx.save();
-    ctx.setLineWidth(2);
+    ctx.setLineWidth(borderWidth);
     ctx.setFont(this.textFont);
+    const textFormatter = TextFormatter.create(this.textFont);
 
-    const paddingX = 2;
-    const paddingY = 2;
-    const rectWidth = 2;
-    const textMeasurements = ctx.measureText(this.section);
-    const textWidth = textMeasurements.width;
-    const textHeight = textMeasurements.height;
-    const width = textWidth + 2 * paddingX; // add left & right padding
-    const height = textHeight + 2 * paddingY; // add top & bottom padding
+    const textWidth = textFormatter.getWidthForTextInPx(this.section);
+    const textHeight = textFormatter.getYForStringInPx(this.section).height;
+    const width = textWidth + 2 * padding; // add left & right padding
+    const height = textHeight + 2 * padding; // add top & bottom padding
 
     //  Seems to be a good default y
     const y = stave.getYForTopText(1.5) + this.shift_y;
     const x = this.x + shift_x;
     if (this.drawRect) {
       ctx.beginPath();
-      ctx.setLineWidth(rectWidth);
-      ctx.rect(x, y + textMeasurements.y - paddingY, width, height);
+      ctx.rect(x, y - height, width, height);
       ctx.stroke();
     }
-    ctx.fillText(this.section, x + paddingX, y);
+    ctx.fillText(this.section, x + padding, y - padding);
     ctx.restore();
     return this;
   }

@@ -18,6 +18,14 @@ export interface TextFormatterInfo extends Record<string, unknown> {
   description: string;
 }
 
+/**
+ * Y information, 0 is baseline, yMin is lowest point.
+ */
+export interface yExtent {
+  yMin: number;
+  yMax: number;
+  height: number;
+}
 // eslint-disable-next-line
 function L(...args: any[]) {
   if (TextFormatter.DEBUG) log('Vex.Flow.TextFormatter', args);
@@ -35,7 +43,7 @@ function L(...args: any[]) {
  *   textWidth == textWidthCache[cacheKey][textToMeasure]
  */
 const textWidthCache: Record<string, Record<string, number | undefined> | undefined> = {};
-
+const textHeightCache: Record<string, Record<string, yExtent | undefined> | undefined> = {};
 /**
  * Applications may register additional fonts via `TextFormatter.registerInfo(info)`.
  * The metrics for those fonts will be made available to the application.
@@ -179,7 +187,7 @@ export class TextFormatter {
   protected bold: boolean = false;
   protected superscriptOffset: number = 0;
   protected subscriptOffset: number = 0;
-  protected maxSizeGlyph: string = 'H';
+  protected maxSizeGlyph: string = '@';
 
   // This is an internal key used to index the `textWidthCache`.
   protected cacheKey: string = '';
@@ -191,7 +199,12 @@ export class TextFormatter {
   private constructor(formatterInfo: TextFormatterInfo) {
     this.updateParams(formatterInfo);
   }
-
+  get localHeightCache(): Record<string, yExtent | undefined> {
+    if (textHeightCache[this.cacheKey] === undefined) {
+      textHeightCache[this.cacheKey] = {};
+    }
+    return textHeightCache[this.cacheKey] ?? {};
+  }
   updateParams(params: TextFormatterInfo): void {
     if (params.family) this.family = params.family;
     if (params.resolution) this.resolution = params.resolution;
@@ -249,7 +262,41 @@ export class TextFormatter {
       return advanceWidth / this.resolution;
     }
   }
-
+  /**
+   * Retrieve the character's y bounds (ymin, ymax) and height.
+   */
+  getYForCharacterInPx(c: string): yExtent {
+    const metrics = this.getGlyphMetrics(c);
+    const rv = { yMin: 0, yMax: this.maxHeight, height: this.maxHeight };
+    if (!metrics) {
+      return rv;
+    } else {
+      if (typeof metrics.y_min === 'number') {
+        rv.yMin = (metrics.y_min / this.resolution) * this.fontSizeInPixels;
+      }
+      if (typeof metrics.y_max === 'number') {
+        rv.yMax = (metrics.y_max / this.resolution) * this.fontSizeInPixels;
+      }
+      rv.height = rv.yMax - rv.yMin;
+      return rv;
+    }
+  }
+  getYForStringInPx(str: string): yExtent {
+    const entry = this.localHeightCache;
+    const extent = { yMin: 0, yMax: this.maxHeight, height: this.maxHeight };
+    const cache = entry[str];
+    if (cache !== undefined) {
+      return cache;
+    }
+    for (let i = 0; i < str.length; ++i) {
+      const curY = this.getYForCharacterInPx(str[i]);
+      extent.yMin = Math.min(extent.yMin, curY.yMin);
+      extent.yMax = Math.max(extent.yMax, curY.yMax);
+      extent.height = extent.yMax - extent.yMin;
+    }
+    entry[str] = extent;
+    return extent;
+  }
   /**
    * Retrieve the total width of `text` in `em` units.
    */
@@ -273,7 +320,6 @@ export class TextFormatter {
     }
     return width;
   }
-
   /** The width of the text (in `em`) is scaled by the font size (in `px`). */
   getWidthForTextInPx(text: string): number {
     return this.getWidthForTextInEm(text) * this.fontSizeInPixels;

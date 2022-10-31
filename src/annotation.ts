@@ -244,7 +244,7 @@ export class Annotation extends Modifier {
     ctx.openGroup('annotation', this.getAttribute('id'));
     ctx.setFont(this.textFont);
 
-    const text_width = ctx.measureText(this.text).width;
+    const text_width = textFormatter.getWidthForTextInPx(this.text);
     const text_height = textFormatter.maxHeight + 2;
     let x;
     let y;
