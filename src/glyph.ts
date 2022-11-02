@@ -4,7 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Element } from './element';
-import { Font, FontGlyph } from './font';
+import { Font, FontGlyph, FontStyle, FontWeight } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
@@ -273,13 +273,27 @@ export class Glyph extends Element {
     const customScale = options?.scale ?? 1;
     const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
-    Glyph.renderOutline(
-      ctx,
-      metrics.outline,
-      scale,
-      x_pos + metrics.x_shift * customScale,
-      y_pos + metrics.y_shift * customScale
-    );
+    if (code == 'noteheadBlack') {
+      const font = {
+        family: 'Bravura',
+        size: 30,
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      ctx.setFont(font);
+      ctx.fillText(
+        String.fromCharCode(0xe0a4),
+        x_pos + metrics.x_shift * customScale,
+        y_pos + metrics.y_shift * customScale
+      );
+    } else
+      Glyph.renderOutline(
+        ctx,
+        metrics.outline,
+        scale,
+        x_pos + metrics.x_shift * customScale,
+        y_pos + metrics.y_shift * customScale
+      );
     return metrics;
   }
 

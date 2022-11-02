@@ -4,13 +4,5 @@
 import { Font } from '../font';
 
 export function loadTextFonts() {
-  // Roboto Slab
-  {
-    Font.load('Roboto Slab');
-  }
-
-  // PetalumaScript
-  {
-    Font.load('PetalumaScript');
-  }
+  Font.loadWebFonts();
 }

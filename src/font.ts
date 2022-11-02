@@ -325,6 +325,7 @@ export class Font {
   static WEB_FONT_FILES: Record<string /* fontName */, string /* fontPath */> = {
     'Roboto Slab': 'robotoslab/RobotoSlab-Medium_2.001.woff',
     PetalumaScript: 'petaluma/PetalumaScript_1.10_FS.woff',
+    Bravura: 'bravura/Bravura_1.392.woff',
   };
 
   /**
