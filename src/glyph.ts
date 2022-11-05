@@ -274,9 +274,10 @@ export class Glyph extends Element {
     const customScale = options?.scale ?? 1;
     const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
-    if (Tables.MUSIC_FONT_STACK[0].getName() == 'Bravura') {
+    const musicFont = Tables.MUSIC_FONT_STACK[0].getName();
+    if (musicFont == 'Bravura' || musicFont == 'Petaluma') {
       const font = {
-        family: Tables.MUSIC_FONT_STACK[0].getName(),
+        family: musicFont,
         size: scale * 1100,
         weight: FontWeight.NORMAL,
         style: FontStyle.NORMAL,
@@ -527,9 +528,10 @@ export class Glyph extends Element {
     this.applyStyle(ctx);
     const xPos = x + this.originShift.x + metrics.x_shift;
     const yPos = y + this.originShift.y + metrics.y_shift;
-    if (Tables.MUSIC_FONT_STACK[0].getName() == 'Bravura') {
+    const musicFont = Tables.MUSIC_FONT_STACK[0].getName();
+    if (musicFont == 'Bravura' || musicFont == 'Petaluma') {
       const font = {
-        family: Tables.MUSIC_FONT_STACK[0].getName(),
+        family: musicFont,
         size: scale * 1100,
         weight: FontWeight.NORMAL,
         style: FontStyle.NORMAL,
