@@ -20,6 +20,7 @@ function toVFPath(glyph) {
   const pointSize = 72;
   const scale = 72 * 20;
   const bb = glyph.getBoundingBox();
+  const unicode = glyph.unicode;
   const path = glyph.getPath(0, 0, pointSize);
   function fix(f, invert = false) {
     return Math.round((f / pointSize) * scale) * (invert ? -1 : 1);
@@ -50,6 +51,7 @@ function toVFPath(glyph) {
     y_min: bb.y1,
     y_max: bb.y2,
     ha: bb.y2 - bb.y1,
+    unicode,
     o: pathStr,
   };
 }

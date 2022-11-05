@@ -8,6 +8,7 @@ import { Font, FontGlyph, FontStyle, FontWeight } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stem } from './stem';
+import { Tables } from './tables';
 import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
@@ -49,6 +50,7 @@ export interface GlyphMetrics {
   y_shift: number;
   scale: number;
   ha: number;
+  unicode?: number;
   outline: number[];
   font: Font;
 }
@@ -212,8 +214,6 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
-    if (!glyph.o) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
-
     let x_shift = 0;
     let y_shift = 0;
     let scale = 1;
@@ -227,7 +227,7 @@ export class Glyph extends Element {
     const x_max = glyph.x_max;
     const ha = glyph.ha;
 
-    if (!glyph.cached_outline) {
+    if (glyph.o && !glyph.cached_outline) {
       glyph.cached_outline = GlyphOutline.parse(glyph.o);
     }
 
@@ -237,8 +237,9 @@ export class Glyph extends Element {
       x_shift,
       y_shift,
       scale,
+      unicode: glyph.unicode,
       ha,
-      outline: glyph.cached_outline,
+      outline: glyph.cached_outline ?? [],
       font,
       width: x_max - x_min,
       height: ha,
@@ -273,16 +274,16 @@ export class Glyph extends Element {
     const customScale = options?.scale ?? 1;
     const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
-    if (code == 'noteheadBlack') {
+    if (Tables.MUSIC_FONT_STACK[0].getName() == 'Bravura') {
       const font = {
-        family: 'Bravura',
-        size: 30,
+        family: Tables.MUSIC_FONT_STACK[0].getName(),
+        size: scale * 1100,
         weight: FontWeight.NORMAL,
         style: FontStyle.NORMAL,
       };
       ctx.setFont(font);
       ctx.fillText(
-        String.fromCharCode(0xe0a4),
+        String.fromCharCode(metrics.unicode ?? 0),
         x_pos + metrics.x_shift * customScale,
         y_pos + metrics.y_shift * customScale
       );
@@ -526,7 +527,16 @@ export class Glyph extends Element {
     this.applyStyle(ctx);
     const xPos = x + this.originShift.x + metrics.x_shift;
     const yPos = y + this.originShift.y + metrics.y_shift;
-    Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
+    if (Tables.MUSIC_FONT_STACK[0].getName() == 'Bravura') {
+      const font = {
+        family: Tables.MUSIC_FONT_STACK[0].getName(),
+        size: scale * 1100,
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      ctx.setFont(font);
+      ctx.fillText(String.fromCharCode(metrics.unicode ?? 0), xPos, yPos);
+    } else Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
     this.restoreStyle(ctx);
   }
 

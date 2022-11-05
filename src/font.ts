@@ -52,6 +52,7 @@ export interface FontGlyph {
   x_max: number;
   y_min?: number;
   y_max?: number;
+  unicode?: number;
   ha: number;
   leftSideBearing?: number;
   advanceWidth?: number;
