@@ -105,11 +105,25 @@ const CANVAS_TEST_CONFIG = {
   fontStacks: ['Bravura'],
 };
 
+const CANVAS_TEXT_CONFIG = {
+  backend: Renderer.Backends.CANVAS,
+  tagName: 'canvas',
+  testType: 'Canvas',
+  fontStacks: ['Bravura'],
+};
+
 const SVG_TEST_CONFIG = {
   backend: Renderer.Backends.SVG,
   tagName: 'div',
   testType: 'SVG',
   fontStacks: ['Bravura', 'Gonville', 'Petaluma', 'Leland'],
+};
+
+const SVG_TEXT_CONFIG = {
+  backend: Renderer.Backends.SVG,
+  tagName: 'div',
+  testType: 'SVG',
+  fontStacks: ['Bravura'],
 };
 
 const NODE_TEST_CONFIG = {
@@ -212,6 +226,12 @@ export class VexFlowTests {
     VexFlowTests.runNodeTest(name, testFunc, params);
   }
 
+  // eslint-disable-next-line
+  static runTextTests(name: string, testFunc: TestFunction, params?: any): void {
+    VexFlowTests.runCanvasText(name, testFunc, params);
+    VexFlowTests.runSVGText(name, testFunc, params);
+  }
+
   /**
    * Append a <div/> which contains the test case title and rendered output.
    * See flow.html and flow.css.
@@ -242,13 +262,27 @@ export class VexFlowTests {
   }
 
   // eslint-disable-next-line
+  static runCanvasText(name: string, testFunc: TestFunction, params: any): void {
+    if (VexFlowTests.RUN_CANVAS_TESTS) {
+      const helper = null;
+      VexFlowTests.runWithParams({ ...CANVAS_TEXT_CONFIG, name, testFunc, params, helper });
+    }
+  }
+
+  // eslint-disable-next-line
   static runSVGTest(name: string, testFunc: TestFunction, params?: any): void {
     if (VexFlowTests.RUN_SVG_TESTS) {
       const helper = null;
       VexFlowTests.runWithParams({ ...SVG_TEST_CONFIG, name, testFunc, params, helper });
     }
   }
-
+  // eslint-disable-next-line
+  static runSVGText(name: string, testFunc: TestFunction, params?: any): void {
+    if (VexFlowTests.RUN_SVG_TESTS) {
+      const helper = null;
+      VexFlowTests.runWithParams({ ...SVG_TEXT_CONFIG, name, testFunc, params, helper });
+    }
+  }
   // eslint-disable-next-line
   static runNodeTest(name: string, testFunc: TestFunction, params: any): void {
     if (VexFlowTests.RUN_NODE_TESTS) {

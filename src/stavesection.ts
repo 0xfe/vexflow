@@ -53,7 +53,7 @@ export class StaveSection extends StaveModifier {
 
   draw(stave: Stave, shift_x: number): this {
     const borderWidth = 2;
-    const padding = 3;
+    const padding = 2;
     const ctx = stave.checkContext();
     this.setRendered();
 
@@ -63,7 +63,9 @@ export class StaveSection extends StaveModifier {
     const textFormatter = TextFormatter.create(this.textFont);
 
     const textWidth = textFormatter.getWidthForTextInPx(this.section);
-    const textHeight = textFormatter.getYForStringInPx(this.section).height;
+    const textY = textFormatter.getYForStringInPx(this.section);
+    const textHeight = textY.height;
+    const headroom = -1 * textY.yMin;
     const width = textWidth + 2 * padding; // add left & right padding
     const height = textHeight + 2 * padding; // add top & bottom padding
 
@@ -72,7 +74,7 @@ export class StaveSection extends StaveModifier {
     const x = this.x + shift_x;
     if (this.drawRect) {
       ctx.beginPath();
-      ctx.rect(x, y - height, width, height);
+      ctx.rect(x, y - height + headroom, width, height);
       ctx.stroke();
     }
     ctx.fillText(this.section, x + padding, y - padding);

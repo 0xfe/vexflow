@@ -5,10 +5,33 @@ import { Font } from '../font';
 import { TextFormatter } from '../textformatter';
 import { PetalumaScriptFont } from './petalumascript_glyphs';
 import { RobotoSlabFont } from './robotoslab_glyphs';
+import { SansFontBold } from './sans_bold_text_metrics';
 import { SansFont } from './sans_text_metrics';
 import { SerifFont } from './serif_text_metrics';
 
 export function loadTextFonts() {
+  // Sans-serif fallback font, very close to Arial
+  {
+    const fontData = SansFontBold;
+    const { fontFamily, resolution, glyphs } = fontData;
+    Font.load(fontFamily, fontData);
+    // Usually @ is the tallest and widest character, although not the
+    // highest since it starts below the baseline.
+    const maxSizeGlyph = '@';
+    TextFormatter.registerInfo({
+      family: fontFamily,
+      resolution,
+      glyphs,
+      maxSizeGlyph,
+      monospaced: false,
+      bold: true,
+      italic: false,
+      superscriptOffset: 0.66,
+      subscriptOffset: 0.66,
+      serifs: false,
+      description: 'Generic SANS font',
+    });
+  }
   // Sans-serif fallback font, very close to Arial
   {
     const fontData = SansFont;
@@ -49,7 +72,7 @@ export function loadTextFonts() {
       italic: false,
       superscriptOffset: 0.66,
       subscriptOffset: 0.66,
-      serifs: false,
+      serifs: true,
       description: 'Generic SERIF font',
     });
   }
