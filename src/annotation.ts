@@ -86,7 +86,7 @@ export class Annotation extends Modifier {
       const annotation = annotations[i];
       const textFormatter = TextFormatter.create(annotation.textFont);
       // Text height is expressed in fractional stave spaces.
-      const textLines = (5 + textFormatter.getYForStringInPx(annotation.text).height) / Tables.STAVE_LINE_DISTANCE;
+      const textLines = (2 + textFormatter.getYForStringInPx(annotation.text).height) / Tables.STAVE_LINE_DISTANCE;
       let verticalSpaceNeeded = textLines;
 
       const note = annotation.checkAttachedNote();
