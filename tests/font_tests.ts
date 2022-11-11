@@ -160,7 +160,6 @@ function setTextFontToGeorgia(options: TestOptions): void {
   TextNote.TEXT_FONT = defaultFont;
   ok(true);
 }
-
 function setMusicFontToPetaluma(options: TestOptions): void {
   Flow.setMusicFont('Petaluma');
 
