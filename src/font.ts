@@ -1,3 +1,5 @@
+import { TextMeasure } from './rendercontext';
+import { Tables } from './tables';
 import { defined } from './util';
 
 export interface FontInfo {
@@ -51,6 +53,7 @@ export interface FontGlyph {
   x_max: number;
   y_min?: number;
   y_max?: number;
+  unicode?: number;
   ha: number;
   leftSideBearing?: number;
   advanceWidth?: number;
@@ -81,13 +84,16 @@ export class Font {
   // STATIC MEMBERS
 
   /** Default sans-serif font family. */
-  static SANS_SERIF: string = 'Arial, sans-serif';
+  static SANS_SERIF: string = 'Bravura';
 
   /** Default serif font family. */
-  static SERIF: string = 'Times New Roman, serif';
+  static SERIF: string = 'Bravura';
 
   /** Default font size in `pt`. */
   static SIZE: number = 10;
+
+  /** Canvas used to measure text */
+  protected static txtCanvas?: HTMLCanvasElement;
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
@@ -311,7 +317,7 @@ export class Font {
    * Alternative: https://cdn.jsdelivr.net/npm/vexflow-fonts@1.0.3/
    * Or you can use your own host.
    */
-  static WEB_FONT_HOST = 'https://unpkg.com/vexflow-fonts@1.0.3/';
+  static WEB_FONT_HOST = './tools/fonts/@';
 
   /**
    * These font files will be loaded from the CDN specified by `Font.WEB_FONT_HOST` when
@@ -319,8 +325,11 @@ export class Font {
    * set of fonts to load. See: `Font.loadWebFonts()`.
    */
   static WEB_FONT_FILES: Record<string /* fontName */, string /* fontPath */> = {
-    'Roboto Slab': 'robotoslab/RobotoSlab-Medium_2.001.woff',
-    PetalumaScript: 'petaluma/PetalumaScript_1.10_FS.woff',
+    'Roboto Slab': 'Robotoslab/RobotoSlab-Medium_2.001',
+    PetalumaScript: 'Petaluma/PetalumaScript_1.10_FS',
+    Gonville: 'Gonville/Gonville-18_20200703',
+    Bravura: 'Bravura/Bravura_1.392',
+    Petaluma: 'Petaluma/Petaluma_1.065',
   };
 
   /**
@@ -333,9 +342,10 @@ export class Font {
   // eslint-disable-next-line
   // @ts-ignore
   static async loadWebFont(fontName: string, woffURL: string, includeWoff2: boolean = true): Promise<FontFace> {
-    const woff2URL = includeWoff2 ? `url(${woffURL}2) format('woff2'), ` : '';
-    const woff1URL = `url(${woffURL}) format('woff')`;
-    const woffURLs = woff2URL + woff1URL;
+    const otfURL = `url(${woffURL}.otf) format('opentype'), `;
+    const woff2URL = includeWoff2 ? `url(${woffURL}.woff2) format('woff2'), ` : '';
+    const woff1URL = `url(${woffURL}.woff) format('woff')`;
+    const woffURLs = otfURL; // + woff2URL + woff1URL;
     // eslint-disable-next-line
     // @ts-ignore
     const fontFace = new FontFace(fontName, woffURLs);
@@ -388,6 +398,49 @@ export class Font {
       font.setMetrics(metrics);
     }
     return font;
+  }
+  static textMetrics(text: string, fontInfo: FontInfo): TextMetrics {
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    context!.font = Font.toCSSString(Font.validate(fontInfo));
+    return context!.measureText(text);
+  }
+
+  /** Return the text bounding box */
+  static measureText(text: string, fontInfo: FontInfo): TextMeasure {
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    context!.font = Font.toCSSString(Font.validate(fontInfo));
+    const metrics = context!.measureText(text);
+
+    let y = 0;
+    let height = 0;
+    //if (metrics.actualBoundingBoxAscent) {
+    y = -metrics.actualBoundingBoxAscent;
+    height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+    //} else {
+    //  y = -metrics.fontBoundingBoxAscent;
+    //  height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
+    //}
+    // Return x, y, width & height in the same manner as svg getBBox
+    return {
+      x: 0,
+      y: y,
+      width: metrics.width,
+      height: height,
+    };
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////

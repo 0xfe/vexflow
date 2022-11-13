@@ -261,12 +261,12 @@ export class CanvasContext extends RenderContext {
 
     let y = 0;
     let height = 0;
-    if (metrics.fontBoundingBoxAscent) {
-      y = -metrics.fontBoundingBoxAscent;
-      height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
-    } else {
+    if (metrics.actualBoundingBoxAscent) {
       y = -metrics.actualBoundingBoxAscent;
       height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+    } else {
+      y = -metrics.fontBoundingBoxAscent;
+      height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
     }
     // Return x, y, width & height in the same manner as svg getBBox
     return {

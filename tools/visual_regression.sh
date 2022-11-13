@@ -147,32 +147,19 @@ function diff_image() {
   cp $fileA $diff-a.png
   cp $fileB $diff-b.png
 
-  # Calculate the difference metric and store the composite diff image.
-  local hash=`compare -metric PHASH -highlight-color '#ff000050' $diff-b.png $diff-a.png $diff-diff.png 2>&1`
-
-  # Remove scientific notation
-  local hash6=`printf "%.6f" $hash`
-  local THRESHOLD6=`printf "%.6f" $THRESHOLD`
-
-  local isGT=`echo "$hash6 > $THRESHOLD6" | bc -l`
-  if [ "$isGT" == "1" ]
-  then
-    # Add the result to results.text
-    echo $name $hash >$diff.fail
-    # Threshold exceeded, save the diff and the original, current
-    cp $diff-diff.png $DIFF/$name.png
-    cp $diff-a.png $DIFF/$name'_'$ANAME.png
-    cp $diff-b.png $DIFF/$name'_'$BNAME.png
-    echo
-    echo "Test: $name"
-    echo "  PHASH value exceeds threshold: $hash > $THRESHOLD"
-    echo "  Image diff stored in $DIFF/$name.png"
-    # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
-    # echo 'Hit return to process next image...'
-    # read
-  else
-    echo $name $hash >$diff.pass
-  fi
+  # Store the composite diff image.
+  # Add the result to results.text
+  echo $name $hash >$diff.fail
+  # Threshold exceeded, save the diff and the original, current
+  cp $diff-diff.png $DIFF/$name.png
+  cp $diff-a.png $DIFF/$name'_'$ANAME.png
+  cp $diff-b.png $DIFF/$name'_'$BNAME.png
+  echo
+  echo "Test: $name"
+  echo "  Image diff stored in $DIFF/$name.png"
+  # $VIEWER "$diff-diff.png" "$diff-a.png" "$diff-b.png"
+  # echo 'Hit return to process next image...'
+  # read
   rm -f $diff-a.png $diff-b.png $diff-diff.png
 }
 
@@ -245,5 +232,5 @@ then
   echo "You have $num_fails fail(s):"
   head -n $num_fails $RESULTS
 else
-  echo "Success - All diffs under threshold!"
+  echo "Success - No differences!"
 fi

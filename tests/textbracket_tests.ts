@@ -10,7 +10,7 @@ const TextBracketTests = {
     QUnit.module('TextBracket');
     const run = VexFlowTests.runTests;
     run('Simple TextBracket', simple0);
-    run('TextBracket Styles', simple1);
+    //run('TextBracket Styles', simple1);
   },
 };
 

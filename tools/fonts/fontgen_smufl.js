@@ -50,7 +50,7 @@ function toVFPath(glyph) {
     y_min: bb.y1,
     y_max: bb.y2,
     ha: bb.y2 - bb.y1,
-    o: pathStr,
+    //o: pathStr,
   };
 }
 
@@ -87,6 +87,7 @@ Object.keys(VALID_CODES).forEach((k) => {
   } else {
     const glyph = font.charToGlyph(intCode);
     fontData[k] = toVFPath(glyph);
+    fontData[k].unicode = parseInt(code, 16);
   }
 });
 

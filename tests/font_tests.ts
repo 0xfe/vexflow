@@ -12,6 +12,7 @@ import { Element } from '../src/element';
 import { Flow } from '../src/flow';
 import { Font, FontStyle, FontWeight } from '../src/font';
 import { PedalMarking } from '../src/pedalmarking';
+import { ContextBuilder } from '../src/renderer';
 import { StaveNote } from '../src/stavenote';
 import { TextBracket } from '../src/textbracket';
 import { TextNote } from '../src/textnote';
@@ -26,6 +27,7 @@ const FontTests = {
     const run = VexFlowTests.runTests;
     run('Set Text Font to Georgia', setTextFontToGeorgia);
     run('Set Music Font to Petaluma', setMusicFontToPetaluma);
+    run('MeasureText', measureText);
   },
 };
 
@@ -58,17 +60,17 @@ function setFont(): void {
   equal(flat.textFont, undefined); // The internal instance variable .textFont is undefined by default.
   // Add italic to the default font as defined in Element.TEXT_FONT (since Accidental does not override TEXT_FONT).
   flat.setFont(undefined, undefined, undefined, FontStyle.ITALIC);
-  equal(flat.getFont(), 'italic 10pt Arial, sans-serif');
+  equal(flat.getFont(), 'italic 10pt ' + Font.SANS_SERIF);
   // Anything that is not set will be reset to the defaults.
   flat.setFont(undefined, undefined, FontWeight.BOLD, undefined);
-  equal(flat.getFont(), 'bold 10pt Arial, sans-serif');
+  equal(flat.getFont(), 'bold 10pt ' + Font.SANS_SERIF);
   flat.setFont(undefined, undefined, FontWeight.BOLD, FontStyle.ITALIC);
-  equal(flat.getFont(), 'italic bold 10pt Arial, sans-serif');
+  equal(flat.getFont(), 'italic bold 10pt ' + Font.SANS_SERIF);
   flat.setFont(undefined, undefined, FontWeight.BOLD, 'oblique');
-  equal(flat.getFont(), 'oblique bold 10pt Arial, sans-serif');
+  equal(flat.getFont(), 'oblique bold 10pt ' + Font.SANS_SERIF);
   // '' is equivalent to 'normal'. Neither will be included in the CSS font string.
   flat.setFont(undefined, undefined, 'normal', '');
-  equal(flat.getFont(), '10pt Arial, sans-serif');
+  equal(flat.getFont(), '10pt ' + Font.SANS_SERIF);
 }
 
 function fontParsing(): void {
@@ -112,7 +114,7 @@ function fontSizes(): void {
 
   {
     const pedal = new PedalMarking([]);
-    equal(pedal.getFont(), 'italic bold 12pt Times New Roman, serif');
+    equal(pedal.getFont(), 'italic bold 12pt ' + Font.SANS_SERIF);
     equal(pedal.fontSizeInPoints, 12);
     equal(pedal.fontSizeInPixels, 16);
     const doubledSizePx = pedal.fontSizeInPixels * 2; // Double the font size.
@@ -160,6 +162,7 @@ function setTextFontToGeorgia(options: TestOptions): void {
   TextNote.TEXT_FONT = defaultFont;
   ok(true);
 }
+
 function setMusicFontToPetaluma(options: TestOptions): void {
   Flow.setMusicFont('Petaluma');
 
@@ -179,6 +182,29 @@ function setMusicFontToPetaluma(options: TestOptions): void {
   factory.draw();
 
   ok(true);
+}
+
+function measureText(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 600, 200);
+  const font = {
+    family: Font.SERIF,
+    size: 14,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
+  };
+  ctx.setFont(font);
+  const texts = [
+    'AVo(i)a',
+    ' AVo(i)a',
+    'iiiiiiiii',
+    '@@@@@@@@',
+    'a very long String with Mixed Case Text,(0123456789)',
+  ];
+  for (let i = 0; i < texts.length; i++) {
+    ctx.fillText(texts[i], 50, 20 + i * 35);
+    ctx.fillRect(50, 25 + i * 35, Font.measureText(texts[i], font).width, 2);
+  }
+  ok(true, 'all pass');
 }
 
 VexFlowTests.register(FontTests);

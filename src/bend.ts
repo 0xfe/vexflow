@@ -2,10 +2,9 @@
 // MIT License
 
 import { Element } from './element';
-import { FontInfo } from './font';
+import { Font, FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { TextFormatter } from './textformatter';
 import { Category, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 
@@ -148,15 +147,13 @@ export class Bend extends Modifier {
     return this.text;
   }
   getTextHeight(): number {
-    const textFormatter = TextFormatter.create(this.textFont);
-    return textFormatter.maxHeight;
+    return Font.measureText(this.text, this.textFont!).width;
   }
 
   /** Recalculate width. */
   protected updateWidth(): this {
-    const textFormatter = TextFormatter.create(this.textFont);
     const measureText = (text: string) => {
-      return textFormatter.getWidthForTextInPx(text);
+      return Font.measureText(text, this.textFont!).width;
     };
 
     let totalWidth = 0;

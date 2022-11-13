@@ -4,7 +4,7 @@
 import { BoundingBox } from './boundingbox';
 import { BoundingBoxComputation } from './boundingboxcomputation';
 import { Element } from './element';
-import { Font, FontGlyph } from './font';
+import { Font, FontGlyph, FontStyle, FontWeight } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Tables } from './tables';
@@ -49,7 +49,8 @@ export interface GlyphMetrics {
   y_shift: number;
   scale: number;
   ha: number;
-  outline: number[];
+  unicode?: number;
+  outline?: number[];
   font: Font;
 }
 
@@ -67,12 +68,28 @@ class GlyphCacheEntry {
 
   constructor(fontStack: Font[], code: string, category?: string) {
     this.metrics = Glyph.loadMetrics(fontStack, code, category);
-    this.bbox = Glyph.getOutlineBoundingBox(
-      this.metrics.outline,
-      this.metrics.scale,
-      this.metrics.x_shift,
-      this.metrics.y_shift
-    );
+    if (this.metrics.outline)
+      this.bbox = Glyph.getOutlineBoundingBox(
+        this.metrics.outline,
+        this.metrics.scale,
+        this.metrics.x_shift,
+        this.metrics.y_shift
+      );
+    else {
+      const font = {
+        family: this.metrics.font.getName(),
+        size: Math.floor(this.metrics.scale * 1100),
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      const mes = Font.textMetrics(String.fromCharCode(this.metrics.unicode ?? 0), font);
+      this.bbox = new BoundingBox(
+        mes.actualBoundingBoxLeft,
+        -mes.actualBoundingBoxDescent,
+        mes.width,
+        mes.actualBoundingBoxAscent + mes.actualBoundingBoxDescent
+      );
+    }
 
     if (category) {
       this.point = Glyph.lookupFontMetric(this.metrics.font, category, code, 'point', -1);
@@ -109,7 +126,7 @@ class GlyphOutline {
   }
 
   done(): boolean {
-    return this.i >= this.outline.length;
+    return this.outline ? this.i >= this.outline.length : true;
   }
   next(): number {
     return Math.round((this.outline[this.i++] * this.precision) / this.precision);
@@ -214,8 +231,6 @@ export class Glyph extends Element {
   static loadMetrics(fontStack: Font[], code: string, category?: string): GlyphMetrics {
     const { glyph, font } = Glyph.lookupGlyph(fontStack, code);
 
-    if (!glyph.o) throw new RuntimeError('BadGlyph', `Glyph ${code} has no outline defined.`);
-
     let x_shift = 0;
     let y_shift = 0;
     let scale = 1;
@@ -229,7 +244,7 @@ export class Glyph extends Element {
     const x_max = glyph.x_max;
     const ha = glyph.ha;
 
-    if (!glyph.cached_outline) {
+    if (glyph.o && !glyph.cached_outline) {
       glyph.cached_outline = GlyphOutline.parse(glyph.o);
     }
 
@@ -239,6 +254,7 @@ export class Glyph extends Element {
       x_shift,
       y_shift,
       scale,
+      unicode: glyph.unicode,
       ha,
       outline: glyph.cached_outline,
       font,
@@ -275,13 +291,29 @@ export class Glyph extends Element {
     const customScale = options?.scale ?? 1;
     const scale = ((point * 72.0) / (metrics.font.getResolution() * 100.0)) * metrics.scale * customScale;
 
-    Glyph.renderOutline(
-      ctx,
-      metrics.outline,
-      scale,
-      x_pos + metrics.x_shift * customScale,
-      y_pos + metrics.y_shift * customScale
-    );
+    if (!metrics.outline) {
+      const font = {
+        family: metrics.font.getName(),
+        size: Math.floor(scale * 1100),
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      ctx.save();
+      ctx.setFont(font);
+      ctx.fillText(
+        String.fromCharCode(metrics.unicode ?? 0),
+        x_pos + metrics.x_shift * customScale,
+        y_pos + metrics.y_shift * customScale
+      );
+      ctx.restore();
+    } else
+      Glyph.renderOutline(
+        ctx,
+        metrics.outline,
+        scale,
+        x_pos + metrics.x_shift * customScale,
+        y_pos + metrics.y_shift * customScale
+      );
     return metrics;
   }
 
@@ -480,6 +512,7 @@ export class Glyph extends Element {
       x_shift: metrics.x_shift,
       y_shift: metrics.y_shift,
       outline: metrics.outline,
+      unicode: metrics.unicode,
       font: metrics.font,
       ha: metrics.ha,
     };
@@ -514,7 +547,18 @@ export class Glyph extends Element {
     this.applyStyle(ctx);
     const xPos = x + this.originShift.x + metrics.x_shift;
     const yPos = y + this.originShift.y + metrics.y_shift;
-    Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
+    if (!outline) {
+      const font = {
+        family: metrics.font.getName(),
+        size: Math.floor(scale * 1100),
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      ctx.save();
+      ctx.setFont(font);
+      ctx.fillText(String.fromCharCode(metrics.unicode ?? 0), xPos, yPos);
+      ctx.restore();
+    } else Glyph.renderOutline(ctx, outline, scale, xPos, yPos);
     this.restoreStyle(ctx);
   }
 
@@ -535,7 +579,18 @@ export class Glyph extends Element {
 
     const xPos = x + this.x_shift + metrics.x_shift;
     const yPos = stave.getYForGlyphs() + this.y_shift + metrics.y_shift;
-    Glyph.renderOutline(context, outline, scale, xPos, yPos);
+    if (!outline) {
+      const font = {
+        family: metrics.font.getName(),
+        size: Math.floor(scale * 1100),
+        weight: FontWeight.NORMAL,
+        style: FontStyle.NORMAL,
+      };
+      context.save();
+      context.setFont(font);
+      context.fillText(String.fromCharCode(metrics.unicode ?? 0), xPos, yPos);
+      context.restore();
+    } else Glyph.renderOutline(context, outline, scale, xPos, yPos);
     this.restoreStyle();
   }
 }

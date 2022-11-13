@@ -4,6 +4,7 @@
 // Renders time signatures glyphs for staffs
 // This class is used by TimeSignature to render the associated glyphs
 
+import { FontStyle, FontWeight } from './font';
 import { Glyph, GlyphMetrics } from './glyph';
 import { TimeSignature } from './timesignature';
 import { defined } from './util';
@@ -96,8 +97,20 @@ export class TimeSignatureGlyph extends Glyph {
     else y = (stave.getYForLine(this.timeSignature.topLine) + stave.getYForLine(this.timeSignature.bottomLine)) / 2;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
-      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + this.x_shift, y);
-      start_x += defined(glyph.getMetrics().width);
+      const metrics = glyph.getMetrics();
+      if (!metrics.outline) {
+        const font = {
+          family: metrics.font.getName(),
+          size: Math.floor(this.scale * 1100),
+          weight: FontWeight.NORMAL,
+          style: FontStyle.NORMAL,
+        };
+        ctx.save();
+        ctx.setFont(font);
+        ctx.fillText(String.fromCharCode(metrics.unicode ?? 0), start_x + this.x_shift, y);
+        ctx.restore();
+      } else Glyph.renderOutline(ctx, metrics.outline, this.scale, start_x + this.x_shift, y);
+      start_x += defined(metrics.width);
     }
 
     start_x = x + this.botStartX;
@@ -105,8 +118,20 @@ export class TimeSignatureGlyph extends Glyph {
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
       this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
-      Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + glyph.getMetrics().x_shift, y);
-      start_x += defined(glyph.getMetrics().width);
+      const metrics = glyph.getMetrics();
+      if (!metrics.outline) {
+        const font = {
+          family: metrics.font.getName(),
+          size: Math.floor(this.scale * 1100),
+          weight: FontWeight.NORMAL,
+          style: FontStyle.NORMAL,
+        };
+        ctx.save();
+        ctx.setFont(font);
+        ctx.fillText(String.fromCharCode(metrics.unicode ?? 0), start_x + metrics.x_shift, y);
+        ctx.restore();
+      } else Glyph.renderOutline(ctx, metrics.outline, this.scale, start_x + metrics.x_shift, y);
+      start_x += defined(metrics.width);
     }
   }
 }
