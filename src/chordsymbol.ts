@@ -730,8 +730,7 @@ export class ChordSymbol extends Modifier {
       }
     } else {
       // (this.vertical === VerticalJustify.TOP)
-      const yAr = note.getYs();
-      const topY = yAr[yAr.length - 1];
+      const topY = Math.min(...note.getYs());
       y = Math.min(stave.getYForTopText(this.text_line), topY - 10);
       if (hasStem) {
         const stem_ext = note.checkStem().getExtents();
