@@ -300,11 +300,15 @@ function top(options: TestOptions): void {
   const ctx = f.getContext();
   ctx.scale(1.5, 1.5);
 
+  // Helper function for creating StaveNotes.
+  const note = (factory: Factory, keys: string[], duration: string, chordSymbol: ChordSymbol, direction: number) =>
+    factory.StaveNote({ keys, duration, stem_direction: direction }).addModifier(chordSymbol, 0);
+
   function draw(c1: ChordSymbol, c2: ChordSymbol, y: number) {
     const stave = f.Stave({ x: 10, y, width: 450 }).addClef('treble').setContext(ctx).draw();
     const notes = [
-      note(f, ['e/4', 'a/4', 'd/5'], 'h', c1).addModifier(new Accidental('b'), 0),
-      note(f, ['c/4', 'e/4', 'b/4'], 'h', c2),
+      note(f, ['e/4', 'a/4', 'd/5'], 'h', c1, 1).addModifier(new Accidental('b'), 0),
+      note(f, ['c/5', 'e/5', 'c/6'], 'h', c2, -1),
     ];
     const score = f.EasyScore();
     const voice = score.voice(notes, { time: '4/4' });
