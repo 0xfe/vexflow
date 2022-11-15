@@ -284,7 +284,8 @@ export class Annotation extends Modifier {
       const yb = stave.getYForBottomText(this.text_line);
       y = yt + (yb - yt) / 2 + text_height / 2;
     } else if (this.verticalJustification === AnnotationVerticalJustify.TOP) {
-      y = note.getYs()[0] - (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE;
+      const yAr = note.getYs();
+      y = yAr[yAr.length - 1] - (this.text_line + 1) * Tables.STAVE_LINE_DISTANCE;
       if (has_stem && stemDirection === Stem.UP) {
         // If the stem is above the stave already, go with default line width vs. actual
         // since the lines between don't really matter.

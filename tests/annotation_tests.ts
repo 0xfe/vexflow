@@ -360,7 +360,7 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
     const notes = [
       staveNote({ keys: ['c/3'], duration: 'q' }).addModifier(annotation('Text', 1, v), 0),
       staveNote({ keys: ['c/4'], duration: 'q' }).addModifier(annotation('Text', 2, v), 0),
-      staveNote({ keys: ['c/5'], duration: 'q' }).addModifier(annotation('Text', 3, v), 0),
+      staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'q' }).addModifier(annotation('Text', 3, v), 0),
       staveNote({ keys: ['c/6'], duration: 'q' }).addModifier(annotation('Text', 4, v), 0),
     ];
 
@@ -384,7 +384,10 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
     const stave = new Stave(10, (v - 1) * 150 + 40, 400).addClef('treble').setContext(ctx).draw();
     const notes = [
       staveNote({ keys: ['c/3'], duration: 'q', stem_direction: -1 }).addModifier(annotation('Text', 1, v), 0),
-      staveNote({ keys: ['c/4'], duration: 'q', stem_direction: -1 }).addModifier(annotation('Text', 2, v), 0),
+      staveNote({ keys: ['c/4', 'e/4', 'c/5'], duration: 'q', stem_direction: -1 }).addModifier(
+        annotation('Text', 2, v),
+        0
+      ),
       staveNote({ keys: ['c/5'], duration: 'q', stem_direction: -1 }).addModifier(annotation('Text', 3, v), 0),
       staveNote({ keys: ['c/6'], duration: 'q', stem_direction: -1 }).addModifier(annotation('Text', 4, v), 0),
     ];
