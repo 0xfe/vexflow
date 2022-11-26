@@ -18,6 +18,11 @@
       "require": "./build/cjs/vexflow-gonville.js",
       "import": "./build/esm/entry/vexflow-gonville.js"
     },
+    "./gootville": {
+      "types": "./build/types/entry/vexflow-gootville.d.ts",
+      "require": "./build/cjs/vexflow-gootville.js",
+      "import": "./build/esm/entry/vexflow-gootville.js"
+    },
     "./leland": {
       "types": "./build/types/entry/vexflow-leland.d.ts",
       "require": "./build/cjs/vexflow-leland.js",
@@ -42,6 +47,11 @@
       "types": "./build/types/entry/vexflow-font-gonville.d.ts",
       "require": "./build/cjs/vexflow-font-gonville.js",
       "import": "./build/esm/entry/vexflow-font-gonville.js"
+    },
+    "./font/gootville": {
+      "types": "./build/types/entry/vexflow-font-gootville.d.ts",
+      "require": "./build/cjs/vexflow-font-gootville.js",
+      "import": "./build/esm/entry/vexflow-font-gootville.js"
     },
     "./font/petaluma": {
       "types": "./build/types/entry/vexflow-font-petaluma.d.ts",
@@ -87,7 +97,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
-    "canvas": "^2.8.0",
+    "canvas": "^2.10.2",
     "circular-dependency-plugin": "^5.2.2",
     "concurrently": "^7.0.0",
     "eslint": "^8.5.0",

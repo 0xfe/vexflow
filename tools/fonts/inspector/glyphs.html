@@ -53,7 +53,9 @@
     <div>
       <a href="#" onclick="chooseFont('Bravura')">Bravura</a> &nbsp;
       <a href="#" onclick="chooseFont('Gonville')">Gonville</a> &nbsp;
+      <a href="#" onclick="chooseFont('Gootville')">Gootville</a> &nbsp;
       <a href="#" onclick="chooseFont('Petaluma')">Petaluma</a> &nbsp;
+      <a href="#" onclick="chooseFont('Leland')">Leland</a> &nbsp;
       <a href="#" onclick="chooseFont('Custom')">Custom</a> &nbsp;
     </div>
     <canvas id="glyphs"></canvas>
@@ -64,7 +66,7 @@
         document.getElementById('title').innerText = 'Glyph Inspector – ' + fontName;
 
         /* Version 4.0.0 */
-        const font = Vex.Flow.setMusicFont(fontName);
+        const font = Vex.Flow.setMusicFont(fontName)[0];
 
         /* Version 3.0.9 */
         // const font = Vex.Flow.Fonts[fontName]();

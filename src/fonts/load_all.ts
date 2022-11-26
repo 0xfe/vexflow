@@ -6,6 +6,7 @@
 import { loadBravura } from './load_bravura';
 import { loadCustom } from './load_custom';
 import { loadGonville } from './load_gonville';
+import { loadGootville } from './load_gootville';
 import { loadLeland } from './load_leland';
 import { loadPetaluma } from './load_petaluma';
 // ADD_MUSIC_FONT
@@ -15,6 +16,7 @@ import { loadPetaluma } from './load_petaluma';
 export function loadAllMusicFonts(): void {
   loadBravura();
   loadGonville();
+  loadGootville();
   loadPetaluma();
   loadCustom();
   loadLeland();

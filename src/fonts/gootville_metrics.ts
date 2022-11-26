@@ -2,8 +2,8 @@
  * The Gonville font was created by Simon Tatham.
  * https://www.chiark.greenend.org.uk/~sgtatham/gonville/
  */
-export const GonvilleMetrics = {
-  name: 'Gonville',
+export const GootvilleMetrics = {
+  name: 'Gootville',
   smufl: true,
 
   stave: {
