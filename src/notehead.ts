@@ -272,7 +272,7 @@ export class NoteHead extends Note {
       head_x +=
         this.stem_direction === Stem.UP
           ? this.stem_up_x_offset +
-            (this.glyph.stem ? this.glyph.getWidth(this.render_options.glyph_font_scale) - this.width : 0)
+            (this.glyphProps.stem ? this.glyphProps.getWidth(this.render_options.glyph_font_scale) - this.width : 0)
           : this.stem_down_x_offset;
     }
 
