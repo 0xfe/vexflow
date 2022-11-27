@@ -316,53 +316,6 @@ export const BravuraMetrics = {
           point: 35,
         },
       },
-      custom: {
-        noteheadCircleXStemUp: {
-          shiftX: 1.5,
-        },
-        noteheadCircleXStemDown: {
-          shiftX: 0.25,
-        },
-        noteheadDiamondHalfStemUp: {
-          shiftX: 1.5,
-        },
-        noteheadDiamondBlackStemUp: {
-          shiftX: 1.5,
-        },
-        noteheadDiamondWholeStemUp: {
-          shiftX: 1,
-        },
-        noteheadXHalfStemUp: {
-          shiftX: -2,
-        },
-        noteheadXHalfStemDown: {
-          shiftX: 1,
-        },
-        noteheadXWholeStemUp: {
-          shiftX: -4,
-        },
-        noteheadXWholeStemDown: {
-          shiftX: 1,
-        },
-        noteheadXDoubleWholeStemUp: {
-          shiftX: -4,
-        },
-        noteheadXDoubleWholeStemDown: {
-          shiftX: 1,
-        },
-        noteheadSquareWhiteStemDown: {
-          shiftX: 0.25,
-        },
-        noteheadSquareWhiteStemUp: {
-          shiftX: -0.75,
-        },
-        noteheadSquareBlackStemUp: {
-          shiftX: -0.75,
-        },
-        noteheadTriangleUpWholeStemUp: {
-          shiftX: -0.75,
-        },
-      },
     },
     chordSymbol: {
       global: {
