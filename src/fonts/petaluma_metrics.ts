@@ -341,56 +341,6 @@ export const PetalumaMetrics = {
           shiftX: 1,
         },
       },
-      custom: {
-        noteheadCircleXStemUp: {
-          shiftX: -1,
-        },
-        noteheadCircleXStemDown: {
-          shiftX: 0.25,
-        },
-        noteheadDiamondHalfStemUp: {
-          shiftX: 1.5,
-        },
-        noteheadDiamondBlackStemUp: {
-          shiftX: 1.5,
-        },
-        noteheadDiamondWholeStemUp: {
-          shiftX: 1,
-        },
-        noteheadXBlackStemUp: {
-          shiftX: 1,
-        },
-        noteheadXHalfStemUp: {
-          shiftX: -3,
-        },
-        noteheadXHalfStemDown: {
-          shiftX: 1,
-        },
-        noteheadXWholeStemUp: {
-          shiftX: -7,
-        },
-        noteheadXWholeStemDown: {
-          shiftX: 1,
-        },
-        noteheadXDoubleWholeStemUp: {
-          shiftX: -12,
-        },
-        noteheadXDoubleWholeStemDown: {
-          shiftX: -4,
-        },
-        noteheadSquareWhiteStemDown: {
-          shiftX: 0.25,
-        },
-        noteheadSquareWhiteStemUp: {
-          shiftX: -0.75,
-        },
-        noteheadSquareBlackStemUp: {
-          shiftX: -0.75,
-        },
-        noteheadTriangleUpWholeStemUp: {
-          shiftX: -0.75,
-        },
-      },
     },
     chordSymbol: {
       global: {

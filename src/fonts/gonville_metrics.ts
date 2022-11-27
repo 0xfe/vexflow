@@ -240,17 +240,6 @@ export const GonvilleMetrics = {
     },
     noteHead: {
       minPadding: 2,
-      custom: {
-        noteheadCircleXStemUp: {
-          shiftX: -1.5,
-        },
-        noteheadXWholeStemUp: {
-          shiftX: -5,
-        },
-        noteheadTriangleUpWholeStemUp: {
-          shiftX: -6,
-        },
-      },
     },
     chordSymbol: {
       global: {

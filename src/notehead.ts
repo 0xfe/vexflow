@@ -155,7 +155,13 @@ export class NoteHead extends Note {
       glyph_font_scale: noteStruct.glyph_font_scale || Tables.NOTATION_FONT_SCALE,
     };
 
-    this.setWidth(this.glyph.getWidth(this.render_options.glyph_font_scale));
+    this.setWidth(
+      this.custom_glyph &&
+        !this.glyph_code.startsWith('noteheadSlashed') &&
+        !this.glyph_code.startsWith('noteheadCircled')
+        ? Glyph.getWidth(this.glyph_code, this.render_options.glyph_font_scale)
+        : this.glyph.getWidth(this.render_options.glyph_font_scale)
+    );
   }
   /** Get the width of the notehead. */
   getWidth(): number {
@@ -264,7 +270,11 @@ export class NoteHead extends Note {
     let head_x = this.getAbsoluteX();
     if (this.custom_glyph) {
       // head_x += this.x_shift;
-      head_x += this.stem_direction === Stem.UP ? this.stem_up_x_offset : this.stem_down_x_offset;
+      head_x +=
+        this.stem_direction === Stem.UP
+          ? this.stem_up_x_offset +
+            (this.glyph.stem ? this.glyph.getWidth(this.render_options.glyph_font_scale) - this.width : 0)
+          : this.stem_down_x_offset;
     }
 
     const y = this.y;
@@ -281,7 +291,7 @@ export class NoteHead extends Note {
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        category: this.custom_glyph ? `noteHead.custom.${categorySuffix}` : `noteHead.standard.${categorySuffix}`,
+        category: `noteHead.standard.${categorySuffix}`,
       });
     }
   }
