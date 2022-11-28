@@ -116,6 +116,17 @@ async function step4() {
   sharp(Buffer.from(svg)).toFile('output/score_gonville.png');
 
   console.log('\n==================================\n');
+  console.log('>>> Leland...');
+}
+
+async function step5() {
+  await VF.fetchMusicFont('Leland');
+  VF.setMusicFont('Leland');
+  console.log('The current music font stack is:', VF.getMusicFont());
+  const svg = getScoreSVG();
+  sharp(Buffer.from(svg)).toFile('output/score_leland.png');
+
+  console.log('\n==================================\n');
   console.log('DONE!');
 }
 
@@ -129,6 +140,8 @@ async function runAllSteps() {
   await step3();
   await waitForKeyPress();
   await step4();
+  await waitForKeyPress();
+  await step5();
 }
 
 runAllSteps().then(() => process.exit(0));

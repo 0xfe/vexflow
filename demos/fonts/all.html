@@ -13,19 +13,23 @@
   </head>
   <body>
     <p>This demo renders three staves, each with a different music engraving font.</p>
-    <h3>Bravura</h3>
+    <h3><a href="https://github.com/steinbergmedia/bravura">Bravura</a></h3>
     <div id="outputBravura"></div>
-    <h3>Gonville</h3>
+    <h3><a href="https://www.chiark.greenend.org.uk/~sgtatham/gonville/">Gonville</a></h3>
     <div id="outputGonville"></div>
-    <h3>Petaluma</h3>
+    <h3><a href="https://github.com/steinbergmedia/petaluma">Petaluma</a></h3>
     <div id="outputPetaluma"></div>
+    <h3><a href="https://github.com/MuseScoreFonts/Leland">Leland</a></h3>
+    <div id="outputLeland"></div>
     <p>View the source code for more information.</p>
     <p>
       <a href="core.html">Also see: core.html</a><br />
       <a href="core-with-promise.html">Also see: core-with-promise.html</a>
     </p>
     <!--
-        The standard VexFlow library (build/cjs/vexflow.js) includes three music fonts: Bravura, Gonville, and Petaluma.
+        To view this demo, open all.html in your web browser.
+
+        The standard VexFlow library (build/cjs/vexflow.js) includes four music fonts: Bravura, Gonville, Petaluma, and Leland.
         It statically bundles all the music fonts, and selects Bravura as its default.
         For this demo we include build/cjs/vexflow-debug.js, which is the non-minified version of vexflow.js.
         The build/cjs/*.js files are compatible with <script> tags.
@@ -86,6 +90,25 @@
         VF.setMusicFont('Petaluma');
         const factory = new VF.Factory({
           renderer: { elementId: 'outputPetaluma', width: 500, height: 130 },
+        });
+        const score = factory.EasyScore();
+        factory
+          .System()
+          .addStave({
+            voices: [
+              score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+              score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+          })
+          .addClef('treble')
+          .addTimeSignature('4/4');
+        factory.draw();
+      }
+
+      {
+        VF.setMusicFont('Leland');
+        const factory = new VF.Factory({
+          renderer: { elementId: 'outputLeland', width: 500, height: 130 },
         });
         const score = factory.EasyScore();
         factory

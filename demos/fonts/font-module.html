@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <!--
-    Test to make sure the font module makes its data available at VexFlowFonts.XXXX.
+    Test to make sure each font module makes its data/metrics available at VexFlowFont.XXXX.
+    See: vexflow-core.ts
   -->
   <head>
     <meta charset="UTF-8" />
@@ -21,11 +22,17 @@
     </style>
   </head>
   <body>
+    <p>Check the console!</p>
     <script src="../../build/cjs/vexflow-font-bravura.js"></script>
+    <script src="../../build/cjs/vexflow-font-leland.js"></script>
     <script src="../../build/cjs/vexflow-font-petaluma.js"></script>
     <script src="../../build/cjs/vexflow-font-gonville.js"></script>
     <script src="../../build/cjs/vexflow-font-custom.js"></script>
     <script>
+      // The data and metrics for the Leland SMuFL font.
+      // console.log(VexFlowFont['Leland']);
+
+      // Each font module above will populate the global VexFlowFont object.
       console.log(VexFlowFont);
     </script>
   </body>
