@@ -409,6 +409,14 @@ export abstract class Note extends Tickable {
     return 0;
   }
 
+  /**
+   * @deprecated Use `getGlyphProps()` instead.
+   */
+  // eslint-disable-next-line
+  getGlyph(): any {
+    return this.glyphProps;
+  }
+
   /** Get the glyph associated with this note. */
   getGlyphProps(): GlyphProps {
     return this.glyphProps;
