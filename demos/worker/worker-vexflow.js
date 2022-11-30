@@ -5,7 +5,7 @@
 importScripts('../../build/cjs/vexflow.js');
 
 onmessage = function (e) {
-  const fonts = ['Bravura', 'Gonville', 'Petaluma'];
+  const fonts = ['Bravura', 'Gonville', 'Petaluma', 'Leland'];
   const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
   Vex.Flow.setMusicFont(randomFont);
 

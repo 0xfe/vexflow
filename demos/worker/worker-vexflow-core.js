@@ -7,7 +7,7 @@ importScripts('../../build/cjs/vexflow-core.js');
 onmessage = function (e) {
   postMessage('VexFlow BUILD: ' + JSON.stringify(Vex.Flow.BUILD));
 
-  const fonts = ['Bravura', 'Gonville', 'Petaluma'];
+  const fonts = ['Bravura', 'Gonville', 'Petaluma', 'Leland'];
   const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
   Vex.Flow.fetchMusicFont(randomFont).then(() => {
     Vex.Flow.setMusicFont(randomFont);
