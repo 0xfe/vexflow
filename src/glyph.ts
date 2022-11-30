@@ -7,12 +7,13 @@ import { Element } from './element';
 import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
-import { Stem } from './stem';
+import { Tables } from './tables';
 import { Category } from './typeguard';
 import { defined, RuntimeError } from './util';
 
 export interface GlyphProps {
   code_head: string;
+  ledger_code_head?: string;
   dot_shiftY: number;
   position: string;
   rest: boolean;
@@ -21,19 +22,18 @@ export interface GlyphProps {
   stem_beam_extension: number;
   stem_up_extension: number;
   stem_down_extension: number;
-  stem: Stem;
-  code: string;
-  code_flag_upstem: string;
-  code_flag_downstem: string;
-  flag: boolean;
-  width: number;
-  text: string;
+  stem: boolean;
+  code?: string;
+  code_flag_upstem?: string;
+  code_flag_downstem?: string;
+  flag?: boolean;
+  width?: number;
+  text?: string;
   tabnote_stem_down_extension: number;
   tabnote_stem_up_extension: number;
   beam_count: number;
-  shift_y: number;
+  shift_y?: number;
   getWidth(a?: number): number;
-  getMetrics(): GlyphMetrics;
 }
 
 export interface GlyphOptions {
@@ -101,22 +101,24 @@ class GlyphCache {
 
 class GlyphOutline {
   private i: number = 0;
+  private precision = 1;
 
   constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {
     // Automatically assign private properties: this.outline, this.originX, this.originY, and this.scale.
+    this.precision = Math.pow(10, Tables.RENDER_PRECISION_PLACES);
   }
 
   done(): boolean {
     return this.i >= this.outline.length;
   }
   next(): number {
-    return this.outline[this.i++];
+    return Math.round((this.outline[this.i++] * this.precision) / this.precision);
   }
   nextX(): number {
-    return this.originX + this.outline[this.i++] * this.scale;
+    return Math.round((this.originX + this.outline[this.i++] * this.scale) * this.precision) / this.precision;
   }
   nextY(): number {
-    return this.originY - this.outline[this.i++] * this.scale;
+    return Math.round((this.originY - this.outline[this.i++] * this.scale) * this.precision) / this.precision;
   }
 
   static parse(str: string): number[] {

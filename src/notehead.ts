@@ -3,7 +3,7 @@
 
 import { BoundingBox } from './boundingbox';
 import { ElementStyle } from './element';
-import { Glyph, GlyphProps } from './glyph';
+import { Glyph } from './glyph';
 import { Note, NoteStruct } from './note';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
@@ -130,14 +130,18 @@ export class NoteHead extends Note {
 
     // Get glyph code based on duration and note type. This could be
     // regular notes, rests, or other custom codes.
-    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
-    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
+    this.glyphProps = Tables.getGlyphProps(this.duration, this.noteType);
+    defined(
+      this.glyphProps,
+      'BadArguments',
+      `No glyph found for duration '${this.duration}' and type '${this.noteType}'`
+    );
 
-    // Swap out the glyph with leger lines
-    if ((this.line > 5 || this.line < 0) && this.glyph.leger_code_head) {
-      this.glyph.code_head = this.glyph.leger_code_head;
+    // Swap out the glyph with ledger lines
+    if ((this.line > 5 || this.line < 0) && this.glyphProps.ledger_code_head) {
+      this.glyphProps.code_head = this.glyphProps.ledger_code_head;
     }
-    this.glyph_code = this.glyph.code_head;
+    this.glyph_code = this.glyphProps.code_head;
     this.x_shift = noteStruct.x_shift || 0;
     if (noteStruct.custom_glyph_code) {
       this.custom_glyph = true;
@@ -160,7 +164,7 @@ export class NoteHead extends Note {
         !this.glyph_code.startsWith('noteheadSlashed') &&
         !this.glyph_code.startsWith('noteheadCircled')
         ? Glyph.getWidth(this.glyph_code, this.render_options.glyph_font_scale)
-        : this.glyph.getWidth(this.render_options.glyph_font_scale)
+        : this.glyphProps.getWidth(this.render_options.glyph_font_scale)
     );
   }
   /** Get the width of the notehead. */
@@ -171,11 +175,6 @@ export class NoteHead extends Note {
   /** Determine if the notehead is displaced. */
   isDisplaced(): boolean {
     return this.displaced === true;
-  }
-
-  /** Get the glyph data. */
-  getGlyph(): GlyphProps {
-    return this.glyph;
   }
 
   /** Set the X coordinate. */
@@ -273,7 +272,7 @@ export class NoteHead extends Note {
       head_x +=
         this.stem_direction === Stem.UP
           ? this.stem_up_x_offset +
-            (this.glyph.stem ? this.glyph.getWidth(this.render_options.glyph_font_scale) - this.width : 0)
+            (this.glyphProps.stem ? this.glyphProps.getWidth(this.render_options.glyph_font_scale) - this.width : 0)
           : this.stem_down_x_offset;
     }
 

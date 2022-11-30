@@ -52,17 +52,18 @@ export abstract class StemmableNote extends Note {
   }
 
   buildFlag(category = 'flag'): void {
-    const { glyph } = this;
+    const { glyphProps } = this;
 
     if (this.hasFlag()) {
-      const flagCode = this.getStemDirection() === Stem.DOWN ? glyph.code_flag_downstem : glyph.code_flag_upstem;
+      const flagCode =
+        this.getStemDirection() === Stem.DOWN ? glyphProps.code_flag_downstem : glyphProps.code_flag_upstem;
 
-      this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale, { category });
+      if (flagCode) this.flag = new Glyph(flagCode, this.render_options.glyph_font_scale, { category });
     }
   }
 
   // Get the custom glyph associated with the outer note head on the base of the stem.
-  getBaseCustomNoteHeadGlyph(): GlyphProps {
+  getBaseCustomNoteHeadGlyphProps(): GlyphProps {
     if (this.getStemDirection() === Stem.DOWN) {
       return this.customGlyphs[this.customGlyphs.length - 1];
     } else {
@@ -77,10 +78,10 @@ export abstract class StemmableNote extends Note {
 
   // Get the number of beams for this duration
   getBeamCount(): number {
-    const glyph = this.getGlyph();
+    const glyphProps = this.getGlyphProps();
 
-    if (glyph) {
-      return glyph.beam_count;
+    if (glyphProps) {
+      return glyphProps.beam_count;
     } else {
       return 0;
     }
@@ -140,10 +141,10 @@ export abstract class StemmableNote extends Note {
 
       // Lookup the base custom notehead (closest to the base of the stem) to extend or shorten
       // the stem appropriately. If there's no custom note head, lookup the standard notehead.
-      const glyph = this.getBaseCustomNoteHeadGlyph() || this.getGlyph();
+      const glyphProps = this.getBaseCustomNoteHeadGlyphProps() || this.getGlyphProps();
 
       // Get the font-specific customizations for the note heads.
-      const offsets = Tables.currentMusicFont().lookupMetric(`stem.noteHead.${glyph.code_head}`, {
+      const offsets = Tables.currentMusicFont().lookupMetric(`stem.noteHead.${glyphProps.code_head}`, {
         offsetYBaseStemUp: 0,
         offsetYTopStemUp: 0,
         offsetYBaseStemDown: 0,
@@ -181,7 +182,7 @@ export abstract class StemmableNote extends Note {
 
   // Get the stem extension for the current duration
   getStemExtension(): number {
-    const glyph = this.getGlyph();
+    const glyphProps = this.getGlyphProps();
 
     if (this.stem_extension_override != undefined) {
       return this.stem_extension_override;
@@ -189,11 +190,11 @@ export abstract class StemmableNote extends Note {
 
     // Use stem_beam_extension with beams
     if (this.beam) {
-      return glyph.stem_beam_extension;
+      return glyphProps.stem_beam_extension;
     }
 
-    if (glyph) {
-      return this.getStemDirection() === Stem.UP ? glyph.stem_up_extension : glyph.stem_down_extension;
+    if (glyphProps) {
+      return this.getStemDirection() === Stem.UP ? glyphProps.stem_up_extension : glyphProps.stem_down_extension;
     }
 
     return 0;
@@ -244,7 +245,7 @@ export abstract class StemmableNote extends Note {
   }
 
   hasFlag(): boolean {
-    return Tables.getGlyphProps(this.duration).flag && !this.beam;
+    return Tables.getGlyphProps(this.duration).flag == true && !this.beam;
   }
 
   /** Post formats the note. */

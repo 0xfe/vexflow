@@ -2,10 +2,8 @@
 // Author Taehoon Moon 2014
 // MIT License
 
-import { BoundingBox } from './boundingbox';
 import { Clef, ClefType } from './clef';
 import { Glyph } from './glyph';
-import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Category } from './typeguard';
@@ -16,17 +14,15 @@ export class ClefNote extends Note {
     return Category.ClefNote;
   }
 
-  protected clef_obj: Clef;
+  protected glyph: Glyph;
+  protected clef: Clef;
   protected type: string;
-  protected clef: ClefType;
 
   constructor(type: string, size?: string, annotation?: string) {
     super({ duration: 'b' });
-
     this.type = type;
-    this.clef_obj = new Clef(type, size, annotation);
-    this.clef = this.clef_obj.clef;
-    this.glyph = new Glyph(this.clef.code, this.clef.point);
+    this.clef = new Clef(type, size, annotation);
+    this.glyph = new Glyph(this.clef.clef.code, this.clef.clef.point);
     this.setWidth(this.glyph.getMetrics().width);
 
     // Note properties
@@ -36,34 +32,21 @@ export class ClefNote extends Note {
   /** Set clef type, size and annotation. */
   setType(type: string, size: string, annotation: string): this {
     this.type = type;
-    this.clef_obj = new Clef(type, size, annotation);
-    this.clef = this.clef_obj.clef;
-    this.glyph = new Glyph(this.clef.code, this.clef.point);
+    this.clef = new Clef(type, size, annotation);
+    this.glyph = new Glyph(this.clef.clef.code, this.clef.clef.point);
     this.setWidth(this.glyph.getMetrics().width);
     return this;
   }
 
   /** Get associated clef. */
   getClef(): ClefType {
-    return this.clef;
+    return this.clef.clef;
   }
 
   /** Set associated context. */
   setContext(context: RenderContext): this {
     super.setContext(context);
     this.glyph.setContext(this.getContext());
-    return this;
-  }
-
-  /** Get bounding box. */
-  getBoundingBox(): BoundingBox | undefined {
-    return super.getBoundingBox();
-  }
-
-  /* Overridden to ignore */
-  // eslint-disable-next-line
-  addToModifierContext(mc: ModifierContext): this {
-    // DO NOTHING.
     return this;
   }
 
@@ -83,18 +66,18 @@ export class ClefNote extends Note {
     const abs_x = this.getAbsoluteX();
 
     this.glyph.setStave(stave);
-    this.glyph.setYShift(stave.getYForLine(this.clef.line ?? 0) - stave.getYForGlyphs());
+    this.glyph.setYShift(stave.getYForLine(this.clef.clef.line ?? 0) - stave.getYForGlyphs());
     this.glyph.renderToStave(abs_x);
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
-    if (this.clef_obj.annotation !== undefined) {
-      const attachment = new Glyph(this.clef_obj.annotation.code, this.clef_obj.annotation.point);
+    if (this.clef.annotation !== undefined) {
+      const attachment = new Glyph(this.clef.annotation.code, this.clef.annotation.point);
       if (!attachment.getContext()) {
         attachment.setContext(this.getContext());
       }
       attachment.setStave(stave);
-      attachment.setYShift(stave.getYForLine(this.clef_obj.annotation.line) - stave.getYForGlyphs());
-      attachment.setXShift(this.clef_obj.annotation.x_shift);
+      attachment.setYShift(stave.getYForLine(this.clef.annotation.line) - stave.getYForGlyphs());
+      attachment.setXShift(this.clef.annotation.x_shift);
       attachment.renderToStave(abs_x);
     }
   }

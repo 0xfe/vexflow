@@ -376,7 +376,7 @@ export class Formatter {
         }
 
         // If activated rests not on default can be rendered as specified.
-        const position = currTickable.getGlyph().position.toUpperCase();
+        const position = currTickable.getGlyphProps().position.toUpperCase();
         if (position !== 'R/4' && position !== 'B/4') {
           return;
         }

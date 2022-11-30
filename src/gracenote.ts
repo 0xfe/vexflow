@@ -46,10 +46,10 @@ export class GraceNote extends StaveNote {
       return this.stem_extension_override;
     }
 
-    const glyph = this.getGlyph();
-    if (glyph) {
+    const glyphProps = this.getGlyphProps();
+    if (glyphProps) {
       let ret = super.getStemExtension();
-      if (glyph.stem) {
+      if (glyphProps.stem) {
         const staveNoteScale = this.getStaveNoteScale();
         ret = (Stem.HEIGHT + ret) * staveNoteScale - Stem.HEIGHT;
       }
@@ -95,7 +95,7 @@ export class GraceNote extends StaveNote {
             : noteHeadBounds.y_bottom - noteStemHeight;
 
         const defaultStemExtention =
-          stem_direction === Stem.DOWN ? this.glyph.stem_down_extension : this.glyph.stem_up_extension;
+          stem_direction === Stem.DOWN ? this.glyphProps.stem_down_extension : this.glyphProps.stem_up_extension;
 
         let defaultOffsetY = Tables.STEM_HEIGHT;
         defaultOffsetY -= defaultOffsetY / 2.8;

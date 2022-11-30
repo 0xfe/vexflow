@@ -129,7 +129,7 @@ export class TabNote extends StemmableNote {
   }
 
   protected ghost: boolean;
-  protected glyphs: GlyphProps[] = [];
+  protected glyphPropsArr: GlyphProps[] = [];
   protected positions: TabNotePosition[];
 
   // Initialize the TabNote with a `noteStruct` full of properties
@@ -162,8 +162,12 @@ export class TabNote extends StemmableNote {
       font: `${Font.SIZE}pt ${Font.SANS_SERIF}`,
     };
 
-    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
-    defined(this.glyph, 'BadArguments', `No glyph found for duration '${this.duration}' and type '${this.noteType}'`);
+    this.glyphProps = Tables.getGlyphProps(this.duration, this.noteType);
+    defined(
+      this.glyphProps,
+      'BadArguments',
+      `No glyph found for duration '${this.duration}' and type '${this.noteType}'`
+    );
 
     this.buildStem();
 
@@ -208,14 +212,16 @@ export class TabNote extends StemmableNote {
 
   // Get the default stem extension for the note
   getStemExtension(): number {
-    const glyph = this.getGlyph();
+    const glyphProps = this.getGlyphProps();
 
     if (this.stem_extension_override != null) {
       return this.stem_extension_override;
     }
 
-    if (glyph) {
-      return this.getStemDirection() === Stem.UP ? glyph.tabnote_stem_up_extension : glyph.tabnote_stem_down_extension;
+    if (glyphProps) {
+      return this.getStemDirection() === Stem.UP
+        ? glyphProps.tabnote_stem_up_extension
+        : glyphProps.tabnote_stem_down_extension;
     }
 
     return 0;
@@ -223,21 +229,21 @@ export class TabNote extends StemmableNote {
 
   // Calculate and store the width of the note
   updateWidth(): void {
-    this.glyphs = [];
+    this.glyphPropsArr = [];
     this.width = 0;
     for (let i = 0; i < this.positions.length; ++i) {
       let fret = this.positions[i].fret;
       if (this.ghost) fret = '(' + fret + ')';
-      const glyph = Tables.tabToGlyph(fret.toString(), this.render_options.scale);
-      this.glyphs.push(glyph as GlyphProps);
-      this.width = Math.max(glyph.getWidth(), this.width);
+      const glyphProps = Tables.tabToGlyphProps(fret.toString(), this.render_options.scale);
+      this.glyphPropsArr.push(glyphProps);
+      this.width = Math.max(glyphProps.getWidth(), this.width);
     }
     // For some reason we associate a notehead glyph with a TabNote, and this
     // glyph is used for certain width calculations. Of course, this is totally
     // incorrect since a notehead is a poor approximation for the dimensions of
     // a fret number which can have multiple digits. As a result, we must
     // overwrite getWidth() to return the correct width
-    this.glyph.getWidth = () => this.width;
+    this.glyphProps.getWidth = () => this.width;
   }
 
   // Set the `stave` to the note
@@ -249,19 +255,19 @@ export class TabNote extends StemmableNote {
     // Calculate the fret number width based on font used
     if (ctx) {
       this.width = 0;
-      for (let i = 0; i < this.glyphs.length; ++i) {
-        const glyph = this.glyphs[i];
-        const text = '' + glyph.text;
+      for (let i = 0; i < this.glyphPropsArr.length; ++i) {
+        const glyphProps = this.glyphPropsArr[i];
+        const text = '' + glyphProps.text;
         if (text.toUpperCase() !== 'X') {
           ctx.save();
           ctx.setFont(this.render_options.font);
-          glyph.width = ctx.measureText(text).width;
+          glyphProps.width = ctx.measureText(text).width;
           ctx.restore();
-          glyph.getWidth = () => glyph.width;
+          glyphProps.getWidth = () => glyphProps.width as number;
         }
-        this.width = Math.max(glyph.getWidth(), this.width);
+        this.width = Math.max(glyphProps.getWidth(), this.width);
       }
-      this.glyph.getWidth = () => this.width;
+      this.glyphProps.getWidth = () => this.width;
     }
 
     // we subtract 1 from `line` because getYForLine expects a 0-based index,
@@ -299,7 +305,7 @@ export class TabNote extends StemmableNote {
     } else if (position === Modifier.Position.RIGHT) {
       x = this.width + 2; // FIXME: modifier padding, move to font file
     } else if (position === Modifier.Position.BELOW || position === Modifier.Position.ABOVE) {
-      const note_glyph_width = this.glyph.getWidth();
+      const note_glyph_width = this.glyphProps.getWidth();
       x = note_glyph_width / 2;
     }
 
@@ -349,7 +355,7 @@ export class TabNote extends StemmableNote {
   drawFlag(): void {
     const {
       beam,
-      glyph,
+      glyphProps,
       render_options: { draw_stem },
     } = this;
     const context = this.checkContext();
@@ -357,14 +363,14 @@ export class TabNote extends StemmableNote {
     const shouldDrawFlag = beam == undefined && draw_stem;
 
     // Now it's the flag's turn.
-    if (glyph.flag && shouldDrawFlag) {
+    if (glyphProps.flag && shouldDrawFlag) {
       const flag_x = this.getStemX();
       const flag_y =
         this.getStemDirection() === Stem.DOWN
           ? // Down stems are below the note head and have flags on the right.
-            this.getStemY() - this.checkStem().getHeight() - (this.glyph ? this.glyph.stem_down_extension : 0)
+            this.getStemY() - this.checkStem().getHeight() - (this.glyphProps ? this.glyphProps.stem_down_extension : 0)
           : // Up stems are above the note head and have flags on the right.
-            this.getStemY() - this.checkStem().getHeight() + (this.glyph ? this.glyph.stem_up_extension : 0);
+            this.getStemY() - this.checkStem().getHeight() + (this.glyphProps ? this.glyphProps.stem_up_extension : 0);
 
       // Draw the Flag
       //this.flag?.setOptions({ category: 'flag.tabStem' });
@@ -423,21 +429,27 @@ export class TabNote extends StemmableNote {
     const ys = this.ys;
     for (let i = 0; i < this.positions.length; ++i) {
       const y = ys[i] + this.render_options.y_shift;
-      const glyph = this.glyphs[i];
+      const glyphProps = this.glyphPropsArr[i];
 
       // Center the fret text beneath the notation note head
-      const note_glyph_width = this.glyph.getWidth();
-      const tab_x = x + note_glyph_width / 2 - glyph.getWidth() / 2;
+      const note_glyph_width = this.glyphProps.getWidth();
+      const tab_x = x + note_glyph_width / 2 - glyphProps.getWidth() / 2;
 
       // FIXME: Magic numbers.
-      ctx.clearRect(tab_x - 2, y - 3, glyph.getWidth() + 4, 6);
+      ctx.clearRect(tab_x - 2, y - 3, glyphProps.getWidth() + 4, 6);
 
-      if (glyph.code) {
-        Glyph.renderGlyph(ctx, tab_x, y, this.render_options.glyph_font_scale * this.render_options.scale, glyph.code);
+      if (glyphProps.code) {
+        Glyph.renderGlyph(
+          ctx,
+          tab_x,
+          y,
+          this.render_options.glyph_font_scale * this.render_options.scale,
+          glyphProps.code
+        );
       } else {
         ctx.save();
         ctx.setFont(this.render_options.font);
-        const text = glyph.text.toString();
+        const text = glyphProps.text ?? '';
         ctx.fillText(text, tab_x, y + 5 * this.render_options.scale);
         ctx.restore();
       }

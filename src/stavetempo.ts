@@ -96,25 +96,25 @@ export class StaveTempo extends StaveModifier {
         x += noteTextFormatter.getWidthForTextInPx('(');
       }
 
-      const code = Tables.getGlyphProps(duration);
+      const glyphProps = Tables.getGlyphProps(duration);
 
       x += 3 * scale;
-      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, code.code_head);
-      x += code.getWidth() * scale;
+      Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, glyphProps.code_head);
+      x += glyphProps.getWidth ? glyphProps.getWidth() : 0 * scale;
 
       // Draw stem and flags
-      if (code.stem) {
+      if (glyphProps.stem) {
         let stem_height = 30;
 
-        if (code.beam_count) stem_height += 3 * (code.beam_count - 1);
+        if (glyphProps.beam_count) stem_height += 3 * (glyphProps.beam_count - 1);
 
         stem_height *= scale;
 
         const y_top = y - stem_height;
         ctx.fillRect(x - scale, y_top, scale, stem_height);
 
-        if (code.flag) {
-          const flagMetrics = Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, code.code_flag_upstem, {
+        if (glyphProps.code && glyphProps.code_flag_upstem) {
+          const flagMetrics = Glyph.renderGlyph(ctx, x, y_top, options.glyph_font_scale, glyphProps.code_flag_upstem, {
             category: 'flag.staveTempo',
           });
           x += (flagMetrics.width * Tables.NOTATION_FONT_SCALE) / flagMetrics.font.getData().resolution;

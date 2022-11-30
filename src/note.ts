@@ -17,16 +17,16 @@ import { defined, RuntimeError } from './util';
 import { Voice } from './voice';
 
 export interface KeyProps {
-  stem_down_x_offset: number;
-  stem_up_x_offset: number;
+  stem_down_x_offset?: number;
+  stem_up_x_offset?: number;
   key: string;
   octave: number;
   line: number;
-  int_value: number;
-  accidental: string;
-  code: string;
+  int_value?: number;
+  accidental?: string;
+  code?: string;
   stroke: number;
-  shift_right: number;
+  shift_right?: number;
   displaced: boolean;
 }
 
@@ -216,8 +216,7 @@ export abstract class Note extends Tickable {
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANCE MEMBERS
 
-  // eslint-disable-next-line
-  glyph?: any;
+  glyphProps: GlyphProps;
   keys: string[];
   keyProps: KeyProps[];
 
@@ -286,7 +285,7 @@ export abstract class Note extends Tickable {
     this.modifiers = [];
 
     // Get the glyph code for this note from the font.
-    this.glyph = Tables.getGlyphProps(this.duration, this.noteType);
+    this.glyphProps = Tables.getGlyphProps(this.duration, this.noteType);
     this.customGlyphs = this.customTypes.map((t) => Tables.getGlyphProps(this.duration, t));
 
     // Note to play for audio players.
@@ -410,24 +409,22 @@ export abstract class Note extends Tickable {
     return 0;
   }
 
-  /** Get the glyph associated with this note. */
+  /**
+   * @deprecated Use `getGlyphProps()` instead.
+   */
   // eslint-disable-next-line
   getGlyph(): any {
-    return this.glyph;
+    return this.glyphProps;
+  }
+
+  /** Get the glyph associated with this note. */
+  getGlyphProps(): GlyphProps {
+    return this.glyphProps;
   }
 
   /** Get the glyph width. */
   getGlyphWidth(): number {
-    // TODO: FIXME (multiple potential values for this.glyph)
-    if (this.glyph) {
-      if (this.glyph.getMetrics) {
-        return this.glyph.getMetrics().width;
-      } else if (this.glyph.getWidth) {
-        return this.glyph.getWidth(this.render_options.glyph_font_scale);
-      }
-    }
-
-    return 0;
+    return this.glyphProps.getWidth(this.render_options.glyph_font_scale);
   }
 
   /**
@@ -652,7 +649,7 @@ export abstract class Note extends Tickable {
   /** Get the `x` coordinate to the right of the note. */
   getTieRightX(): number {
     let tieStartX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.getWidth();
+    const note_glyph_width = this.glyphProps.getWidth();
     tieStartX += note_glyph_width / 2;
     tieStartX += -this.width / 2 + this.width + 2;
 
@@ -662,7 +659,7 @@ export abstract class Note extends Tickable {
   /** Get the `x` coordinate to the left of the note. */
   getTieLeftX(): number {
     let tieEndX = this.getAbsoluteX();
-    const note_glyph_width = this.glyph.getWidth();
+    const note_glyph_width = this.glyphProps.getWidth();
     tieEndX += note_glyph_width / 2;
     tieEndX -= this.width / 2 + 2;
 
