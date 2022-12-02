@@ -78,7 +78,7 @@ export class Clef extends StaveModifier {
         point: 0,
       },
       percussion: {
-        code: 'restMaxima',
+        code: 'unpitchedPercussionClef1',
         line: 2,
         point: 0,
       },
