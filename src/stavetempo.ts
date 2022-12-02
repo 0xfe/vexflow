@@ -100,7 +100,7 @@ export class StaveTempo extends StaveModifier {
 
       x += 3 * scale;
       Glyph.renderGlyph(ctx, x, y, options.glyph_font_scale, glyphProps.code_head);
-      x += glyphProps.getWidth ? glyphProps.getWidth() : 0 * scale;
+      x += Glyph.getWidth(glyphProps.code_head, options.glyph_font_scale);
 
       // Draw stem and flags
       if (glyphProps.stem) {
