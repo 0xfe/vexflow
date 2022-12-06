@@ -4,7 +4,7 @@
  */
 export const GonvilleMetrics = {
   name: 'Gonville',
-  smufl: false,
+  smufl: true,
 
   stave: {
     padding: 12,
