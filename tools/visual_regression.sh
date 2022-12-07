@@ -22,9 +22,8 @@
 #  The optional argument allows you to compare a subset of the images
 #  (only those with names starting with the specified prefix).
 #
-#  Check build/images/diff/results.txt for results. This file is sorted
-#  by PHASH difference (most different files on top.) The composite diff
-#  images for failed tests (i.e., PHASH > 1.0) are stored in build/images/diff.
+#  Check build/images/diff/results.txt for results. The composite diff
+#  images for failed tests are stored in build/images/diff.
 #
 
 # PNG viewer on OSX. Switch this to whatever your system uses.
@@ -35,10 +34,6 @@ LC_NUMERIC="en_US.UTF-8"
 
 # Check ImageMagick installation
 command -v convert >/dev/null 2>&1 || { echo >&2 "Error: ImageMagick not found."; exit 1; }
-
-# Show images over this PHASH threshold. This is probably too low, but
-# a good first pass.
-THRESHOLD=0.01
 
 # Directories. You might want to change BASE, if you're running from a
 # different working directory.
@@ -110,7 +105,7 @@ if [ -n "$NPROC" ]; then
   nproc=$NPROC
 fi
 
-echo "Running $totalImagesA tests with threshold $THRESHOLD (nproc=$nproc)..."
+echo "Running $totalImagesA tests (nproc=$nproc)..."
 
 function ProgressBar {
     let _progress=(${1}*100/${2}*100)/100
@@ -142,14 +137,14 @@ function diff_image() {
   fi
 
   # If the two files are byte-for-byte identical, skip the image comparison below.
-  cmp -s $fileA $fileB && echo $name "0" >$diff.pass && return
+  cmp -s $fileA $fileB && return
 
   cp $fileA $diff-a.png
   cp $fileB $diff-b.png
 
   # Store the composite diff image.
   # Add the result to results.text
-  echo $name $hash >$diff.fail
+  echo $name >$diff.fail
   # Threshold exceeded, save the diff and the original, current
   cp $diff-diff.png $DIFF/$name.png
   cp $diff-a.png $DIFF/$name'_'$ANAME.png
@@ -206,18 +201,15 @@ cat $BDIR/*.fail 1>$RESULTS.fail 2>/dev/null
 num_fails=`cat $RESULTS.fail | wc -l`
 rm -f  $BDIR/*.fail
 
-# Sort results by PHASH
-sort -r -n -k 2 $RESULTS.fail >$RESULTS
-sort -r -n -k 2 $BDIR/*.pass 1>>$RESULTS 2>/dev/null
+# Sort results
+sort $RESULTS.fail >$RESULTS
 
 # The previous cleanup approach (rm -f) triggered the error: Argument list too long.
-find $BDIR -name '*-temp.pass' -type f -delete
 rm -f $RESULTS.fail
 
 echo
 echo Results stored in $DIFF/results.txt
-echo All images with a difference over threshold, $THRESHOLD, are
-echo available in $DIFF, sorted by perceptual hash.
+echo All images with a difference, are available in $DIFF.
 echo
 
 if [ "$num_warnings" -gt 0 ]
