@@ -85,6 +85,7 @@
     "url": "https://github.com/0xfe/vexflow/issues"
   },
   "devDependencies": {
+    "@types/node": "^18.11.11",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "canvas": "^2.8.0",
@@ -116,6 +117,7 @@
     "sharp": "^0.29.3",
     "string-replace-loader": "^3.1.0",
     "svg2pdf.js": "^2.2.0",
+    "terser-webpack-plugin": "^5.3.6",
     "ts-loader": "^9.2.6",
     "tsc-watch": "^4.6.0",
     "typedoc": "^0.22.10",
