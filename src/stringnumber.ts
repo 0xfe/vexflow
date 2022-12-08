@@ -15,6 +15,13 @@ import { Tables } from './tables';
 import { Category, isStaveNote, isStemmableNote } from './typeguard';
 import { RuntimeError } from './util';
 
+export interface StringNumberMetrics {
+  verticalPadding: number;
+  stemPadding: number;
+  leftPadding: number;
+  rightPadding: number;
+}
+
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
     return Category.StringNumber;
@@ -27,9 +34,15 @@ export class StringNumber extends Modifier {
     style: FontStyle.NORMAL,
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static get metrics(): any {
-    return Tables.currentMusicFont().getMetrics().glyphs.stringNumber;
+  static get metrics(): StringNumberMetrics {
+    return (
+      Tables.currentMusicFont().getMetrics().stringNumber ?? {
+        verticalPadding: 0,
+        stemPadding: 0,
+        leftPadding: 0,
+        rightPadding: 0,
+      }
+    );
   }
 
   // ## Static Methods

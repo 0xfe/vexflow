@@ -1,3 +1,4 @@
+import { StringNumberMetrics } from './stringnumber';
 import { defined } from './util';
 
 export interface FontInfo {
@@ -42,6 +43,7 @@ export interface FontMetrics extends Record<string, any> {
   tremolo?: Record<string, Record<string, number>>;
   // Not specified in bravura_metrics.ts or gonville_metrics.ts.
   noteHead?: Record<string, Record<string, number>>;
+  stringNumber?: StringNumberMetrics;
   // eslint-disable-next-line
   glyphs: Record<string, Record<string, any>>;
 }

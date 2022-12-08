@@ -207,6 +207,13 @@ export const PetalumaMetrics = {
     },
   },
 
+  stringNumber: {
+    verticalPadding: 8,
+    stemPadding: 2,
+    leftPadding: 5,
+    rightPadding: 6,
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -271,12 +278,6 @@ export const PetalumaMetrics = {
       ornamentTurnSlash: {
         scale: 1.2,
       },
-    },
-    stringNumber: {
-      verticalPadding: 8,
-      stemPadding: 2,
-      leftPadding: 5,
-      rightPadding: 6,
     },
     stroke: {
       arrowheadBlackDown: {

@@ -193,6 +193,13 @@ export const GonvilleMetrics = {
     },
   },
 
+  stringNumber: {
+    verticalPadding: 8,
+    stemPadding: 2,
+    leftPadding: 5,
+    rightPadding: 6,
+  },
+
   glyphs: {
     flag: {
       shiftX: -0.08,
@@ -223,12 +230,6 @@ export const GonvilleMetrics = {
       flag128thUp: {
         shiftY: -22,
       },
-    },
-    stringNumber: {
-      verticalPadding: 8,
-      stemPadding: 2,
-      leftPadding: 5,
-      rightPadding: 6,
     },
     textNote: {
       point: 40,
