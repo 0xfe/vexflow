@@ -19,6 +19,89 @@ export const BravuraMetrics = {
     accidentalSpacing: 3,
   },
 
+  chordSymbol: {
+    global: {
+      superscriptOffset: -400,
+      subscriptOffset: 300,
+      kerningOffset: -250,
+      lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+      upperKerningText: ['A', 'L'],
+      spacing: 100,
+      superSubRatio: 0.66,
+    },
+    glyphs: {
+      csymDiminished: {
+        leftSideBearing: -32,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymHalfDiminished: {
+        leftSideBearing: -32,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymAugmented: {
+        leftSideBearing: 0,
+        advanceWidth: 530,
+        yOffset: 0,
+      },
+      csymParensLeftTall: {
+        leftSideBearing: -20,
+        advanceWidth: 184,
+        yOffset: 250,
+      },
+      csymParensRightTall: {
+        leftSideBearing: 0,
+        advanceWidth: 189,
+        yOffset: 250,
+      },
+      csymBracketLeftTall: {
+        leftSideBearing: 0,
+        advanceWidth: 328,
+        yOffset: 0,
+      },
+      csymBracketRightTall: {
+        leftSideBearing: 1,
+        advanceWidth: 600,
+        yOffset: 0,
+      },
+      csymParensLeftVeryTall: {
+        leftSideBearing: 50,
+        advanceWidth: 121,
+        yOffset: 350,
+      },
+      csymParensRightVeryTall: {
+        leftSideBearing: 0,
+        advanceWidth: 111,
+        yOffset: 350,
+      },
+      csymDiagonalArrangementSlash: {
+        leftSideBearing: -1,
+        advanceWidth: 990,
+        yOffset: 0,
+      },
+      csymMinor: {
+        leftSideBearing: 0,
+        advanceWidth: 482,
+        yOffset: 0,
+      },
+      csymMajorSeventh: {
+        leftSideBearing: 200,
+        yOffset: 0,
+        advanceWidth: 600,
+      },
+      accidentalSharp: {
+        leftSideBearing: 20,
+        advanceWidth: 250,
+        yOffset: -302,
+      },
+      accidentalFlat: {
+        leftSideBearing: -20,
+        advanceWidth: 226,
+        yOffset: -184,
+      },
+    },
+  },
   clef: {
     default: {
       point: 32,
@@ -319,98 +402,47 @@ export const BravuraMetrics = {
       },
     },
     chordSymbol: {
-      global: {
-        superscriptOffset: -400,
-        subscriptOffset: 300,
-        kerningOffset: -250,
-        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText: ['A', 'L'],
-        spacing: 100,
-        superSubRatio: 0.66,
-      },
       csymDiminished: {
         scale: 0.8,
-        leftSideBearing: -32,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
-        leftSideBearing: -32,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
-        leftSideBearing: 0,
-        advanceWidth: 530,
-        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
-        leftSideBearing: -20,
-        advanceWidth: 184,
-        yOffset: 250,
       },
       csymParensRightTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 189,
-        yOffset: 250,
       },
       csymBracketLeftTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 328,
-        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
-        leftSideBearing: 1,
-        advanceWidth: 600,
-        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.9,
-        leftSideBearing: 50,
-        advanceWidth: 121,
-        yOffset: 350,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
-        leftSideBearing: 0,
-        advanceWidth: 111,
-        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
-        leftSideBearing: -1,
-        advanceWidth: 990,
-        yOffset: 0,
       },
       csymMinor: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 482,
-        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.9,
-        leftSideBearing: 200,
-        yOffset: 0,
-        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.75,
-        leftSideBearing: 20,
-        advanceWidth: 250,
-        yOffset: -302,
       },
       accidentalFlat: {
         scale: 0.9,
-        leftSideBearing: -20,
-        advanceWidth: 226,
-        yOffset: -184,
       },
     },
     jazzOrnaments: {
