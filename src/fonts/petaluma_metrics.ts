@@ -166,7 +166,74 @@ export const PetalumaMetrics = {
       '4': { point: 23, shiftY: -12 },
     },
   },
-
+  ornament: {
+    brassScoop: {
+      xOffset: -12,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassDoitMedium: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 19,
+    },
+    brassFallLipShort: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 19,
+    },
+    brassLiftMedium: {
+      xOffset: 16,
+      yOffset: 5,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassFallRoughMedium: {
+      xOffset: 16,
+      yOffset: 26,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassBend: {
+      xOffset: 3,
+      yOffset: -8,
+      stemUpYOffset: 28,
+      reportedWidth: 5,
+    },
+    brassMuteClosed: {
+      xOffset: 3,
+      yOffset: -8,
+      stemUpYOffset: 26,
+      reportedWidth: 5,
+    },
+    brassMuteOpen: {
+      xOffset: 4,
+      yOffset: -8,
+      stemUpYOffset: 27,
+      reportedWidth: 5,
+    },
+    brassFlip: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 7,
+      reportedWidth: 5,
+    },
+    brassJazzTurn: {
+      xOffset: 6,
+      yOffset: -4,
+      stemUpYOffset: 5,
+      reportedWidth: 30,
+    },
+    brassSmear: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 5,
+      reportedWidth: 5,
+    },
+  },
   parenthesis: {
     default: {
       point: 39,
@@ -361,6 +428,39 @@ export const PetalumaMetrics = {
       ornamentTurnSlash: {
         scale: 1.2,
       },
+      brassScoop: {
+        scale: 1.0,
+      },
+      brassDoitMedium: {
+        scale: 1.0,
+      },
+      brassFallLipShort: {
+        scale: 1.0,
+      },
+      brassLiftMedium: {
+        scale: 1.0,
+      },
+      brassFallRoughMedium: {
+        scale: 1.0,
+      },
+      brassBend: {
+        scale: 1.0,
+      },
+      brassMuteClosed: {
+        scale: 1.0,
+      },
+      brassMuteOpen: {
+        scale: 1.0,
+      },
+      brassFlip: {
+        scale: 1.0,
+      },
+      brassJazzTurn: {
+        scale: 1.0,
+      },
+      brassSmear: {
+        scale: 1.0,
+      },
     },
     stroke: {
       arrowheadBlackDown: {
@@ -468,85 +568,6 @@ export const PetalumaMetrics = {
       },
       accidentalFlat: {
         scale: 0.8,
-      },
-    },
-    jazzOrnaments: {
-      brassScoop: {
-        scale: 1.0,
-        xOffset: -12,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
-      },
-      brassDoitMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 19,
-      },
-      brassFallLipShort: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 19,
-      },
-      brassLiftMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 5,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
-      },
-      brassFallRoughMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 26,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
-      },
-      brassBend: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -8,
-        stemUpYOffset: 28,
-        reportedWidth: 5,
-      },
-      brassMuteClosed: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -8,
-        stemUpYOffset: 26,
-        reportedWidth: 5,
-      },
-      brassMuteOpen: {
-        scale: 1.0,
-        xOffset: 4,
-        yOffset: -8,
-        stemUpYOffset: 27,
-        reportedWidth: 5,
-      },
-      brassFlip: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 7,
-        reportedWidth: 5,
-      },
-      brassJazzTurn: {
-        scale: 1.0,
-        xOffset: 6,
-        yOffset: -4,
-        stemUpYOffset: 5,
-        reportedWidth: 30,
-      },
-      brassSmear: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 5,
-        reportedWidth: 5,
       },
     },
     tuplet: {

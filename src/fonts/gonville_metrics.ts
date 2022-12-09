@@ -168,6 +168,75 @@ export const GonvilleMetrics = {
     },
   },
 
+  ornament: {
+    brassScoop: {
+      xOffset: -12,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassDoitMedium: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 22,
+    },
+    brassFallLipShort: {
+      xOffset: 17,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassLiftMedium: {
+      xOffset: 16,
+      yOffset: 5,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassFallRoughMedium: {
+      xOffset: 16,
+      yOffset: 28,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassBend: {
+      xOffset: 2,
+      yOffset: -8,
+      stemUpYOffset: 24,
+      reportedWidth: 5,
+    },
+    brassMuteClosed: {
+      xOffset: 3,
+      yOffset: -9,
+      stemUpYOffset: 24,
+      reportedWidth: 5,
+    },
+    brassMuteOpen: {
+      xOffset: 3,
+      yOffset: -7,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassFlip: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 7,
+      reportedWidth: 5,
+    },
+    brassJazzTurn: {
+      xOffset: 3,
+      yOffset: -4,
+      stemUpYOffset: 10,
+      reportedWidth: 28,
+    },
+    brassSmear: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 9,
+      reportedWidth: 5,
+    },
+  },
+
   parenthesis: {
     default: {
       point: 39,
@@ -370,83 +439,39 @@ export const GonvilleMetrics = {
         scale: 0.95,
       },
     },
-    jazzOrnaments: {
+    ornament: {
       brassScoop: {
         scale: 1.0,
-        xOffset: -12,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
       },
       brassDoitMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 22,
       },
       brassFallLipShort: {
         scale: 1.0,
-        xOffset: 17,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
       },
       brassLiftMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 5,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
       },
       brassFallRoughMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 28,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
       },
       brassBend: {
         scale: 1.0,
-        xOffset: 2,
-        yOffset: -8,
-        stemUpYOffset: 24,
-        reportedWidth: 5,
       },
       brassMuteClosed: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -9,
-        stemUpYOffset: 24,
-        reportedWidth: 5,
       },
       brassMuteOpen: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -7,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
       },
       brassFlip: {
         scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 7,
-        reportedWidth: 5,
       },
       brassJazzTurn: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -4,
-        stemUpYOffset: 10,
-        reportedWidth: 28,
       },
       brassSmear: {
         scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 9,
-        reportedWidth: 5,
       },
     },
     tremolo: {

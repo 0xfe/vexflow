@@ -163,6 +163,74 @@ export const LelandMetrics = {
     },
   },
 
+  ornament: {
+    brassScoop: {
+      xOffset: -12,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 20,
+    },
+    brassDoitMedium: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 22,
+    },
+    brassFallLipShort: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassLiftMedium: {
+      xOffset: 16,
+      yOffset: 5,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassFallRoughMedium: {
+      xOffset: 16,
+      yOffset: 28,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassBend: {
+      xOffset: 2,
+      yOffset: -8,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassMuteClosed: {
+      xOffset: 3,
+      yOffset: -8,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassMuteOpen: {
+      xOffset: 3,
+      yOffset: -7,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassFlip: {
+      xOffset: 10,
+      yOffset: 0,
+      stemUpYOffset: 7,
+      reportedWidth: 10,
+    },
+    brassJazzTurn: {
+      xOffset: 0,
+      yOffset: 0,
+      stemUpYOffset: 8,
+      reportedWidth: 31,
+    },
+    brassSmear: {
+      xOffset: 10,
+      yOffset: 0,
+      stemUpYOffset: 8,
+      reportedWidth: 5,
+    },
+  },
   parenthesis: {
     default: {
       point: 39,
@@ -330,6 +398,39 @@ export const LelandMetrics = {
       ornamentTurnSlash: {
         scale: 1.2,
       },
+      brassScoop: {
+        scale: 1.0,
+      },
+      brassDoitMedium: {
+        scale: 1.0,
+      },
+      brassFallLipShort: {
+        scale: 1.0,
+      },
+      brassLiftMedium: {
+        scale: 1.0,
+      },
+      brassFallRoughMedium: {
+        scale: 1.0,
+      },
+      brassBend: {
+        scale: 1.0,
+      },
+      brassMuteClosed: {
+        scale: 1.0,
+      },
+      brassMuteOpen: {
+        scale: 1.0,
+      },
+      brassFlip: {
+        scale: 1.0,
+      },
+      brassJazzTurn: {
+        scale: 1.0,
+      },
+      brassSmear: {
+        scale: 1.0,
+      },
     },
     stroke: {
       arrowheadBlackDown: {
@@ -440,85 +541,6 @@ export const LelandMetrics = {
       },
       accidentalFlat: {
         scale: 0.9,
-      },
-    },
-    jazzOrnaments: {
-      brassScoop: {
-        scale: 1.0,
-        xOffset: -12,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 20,
-      },
-      brassDoitMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 22,
-      },
-      brassFallLipShort: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
-      },
-      brassLiftMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 5,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
-      },
-      brassFallRoughMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 28,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
-      },
-      brassBend: {
-        scale: 1.0,
-        xOffset: 2,
-        yOffset: -8,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassMuteClosed: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -8,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassMuteOpen: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -7,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassFlip: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: 0,
-        stemUpYOffset: 7,
-        reportedWidth: 10,
-      },
-      brassJazzTurn: {
-        scale: 1.0,
-        xOffset: 0,
-        yOffset: 0,
-        stemUpYOffset: 8,
-        reportedWidth: 31,
-      },
-      brassSmear: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: 0,
-        stemUpYOffset: 8,
-        reportedWidth: 5,
       },
     },
     tuplet: {
