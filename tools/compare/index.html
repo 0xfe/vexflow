@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="compare.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 24px;
+        margin: 40px;
+        color: #111;
+        background-color: #f3faff;
+      }
+      button {
+        font-size: 18px;
+        padding: 0.5em 1em;
+        border: 1px solid #ccc;
+        border-radius: 0.5em;
+        background: #eee;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #dff;
+      }
+      button:active {
+        background: #6cc;
+      }
+
+      .centered {
+        display: flex;
+        justify-content: center;
+      }
+
+      .centered select {
+        margin: 0;
+        width: 45%;
+        text-indent: 10px;
+        font-size: 13px;
+        font-family: ui-monospace, Menlo, Monaco, 'Droid Sans Mono', 'Courier New', monospace;
+        overflow: auto;
+        height: 200px;
+      }
+
+      #filter {
+        width: 90%;
+        padding: 12px 20px;
+        margin: 12px 0;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      #images {
+        margin-top: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        addListeners();
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      Open the <b><code>vexflow/build/images/</code></b> folder, which contains <code>current, diff, reference</code>.
+    </p>
+    <p>When the pop-up appears, click <b>View Files</b>.</p>
+    <p><button onclick="openTheFolder()">Open Folder</button></p>
+    <p>
+      You can also drag and drop the <b><code>vexflow/build/images/</code></b> folder onto this page.
+    </p>
+    <div class="centered">
+      <input
+        id="filter"
+        type="text"
+        placeholder="Search terms separated by spaces..."
+        onkeyup="filterResults()"
+      /><br />
+    </div>
+    <div class="centered">
+      <select id="currentImages" size="2" onchange="if (this.selectedIndex > -1) selectedCurrentImage();"></select>
+      <select id="referenceImages" size="5" onchange="if (this.selectedIndex > -1) selectedReferenceImage();"></select>
+    </div>
+    <p>
+      LEFT / RIGHT arrow keys flip between current / reference images.<br />UP / DOWN arrow keys selects the next /
+      previous image to compare.<br />ESC shows images side by side.
+    </p>
+    <div id="images" class="centered"></div>
+  </body>
+</html>
