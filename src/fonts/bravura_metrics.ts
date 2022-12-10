@@ -444,24 +444,22 @@ export const BravuraMetrics = {
         scale: 1.0,
       },
     },
-    stroke: {
+    stroke_straight: {
       arrowheadBlackDown: {
-        straight: {
-          shiftX: -4.5,
-        },
-        wiggly: {
-          shiftX: -1,
-          shiftY: 1,
-        },
+        shiftX: -4.5,
       },
       arrowheadBlackUp: {
-        straight: {
-          shiftX: -0.85,
-        },
-        wiggly: {
-          shiftX: -1,
-          shiftY: 1,
-        },
+        shiftX: -0.85,
+      },
+    },
+    stroke_wiggly: {
+      arrowheadBlackDown: {
+        shiftX: -1,
+        shiftY: 1,
+      },
+      arrowheadBlackUp: {
+        shiftX: -1,
+        shiftY: 1,
       },
     },
     textNote: {

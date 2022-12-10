@@ -233,7 +233,7 @@ export class Stroke extends Modifier {
 
     // Draw the arrow head
     Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
-      category: `stroke.${arrow}.${strokeLine}`,
+      category: `stroke_${strokeLine}.${arrow}`,
     });
 
     // Draw the rasquedo "R"
