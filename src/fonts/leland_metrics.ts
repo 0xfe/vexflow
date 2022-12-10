@@ -359,6 +359,13 @@ export const LelandMetrics = {
     rightPadding: 6,
   },
 
+  tuplet: {
+    noteHeadOffset: 20,
+    stemOffset: 10,
+    bottomLine: 4,
+    topModifierOffset: 15,
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -540,12 +547,6 @@ export const LelandMetrics = {
       accidentalFlat: {
         scale: 0.9,
       },
-    },
-    tuplet: {
-      noteHeadOffset: 20,
-      stemOffset: 10,
-      bottomLine: 4,
-      topModifierOffset: 15,
     },
   },
 };

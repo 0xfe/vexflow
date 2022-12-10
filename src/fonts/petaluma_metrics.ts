@@ -363,6 +363,13 @@ export const PetalumaMetrics = {
     rightPadding: 6,
   },
 
+  tuplet: {
+    noteHeadOffset: 20,
+    stemOffset: 10,
+    bottomLine: 4,
+    topModifierOffset: 20,
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -565,12 +572,6 @@ export const PetalumaMetrics = {
       accidentalFlat: {
         scale: 0.8,
       },
-    },
-    tuplet: {
-      noteHeadOffset: 20,
-      stemOffset: 10,
-      bottomLine: 4,
-      topModifierOffset: 20,
     },
   },
 };

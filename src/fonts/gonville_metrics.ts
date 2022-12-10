@@ -354,6 +354,13 @@ export const GonvilleMetrics = {
     rightPadding: 6,
   },
 
+  tuplet: {
+    noteHeadOffset: 20,
+    stemOffset: 10,
+    bottomLine: 4,
+    topModifierOffset: 15,
+  },
+
   glyphs: {
     flag: {
       shiftX: -0.08,
@@ -479,12 +486,6 @@ export const GonvilleMetrics = {
       grace: {
         shiftY: -5,
       },
-    },
-    tuplet: {
-      noteHeadOffset: 20,
-      stemOffset: 10,
-      bottomLine: 4,
-      topModifierOffset: 15,
     },
   },
 };

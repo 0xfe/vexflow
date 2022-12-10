@@ -2,6 +2,7 @@ import { ChordSymbolMetrics } from './chordsymbol';
 import { NoteHeadMetrics } from './notehead';
 import { OrnamentMetrics } from './ornament';
 import { StringNumberMetrics } from './stringnumber';
+import { TupletMetrics } from './tuplet';
 import { defined } from './util';
 
 export interface FontInfo {
@@ -48,6 +49,8 @@ export interface FontMetrics extends Record<string, any> {
   ornament?: Record<string, OrnamentMetrics>;
   noteHead?: NoteHeadMetrics;
   stringNumber?: StringNumberMetrics;
+  tuplet?: TupletMetrics;
+
   // eslint-disable-next-line
   glyphs: Record<string, Record<string, any>>;
 }
