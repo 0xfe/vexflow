@@ -1,6 +1,15 @@
 // Author: Ron B. Yeh
-
+// MIT License
 // See: https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API
+
+// To generate current/ and reference/ images, follow these steps:
+// `git checkout` a stable "reference" version of VexFlow (e.g., a recent release).
+// `grunt reference` builds VexFlow and copies the build/ to the reference/ folder
+// `git checkout` the new branch you are working on.
+// `grunt` builds your latest "current" version.
+// `grunt generate:current`
+// `grunt generate:reference`
+// Now you can use this tool to compare the current/ and reference/ images.
 
 // store a reference to our file handle
 let fileHandle;
@@ -240,4 +249,11 @@ function updateLabelsForViewMode() {
       document.getElementById('labelReference').style.opacity = 1;
     }
   }
+}
+
+function showInfoTemporarily() {
+  document.getElementById('info').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('info').style.display = 'none';
+  }, 6500);
 }

@@ -2,6 +2,7 @@
 <html>
   <head>
     <script src="compare.js"></script>
+    <meta name="author" content="Ron B. Yeh" />
     <style>
       body {
         font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -78,6 +79,12 @@
         color: #ddd;
         z-index: 10;
       }
+
+      #info {
+        background-color: #444;
+        color: #bbb;
+        padding: 20px;
+      }
     </style>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -90,7 +97,17 @@
       <a href="#" onclick="openTheFolder()"
         >Click here to open the <b><code>vexflow/build/images/</code></b> folder</a
       >
-      (the one which contains <code>current/, diff/, reference/</code>).
+      (the one which contains <code>current/, diff/, reference/</code>). [<a
+        href="#"
+        onclick="showInfoTemporarily(); return false;"
+        title="Use commands like `grunt reference`, `grunt generate:current`, and `grunt generate:reference` to generate the necessary images."
+      >
+        ? </a
+      >]
+    </p>
+    <p id="info" style="display: none">
+      Use commands like `grunt reference`, `grunt generate:current`, and `grunt generate:reference` to generate the
+      necessary images.
     </p>
     <p>If a "Let site view files?" pop-up appears, choose <b>View Files</b>.</p>
     <p>
