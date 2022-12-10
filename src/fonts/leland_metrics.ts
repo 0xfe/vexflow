@@ -304,8 +304,9 @@ export const LelandMetrics = {
     },
   },
 
-  // noteHead: {
-  // },
+  noteHead: {
+    minPadding: 2,
+  },
 
   stem: {
     heightAdjustmentForFlag: -3,
@@ -489,14 +490,11 @@ export const LelandMetrics = {
       },
     },
     noteHead: {
-      minPadding: 2,
-      standard: {
-        restQuarterStemUp: {
-          point: 35,
-        },
-        restQuarterStemDown: {
-          point: 35,
-        },
+      restQuarterStemUp: {
+        point: 35,
+      },
+      restQuarterStemDown: {
+        point: 35,
       },
     },
     chordSymbol: {

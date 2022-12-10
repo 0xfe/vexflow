@@ -308,9 +308,8 @@ export const PetalumaMetrics = {
   },
 
   noteHead: {
-    displaced: {
-      shiftX: -2,
-    },
+    minPadding: 2,
+    displacedShiftX: -2,
   },
 
   stem: {
@@ -513,17 +512,14 @@ export const PetalumaMetrics = {
       },
     },
     noteHead: {
-      minPadding: 2,
-      standard: {
-        noteheadBlackStemUp: {
-          shiftX: 0.5,
-        },
-        noteheadHalfStemUp: {
-          shiftX: 0.725,
-        },
-        noteheadWholeStemUp: {
-          shiftX: 1,
-        },
+      noteheadBlackStemUp: {
+        shiftX: 0.5,
+      },
+      noteheadHalfStemUp: {
+        shiftX: 0.725,
+      },
+      noteheadWholeStemUp: {
+        shiftX: 1,
       },
     },
     chordSymbol: {

@@ -299,8 +299,9 @@ export const GonvilleMetrics = {
     },
   },
 
-  // noteHead: {
-  // },
+  noteHead: {
+    minPadding: 2,
+  },
 
   stem: {
     heightAdjustmentForFlag: -3,
@@ -391,9 +392,6 @@ export const GonvilleMetrics = {
         shiftX: -5,
         shiftY: 4,
       },
-    },
-    noteHead: {
-      minPadding: 2,
     },
     chordSymbol: {
       csymDiminished: {

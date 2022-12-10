@@ -1,4 +1,5 @@
 import { ChordSymbolMetrics } from './chordsymbol';
+import { NoteHeadMetrics } from './notehead';
 import { OrnamentMetrics } from './ornament';
 import { StringNumberMetrics } from './stringnumber';
 import { defined } from './util';
@@ -43,10 +44,9 @@ export interface FontMetrics extends Record<string, any> {
   // Not specified in gonville_metrics.ts.
   articulation?: Record<string, Record<string, number>>;
   tremolo?: Record<string, Record<string, number>>;
-  // Not specified in bravura_metrics.ts or gonville_metrics.ts.
-  noteHead?: Record<string, Record<string, number>>;
   chordSymbol?: ChordSymbolMetrics;
   ornament?: Record<string, OrnamentMetrics>;
+  noteHead?: NoteHeadMetrics;
   stringNumber?: StringNumberMetrics;
   // eslint-disable-next-line
   glyphs: Record<string, Record<string, any>>;

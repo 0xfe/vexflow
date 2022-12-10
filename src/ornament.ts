@@ -41,7 +41,7 @@ export class Ornament extends Modifier {
   }
   static get minPadding(): number {
     const musicFont = Tables.currentMusicFont();
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+    return musicFont.lookupMetric('noteHead.minPadding');
   }
 
   protected ornament: {

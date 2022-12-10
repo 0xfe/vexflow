@@ -270,7 +270,7 @@ export class ChordSymbol extends Modifier {
 
   static get minPadding(): number {
     const musicFont = Tables.currentMusicFont();
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+    return musicFont.lookupMetric('noteHead.minPadding');
   }
   /**
    * Estimate the width of the whole chord symbol, based on the sum of the widths of the individual blocks.
