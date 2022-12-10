@@ -12,7 +12,23 @@ import { defined, log } from './util';
 export interface ClefType {
   point: number;
   code: string;
-  line?: number;
+  line: number;
+}
+
+export interface ClefAnnotatiomType extends ClefType {
+  x_shift: number;
+  code: string;
+  line: number;
+}
+
+export interface ClefMetrics {
+  width: number;
+  annotations: {
+    [key: string]: {
+      point: number;
+      [type: string]: { line?: number; shiftX?: number } | number;
+    };
+  };
 }
 
 // eslint-disable-next-line
@@ -33,12 +49,7 @@ export class Clef extends StaveModifier {
     return Category.Clef;
   }
 
-  annotation?: {
-    code: string;
-    line: number;
-    x_shift: number;
-    point: number;
-  };
+  annotation?: ClefAnnotatiomType;
 
   /**
    * The attribute `clef` must be a key from
@@ -46,7 +57,6 @@ export class Clef extends StaveModifier {
    */
   clef: ClefType = Clef.types['treble'];
 
-  protected glyph?: Glyph;
   protected attachment?: Glyph;
   protected size?: string;
   protected type?: string;
@@ -114,8 +124,16 @@ export class Clef extends StaveModifier {
       },
       tab: {
         code: '6stringTabClef',
+        line: 3,
         point: 0,
       },
+    };
+  }
+
+  static get annotationSmufl(): Record<string, string> {
+    return {
+      '8va': 'timeSig8',
+      '8vb': 'timeSig8',
     };
   }
 
@@ -125,7 +143,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(Tables.currentMusicFont().lookupMetric(`clef.${this.size}.width`));
+    this.setWidth(Tables.currentMusicFont().lookupMetric(`clef_${this.size}.width`));
     L('Creating clef:', type);
   }
 
@@ -141,17 +159,12 @@ export class Clef extends StaveModifier {
 
     const musicFont = Tables.currentMusicFont();
 
-    this.clef.point = musicFont.lookupMetric(`clef.${this.size}.point`, 0);
-    this.glyph = new Glyph(this.clef.code, this.clef.point, {
-      category: `clef.${this.clef.code}.${this.size}`,
-    });
-
     // If an annotation, such as 8va, is specified, add it to the Clef object.
     if (annotation !== undefined) {
-      const code = musicFont.lookupMetric(`clef.annotations.${annotation}.smuflCode`);
-      const point = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.point`);
-      const line = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.line`);
-      const x_shift = musicFont.lookupMetric(`clef.annotations.${annotation}.${this.size}.${this.type}.shiftX`);
+      const code = Clef.annotationSmufl[annotation];
+      const point = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.point`);
+      const line = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.${this.type}.line`);
+      const x_shift = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.${this.type}.shiftX`);
 
       this.annotation = { code, point, line, x_shift };
 
@@ -176,35 +189,20 @@ export class Clef extends StaveModifier {
   /** Set associated stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
-    if (this.type === 'tab') {
-      const glyph = defined(this.glyph, 'ClefError', "Can't set stave without glyph.");
-
-      const numLines = this.stave.getNumLines();
-      const musicFont = Tables.currentMusicFont();
-      const point = musicFont.lookupMetric(`clef.lineCount.${numLines}.point`);
-      const shiftY = musicFont.lookupMetric(`clef.lineCount.${numLines}.shiftY`);
-      glyph.setPoint(point);
-      glyph.setYShift(shiftY);
-    }
     return this;
   }
 
   /** Render clef. */
   draw(): void {
-    const glyph = defined(this.glyph, 'ClefError', "Can't draw clef without glyph.");
     const stave = this.checkStave();
     const ctx = stave.checkContext();
     this.setRendered();
 
     this.applyStyle(ctx);
     ctx.openGroup('clef', this.getAttribute('id'));
-    glyph.setStave(stave);
-    glyph.setContext(ctx);
-    if (this.clef.line !== undefined) {
-      this.placeGlyphOnLine(glyph, stave, this.clef.line);
-    }
-    glyph.renderToStave(this.x);
-
+    Glyph.renderGlyph(ctx, this.x, stave.getYForLine(this.clef.line), this.clef.point, this.clef.code, {
+      category: `clef_${this.size}`,
+    });
     if (this.annotation !== undefined && this.attachment !== undefined) {
       this.placeGlyphOnLine(this.attachment, stave, this.annotation.line);
       this.attachment.setStave(stave);

@@ -1,4 +1,5 @@
 import { ChordSymbolMetrics } from './chordsymbol';
+import { ClefMetrics } from './clef';
 import { NoteHeadMetrics } from './notehead';
 import { OrnamentMetrics } from './ornament';
 import { StringNumberMetrics } from './stringnumber';
@@ -38,11 +39,10 @@ export interface FontMetrics extends Record<string, any> {
   smufl: boolean;
   stave?: Record<string, number>;
   accidental?: Record<string, number>;
-  // eslint-disable-next-line
-  clef?: Record<string, any>;
+  clef_default?: ClefMetrics;
+  clef_small?: ClefMetrics;
   pedalMarking?: Record<string, Record<string, number>>;
   digits?: Record<string, number>;
-  // Not specified in gonville_metrics.ts.
   articulation?: Record<string, Record<string, number>>;
   tremolo?: Record<string, Record<string, number>>;
   chordSymbol?: ChordSymbolMetrics;
@@ -50,9 +50,16 @@ export interface FontMetrics extends Record<string, any> {
   noteHead?: NoteHeadMetrics;
   stringNumber?: StringNumberMetrics;
   tuplet?: TupletMetrics;
-
-  // eslint-disable-next-line
-  glyphs: Record<string, Record<string, any>>;
+  glyphs: Record<
+    string,
+    {
+      point?: number;
+      shiftX?: number;
+      shiftY?: number;
+      scale?: number;
+      [key: string]: { point?: number; shiftX?: number; shiftY?: number; scale?: number } | number | undefined;
+    }
+  >;
 }
 
 export interface FontGlyph {

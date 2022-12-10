@@ -102,67 +102,52 @@ export const BravuraMetrics = {
       },
     },
   },
-  clef: {
-    default: {
-      point: 32,
-      width: 26,
-    },
-    small: {
-      point: 26,
-      width: 20,
-    },
+  clef_default: {
+    width: 26,
 
     annotations: {
       '8va': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 18,
-          treble: {
-            line: -1.4,
-            shiftX: 12,
-          },
-        },
-        small: {
-          point: 16,
-          treble: {
-            line: -0.2,
-            shiftX: 8,
-          },
+        point: 18,
+        treble: {
+          line: -1.4,
+          shiftX: 12,
         },
       },
       '8vb': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 18,
-          treble: {
-            line: 6,
-            shiftX: 10,
-          },
-          bass: {
-            line: 3.5,
-            shiftX: 1,
-          },
+        point: 18,
+        treble: {
+          line: 6,
+          shiftX: 10,
         },
-        small: {
-          point: 16,
-          treble: {
-            line: 5.3,
-            shiftX: 6,
-          },
-          bass: {
-            line: 3.1,
-            shiftX: 0.5,
-          },
+        bass: {
+          line: 3.5,
+          shiftX: 1,
         },
       },
     },
-    // These may no longer be necessary
-    lineCount: {
-      '8': { point: 55, shiftY: 14 },
-      '7': { point: 47, shiftY: 8 },
-      '6': { point: 32, shiftY: 1 },
-      '5': { point: 30, shiftY: -6 },
-      '4': { point: 23, shiftY: -12 },
+  },
+
+  clef_small: {
+    width: 20,
+    annotations: {
+      '8va': {
+        point: 16,
+        treble: {
+          line: -0.2,
+          shiftX: 8,
+        },
+      },
+      '8vb': {
+        point: 16,
+        treble: {
+          line: 5.3,
+          shiftX: 6,
+        },
+        bass: {
+          line: 3.1,
+          shiftX: 0.5,
+        },
+      },
     },
   },
 
@@ -394,14 +379,31 @@ export const BravuraMetrics = {
         shiftX: -1,
       },
     },
-    clef: {
+    clef_default: {
+      point: 32,
       gClef: {
-        default: { scale: 1.1, shiftY: 1 },
-        small: { shiftY: 1.5 },
+        scale: 1.1,
+        shiftY: 1,
       },
       fClef: {
-        default: { shiftY: -0.5 },
+        shiftY: -0.5,
       },
+      '6stringTabClef': {
+        point: 32,
+        shiftY: -5.5,
+      },
+    },
+    clef_small: {
+      point: 26,
+      gClef: {
+        shiftY: 1.5,
+      },
+    },
+    clefNote_default: {
+      point: 32,
+    },
+    clefNote_small: {
+      point: 26,
     },
     ornament: {
       ornamentTurn: {
