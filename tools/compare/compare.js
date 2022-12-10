@@ -14,29 +14,12 @@ const referenceImagesNames = [];
 
 let filterStrings = [];
 
-async function getFile() {
-  // open file picker
-  [fileHandle] = await window.showOpenFilePicker();
+let currentIMGElement;
+let referenceIMGElement;
 
-  if (fileHandle.kind === 'file') {
-    // run file code
-  } else if (fileHandle.kind === 'directory') {
-    // run directory code
-  }
-}
-
-const pickerOpts = {
-  types: [
-    {
-      description: 'Images',
-      accept: {
-        'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
-      },
-    },
-  ],
-  excludeAcceptAllOption: true,
-  multiple: false,
-};
+const SIDE_BY_SIDE = 0;
+const OVERLAY = 1;
+let viewMode = SIDE_BY_SIDE;
 
 async function openTheFolder() {
   // Ask the user to choose a folder.
@@ -68,6 +51,24 @@ function addListeners() {
           listDirectoryContents(handle);
         }
       }
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    e = e || window.event;
+    switch (e.key) {
+      case 'Enter':
+        openTheFolder();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        flipBetweenImages();
+        break;
+      case ' ': // SPACE BAR
+        toggleViewMode();
+        break;
+      default:
+        break;
     }
   });
 }
@@ -186,10 +187,57 @@ async function showImages(selectedImageFileName) {
   }
 
   // Add the two new images.
-  const imgC = document.createElement('img');
-  imgC.src = cURL;
-  imagesContainer.appendChild(imgC);
-  const imgR = document.createElement('img');
-  imgR.src = rURL;
-  imagesContainer.appendChild(imgR);
+  currentIMGElement = document.createElement('img');
+  currentIMGElement.id = 'currentImage';
+  currentIMGElement.src = cURL;
+  currentIMGElement.style.zIndex = 1;
+  imagesContainer.appendChild(currentIMGElement);
+
+  referenceIMGElement = document.createElement('img');
+  referenceIMGElement.id = 'referenceImage';
+  referenceIMGElement.src = rURL;
+  referenceIMGElement.style.zIndex = -1;
+  imagesContainer.appendChild(referenceIMGElement);
+
+  updateImagesForViewMode();
+  updateLabelsForViewMode();
+}
+
+function flipBetweenImages() {
+  currentIMGElement.style.zIndex = -1 * currentIMGElement.style.zIndex;
+  referenceIMGElement.style.zIndex = -1 * referenceIMGElement.style.zIndex;
+  updateLabelsForViewMode();
+}
+
+function toggleViewMode() {
+  viewMode = 1 - viewMode;
+  updateImagesForViewMode();
+  updateLabelsForViewMode();
+}
+
+function updateImagesForViewMode() {
+  if (viewMode === SIDE_BY_SIDE) {
+    currentIMGElement.style.position = 'static';
+    referenceIMGElement.style.position = 'static';
+  } else {
+    currentIMGElement.style.position = 'absolute';
+    referenceIMGElement.style.position = 'absolute';
+  }
+}
+
+function updateLabelsForViewMode() {
+  if (viewMode === SIDE_BY_SIDE) {
+    document.getElementById('labelCurrent').style.opacity = 1;
+    document.getElementById('labelReference').style.opacity = 1;
+  } else {
+    if (currentIMGElement.style.zIndex > referenceIMGElement.style.zIndex) {
+      console.log('CURRENT!!!');
+      document.getElementById('labelCurrent').style.opacity = 1;
+      document.getElementById('labelReference').style.opacity = 0.4;
+    } else {
+      console.log('REFERENCE');
+      document.getElementById('labelCurrent').style.opacity = 0.4;
+      document.getElementById('labelReference').style.opacity = 1;
+    }
+  }
 }

@@ -4,9 +4,10 @@
     <script src="compare.js"></script>
     <style>
       body {
-        font-family: sans-serif;
-        font-size: 24px;
-        margin: 40px;
+        font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+          'Segoe UI Symbol';
+        font-size: 20px;
+        margin: 22px;
         color: #111;
         background-color: #f3faff;
       }
@@ -34,36 +35,64 @@
         margin: 0;
         width: 45%;
         text-indent: 10px;
-        font-size: 13px;
+        font-size: 12px;
         font-family: ui-monospace, Menlo, Monaco, 'Droid Sans Mono', 'Courier New', monospace;
         overflow: auto;
-        height: 200px;
+        height: 180px;
       }
 
       #filter {
         width: 90%;
         padding: 12px 20px;
-        margin: 12px 0;
+        margin: 0 0 10px 0;
         font-size: 16px;
         box-sizing: border-box;
       }
 
       #images {
         margin-top: 20px;
+        position: relative;
+        overflow: visible;
+      }
+
+      #images img {
+        background-color: white;
+        margin: 4px;
+        padding: 4px;
+        border: 1px solid #777;
+      }
+
+      #labelCurrent {
+        left: 0;
+      }
+
+      #labelReference {
+        right: 0;
+      }
+
+      .label {
+        position: fixed;
+        bottom: 0;
+        background-color: #444;
+        padding: 4px 12px;
+        color: #ddd;
+        z-index: 10;
       }
     </style>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', () => {
         addListeners();
       });
     </script>
   </head>
   <body>
     <p>
-      Open the <b><code>vexflow/build/images/</code></b> folder, which contains <code>current, diff, reference</code>.
+      <a href="#" onclick="openTheFolder()"
+        >Click here to open the <b><code>vexflow/build/images/</code></b> folder</a
+      >
+      (the one which contains <code>current/, diff/, reference/</code>).
     </p>
-    <p>When the pop-up appears, click <b>View Files</b>.</p>
-    <p><button onclick="openTheFolder()">Open Folder</button></p>
+    <p>If a "Let site view files?" pop-up appears, choose <b>View Files</b>.</p>
     <p>
       You can also drag and drop the <b><code>vexflow/build/images/</code></b> folder onto this page.
     </p>
@@ -80,9 +109,12 @@
       <select id="referenceImages" size="5" onchange="if (this.selectedIndex > -1) selectedReferenceImage();"></select>
     </div>
     <p>
-      LEFT / RIGHT arrow keys flip between current / reference images.<br />UP / DOWN arrow keys selects the next /
-      previous image to compare.<br />ESC shows images side by side.
+      <b>SPACE BAR</b> - Toggle between overlaying images or showing images side by side.<br /><b>UP / DOWN</b> arrow
+      keys - Select the previous / next image in the list. <b>LEFT / RIGHT</b> arrow keys - Flip between current /
+      reference images, in overlay mode.
     </p>
     <div id="images" class="centered"></div>
+    <div id="labelCurrent" class="label">CURRENT</div>
+    <div id="labelReference" class="label">REFERENCE</div>
   </body>
 </html>
