@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="author" content="Ron B. Yeh" />
+    <style>
+      body {
+        font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+          'Segoe UI Symbol';
+        font-size: 20px;
+        margin: 22px;
+        color: #111;
+        background-color: #f3faff;
+      }
+
+      code {
+        font-weight: bold;
+      }
+
+      a {
+        color: #04f;
+        padding: 8px 10px;
+      }
+
+      a:hover {
+        color: #aef;
+        background-color: #789;
+      }
+
+      /* button at the top right */
+      #help-button {
+        font-weight: bold;
+        text-decoration: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        padding: 8px 14px 16px 20px;
+        border-bottom-left-radius: 8px;
+      }
+
+      #help-text {
+        background-color: #333;
+        color: #ddd;
+        padding: 20px;
+      }
+
+      button {
+        font-size: 18px;
+        padding: 0.5em 1em;
+        border: 1px solid #ccc;
+        border-radius: 0.5em;
+        background: #eee;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #dff;
+      }
+      button:active {
+        background: #6cc;
+      }
+
+      .centered {
+        display: flex;
+        justify-content: center;
+      }
+
+      .centered select {
+        margin: 0;
+        width: 45%;
+        text-indent: 10px;
+        font-size: 12px;
+        font-family: ui-monospace, Menlo, Monaco, 'Droid Sans Mono', 'Courier New', monospace;
+        overflow: auto;
+        height: 180px;
+      }
+
+      #currentImages {
+        margin-right: 10px;
+      }
+
+      #referenceImages {
+        margin-left: 10px;
+      }
+
+      #filter {
+        width: 90%;
+        padding: 12px 20px;
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      #images {
+        margin-top: 20px;
+        position: relative;
+        overflow: visible;
+      }
+
+      #images img {
+        background-color: white;
+        margin: 5px;
+        padding: 6px;
+        border: 1px solid #777;
+      }
+
+      .label {
+        background-color: #404040;
+        padding: 6px 0;
+        width: 45%;
+        text-align: center;
+        color: #eee;
+        box-sizing: border-box;
+      }
+
+      .label a {
+        color: #6af;
+        padding: 2px 20px;
+      }
+
+      .label a:hover {
+        color: #aef;
+        background-color: #123;
+      }
+
+      #labelCurrent {
+        border-top: 8px solid #4bd;
+        border-left: 2px solid #4bd;
+        border-right: 2px solid #4bd;
+      }
+
+      #labelReference {
+        border-top: 8px solid #d4a;
+        border-left: 2px solid #d4a;
+        border-right: 2px solid #d4a;
+      }
+
+      #drop-target-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(10, 10, 10, 0.35);
+        z-index: 100;
+        display: none;
+        font-size: 120px;
+        text-align: center;
+        font-family: monospace;
+        color: white;
+      }
+
+      #drop-target-images {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        background-color: rgba(0, 100, 200, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        border: 12px solid #44d;
+      }
+
+      #drop-target-current {
+        position: absolute;
+        top: 40%;
+        left: 0;
+        width: 50%;
+        height: 60%;
+        background-color: rgba(90, 200, 80, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        border: 12px solid #284;
+      }
+
+      #drop-target-reference {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 50%;
+        height: 60%;
+        background-color: rgba(200, 80, 90, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        border: 12px solid #714;
+      }
+    </style>
+    <script src="compare.js"></script>
+    <script type="module">
+      // Image Diff: https://github.com/mapbox/pixelmatch
+      import pixelmatch from 'https://cdn.skypack.dev/pixelmatch@5.3.0';
+      document.addEventListener('DOMContentLoaded', () => {
+        app(pixelmatch);
+      });
+    </script>
+  </head>
+  <body>
+    <!-- OVERLAY -->
+    <div id="drop-target-overlay">
+      <div id="drop-target-images">images/</div>
+      <div id="drop-target-current">current/</div>
+      <div id="drop-target-reference">reference/</div>
+    </div>
+    <!-- HELP SCREEN -->
+    <p id="help-text" style="display: none">
+      <code>vexflow/build/images/</code> contains these folders:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>current/</code><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>diff/</code><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>reference/</code><br /><br />
+      Use these commands to generate the necessary images:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>grunt reference</code><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>grunt generate:current</code><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>grunt generate:reference</code><br /><br />
+      Shortcuts:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + I</code> - select the <code>images/</code> folder. This folder needs
+      to contain <code>current/</code> and <code>reference/</code> subfolders.<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + C</code> - select the <code>current/</code> folder. This can be any
+      folder, and does not need to be named "current". This allows you to choose arbitrary folders to compare (e.g.,
+      from two different repos).<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + R</code> - select the <code>reference/</code> folder. This can be any
+      folder, and does not need to be named "reference". This allows you to choose arbitrary folders to compare (e.g.,
+      from two different repos).<br /><br />
+
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>1</code> - Show images side-by-side<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>2</code> - Flip between current / reference image. Use LEFT | RIGHT arrow keys.<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>3</code> - Stack / Overlay the current / reference images on top of each other. The
+      top image is translucent with 50% opacity. Use LEFT | RIGHT arrow keys to change the order.<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>4</code> - Show an image diff. Red regions highlight the differing pixels. Use LEFT
+      | RIGHT arrow keys to adjust the threshold for the diff.<br />
+      <br /><br />
+      <button onclick="hideHelpText(); return false;">AWESOME! I'M DONE READING</button>
+    </p>
+    <a id="help-button" href="#" onclick="showHelpText(); return false;">???</a>
+    <!-- INFORMATION -->
+    <p>
+      Click to open:
+      <a id="chooseImagesFolder" href="#"><code>vexflow/build/images/</code></a
+      ><br />If a "Let site view files?" pop-up appears, choose <b>View Files</b>.
+    </p>
+    <p>
+      You can also drag &amp; drop the <code>vexflow/build/images/</code> or <code>current/</code> or
+      <code>reference/</code> folders onto this page.
+    </p>
+    <p>
+      Number Keys: <b>1, 2, 3, 4</b> - Change view modes (side-by-side | alternate | stacked | diff).<br />
+      Arrow Keys: <b>UP / DOWN</b> - Select the previous / next image in the list. <b>LEFT / RIGHT</b> - Flip between
+      current / reference images, in alternating or stacked view modes.
+    </p>
+    <!-- SEARCH BOX -->
+    <div class="centered">
+      <input
+        id="filter"
+        type="text"
+        placeholder="Search terms separated by spaces..."
+        onkeyup="filterResults()"
+      /><br />
+    </div>
+    <!-- LIST OF IMAGES -->
+    <div class="centered">
+      <div id="labelCurrent" class="label">
+        <a id="chooseCurrentFolder" href="#">CURRENT</a>
+      </div>
+      <div id="labelReference" class="label">
+        <a id="chooseReferenceFolder" href="#">REFERENCE</a>
+      </div>
+    </div>
+    <div class="centered">
+      <select id="selectBoxCurrent" size="5" onchange="if (this.selectedIndex > -1) selectedCurrentImage();"></select>
+      <select
+        id="selectBoxReference"
+        size="5"
+        onchange="if (this.selectedIndex > -1) selectedReferenceImage();"
+      ></select>
+    </div>
+    <div id="images" class="centered"></div>
+  </body>
+</html>
