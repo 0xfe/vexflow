@@ -97,8 +97,8 @@
 
       #images img {
         background-color: white;
-        margin: 4px;
-        padding: 4px;
+        margin: 5px;
+        padding: 6px;
         border: 1px solid #777;
       }
 
@@ -194,9 +194,8 @@
     <script type="module">
       // Image Diff: https://github.com/mapbox/pixelmatch
       import pixelmatch from 'https://cdn.skypack.dev/pixelmatch@5.3.0';
-
       document.addEventListener('DOMContentLoaded', () => {
-        addListeners();
+        app(pixelmatch);
       });
     </script>
   </head>
@@ -218,14 +217,14 @@
       &nbsp;&nbsp;&nbsp;&nbsp;<code>grunt generate:current</code><br />
       &nbsp;&nbsp;&nbsp;&nbsp;<code>grunt generate:reference</code><br /><br />
       Shortcuts:<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;<code>Alt + I</code> - select the <code>images/</code> folder. This folder needs to
-      contain <code>current/</code> and <code>reference/</code> subfolders.<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;<code>Alt + C</code> - select the <code>current/</code> folder. This can be any folder,
-      and does not need to be named "current". This allows you to choose arbitrary folders to compare (e.g., from two
-      different repos).<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;<code>Alt + R</code> - select the <code>reference/</code> folder. This can be any folder,
-      and does not need to be named "reference". This allows you to choose arbitrary folders to compare (e.g., from two
-      different repos).<br /><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + I</code> - select the <code>images/</code> folder. This folder needs
+      to contain <code>current/</code> and <code>reference/</code> subfolders.<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + C</code> - select the <code>current/</code> folder. This can be any
+      folder, and does not need to be named "current". This allows you to choose arbitrary folders to compare (e.g.,
+      from two different repos).<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;<code>CTRL + SHIFT + R</code> - select the <code>reference/</code> folder. This can be any
+      folder, and does not need to be named "reference". This allows you to choose arbitrary folders to compare (e.g.,
+      from two different repos).<br /><br />
 
       &nbsp;&nbsp;&nbsp;&nbsp;<code>1</code> - Show images side-by-side<br />
       &nbsp;&nbsp;&nbsp;&nbsp;<code>2</code> - Flip between current / reference image. Use LEFT | RIGHT arrow keys.<br />
@@ -240,7 +239,7 @@
     <!-- INFORMATION -->
     <p>
       Click to open:
-      <a href="#" onclick="openImagesFolder()"><code>vexflow/build/images/</code></a
+      <a id="chooseImagesFolder" href="#"><code>vexflow/build/images/</code></a
       ><br />If a "Let site view files?" pop-up appears, choose <b>View Files</b>.
     </p>
     <p>
@@ -263,8 +262,12 @@
     </div>
     <!-- LIST OF IMAGES -->
     <div class="centered">
-      <div id="labelCurrent" class="label"><a href="#" onclick="openCurrentFolder()">CURRENT</a></div>
-      <div id="labelReference" class="label"><a href="#" onclick="openCurrentFolder()">REFERENCE</a></div>
+      <div id="labelCurrent" class="label">
+        <a id="chooseCurrentFolder" href="#">CURRENT</a>
+      </div>
+      <div id="labelReference" class="label">
+        <a id="chooseReferenceFolder" href="#">REFERENCE</a>
+      </div>
     </div>
     <div class="centered">
       <select id="selectBoxCurrent" size="5" onchange="if (this.selectedIndex > -1) selectedCurrentImage();"></select>

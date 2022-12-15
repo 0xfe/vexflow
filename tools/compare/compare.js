@@ -21,6 +21,11 @@
 
 // TODO: If this tool gets any more complicated, we should use something like React :-).
 
+// Helper function.
+function $(id) {
+  return document.getElementById(id);
+}
+
 // Images we discovered in the vexflow/build/images/current folder.
 let currentImages = {}; // FileSystemFileHandle
 let currentImagesNames = [];
@@ -31,21 +36,34 @@ let referenceImagesNames = [];
 
 let filterStrings = [];
 
-let currentIMGElement;
-let referenceIMGElement;
+// <img> elements so we can display the current & reference images.
+let currentImageElement;
+let referenceImageElement;
 
-// Helper function.
-function $(id) {
-  return document.getElementById(id);
-}
+// Use canvas for the image diff.
+let currentCanvas;
+let currentContext;
+let currentImageWidth = 0;
+let currentImageHeight = 0;
+
+let referenceCanvas;
+let referenceContext;
+let referenceImageWidth = 0;
+let referenceImageHeight = 0;
+
+let diffHelperFunction;
+let diffCanvas;
+let diffContext;
+
+let imagesContainer;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // View Mode
 
-const SIDE_BY_SIDE = 0;
-const ALTERNATE = 1;
-const STACK = 2;
-const DIFF = 3;
+const SIDE_BY_SIDE = 0; // Show current / reference images side-by-side.
+const ALTERNATE = 1; // Alternate between current / reference images.
+const STACK = 2; // Show current / reference images stacked on top of each other. The top image is translucent with 80% opacity.
+const DIFF = 3; // Show a visual diff between the current / reference images.
 
 let viewMode = loadCurrentViewMode();
 
@@ -79,69 +97,45 @@ let cursor = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Open Folders
-
-// Choose a folder that contains two subfolders: current/ and reference/.
-// Usually, this is the vexflow/build/images/ folder.
-async function openImagesFolder() {
-  // Ask the user to choose a folder.
-  // Window.showDirectoryPicker() returns a handle for the directory.
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    processImagesFolder(dirHandle);
-  } catch (err) {
-    // console.error(err.name, err.message); // AbortError The user aborted a request.
-    console.log('The user closed the dialog without selecting a folder.');
-  }
+// IMAGES
+//     Choose a folder that contains two subfolders: current/ and reference/.
+//     Usually, this is the vexflow/build/images/ folder.
+// CURRENT
+//     Choose any folder that contains the current images. The folder does not need to be called 'current'.
+// REFERENCE
+//     Choose any folder that contains the reference images. The folder does not need to be called 'reference'.
+function getDirectoryPicker(processCallback) {
+  return async function () {
+    // Ask the user to choose a folder.
+    // Window.showDirectoryPicker() returns a handle for the directory.
+    try {
+      const dirHandle = await window.showDirectoryPicker();
+      processCallback(dirHandle);
+    } catch (err) {
+      // console.error(err.name, err.message); // AbortError The user aborted a request.
+      console.log('The user closed the dialog without selecting a folder.');
+    }
+  };
 }
 
-// Choose any folder that contains the current images. The folder does not need to be called 'current'.
-async function openCurrentFolder() {
-  // Ask the user to choose a folder.
-  // Window.showDirectoryPicker() returns a handle for the directory.
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    console.log(dirHandle);
-  } catch (err) {
-    // console.error(err.name, err.message); // AbortError The user aborted a request.
-    console.log('The user closed the dialog without selecting a folder.');
-  }
+function openImagesFolder() {
+  getDirectoryPicker(processImagesFolder)();
 }
 
-// Choose any folder that contains the reference images. The folder does not need to be called 'reference'.
-async function openReferenceFolder() {
-  // Ask the user to choose a folder.
-  // Window.showDirectoryPicker() returns a handle for the directory.
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    console.log(dirHandle);
-  } catch (err) {
-    // console.error(err.name, err.message); // AbortError The user aborted a request.
-    console.log('The user closed the dialog without selecting a folder.');
-  }
+function openCurrentFolder() {
+  getDirectoryPicker(processCurrentFolder)();
+}
+
+function openReferenceFolder() {
+  getDirectoryPicker(processReferenceFolder)();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-function droppedFilesOnImagesDropTarget() {}
-
-function droppedFilesOnSelectBoxCurrent(e) {
-  [...e.dataTransfer.items].forEach((item, i) => {
-    // If dropped items aren't files, reject them
-    if (item.kind === 'file') {
-      const file = item.getAsFile();
-      console.log(`CURR: file[${i}].name = ${file.name}`);
-    }
-  });
-}
-
-function droppedFilesOnSelectBoxReference(e) {
-  [...e.dataTransfer.items].forEach((item, i) => {
-    // If dropped items aren't files, reject them
-    if (item.kind === 'file') {
-      const file = item.getAsFile();
-      console.log(`REF: file[${i}].name = ${file.name}`);
-    }
-  });
+function addClickListeners() {
+  $('chooseImagesFolder').addEventListener('click', getDirectoryPicker(processImagesFolder));
+  $('chooseCurrentFolder').addEventListener('click', getDirectoryPicker(processCurrentFolder));
+  $('chooseReferenceFolder').addEventListener('click', getDirectoryPicker(processReferenceFolder));
 }
 
 let dragCounter = 0;
@@ -186,65 +180,44 @@ function hideDropTargets() {
 }
 
 function addDropTargets() {
-  $('drop-target-images').addEventListener('drop', async (e) => {
+  const getProcessFolderHandler = (processCallback) => async (e) => {
     // Prevent navigation.
     e.preventDefault();
 
-    // Process all of the items.
+    // Process all items, but stop once we find the first folder.
     for (const item of e.dataTransfer.items) {
-      // Careful: `kind` will be 'file' for both file _and_ directory entries.
+      // item.kind will be 'file' for both file _and_ directory entries.
       if (item.kind === 'file') {
         const handle = await item.getAsFileSystemHandle();
         if (handle.kind === 'directory') {
-          processImagesFolder(handle);
+          processCallback(handle);
+          return;
         }
       }
     }
-  });
+  };
 
-  $('drop-target-current').addEventListener('drop', async (e) => {
-    // Prevent navigation.
-    e.preventDefault();
+  $('drop-target-images').addEventListener('drop', getProcessFolderHandler(processImagesFolder));
+  $('drop-target-current').addEventListener('drop', getProcessFolderHandler(processCurrentFolder));
+  $('drop-target-reference').addEventListener('drop', getProcessFolderHandler(processReferenceFolder));
+}
 
-    // Process all of the items.
-    for (const item of e.dataTransfer.items) {
-      // Careful: `kind` will be 'file' for both file _and_ directory entries.
-      if (item.kind === 'file') {
-        const handle = await item.getAsFileSystemHandle();
-        if (handle.kind === 'directory') {
-          console.log(handle);
-          // processImagesFolder(handle);
-        }
-      }
-    }
-  });
-
-  $('drop-target-reference').addEventListener('drop', async (e) => {
-    // Prevent navigation.
-    e.preventDefault();
-
-    // Process all of the items.
-    for (const item of e.dataTransfer.items) {
-      // Careful: `kind` will be 'file' for both file _and_ directory entries.
-      if (item.kind === 'file') {
-        const handle = await item.getAsFileSystemHandle();
-        if (handle.kind === 'directory') {
-          console.log(handle);
-          // processImagesFolder(handle);
-        }
-      }
-    }
-  });
+function app(diffFunction) {
+  imagesContainer = $('images');
+  addListeners();
+  setDiffFunction(diffFunction);
 }
 
 function addListeners() {
+  addClickListeners();
   addWindowDragListeners();
   addDropTargets();
 
   // Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
     e = e || window.event;
-    const isAltKeyPressed = e.altKey;
+    const isControlOrMetaKeyPressed = e.ctrlKey || e.metaKey;
+    const isShiftKeyPressed = e.shiftKey;
     const key = e.key.toLowerCase();
     switch (key) {
       case 'escape':
@@ -253,21 +226,21 @@ function addListeners() {
         document.activeElement.blur();
         break;
       case 'c':
-        if (isAltKeyPressed) {
-          console.log('Open the current/ folder.');
+        if (isControlOrMetaKeyPressed && isShiftKeyPressed) {
+          e.preventDefault();
           openCurrentFolder();
         }
         break;
       case 'r':
-        if (isAltKeyPressed) {
-          console.log('Open the reference/ folder.');
+        if (isControlOrMetaKeyPressed && isShiftKeyPressed) {
+          e.preventDefault();
           openReferenceFolder();
         }
         break;
       case 'o':
       case 'i':
-        if (isAltKeyPressed) {
-          console.log('Open the images/ folder.');
+        if (isControlOrMetaKeyPressed && isShiftKeyPressed) {
+          e.preventDefault();
           openImagesFolder();
         }
         break;
@@ -310,8 +283,7 @@ function addListeners() {
         // Nothing for now.
         break;
       default:
-        // Nothing for now.
-        console.log('Unhandled Shortcut:', key);
+        // console.log('Unhandled Shortcut:', key);
         break;
     }
   });
@@ -342,6 +314,9 @@ async function processCurrentFolder(dirHandle) {
   const entries = await dirHandle.values();
   for await (const entry of entries) {
     const fileName = entry.name;
+    if (entry.kind === 'directory') {
+      continue;
+    }
     currentImages[fileName] = entry;
     currentImagesNames.push(fileName);
   }
@@ -358,6 +333,9 @@ async function processReferenceFolder(dirHandle) {
   const entries = await dirHandle.values();
   for await (const entry of entries) {
     const fileName = entry.name;
+    if (entry.kind === 'directory') {
+      continue;
+    }
     referenceImages[fileName] = entry;
     referenceImagesNames.push(fileName);
   }
@@ -408,10 +386,12 @@ function filterResults() {
 async function selectedCurrentImage() {
   let selectBox = $('selectBoxCurrent');
 
-  // Select the corresponding item on the right side.
+  // Select the corresponding item on the right side, if it exists.
   let selectedImageFileName = selectBox.options[selectBox.selectedIndex].value;
-  let referenceImage = $('reference_' + selectedImageFileName);
-  referenceImage.selected = true;
+  let correspondingElement = $('reference_' + selectedImageFileName);
+  if (correspondingElement) {
+    correspondingElement.selected = true;
+  }
 
   showImages(selectedImageFileName);
 }
@@ -419,12 +399,23 @@ async function selectedCurrentImage() {
 async function selectedReferenceImage() {
   let selectBox = $('selectBoxReference');
 
-  // Select the corresponding item on the left side.
+  // Select the corresponding item on the left side, if it exists.
   let selectedImageFileName = selectBox.options[selectBox.selectedIndex].value;
-  let currentImage = $('current_' + selectedImageFileName);
-  currentImage.selected = true;
+  let correspondingElement = $('current_' + selectedImageFileName);
+  if (correspondingElement) {
+    correspondingElement.selected = true;
+  }
 
   showImages(selectedImageFileName);
+}
+
+function createCanvas(w, h) {
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  return canvas;
 }
 
 async function showImages(selectedImageFileName) {
@@ -434,35 +425,58 @@ async function showImages(selectedImageFileName) {
   const cFile = await currentFileHandle.getFile();
   const rFile = await referenceFileHandle.getFile();
 
-  const cURL = URL.createObjectURL(cFile);
-  const rURL = URL.createObjectURL(rFile);
-
-  const imagesContainer = $('images');
-
   // Clear the images container.
   while (imagesContainer.firstChild) {
     imagesContainer.removeChild(imagesContainer.firstChild);
   }
 
-  // Add the two new images.
-  currentIMGElement = document.createElement('img');
-  currentIMGElement.id = 'currentImage';
-  currentIMGElement.src = cURL;
-  currentIMGElement.style.zIndex = 1;
-  imagesContainer.appendChild(currentIMGElement);
+  const cURL = URL.createObjectURL(cFile);
+  const rURL = URL.createObjectURL(rFile);
 
-  referenceIMGElement = document.createElement('img');
-  referenceIMGElement.id = 'referenceImage';
-  referenceIMGElement.src = rURL;
-  referenceIMGElement.style.zIndex = -1;
-  imagesContainer.appendChild(referenceIMGElement);
+  currentImageElement = new Image();
+  currentImageElement.src = cURL;
+  currentImageElement.onload = () => {
+    currentImageElement.id = 'currentImage';
+    currentImageElement.style.zIndex = 1;
+    const w = currentImageElement.naturalWidth;
+    const h = currentImageElement.naturalHeight;
+    // Make a canvas of the same size and assign it to currentCanvas.
+    currentCanvas = createCanvas(w, h);
+    // Draw the image onto the canvas.
+    currentContext = currentCanvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+    currentContext.drawImage(currentImageElement, 0, 0, w, h);
+    currentImageWidth = w;
+    currentImageHeight = h;
+  };
 
+  referenceImageElement = new Image();
+  referenceImageElement.src = rURL;
+  referenceImageElement.onload = () => {
+    referenceImageElement.id = 'referenceImage';
+    referenceImageElement.style.zIndex = -1;
+    const w = referenceImageElement.naturalWidth;
+    const h = referenceImageElement.naturalHeight;
+    // Make a canvas of the same size and assign it to referenceCanvas.
+    referenceCanvas = createCanvas(w, h);
+    // Draw the image onto the canvas.
+    referenceContext = referenceCanvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+    referenceContext.drawImage(referenceImageElement, 0, 0, w, h);
+    referenceImageWidth = w;
+    referenceImageHeight = h;
+  };
+
+  await currentImageElement.decode();
+  await referenceImageElement.decode();
   updateUIForViewMode();
 }
 
 function flipBetweenImages() {
-  currentIMGElement.style.zIndex = cursor;
-  referenceIMGElement.style.zIndex = 1 - cursor;
+  currentImageElement.style.zIndex = cursor;
+  referenceImageElement.style.zIndex = 1 - cursor;
   updateLabelsForViewMode();
 }
 
@@ -478,44 +492,47 @@ function hideHelpText() {
 // Different View Modes
 
 function updateUIForViewMode() {
-  switch (viewMode) {
-    case SIDE_BY_SIDE:
-      console.log('Show current / reference images side by side.');
-      break;
-    case ALTERNATE:
-      console.log('Alternate between current / reference images.');
-      break;
-    case STACK:
-      console.log(
-        'Show current / reference images stacked on top of each other. The top image is translucent with 50% opacity.'
-      );
-      break;
-    case DIFF:
-      console.log('Show a visual diff between the current / reference images.');
-      break;
-    default:
-      console.log('Unknown view mode.');
-      break;
-  }
-
   updateImagesForViewMode();
   updateLabelsForViewMode();
 }
 
+function addImageElements() {
+  imagesContainer.appendChild(currentImageElement);
+  imagesContainer.appendChild(referenceImageElement);
+}
+
+function removeImageElements() {
+  if (currentImageElement && currentImageElement.parentNode === imagesContainer) {
+    imagesContainer.removeChild(currentImageElement);
+  }
+  if (referenceImageElement && referenceImageElement.parentNode === imagesContainer) {
+    imagesContainer.removeChild(referenceImageElement);
+  }
+}
+
 function updateImagesForViewMode() {
+  currentImageElement.style.opacity = 1.0;
+  referenceImageElement.style.opacity = 1.0;
+
   switch (viewMode) {
     case SIDE_BY_SIDE:
-      currentIMGElement.style.position = 'static';
-      referenceIMGElement.style.position = 'static';
+      removeDiffCanvas();
+      addImageElements();
+      currentImageElement.style.position = 'static';
+      referenceImageElement.style.position = 'static';
       break;
     case ALTERNATE:
-      currentIMGElement.style.position = 'absolute';
-      referenceIMGElement.style.position = 'absolute';
+      removeDiffCanvas();
+      addImageElements();
+      updateAlternatingImages();
       break;
     case STACK:
+      removeDiffCanvas();
+      addImageElements();
       updateStackedImages();
       break;
     case DIFF:
+      updateDiff();
       break;
     default:
       console.log('Unknown view mode.');
@@ -526,23 +543,19 @@ function updateImagesForViewMode() {
 function updateLabelsForViewMode() {
   switch (viewMode) {
     case SIDE_BY_SIDE:
+    case DIFF:
       $('labelCurrent').style.opacity = 1;
       $('labelReference').style.opacity = 1;
       break;
     case ALTERNATE:
-      break;
     case STACK:
-      if (currentIMGElement.style.zIndex > referenceIMGElement.style.zIndex) {
-        console.log('CURRENT!!!');
+      if (currentImageElement.style.zIndex > referenceImageElement.style.zIndex) {
         $('labelCurrent').style.opacity = 1;
         $('labelReference').style.opacity = 0.4;
       } else {
-        console.log('REFERENCE');
         $('labelCurrent').style.opacity = 0.4;
         $('labelReference').style.opacity = 1;
       }
-      break;
-    case DIFF:
       break;
     default:
       console.log('Unknown view mode.');
@@ -550,11 +563,66 @@ function updateLabelsForViewMode() {
   }
 }
 
+function updateAlternatingImages() {
+  currentImageElement.style.position = 'absolute';
+  referenceImageElement.style.position = 'absolute';
+  currentImageElement.style.opacity = 1.0;
+  referenceImageElement.style.opacity = 1.0;
+  if (cursor === 0) {
+    currentImageElement.style.zIndex = 1;
+    referenceImageElement.style.zIndex = -1;
+  } else {
+    referenceImageElement.style.zIndex = 1;
+    currentImageElement.style.zIndex = -1;
+  }
+}
+
 function updateStackedImages() {
-  currentIMGElement.style.position = 'absolute';
-  referenceIMGElement.style.position = 'absolute';
+  currentImageElement.style.position = 'absolute';
+  referenceImageElement.style.position = 'absolute';
+  if (cursor === 0) {
+    currentImageElement.style.zIndex = 1;
+    currentImageElement.style.opacity = 0.8;
+    referenceImageElement.style.zIndex = -1;
+    referenceImageElement.style.opacity = 1.0;
+  } else {
+    referenceImageElement.style.zIndex = 1;
+    referenceImageElement.style.opacity = 0.8;
+    currentImageElement.style.zIndex = -1;
+    currentImageElement.style.opacity = 1.0;
+  }
+}
+
+function removeDiffCanvas() {
+  if (diffCanvas && diffCanvas.parentNode) {
+    diffCanvas.parentNode.removeChild(diffCanvas);
+  }
+}
+
+function updateDiff() {
+  removeImageElements();
+
+  const c = currentContext.getImageData(0, 0, currentImageWidth, currentImageHeight);
+  const r = referenceContext.getImageData(0, 0, referenceImageWidth, referenceImageHeight);
+
+  const maxW = Math.max(currentImageWidth, referenceImageWidth);
+  const maxH = Math.max(currentImageHeight, referenceImageHeight);
+
+  removeDiffCanvas();
+  diffCanvas = createCanvas(maxW, maxH);
+  diffContext = diffCanvas.getContext('2d');
+
+  const diffImage = diffContext.createImageData(maxW, maxH);
+  diffHelperFunction(c.data, r.data, diffImage.data, maxW, maxH, { threshold: 0.1 });
+
+  diffContext.putImageData(diffImage, 0, 0);
+  imagesContainer.appendChild(diffCanvas);
 }
 
 function isFocusedOnInput() {
   return document.activeElement.tagName === 'INPUT';
+}
+
+function setDiffFunction(fcn) {
+  diffHelperFunction = fcn;
 }
