@@ -1,0 +1,218 @@
+body {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+  font-size: 20px;
+  margin: 22px;
+  color: #111;
+  background-color: #f3faff;
+}
+
+code {
+  font-weight: bold;
+}
+
+a {
+  color: #04f;
+  padding: 8px 10px;
+}
+
+a:hover {
+  color: #aef;
+  background-color: #789;
+}
+
+/* button at the top right */
+#help-button {
+  font-weight: bold;
+  text-decoration: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 8px 14px 16px 20px;
+  border-bottom-left-radius: 8px;
+}
+
+#help-text {
+  background-color: #333;
+  color: #ddd;
+  padding: 20px;
+}
+
+button {
+  font-size: 18px;
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  background: #eee;
+  cursor: pointer;
+}
+button:hover {
+  background: #dff;
+}
+button:active {
+  background: #6cc;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+}
+
+.centered select {
+  margin: 0;
+  width: 45%;
+  text-indent: 10px;
+  font-size: 12px;
+  font-family: ui-monospace, Menlo, Monaco, 'Droid Sans Mono', 'Courier New', monospace;
+  overflow: auto;
+  height: 160px;
+}
+
+#currentImages {
+  margin-right: 10px;
+}
+
+#referenceImages {
+  margin-left: 10px;
+}
+
+#filter {
+  width: 90%;
+  padding: 12px 20px;
+  margin: 0;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#images {
+  margin-top: 20px;
+  position: relative;
+  overflow: visible;
+}
+
+#images img {
+  background-color: white;
+  margin: 5px;
+  padding: 6px;
+  border: 1px solid #777;
+}
+
+.label {
+  background-color: #404040;
+  padding: 6px 0;
+  width: 45%;
+  text-align: center;
+  color: #eee;
+  box-sizing: border-box;
+}
+
+.label a {
+  color: #6af;
+  padding: 4px 20px;
+  font-size: 28px;
+  line-height: 130%;
+  text-decoration: dashed underline;
+  text-underline-offset: 5px;
+  text-decoration-color: #777;
+}
+
+.label a:hover {
+  color: #aef;
+  background-color: #123;
+}
+
+#labelCurrent {
+  border-top: 8px solid #4bd;
+  border-left: 2px solid #4bd;
+  border-right: 2px solid #4bd;
+}
+
+#labelReference {
+  border-top: 8px solid #d4a;
+  border-left: 2px solid #d4a;
+  border-right: 2px solid #d4a;
+}
+
+#drop-target-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 10, 10, 0.35);
+  z-index: 100;
+  display: none;
+  font-size: 120px;
+  text-align: center;
+  font-family: monospace;
+  color: white;
+}
+
+#drop-target-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background-color: rgba(0, 100, 200, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 12px solid #44d;
+}
+
+#drop-target-current {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  width: 50%;
+  height: 70%;
+  background-color: rgba(90, 200, 80, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 12px solid #284;
+}
+
+#drop-target-reference {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 50%;
+  height: 70%;
+  background-color: rgba(200, 80, 90, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 12px solid #714;
+}
+
+#status {
+  position: absolute;
+  bottom: 0;
+  width: 60%;
+  min-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 80%;
+}
+
+#status-view-mode {
+  background-color: #222;
+  color: #9de;
+  padding: 10px 8px;
+}
+
+#status-image-name {
+  background-color: #555;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 10px 8px;
+}
