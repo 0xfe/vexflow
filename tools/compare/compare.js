@@ -26,19 +26,15 @@ function $(id) {
   return document.getElementById(id);
 }
 
+let imagesContainer;
+
+// Allow the user to quickly search through the list of images.
+let filterStringsInclude = [];
+let filterStringsExclude = [];
+
 // Images we discovered in the vexflow/build/images/current folder.
 let currentImages = {}; // FileSystemFileHandle
 let currentImagesNames = [];
-
-// Images we discovered in the vexflow/build/images/reference folder.
-let referenceImages = {}; // FileSystemFileHandle
-let referenceImagesNames = [];
-
-let filterStrings = [];
-
-// <img> elements so we can display the current & reference images.
-let currentImageElement;
-let referenceImageElement;
 
 // Use canvas for the image diff.
 let currentCanvas;
@@ -46,16 +42,27 @@ let currentContext;
 let currentImageWidth = 0;
 let currentImageHeight = 0;
 
+// <img> element so we can display the current & reference images.
+let currentImageElement;
+let currentLabel = 'current/';
+
+// Images we discovered in the vexflow/build/images/reference folder.
+let referenceImages = {}; // FileSystemFileHandle
+let referenceImagesNames = [];
+
 let referenceCanvas;
 let referenceContext;
 let referenceImageWidth = 0;
 let referenceImageHeight = 0;
 
+// <img> element so we can display the current & reference images.
+let referenceImageElement;
+let referenceLabel = 'reference/';
+
+// Show a visual diff between the current & reference images.
 let diffHelperFunction;
 let diffCanvas;
 let diffContext;
-
-let imagesContainer;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // View Mode
@@ -65,7 +72,7 @@ const ALTERNATE = 1; // Alternate between current / reference images.
 const STACK = 2; // Show current / reference images stacked on top of each other. The top image is translucent with 80% opacity.
 const DIFF = 3; // Show a visual diff between the current / reference images.
 
-let viewMode = loadCurrentViewMode();
+let viewMode;
 
 function loadCurrentViewMode() {
   const modeSaved = localStorage.getItem('vexflow.compare.viewMode');
@@ -202,10 +209,33 @@ function addDropTargets() {
   $('drop-target-reference').addEventListener('drop', getProcessFolderHandler(processReferenceFolder));
 }
 
+// The main entry point for the app.
 function app(diffFunction) {
   imagesContainer = $('images');
+  getQueryParams();
+  viewMode = loadCurrentViewMode();
+  updateLabelsForViewMode();
   addListeners();
   setDiffFunction(diffFunction);
+}
+
+function getQueryParams() {
+  const urlParams = new URLSearchParams(window.location.search);
+  // Useful for making GIFs to communicate with collaborators. For example:
+  //     currentLabel=NewLayoutAlgorithm
+  //     referenceLabel=4.1_Release
+  const cLabel = urlParams.get('currentLabel');
+  const rLabel = urlParams.get('referenceLabel');
+  if (cLabel) {
+    currentLabel = cLabel;
+  }
+  $('chooseCurrentFolder').textContent = currentLabel;
+  $('drop-target-current').textContent = currentLabel;
+  if (rLabel) {
+    referenceLabel = rLabel;
+  }
+  $('chooseReferenceFolder').textContent = referenceLabel;
+  $('drop-target-reference').textContent = referenceLabel;
 }
 
 function addListeners() {
@@ -281,6 +311,12 @@ function addListeners() {
         break;
       case ' ': // SPACE BAR
         // Nothing for now.
+        break;
+      case '/':
+        if (!isFocusedOnInput()) {
+          e.preventDefault();
+          $('filter').focus();
+        }
         break;
       default:
         // console.log('Unhandled Shortcut:', key);
@@ -361,8 +397,9 @@ function buildOptionsHTMLString(imageNamesArray, idPrefix) {
 
   for (let imageName of imageNamesArray) {
     const lowerCaseImageName = imageName.toLowerCase();
-    const allFiltersMatch = filterStrings.every((filter) => lowerCaseImageName.includes(filter));
-    if (allFiltersMatch) {
+    const includeFiltersOK = filterStringsInclude.every((filter) => lowerCaseImageName.includes(filter));
+    const excludeFiltersOK = filterStringsExclude.every((filter) => !lowerCaseImageName.includes(filter));
+    if (includeFiltersOK && excludeFiltersOK) {
       options += `<option id="${idPrefix + imageName}" value="${imageName}">${imageName}</option>`;
     }
   }
@@ -373,7 +410,25 @@ let timeoutID = 0;
 function filterResults() {
   let filterString = $('filter').value;
   filterString = filterString.toLowerCase().replace(/,/g, ' ');
-  filterStrings = filterString.split(' ');
+  const terms = filterString.split(' ');
+
+  filterStringsInclude = [];
+  filterStringsExclude = [];
+
+  for (let searchTerm of terms) {
+    if (searchTerm.length === 0) {
+      continue;
+    }
+    if (searchTerm.startsWith('!')) {
+      searchTerm = searchTerm.substring(1);
+      filterStringsExclude.push(searchTerm);
+    } else {
+      filterStringsInclude.push(searchTerm);
+    }
+  }
+
+  console.log('Include terms are:', filterStringsInclude);
+  console.log('Exclude terms are:', filterStringsExclude);
 
   // Filter the list with at least a 400ms delay after the last letter was typed.
   clearTimeout(timeoutID);
@@ -419,8 +474,21 @@ function createCanvas(w, h) {
 }
 
 async function showImages(selectedImageFileName) {
+  const statusImageName = $('status-image-name');
+  statusImageName.textContent = selectedImageFileName;
+
   const currentFileHandle = currentImages[selectedImageFileName];
   const referenceFileHandle = referenceImages[selectedImageFileName];
+
+  if (!currentFileHandle) {
+    console.log('current/ does not have: ' + selectedImageFileName);
+    return;
+  }
+
+  if (!referenceFileHandle) {
+    console.log('reference/ does not have: ' + selectedImageFileName);
+    return;
+  }
 
   const cFile = await currentFileHandle.getFile();
   const rFile = await referenceFileHandle.getFile();
@@ -475,8 +543,12 @@ async function showImages(selectedImageFileName) {
 }
 
 function flipBetweenImages() {
-  currentImageElement.style.zIndex = cursor;
-  referenceImageElement.style.zIndex = 1 - cursor;
+  if (currentImageElement) {
+    currentImageElement.style.zIndex = cursor;
+  }
+  if (referenceImageElement) {
+    referenceImageElement.style.zIndex = 1 - cursor;
+  }
   updateLabelsForViewMode();
 }
 
@@ -497,8 +569,12 @@ function updateUIForViewMode() {
 }
 
 function addImageElements() {
-  imagesContainer.appendChild(currentImageElement);
-  imagesContainer.appendChild(referenceImageElement);
+  if (currentImageElement) {
+    imagesContainer.appendChild(currentImageElement);
+  }
+  if (referenceImageElement) {
+    imagesContainer.appendChild(referenceImageElement);
+  }
 }
 
 function removeImageElements() {
@@ -511,59 +587,101 @@ function removeImageElements() {
 }
 
 function updateImagesForViewMode() {
-  currentImageElement.style.opacity = 1.0;
-  referenceImageElement.style.opacity = 1.0;
+  if (currentImageElement) {
+    currentImageElement.style.opacity = 1.0;
+  }
+  if (referenceImageElement) {
+    referenceImageElement.style.opacity = 1.0;
+  }
+
+  removeImageElements();
+  removeDiffCanvas();
 
   switch (viewMode) {
     case SIDE_BY_SIDE:
-      removeDiffCanvas();
-      addImageElements();
-      currentImageElement.style.position = 'static';
-      referenceImageElement.style.position = 'static';
+      showImagesSideBySide();
       break;
     case ALTERNATE:
-      removeDiffCanvas();
-      addImageElements();
-      updateAlternatingImages();
+      showImagesAlternating();
       break;
     case STACK:
-      removeDiffCanvas();
-      addImageElements();
-      updateStackedImages();
+      showImagesStackedOnTopOfEachOther();
       break;
     case DIFF:
-      updateDiff();
+      showVisualDiffBetweenImages();
       break;
     default:
       console.log('Unknown view mode.');
       break;
+  }
+}
+
+function resetLabelOpacity() {
+  const c = $('labelCurrent');
+  const l = $('labelReference');
+  c.style.opacity = 1;
+  l.style.opacity = 1;
+}
+
+function fadeOutLabelForBottomImage() {
+  if (!currentImageElement || !referenceImageElement) {
+    return;
+  }
+
+  let l = $('labelReference');
+  let c = $('labelCurrent');
+  if (currentImageElement.style.zIndex > referenceImageElement.style.zIndex) {
+    if (l) {
+      l.style.opacity = 0.4;
+    }
+  } else {
+    if (c) {
+      c.style.opacity = 0.4;
+    }
   }
 }
 
 function updateLabelsForViewMode() {
+  let viewModeLabel = '';
+  resetLabelOpacity();
+
   switch (viewMode) {
     case SIDE_BY_SIDE:
+      viewModeLabel = 'side-by-side';
+      break;
     case DIFF:
-      $('labelCurrent').style.opacity = 1;
-      $('labelReference').style.opacity = 1;
+      viewModeLabel = 'diff';
       break;
     case ALTERNATE:
+      viewModeLabel = 'alternate';
+      fadeOutLabelForBottomImage();
+      break;
     case STACK:
-      if (currentImageElement.style.zIndex > referenceImageElement.style.zIndex) {
-        $('labelCurrent').style.opacity = 1;
-        $('labelReference').style.opacity = 0.4;
-      } else {
-        $('labelCurrent').style.opacity = 0.4;
-        $('labelReference').style.opacity = 1;
-      }
+      viewModeLabel = 'stack';
+      fadeOutLabelForBottomImage();
       break;
     default:
       console.log('Unknown view mode.');
       break;
   }
+
+  $('status-view-mode').textContent = 'view: ' + viewModeLabel;
 }
 
-function updateAlternatingImages() {
+function showImagesSideBySide() {
+  addImageElements();
+  if (!currentImageElement || !referenceImageElement) {
+    return;
+  }
+  currentImageElement.style.position = 'static';
+  referenceImageElement.style.position = 'static';
+}
+
+function showImagesAlternating() {
+  addImageElements();
+  if (!currentImageElement || !referenceImageElement) {
+    return;
+  }
   currentImageElement.style.position = 'absolute';
   referenceImageElement.style.position = 'absolute';
   currentImageElement.style.opacity = 1.0;
@@ -577,7 +695,11 @@ function updateAlternatingImages() {
   }
 }
 
-function updateStackedImages() {
+function showImagesStackedOnTopOfEachOther() {
+  addImageElements();
+  if (!currentImageElement || !referenceImageElement) {
+    return;
+  }
   currentImageElement.style.position = 'absolute';
   referenceImageElement.style.position = 'absolute';
   if (cursor === 0) {
@@ -599,8 +721,10 @@ function removeDiffCanvas() {
   }
 }
 
-function updateDiff() {
-  removeImageElements();
+function showVisualDiffBetweenImages() {
+  if (!currentContext || !referenceContext) {
+    return;
+  }
 
   const c = currentContext.getImageData(0, 0, currentImageWidth, currentImageHeight);
   const r = referenceContext.getImageData(0, 0, referenceImageWidth, referenceImageHeight);
@@ -608,7 +732,6 @@ function updateDiff() {
   const maxW = Math.max(currentImageWidth, referenceImageWidth);
   const maxH = Math.max(currentImageHeight, referenceImageHeight);
 
-  removeDiffCanvas();
   diffCanvas = createCanvas(maxW, maxH);
   diffContext = diffCanvas.getContext('2d');
 
