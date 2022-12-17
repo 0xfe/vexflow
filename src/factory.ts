@@ -17,6 +17,7 @@ import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
 import { Glyph } from './glyph';
+import { GlyphArticulation } from './glypharticulation';
 import { GlyphNote, GlyphNoteOptions } from './glyphnote';
 import { GraceNote, GraceNoteStruct } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
@@ -389,6 +390,19 @@ export class Factory {
     }
     chordSymbol.setContext(this.context);
     return chordSymbol;
+  }
+
+  GlyphArticulation(code: string, params?: { between_lines?: boolean; position?: string | number }): Articulation {
+    const p = {
+      position: 'above',
+      between_lines: false,
+      ...params,
+    };
+
+    const articulation = new GlyphArticulation(code, p.between_lines);
+    articulation.setPosition(p.position);
+    articulation.setContext(this.context);
+    return articulation;
   }
 
   Articulation(params?: { type?: string; position?: string | number }): Articulation {
