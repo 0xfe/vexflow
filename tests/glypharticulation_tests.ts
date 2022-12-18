@@ -33,21 +33,21 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow').setPosition(ModifierPosition.BELOW), 0),
     staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addModifier(new GlyphArticulation('fermataBelow').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new GlyphArticulation('fermataShortBelow').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow').setPosition(ModifierPosition.BELOW), 0),
     staveNote({ keys: ['c/5'], duration: 'q' })
-      .addModifier(new GlyphArticulation('fermataBelow').setPosition(ModifierPosition.BELOW), 0)
+      .addModifier(new GlyphArticulation('fermataLongBelow').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow').setPosition(ModifierPosition.BELOW), 0),
     staveNote({ keys: ['f/4'], duration: 'q' })
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow').setPosition(ModifierPosition.BELOW), 0)
-      .addModifier(new GlyphArticulation('fermataBelow').setPosition(ModifierPosition.BELOW), 0),
+      .addModifier(new GlyphArticulation('fermataVeryShortBelow').setPosition(ModifierPosition.BELOW), 0),
     staveNote({ keys: ['g/4'], duration: 'q', stem_direction: Stem.DOWN })
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow').setPosition(ModifierPosition.BELOW), 0)
-      .addModifier(new GlyphArticulation('fermataBelow').setPosition(ModifierPosition.BELOW), 0),
+      .addModifier(new GlyphArticulation('fermataVeryLongBelow').setPosition(ModifierPosition.BELOW), 0),
     staveNote({ keys: ['c/5'], duration: 'q' })
       .addModifier(new GlyphArticulation('augmentationDot', true).setPosition(ModifierPosition.BELOW), 0)
       .addModifier(new GlyphArticulation('articTenutoBelow', true).setPosition(ModifierPosition.BELOW), 0)
@@ -57,21 +57,21 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove').setPosition(ModifierPosition.ABOVE), 0),
     staveNote({ keys: ['f/5'], duration: 'q' })
-      .addModifier(new GlyphArticulation('fermataAbove').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new GlyphArticulation('fermataShortAbove').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove').setPosition(ModifierPosition.ABOVE), 0),
     staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
-      .addModifier(new GlyphArticulation('fermataAbove').setPosition(ModifierPosition.ABOVE), 0)
+      .addModifier(new GlyphArticulation('fermataLongAbove').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove').setPosition(ModifierPosition.ABOVE), 0),
     staveNote({ keys: ['a/5'], duration: 'q', stem_direction: Stem.DOWN })
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove').setPosition(ModifierPosition.ABOVE), 0)
-      .addModifier(new GlyphArticulation('fermataAbove').setPosition(ModifierPosition.ABOVE), 0),
+      .addModifier(new GlyphArticulation('fermataVeryShortAbove').setPosition(ModifierPosition.ABOVE), 0),
     staveNote({ keys: ['f/5'], duration: 'q' })
       .addModifier(new GlyphArticulation('augmentationDot').setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove').setPosition(ModifierPosition.ABOVE), 0)
-      .addModifier(new GlyphArticulation('fermataAbove').setPosition(ModifierPosition.ABOVE), 0),
+      .addModifier(new GlyphArticulation('fermataVeryLongAbove').setPosition(ModifierPosition.ABOVE), 0),
     staveNote({ keys: ['b/4'], duration: 'q', stem_direction: Stem.DOWN })
       .addModifier(new GlyphArticulation('augmentationDot', true).setPosition(ModifierPosition.ABOVE), 0)
       .addModifier(new GlyphArticulation('articTenutoAbove', true).setPosition(ModifierPosition.ABOVE), 0)
