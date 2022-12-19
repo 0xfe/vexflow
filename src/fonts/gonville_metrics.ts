@@ -480,6 +480,24 @@ export const GonvilleMetrics = {
         scale: 1.0,
       },
     },
+    stroke_straight: {
+      arrowheadBlackDown: {
+        shiftX: -4.5,
+      },
+      arrowheadBlackUp: {
+        shiftX: -0.85,
+      },
+    },
+    stroke_wiggly: {
+      arrowheadBlackDown: {
+        shiftX: -1,
+        shiftY: 1,
+      },
+      arrowheadBlackUp: {
+        shiftX: -1,
+        shiftY: 1,
+      },
+    },
     tremolo: {
       default: {
         shiftY: -10,
