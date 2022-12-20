@@ -27,7 +27,6 @@ export * from './fraction';
 export * from './frethandfinger';
 export * from './ghostnote';
 export * from './glyph';
-export * from './glypharticulation';
 export * from './glyphnote';
 export * from './gracenote';
 export * from './gracenotegroup';
