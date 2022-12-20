@@ -17,6 +17,10 @@ function L(...args: any[]) {
   if (NoteHead.DEBUG) log('Vex.Flow.NoteHead', args);
 }
 
+export interface NoteHeadMetrics {
+  minPadding?: number;
+  displacedShiftX?: number;
+}
 export interface NoteHeadStruct extends NoteStruct {
   line?: number;
   glyph_font_scale?: number;
@@ -217,7 +221,7 @@ export class NoteHead extends Note {
     const displacementStemAdjustment = Stem.WIDTH / 2;
     const musicFont = Tables.currentMusicFont();
     const fontShift = musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
-    const displacedFontShift = musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
+    const displacedFontShift = musicFont.lookupMetric('noteHead.displacedShiftX', 0) * this.stem_direction;
 
     return (
       x +
@@ -290,7 +294,7 @@ export class NoteHead extends Note {
       drawSlashNoteHead(ctx, this.duration, head_x, y, stem_direction, staveSpace);
     } else {
       Glyph.renderGlyph(ctx, head_x, y, glyph_font_scale, this.glyph_code, {
-        category: `noteHead.standard.${categorySuffix}`,
+        category: `noteHead.${categorySuffix}`,
       });
     }
   }

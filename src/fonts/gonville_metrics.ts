@@ -19,68 +19,205 @@ export const GonvilleMetrics = {
     accidentalSpacing: 3,
   },
 
-  clef: {
-    default: {
-      point: 40,
-      width: 26,
+  chordSymbol: {
+    global: {
+      superscriptOffset: -400,
+      subscriptOffset: 300,
+      kerningOffset: -250,
+      lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+      upperKerningText: ['A', 'L'],
+      spacing: 100,
+      superSubRatio: 0.66,
     },
-    small: {
-      point: 32,
-      width: 20,
+    glyphs: {
+      csymDiminished: {
+        leftSideBearing: 0,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymHalfDiminished: {
+        leftSideBearing: -32,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymAugmented: {
+        leftSideBearing: 0,
+        advanceWidth: 530,
+        yOffset: 0,
+      },
+      csymParensLeftTall: {
+        leftSideBearing: 0,
+        advanceWidth: 155,
+        yOffset: 250,
+      },
+      csymParensRightTall: {
+        leftSideBearing: -40,
+        advanceWidth: 189,
+        yOffset: 250,
+      },
+      csymBracketLeftTall: {
+        leftSideBearing: 0,
+        advanceWidth: 328,
+        yOffset: 0,
+      },
+      csymBracketRightTall: {
+        leftSideBearing: 1,
+        advanceWidth: 600,
+        yOffset: 0,
+      },
+      csymParensLeftVeryTall: {
+        leftSideBearing: 0,
+        advanceWidth: 121,
+        yOffset: 350,
+      },
+      csymParensRightVeryTall: {
+        leftSideBearing: 50,
+        advanceWidth: 111,
+        yOffset: 350,
+      },
+      csymDiagonalArrangementSlash: {
+        leftSideBearing: -1,
+        advanceWidth: 990,
+        yOffset: 0,
+      },
+      csymMinor: {
+        leftSideBearing: 0,
+        advanceWidth: 482,
+        yOffset: 0,
+      },
+      csymMajorSeventh: {
+        leftSideBearing: 200,
+        yOffset: 0,
+        advanceWidth: 600,
+      },
+      accidentalSharp: {
+        leftSideBearing: 40,
+        advanceWidth: 250,
+        yOffset: -402,
+      },
+      accidentalFlat: {
+        leftSideBearing: -50,
+        advanceWidth: 208,
+        yOffset: -184,
+      },
     },
+  },
+
+  clef_default: {
+    width: 26,
 
     annotations: {
       '8va': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 20,
-          treble: {
-            line: -1.2,
-            shiftX: 11,
-          },
-        },
-        small: {
-          point: 18,
-          treble: {
-            line: -0.4,
-            shiftX: 8,
-          },
+        point: 20,
+        treble: {
+          line: -1.2,
+          shiftX: 11,
         },
       },
       '8vb': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 20,
-          treble: {
-            line: 6.3,
-            shiftX: 10,
-          },
-          bass: {
-            line: 4,
-            shiftX: 1,
-          },
+        point: 20,
+        treble: {
+          line: 6.3,
+          shiftX: 10,
         },
-        small: {
-          point: 18,
-          treble: {
-            line: 5.8,
-            shiftX: 6,
-          },
-          bass: {
-            line: 3.5,
-            shiftX: 0.5,
-          },
+        bass: {
+          line: 4,
+          shiftX: 1,
         },
       },
     },
+  },
 
-    // May not need these anymore
-    lineCount: {
-      '8': { point: 55, shiftY: 14 },
-      '7': { point: 47, shiftY: 8 },
-      '6': { point: 40, shiftY: 1 },
-      '5': { point: 30, shiftY: -6 },
-      '4': { point: 23, shiftY: -12 },
+  clef_small: {
+    width: 20,
+    annotations: {
+      '8va': {
+        point: 18,
+        treble: {
+          line: -0.4,
+          shiftX: 8,
+        },
+      },
+      '8vb': {
+        point: 18,
+        treble: {
+          line: 5.8,
+          shiftX: 6,
+        },
+        bass: {
+          line: 3.5,
+          shiftX: 0.5,
+        },
+      },
+    },
+  },
+
+  ornament: {
+    brassScoop: {
+      xOffset: -12,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassDoitMedium: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 22,
+    },
+    brassFallLipShort: {
+      xOffset: 17,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassLiftMedium: {
+      xOffset: 16,
+      yOffset: 5,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassFallRoughMedium: {
+      xOffset: 16,
+      yOffset: 28,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassBend: {
+      xOffset: 2,
+      yOffset: -8,
+      stemUpYOffset: 24,
+      reportedWidth: 5,
+    },
+    brassMuteClosed: {
+      xOffset: 3,
+      yOffset: -9,
+      stemUpYOffset: 24,
+      reportedWidth: 5,
+    },
+    brassMuteOpen: {
+      xOffset: 3,
+      yOffset: -7,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassFlip: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 7,
+      reportedWidth: 5,
+    },
+    brassJazzTurn: {
+      xOffset: 3,
+      yOffset: -4,
+      stemUpYOffset: 10,
+      reportedWidth: 28,
+    },
+    brassSmear: {
+      xOffset: 10,
+      yOffset: -4,
+      stemUpYOffset: 9,
+      reportedWidth: 5,
     },
   },
 
@@ -146,8 +283,9 @@ export const GonvilleMetrics = {
     },
   },
 
-  // noteHead: {
-  // },
+  noteHead: {
+    minPadding: 2,
+  },
 
   stem: {
     heightAdjustmentForFlag: -3,
@@ -200,6 +338,13 @@ export const GonvilleMetrics = {
     rightPadding: 6,
   },
 
+  tuplet: {
+    noteHeadOffset: 20,
+    stemOffset: 10,
+    bottomLine: 4,
+    topModifierOffset: 15,
+  },
+
   glyphs: {
     flag: {
       shiftX: -0.08,
@@ -231,6 +376,23 @@ export const GonvilleMetrics = {
         shiftY: -22,
       },
     },
+    clef_default: {
+      point: 40,
+      '6stringTabClef': {
+        point: 40,
+        shiftY: -5.5,
+      },
+    },
+    clef_small: {
+      point: 32,
+    },
+    clefNote_default: {
+      point: 40,
+    },
+    clefNote_small: {
+      point: 32,
+    },
+
     textNote: {
       point: 40,
       default: {},
@@ -239,181 +401,83 @@ export const GonvilleMetrics = {
         shiftY: 4,
       },
     },
-    noteHead: {
-      minPadding: 2,
-    },
     chordSymbol: {
-      global: {
-        superscriptOffset: -400,
-        subscriptOffset: 300,
-        kerningOffset: -250,
-        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText: ['A', 'L'],
-        spacing: 100,
-        superSubRatio: 0.66,
-      },
       csymDiminished: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
-        leftSideBearing: -32,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
-        leftSideBearing: 0,
-        advanceWidth: 530,
-        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 155,
-        yOffset: 250,
       },
       csymParensRightTall: {
         scale: 0.8,
-        leftSideBearing: -40,
-        advanceWidth: 189,
-        yOffset: 250,
       },
       csymBracketLeftTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 328,
-        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
-        leftSideBearing: 1,
-        advanceWidth: 600,
-        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.9,
-        leftSideBearing: 0,
-        advanceWidth: 121,
-        yOffset: 350,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
-        leftSideBearing: 50,
-        advanceWidth: 111,
-        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
-        leftSideBearing: -1,
-        advanceWidth: 990,
-        yOffset: 0,
       },
       csymMinor: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 482,
-        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.9,
-        leftSideBearing: 200,
-        yOffset: 0,
-        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.75,
-        leftSideBearing: 40,
-        advanceWidth: 250,
-        yOffset: -402,
       },
       accidentalFlat: {
         scale: 0.95,
-        leftSideBearing: -50,
-        advanceWidth: 208,
-        yOffset: -184,
       },
     },
-    jazzOrnaments: {
+    ornament: {
       brassScoop: {
         scale: 1.0,
-        xOffset: -12,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
       },
       brassDoitMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 22,
       },
       brassFallLipShort: {
         scale: 1.0,
-        xOffset: 17,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
       },
       brassLiftMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 5,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
       },
       brassFallRoughMedium: {
         scale: 1.0,
-        xOffset: 16,
-        yOffset: 28,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
       },
       brassBend: {
         scale: 1.0,
-        xOffset: 2,
-        yOffset: -8,
-        stemUpYOffset: 24,
-        reportedWidth: 5,
       },
       brassMuteClosed: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -9,
-        stemUpYOffset: 24,
-        reportedWidth: 5,
       },
       brassMuteOpen: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -7,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
       },
       brassFlip: {
         scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 7,
-        reportedWidth: 5,
       },
       brassJazzTurn: {
         scale: 1.0,
-        xOffset: 3,
-        yOffset: -4,
-        stemUpYOffset: 10,
-        reportedWidth: 28,
       },
       brassSmear: {
         scale: 1.0,
-        xOffset: 10,
-        yOffset: -4,
-        stemUpYOffset: 9,
-        reportedWidth: 5,
       },
     },
     tremolo: {
@@ -423,12 +487,6 @@ export const GonvilleMetrics = {
       grace: {
         shiftY: -5,
       },
-    },
-    tuplet: {
-      noteHeadOffset: 20,
-      stemOffset: 10,
-      bottomLine: 4,
-      topModifierOffset: 15,
     },
   },
 };

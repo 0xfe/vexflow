@@ -19,67 +19,204 @@ export const BravuraMetrics = {
     accidentalSpacing: 3,
   },
 
-  clef: {
-    default: {
-      point: 32,
-      width: 26,
+  chordSymbol: {
+    global: {
+      superscriptOffset: -400,
+      subscriptOffset: 300,
+      kerningOffset: -250,
+      lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
+      upperKerningText: ['A', 'L'],
+      spacing: 100,
+      superSubRatio: 0.66,
     },
-    small: {
-      point: 26,
-      width: 20,
+    glyphs: {
+      csymDiminished: {
+        leftSideBearing: -32,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymHalfDiminished: {
+        leftSideBearing: -32,
+        advanceWidth: 506,
+        yOffset: 0,
+      },
+      csymAugmented: {
+        leftSideBearing: 0,
+        advanceWidth: 530,
+        yOffset: 0,
+      },
+      csymParensLeftTall: {
+        leftSideBearing: -20,
+        advanceWidth: 184,
+        yOffset: 250,
+      },
+      csymParensRightTall: {
+        leftSideBearing: 0,
+        advanceWidth: 189,
+        yOffset: 250,
+      },
+      csymBracketLeftTall: {
+        leftSideBearing: 0,
+        advanceWidth: 328,
+        yOffset: 0,
+      },
+      csymBracketRightTall: {
+        leftSideBearing: 1,
+        advanceWidth: 600,
+        yOffset: 0,
+      },
+      csymParensLeftVeryTall: {
+        leftSideBearing: 50,
+        advanceWidth: 121,
+        yOffset: 350,
+      },
+      csymParensRightVeryTall: {
+        leftSideBearing: 0,
+        advanceWidth: 111,
+        yOffset: 350,
+      },
+      csymDiagonalArrangementSlash: {
+        leftSideBearing: -1,
+        advanceWidth: 990,
+        yOffset: 0,
+      },
+      csymMinor: {
+        leftSideBearing: 0,
+        advanceWidth: 482,
+        yOffset: 0,
+      },
+      csymMajorSeventh: {
+        leftSideBearing: 200,
+        yOffset: 0,
+        advanceWidth: 600,
+      },
+      accidentalSharp: {
+        leftSideBearing: 20,
+        advanceWidth: 250,
+        yOffset: -302,
+      },
+      accidentalFlat: {
+        leftSideBearing: -20,
+        advanceWidth: 226,
+        yOffset: -184,
+      },
     },
+  },
+  clef_default: {
+    width: 26,
 
     annotations: {
       '8va': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 18,
-          treble: {
-            line: -1.4,
-            shiftX: 12,
-          },
-        },
-        small: {
-          point: 16,
-          treble: {
-            line: -0.2,
-            shiftX: 8,
-          },
+        point: 18,
+        treble: {
+          line: -1.4,
+          shiftX: 12,
         },
       },
       '8vb': {
-        smuflCode: 'timeSig8',
-        default: {
-          point: 18,
-          treble: {
-            line: 6,
-            shiftX: 10,
-          },
-          bass: {
-            line: 3.5,
-            shiftX: 1,
-          },
+        point: 18,
+        treble: {
+          line: 6,
+          shiftX: 10,
         },
-        small: {
-          point: 16,
-          treble: {
-            line: 5.3,
-            shiftX: 6,
-          },
-          bass: {
-            line: 3.1,
-            shiftX: 0.5,
-          },
+        bass: {
+          line: 3.5,
+          shiftX: 1,
         },
       },
     },
-    // These may no longer be necessary
-    lineCount: {
-      '8': { point: 55, shiftY: 14 },
-      '7': { point: 47, shiftY: 8 },
-      '6': { point: 32, shiftY: 1 },
-      '5': { point: 30, shiftY: -6 },
-      '4': { point: 23, shiftY: -12 },
+  },
+
+  clef_small: {
+    width: 20,
+    annotations: {
+      '8va': {
+        point: 16,
+        treble: {
+          line: -0.2,
+          shiftX: 8,
+        },
+      },
+      '8vb': {
+        point: 16,
+        treble: {
+          line: 5.3,
+          shiftX: 6,
+        },
+        bass: {
+          line: 3.1,
+          shiftX: 0.5,
+        },
+      },
+    },
+  },
+
+  ornament: {
+    brassScoop: {
+      xOffset: -12,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 20,
+    },
+    brassDoitMedium: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 22,
+    },
+    brassFallLipShort: {
+      xOffset: 16,
+      yOffset: 0,
+      stemUpYOffset: 0,
+      reportedWidth: 15,
+    },
+    brassLiftMedium: {
+      xOffset: 16,
+      yOffset: 5,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassFallRoughMedium: {
+      xOffset: 16,
+      yOffset: 28,
+      stemUpYOffset: 0,
+      reportedWidth: 5,
+    },
+    brassBend: {
+      xOffset: 2,
+      yOffset: -8,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassMuteClosed: {
+      xOffset: 3,
+      yOffset: -8,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassMuteOpen: {
+      xOffset: 3,
+      yOffset: -7,
+      stemUpYOffset: 25,
+      reportedWidth: 5,
+    },
+    brassFlip: {
+      xOffset: 10,
+      yOffset: 0,
+      stemUpYOffset: 7,
+      reportedWidth: 10,
+    },
+    brassJazzTurn: {
+      xOffset: 0,
+      yOffset: 0,
+      stemUpYOffset: 8,
+      reportedWidth: 31,
+    },
+    brassSmear: {
+      xOffset: 10,
+      yOffset: 0,
+      stemUpYOffset: 8,
+      reportedWidth: 5,
     },
   },
 
@@ -156,8 +293,9 @@ export const BravuraMetrics = {
     },
   },
 
-  // noteHead: {
-  // },
+  noteHead: {
+    minPadding: 2,
+  },
 
   stem: {
     heightAdjustmentForFlag: -3,
@@ -210,6 +348,13 @@ export const BravuraMetrics = {
     rightPadding: 6,
   },
 
+  tuplet: {
+    noteHeadOffset: 20,
+    stemOffset: 10,
+    bottomLine: 4,
+    topModifierOffset: 15,
+  },
+
   // Values under here are used by the Glyph class to reposition and rescale
   // glyphs based on their category. This should be the first stop for
   // custom font glyph repositioning.
@@ -234,14 +379,31 @@ export const BravuraMetrics = {
         shiftX: -1,
       },
     },
-    clef: {
+    clef_default: {
+      point: 32,
       gClef: {
-        default: { scale: 1.1, shiftY: 1 },
-        small: { shiftY: 1.5 },
+        scale: 1.1,
+        shiftY: 1,
       },
       fClef: {
-        default: { shiftY: -0.5 },
+        shiftY: -0.5,
       },
+      '6stringTabClef': {
+        point: 32,
+        shiftY: -5.5,
+      },
+    },
+    clef_small: {
+      point: 26,
+      gClef: {
+        shiftY: 1.5,
+      },
+    },
+    clefNote_default: {
+      point: 32,
+    },
+    clefNote_small: {
+      point: 26,
     },
     ornament: {
       ornamentTurn: {
@@ -250,25 +412,56 @@ export const BravuraMetrics = {
       ornamentTurnSlash: {
         scale: 1.2,
       },
+      brassScoop: {
+        scale: 1.0,
+      },
+      brassDoitMedium: {
+        scale: 1.0,
+      },
+      brassFallLipShort: {
+        scale: 1.0,
+      },
+      brassLiftMedium: {
+        scale: 1.0,
+      },
+      brassFallRoughMedium: {
+        scale: 1.0,
+      },
+      brassBend: {
+        scale: 1.0,
+      },
+      brassMuteClosed: {
+        scale: 1.0,
+      },
+      brassMuteOpen: {
+        scale: 1.0,
+      },
+      brassFlip: {
+        scale: 1.0,
+      },
+      brassJazzTurn: {
+        scale: 1.0,
+      },
+      brassSmear: {
+        scale: 1.0,
+      },
     },
-    stroke: {
+    stroke_straight: {
       arrowheadBlackDown: {
-        straight: {
-          shiftX: -4.5,
-        },
-        wiggly: {
-          shiftX: -1,
-          shiftY: 1,
-        },
+        shiftX: -4.5,
       },
       arrowheadBlackUp: {
-        straight: {
-          shiftX: -0.85,
-        },
-        wiggly: {
-          shiftX: -1,
-          shiftY: 1,
-        },
+        shiftX: -0.85,
+      },
+    },
+    stroke_wiggly: {
+      arrowheadBlackDown: {
+        shiftX: -1,
+        shiftY: 1,
+      },
+      arrowheadBlackUp: {
+        shiftX: -1,
+        shiftY: 1,
       },
     },
     textNote: {
@@ -308,195 +501,56 @@ export const BravuraMetrics = {
       },
     },
     noteHead: {
-      minPadding: 2,
-      standard: {
-        restQuarterStemUp: {
-          point: 35,
-        },
-        restQuarterStemDown: {
-          point: 35,
-        },
+      restQuarterStemUp: {
+        point: 35,
+      },
+      restQuarterStemDown: {
+        point: 35,
       },
     },
     chordSymbol: {
-      global: {
-        superscriptOffset: -400,
-        subscriptOffset: 300,
-        kerningOffset: -250,
-        lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
-        upperKerningText: ['A', 'L'],
-        spacing: 100,
-        superSubRatio: 0.66,
-      },
       csymDiminished: {
         scale: 0.8,
-        leftSideBearing: -32,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymHalfDiminished: {
         scale: 0.8,
-        leftSideBearing: -32,
-        advanceWidth: 506,
-        yOffset: 0,
       },
       csymAugmented: {
         scale: 1,
-        leftSideBearing: 0,
-        advanceWidth: 530,
-        yOffset: 0,
       },
       csymParensLeftTall: {
         scale: 0.8,
-        leftSideBearing: -20,
-        advanceWidth: 184,
-        yOffset: 250,
       },
       csymParensRightTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 189,
-        yOffset: 250,
       },
       csymBracketLeftTall: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 328,
-        yOffset: 0,
       },
       csymBracketRightTall: {
         scale: 0.8,
-        leftSideBearing: 1,
-        advanceWidth: 600,
-        yOffset: 0,
       },
       csymParensLeftVeryTall: {
         scale: 0.9,
-        leftSideBearing: 50,
-        advanceWidth: 121,
-        yOffset: 350,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
-        leftSideBearing: 0,
-        advanceWidth: 111,
-        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         scale: 0.6,
-        leftSideBearing: -1,
-        advanceWidth: 990,
-        yOffset: 0,
       },
       csymMinor: {
         scale: 0.8,
-        leftSideBearing: 0,
-        advanceWidth: 482,
-        yOffset: 0,
       },
       csymMajorSeventh: {
         scale: 0.9,
-        leftSideBearing: 200,
-        yOffset: 0,
-        advanceWidth: 600,
       },
       accidentalSharp: {
         scale: 0.75,
-        leftSideBearing: 20,
-        advanceWidth: 250,
-        yOffset: -302,
       },
       accidentalFlat: {
         scale: 0.9,
-        leftSideBearing: -20,
-        advanceWidth: 226,
-        yOffset: -184,
       },
-    },
-    jazzOrnaments: {
-      brassScoop: {
-        scale: 1.0,
-        xOffset: -12,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 20,
-      },
-      brassDoitMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 22,
-      },
-      brassFallLipShort: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 0,
-        stemUpYOffset: 0,
-        reportedWidth: 15,
-      },
-      brassLiftMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 5,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
-      },
-      brassFallRoughMedium: {
-        scale: 1.0,
-        xOffset: 16,
-        yOffset: 28,
-        stemUpYOffset: 0,
-        reportedWidth: 5,
-      },
-      brassBend: {
-        scale: 1.0,
-        xOffset: 2,
-        yOffset: -8,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassMuteClosed: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -8,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassMuteOpen: {
-        scale: 1.0,
-        xOffset: 3,
-        yOffset: -7,
-        stemUpYOffset: 25,
-        reportedWidth: 5,
-      },
-      brassFlip: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: 0,
-        stemUpYOffset: 7,
-        reportedWidth: 10,
-      },
-      brassJazzTurn: {
-        scale: 1.0,
-        xOffset: 0,
-        yOffset: 0,
-        stemUpYOffset: 8,
-        reportedWidth: 31,
-      },
-      brassSmear: {
-        scale: 1.0,
-        xOffset: 10,
-        yOffset: 0,
-        stemUpYOffset: 8,
-        reportedWidth: 5,
-      },
-    },
-    tuplet: {
-      noteHeadOffset: 20,
-      stemOffset: 10,
-      bottomLine: 4,
-      topModifierOffset: 15,
     },
   },
 };

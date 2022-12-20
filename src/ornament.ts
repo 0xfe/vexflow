@@ -17,6 +17,13 @@ function L(...args: any[]) {
   if (Ornament.DEBUG) log('Vex.Flow.Ornament', args);
 }
 
+export interface OrnamentMetrics {
+  xOffset: number;
+  yOffset: number;
+  stemUpYOffset: number;
+  reportedWidth: number;
+}
+
 /**
  * Ornament implements ornaments as modifiers that can be
  * attached to notes. The complete list of ornaments is available in
@@ -34,7 +41,7 @@ export class Ornament extends Modifier {
   }
   static get minPadding(): number {
     const musicFont = Tables.currentMusicFont();
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+    return musicFont.lookupMetric('noteHead.minPadding');
   }
 
   protected ornament: {
@@ -156,9 +163,11 @@ export class Ornament extends Modifier {
    * Legacy ornaments have hard-coded metrics.  If additional ornament types are
    * added, get their metrics here.
    */
-  // eslint-disable-next-line
-  getMetrics(): any {
-    return Tables.currentMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
+  getMetrics(): OrnamentMetrics {
+    const ornamentMetrics = Tables.currentMusicFont().getMetrics().ornament;
+
+    if (!ornamentMetrics) throw new RuntimeError('BadMetrics', `ornament missing`);
+    return ornamentMetrics[this.ornament.code];
   }
 
   /**

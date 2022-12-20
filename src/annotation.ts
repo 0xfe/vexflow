@@ -73,7 +73,7 @@ export class Annotation extends Modifier {
   // words don't run into each other.
   static get minAnnotationPadding(): number {
     const musicFont = Tables.currentMusicFont();
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+    return musicFont.lookupMetric('noteHead.minPadding');
   }
   /** Arrange annotations within a `ModifierContext` */
   static format(annotations: Annotation[], state: ModifierContextState): boolean {

@@ -123,7 +123,7 @@ export class StaveNote extends StemmableNote {
 
   static get minNoteheadPadding(): number {
     const musicFont = Tables.currentMusicFont();
-    return musicFont.lookupMetric('glyphs.noteHead.minPadding');
+    return musicFont.lookupMetric('noteHead.minPadding');
   }
 
   /** Format notes inside a ModifierContext. */
