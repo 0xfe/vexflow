@@ -111,6 +111,7 @@ const releaseItDynamicImport = import('release-it');
 const VEX = 'vexflow';
 const VEX_BRAVURA = 'vexflow-bravura';
 const VEX_GONVILLE = 'vexflow-gonville';
+const VEX_GOOTVILLE = 'vexflow-gootville';
 const VEX_LELAND = 'vexflow-leland';
 const VEX_PETALUMA = 'vexflow-petaluma';
 const VEX_CORE = 'vexflow-core'; // Supports dynamic import of the font modules below.
@@ -332,7 +333,7 @@ function webpackConfigs() {
 
   function prodConfig(watch = false) {
     return getConfig(
-      [VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_LELAND, VEX_PETALUMA, VEX_CORE],
+      [VEX, VEX_BRAVURA, VEX_GONVILLE, VEX_GOOTVILLE, VEX_LELAND, VEX_PETALUMA, VEX_CORE],
       PRODUCTION_MODE,
       BANNER,
       'Vex',
@@ -348,6 +349,7 @@ function webpackConfigs() {
       getConfig('vexflow-font-leland', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Leland'], watch),
       getConfig('vexflow-font-petaluma', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Petaluma'], watch),
       getConfig('vexflow-font-gonville', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gonville'], watch),
+      getConfig('vexflow-font-gootville', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Gootville'], watch),
       getConfig('vexflow-font-custom', PRODUCTION_MODE, !BANNER, ['VexFlowFont', 'Custom'], watch),
       // ADD_MUSIC_FONT
       // Add a webpack config for exporting your font module.
