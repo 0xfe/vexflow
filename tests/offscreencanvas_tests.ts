@@ -29,7 +29,9 @@ function simpleTest(): void {
   // eslint-disable-next-line
   // @ts-ignore
   const offscreenCanvas = new OffscreenCanvas(550, 200);
-  const offscreenCtx = offscreenCanvas.getContext('2d');
+  // eslint-disable-next-line
+  // @ts-ignore
+  const offscreenCtx: OffscreenCanvasRenderingContext2D = offscreenCanvas.getContext('2d');
   if (offscreenCtx == null) {
     throw new Error("Couldn't create offscreen context");
   }
