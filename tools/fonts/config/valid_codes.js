@@ -162,6 +162,8 @@ module.exports = {
   fermataLongBelow: 'v5f',
   fermataVeryLongAbove: 'v32',
   fermataVeryLongBelow: 'vbd',
+  fermataVeryShortAbove: 'vxx',
+  fermataVeryShortBelow: 'vxx',
   fermataShortAbove: 'vac',
   fermataShortBelow: 'v7e',
   breathMarkComma: 'v6c',

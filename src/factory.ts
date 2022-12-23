@@ -391,15 +391,11 @@ export class Factory {
     return chordSymbol;
   }
 
-  Articulation(params?: { type?: string; position?: string | number }): Articulation {
-    const p = {
-      type: 'a.',
-      position: 'above',
-      ...params,
-    };
+  Articulation(params?: { betweenLines?: boolean; type?: string; position?: string | number }): Articulation {
+    const articulation = new Articulation(params?.type ?? 'a.');
 
-    const articulation = new Articulation(p.type);
-    articulation.setPosition(p.position);
+    if (params?.position != undefined) articulation.setPosition(params.position);
+    if (params?.betweenLines != undefined) articulation.setBetweenLines(params.betweenLines);
     articulation.setContext(this.context);
     return articulation;
   }

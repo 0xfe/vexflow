@@ -295,13 +295,17 @@ export class Articulation extends Modifier {
 
   /**
    * Create a new articulation.
-   * @param type entry in `Vex.Flow.articulationCodes` in `tables.ts`
+   * @param type entry in `Vex.Flow.articulationCodes` in `tables.ts` or Glyph code.
+   *
+   * Notes (by default):
+   * - Glyph codes ending with 'Above' will be positioned ABOVE
+   * - Glyph codes ending with 'Below' will be positioned BELOW
    */
   constructor(type: string) {
     super();
 
     this.type = type;
-    this.position = BELOW;
+    this.position = ABOVE;
     this.render_options = {
       font_scale: 38,
     };
@@ -311,11 +315,24 @@ export class Articulation extends Modifier {
 
   protected reset(): void {
     this.articulation = Tables.articulationCodes(this.type);
-    const articulation = defined(this.articulation, 'ArgumentError', `Articulation not found: ${this.type}`);
-    const code = (this.position === ABOVE ? articulation.aboveCode : articulation.belowCode) || articulation.code;
+    // Use type as glyph code, if not defined as articulation code
+    if (!this.articulation) {
+      this.articulation = { code: this.type, between_lines: false };
+      if (this.type.endsWith('Above')) this.position = ABOVE;
+      if (this.type.endsWith('Below')) this.position = BELOW;
+    }
+    const code =
+      (this.position === ABOVE ? this.articulation.aboveCode : this.articulation.belowCode) || this.articulation.code;
     this.glyph = new Glyph(code ?? '', this.render_options.font_scale);
+    defined(this.glyph, 'ArgumentError', `Articulation not found: ${this.type}`);
 
     this.setWidth(defined(this.glyph.getMetrics().width));
+  }
+
+  /** Set if articulation should be rendered between lines. */
+  setBetweenLines(betweenLines = true): this {
+    this.articulation.between_lines = betweenLines;
+    return this;
   }
 
   /** Render articulation in position next to note. */
