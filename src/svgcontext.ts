@@ -13,6 +13,8 @@ export type Attributes = {
   'font-size'?: string | number;
   'font-style'?: string;
   'font-weight'?: string | number;
+  scaleX?: number;
+  scaleY?: number;
 };
 
 /** For a particular element type (e.g., rect), we will not apply certain presentation attributes. */
@@ -337,10 +339,10 @@ export class SVGContext extends RenderContext {
     // handle internal scaling, am trying to make it possible
     // for us to eventually move in that direction.
 
-    this.state.scaleX = x;
-    this.state.scaleY = y;
-    const visibleWidth = this.width / x;
-    const visibleHeight = this.height / y;
+    this.state.scaleX = this.state.scaleX ? this.state.scaleX * x : x;
+    this.state.scaleY = this.state.scaleY ? this.state.scaleY * y : y;
+    const visibleWidth = this.width / this.state.scaleX;
+    const visibleHeight = this.height / this.state.scaleY;
     this.setViewBox(0, 0, visibleWidth, visibleHeight);
 
     return this;
