@@ -81,7 +81,7 @@ const parseArgs = () => {
   });
 
   backends = backends || {
-    all: true,
+    pptr: true,
   };
 
   return {
