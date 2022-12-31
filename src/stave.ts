@@ -854,6 +854,45 @@ export class Stave extends Element {
   }
 
   static formatBegModifiers(staves: Stave[]): void {
+    const adjustCategoryStartX = (category: Category) => {
+      let minStartX = 0;
+      // Calculate min start X for the category
+      staves.forEach((stave) => {
+        const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, category);
+        // Consider only the first instance
+        if (modifiers.length > 0 && modifiers[0].getX() > minStartX) minStartX = modifiers[0].getX();
+      });
+      let adjustX = 0;
+      staves.forEach((stave) => {
+        adjustX = 0;
+        const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, category);
+        // Calculate adjustement required for the stave
+        modifiers.forEach((modifier) => {
+          if (minStartX - modifier.getX() > adjustX) adjustX = minStartX - modifier.getX();
+        });
+        const allModifiers = stave.getModifiers(StaveModifierPosition.BEGIN);
+        let bAdjust = false;
+        // Apply adjustment to all the modifiers in and beyond the category
+        allModifiers.forEach((modifier) => {
+          if (modifier.getCategory() === category) bAdjust = true;
+          if (bAdjust && adjustX > 0) modifier.setX(modifier.getX() + adjustX);
+        });
+        // Apply adjustment also to note start.
+        stave.setNoteStartX(stave.getNoteStartX() + adjustX);
+      });
+    };
+
+    // Make sure that staves are formatted
+    staves.forEach((stave) => {
+      if (!stave.formatted) stave.format();
+    });
+    // Align Clefs
+    adjustCategoryStartX(Category.Clef);
+    // Align key signatures
+    adjustCategoryStartX(Category.KeySignature);
+    // Align time signatures
+    adjustCategoryStartX(Category.TimeSignature);
+
     let maxX = 0;
     // align note start
     staves.forEach((stave) => {
@@ -876,21 +915,6 @@ export class Stave extends Element {
       const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.Barline);
       modifiers.forEach((modifier) => {
         if ((modifier as Barline).getType() == BarlineType.REPEAT_BEGIN) modifier.setX(maxX);
-      });
-    });
-
-    maxX = 0;
-    // Align time signatures
-    staves.forEach((stave) => {
-      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.TimeSignature);
-      modifiers.forEach((modifier) => {
-        if (modifier.getX() > maxX) maxX = modifier.getX();
-      });
-    });
-    staves.forEach((stave) => {
-      const modifiers = stave.getModifiers(StaveModifierPosition.BEGIN, Category.TimeSignature);
-      modifiers.forEach((modifier) => {
-        modifier.setX(maxX);
       });
     });
   }

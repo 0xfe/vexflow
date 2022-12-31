@@ -143,7 +143,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(Tables.currentMusicFont().lookupMetric(`clef_${this.size}.width`));
+    this.setWidth(Glyph.getWidth(this.clef.code, this.clef.point, `clef_${this.size}`));
     L('Creating clef:', type);
   }
 
