@@ -60,6 +60,7 @@ export class TimeSignature extends StaveModifier {
   bottomLine: number;
   topLine: number;
 
+  protected timeSpec: string = '4/4';
   protected line: number = 0;
   protected glyph: Glyph;
   protected is_numeric: boolean = true;
@@ -68,6 +69,18 @@ export class TimeSignature extends StaveModifier {
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
     this.validate_args = validate_args;
+    this.timeSpec = timeSpec;
+
+    const padding = customPadding;
+
+    // point must be defined before parsing spec.
+    const musicFont = Tables.currentMusicFont();
+    this.point = musicFont.lookupMetric('digits.point');
+
+    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
+    this.topLine = 2 + fontLineShift;
+    this.bottomLine = 4 + fontLineShift;
+    this.setPosition(StaveModifierPosition.BEGIN);
 
     // violates DRY w/ setTimeSig(timeSpec) but needed to convince TypeScript that all is well.
     const info = this.parseTimeSpec(timeSpec);
@@ -75,14 +88,6 @@ export class TimeSignature extends StaveModifier {
     this.is_numeric = info.num;
     this.line = info.line;
 
-    const padding = customPadding;
-
-    const musicFont = Tables.currentMusicFont();
-    this.point = musicFont.lookupMetric('digits.point');
-    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
-    this.topLine = 2 + fontLineShift;
-    this.bottomLine = 4 + fontLineShift;
-    this.setPosition(StaveModifierPosition.BEGIN);
     this.setWidth(defined(this.glyph.getMetrics().width));
     this.setPadding(padding);
   }
@@ -124,13 +129,20 @@ export class TimeSignature extends StaveModifier {
 
   /**
    * Set a new time signature specification without changing customPadding, etc.
+   *
+   * The getter for this is `getTimeSpec` not `getTimeSig`.
    */
   setTimeSig(timeSpec: string): this {
+    this.timeSpec = timeSpec;
     const info = this.parseTimeSpec(timeSpec);
     this.glyph = info.glyph;
     this.is_numeric = info.num;
     this.line = info.line;
     return this;
+  }
+
+  getTimeSpec(): string {
+    return this.timeSpec;
   }
 
   getLine(): number {
