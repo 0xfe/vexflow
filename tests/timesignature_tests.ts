@@ -38,6 +38,13 @@ function parser(): void {
   const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|', '+'];
   mustPass.forEach((validString) => timeSig.parseTimeSpec(validString));
 
+  timeSig.parseTimeSpec('4/4');
+  equal(timeSig.getIsNumeric(), true, '4/4 is numeric');
+  equal(timeSig.getLine(), 0, 'digits are on line 0');
+  timeSig.parseTimeSpec('C|');
+  equal(timeSig.getIsNumeric(), false, 'cut time is not numeric');
+  equal(timeSig.getLine(), 2, 'cut/common are on line 2');
+
   ok(true, 'all pass');
 }
 

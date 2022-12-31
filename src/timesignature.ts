@@ -14,7 +14,7 @@ import { defined, RuntimeError } from './util';
 
 export interface TimeSignatureInfo {
   glyph: Glyph;
-  line?: number;
+  line: number;
   num: boolean;
 }
 
@@ -60,12 +60,20 @@ export class TimeSignature extends StaveModifier {
   bottomLine: number;
   topLine: number;
 
-  protected info: TimeSignatureInfo;
+  protected line: number = 0;
+  protected glyph: Glyph;
+  protected is_numeric: boolean = true;
   protected validate_args: boolean;
 
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
     this.validate_args = validate_args;
+
+    // violates DRY w/ setTimeSig(timeSpec) but needed to convince TypeScript that all is well.
+    const info = this.parseTimeSpec(timeSpec);
+    this.glyph = info.glyph;
+    this.is_numeric = info.num;
+    this.line = info.line;
 
     const padding = customPadding;
 
@@ -75,8 +83,7 @@ export class TimeSignature extends StaveModifier {
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifierPosition.BEGIN);
-    this.info = this.parseTimeSpec(timeSpec);
-    this.setWidth(defined(this.info.glyph.getMetrics().width));
+    this.setWidth(defined(this.glyph.getMetrics().width));
     this.setPadding(padding);
   }
 
@@ -97,6 +104,7 @@ export class TimeSignature extends StaveModifier {
     const parts = timeSpec.split('/');
 
     return {
+      line: 0,
       num: true,
       glyph: this.makeTimeSignatureGlyph(parts[0] ?? '', parts[1] ?? ''),
     };
@@ -106,13 +114,47 @@ export class TimeSignature extends StaveModifier {
     return new TimeSignatureGlyph(this, topDigits, botDigits, 'timeSig0', this.point);
   }
 
+  /**
+   * Returns line, num, glyph -- but these can be accessed directly w/ getters and setters.
+   */
   getInfo(): TimeSignatureInfo {
-    return this.info;
+    const { line, is_numeric, glyph } = this;
+    return { line, num: is_numeric, glyph };
   }
 
+  /**
+   * Set a new time signature specification without changing customPadding, etc.
+   */
   setTimeSig(timeSpec: string): this {
-    this.info = this.parseTimeSpec(timeSpec);
+    const info = this.parseTimeSpec(timeSpec);
+    this.glyph = info.glyph;
+    this.is_numeric = info.num;
+    this.line = info.line;
     return this;
+  }
+
+  getLine(): number {
+    return this.line;
+  }
+
+  setLine(line: number) {
+    this.line = line;
+  }
+
+  getGlyph(): Glyph {
+    return this.glyph;
+  }
+
+  setGlyph(glyph: Glyph) {
+    this.glyph = glyph;
+  }
+
+  getIsNumeric(): boolean {
+    return this.is_numeric;
+  }
+
+  setIsNumeric(isNumeric: boolean) {
+    this.is_numeric = isNumeric;
   }
 
   draw(): void {
@@ -122,10 +164,10 @@ export class TimeSignature extends StaveModifier {
 
     this.applyStyle(ctx);
     ctx.openGroup('timesignature', this.getAttribute('id'));
-    this.info.glyph.setStave(stave);
-    this.info.glyph.setContext(ctx);
-    this.placeGlyphOnLine(this.info.glyph, stave, this.info.line);
-    this.info.glyph.renderToStave(this.x);
+    this.glyph.setStave(stave);
+    this.glyph.setContext(ctx);
+    this.placeGlyphOnLine(this.glyph, stave, this.line);
+    this.glyph.renderToStave(this.x);
     ctx.closeGroup();
     this.restoreStyle(ctx);
   }

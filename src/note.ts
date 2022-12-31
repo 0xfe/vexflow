@@ -488,7 +488,7 @@ export abstract class Note extends Tickable {
 
   /** Accessor to isDotted. */
   isDotted(): boolean {
-    return this.getModifiersByType('Dot').length > 0;
+    return this.getModifiersByType(Category.Dot).length > 0;
   }
 
   /** Accessor to hasStem. */

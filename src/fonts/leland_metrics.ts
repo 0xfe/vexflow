@@ -237,7 +237,7 @@ export const LelandMetrics = {
 
   // These are for numeric digits, such as in time signatures
   digits: {
-    // used by timesig
+    // used by TimeSignature objects
     shiftLine: -1,
     point: 34,
 

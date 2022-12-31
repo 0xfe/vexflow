@@ -3,7 +3,7 @@
 
 import { ModifierContext } from './modifiercontext';
 import { Note } from './note';
-import { TimeSignature, TimeSignatureInfo } from './timesignature';
+import { TimeSignature } from './timesignature';
 import { Category } from './typeguard';
 
 export class TimeSigNote extends Note {
@@ -11,14 +11,13 @@ export class TimeSigNote extends Note {
     return Category.TimeSigNote;
   }
 
-  protected timeSigInfo: TimeSignatureInfo;
+  protected timeSig: TimeSignature;
 
   constructor(timeSpec: string, customPadding?: number) {
     super({ duration: 'b' });
 
-    const timeSignature = new TimeSignature(timeSpec, customPadding);
-    this.timeSigInfo = timeSignature.getInfo();
-    this.setWidth(this.timeSigInfo.glyph.getMetrics().width);
+    this.timeSig = new TimeSignature(timeSpec, customPadding);
+    this.setWidth(this.timeSig.getGlyph().getMetrics().width);
 
     // Note properties
     this.ignore_ticks = true;
@@ -41,12 +40,13 @@ export class TimeSigNote extends Note {
     const ctx = this.checkContext();
     this.setRendered();
 
-    if (!this.timeSigInfo.glyph.getContext()) {
-      this.timeSigInfo.glyph.setContext(ctx);
+    const tsGlyph = this.timeSig.getGlyph();
+    if (!tsGlyph.getContext()) {
+      tsGlyph.setContext(ctx);
     }
 
-    this.timeSigInfo.glyph.setStave(stave);
-    this.timeSigInfo.glyph.setYShift(stave.getYForLine(2) - stave.getYForGlyphs());
-    this.timeSigInfo.glyph.renderToStave(this.getAbsoluteX());
+    tsGlyph.setStave(stave);
+    tsGlyph.setYShift(stave.getYForLine(2) - stave.getYForGlyphs());
+    tsGlyph.renderToStave(this.getAbsoluteX());
   }
 }
