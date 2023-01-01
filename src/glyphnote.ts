@@ -1,4 +1,6 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// Any glyph that is set to appear on a Stave and take up musical time and graphical space.
 
 import { BoundingBox } from './boundingbox';
 import { Glyph } from './glyph';

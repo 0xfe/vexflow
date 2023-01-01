@@ -205,13 +205,13 @@ export abstract class Tickable extends Element {
     return this.tuplet;
   }
 
-  /** Return the intrinsic ticks. */
+  /** Return a list of Tuplets. */
   getTupletStack(): Tuplet[] {
     return this.tupletStack;
   }
 
   /**
-   * Reset the specific Tuplet if this is not provided, all tuplets are reset.
+   * Reset the specific Tuplet (if this is not provided, all tuplets are reset).
    * Remove any prior tuplets from the tick calculation and
    * reset the intrinsic tick value.
    */

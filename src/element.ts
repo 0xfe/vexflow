@@ -64,6 +64,9 @@ export abstract class Element {
     return Category.Element;
   }
 
+  // all Element objects keep a list of children that they are responsible and which
+  // inherit the style of their parents.
+  // Currently used by StaveNote for noteheads and
   protected children: Element[] = [];
   protected static ID: number = 1000;
   protected static newID(): string {
@@ -108,6 +111,15 @@ export abstract class Element {
     Registry.getDefaultRegistry()?.register(this);
   }
 
+  /**
+   * Adds a child Element to the Element, which lets it inherit the
+   * same style as the parent when setGroupStyle() is called.
+   *
+   * Examples of children are noteheads and stems.  Modifiers such
+   * as Accidentals are generally not set as children.
+   *
+   * Note that StaveNote calls setGroupStyle() when setStyle() is called.
+   */
   addChildElement(child: Element): this {
     this.children.push(child);
     return this;
@@ -186,7 +198,7 @@ export abstract class Element {
 
   /**
    * Draw the element and all its sub-elements (ie.: Modifiers in a Stave)
-   * with the element style.
+   * with the element's style (see `getStyle()` and `setStyle()`)
    */
   drawWithStyle(): void {
     this.checkContext();
