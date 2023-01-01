@@ -195,12 +195,16 @@ export class Voice extends Element {
    */
   setSoftmaxFactor(factor: number): this {
     this.options.softmaxFactor = factor;
+    this.expTicksUsed = 0; // reset
     return this;
   }
 
   /**
    * Calculate the sum of the exponents of all the ticks in this voice to use
-   * as the denominator of softmax.
+   * as the denominator of softmax.  (It is not the sum of the softmax(t) over all tickables)
+   *
+   * Note that the "exp" of "expTicksUsed" stands for "expontential" ticks used,
+   * not "expected" ticks used.
    */
   protected reCalculateExpTicksUsed(): number {
     const totalTicks = this.ticksUsed.value();
