@@ -89,3 +89,10 @@ export function normalizeAngle(a: number): number {
   }
   return a;
 }
+
+/**
+ * Return the sum of an array of numbers.
+ */
+export function sumArray(arr: number[]): number {
+  return arr.reduce((a, b) => a + b, 0);
+}

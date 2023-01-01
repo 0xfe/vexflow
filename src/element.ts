@@ -58,6 +58,11 @@ export interface ElementStyle {
 /**
  * Element implements a generic base class for VexFlow, with implementations
  * of general functions and properties that can be inherited by all VexFlow elements.
+ *
+ * The Element is an abstract class that needs to be subclassed to work. It handles
+ * style and text-font properties for the Element and any child elements, along with
+ * working with the Registry to create unique ids, but does not have any tools for
+ * formatting x or y positions or connections to a Stave.
  */
 export abstract class Element {
   static get CATEGORY(): string {
@@ -66,7 +71,6 @@ export abstract class Element {
 
   // all Element objects keep a list of children that they are responsible and which
   // inherit the style of their parents.
-  // Currently used by StaveNote for noteheads and
   protected children: Element[] = [];
   protected static ID: number = 1000;
   protected static newID(): string {
@@ -270,7 +274,7 @@ export abstract class Element {
     return this.attrs;
   }
 
-  /** Return an attribute. */
+  /** Return an attribute, such as 'id', 'type' or 'class'. */
   // eslint-disable-next-line
   getAttribute(name: string): any {
     return this.attrs[name];
@@ -283,7 +287,7 @@ export abstract class Element {
     if (element) return element as unknown as SVGElement;
   }
 
-  /** Set an attribute. */
+  /** Set an attribute such as 'id', 'class', or 'type'. */
   setAttribute(name: string, value: string | undefined): this {
     const oldID = this.attrs.id;
     const oldValue = this.attrs[name];
@@ -298,18 +302,18 @@ export abstract class Element {
     return this.boundingBox;
   }
 
-  /** Return the context. */
+  /** Return the context, such as an SVGContext or CanvasContext object. */
   getContext(): RenderContext | undefined {
     return this.context;
   }
 
-  /** Set the context. */
+  /** Set the context to an SVGContext or CanvasContext object */
   setContext(context?: RenderContext): this {
     this.context = context;
     return this;
   }
 
-  /** Validate and return the context. */
+  /** Validate and return the rendering context. */
   checkContext(): RenderContext {
     return defined(this.context, 'NoContext', 'No rendering context attached to instance.');
   }
@@ -318,19 +322,24 @@ export abstract class Element {
   // Font Handling
 
   /**
-   * Provide a CSS compatible font string (e.g., 'bold 16px Arial').
+   * Provide a CSS compatible font string (e.g., 'bold 16px Arial') that will be applied
+   * to text (not glyphs).
    */
   set font(f: string) {
     this.setFont(f);
   }
 
-  /** Returns the CSS compatible font string. */
+  /** Returns the CSS compatible font string for the text font. */
   get font(): string {
     return Font.toCSSString(this.textFont);
   }
 
   /**
-   * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   * Set the element's text font family, size, weight, style
+   * (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   *
+   * This attribute does not determine the font used for musical Glyphs like treble clefs.
+   *
    * @param font is 1) a `FontInfo` object or
    *                2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
    *                3) a string representing the font family (at least one of `size`, `weight`, or `style` must also be provided).
@@ -376,6 +385,10 @@ export abstract class Element {
     return this;
   }
 
+  /**
+   * Get the css string describing this Element's text font. e.g.,
+   * 'bold 10pt Arial'.
+   */
   getFont(): string {
     if (!this.textFont) {
       this.resetFont();

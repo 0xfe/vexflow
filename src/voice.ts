@@ -9,7 +9,7 @@ import { Stave } from './stave';
 import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { Category } from './typeguard';
-import { defined, RuntimeError } from './util';
+import { defined, RuntimeError, sumArray } from './util';
 
 export interface VoiceTime {
   num_beats: number;
@@ -88,6 +88,7 @@ export class Voice extends Element {
 
     // Recalculate total ticks.
     this.totalTicks = new Fraction(this.time.num_beats * (this.time.resolution / this.time.beat_value), 1);
+    // until tickables are added, the smallestTickCount is the same as the stated totalTicks duration.
     this.smallestTickCount = this.totalTicks.clone();
   }
 
@@ -116,14 +117,14 @@ export class Voice extends Element {
     return this.tickables;
   }
 
-  /** Get the voice mode. */
+  /** Get the voice mode (Voice.Mode.SOFT, STRICT, or FULL) */
   getMode(): number {
     return this.mode;
   }
 
   /**
    * Set the voice mode.
-   * @param mode value from `VoiceMode`
+   * @param mode value from `VoiceMode` or Voice.Mode
    */
   setMode(mode: number): this {
     this.mode = mode;
@@ -204,7 +205,7 @@ export class Voice extends Element {
   protected reCalculateExpTicksUsed(): number {
     const totalTicks = this.ticksUsed.value();
     const exp = (tickable: Tickable) => Math.pow(this.options.softmaxFactor, tickable.getTicks().value() / totalTicks);
-    this.expTicksUsed = this.tickables.map(exp).reduce((a, b) => a + b, 0);
+    this.expTicksUsed = sumArray(this.tickables.map(exp));
     return this.expTicksUsed;
   }
 
