@@ -62,14 +62,13 @@ export class TimeSignature extends StaveModifier {
 
   protected timeSpec: string = '4/4';
   protected line: number = 0;
-  protected glyph: Glyph;
+  protected glyph!: Glyph;
   protected is_numeric: boolean = true;
   protected validate_args: boolean;
 
   constructor(timeSpec: string = '4/4', customPadding = 15, validate_args = true) {
     super();
     this.validate_args = validate_args;
-    this.timeSpec = timeSpec;
 
     const padding = customPadding;
 
@@ -81,13 +80,7 @@ export class TimeSignature extends StaveModifier {
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifierPosition.BEGIN);
-
-    // violates DRY w/ setTimeSig(timeSpec) but needed to convince TypeScript that all is well.
-    const info = this.parseTimeSpec(timeSpec);
-    this.glyph = info.glyph;
-    this.is_numeric = info.num;
-    this.line = info.line;
-
+    this.setTimeSig(timeSpec);
     this.setWidth(defined(this.glyph.getMetrics().width));
     this.setPadding(padding);
   }
