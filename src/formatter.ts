@@ -16,7 +16,7 @@ import { TabStave } from './tabstave';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { isNote, isStaveNote } from './typeguard';
-import { defined, log, midLine, RuntimeError } from './util';
+import { defined, log, midLine, RuntimeError, sumArray } from './util';
 import { Voice } from './voice';
 
 interface Distance {
@@ -60,9 +60,6 @@ export interface AlignmentModifierContexts {
 
 type addToContextFn<T> = (tickable: Tickable, context: T, voiceIndex: number) => void;
 type makeContextFn<T> = (tick?: { tickID: number }) => T;
-
-// Helper function
-const sumArray = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 /**
  * Create `Alignment`s for each tick in `voices`. Also calculate the

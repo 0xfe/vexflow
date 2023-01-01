@@ -3,7 +3,12 @@
 // ## Description
 //
 // This class implements various types of members to notes (e.g. bends,
-// fingering positions etc.)
+// fingering positions etc.).  The ModifierContext works with tickables
+// that are at the same tick to ensure that they and their modifiers
+// all have proper alignment.  (Note that the ModifierContext also
+// runs the spacing of the tickable).
+//
+// see https://github.com/0xfe/vexflow/wiki/How-Formatting-Works
 
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
@@ -58,7 +63,8 @@ export class ModifierContext {
     top_text_line: 0,
   };
 
-  // Current members
+  // Current members -- a mapping of Category (string) to a list of Tickables, Modifiers,
+  // StaveNotes, TabNotes, etc.
   protected members: Record<string, ModifierContextMember[]> = {};
 
   protected preFormatted: boolean = false;
@@ -102,6 +108,9 @@ export class ModifierContext {
     return this.members[category] ?? [];
   }
 
+  /**
+   * Get the width of the entire
+   */
   getWidth(): number {
     return this.width;
   }
