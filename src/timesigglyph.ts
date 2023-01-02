@@ -104,7 +104,7 @@ export class TimeSignatureGlyph extends Glyph {
     y = stave.getYForLine(this.timeSignature.bottomLine);
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
-      this.timeSignature.placeGlyphOnLine(glyph, stave, 0);
+      this.timeSignature.placeGlyphOnLine(glyph, stave, this.timeSignature.getLine());
       Glyph.renderOutline(ctx, glyph.getMetrics().outline, this.scale, start_x + glyph.getMetrics().x_shift, y);
       start_x += defined(glyph.getMetrics().width);
     }

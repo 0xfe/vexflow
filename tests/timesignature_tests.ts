@@ -29,6 +29,7 @@ const TimeSignatureTests = {
 
 function parser(): void {
   const timeSig = new TimeSignature();
+  equal(timeSig.getTimeSpec(), '4/4', 'default time signature is 4/4');
 
   const mustFail = ['asdf', '123/', '/10', '/', '4567', 'C+', '1+', '+1', '(3+', '+3)', '()', '(+)'];
   mustFail.forEach((invalidString) => {
@@ -37,6 +38,14 @@ function parser(): void {
 
   const mustPass = ['4/4', '10/12', '1/8', '1234567890/1234567890', 'C', 'C|', '+'];
   mustPass.forEach((validString) => timeSig.parseTimeSpec(validString));
+
+  timeSig.setTimeSig('4/4');
+  equal(timeSig.getIsNumeric(), true, '4/4 is numeric');
+  equal(timeSig.getLine(), 0, 'digits are on line 0');
+  timeSig.setTimeSig('C|');
+  equal(timeSig.getTimeSpec(), 'C|', 'timeSpec changed to C|');
+  equal(timeSig.getIsNumeric(), false, 'cut time is not numeric');
+  equal(timeSig.getLine(), 2, 'cut/common are on line 2');
 
   ok(true, 'all pass');
 }
