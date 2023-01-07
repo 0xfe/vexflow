@@ -100,7 +100,7 @@ function drawNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 function createSingleMeasureTest(setup: (f: Factory) => void) {
   return (options: TestOptions): void => {
     const f = VexFlowTests.makeFactory(options, 500);
-    const stave = f.Stave().addClef('percussion');
+    const stave = f.Stave().addClef('percussion').setTimeSignature('4/4');
     setup(f);
     f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
     f.draw();

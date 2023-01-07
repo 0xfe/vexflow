@@ -153,6 +153,8 @@ function multiple(options: TestOptions, contextBuilder: ContextBuilder): void {
   const stave2 = new Stave(15, 110, 300).addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
   const stave3 = new Stave(15, 220, 300).addClef('bass').addTimeSignature('4/4').setContext(ctx).draw();
 
+  Stave.formatBegModifiers([stave1, stave2, stave3]);
+
   new StaveConnector(stave1, stave2).setType('single').setContext(ctx).draw();
   new StaveConnector(stave2, stave3).setType('single').setContext(ctx).draw();
   new StaveConnector(stave2, stave3).setType('brace').setContext(ctx).draw();
