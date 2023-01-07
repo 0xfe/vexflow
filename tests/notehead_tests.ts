@@ -34,11 +34,10 @@ const NoteHeadTests = {
 };
 
 function setContextStyle(ctx: RenderContext): void {
-  // TODO: scale() method in SVGContext and CanvasContext should work similarly!
   // The final scale should be 1.8.
-  // ctx.scale(0.9, 0.9);
-  // ctx.scale(2.0, 2.0);
-  ctx.scale(1.8, 1.8);
+  ctx.scale(0.9, 0.9);
+  ctx.scale(2.0, 2.0);
+  //ctx.scale(1.8, 1.8);
 
   ctx.font = '10pt Arial';
 }
