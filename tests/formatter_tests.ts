@@ -190,11 +190,11 @@ function penultimateNote(options: TestOptions): void {
     f.getContext().fillText(`softmax: ${softmax.toString()}`, staffWidth + 20, y + 50);
     y += 100;
   };
-  draw(100);
+  draw(15);
   draw(10);
   draw(5);
   draw(2);
-  draw(1.5);
+  draw(1);
   ok(true);
 }
 
@@ -270,7 +270,7 @@ function accidentalJustification(options: TestOptions): void {
   let beams = Beam.generateBeams(notes11.slice(2));
   beams = beams.concat(beams, Beam.generateBeams(notes21.slice(1, 3)));
   beams = beams.concat(Beam.generateBeams(notes21.slice(3)));
-  const formatter = f.Formatter({ softmaxFactor: 100 }).joinVoices([voice11]).joinVoices([voice21]);
+  const formatter = f.Formatter({}).joinVoices([voice11]).joinVoices([voice21]);
 
   const width = formatter.preCalculateMinTotalWidth([voice11, voice21]);
   const stave11 = f.Stave({ y: 20, width: width + Stave.defaultPadding });
@@ -359,7 +359,7 @@ function unalignedNoteDurations2(options: TestOptions): void {
   const voice2 = new Voice({ num_beats: 4, beat_value: 4 });
   voice2.addTickables(notes2);
 
-  const formatter = new Formatter({ softmaxFactor: 100, globalSoftmax: options.params.globalSoftmax });
+  const formatter = new Formatter({ globalSoftmax: options.params.globalSoftmax });
   formatter.joinVoices([voice1]);
   formatter.joinVoices([voice2]);
   const width = formatter.preCalculateMinTotalWidth([voice1, voice2]);
@@ -690,9 +690,9 @@ function softMax(options: TestOptions): void {
 
   draw(50, 1);
   draw(150, 2);
-  draw(250, 10);
-  draw(350, 20);
-  draw(450, 200);
+  draw(250, 5);
+  draw(350, 10);
+  draw(450, 15);
 }
 
 function mixTime(options: TestOptions): void {
@@ -700,7 +700,7 @@ function mixTime(options: TestOptions): void {
   f.getContext().scale(0.8, 0.8);
   const score = f.EasyScore();
   const system = f.System({
-    details: { softmaxFactor: 100 },
+    details: {},
     autoWidth: true,
     debugFormatter: true,
   });
@@ -801,22 +801,22 @@ function annotations(options: TestOptions): void {
       title: '550px,softMax:5',
     },
     {
-      sm: 10,
-      width: 550,
-      lyrics: lyrics2,
-      title: '550px,softmax:10,different word order',
-    },
-    {
       sm: 5,
       width: 550,
       lyrics: lyrics2,
-      title: '550px,softmax:5',
+      title: '550px,softmax:5,different word order',
     },
     {
-      sm: 100,
+      sm: 10,
       width: 550,
       lyrics: lyrics2,
-      title: '550px,softmax:100',
+      title: '550px,softmax:10',
+    },
+    {
+      sm: 15,
+      width: 550,
+      lyrics: lyrics2,
+      title: '550px,softmax:15',
     },
   ];
 
