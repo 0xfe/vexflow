@@ -28,7 +28,7 @@ interface Distance {
 }
 
 export interface FormatterOptions {
-  /** Defaults to 100. */
+  /** Defaults to Tables.SOFTMAX_FACTOR. */
   softmaxFactor?: number;
 
   /** Defaults to `false`. */
