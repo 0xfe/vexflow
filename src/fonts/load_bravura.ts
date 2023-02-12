@@ -13,8 +13,8 @@
 
 import { Font } from '../font';
 import { BravuraFont } from './bravura_glyphs';
-import { BravuraMetrics } from './bravura_metrics';
+import { CommonMetrics } from './common_metrics';
 
 export function loadBravura() {
-  Font.load('Bravura', BravuraFont, BravuraMetrics);
+  Font.load('Bravura', BravuraFont, CommonMetrics);
 }

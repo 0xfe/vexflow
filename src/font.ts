@@ -35,7 +35,6 @@ export interface FontData {
 /** Specified in the `xxx_metrics.ts` files. */
 // eslint-disable-next-line
 export interface FontMetrics extends Record<string, any> {
-  name: string;
   smufl: boolean;
   stave?: Record<string, number>;
   accidental?: Record<string, number>;
