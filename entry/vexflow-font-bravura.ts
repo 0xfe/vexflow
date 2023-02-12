@@ -9,11 +9,11 @@
 // Then you will need to import the xxx_glyphs.ts and xxx_metrics.ts files.
 
 import { BravuraFont } from '../src/fonts/bravura_glyphs';
-import { BravuraMetrics } from '../src/fonts/bravura_metrics';
+import { CommonMetrics } from '../src/fonts/common_metrics';
 
 export const Font = {
   data: BravuraFont,
-  metrics: BravuraMetrics,
+  metrics: CommonMetrics,
 };
 
 export default Font;

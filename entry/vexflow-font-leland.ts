@@ -1,11 +1,11 @@
 // [VexFlow](https://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { CommonMetrics } from '../src/fonts/common_metrics';
 import { LelandFont } from '../src/fonts/leland_glyphs';
-import { LelandMetrics } from '../src/fonts/leland_metrics';
 
 export const Font = {
   data: LelandFont,
-  metrics: LelandMetrics,
+  metrics: CommonMetrics,
 };
 export default Font;

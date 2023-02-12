@@ -1,16 +1,11 @@
-/**
- * The Petaluma font was created by Steinberg Media.
- * https://github.com/steinbergmedia/petaluma
- */
-export const PetalumaMetrics = {
-  name: 'Petaluma',
+export const CommonMetrics = {
   smufl: true,
 
   stave: {
-    padding: 15,
-    endPaddingMax: 15,
-    endPaddingMin: 7,
-    unalignedNotePadding: 12,
+    padding: 12,
+    endPaddingMax: 10,
+    endPaddingMin: 5,
+    unalignedNotePadding: 10,
   },
 
   accidental: {
@@ -23,15 +18,15 @@ export const PetalumaMetrics = {
     global: {
       superscriptOffset: -400,
       subscriptOffset: 300,
-      kerningOffset: -150,
+      kerningOffset: -250,
       lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
-      upperKerningText: ['L'],
-      spacing: 20,
-      superSubRatio: 0.73,
+      upperKerningText: ['A', 'L'],
+      spacing: 100,
+      superSubRatio: 0.66,
     },
     glyphs: {
       csymDiminished: {
-        leftSideBearing: -95,
+        leftSideBearing: -32,
         advanceWidth: 506,
         yOffset: 0,
       },
@@ -41,19 +36,19 @@ export const PetalumaMetrics = {
         yOffset: 0,
       },
       csymAugmented: {
-        leftSideBearing: -25,
+        leftSideBearing: 0,
         advanceWidth: 530,
         yOffset: 0,
       },
       csymParensLeftTall: {
-        leftSideBearing: 0,
-        advanceWidth: 155,
-        yOffset: 150,
+        leftSideBearing: -20,
+        advanceWidth: 184,
+        yOffset: 250,
       },
       csymParensRightTall: {
-        leftSideBearing: 40,
+        leftSideBearing: 0,
         advanceWidth: 189,
-        yOffset: 150,
+        yOffset: 250,
       },
       csymBracketLeftTall: {
         leftSideBearing: 0,
@@ -66,14 +61,14 @@ export const PetalumaMetrics = {
         yOffset: 0,
       },
       csymParensLeftVeryTall: {
-        leftSideBearing: 0,
-        advanceWidth: 210,
-        yOffset: 250,
+        leftSideBearing: 50,
+        advanceWidth: 121,
+        yOffset: 350,
       },
       csymParensRightVeryTall: {
-        leftSideBearing: -100,
+        leftSideBearing: 0,
         advanceWidth: 111,
-        yOffset: 250,
+        yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         leftSideBearing: -1,
@@ -86,22 +81,23 @@ export const PetalumaMetrics = {
         yOffset: 0,
       },
       csymMajorSeventh: {
-        leftSideBearing: 100,
+        leftSideBearing: 200,
         yOffset: 0,
         advanceWidth: 600,
       },
       accidentalSharp: {
-        leftSideBearing: 0,
-        advanceWidth: 425,
-        yOffset: -422,
+        leftSideBearing: 20,
+        advanceWidth: 250,
+        yOffset: -302,
       },
       accidentalFlat: {
-        leftSideBearing: -10,
-        advanceWidth: 228,
-        yOffset: -284,
+        leftSideBearing: -20,
+        advanceWidth: 226,
+        yOffset: -184,
       },
     },
   },
+
   clef_default: {
     width: 26,
     annotations: {
@@ -125,6 +121,7 @@ export const PetalumaMetrics = {
       },
     },
   },
+
   clef_small: {
     width: 20,
     annotations: {
@@ -148,74 +145,76 @@ export const PetalumaMetrics = {
       },
     },
   },
+
   ornament: {
     brassScoop: {
       xOffset: -12,
       yOffset: 0,
       stemUpYOffset: 0,
-      reportedWidth: 15,
+      reportedWidth: 20,
     },
     brassDoitMedium: {
       xOffset: 16,
       yOffset: 0,
       stemUpYOffset: 0,
-      reportedWidth: 19,
+      reportedWidth: 22,
     },
     brassFallLipShort: {
       xOffset: 16,
       yOffset: 0,
       stemUpYOffset: 0,
-      reportedWidth: 19,
+      reportedWidth: 15,
     },
     brassLiftMedium: {
       xOffset: 16,
       yOffset: 5,
       stemUpYOffset: 0,
-      reportedWidth: 15,
+      reportedWidth: 5,
     },
     brassFallRoughMedium: {
       xOffset: 16,
-      yOffset: 26,
+      yOffset: 28,
       stemUpYOffset: 0,
       reportedWidth: 5,
     },
     brassBend: {
-      xOffset: 3,
+      xOffset: 2,
       yOffset: -8,
-      stemUpYOffset: 28,
+      stemUpYOffset: 25,
       reportedWidth: 5,
     },
     brassMuteClosed: {
       xOffset: 3,
       yOffset: -8,
-      stemUpYOffset: 26,
+      stemUpYOffset: 25,
       reportedWidth: 5,
     },
     brassMuteOpen: {
-      xOffset: 4,
-      yOffset: -8,
-      stemUpYOffset: 27,
+      xOffset: 3,
+      yOffset: -7,
+      stemUpYOffset: 25,
       reportedWidth: 5,
     },
     brassFlip: {
       xOffset: 10,
-      yOffset: -4,
+      yOffset: 0,
       stemUpYOffset: 7,
-      reportedWidth: 5,
+      reportedWidth: 10,
     },
     brassJazzTurn: {
-      xOffset: 6,
-      yOffset: -4,
-      stemUpYOffset: 5,
-      reportedWidth: 30,
+      xOffset: 0,
+      yOffset: 0,
+      stemUpYOffset: 8,
+      reportedWidth: 31,
     },
     brassSmear: {
       xOffset: 10,
-      yOffset: -4,
-      stemUpYOffset: 5,
+      yOffset: 0,
+      stemUpYOffset: 8,
       reportedWidth: 5,
     },
   },
+
   parenthesis: {
     default: {
       point: 39,
@@ -238,13 +237,13 @@ export const PetalumaMetrics = {
 
   // These are for numeric digits, such as in time signatures
   digits: {
-    // used by timesig
+    // used by TimeSignature objects
     shiftLine: -1,
-    point: 22,
+    point: 34,
 
     // used by tuplets
-    tupletPoint: 16,
-    shiftY: -2,
+    tupletPoint: 22,
+    shiftY: -6,
   },
 
   articulation: {
@@ -262,7 +261,7 @@ export const PetalumaMetrics = {
       spacing: 5,
       offsetYStemUp: -5,
       offsetYStemDown: 5,
-      offsetXStemUp: 13,
+      offsetXStemUp: 11,
       offsetXStemDown: 1,
     },
     grace: {
@@ -270,7 +269,7 @@ export const PetalumaMetrics = {
       spacing: 4,
       offsetYStemUp: -5,
       offsetYStemDown: 5,
-      offsetXStemUp: 8,
+      offsetXStemUp: 7,
       offsetXStemDown: 1,
     },
   },
@@ -291,7 +290,6 @@ export const PetalumaMetrics = {
 
   noteHead: {
     minPadding: 2,
-    displacedShiftX: -2,
   },
 
   stem: {
@@ -324,12 +322,12 @@ export const PetalumaMetrics = {
         offsetYBaseStemDown: 4,
       },
       noteheadHalf: {
-        offsetYBaseStemDown: 1.8,
-        offsetYBaseStemUp: -1.8,
+        offsetYBaseStemUp: -2.55,
+        offsetYBaseStemDown: 2.65,
       },
       noteheadBlack: {
-        offsetYBaseStemDown: 2,
         offsetYBaseStemUp: -2,
+        offsetYBaseStemDown: 2,
       },
       noteheadSquareWhite: {
         offsetYBaseStemDown: -5,
@@ -349,7 +347,7 @@ export const PetalumaMetrics = {
     noteHeadOffset: 20,
     stemOffset: 10,
     bottomLine: 4,
-    topModifierOffset: 20,
+    topModifierOffset: 15,
   },
 
   // Values under here are used by the Glyph class to reposition and rescale
@@ -371,31 +369,7 @@ export const PetalumaMetrics = {
       shiftX: -7,
     },
     flag: {
-      shiftX: -0.77,
-      flag16thUp: {
-        shiftX: -0.75,
-      },
-      flag32ndUp: {
-        shiftX: -0.85,
-      },
-      flag64thUp: {
-        shiftX: -1.55,
-      },
-      flag128thUp: {
-        shiftX: -1.3,
-      },
-      flag16thDown: {
-        shiftX: -0.75,
-      },
-      flag32ndDown: {
-        shiftX: -0.76,
-      },
-      flag64thDown: {
-        shiftX: -1.5,
-      },
-      flag128thDown: {
-        shiftX: -1.2,
-      },
+      shiftX: -0.75,
       staveTempo: {
         shiftX: -1,
       },
@@ -426,7 +400,6 @@ export const PetalumaMetrics = {
     clefNote_small: {
       point: 26,
     },
-
     ornament: {
       ornamentTurn: {
         scale: 1.2,
@@ -506,8 +479,14 @@ export const PetalumaMetrics = {
         shiftY: 8,
       },
       ornamentTrill: {
-        shiftX: -10,
+        shiftX: -8,
         shiftY: 8,
+      },
+      ornamentTurn: {
+        point: 42,
+      },
+      ornamentTurnSlash: {
+        point: 42,
       },
       ornamentMordent: {
         shiftX: -8,
@@ -517,14 +496,11 @@ export const PetalumaMetrics = {
       },
     },
     noteHead: {
-      noteheadBlackStemUp: {
-        shiftX: 0.5,
+      restQuarterStemUp: {
+        point: 35,
       },
-      noteheadHalfStemUp: {
-        shiftX: 0.725,
-      },
-      noteheadWholeStemUp: {
-        shiftX: 1,
+      restQuarterStemDown: {
+        point: 35,
       },
     },
     chordSymbol: {
@@ -550,7 +526,7 @@ export const PetalumaMetrics = {
         scale: 0.8,
       },
       csymParensLeftVeryTall: {
-        scale: 0.95,
+        scale: 0.9,
       },
       csymParensRightVeryTall: {
         scale: 0.9,
@@ -559,16 +535,16 @@ export const PetalumaMetrics = {
         scale: 0.6,
       },
       csymMinor: {
-        scale: 0.7,
+        scale: 0.8,
       },
       csymMajorSeventh: {
-        scale: 0.8,
+        scale: 0.9,
       },
       accidentalSharp: {
-        scale: 0.7,
+        scale: 0.75,
       },
       accidentalFlat: {
-        scale: 0.8,
+        scale: 0.9,
       },
     },
   },
