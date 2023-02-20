@@ -382,47 +382,6 @@ export const CommonMetrics = {
     },
     clefNote_default: {},
     clefNote_small: {},
-    ornament: {
-      ornamentTurn: {
-        scale: 1.2,
-      },
-      ornamentTurnSlash: {
-        scale: 1.2,
-      },
-      brassScoop: {
-        scale: 1.0,
-      },
-      brassDoitMedium: {
-        scale: 1.0,
-      },
-      brassFallLipShort: {
-        scale: 1.0,
-      },
-      brassLiftMedium: {
-        scale: 1.0,
-      },
-      brassFallRoughMedium: {
-        scale: 1.0,
-      },
-      brassBend: {
-        scale: 1.0,
-      },
-      brassMuteClosed: {
-        scale: 1.0,
-      },
-      brassMuteOpen: {
-        scale: 1.0,
-      },
-      brassFlip: {
-        scale: 1.0,
-      },
-      brassJazzTurn: {
-        scale: 1.0,
-      },
-      brassSmear: {
-        scale: 1.0,
-      },
-    },
     stroke_straight: {
       arrowheadBlackDown: {
         shiftX: -4.5,
@@ -442,21 +401,16 @@ export const CommonMetrics = {
       },
     },
     textNote: {
-      point: 34,
+      point: 39,
       breathMarkTick: {
-        point: 36,
         shiftY: 9,
       },
-      breathMarkComma: {
-        point: 36,
-      },
+      breathMarkComma: {},
       segno: {
-        point: 30,
         shiftX: -7,
         shiftY: 8,
       },
       coda: {
-        point: 20,
         shiftX: -7,
         shiftY: 8,
       },
@@ -464,12 +418,8 @@ export const CommonMetrics = {
         shiftX: -8,
         shiftY: 8,
       },
-      ornamentTurn: {
-        point: 42,
-      },
-      ornamentTurnSlash: {
-        point: 42,
-      },
+      ornamentTurn: {},
+      ornamentTurnSlash: {},
       ornamentMordent: {
         shiftX: -8,
       },
