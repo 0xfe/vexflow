@@ -239,7 +239,7 @@ export const CommonMetrics = {
   digits: {
     // used by TimeSignature objects
     shiftLine: -1,
-    point: 34,
+    point: 36,
 
     // used by tuplets
     tupletPoint: 22,
@@ -375,30 +375,19 @@ export const CommonMetrics = {
       },
     },
     clef_default: {
-      point: 32,
-      gClef: {
-        scale: 1.1,
-        shiftY: 1,
-      },
-      fClef: {
-        shiftY: -0.5,
-      },
-      '6stringTabClef': {
-        point: 32,
-        shiftY: -5.5,
-      },
+      point: 36,
     },
     clef_small: {
-      point: 26,
+      point: 24, // two thirds of default
       gClef: {
         shiftY: 1.5,
       },
     },
     clefNote_default: {
-      point: 32,
+      point: 36,
     },
     clefNote_small: {
-      point: 26,
+      point: 24,
     },
     ornament: {
       ornamentTurn: {

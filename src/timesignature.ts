@@ -50,12 +50,12 @@ export class TimeSignature extends StaveModifier {
     return {
       C: {
         code: 'timeSigCommon',
-        point: 40,
+        point: 36,
         line: 2,
       },
       'C|': {
         code: 'timeSigCutCommon',
-        point: 40,
+        point: 36,
         line: 2,
       },
     };

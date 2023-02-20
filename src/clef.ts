@@ -124,7 +124,7 @@ export class Clef extends StaveModifier {
       },
       tab: {
         code: '6stringTabClef',
-        line: 3,
+        line: 2.5,
         point: 0,
       },
     };
