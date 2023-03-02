@@ -39,7 +39,7 @@ const options = {
   job: 0,
   SCRIPT_VER: argv[2] || 'build',
   IMAGE_OUTPUT_DIR: argv[3],
-  TIMEOUT: 30 * 1000,
+  TIMEOUT: 60 * 1000, // 60 seconds.
 };
 const args = process.argv.slice(4);
 // console.log(args);
