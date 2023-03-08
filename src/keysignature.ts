@@ -95,7 +95,7 @@ export class KeySignature extends StaveModifier {
 
     this.setKeySig(keySpec, cancelKeySpec, alterKeySpec);
     this.setPosition(StaveModifierPosition.BEGIN);
-    this.glyphFontScale = 38; // TODO(0xFE): Should this match StaveNote?
+    this.glyphFontScale = Tables.NOTATION_FONT_SCALE;
     this.glyphs = [];
     this.xPositions = []; // relative to this.x
     this.paddingForced = false;

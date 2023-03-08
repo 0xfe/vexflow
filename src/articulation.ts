@@ -307,7 +307,7 @@ export class Articulation extends Modifier {
     this.type = type;
     this.position = ABOVE;
     this.render_options = {
-      font_scale: 38,
+      font_scale: Tables.NOTATION_FONT_SCALE,
     };
 
     this.reset();

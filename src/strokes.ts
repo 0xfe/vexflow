@@ -9,6 +9,7 @@ import { Glyph } from './glyph';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { Note } from './note';
+import { Tables } from './tables';
 import { Category, isNote, isStaveNote, isTabNote } from './typeguard';
 import { RuntimeError } from './util';
 
@@ -92,7 +93,7 @@ export class Stroke extends Modifier {
     this.position = Modifier.Position.LEFT;
 
     this.render_options = {
-      font_scale: 38,
+      font_scale: Tables.NOTATION_FONT_SCALE,
     };
 
     this.resetFont();
