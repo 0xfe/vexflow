@@ -104,18 +104,18 @@ export const CommonMetrics = {
       '8va': {
         point: 18,
         treble: {
-          line: -1.4,
+          line: -2,
           shiftX: 12,
         },
       },
       '8vb': {
         point: 18,
         treble: {
-          line: 6,
+          line: 6.5,
           shiftX: 10,
         },
         bass: {
-          line: 3.5,
+          line: 4,
           shiftX: 1,
         },
       },
@@ -239,7 +239,7 @@ export const CommonMetrics = {
   digits: {
     // used by TimeSignature objects
     shiftLine: -1,
-    point: 36,
+    point: 39,
 
     // used by tuplets
     tupletPoint: 22,
@@ -374,21 +374,14 @@ export const CommonMetrics = {
         shiftX: -1,
       },
     },
-    clef_default: {
-      point: 36,
-    },
+    clef_default: {},
     clef_small: {
-      point: 24, // two thirds of default
       gClef: {
         shiftY: 1.5,
       },
     },
-    clefNote_default: {
-      point: 36,
-    },
-    clefNote_small: {
-      point: 24,
-    },
+    clefNote_default: {},
+    clefNote_small: {},
     ornament: {
       ornamentTurn: {
         scale: 1.2,

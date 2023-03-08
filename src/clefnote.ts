@@ -5,6 +5,7 @@
 import { Clef, ClefAnnotatiomType, ClefType } from './clef';
 import { Glyph } from './glyph';
 import { Note } from './note';
+import { Tables } from './tables';
 import { Category } from './typeguard';
 
 /** ClefNote implements clef annotations in measures. */
@@ -25,7 +26,13 @@ export class ClefNote extends Note {
     this.clef = clef.clef;
     this.annotation = clef.annotation;
     this.size = size === undefined ? 'default' : size;
-    this.setWidth(Glyph.getWidth(this.clef.code, this.clef.point, `clefNote_${this.size}`));
+    this.setWidth(
+      Glyph.getWidth(
+        this.clef.code,
+        this.size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2,
+        `clefNote_${this.size}`
+      )
+    );
 
     // Note properties
     this.ignore_ticks = true;
@@ -38,7 +45,13 @@ export class ClefNote extends Note {
     const clef = new Clef(type, size, annotation);
     this.clef = clef.clef;
     this.annotation = clef.annotation;
-    this.setWidth(Glyph.getWidth(this.clef.code, this.clef.point, `clefNote_${this.size}`));
+    this.setWidth(
+      Glyph.getWidth(
+        this.clef.code,
+        this.size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2,
+        `clefNote_${this.size}`
+      )
+    );
     return this;
   }
 
@@ -60,9 +73,16 @@ export class ClefNote extends Note {
     this.setRendered();
     const abs_x = this.getAbsoluteX();
 
-    Glyph.renderGlyph(ctx, abs_x, stave.getYForLine(this.clef.line), this.clef.point, this.clef.code, {
-      category: `clefNote_${this.size}`,
-    });
+    Glyph.renderGlyph(
+      ctx,
+      abs_x,
+      stave.getYForLine(this.clef.line),
+      this.size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2,
+      this.clef.code,
+      {
+        category: `clefNote_${this.size}`,
+      }
+    );
 
     // If the Vex.Flow.Clef has an annotation, such as 8va, draw it.
     if (this.annotation !== undefined) {
