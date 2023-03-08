@@ -2,9 +2,9 @@
 // MIT License
 
 import { Font } from '../font';
+import { CommonMetrics } from './common_metrics';
 import { LelandFont } from './leland_glyphs';
-import { LelandMetrics } from './leland_metrics';
 
 export function loadLeland() {
-  Font.load('Leland', LelandFont, LelandMetrics);
+  Font.load('Leland', LelandFont, CommonMetrics);
 }

@@ -2,9 +2,9 @@
 // MIT License
 
 import { Font } from '../font';
+import { CommonMetrics } from './common_metrics';
 import { PetalumaFont } from './petaluma_glyphs';
-import { PetalumaMetrics } from './petaluma_metrics';
 
 export function loadPetaluma() {
-  Font.load('Petaluma', PetalumaFont, PetalumaMetrics);
+  Font.load('Petaluma', PetalumaFont, CommonMetrics);
 }

@@ -13,6 +13,7 @@ export class TimeSignatureGlyph extends Glyph {
   topStartX: number;
   botStartX: number;
   width: number;
+  lineShift: number;
   xMin: number;
 
   constructor(
@@ -29,6 +30,7 @@ export class TimeSignatureGlyph extends Glyph {
     this.botGlyphs = [];
 
     let topWidth = 0;
+    let height = 0;
     for (let i = 0; i < topDigits.length; ++i) {
       let timeSigType = topDigits[i];
       switch (topDigits[i]) {
@@ -49,6 +51,7 @@ export class TimeSignatureGlyph extends Glyph {
 
       this.topGlyphs.push(topGlyph);
       topWidth += topGlyph.getMetrics().width ?? 0;
+      height = Math.max(height, topGlyph.getMetrics().height);
     }
 
     let botWidth = 0;
@@ -69,7 +72,12 @@ export class TimeSignatureGlyph extends Glyph {
 
       this.botGlyphs.push(botGlyph);
       botWidth += defined(botGlyph.getMetrics().width);
+      height = Math.max(height, botGlyph.getMetrics().height);
     }
+
+    // If the height of the digits is more than two staff spaces (20), shift to the next line
+    // in order to center the digits on lines 1 and 5 rather than 2 and 4.
+    this.lineShift = height > 20 ? 1 : 0;
 
     this.width = Math.max(topWidth, botWidth);
     this.xMin = this.getMetrics().x_min;
@@ -92,7 +100,7 @@ export class TimeSignatureGlyph extends Glyph {
 
     let start_x = x + this.topStartX;
     let y = 0;
-    if (this.botGlyphs.length > 0) y = stave.getYForLine(this.timeSignature.topLine);
+    if (this.botGlyphs.length > 0) y = stave.getYForLine(this.timeSignature.topLine - this.lineShift);
     else y = (stave.getYForLine(this.timeSignature.topLine) + stave.getYForLine(this.timeSignature.bottomLine)) / 2;
     for (let i = 0; i < this.topGlyphs.length; ++i) {
       const glyph = this.topGlyphs[i];
@@ -101,7 +109,7 @@ export class TimeSignatureGlyph extends Glyph {
     }
 
     start_x = x + this.botStartX;
-    y = stave.getYForLine(this.timeSignature.bottomLine);
+    y = stave.getYForLine(this.timeSignature.bottomLine + this.lineShift);
     for (let i = 0; i < this.botGlyphs.length; ++i) {
       const glyph = this.botGlyphs[i];
       this.timeSignature.placeGlyphOnLine(glyph, stave, this.timeSignature.getLine());
