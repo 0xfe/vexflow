@@ -10,15 +10,13 @@ import { Category } from './typeguard';
 import { defined, log } from './util';
 
 export interface ClefType {
-  point: number;
   code: string;
   line: number;
 }
 
 export interface ClefAnnotatiomType extends ClefType {
   x_shift: number;
-  code: string;
-  line: number;
+  point: number;
 }
 
 export interface ClefMetrics {
@@ -70,62 +68,50 @@ export class Clef extends StaveModifier {
       treble: {
         code: 'gClef',
         line: 3,
-        point: 0,
       },
       bass: {
         code: 'fClef',
         line: 1,
-        point: 0,
       },
       alto: {
         code: 'cClef',
         line: 2,
-        point: 0,
       },
       tenor: {
         code: 'cClef',
         line: 1,
-        point: 0,
       },
       percussion: {
         code: 'unpitchedPercussionClef1',
         line: 2,
-        point: 0,
       },
       soprano: {
         code: 'cClef',
         line: 4,
-        point: 0,
       },
       'mezzo-soprano': {
         code: 'cClef',
         line: 3,
-        point: 0,
       },
       'baritone-c': {
         code: 'cClef',
         line: 0,
-        point: 0,
       },
       'baritone-f': {
         code: 'fClef',
         line: 2,
-        point: 0,
       },
       subbass: {
         code: 'fClef',
         line: 0,
-        point: 0,
       },
       french: {
         code: 'gClef',
         line: 4,
-        point: 0,
       },
       tab: {
         code: '6stringTabClef',
-        line: 3,
-        point: 0,
+        line: 2.5,
       },
     };
   }
@@ -143,7 +129,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(Glyph.getWidth(this.clef.code, this.clef.point, `clef_${this.size}`));
+    this.setWidth(Glyph.getWidth(this.clef.code, Clef.getPoint(this.size), `clef_${this.size}`));
     L('Creating clef:', type);
   }
 
@@ -186,6 +172,12 @@ export class Clef extends StaveModifier {
     return this.width;
   }
 
+  /** Get point for clefs. */
+  static getPoint(size?: string): number {
+    // for sizes other than 'default', clef is 2/3 of the default value
+    return size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2;
+  }
+
   /** Set associated stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
@@ -200,7 +192,7 @@ export class Clef extends StaveModifier {
 
     this.applyStyle(ctx);
     ctx.openGroup('clef', this.getAttribute('id'));
-    Glyph.renderGlyph(ctx, this.x, stave.getYForLine(this.clef.line), this.clef.point, this.clef.code, {
+    Glyph.renderGlyph(ctx, this.x, stave.getYForLine(this.clef.line), Clef.getPoint(this.size), this.clef.code, {
       category: `clef_${this.size}`,
     });
     if (this.annotation !== undefined && this.attachment !== undefined) {

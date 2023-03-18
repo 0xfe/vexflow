@@ -483,7 +483,7 @@ export class Accidental extends Modifier {
 
     this.render_options = {
       // Font size for glyphs
-      font_scale: 38,
+      font_scale: Tables.NOTATION_FONT_SCALE,
 
       // Padding between accidental and parentheses on each side
       parenLeftPadding: 2,

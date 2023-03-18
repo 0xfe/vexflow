@@ -77,7 +77,7 @@ export class TimeSignatureGlyph extends Glyph {
 
     // If the height of the digits is more than two staff spaces (20), shift to the next line
     // in order to center the digits on lines 1 and 5 rather than 2 and 4.
-    this.lineShift = height > 20 ? 1 : 0;
+    this.lineShift = height > 22 ? 1 : 0;
 
     this.width = Math.max(topWidth, botWidth);
     this.xMin = this.getMetrics().x_min;

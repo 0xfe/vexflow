@@ -181,7 +181,7 @@ export class Ornament extends Modifier {
     this.delayed = false;
 
     this.render_options = {
-      font_scale: 38,
+      font_scale: Tables.NOTATION_FONT_SCALE,
       accidentalLowerPadding: 3,
       accidentalUpperPadding: 3,
     };

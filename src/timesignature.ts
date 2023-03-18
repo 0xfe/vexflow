@@ -46,16 +46,14 @@ export class TimeSignature extends StaveModifier {
     return Category.TimeSignature;
   }
 
-  static get glyphs(): Record<string, { code: string; point: number; line: number }> {
+  static get glyphs(): Record<string, { code: string; line: number }> {
     return {
       C: {
         code: 'timeSigCommon',
-        point: 40,
         line: 2,
       },
       'C|': {
         code: 'timeSigCutCommon',
-        point: 40,
         line: 2,
       },
     };
@@ -79,7 +77,7 @@ export class TimeSignature extends StaveModifier {
 
     // point must be defined before parsing spec.
     const musicFont = Tables.currentMusicFont();
-    this.point = musicFont.lookupMetric('digits.point');
+    this.point = musicFont.lookupMetric('digits.point') || Tables.NOTATION_FONT_SCALE;
 
     const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
@@ -96,11 +94,11 @@ export class TimeSignature extends StaveModifier {
    */
   parseTimeSpec(timeSpec: string): TimeSignatureInfo {
     if (timeSpec === 'C' || timeSpec === 'C|') {
-      const { line, code, point } = TimeSignature.glyphs[timeSpec];
+      const { line, code } = TimeSignature.glyphs[timeSpec];
       return {
         line,
         num: false,
-        glyph: new Glyph(code, point),
+        glyph: new Glyph(code, Tables.NOTATION_FONT_SCALE),
       };
     }
 

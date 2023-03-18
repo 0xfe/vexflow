@@ -65,9 +65,7 @@ export class StaveTempo extends StaveModifier {
     this.setRendered();
 
     const options = this.render_options;
-    // FIXME: What does the '38' mean? Why 38? Is that supposed to
-    // be the default font size for standard notation?
-    const scale = options.glyph_font_scale / 38;
+    const scale = options.glyph_font_scale / Tables.NOTATION_FONT_SCALE;
     const name = this.tempo.name;
     const duration = this.tempo.duration;
     const dots = this.tempo.dots || 0;

@@ -380,7 +380,6 @@ export const GonvilleMetrics = {
       point: 40,
       '6stringTabClef': {
         point: 40,
-        shiftY: -5.5,
       },
     },
     clef_small: {
