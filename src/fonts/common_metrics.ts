@@ -427,14 +427,7 @@ export const CommonMetrics = {
         shiftX: -8,
       },
     },
-    noteHead: {
-      restQuarterStemUp: {
-        point: 35,
-      },
-      restQuarterStemDown: {
-        point: 35,
-      },
-    },
+    noteHead: {},
     chordSymbol: {
       csymDiminished: {
         scale: 0.8,
