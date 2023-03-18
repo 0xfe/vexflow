@@ -129,13 +129,7 @@ export class Clef extends StaveModifier {
 
     this.setPosition(StaveModifierPosition.BEGIN);
     this.setType(type, size, annotation);
-    this.setWidth(
-      Glyph.getWidth(
-        this.clef.code,
-        this.size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2,
-        `clef_${this.size}`
-      )
-    );
+    this.setWidth(Glyph.getWidth(this.clef.code, Clef.getPoint(this.size), `clef_${this.size}`));
     L('Creating clef:', type);
   }
 
@@ -178,6 +172,12 @@ export class Clef extends StaveModifier {
     return this.width;
   }
 
+  /** Get point for clefs. */
+  static getPoint(size?: string): number {
+    // for sizes other than 'default', clef is 2/3 of the default value
+    return size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2;
+  }
+
   /** Set associated stave. */
   setStave(stave: Stave): this {
     this.stave = stave;
@@ -192,16 +192,9 @@ export class Clef extends StaveModifier {
 
     this.applyStyle(ctx);
     ctx.openGroup('clef', this.getAttribute('id'));
-    Glyph.renderGlyph(
-      ctx,
-      this.x,
-      stave.getYForLine(this.clef.line),
-      this.size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 3) * 2,
-      this.clef.code,
-      {
-        category: `clef_${this.size}`,
-      }
-    );
+    Glyph.renderGlyph(ctx, this.x, stave.getYForLine(this.clef.line), Clef.getPoint(this.size), this.clef.code, {
+      category: `clef_${this.size}`,
+    });
     if (this.annotation !== undefined && this.attachment !== undefined) {
       this.placeGlyphOnLine(this.attachment, stave, this.annotation.line);
       this.attachment.setStave(stave);
