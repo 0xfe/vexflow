@@ -23,7 +23,8 @@ function L(...args: any[]) {
 function drawPedalGlyph(name: string, context: RenderContext, x: number, y: number, point: number): void {
   const glyph_data = PedalMarking.GLYPHS[name];
   const glyph = new Glyph(glyph_data.code, point, { category: 'pedalMarking' });
-  glyph.render(context, x + glyph_data.x_shift, y + glyph_data.y_shift);
+  // Center the middle of the glyph with the middle of the note head (Tables.STAVE_LINE_DISTANCE / 2)
+  glyph.render(context, x - (glyph.getMetrics().width - Tables.STAVE_LINE_DISTANCE) / 2, y);
 }
 
 /**
@@ -61,16 +62,12 @@ export class PedalMarking extends Element {
   protected notes: StaveNote[];
 
   /** Glyph data */
-  static readonly GLYPHS: Record<string, { code: string; y_shift: number; x_shift: number }> = {
+  static readonly GLYPHS: Record<string, { code: string }> = {
     pedal_depress: {
       code: 'keyboardPedalPed',
-      x_shift: -10,
-      y_shift: 0,
     },
     pedal_release: {
       code: 'keyboardPedalUp',
-      x_shift: -2,
-      y_shift: 3,
     },
   };
 
@@ -188,7 +185,9 @@ export class PedalMarking extends Element {
       const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
-      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point =
+        Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`) ??
+        Tables.NOTATION_FONT_SCALE;
 
       if (is_pedal_depressed) {
         // Adjustment for release+depress
@@ -248,7 +247,9 @@ export class PedalMarking extends Element {
       const x = note.getAbsoluteX();
       const y = stave.getYForBottomText(this.line + 3);
 
-      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point =
+        Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`) ??
+        Tables.NOTATION_FONT_SCALE;
 
       let text_width = 0;
       if (is_pedal_depressed) {

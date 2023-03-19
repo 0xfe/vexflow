@@ -226,14 +226,7 @@ export const CommonMetrics = {
     },
   },
 
-  pedalMarking: {
-    up: {
-      point: 40,
-    },
-    down: {
-      point: 34,
-    },
-  },
+  pedalMarking: {},
 
   // These are for numeric digits, such as in time signatures
   digits: {
