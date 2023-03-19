@@ -3,6 +3,7 @@
 
 import { Glyph } from './glyph';
 import { Note } from './note';
+import { Tables } from './tables';
 import { TextNoteStruct } from './textnote';
 import { Category } from './typeguard';
 import { defined, log, RuntimeError } from './util';
@@ -78,7 +79,7 @@ export class TextDynamics extends Note {
     this.line = noteStruct.line || 0;
     this.glyphs = [];
 
-    this.render_options = { ...this.render_options, glyph_font_size: 40 };
+    this.render_options = { ...this.render_options, glyph_font_size: Tables.NOTATION_FONT_SCALE };
 
     L('New Dynamics Text: ', this.sequence);
   }

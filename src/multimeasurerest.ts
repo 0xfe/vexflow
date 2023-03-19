@@ -106,7 +106,7 @@ export class MultiMeasureRest extends Element {
       use_symbols: false,
       show_number: true,
       number_line: -0.5,
-      number_glyph_point: musicFont.lookupMetric('digits.point'), // same as TimeSignature.
+      number_glyph_point: musicFont.lookupMetric('digits.point') ?? Tables.NOTATION_FONT_SCALE, // same as TimeSignature.
       line: 2,
       spacing_between_lines_px: Tables.STAVE_LINE_DISTANCE, // same as Stave.
       serif_thickness: 2,
