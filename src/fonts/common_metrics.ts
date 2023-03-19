@@ -217,11 +217,9 @@ export const CommonMetrics = {
 
   parenthesis: {
     default: {
-      point: 39,
       width: 7,
     },
     gracenote: {
-      point: (39 * 3) / 5,
       width: 3,
     },
   },
@@ -249,18 +247,16 @@ export const CommonMetrics = {
 
   tremolo: {
     default: {
-      point: 25,
-      spacing: 5,
-      offsetYStemUp: -5,
-      offsetYStemDown: 5,
+      spacing: 7,
+      offsetYStemUp: -3,
+      offsetYStemDown: 3,
       offsetXStemUp: 11,
       offsetXStemDown: 1,
     },
     grace: {
-      point: 18,
-      spacing: 4,
-      offsetYStemUp: -5,
-      offsetYStemDown: 5,
+      spacing: (7 * 3) / 5,
+      offsetYStemUp: -3,
+      offsetYStemDown: 3,
       offsetXStemUp: 7,
       offsetXStemDown: 1,
     },
