@@ -39,7 +39,6 @@ export interface ChordSymbolBlock {
 
 export interface ChordSymbolGlyphMetrics {
   leftSideBearing: number;
-  advanceWidth: number;
   yOffset: number;
 }
 
@@ -139,11 +138,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static getWidthForGlyph(glyph: Glyph): number {
-    const metric = ChordSymbol.getMetricForGlyph(glyph.code);
-    if (!metric) {
-      return 0.65; // probably should do something here.
-    }
-    return metric.advanceWidth / ChordSymbol.engravingFontResolution;
+    return glyph.getMetrics().width + 5;
   }
 
   static getYShiftForGlyph(glyph: Glyph): number {
@@ -313,7 +308,7 @@ export class ChordSymbol extends Modifier {
         const fontSize = symbol.textFormatter.fontSizeInPixels;
         const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
-          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
+          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubScale;
           block.yShift += ChordSymbol.getYShiftForGlyph(block.glyph) * superSubFontSize;
           block.xShift += ChordSymbol.getXShiftForGlyph(block.glyph) * superSubFontSize;
           block.glyph.scale = block.glyph.scale * adj;
