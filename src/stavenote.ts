@@ -246,6 +246,7 @@ export class StaveNote extends StemmableNote {
               blackNoteHeadCount++;
             }
             if (
+              !Tables.UNISON ||
               (whiteNoteHeadCount !== 2 && blackNoteHeadCount !== 2) ||
               noteU.note.getModifiersByType(Category.Dot).length !== noteL.note.getModifiersByType(Category.Dot).length
             ) {
