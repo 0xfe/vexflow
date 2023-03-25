@@ -5,7 +5,6 @@
 import { Clef, ClefAnnotatiomType, ClefType } from './clef';
 import { Glyph } from './glyph';
 import { Note } from './note';
-import { Tables } from './tables';
 import { Category } from './typeguard';
 
 /** ClefNote implements clef annotations in measures. */
