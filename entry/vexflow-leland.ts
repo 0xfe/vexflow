@@ -7,12 +7,10 @@
 import { Flow } from '../src/flow';
 import { loadCustom } from '../src/fonts/load_custom';
 import { loadLeland } from '../src/fonts/load_leland';
-import { loadTextFonts } from '../src/fonts/textfonts';
 
 loadLeland();
 loadCustom();
 Flow.setMusicFont('Leland', 'Custom');
-loadTextFonts();
 
 // Re-export all exports from index.ts.
 export * from '../src/index';

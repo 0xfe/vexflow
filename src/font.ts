@@ -2,9 +2,10 @@ import { ChordSymbolMetrics } from './chordsymbol';
 import { ClefMetrics } from './clef';
 import { NoteHeadMetrics } from './notehead';
 import { OrnamentMetrics } from './ornament';
+import { TextMeasure } from './rendercontext';
 import { StringNumberMetrics } from './stringnumber';
 import { TupletMetrics } from './tuplet';
-import { defined } from './util';
+import { defined, RuntimeError } from './util';
 
 export interface FontInfo {
   /** CSS font-family, e.g., 'Arial', 'Helvetica Neue, Arial, sans-serif', 'Times, serif' */
@@ -103,6 +104,9 @@ export class Font {
 
   /** Default font size in `pt`. */
   static SIZE: number = 10;
+
+  /** Canvas used to measure text */
+  protected static txtCanvas?: HTMLCanvasElement;
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
@@ -403,6 +407,53 @@ export class Font {
       font.setMetrics(metrics);
     }
     return font;
+  }
+  static textMetrics(text: string, fontInfo?: FontInfo): TextMetrics {
+    if (!fontInfo) throw new RuntimeError('Font', 'No font info');
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    if (!context) throw new RuntimeError('Font', 'No txt context');
+    context.font = Font.toCSSString(Font.validate(fontInfo));
+    return context.measureText(text);
+  }
+
+  /** Return the text bounding box */
+  static measureText(text: string, fontInfo?: FontInfo): TextMeasure {
+    if (!fontInfo) throw new RuntimeError('Font', 'No font info');
+    let txtCanvas = this.txtCanvas;
+    if (!txtCanvas) {
+      // Create the SVG text element that will be used to measure text in the event
+      // of a cache miss.
+      txtCanvas = document.createElement('canvas');
+      this.txtCanvas = txtCanvas;
+    }
+    const context = txtCanvas.getContext('2d');
+    if (!context) throw new RuntimeError('Font', 'No txt context');
+    context.font = Font.toCSSString(Font.validate(fontInfo));
+    const metrics = context.measureText(text);
+
+    let y = 0;
+    let height = 0;
+    if (metrics.fontBoundingBoxAscent) {
+      y = -metrics.fontBoundingBoxAscent;
+      height = metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
+    } else {
+      y = -metrics.actualBoundingBoxAscent;
+      height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+    }
+    // Return x, y, width & height in the same manner as svg getBBox
+    return {
+      x: 0,
+      y: y,
+      width: metrics.width,
+      height: height,
+    };
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,6 @@
 
 import { Flow } from '../src/flow';
 import { Font, FontModule } from '../src/font';
-import { loadTextFonts } from '../src/fonts/textfonts';
 import { globalObject, RuntimeError } from '../src/util';
 
 // fontModules maps font names => font module paths, which can be loaded at runtime by vexflow-core.js.
@@ -68,9 +67,6 @@ Flow.fetchMusicFont = async (fontName: string, fontModuleOrPath?: string | FontM
   font.setData(fontModule.data);
   font.setMetrics(fontModule.metrics);
 };
-
-// Load the two text fonts that ChordSymbol & Annotation use.
-loadTextFonts();
 
 // Re-export all exports from index.ts.
 export * from '../src/index';

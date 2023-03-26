@@ -73,7 +73,6 @@ import {
   TabTie,
   TextBracket,
   TextDynamics,
-  TextFormatter,
   TextNote,
   TickContext,
   TimeSignature,
@@ -171,7 +170,6 @@ function VF_Prefix(assert: Assert): void {
   assert.equal(TabTie, VF.TabTie);
   assert.equal(TextBracket, VF.TextBracket);
   assert.equal(TextDynamics, VF.TextDynamics);
-  assert.equal(TextFormatter, VF.TextFormatter);
   assert.equal(TextNote, VF.TextNote);
   assert.equal(TickContext, VF.TickContext);
   assert.equal(TimeSignature, VF.TimeSignature);
