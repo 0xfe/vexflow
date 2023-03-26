@@ -279,8 +279,8 @@ export class StaveNote extends StemmableNote {
             } //Very close whole notes
           } else if (lineDiff < 1) {
             xShift = voiceXShift + 2;
-            if (noteU.stemDirection === noteL.stemDirection) {
-              // upper voice is middle voice, so shift it right
+            if (noteU.note.duration < noteL.note.duration) {
+              // upper voice is shorter, so shift it right
               noteU.note.setXShift(xShift);
             } else {
               // shift lower voice right
