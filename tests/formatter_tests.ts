@@ -187,7 +187,9 @@ function penultimateNote(options: TestOptions): void {
     stave.addTimeSignature('2/4');
     voices = [];
     f.draw();
-    f.getContext().fillText(`softmax: ${softmax.toString()}`, staffWidth + 20, y + 50);
+    f.getContext()
+      .setFont('Arial', 10)
+      .fillText(`softmax: ${softmax.toString()}`, staffWidth + 20, y + 50);
     y += 100;
   };
   draw(15);
@@ -684,7 +686,9 @@ function softMax(options: TestOptions): void {
       .addTimeSignature('5/4');
 
     f.draw();
-    f.getContext().fillText(`softmax: ${factor.toString()}`, textX, y + 50);
+    f.getContext()
+      .setFont('Arial', 10)
+      .fillText(`softmax: ${factor.toString()}`, textX, y + 50);
     options.assert.ok(true);
   }
 
@@ -833,7 +837,7 @@ function annotations(options: TestOptions): void {
     const stave = new Stave(10, y, sm.width);
     const notes: StaveNote[] = [];
     let iii = 0;
-    context.fillText(sm.title, 100, y);
+    context.setFont('Arial', 10).fillText(sm.title, 100, y);
     y += rowSize;
 
     durations.forEach((dd) => {
