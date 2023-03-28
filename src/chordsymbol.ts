@@ -38,7 +38,6 @@ export interface ChordSymbolBlock {
 
 export interface ChordSymbolGlyphMetrics {
   leftSideBearing: number;
-  advanceWidth: number;
   yOffset: number;
 }
 
@@ -138,11 +137,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static getWidthForGlyph(glyph: Glyph): number {
-    const metric = ChordSymbol.getMetricForGlyph(glyph.code);
-    if (!metric) {
-      return 0.65; // probably should do something here.
-    }
-    return metric.advanceWidth / ChordSymbol.engravingFontResolution;
+    return Glyph.getWidth(glyph.code, glyph.fontSizeInPoints);
   }
 
   static getYShiftForGlyph(glyph: Glyph): number {
@@ -312,12 +307,12 @@ export class ChordSymbol extends Modifier {
         const fontSize = Font.convertSizeToPixelValue(symbol.textFont?.size);
         const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
-          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
+          block.width = Glyph.getWidth(block.glyph.code, fontSize);
           block.yShift += ChordSymbol.getYShiftForGlyph(block.glyph) * superSubFontSize;
           block.xShift += ChordSymbol.getXShiftForGlyph(block.glyph) * superSubFontSize;
           block.glyph.scale = block.glyph.scale * adj;
         } else if (block.symbolType === SymbolTypes.TEXT) {
-          block.width = block.width * superSubFontSize;
+          block.width = block.width * superSubScale;
           block.yShift += symbol.getYOffsetForText(block.text) * adj;
         }
 
@@ -563,7 +558,7 @@ export class ChordSymbol extends Modifier {
       // rv.width = rv.glyph.getMetrics().width;
       // don't set yShift here, b/c we need to do it at formatting time after the font is set.
     } else if (symbolType === SymbolTypes.TEXT) {
-      symbolBlock.width = Font.measureText(symbolBlock.text, this.textFont).width / Font.scaleToPxFrom['em'];
+      symbolBlock.width = Font.measureText(symbolBlock.text, this.textFont).width;
     } else if (symbolType === SymbolTypes.LINE) {
       symbolBlock.width = params.width;
     }

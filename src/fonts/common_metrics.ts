@@ -21,78 +21,64 @@ export const CommonMetrics = {
       kerningOffset: -250,
       lowerKerningText: ['D', 'F', 'P', 'T', 'V', 'Y'],
       upperKerningText: ['A', 'L'],
-      spacing: 100,
+      spacing: 50,
       superSubRatio: 0.66,
     },
     glyphs: {
       csymDiminished: {
         leftSideBearing: -32,
-        advanceWidth: 506,
         yOffset: 0,
       },
       csymHalfDiminished: {
         leftSideBearing: -32,
-        advanceWidth: 506,
         yOffset: 0,
       },
       csymAugmented: {
         leftSideBearing: 0,
-        advanceWidth: 530,
         yOffset: 0,
       },
       csymParensLeftTall: {
         leftSideBearing: -20,
-        advanceWidth: 184,
         yOffset: 250,
       },
       csymParensRightTall: {
         leftSideBearing: 0,
-        advanceWidth: 189,
         yOffset: 250,
       },
       csymBracketLeftTall: {
         leftSideBearing: 0,
-        advanceWidth: 328,
         yOffset: 0,
       },
       csymBracketRightTall: {
         leftSideBearing: 1,
-        advanceWidth: 600,
         yOffset: 0,
       },
       csymParensLeftVeryTall: {
         leftSideBearing: 50,
-        advanceWidth: 121,
         yOffset: 350,
       },
       csymParensRightVeryTall: {
         leftSideBearing: 0,
-        advanceWidth: 111,
         yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
         leftSideBearing: 250,
-        advanceWidth: 990,
         yOffset: 300,
       },
       csymMinor: {
         leftSideBearing: 0,
-        advanceWidth: 482,
         yOffset: 0,
       },
       csymMajorSeventh: {
         leftSideBearing: 200,
         yOffset: 0,
-        advanceWidth: 600,
       },
       accidentalSharp: {
         leftSideBearing: 20,
-        advanceWidth: 250,
         yOffset: -302,
       },
       accidentalFlat: {
         leftSideBearing: -20,
-        advanceWidth: 226,
         yOffset: -184,
       },
     },
