@@ -231,34 +231,29 @@ export class StaveNote extends StemmableNote {
           //If we are sharing a line and in the same voice, only then offset one note
           const lineDiff = Math.abs(noteU.line - noteL.line);
           if (noteU.note.hasStem() && noteL.note.hasStem()) {
-            //If we have different dot values, must offset
-            //Or If we have a white mixed with a black notehead, must offset
-            let whiteNoteHeadCount = 0;
-            let blackNoteHeadCount = 0;
-            if (Tables.durationToNumber(noteU.note.duration) === 2) {
-              whiteNoteHeadCount++;
-            } else if (Tables.durationToNumber(noteU.note.duration) > 2) {
-              blackNoteHeadCount++;
-            }
-            if (Tables.durationToNumber(noteL.note.duration) === 2) {
-              whiteNoteHeadCount++;
-            } else if (Tables.durationToNumber(noteL.note.duration) > 2) {
-              blackNoteHeadCount++;
-            }
+            const noteUHead = Tables.codeNoteHead(
+              noteU.note.sortedKeyProps[0].keyProps.code ?? 'N',
+              noteU.note.duration
+            );
+            const noteLHead = Tables.codeNoteHead(
+              noteL.note.sortedKeyProps[noteL.note.sortedKeyProps.length - 1].keyProps.code ?? 'N',
+              noteL.note.duration
+            );
             if (
-              (whiteNoteHeadCount !== 2 && blackNoteHeadCount !== 2) ||
-              noteU.note.getModifiersByType(Category.Dot).length !== noteL.note.getModifiersByType(Category.Dot).length
+              // If unison is not configured, shift
+              !Tables.UNISON ||
+              // If we have different noteheads, shift
+              noteUHead !== noteLHead ||
+              // If we have different dot values, shift
+              noteU.note.getModifiers().filter((item) => item.getCategory() === Category.Dot && item.getIndex() === 0)
+                .length !==
+                noteL.note.getModifiers().filter((item) => item.getCategory() === Category.Dot && item.getIndex() === 0)
+                  .length ||
+              // If the notes are quite close but not on the same line, shift
+              (lineDiff < 1 && lineDiff > 0) ||
+              // If styles are different, shift
+              JSON.stringify(noteU.note.getStyle()) !== JSON.stringify(noteL.note.getStyle())
             ) {
-              xShift = voiceXShift + 2;
-              if (noteU.stemDirection === noteL.stemDirection) {
-                // upper voice is middle voice, so shift it right
-                noteU.note.setXShift(xShift);
-              } else {
-                // shift lower voice right
-                noteL.note.setXShift(xShift);
-              }
-            } else if (lineDiff < 1 && lineDiff > 0) {
-              //if the notes are quite close but not on the same line, shift
               xShift = voiceXShift + 2;
               if (noteU.stemDirection === noteL.stemDirection) {
                 // upper voice is middle voice, so shift it right
@@ -284,8 +279,8 @@ export class StaveNote extends StemmableNote {
             } //Very close whole notes
           } else if (lineDiff < 1) {
             xShift = voiceXShift + 2;
-            if (noteU.stemDirection === noteL.stemDirection) {
-              // upper voice is middle voice, so shift it right
+            if (noteU.note.duration < noteL.note.duration) {
+              // upper voice is shorter, so shift it right
               noteU.note.setXShift(xShift);
             } else {
               // shift lower voice right

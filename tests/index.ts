@@ -80,6 +80,7 @@ export * from './tremolo_tests';
 export * from './tuning_tests';
 export * from './tuplet_tests';
 export * from './typeguard_tests';
+export * from './unison_tests';
 export * from './vf_prefix_tests';
 export * from './vibrato_tests';
 export * from './vibratobracket_tests';

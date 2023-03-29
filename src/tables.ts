@@ -539,6 +539,7 @@ const ornaments: Record<string, { code: string }> = {
 };
 
 export class Tables {
+  static UNISON = true;
   static SOFTMAX_FACTOR = 10;
   static STEM_WIDTH = 1.5;
   static STEM_HEIGHT = 35;
