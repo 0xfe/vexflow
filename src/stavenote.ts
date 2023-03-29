@@ -464,7 +464,7 @@ export class StaveNote extends StemmableNote {
 
     const stave = this.stave;
     if (stave) {
-      this._noteHeads.forEach((head) => head.setStave(stave));
+      this.setStave(stave);
     }
     this.calcNoteDisplacements();
     return this;

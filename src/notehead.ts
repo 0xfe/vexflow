@@ -10,7 +10,7 @@ import { Stave } from './stave';
 import { Stem } from './stem';
 import { Tables } from './tables';
 import { Category } from './typeguard';
-import { defined, log, RuntimeError } from './util';
+import { defined, log } from './util';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -232,9 +232,6 @@ export class NoteHead extends Note {
 
   /** Get the `BoundingBox` for the `NoteHead`. */
   getBoundingBox(): BoundingBox {
-    if (!this.preFormatted) {
-      throw new RuntimeError('UnformattedNote', "Can't call getBoundingBox on an unformatted note.");
-    }
     const spacing = this.checkStave().getSpacingBetweenLines();
     const half_spacing = spacing / 2;
     const min_y = this.y - half_spacing;
