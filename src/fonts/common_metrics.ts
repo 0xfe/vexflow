@@ -239,7 +239,6 @@ export const CommonMetrics = {
   digits: {
     // used by TimeSignature objects
     shiftLine: -1,
-    point: 39,
 
     // used by tuplets
     tupletPoint: 22,
@@ -401,7 +400,6 @@ export const CommonMetrics = {
       },
     },
     textNote: {
-      point: 39,
       breathMarkTick: {
         shiftY: 9,
       },
