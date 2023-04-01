@@ -1,18 +1,14 @@
 ## Font Generation Scripts
 
-### Generate Gonville fonts
-
-To add a new Gonville glyph to Vexflow, add the glyph code along with SMuFL name to `config/valid_codes.json`. Then run the following:
-
-```sh
-$ node fontgen_gonville.js ../../src/fonts/
-```
-
 ### Generate SMuFL font
 
 To add a new SMuFL glyph to Vexflow, add the SMuFL code with the Gonville backup code to `config/valid_codes.json`. Then run the following:
 
 ```sh
+# Generate Gonville glyphs
+$ ./gonville2smufl.py @/gonville/Gonville-18_20200703.otf @/gonville/GonvilleSmufl.otf
+$ node fontgen_smufl.js @/gonville/GonvilleSmufl.otf ../../src/fonts/gonville_glyphs.ts
+
 # Generate Bravura glyphs
 $ node fontgen_smufl.js @/bravura/Bravura_1.392.otf ../../src/fonts/bravura_glyphs.ts
 
@@ -28,7 +24,7 @@ $ node fontgen_gonville.js @/gonville/Gonville-18_20200703.otf../../src/fonts/go
 To add a custom glyph, add its outline to `fonts/custom_glyphs.js` and a custom code (with the `vex` prefix) to `config/valid_codes.json`. Then run the following.
 
 ```sh
-$ node fontgen_gonville.js ../../src/fonts/
+$ node fontgen_custom.js ../../src/fonts/
 ```
 
 ### Generate Text Metrics for a Text Font
