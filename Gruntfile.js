@@ -244,10 +244,6 @@ function webpackConfigs() {
               global: true,
             },
           },
-          eslint: {
-            files: ['./src/**/*.ts', './entry/**/*.ts', './tests/**/*.ts'],
-            options: { fix: true, cache: true, cacheLocation: ESLINT_CACHE_FILE },
-          },
         });
         plugins.push(pluginFork);
       }
