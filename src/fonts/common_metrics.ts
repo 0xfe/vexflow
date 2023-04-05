@@ -248,15 +248,15 @@ export const CommonMetrics = {
   tremolo: {
     default: {
       spacing: 7,
-      offsetYStemUp: -3,
-      offsetYStemDown: 3,
+      offsetYStemUp: -8,
+      offsetYStemDown: 8,
       offsetXStemUp: 11,
       offsetXStemDown: 1,
     },
     grace: {
       spacing: (7 * 3) / 5,
-      offsetYStemUp: -3,
-      offsetYStemDown: 3,
+      offsetYStemUp: -(8 * 3) / 5,
+      offsetYStemDown: (8 * 3) / 5,
       offsetXStemUp: 7,
       offsetXStemDown: 1,
     },
