@@ -5,6 +5,7 @@
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
 import { Modifier } from './modifier';
+import { Note } from './note';
 import { Stem } from './stem';
 import { Tables } from './tables';
 import { Category, isGraceNote } from './typeguard';
@@ -64,7 +65,7 @@ export class Tremolo extends Modifier {
       y += musicFont.lookupMetric(`${category}.offsetYStemUp`) * scale;
     }
 
-    const fontScale = musicFont.lookupMetric(`${category}.point`);
+    const fontScale = musicFont.lookupMetric(`${category}.point`) ?? Note.getPoint(gn ? 'grace' : 'default');
 
     x += musicFont.lookupMetric(`${category}.offsetXStem${stemDirection === Stem.UP ? 'Up' : 'Down'}`);
     for (let i = 0; i < this.num; ++i) {

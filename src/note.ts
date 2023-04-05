@@ -636,6 +636,12 @@ export abstract class Note extends Tickable {
     return x;
   }
 
+  /** Get point for notes. */
+  static getPoint(size?: string): number {
+    // for sizes other than 'default', note is 2/3 of the default value
+    return size == 'default' ? Tables.NOTATION_FONT_SCALE : (Tables.NOTATION_FONT_SCALE / 5) * 3;
+  }
+
   /** Get the direction of the stem. */
   getStemDirection(): number {
     throw new RuntimeError('NoStem', 'No stem attached to this note.');

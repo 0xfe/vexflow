@@ -68,17 +68,17 @@ export class Parenthesis extends Modifier {
 
     this.position = position ?? Modifier.Position.LEFT;
 
-    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
+    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point') ?? Note.getPoint('default');
     this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
   }
 
   /** Set the associated note. */
   setNote(note: Note): this {
     this.note = note;
-    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point');
+    this.point = Tables.currentMusicFont().lookupMetric('parenthesis.default.point') ?? Note.getPoint('default');
     this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.default.width'));
     if (isGraceNote(note)) {
-      this.point = Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.point');
+      this.point = Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.point') ?? Note.getPoint('gracenote');
       this.setWidth(Tables.currentMusicFont().lookupMetric('parenthesis.gracenote.width'));
     }
     return this;
