@@ -102,14 +102,12 @@ export const CommonMetrics = {
     width: 26,
     annotations: {
       '8va': {
-        point: 18,
         treble: {
           line: -2,
           shiftX: 12,
         },
       },
       '8vb': {
-        point: 18,
         treble: {
           line: 6.5,
           shiftX: 10,
@@ -126,14 +124,12 @@ export const CommonMetrics = {
     width: 20,
     annotations: {
       '8va': {
-        point: 16,
         treble: {
           line: -0.2,
           shiftX: 8,
         },
       },
       '8vb': {
-        point: 16,
         treble: {
           line: 5.3,
           shiftX: 6,
