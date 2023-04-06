@@ -71,9 +71,9 @@ export const CommonMetrics = {
         yOffset: 350,
       },
       csymDiagonalArrangementSlash: {
-        leftSideBearing: -1,
+        leftSideBearing: 250,
         advanceWidth: 990,
-        yOffset: 0,
+        yOffset: 300,
       },
       csymMinor: {
         leftSideBearing: 0,
@@ -416,48 +416,7 @@ export const CommonMetrics = {
     },
     noteHead: {},
     chordSymbol: {
-      csymDiminished: {
-        scale: 0.8,
-      },
-      csymHalfDiminished: {
-        scale: 0.8,
-      },
-      csymAugmented: {
-        scale: 1,
-      },
-      csymParensLeftTall: {
-        scale: 0.8,
-      },
-      csymParensRightTall: {
-        scale: 0.8,
-      },
-      csymBracketLeftTall: {
-        scale: 0.8,
-      },
-      csymBracketRightTall: {
-        scale: 0.8,
-      },
-      csymParensLeftVeryTall: {
-        scale: 0.9,
-      },
-      csymParensRightVeryTall: {
-        scale: 0.9,
-      },
-      csymDiagonalArrangementSlash: {
-        scale: 0.6,
-      },
-      csymMinor: {
-        scale: 0.8,
-      },
-      csymMajorSeventh: {
-        scale: 0.9,
-      },
-      accidentalSharp: {
-        scale: 0.75,
-      },
-      accidentalFlat: {
-        scale: 0.9,
-      },
+      scale: 0.8,
     },
   },
 };
