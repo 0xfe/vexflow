@@ -344,7 +344,6 @@ export const CommonMetrics = {
   // Details in Glyph.lookupFontMetrics.
   glyphs: {
     coda: {
-      point: 20,
       shiftX: -7,
       shiftY: 8,
     },
