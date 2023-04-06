@@ -232,7 +232,6 @@ export const CommonMetrics = {
     shiftLine: -1,
 
     // used by tuplets
-    tupletPoint: 22,
     shiftY: -6,
   },
 

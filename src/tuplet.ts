@@ -141,7 +141,7 @@ export class Tuplet extends Element {
 
     this.ratioed =
       this.options.ratioed != undefined ? this.options.ratioed : Math.abs(this.notes_occupied - this.num_notes) > 1;
-    this.point = Tables.currentMusicFont().lookupMetric('digits.tupletPoint');
+    this.point = (Tables.NOTATION_FONT_SCALE * 3) / 5;
     this.y_pos = 16;
     this.x_pos = 100;
     this.width = 200;
