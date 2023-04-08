@@ -23,7 +23,6 @@ export interface ClefMetrics {
   width: number;
   annotations: {
     [key: string]: {
-      point: number;
       [type: string]: { line?: number; shiftX?: number } | number;
     };
   };
@@ -148,7 +147,7 @@ export class Clef extends StaveModifier {
     // If an annotation, such as 8va, is specified, add it to the Clef object.
     if (annotation !== undefined) {
       const code = Clef.annotationSmufl[annotation];
-      const point = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.point`);
+      const point = (Clef.getPoint(this.size) / 5) * 3;
       const line = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.${this.type}.line`);
       const x_shift = musicFont.lookupMetric(`clef_${this.size}.annotations.${annotation}.${this.type}.shiftX`);
 
