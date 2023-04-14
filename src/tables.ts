@@ -184,7 +184,7 @@ const accidentals: Record<string, { code: string; parenRightPaddingAdjustment: n
   o: { code: 'accidentalSori', parenRightPaddingAdjustment: -1 },
   k: { code: 'accidentalKoron', parenRightPaddingAdjustment: -1 },
   bbs: { code: 'vexAccidentalMicrotonal1', parenRightPaddingAdjustment: -1 },
-  '++-': { code: 'vexAccidentalMicrotonal2', parenRightPaddingAdjustment: -1 },
+  '++-': { code: 'accidentalBuyukMucennebSharp', parenRightPaddingAdjustment: -1 },
   ashs: { code: 'vexAccidentalMicrotonal3', parenRightPaddingAdjustment: -1 },
   afhf: { code: 'vexAccidentalMicrotonal4', parenRightPaddingAdjustment: -1 },
   accSagittal5v7KleismaUp: { code: 'accSagittal5v7KleismaUp', parenRightPaddingAdjustment: -1 },
