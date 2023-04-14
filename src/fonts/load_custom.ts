@@ -2,9 +2,9 @@
 // MIT License
 
 import { Font } from '../font';
+import { CommonMetrics } from './common_metrics';
 import { CustomFont } from './custom_glyphs';
-import { CustomMetrics } from './custom_metrics';
 
 export function loadCustom() {
-  Font.load('Custom', CustomFont, CustomMetrics);
+  Font.load('Custom', CustomFont, CommonMetrics);
 }
