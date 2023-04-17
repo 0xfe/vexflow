@@ -57,6 +57,9 @@ export abstract class RenderContext {
   // eslint-disable-next-line
   abstract openGroup(cls?: string, id?: string, attrs?: GroupAttributes): any;
   abstract closeGroup(): void;
+  abstract openRotation(angle: number, x: number, y: number): void;
+  abstract closeRotation(): void;
+
   // eslint-disable-next-line
   abstract add(child: any): void;
   abstract measureText(text: string): TextMeasure;

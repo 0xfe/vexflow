@@ -213,14 +213,19 @@ export class Stroke extends Modifier {
       ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
       strokeLine = 'wiggly';
+      const h = Glyph.getWidth('wiggleArpeggiatoUp', this.render_options.font_scale) / 4;
       if (isStaveNote(note)) {
         for (let i = topY; i <= botY; i += line_space) {
-          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
+          ctx.openRotation(-90, x + this.x_shift + h, i);
+          Glyph.renderGlyph(ctx, x + this.x_shift + h, i, this.render_options.font_scale, 'wiggleArpeggiatoUp');
+          ctx.closeRotation();
         }
       } else {
         let i;
         for (i = topY; i <= botY; i += 10) {
-          Glyph.renderGlyph(ctx, x + this.x_shift - 4, i, this.render_options.font_scale, 'vexWiggleArpeggioUp');
+          ctx.openRotation(-90, x + this.x_shift + h, i);
+          Glyph.renderGlyph(ctx, x + this.x_shift + h, i, this.render_options.font_scale, 'wiggleArpeggiatoUp');
+          ctx.closeRotation();
         }
         if (this.type === Stroke.Type.RASQUEDO_DOWN) {
           text_y = i + 0.25 * line_space;

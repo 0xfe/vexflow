@@ -43,6 +43,7 @@ export class CanvasContext extends RenderContext {
   /**  The 2D rendering context from the Canvas API. Forward method calls to this object. */
   context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
+  curTransfrom: DOMMatrix;
   /**
    * The HTMLCanvasElement or OffscreenCanvas that is associated with the above context.
    * If there was no associated `<canvas>` element, just store the default WIDTH / HEIGHT.
@@ -85,6 +86,7 @@ export class CanvasContext extends RenderContext {
   constructor(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) {
     super();
     this.context2D = context;
+    this.curTransfrom = context.getTransform();
     if (!context.canvas) {
       this.canvas = {
         width: CanvasContext.WIDTH,
@@ -109,6 +111,17 @@ export class CanvasContext extends RenderContext {
 
   closeGroup(): void {
     // Containers not implemented.
+  }
+
+  openRotation(angle: number, x: number, y: number) {
+    this.curTransfrom = this.context2D.getTransform();
+    this.context2D.translate(x,y);
+    this.context2D.rotate((angle * Math.PI) / 180);
+    this.context2D.translate(-x, -y);
+  }
+
+  closeRotation() {
+    this.context2D.setTransform(this.curTransfrom);
   }
 
   // eslint-disable-next-line
