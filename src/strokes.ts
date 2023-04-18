@@ -213,24 +213,34 @@ export class Stroke extends Modifier {
       ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
     } else {
       strokeLine = 'wiggly';
-      const h = Glyph.getWidth('wiggleArpeggiatoUp', this.render_options.font_scale) / 4;
+      const h = Glyph.getWidth('wiggleArpeggiatoUp', this.render_options.font_scale);
+      ctx.openRotation(90, x + this.x_shift - h / 4, topY - (h * 3) / 4);
       if (isStaveNote(note)) {
-        for (let i = topY; i <= botY; i += line_space) {
-          ctx.openRotation(-90, x + this.x_shift + h, i);
-          Glyph.renderGlyph(ctx, x + this.x_shift + h, i, this.render_options.font_scale, 'wiggleArpeggiatoUp');
-          ctx.closeRotation();
+        for (let i = 0; i <= botY - topY; i += line_space) {
+          Glyph.renderGlyph(
+            ctx,
+            x + this.x_shift - h / 4 + i,
+            topY - (h * 3) / 4,
+            this.render_options.font_scale,
+            'wiggleArpeggiatoUp'
+          );
         }
       } else {
         let i;
-        for (i = topY; i <= botY; i += 10) {
-          ctx.openRotation(-90, x + this.x_shift + h, i);
-          Glyph.renderGlyph(ctx, x + this.x_shift + h, i, this.render_options.font_scale, 'wiggleArpeggiatoUp');
-          ctx.closeRotation();
+        for (i = 0; i <= botY - topY; i += 10) {
+          Glyph.renderGlyph(
+            ctx,
+            x + this.x_shift - h / 4 + i,
+            topY - (h * 3) / 4,
+            this.render_options.font_scale,
+            'wiggleArpeggiatoUp'
+          );
         }
         if (this.type === Stroke.Type.RASQUEDO_DOWN) {
-          text_y = i + 0.25 * line_space;
+          text_y = topY + i + 0.25 * line_space;
         }
       }
+      ctx.closeRotation();
     }
 
     if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
