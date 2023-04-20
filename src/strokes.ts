@@ -140,7 +140,6 @@ export class Stroke extends Modifier {
     }
 
     let arrow = '';
-    let arrow_shift_x = 0;
     let arrow_y = 0;
     let text_shift_x = 0;
     let text_y = 0;
@@ -148,32 +147,28 @@ export class Stroke extends Modifier {
     switch (this.type) {
       case Stroke.Type.BRUSH_DOWN:
         arrow = 'arrowheadBlackUp';
-        arrow_shift_x = -3;
         arrow_y = topY - line_space / 2 + 10;
         botY += line_space / 2;
         break;
       case Stroke.Type.BRUSH_UP:
         arrow = 'arrowheadBlackDown';
-        arrow_shift_x = 0.5;
         arrow_y = botY + line_space / 2;
         topY -= line_space / 2;
         break;
       case Stroke.Type.ROLL_DOWN:
       case Stroke.Type.RASQUEDO_DOWN:
         arrow = 'arrowheadBlackUp';
-        arrow_shift_x = -3;
         topY += 0.5 * line_space;
         botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
-        text_shift_x = this.x_shift + arrow_shift_x - 2;
+        text_shift_x = this.x_shift - 5;
         text_y = botY + 1.25 * line_space;
         break;
       case Stroke.Type.ROLL_UP:
       case Stroke.Type.RASQUEDO_UP:
         arrow = 'arrowheadBlackDown';
-        arrow_shift_x = -4;
         topY += 0.5 * line_space;
         botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
-        text_shift_x = this.x_shift + arrow_shift_x - 1;
+        text_shift_x = this.x_shift - 5;
         text_y = topY - 1.25 * line_space;
         break;
       case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
@@ -184,19 +179,18 @@ export class Stroke extends Modifier {
         throw new RuntimeError('InvalidType', `The stroke type ${this.type} does not exist`);
     }
 
-    let strokeLine = 'straight';
     // Draw the stroke
     if (this.type === Stroke.Type.BRUSH_DOWN || this.type === Stroke.Type.BRUSH_UP) {
       ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
-      if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
-        return; // skip drawing arrow heads or text
-      }
       // Draw the arrow head
-      Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
-        category: `stroke_${strokeLine}.${arrow}`,
-      });
+      Glyph.renderGlyph(
+        ctx,
+        x + this.x_shift - Glyph.getWidth(arrow, this.render_options.font_scale) / 2,
+        arrow_y,
+        this.render_options.font_scale,
+        arrow
+      );
     } else {
-      strokeLine = 'wiggly';
       const h = Glyph.getWidth(
         arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp',
         this.render_options.font_scale
