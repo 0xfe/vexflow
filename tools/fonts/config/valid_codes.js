@@ -135,6 +135,7 @@ module.exports = {
 
   // arel-ezgi-uzdilek accidentals (e440-e44f)
   accidentalBuyukMucennebFlat: 'v39',
+  accidentalBuyukMucennebSharp: null,
   accidentalBakiyeFlat: 'vb7',
   accidentalKomaSharp: 'v51', // same as accidentalQuarterToneSharpStein
   accidentalKucukMucennebSharp: 'v8d',
