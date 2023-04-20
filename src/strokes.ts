@@ -162,42 +162,19 @@ export class Stroke extends Modifier {
       case Stroke.Type.RASQUEDO_DOWN:
         arrow = 'arrowheadBlackUp';
         arrow_shift_x = -3;
+        topY += 0.5 * line_space;
+        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
         text_shift_x = this.x_shift + arrow_shift_x - 2;
-        if (isStaveNote(note)) {
-          topY += 1.5 * line_space;
-          if ((botY - topY) % 2 !== 0) {
-            botY += 0.5 * line_space;
-          } else {
-            botY += line_space;
-          }
-          arrow_y = topY - line_space;
-          text_y = botY + line_space + 2;
-        } else {
-          topY += 1.5 * line_space;
-          botY += line_space;
-          arrow_y = topY - 0.75 * line_space;
-          text_y = botY + 0.25 * line_space;
-        }
+        text_y = botY + 1.25 * line_space;
         break;
       case Stroke.Type.ROLL_UP:
       case Stroke.Type.RASQUEDO_UP:
         arrow = 'arrowheadBlackDown';
         arrow_shift_x = -4;
+        topY += 0.5 * line_space;
+        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
         text_shift_x = this.x_shift + arrow_shift_x - 1;
-        if (isStaveNote(note)) {
-          arrow_y = line_space / 2;
-          topY += 0.5 * line_space;
-          if ((botY - topY) % 2 === 0) {
-            botY += line_space / 2;
-          }
-          arrow_y = botY + 0.5 * line_space;
-          text_y = topY - 1.25 * line_space;
-        } else {
-          topY += 0.25 * line_space;
-          botY += 0.5 * line_space;
-          arrow_y = botY + 0.25 * line_space;
-          text_y = topY - line_space;
-        }
+        text_y = topY - 1.25 * line_space;
         break;
       case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
         topY += 0.5 * line_space;
@@ -211,46 +188,61 @@ export class Stroke extends Modifier {
     // Draw the stroke
     if (this.type === Stroke.Type.BRUSH_DOWN || this.type === Stroke.Type.BRUSH_UP) {
       ctx.fillRect(x + this.x_shift, topY, 1, botY - topY);
+      if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
+        return; // skip drawing arrow heads or text
+      }
+      // Draw the arrow head
+      Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
+        category: `stroke_${strokeLine}.${arrow}`,
+      });
     } else {
       strokeLine = 'wiggly';
-      const h = Glyph.getWidth('wiggleArpeggiatoUp', this.render_options.font_scale);
+      const h = Glyph.getWidth(
+        arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp',
+        this.render_options.font_scale
+      );
       ctx.openRotation(90, x + this.x_shift - h / 4, topY - (h * 3) / 4);
-      if (isStaveNote(note)) {
-        for (let i = 0; i <= botY - topY; i += line_space) {
-          Glyph.renderGlyph(
-            ctx,
-            x + this.x_shift - h / 4 + i,
-            topY - (h * 3) / 4,
-            this.render_options.font_scale,
-            'wiggleArpeggiatoUp'
-          );
-        }
-      } else {
-        let i;
-        for (i = 0; i <= botY - topY; i += 10) {
-          Glyph.renderGlyph(
-            ctx,
-            x + this.x_shift - h / 4 + i,
-            topY - (h * 3) / 4,
-            this.render_options.font_scale,
-            'wiggleArpeggiatoUp'
-          );
-        }
-        if (this.type === Stroke.Type.RASQUEDO_DOWN) {
-          text_y = topY + i + 0.25 * line_space;
-        }
+      let i = 0;
+      if (arrow == 'arrowheadBlackUp') {
+        // Draw the arrow head
+        Glyph.renderGlyph(
+          ctx,
+          x + this.x_shift - h / 4 - 4,
+          topY -
+            (h * 3) / 4 -
+            Glyph.getHeight('wiggleArpeggiatoUp', this.render_options.font_scale) / 2 +
+            Glyph.getHeight('arrowheadBlackLeft', this.render_options.font_scale) / 2,
+          this.render_options.font_scale,
+          'arrowheadBlackLeft'
+        );
+      }
+      for (; i <= botY - topY; i += 10) {
+        Glyph.renderGlyph(
+          ctx,
+          x + this.x_shift - h / 4 + i,
+          topY - (h * 3) / 4,
+          this.render_options.font_scale,
+          arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp'
+        );
+      }
+      if (arrow == 'arrowheadBlackDown') {
+        // Draw the arrow head
+        Glyph.renderGlyph(
+          ctx,
+          x + this.x_shift - h / 4 + i - 10 + 4,
+          topY -
+            (h * 3) / 4 -
+            Glyph.getHeight('wiggleArpeggiatoDown', this.render_options.font_scale) / 2 +
+            Glyph.getHeight('arrowheadBlackRight', this.render_options.font_scale) / 2,
+          this.render_options.font_scale,
+          'arrowheadBlackRight'
+        );
+      }
+      if (this.type === Stroke.Type.RASQUEDO_DOWN) {
+        text_y = topY + i + 0.25 * line_space;
       }
       ctx.closeRotation();
     }
-
-    if (this.type === Stroke.Type.ARPEGGIO_DIRECTIONLESS) {
-      return; // skip drawing arrow heads or text
-    }
-
-    // Draw the arrow head
-    Glyph.renderGlyph(ctx, x + this.x_shift + arrow_shift_x, arrow_y, this.render_options.font_scale, arrow, {
-      category: `stroke_${strokeLine}.${arrow}`,
-    });
 
     // Draw the rasquedo "R"
     if (this.type === Stroke.Type.RASQUEDO_DOWN || this.type === Stroke.Type.RASQUEDO_UP) {

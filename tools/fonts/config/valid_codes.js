@@ -243,11 +243,14 @@ module.exports = {
   pictChokeCymbal: 'vb3',
 
   // multi-segment lines (eaa0-eb0f)
-  wiggleArpeggiatoUp: 'va3', // rotated 90deg from reference implementation
+  wiggleArpeggiatoUp: null,
+  wiggleArpeggiatoDown: null,
 
   // arrows and arrowheads (eb60-eb8f)
   arrowheadBlackUp: 'vc3',
   arrowheadBlackDown: 'v52',
+  arrowheadBlackRight: null,
+  arrowheadBlackLeft: null,
   arpeggiatoUp: null, // stroke
   arpeggiatoDown: null, // stroke
 

@@ -363,6 +363,15 @@ export class Glyph extends Element {
     return data.bbox.getW() * scale;
   }
 
+  static getHeight(code: string, point: number, category?: string): number {
+    const data = Glyph.cache.lookup(code, category);
+    if (data.point != -1) {
+      point = data.point;
+    }
+    const scale = (point * 72) / (data.metrics.font.getResolution() * 100);
+    return data.bbox.getH() * scale;
+  }
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   // INSTANCE MEMBERS
 
