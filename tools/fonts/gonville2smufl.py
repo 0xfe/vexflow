@@ -2,6 +2,10 @@
 # usage
 # ./gonville2smufl.py <org> <dst>
 #
+# [GonvilleSmufl](https://github.com/rvilarl/gonville)
+# Author: Rodrigo Vilar
+# MIT
+#
 
 from sys import argv; import fontforge; import psMat; import math
 # array[0..5]
@@ -19,7 +23,6 @@ array=[
 [0xE101, 0xE101,     0,     0,   0,   1],
 [0xE103, 0xE103,     0,     0,   0,   1],
 [0xE106, 0xE106,     0,     0,   0,   1],
-[0xE109, 0xE109,     0,     0,   0,   1],
 [0xE10F, 0xE10F,     0,     0,   0,   1],
 [0xE111, 0xE111,     0,     0,   0,   1],
 [0xE114, 0xE114,     0,     0,   0,   1],
@@ -163,6 +166,7 @@ array=[
 [0xE141, 0xE442,     0,     0,   0,   1],
 [0xE184, 0xE444,     0,     0,   0,   1],
 [0xE185, 0xE446,     0,     0,   0,   1],
+[0xE188, 0xE447,     0,     0,   0,   1],
 [0xE1B0, 0xE4A0,     0,     0,   0,   1], # Articulation (U+E4A0–U+E4BF)
 [0xE1B0, 0xE4A1,     0,     0,   0,   1],
 [0xE192, 0xE4A2,     0,     0,   0,   1],
@@ -255,12 +259,14 @@ array=[
 [0xE1C5, 0xE8CB,     0,     0,   0,   1],
 [0xE1C6, 0xE8CC,     0,     0,   0,   1],
 [0xE10E, 0xE805,     0,     0,   0,   1], # Percussion playing technique pictograms (U+E7F0–U+E80F)
+[0xE109, 0xEAA9,     0,     0,   0,   1], # Multi-segment lines (U+EAA0–U+EB0F)
+[0xE109, 0xEAAA,     0,     0,   0,   1],
 [0xE108, 0xEB60,     0,     0,   0,   1], # Arrows and arrowheads (U+EB60–U+EB8F)
 [0xE107, 0xEB64,     0,     0,   0,   1],
 [0xE1B1, 0xEB78,   125,   250,   0,   1],
-[0xE1B4, 0xEB7A,     0,     0,   0,   1],
+[0xE1B4, 0xEB7A,   250,   125,   0,   1],
 [0xE1B2, 0xEB7C,   125,    25,   0,   1],
-[0xE1B3, 0xEB7E,     0,     0,   0,   1],
+[0xE1B3, 0xEB7E,     0,   125,   0,   1],
 [0xE1AD, 0xEB88,     0,     0,   0,   1],
 [0xE1B0, 0xEB8A,     0,     0,   0,   1],
 [0xE1AE, 0xEB8C,     0,     0,   0,   1],
