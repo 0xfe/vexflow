@@ -96,7 +96,7 @@ const savePNGData = (filename, pngDataURL) => {
 };
 
 const launch = async (query, jobInfo) => {
-  const browser = await puppeteer.launch({ headless: true, devtools: false });
+  const browser = await puppeteer.launch({ headless: "new", devtools: false });
   const page = await browser.newPage();
   page.on('error', (msg) => {
     jobLog(msg, 'error', jobInfo);

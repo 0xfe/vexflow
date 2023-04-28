@@ -19,7 +19,7 @@ const TuningTests = {
 /**
  * Helper function to verify that the provided tuning matches a standard 6-string guitar.
  */
-function checkStandard(assert: any, tuning: Tuning): void {
+function checkStandard(assert: Assert, tuning: Tuning): void {
   assert.throws(() => tuning.getValueForString(0), /BadArguments/, 'String 0');
   assert.throws(() => tuning.getValueForString(9), /BadArguments/, 'String 9');
   // TODO: Tuning constructor has a bug in that the default tuning has 8 strings.
@@ -38,7 +38,7 @@ function checkStandard(assert: any, tuning: Tuning): void {
 /**
  * Helper function to verify that the provided tuning matches a standard 5-string banjo.
  */
-function checkStandardBanjo(assert: any, tuning: Tuning): void {
+function checkStandardBanjo(assert: Assert, tuning: Tuning): void {
   assert.throws(() => tuning.getValueForString(0), /BadArguments/, 'String 0');
   assert.throws(() => tuning.getValueForString(6), /BadArguments/, 'String 6');
 
@@ -49,7 +49,7 @@ function checkStandardBanjo(assert: any, tuning: Tuning): void {
   assert.equal(tuning.getValueForString(1), 62, 'High D string');
 }
 
-function standard(assert: any): void {
+function standard(assert: Assert): void {
   assert.expect(16);
 
   const tuning = new Tuning();
@@ -60,7 +60,7 @@ function standard(assert: any): void {
   checkStandard(assert, tuning);
 }
 
-function banjo(assert: any): void {
+function banjo(assert: Assert): void {
   assert.expect(7);
 
   const tuning = new Tuning();
@@ -68,7 +68,7 @@ function banjo(assert: any): void {
   checkStandardBanjo(assert, tuning);
 }
 
-function noteForFret(assert: any): void {
+function noteForFret(assert: Assert): void {
   assert.expect(8);
   const tuning = new Tuning('E/5,B/4,G/4,D/4,A/3,E/3');
   assert.throws(() => tuning.getNoteForFret(-1, 1), /BadArguments/, 'Fret = -1');

@@ -50,7 +50,7 @@ const StaveTests = {
   },
 };
 
-function sortByCategory(assert: any): void {
+function sortByCategory(assert: Assert): void {
   const stave = new Stave(0, 0, 300);
   const clef0 = new Clef('treble');
   const clef1 = new Clef('alto');

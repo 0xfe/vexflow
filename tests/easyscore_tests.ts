@@ -61,7 +61,7 @@ function createShortcuts(score: EasyScore) {
  * - all strings in `mustPass` parse correctly
  * - all strings in `mustFail` fail to parse (i.e., Result.success is `false`).
  */
-function basic(assert: any): void {
+function basic(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g'];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
@@ -70,7 +70,7 @@ function basic(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function accidentals(assert: any): void {
+function accidentals(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = [
     'c3',
@@ -126,7 +126,7 @@ function accidentals(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function durations(assert: any): void {
+function durations(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
   const mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
@@ -135,7 +135,7 @@ function durations(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function chords(assert: any): void {
+function chords(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = [
     '(c5)',
@@ -151,7 +151,7 @@ function chords(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function dots(assert: any): void {
+function dots(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = [
     'c3/4.',
@@ -168,7 +168,7 @@ function dots(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function types(assert: any): void {
+function types(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = ['c3/4/m.', 'c##3//r.., cb3', 'c##3/m.., cb3', 'c##3/r.., cb3', 'd##3/w/s, cb3/q...', 'Fb4'];
   const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32', 'z#3'];
@@ -177,7 +177,7 @@ function types(assert: any): void {
   mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function options(assert: any): void {
+function options(assert: Assert): void {
   const score = new EasyScore();
   const mustPass = [
     'c3/4.[foo="bar"]',

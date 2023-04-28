@@ -17,12 +17,12 @@ const TickContextTests = {
   },
 };
 
-function currentTick(assert: any): void {
+function currentTick(assert: Assert): void {
   const tc = new TickContext();
   assert.equal(tc.getCurrentTick().value(), 0, 'New tick context has no ticks');
 }
 
-function tracking(assert: any): void {
+function tracking(assert: Assert): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   const tickables = [

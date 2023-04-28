@@ -32,7 +32,7 @@ const FontTests = {
 /**
  * Test out the setFont method in various classes.
  */
-function setFont(assert: any): void {
+function setFont(assert: Assert): void {
   // Create a CanvasCntext and call setFont on it.
   const canvas = document.createElement('canvas');
   canvas.width = 800;
@@ -71,7 +71,7 @@ function setFont(assert: any): void {
   assert.equal(flat.getFont(), '10pt Arial, sans-serif');
 }
 
-function fontParsing(assert: any): void {
+function fontParsing(assert: Assert): void {
   const b = new Bend('1/2', true);
   const bFont = b.fontInfo;
   // Check the default font.
@@ -97,7 +97,7 @@ function fontParsing(assert: any): void {
   assert.equal(f3SizeInPx, 24);
 }
 
-function fontSizes(assert: any): void {
+function fontSizes(assert: Assert): void {
   {
     const size = '17px';
     const sizeInEm = Font.convertSizeToPixelValue(size) / Font.scaleToPxFrom.em;

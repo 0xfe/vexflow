@@ -74,7 +74,7 @@ function getGlyphWidth(glyphName: string): number {
   return widthInEm * 38 * Font.scaleToPxFrom.pt;
 }
 
-function buildTickContexts(assert: any): void {
+function buildTickContexts(assert: Assert): void {
   function createTickable(beat: number) {
     return new MockTickable().setTicks(beat);
   }

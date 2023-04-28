@@ -38,7 +38,7 @@ const fontWidths = () => {
   return { sharpWidth, flatWidth, naturalWidth, clefWidth };
 };
 
-function parser(assert: any): void {
+function parser(assert: Assert): void {
   assert.expect(11);
 
   function catchError(spec: string): void {

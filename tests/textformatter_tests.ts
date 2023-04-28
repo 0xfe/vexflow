@@ -19,7 +19,7 @@ const TextFormatterTests = {
   },
 };
 
-function basic(assert: any): void {
+function basic(assert: Assert): void {
   // See: src/fonts/textfonts.ts > loadTextFonts()
   const registeredFamilies = TextFormatter.getFontFamilies();
   assert.equal(

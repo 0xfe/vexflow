@@ -18,7 +18,7 @@ const KeyManagerTests = {
   },
 };
 
-function works(assert: any): void {
+function works(assert: Assert): void {
   const manager = new KeyManager('g');
   assert.equal(manager.getAccidental('f').accidental, '#');
 
@@ -33,7 +33,7 @@ function works(assert: any): void {
   assert.equal(manager.getAccidental('f').accidental, '#');
 }
 
-function selectNotes(assert: any): void {
+function selectNotes(assert: Assert): void {
   const manager = new KeyManager('f');
   assert.equal(manager.selectNote('bb').note, 'bb');
   assert.equal(manager.selectNote('bb').accidental, 'b');

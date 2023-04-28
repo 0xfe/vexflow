@@ -115,7 +115,7 @@ function draw(
   return note;
 }
 
-function ticks(assert: any): void {
+function ticks(assert: Assert): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   // Key value pairs of `testName: [durationString, expectedBeats, expectedNoteType]`
@@ -166,7 +166,7 @@ function ticks(assert: any): void {
   );
 }
 
-function ticksNewAPI(assert: any): void {
+function ticksNewAPI(assert: Assert): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
@@ -220,12 +220,12 @@ function ticksNewAPI(assert: any): void {
   );
 }
 
-function stem(assert: any): void {
+function stem(assert: Assert): void {
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
   assert.equal(note.getStemDirection(), Stem.UP, 'Default note has UP stem');
 }
 
-function autoStem(assert: any): void {
+function autoStem(assert: Assert): void {
   const testData: [/* keys */ string[], /* expectedStemDirection */ number][] = [
     [['c/5', 'e/5', 'g/5'], Stem.DOWN],
     [['e/4', 'g/4', 'c/5'], Stem.UP],
@@ -245,7 +245,7 @@ function autoStem(assert: any): void {
   });
 }
 
-function stemExtensionPitch(assert: any): void {
+function stemExtensionPitch(assert: Assert): void {
   // [keys, expectedStemExtension, override stem direction]
   const testData: [string[], number, number][] = [
     [['c/5', 'e/5', 'g/5'], 0, 0],
@@ -292,7 +292,7 @@ function stemExtensionPitch(assert: any): void {
   });
 }
 
-function setStemDirectionDisplacement(assert: any): void {
+function setStemDirectionDisplacement(assert: Assert): void {
   function getDisplacements(note: StaveNote) {
     return note.noteHeads.map((noteHead) => noteHead.isDisplaced());
   }
@@ -308,7 +308,7 @@ function setStemDirectionDisplacement(assert: any): void {
   assert.deepEqual(getDisplacements(note), stemUpDisplacements);
 }
 
-function staveLine(assert: any): void {
+function staveLine(assert: Assert): void {
   const stave = new Stave(10, 10, 300);
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
   note.setStave(stave);
@@ -325,12 +325,12 @@ function staveLine(assert: any): void {
   assert.equal(ys[2], 75, 'Line for A/4');
 }
 
-function width(assert: any): void {
+function width(assert: Assert): void {
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
   assert.throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
 }
 
-function tickContext(assert: any): void {
+function tickContext(assert: Assert): void {
   const stave = new Stave(10, 10, 400);
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 

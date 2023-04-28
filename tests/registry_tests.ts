@@ -16,7 +16,7 @@ const RegistryTests = {
   },
 };
 
-function registerAndClear(assert: any): void {
+function registerAndClear(assert: Assert): void {
   const registry = new Registry();
   const score = new EasyScore({ factory: Factory.newFromElementId(null) });
 
@@ -37,7 +37,7 @@ function registerAndClear(assert: any): void {
   assert.ok(registry.register(score.notes('C4[id="boobar"]')[0]).getElementById('boobar'));
 }
 
-function defaultRegistry(assert: any): void {
+function defaultRegistry(assert: Assert): void {
   const registry = new Registry();
   const score = new EasyScore({ factory: Factory.newFromElementId(null) });
 
@@ -58,7 +58,7 @@ function defaultRegistry(assert: any): void {
   assert.equal(elements.length, 1);
 }
 
-function classes(assert: any): void {
+function classes(assert: Assert): void {
   const registry = new Registry();
   const score = new EasyScore({ factory: Factory.newFromElementId(null) });
 

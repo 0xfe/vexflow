@@ -36,7 +36,7 @@ const TabNoteTests = {
   },
 };
 
-function ticks(assert: any): void {
+function ticks(assert: Assert): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   let note = new TabNote({ positions: [{ str: 6, fret: 6 }], duration: '1' });
@@ -46,7 +46,7 @@ function ticks(assert: any): void {
   assert.equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beat');
 }
 
-function tabStaveLine(assert: any): void {
+function tabStaveLine(assert: Assert): void {
   const note = new TabNote({
     positions: [
       { str: 6, fret: 6 },
@@ -70,7 +70,7 @@ function tabStaveLine(assert: any): void {
   assert.equal(ys[1], 80, 'Line for String 4, Fret 5');
 }
 
-function width(assert: any): void {
+function width(assert: Assert): void {
   assert.expect(1);
   const note = new TabNote({
     positions: [
@@ -83,7 +83,7 @@ function width(assert: any): void {
   assert.throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
 }
 
-function tickContext(assert: any): void {
+function tickContext(assert: Assert): void {
   const note = new TabNote({
     positions: [
       { str: 6, fret: 6 },

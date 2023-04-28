@@ -100,7 +100,7 @@ const VFPrefixTests = {
   },
 };
 
-function VF_Prefix(assert: any): void {
+function VF_Prefix(assert: Assert): void {
   // Intentionally use Vex.Flow here so we can verify that the Vex.Flow.* API
   // is equivalent to using the individual classes in TypeScript.
   const VF = Vex.Flow;
@@ -189,7 +189,7 @@ function VF_Prefix(assert: any): void {
  * If you have name collisions with VexFlow classes, consider extracting classes from Vex.Flow
  * and renaming them with a VF prefix.
  */
-function VF_Alias(assert: any): void {
+function VF_Alias(assert: Assert): void {
   const Flow = Vex.Flow;
   const VFAliases = {
     get VFAccidental() {

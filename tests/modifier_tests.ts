@@ -15,12 +15,12 @@ const ModifierContextTests = {
   },
 };
 
-function width(assert: any): void {
+function width(assert: Assert): void {
   const mc = new ModifierContext();
   assert.equal(mc.getWidth(), 0, 'New modifier context has no width');
 }
 
-function management(assert: any): void {
+function management(assert: Assert): void {
   const mc = new ModifierContext();
   const modifier1 = new Modifier();
   const modifier2 = new Modifier();

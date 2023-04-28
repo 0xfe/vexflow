@@ -15,7 +15,7 @@ const BoundingBoxTests = {
   },
 };
 
-function initialization(assert: any): void {
+function initialization(assert: Assert): void {
   const bb = new BoundingBox(4, 5, 6, 7);
   assert.equal(bb.getX(), 4, 'Bad X');
   assert.equal(bb.getY(), 5, 'Bad Y');
@@ -26,7 +26,7 @@ function initialization(assert: any): void {
   assert.equal(bb.getX(), 5, 'Bad X');
 }
 
-function merging(assert: any): void {
+function merging(assert: Assert): void {
   const tests = [
     {
       type: 'Intersection',
