@@ -12,17 +12,17 @@ import { TextFormatter } from '../src/textformatter';
 const TextFormatterTests = {
   Start(): void {
     QUnit.module('TextFormatter');
-    test('Basic', basic);
+    QUnit.test('Basic', basic);
     const run = VexFlowTests.runTextTests;
     run('Accuracy', accuracy);
     run('Box Text', textBoxAccuracy);
   },
 };
 
-function basic(): void {
+function basic(assert: any): void {
   // See: src/fonts/textfonts.ts > loadTextFonts()
   const registeredFamilies = TextFormatter.getFontFamilies();
-  equal(
+  assert.equal(
     registeredFamilies.length,
     5,
     `There are five registered font families: 'Roboto Slab' & 'PetalumaScript' and default 'Serif', 'Serif-Bold' and 'Sans'`
@@ -32,19 +32,19 @@ function basic(): void {
   // https://fontdrop.info/
   // https://opentype.js.org/glyph-inspector.html
   const petalumaFormatterInfo = TextFormatter.getInfo('PetalumaScript');
-  equal(petalumaFormatterInfo?.glyphs?.C.advanceWidth, 623, 'PetalumaScript advanceWidth of C character is 623.');
+  assert.equal(petalumaFormatterInfo?.glyphs?.C.advanceWidth, 623, 'PetalumaScript advanceWidth of C character is 623.');
 
   const formatterForPetalumaScript = TextFormatter.create({ family: 'PetalumaScript', size: '100px' });
   const metricsPetalumaScriptH = formatterForPetalumaScript.getGlyphMetrics('H');
-  equal(metricsPetalumaScriptH.leftSideBearing, 37);
+  assert.equal(metricsPetalumaScriptH.leftSideBearing, 37);
 
   const formatterForRobotoSlab = TextFormatter.create({ family: 'Roboto Slab', size: '100px', style: 'italic' });
   const metricsRobotoSlabH = formatterForRobotoSlab.getGlyphMetrics('H');
-  equal(metricsRobotoSlabH.advanceWidth, 1578);
+  assert.equal(metricsRobotoSlabH.advanceWidth, 1578);
 
   // eslint-disable-next-line
   // @ts-ignore direct access to protected variable .cacheKey
-  equal(formatterForRobotoSlab.cacheKey, 'Roboto_Slab%75%normal%normal');
+  assert.equal(formatterForRobotoSlab.cacheKey, 'Roboto_Slab%75%normal%normal');
 }
 function accuracy(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 500);
@@ -88,7 +88,7 @@ function accuracy(options: TestOptions, contextBuilder: ContextBuilder): void {
       startY += lineHeight;
     }
   }
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 function textBoxAccuracy(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 600, 800);
@@ -150,7 +150,7 @@ function textBoxAccuracy(options: TestOptions, contextBuilder: ContextBuilder): 
     }
     ctx.restore();
   }
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 VexFlowTests.register(TextFormatterTests);
 export { TextFormatterTests };

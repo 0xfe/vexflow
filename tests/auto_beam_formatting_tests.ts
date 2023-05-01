@@ -71,7 +71,7 @@ function simpleAuto(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beaming Applicator Test');
+  options.assert.ok(true, 'Auto Beaming Applicator Test');
 }
 
 function simpleAutoWithOverflowGroup(options: TestOptions): void {
@@ -93,7 +93,7 @@ function simpleAutoWithOverflowGroup(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beaming Applicator Test');
+  options.assert.ok(true, 'Auto Beaming Applicator Test');
 }
 
 function evenGroupStemDirections(options: TestOptions): void {
@@ -112,14 +112,14 @@ function evenGroupStemDirections(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  equal(beams[0].getStemDirection(), Stem.UP);
-  equal(beams[1].getStemDirection(), Stem.UP);
-  equal(beams[2].getStemDirection(), Stem.UP);
-  equal(beams[3].getStemDirection(), Stem.UP);
-  equal(beams[4].getStemDirection(), Stem.DOWN);
-  equal(beams[5].getStemDirection(), Stem.DOWN);
+  options.assert.equal(beams[0].getStemDirection(), Stem.UP);
+  options.assert.equal(beams[1].getStemDirection(), Stem.UP);
+  options.assert.equal(beams[2].getStemDirection(), Stem.UP);
+  options.assert.equal(beams[3].getStemDirection(), Stem.UP);
+  options.assert.equal(beams[4].getStemDirection(), Stem.DOWN);
+  options.assert.equal(beams[5].getStemDirection(), Stem.DOWN);
 
-  ok(true, 'Auto Beaming Applicator Test');
+  options.assert.ok(true, 'Auto Beaming Applicator Test');
 }
 
 function oddGroupStemDirections(options: TestOptions): void {
@@ -134,10 +134,10 @@ function oddGroupStemDirections(options: TestOptions): void {
   const groups = [new Fraction(3, 8)];
   const beams = Beam.applyAndGetBeams(voice, undefined, groups);
 
-  equal(beams[0].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
-  equal(beams[1].getStemDirection(), Stem.DOWN);
-  equal(beams[2].getStemDirection(), Stem.UP);
-  equal(beams[3].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
+  options.assert.equal(beams[0].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
+  options.assert.equal(beams[1].getStemDirection(), Stem.DOWN);
+  options.assert.equal(beams[2].getStemDirection(), Stem.UP);
+  options.assert.equal(beams[3].getStemDirection(), Stem.DOWN, 'Notes are equidistant from middle line');
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
@@ -145,7 +145,7 @@ function oddGroupStemDirections(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beaming Applicator Test');
+  options.assert.ok(true, 'Auto Beaming Applicator Test');
 }
 
 function oddBeamGroups(options: TestOptions): void {
@@ -166,7 +166,7 @@ function oddBeamGroups(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function moreSimple0(options: TestOptions): void {
@@ -184,7 +184,7 @@ function moreSimple0(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function moreSimple1(options: TestOptions): void {
@@ -205,7 +205,7 @@ function moreSimple1(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function breakBeamsOnRests(options: TestOptions): void {
@@ -228,7 +228,7 @@ function breakBeamsOnRests(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamAcrossAllRestsWithStemlets(options: TestOptions): void {
@@ -252,7 +252,7 @@ function beamAcrossAllRestsWithStemlets(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamAcrossAllRests(options: TestOptions): void {
@@ -275,7 +275,7 @@ function beamAcrossAllRests(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamAcrossMiddleRests(options: TestOptions): void {
@@ -299,7 +299,7 @@ function beamAcrossMiddleRests(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function maintainStemDirections(options: TestOptions): void {
@@ -332,7 +332,7 @@ function maintainStemDirections(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function maintainStemDirectionsBeamAcrossRests(options: TestOptions): void {
@@ -364,7 +364,7 @@ function maintainStemDirectionsBeamAcrossRests(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function groupWithUnbeamableNote(options: TestOptions): void {
@@ -386,7 +386,7 @@ function groupWithUnbeamableNote(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function groupWithUnbeamableNote1(options: TestOptions): void {
@@ -408,7 +408,7 @@ function groupWithUnbeamableNote1(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function autoOddBeamGroups(options: TestOptions): void {
@@ -440,7 +440,7 @@ function autoOddBeamGroups(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function customBeamGroups(options: TestOptions): void {
@@ -475,7 +475,7 @@ function customBeamGroups(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 /**
@@ -513,7 +513,7 @@ function simpleTuplets(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function moreSimpleTuplets(options: TestOptions): void {
@@ -533,7 +533,7 @@ function moreSimpleTuplets(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function moreBeaming(options: TestOptions): void {
@@ -551,7 +551,7 @@ function moreBeaming(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamingWithSeveralGroups1(options: TestOptions): void {
@@ -569,7 +569,7 @@ function beamingWithSeveralGroups1(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamingWithSeveralGroupsOverflow(options: TestOptions): void {
@@ -587,7 +587,7 @@ function beamingWithSeveralGroupsOverflow(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamingWithSeveralGroupsOverflow2(options: TestOptions): void {
@@ -607,7 +607,7 @@ function beamingWithSeveralGroupsOverflow2(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function beamingWithSeveralGroupsOverflow3(options: TestOptions): void {
@@ -625,7 +625,7 @@ function beamingWithSeveralGroupsOverflow3(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Auto Beam Applicator Test');
+  options.assert.ok(true, 'Auto Beam Applicator Test');
 }
 
 function secondaryBreaks1(options: TestOptions): void {
@@ -652,7 +652,7 @@ function secondaryBreaks1(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Duration-Based Secondary Breaks Test');
+  options.assert.ok(true, 'Duration-Based Secondary Breaks Test');
 }
 
 function secondaryBreaks2(options: TestOptions): void {
@@ -682,7 +682,7 @@ function secondaryBreaks2(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Duration-Based Secondary Breaks Test');
+  options.assert.ok(true, 'Duration-Based Secondary Breaks Test');
 }
 
 function flatBeamsUp(options: TestOptions): void {
@@ -712,7 +712,7 @@ function flatBeamsUp(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Up Test');
+  options.assert.ok(true, 'Flat Beams Up Test');
 }
 
 function flatBeamsDown(options: TestOptions): void {
@@ -737,7 +737,7 @@ function flatBeamsDown(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Down Test');
+  options.assert.ok(true, 'Flat Beams Down Test');
 }
 
 function flatBeamsMixed(options: TestOptions): void {
@@ -759,7 +759,7 @@ function flatBeamsMixed(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Mixed Direction Test');
+  options.assert.ok(true, 'Flat Beams Mixed Direction Test');
 }
 
 function flatBeamsUpUniform(options: TestOptions): void {
@@ -786,7 +786,7 @@ function flatBeamsUpUniform(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Up (uniform) Test');
+  options.assert.ok(true, 'Flat Beams Up (uniform) Test');
 }
 
 function flatBeamsDownUniform(options: TestOptions): void {
@@ -812,7 +812,7 @@ function flatBeamsDownUniform(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Down (uniform) Test');
+  options.assert.ok(true, 'Flat Beams Down (uniform) Test');
 }
 
 function flatBeamsUpBounds(options: TestOptions): void {
@@ -839,7 +839,7 @@ function flatBeamsUpBounds(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Up (uniform) Test');
+  options.assert.ok(true, 'Flat Beams Up (uniform) Test');
 }
 
 function flatBeamsDownBounds(options: TestOptions): void {
@@ -871,7 +871,7 @@ function flatBeamsDownBounds(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'Flat Beams Down (uniform) Test');
+  options.assert.ok(true, 'Flat Beams Down (uniform) Test');
 }
 
 VexFlowTests.register(AutoBeamFormattingTests);

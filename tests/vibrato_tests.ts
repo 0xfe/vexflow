@@ -45,7 +45,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Simple Vibrato');
+  options.assert.ok(true, 'Simple Vibrato');
 }
 
 /**
@@ -75,7 +75,7 @@ function harsh(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Harsh Vibrato');
+  options.assert.ok(true, 'Harsh Vibrato');
 }
 
 function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -109,7 +109,7 @@ function withBend(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Vibrato with Bend');
+  options.assert.ok(true, 'Vibrato with Bend');
 }
 
 VexFlowTests.register(VibratoTests);

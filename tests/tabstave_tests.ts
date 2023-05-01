@@ -23,12 +23,12 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   stave.setContext(ctx);
   stave.draw();
 
-  equal(stave.getYForNote(0), 127, 'getYForNote(0)');
-  equal(stave.getYForLine(5), 127, 'getYForLine(5)');
-  equal(stave.getYForLine(0), 62, 'getYForLine(0) - Top Line');
-  equal(stave.getYForLine(4), 114, 'getYForLine(4) - Bottom Line');
+  options.assert.equal(stave.getYForNote(0), 127, 'getYForNote(0)');
+  options.assert.equal(stave.getYForLine(5), 127, 'getYForLine(5)');
+  options.assert.equal(stave.getYForLine(0), 62, 'getYForLine(0) - Top Line');
+  options.assert.equal(stave.getYForLine(4), 114, 'getYForLine(4) - Bottom Line');
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(TabStaveTests);

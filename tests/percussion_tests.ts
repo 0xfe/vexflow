@@ -43,7 +43,7 @@ const PercussionTests = {
 function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 400, 120);
   new Stave(10, 10, 300).addClef('percussion').setContext(ctx).draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 /**
@@ -87,8 +87,8 @@ function drawNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
       note.stem_direction = h === 0 ? -1 : 1;
       const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-      ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-      ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+      options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+      options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
     }
   }
 }
@@ -104,7 +104,7 @@ function createSingleMeasureTest(setup: (f: Factory) => void) {
     setup(f);
     f.Formatter().joinVoices(f.getVoices()).formatToStave(f.getVoices(), stave);
     f.draw();
-    ok(true);
+    options.assert.ok(true);
   };
 }
 

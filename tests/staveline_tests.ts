@@ -53,7 +53,7 @@ function simple0(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function simple1(options: TestOptions): void {
@@ -147,7 +147,7 @@ function simple1(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(StaveLineTests);

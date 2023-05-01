@@ -120,7 +120,7 @@ function drawMultipleMeasures(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'String Number');
+  options.assert.ok(true, 'String Number');
 }
 
 function drawFretHandFingers(options: TestOptions): void {
@@ -206,7 +206,7 @@ function drawFretHandFingers(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'String Number');
+  options.assert.ok(true, 'String Number');
 }
 
 function multi(options: TestOptions): void {
@@ -269,7 +269,7 @@ function multi(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Strokes Test Multi Voice');
+  options.assert.ok(true, 'Strokes Test Multi Voice');
 }
 
 function drawAccidentals(options: TestOptions): void {
@@ -346,7 +346,7 @@ function drawAccidentals(options: TestOptions): void {
     .addClef('treble')
     .draw();
   voice.draw(ctx, stave);
-  ok(true, 'String Number');
+  options.assert.ok(true, 'String Number');
 }
 
 VexFlowTests.register(StringNumberTests);

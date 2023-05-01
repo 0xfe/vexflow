@@ -95,101 +95,101 @@ declare let Vex: Record<string, any> & { Flow: typeof Flow & Record<string, any>
 const VFPrefixTests = {
   Start(): void {
     QUnit.module('VF.* API');
-    test('VF.* API', VF_Prefix);
-    test('VF Alias', VF_Alias);
+    QUnit.test('VF.* API', VF_Prefix);
+    QUnit.test('VF Alias', VF_Alias);
   },
 };
 
-function VF_Prefix(): void {
+function VF_Prefix(assert: any): void {
   // Intentionally use Vex.Flow here so we can verify that the Vex.Flow.* API
   // is equivalent to using the individual classes in TypeScript.
   const VF = Vex.Flow;
-  equal(Accidental, VF.Accidental);
-  equal(Annotation, VF.Annotation);
-  equal(Articulation, VF.Articulation);
-  equal(Barline, VF.Barline);
-  equal(BarNote, VF.BarNote);
-  equal(Beam, VF.Beam);
-  equal(Bend, VF.Bend);
-  equal(BoundingBox, VF.BoundingBox);
-  equal(BoundingBoxComputation, VF.BoundingBoxComputation);
-  equal(ChordSymbol, VF.ChordSymbol);
-  equal(Clef, VF.Clef);
-  equal(ClefNote, VF.ClefNote);
-  equal(Crescendo, VF.Crescendo);
-  equal(Curve, VF.Curve);
-  equal(Dot, VF.Dot);
-  equal(EasyScore, VF.EasyScore);
-  equal(Element, VF.Element);
-  equal(Factory, VF.Factory);
-  equal(Flow.RESOLUTION, VF.RESOLUTION);
-  equal(Font, VF.Font);
-  equal(Formatter, VF.Formatter);
-  propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
-  equal(Fraction, VF.Fraction);
-  equal(FretHandFinger, VF.FretHandFinger);
-  equal(GhostNote, VF.GhostNote);
-  equal(Glyph, VF.Glyph);
-  equal(GlyphNote, VF.GlyphNote);
-  equal(GraceNote, VF.GraceNote);
-  equal(GraceNoteGroup, VF.GraceNoteGroup);
-  equal(GraceTabNote, VF.GraceTabNote);
-  equal(KeyManager, VF.KeyManager);
-  equal(KeySignature, VF.KeySignature);
-  equal(KeySigNote, VF.KeySigNote);
-  equal(Modifier, VF.Modifier);
-  equal(ModifierContext, VF.ModifierContext);
-  equal(MultiMeasureRest, VF.MultiMeasureRest);
-  equal(Music, VF.Music);
-  equal(Note, VF.Note);
-  equal(NoteHead, VF.NoteHead);
-  equal(NoteSubGroup, VF.NoteSubGroup);
-  equal(Ornament, VF.Ornament);
-  equal(Parser, VF.Parser);
-  equal(PedalMarking, VF.PedalMarking);
-  equal(Registry, VF.Registry);
-  equal(Renderer, VF.Renderer);
-  equal(RepeatNote, VF.RepeatNote);
-  equal(Repetition, VF.Repetition);
-  equal(Stave, VF.Stave);
-  notEqual(Stave, VF.StaveNote);
-  equal(StaveConnector, VF.StaveConnector);
-  equal(StaveHairpin, VF.StaveHairpin);
-  equal(StaveLine, VF.StaveLine);
-  equal(StaveModifier, VF.StaveModifier);
-  equal(StaveNote, VF.StaveNote);
-  equal(StaveTempo, VF.StaveTempo);
-  equal(StaveText, VF.StaveText);
-  equal(StaveTie, VF.StaveTie);
-  equal(Stem, VF.Stem);
-  equal(StringNumber, VF.StringNumber);
-  equal(Stroke, VF.Stroke);
-  equal(System, VF.System);
-  equal(TabNote, VF.TabNote);
-  equal(TabSlide, VF.TabSlide);
-  equal(TabStave, VF.TabStave);
-  equal(TabTie, VF.TabTie);
-  equal(TextBracket, VF.TextBracket);
-  equal(TextDynamics, VF.TextDynamics);
-  equal(TextFormatter, VF.TextFormatter);
-  equal(TextNote, VF.TextNote);
-  equal(TickContext, VF.TickContext);
-  equal(TimeSignature, VF.TimeSignature);
-  equal(TimeSigNote, VF.TimeSigNote);
-  equal(Tremolo, VF.Tremolo);
-  equal(Tuning, VF.Tuning);
-  equal(Tuplet, VF.Tuplet);
-  equal(Vibrato, VF.Vibrato);
-  equal(VibratoBracket, VF.VibratoBracket);
-  equal(Voice, VF.Voice);
-  equal(Volta, VF.Volta);
+  assert.equal(Accidental, VF.Accidental);
+  assert.equal(Annotation, VF.Annotation);
+  assert.equal(Articulation, VF.Articulation);
+  assert.equal(Barline, VF.Barline);
+  assert.equal(BarNote, VF.BarNote);
+  assert.equal(Beam, VF.Beam);
+  assert.equal(Bend, VF.Bend);
+  assert.equal(BoundingBox, VF.BoundingBox);
+  assert.equal(BoundingBoxComputation, VF.BoundingBoxComputation);
+  assert.equal(ChordSymbol, VF.ChordSymbol);
+  assert.equal(Clef, VF.Clef);
+  assert.equal(ClefNote, VF.ClefNote);
+  assert.equal(Crescendo, VF.Crescendo);
+  assert.equal(Curve, VF.Curve);
+  assert.equal(Dot, VF.Dot);
+  assert.equal(EasyScore, VF.EasyScore);
+  assert.equal(Element, VF.Element);
+  assert.equal(Factory, VF.Factory);
+  assert.equal(Flow.RESOLUTION, VF.RESOLUTION);
+  assert.equal(Font, VF.Font);
+  assert.equal(Formatter, VF.Formatter);
+  assert.propEqual(new Formatter(), new VF.Formatter(), 'new Formatter()');
+  assert.equal(Fraction, VF.Fraction);
+  assert.equal(FretHandFinger, VF.FretHandFinger);
+  assert.equal(GhostNote, VF.GhostNote);
+  assert.equal(Glyph, VF.Glyph);
+  assert.equal(GlyphNote, VF.GlyphNote);
+  assert.equal(GraceNote, VF.GraceNote);
+  assert.equal(GraceNoteGroup, VF.GraceNoteGroup);
+  assert.equal(GraceTabNote, VF.GraceTabNote);
+  assert.equal(KeyManager, VF.KeyManager);
+  assert.equal(KeySignature, VF.KeySignature);
+  assert.equal(KeySigNote, VF.KeySigNote);
+  assert.equal(Modifier, VF.Modifier);
+  assert.equal(ModifierContext, VF.ModifierContext);
+  assert.equal(MultiMeasureRest, VF.MultiMeasureRest);
+  assert.equal(Music, VF.Music);
+  assert.equal(Note, VF.Note);
+  assert.equal(NoteHead, VF.NoteHead);
+  assert.equal(NoteSubGroup, VF.NoteSubGroup);
+  assert.equal(Ornament, VF.Ornament);
+  assert.equal(Parser, VF.Parser);
+  assert.equal(PedalMarking, VF.PedalMarking);
+  assert.equal(Registry, VF.Registry);
+  assert.equal(Renderer, VF.Renderer);
+  assert.equal(RepeatNote, VF.RepeatNote);
+  assert.equal(Repetition, VF.Repetition);
+  assert.equal(Stave, VF.Stave);
+  assert.notEqual(Stave, VF.StaveNote);
+  assert.equal(StaveConnector, VF.StaveConnector);
+  assert.equal(StaveHairpin, VF.StaveHairpin);
+  assert.equal(StaveLine, VF.StaveLine);
+  assert.equal(StaveModifier, VF.StaveModifier);
+  assert.equal(StaveNote, VF.StaveNote);
+  assert.equal(StaveTempo, VF.StaveTempo);
+  assert.equal(StaveText, VF.StaveText);
+  assert.equal(StaveTie, VF.StaveTie);
+  assert.equal(Stem, VF.Stem);
+  assert.equal(StringNumber, VF.StringNumber);
+  assert.equal(Stroke, VF.Stroke);
+  assert.equal(System, VF.System);
+  assert.equal(TabNote, VF.TabNote);
+  assert.equal(TabSlide, VF.TabSlide);
+  assert.equal(TabStave, VF.TabStave);
+  assert.equal(TabTie, VF.TabTie);
+  assert.equal(TextBracket, VF.TextBracket);
+  assert.equal(TextDynamics, VF.TextDynamics);
+  assert.equal(TextFormatter, VF.TextFormatter);
+  assert.equal(TextNote, VF.TextNote);
+  assert.equal(TickContext, VF.TickContext);
+  assert.equal(TimeSignature, VF.TimeSignature);
+  assert.equal(TimeSigNote, VF.TimeSigNote);
+  assert.equal(Tremolo, VF.Tremolo);
+  assert.equal(Tuning, VF.Tuning);
+  assert.equal(Tuplet, VF.Tuplet);
+  assert.equal(Vibrato, VF.Vibrato);
+  assert.equal(VibratoBracket, VF.VibratoBracket);
+  assert.equal(Voice, VF.Voice);
+  assert.equal(Volta, VF.Volta);
 }
 
 /**
  * If you have name collisions with VexFlow classes, consider extracting classes from Vex.Flow
  * and renaming them with a VF prefix.
  */
-function VF_Alias(): void {
+function VF_Alias(assert: any): void {
   const Flow = Vex.Flow;
   const VFAliases = {
     get VFAccidental() {
@@ -203,15 +203,15 @@ function VF_Alias(): void {
     },
   };
   const { VFVibrato, VFAccidental, VFAnnotation } = VFAliases;
-  equal(Accidental, VFAccidental);
-  equal(Annotation, VFAnnotation);
+  assert.equal(Accidental, VFAccidental);
+  assert.equal(Annotation, VFAnnotation);
 
   const vibrato = new VFVibrato();
-  ok(vibrato);
+  assert.ok(vibrato);
 
   const acc1 = new VFAccidental('##');
   const acc2 = new Accidental('##');
-  equal(acc1.type, acc2.type);
+  assert.equal(acc1.type, acc2.type);
 }
 
 VexFlowTests.register(VFPrefixTests);

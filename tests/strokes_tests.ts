@@ -65,7 +65,7 @@ function brushRollRasquedo(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Brush/Roll/Rasquedo');
+  options.assert.ok(true, 'Brush/Roll/Rasquedo');
 }
 
 function arpeggioDirectionless(options: TestOptions): void {
@@ -111,7 +111,7 @@ function arpeggioDirectionless(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Arpeggio directionless (without arrows)');
+  options.assert.ok(true, 'Arpeggio directionless (without arrows)');
 }
 
 function multiVoice(options: TestOptions): void {
@@ -140,7 +140,7 @@ function multiVoice(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Strokes Test Multi Voice');
+  options.assert.ok(true, 'Strokes Test Multi Voice');
 }
 
 function multiNotationAndTab(options: TestOptions): void {
@@ -214,7 +214,7 @@ function multiNotationAndTab(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Strokes Test Notation & Tab Multi Voice');
+  options.assert.ok(true, 'Strokes Test Notation & Tab Multi Voice');
 }
 
 /*
@@ -303,7 +303,7 @@ function drawTabStrokes(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Strokes Tab test');
+  options.assert.ok(true, 'Strokes Tab test');
 }
 */
 
@@ -434,7 +434,7 @@ function notesWithTab(options: TestOptions): void {
     beam.setContext(f.getContext()).draw();
   });
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(StrokesTests);

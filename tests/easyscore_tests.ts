@@ -17,13 +17,13 @@ import { Tuplet } from '../src/tuplet';
 const EasyScoreTests = {
   Start(): void {
     QUnit.module('EasyScore');
-    test('Basic', basic);
-    test('Accidentals', accidentals);
-    test('Durations', durations);
-    test('Chords', chords);
-    test('Dots', dots);
-    test('Types', types);
-    test('Options', options);
+    QUnit.test('Basic', basic);
+    QUnit.test('Accidentals', accidentals);
+    QUnit.test('Durations', durations);
+    QUnit.test('Chords', chords);
+    QUnit.test('Dots', dots);
+    QUnit.test('Types', types);
+    QUnit.test('Options', options);
     const run = VexFlowTests.runTests;
     run('Draw Basic', drawBasicTest);
     run('Draw Different KeySignature', drawDiffKeysig);
@@ -61,16 +61,16 @@ function createShortcuts(score: EasyScore) {
  * - all strings in `mustPass` parse correctly
  * - all strings in `mustFail` fail to parse (i.e., Result.success is `false`).
  */
-function basic(): void {
+function basic(assert: any): void {
   const score = new EasyScore();
   const mustPass = ['c4', 'c#4', 'c4/r', 'c#5', 'c3/m', 'c3//m', 'c3//h', 'c3/s', 'c3//s', 'c3/g', 'c3//g'];
   const mustFail = ['', '()', '7', '(c#4 e5 g6'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function accidentals(): void {
+function accidentals(assert: any): void {
   const score = new EasyScore();
   const mustPass = [
     'c3',
@@ -122,20 +122,20 @@ function accidentals(): void {
     'c#s7',
   ];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function durations(): void {
+function durations(assert: any): void {
   const score = new EasyScore();
   const mustPass = ['c3/4', 'c##3/w, cb3', 'c##3/w, cb3/q', 'c##3/q, cb3/32', '(c##3 cbb3 cn3), cb3'];
   const mustFail = ['Cn3/]', '/', '(cq cbb3 cn3), cb3', '(cdd7 cbb3 cn3), cb3'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function chords(): void {
+function chords(assert: any): void {
   const score = new EasyScore();
   const mustPass = [
     '(c5)',
@@ -147,11 +147,11 @@ function chords(): void {
   ];
   const mustFail = ['(c)'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function dots(): void {
+function dots(assert: any): void {
   const score = new EasyScore();
   const mustPass = [
     'c3/4.',
@@ -164,20 +164,20 @@ function dots(): void {
   ];
   const mustFail = ['.', 'c.#', 'c#4./4'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function types(): void {
+function types(assert: any): void {
   const score = new EasyScore();
   const mustPass = ['c3/4/m.', 'c##3//r.., cb3', 'c##3/m.., cb3', 'c##3/r.., cb3', 'd##3/w/s, cb3/q...', 'Fb4'];
   const mustFail = ['c4/q/U', '(c##4, cbb4 cn4)/w.., (c#5 cb2 a3)/32', 'z#3'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
-function options(): void {
+function options(assert: any): void {
   const score = new EasyScore();
   const mustPass = [
     'c3/4.[foo="bar"]',
@@ -189,8 +189,8 @@ function options(): void {
   ];
   const mustFail = ['.[', 'f##3/w[], cb3/q...'];
 
-  mustPass.forEach((line) => equal(score.parse(line).success, true, line));
-  mustFail.forEach((line) => equal(score.parse(line).success, false, line));
+  mustPass.forEach((line) => assert.equal(score.parse(line).success, true, line));
+  mustFail.forEach((line) => assert.equal(score.parse(line).success, false, line));
 }
 
 function drawBasicTest(options: TestOptions): void {
@@ -217,7 +217,7 @@ function drawBasicTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawDiffKeysig(options: TestOptions): void {
@@ -247,7 +247,7 @@ function drawDiffKeysig(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawBasicMutedTest(options: TestOptions): void {
@@ -274,7 +274,7 @@ function drawBasicMutedTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawBasicHarmonicTest(options: TestOptions): void {
@@ -301,7 +301,7 @@ function drawBasicHarmonicTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawBasicSlashTest(options: TestOptions): void {
@@ -328,7 +328,7 @@ function drawBasicSlashTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawGhostBasicTest(options: TestOptions): void {
@@ -353,7 +353,7 @@ function drawGhostBasicTest(options: TestOptions): void {
   });
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawGhostDottedTest(options: TestOptions): void {
@@ -384,7 +384,7 @@ function drawGhostDottedTest(options: TestOptions): void {
   });
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawParenthesisedTest(options: TestOptions): void {
@@ -415,7 +415,7 @@ function drawParenthesisedTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawAccidentalsTest(options: TestOptions): void {
@@ -442,7 +442,7 @@ function drawAccidentalsTest(options: TestOptions): void {
   system.addConnector().setType(StaveConnector.type.BRACKET);
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawBeamsTest(options: TestOptions): void {
@@ -462,7 +462,7 @@ function drawBeamsTest(options: TestOptions): void {
     .addClef('treble');
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawTupletsTest(options: TestOptions): void {
@@ -487,7 +487,7 @@ function drawTupletsTest(options: TestOptions): void {
   system.addStave({ voices: [v1, v2] }).addClef('treble');
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawDotsTest(options: TestOptions): void {
@@ -504,7 +504,7 @@ function drawDotsTest(options: TestOptions): void {
     .addClef('treble');
 
   f.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawOptionsTest(options: TestOptions): void {
@@ -526,20 +526,20 @@ function drawOptionsTest(options: TestOptions): void {
   const note0_modifier1 = note0.getModifiers()[1] as Articulation;
   const note1_modifier0 = note1.getModifiers()[0] as Articulation;
 
-  equal(note0.getAttribute('id'), 'foobar');
-  ok(note0.hasClass('red'));
-  ok(note0.hasClass('bold'));
-  equal(note0_modifier0.getCategory(), Articulation.CATEGORY);
-  equal(note0_modifier0.type, 'a.');
-  equal(note0_modifier0.getPosition(), Modifier.Position.BELOW);
-  equal(note0_modifier1.getCategory(), Articulation.CATEGORY);
-  equal(note0_modifier1.type, 'a-');
-  equal(note0_modifier1.getPosition(), Modifier.Position.ABOVE);
-  equal(note0.getStemDirection(), Stem.UP);
-  equal(note1_modifier0.getCategory(), Articulation.CATEGORY);
-  equal(note1_modifier0.type, 'a>');
-  equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
-  equal(notes[2].getStemDirection(), Stem.DOWN);
+  options.assert.equal(note0.getAttribute('id'), 'foobar');
+  options.assert.ok(note0.hasClass('red'));
+  options.assert.ok(note0.hasClass('bold'));
+  options.assert.equal(note0_modifier0.getCategory(), Articulation.CATEGORY);
+  options.assert.equal(note0_modifier0.type, 'a.');
+  options.assert.equal(note0_modifier0.getPosition(), Modifier.Position.BELOW);
+  options.assert.equal(note0_modifier1.getCategory(), Articulation.CATEGORY);
+  options.assert.equal(note0_modifier1.type, 'a-');
+  options.assert.equal(note0_modifier1.getPosition(), Modifier.Position.ABOVE);
+  options.assert.equal(note0.getStemDirection(), Stem.UP);
+  options.assert.equal(note1_modifier0.getCategory(), Articulation.CATEGORY);
+  options.assert.equal(note1_modifier0.type, 'a>');
+  options.assert.equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
+  options.assert.equal(notes[2].getStemDirection(), Stem.DOWN);
 }
 
 function drawFingeringsTest(options: TestOptions): void {
@@ -556,33 +556,33 @@ function drawFingeringsTest(options: TestOptions): void {
   f.draw();
 
   const note0_modifier0 = notes[0].getModifiers()[0] as FretHandFinger;
-  equal(note0_modifier0.getCategory(), FretHandFinger.CATEGORY);
-  equal(note0_modifier0.getFretHandFinger(), '1');
-  equal(note0_modifier0.getPosition(), Modifier.Position.LEFT);
+  options.assert.equal(note0_modifier0.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note0_modifier0.getFretHandFinger(), '1');
+  options.assert.equal(note0_modifier0.getPosition(), Modifier.Position.LEFT);
 
   const note1_modifier0 = notes[1].getModifiers()[0] as FretHandFinger;
-  equal(note1_modifier0.getCategory(), FretHandFinger.CATEGORY);
-  equal(note1_modifier0.getFretHandFinger(), '3');
-  equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
+  options.assert.equal(note1_modifier0.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note1_modifier0.getFretHandFinger(), '3');
+  options.assert.equal(note1_modifier0.getPosition(), Modifier.Position.ABOVE);
 
   const note2_modifier0 = notes[2].getModifiers()[0] as FretHandFinger;
-  equal(note2_modifier0.getCategory(), FretHandFinger.CATEGORY);
-  equal(note2_modifier0.getFretHandFinger(), '5');
-  equal(note2_modifier0.getPosition(), Modifier.Position.BELOW);
+  options.assert.equal(note2_modifier0.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note2_modifier0.getFretHandFinger(), '5');
+  options.assert.equal(note2_modifier0.getPosition(), Modifier.Position.BELOW);
 
   const note3_modifiers: FretHandFinger[] = notes[3].getModifiers() as FretHandFinger[];
   const note3_modifier0 = note3_modifiers[0];
   const note3_modifier1 = note3_modifiers[1];
   const note3_modifier2 = note3_modifiers[2];
-  equal(note3_modifier0.getCategory(), FretHandFinger.CATEGORY);
-  equal(note3_modifier0.getFretHandFinger(), '1');
-  equal(note3_modifier0.getPosition(), Modifier.Position.LEFT);
-  equal(note3_modifier1.getCategory(), FretHandFinger.CATEGORY);
-  equal(note3_modifier1.getFretHandFinger(), '3');
-  equal(note3_modifier1.getPosition(), Modifier.Position.LEFT);
-  equal(note3_modifier2.getCategory(), FretHandFinger.CATEGORY);
-  equal(note3_modifier2.getFretHandFinger(), '5');
-  equal(note3_modifier2.getPosition(), Modifier.Position.LEFT);
+  options.assert.equal(note3_modifier0.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note3_modifier0.getFretHandFinger(), '1');
+  options.assert.equal(note3_modifier0.getPosition(), Modifier.Position.LEFT);
+  options.assert.equal(note3_modifier1.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note3_modifier1.getFretHandFinger(), '3');
+  options.assert.equal(note3_modifier1.getPosition(), Modifier.Position.LEFT);
+  options.assert.equal(note3_modifier2.getCategory(), FretHandFinger.CATEGORY);
+  options.assert.equal(note3_modifier2.getFretHandFinger(), '5');
+  options.assert.equal(note3_modifier2.getPosition(), Modifier.Position.LEFT);
 }
 
 function keys(options: TestOptions): void {
@@ -597,13 +597,13 @@ function keys(options: TestOptions): void {
   system.addStave({ voices: [f.Voice().setStrict(false).addTickables(notes)] }).addClef('bass');
   f.draw();
 
-  equal(notes[0].keys, 'c#/3');
-  equal(notes[1].keys, 'c##/3');
-  equal(notes[2].keys, 'cb/3');
-  equal(notes[3].keys, 'cbb/3');
-  equal(notes[4].keys, 'cn/3');
+  options.assert.equal(notes[0].keys, 'c#/3');
+  options.assert.equal(notes[1].keys, 'c##/3');
+  options.assert.equal(notes[2].keys, 'cb/3');
+  options.assert.equal(notes[3].keys, 'cbb/3');
+  options.assert.equal(notes[4].keys, 'cn/3');
   for (let i = 5; i < notes.length; i++) {
-    equal(notes[i].keys, 'c/3');
+    options.assert.equal(notes[i].keys, 'c/3');
   }
 }
 

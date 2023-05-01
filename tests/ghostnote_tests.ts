@@ -34,7 +34,7 @@ function createTest(addItems: (f: Factory, s: EasyScore) => void) {
     factory.Formatter().joinVoices(voices).formatToStave(voices, stave);
     factory.draw();
 
-    ok(true, 'all pass');
+    options.assert.ok(true, 'all pass');
   };
 }
 

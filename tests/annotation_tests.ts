@@ -100,7 +100,7 @@ function lyrics(options: TestOptions): void {
     x = x + width;
     fontSize = fontSize + 2;
   }
-  ok(true);
+  options.assert.ok(true);
 }
 
 function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -125,7 +125,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Simple Annotation');
+  options.assert.ok(true, 'Simple Annotation');
 }
 
 function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -142,7 +142,7 @@ function standard(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Standard Notation Annotation');
+  options.assert.ok(true, 'Standard Notation Annotation');
 }
 
 function styling(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -162,7 +162,7 @@ function styling(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Standard Notation Annotation');
+  options.assert.ok(true, 'Standard Notation Annotation');
 }
 
 function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -189,7 +189,7 @@ function harmonic(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Simple Annotation');
+  options.assert.ok(true, 'Simple Annotation');
 }
 
 function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -231,7 +231,7 @@ function picking(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Fingerpicking');
+  options.assert.ok(true, 'Fingerpicking');
 }
 function placement(options: TestOptions, contextBuilder: ContextBuilder): void {
   const ctx = contextBuilder(options.elementId, 750, 300);
@@ -293,7 +293,7 @@ function placement(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, ' Annotation Placement');
+  options.assert.ok(true, ' Annotation Placement');
 }
 
 function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -313,7 +313,7 @@ function bottom(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'Bottom Annotation');
+  options.assert.ok(true, 'Bottom Annotation');
 }
 
 function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -341,7 +341,7 @@ function bottomWithBeam(options: TestOptions, contextBuilder: ContextBuilder): v
 
   Formatter.FormatAndDraw(ctx, stave, notes);
   beam.setContext(ctx).draw();
-  ok(true, 'Bottom Annotation with Beams');
+  options.assert.ok(true, 'Bottom Annotation with Beams');
 }
 
 function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -367,7 +367,7 @@ function justificationStemUp(options: TestOptions, contextBuilder: ContextBuilde
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
 
-  ok(true, 'Test Justification Annotation');
+  options.assert.ok(true, 'Test Justification Annotation');
 }
 
 function justificationStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -394,7 +394,7 @@ function justificationStemDown(options: TestOptions, contextBuilder: ContextBuil
     Formatter.FormatAndDraw(ctx, stave, notes);
   }
 
-  ok(true, 'Test Justification Annotation');
+  options.assert.ok(true, 'Test Justification Annotation');
 }
 
 function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -477,7 +477,7 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   voice.draw(ctx, stave);
 
-  ok(true, 'TabNotes successfully drawn');
+  options.assert.ok(true, 'TabNotes successfully drawn');
 }
 
 VexFlowTests.register(AnnotationTests);

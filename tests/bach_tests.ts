@@ -428,7 +428,7 @@ function minuet1(options: TestOptions): void {
   /* Done */
   f.draw();
   Registry.disableDefaultRegistry();
-  ok(true, 'Bach Minuet 1');
+  options.assert.ok(true, 'Bach Minuet 1');
 }
 
 VexFlowTests.register(BachDemoTests);

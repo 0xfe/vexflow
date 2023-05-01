@@ -53,7 +53,7 @@ function formatTextNotes(options: TestOptions): void {
   formatter.joinVoices([voice1, voice2]).formatToStave([voice1, voice2], stave);
 
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function formatTextNotes2(options: TestOptions): void {
@@ -107,7 +107,7 @@ function formatTextNotes2(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function superscriptAndSubscript(options: TestOptions): void {
@@ -135,7 +135,7 @@ function superscriptAndSubscript(options: TestOptions): void {
     f.TextNote({ text: 'vii', superscript: Flow.unicode['o-with-slash'] + '7', duration: '8' }),
     f.TextNote({ text: 'V', superscript: '7', duration: '8' }),
   ];
-  equal(notes2[0].getText(), Flow.unicode.flat + 'I', 'TextNote.getText() return .text');
+  options.assert.equal(notes2[0].getText(), Flow.unicode.flat + 'I', 'TextNote.getText() return .text');
 
   const voice2 = score.voice(notes2);
   voice2.getTickables().forEach((note) => {
@@ -149,7 +149,7 @@ function superscriptAndSubscript(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function formatTextGlyphs0(options: TestOptions): void {
@@ -187,7 +187,7 @@ function formatTextGlyphs0(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function formatTextGlyphs1(options: TestOptions): void {
@@ -224,7 +224,7 @@ function formatTextGlyphs1(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function crescendo(options: TestOptions): void {
@@ -244,7 +244,7 @@ function crescendo(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function textDynamics(options: TestOptions): void {
@@ -275,7 +275,7 @@ function textDynamics(options: TestOptions): void {
   const stave = f.Stave({ y: 40, width: width + Stave.defaultPadding });
   stave.draw();
   voice.draw(f.getContext(), stave);
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(TextNoteTests);

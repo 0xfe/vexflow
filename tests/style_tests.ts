@@ -102,7 +102,7 @@ function stave(options: TestOptions): void {
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
 
   f.draw();
-  ok(true, 'Basic Style');
+  options.assert.ok(true, 'Basic Style');
 }
 
 /**
@@ -138,7 +138,7 @@ function tab(options: TestOptions, contextBuilder: ContextBuilder): void {
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, 'TabNote Modifiers Style');
+  options.assert.ok(true, 'TabNote Modifiers Style');
 }
 
 VexFlowTests.register(StyleTests);

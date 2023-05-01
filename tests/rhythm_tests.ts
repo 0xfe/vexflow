@@ -43,7 +43,7 @@ function drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {
     { keys: ['b/4'], duration: '32s', stem_direction: -1 },
     { keys: ['b/4'], duration: '64s', stem_direction: -1 },
   ];
-  expect(notes.length * 2);
+  options.assert.expect(notes.length * 2);
 
   for (let i = 0; i < notes.length; ++i) {
     const staveNote = new StaveNote(notes[i]).setStave(stave);
@@ -53,8 +53,8 @@ function drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {
       .setX((i + 1) * 25);
     staveNote.setContext(ctx).draw();
 
-    ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-    ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 */
@@ -172,7 +172,7 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, staveBar4, notesBar4);
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawBeamedSlashNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -246,7 +246,7 @@ function drawBeamedSlashNotes(options: TestOptions, contextBuilder: ContextBuild
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawSlashAndBeamAndRests(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -331,7 +331,7 @@ function drawSlashAndBeamAndRests(options: TestOptions, contextBuilder: ContextB
   // Helper function to justify and draw a 4/4 voice
   Formatter.FormatAndDraw(ctx, staveBar2, notesBar2);
 
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawSixtenthWithScratches(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -406,7 +406,7 @@ function drawSixtenthWithScratches(options: TestOptions, contextBuilder: Context
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
-  expect(0);
+  options.assert.expect(0);
 }
 
 function drawThirtySecondWithScratches(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -476,7 +476,7 @@ function drawThirtySecondWithScratches(options: TestOptions, contextBuilder: Con
   // Render beams
   beam1.setContext(ctx).draw();
 
-  expect(0);
+  options.assert.expect(0);
 }
 
 VexFlowTests.register(RhythmTests);

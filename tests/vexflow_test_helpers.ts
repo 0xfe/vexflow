@@ -16,7 +16,7 @@ const global = globalObject();
 export interface TestOptions {
   elementId: string;
   params: any /* eslint-disable-line */;
-  assert: Assert;
+  assert: any;
   backend: number;
 
   // Some tests use this field to pass around the ContextBuilder function.
@@ -323,7 +323,7 @@ export class VexFlowTests {
     }
     const testTypeLowerCase = testType.toLowerCase();
     fontStacks.forEach((fontStackName: string) => {
-      QUnit.test(name, (assert: Assert) => {
+      QUnit.test(name, (assert: any) => {
         useTempFontStack(fontStackName);
         const elementId = VexFlowTests.generateTestID(`${testTypeLowerCase}_` + fontStackName);
         const moduleName = assert.test.module.name;

@@ -71,7 +71,7 @@ function createTest(drawTwoHairpins: (ctx: RenderContext, notes: StaveNote[]) =>
 
     drawTwoHairpins(ctx, notes);
 
-    ok(true, 'Simple Test');
+    options.assert.ok(true, 'Simple Test');
   };
 }
 

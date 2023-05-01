@@ -76,7 +76,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
     stave,
     context
   );
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 /**
@@ -133,7 +133,7 @@ function multiTest(options: TestOptions, buildTabSlide: (notes: TieNotes) => Tab
     .setContext(context)
     .draw();
 
-  ok(true, 'Single note');
+  options.assert.ok(true, 'Single note');
 
   buildTabSlide({
     first_note: notes[2],
@@ -144,7 +144,7 @@ function multiTest(options: TestOptions, buildTabSlide: (notes: TieNotes) => Tab
     .setContext(context)
     .draw();
 
-  ok(true, 'Chord');
+  options.assert.ok(true, 'Chord');
 
   buildTabSlide({
     first_note: notes[4],
@@ -155,7 +155,7 @@ function multiTest(options: TestOptions, buildTabSlide: (notes: TieNotes) => Tab
     .setContext(context)
     .draw();
 
-  ok(true, 'Single note high-fret');
+  options.assert.ok(true, 'Single note high-fret');
 
   buildTabSlide({
     first_note: notes[6],
@@ -166,7 +166,7 @@ function multiTest(options: TestOptions, buildTabSlide: (notes: TieNotes) => Tab
     .setContext(context)
     .draw();
 
-  ok(true, 'Chord high-fret');
+  options.assert.ok(true, 'Chord high-fret');
 }
 
 function slideUp(options: TestOptions, contextBuilder: ContextBuilder): void {

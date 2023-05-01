@@ -20,11 +20,11 @@ const OffscreenCanvasTests = {
     }
 
     QUnit.module('OffscreenCanvas');
-    test('Simple Test', simpleTest);
+    QUnit.test('Simple Test', simpleTest);
   },
 };
 
-function simpleTest(): void {
+function simpleTest(assert: any): void {
   // Create a CanvasContext from an OffscreenCanvas.
   // eslint-disable-next-line
   // @ts-ignore
@@ -61,7 +61,7 @@ function simpleTest(): void {
   canvasCtx.drawImage(imgBmp, 0, 0);
   document.body.appendChild(canvas);
 
-  ok(true, 'all pass');
+  assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(OffscreenCanvasTests);

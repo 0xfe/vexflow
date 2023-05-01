@@ -21,10 +21,10 @@ const TabNoteTests = {
   Start(): void {
     QUnit.module('TabNote');
 
-    test('Tick', ticks);
-    test('TabStave Line', tabStaveLine);
-    test('Width', width);
-    test('TickContext', tickContext);
+    QUnit.test('Tick', ticks);
+    QUnit.test('TabStave Line', tabStaveLine);
+    QUnit.test('Width', width);
+    QUnit.test('TickContext', tickContext);
 
     const run = VexFlowTests.runTests;
     run('TabNote Draw', draw);
@@ -36,17 +36,17 @@ const TabNoteTests = {
   },
 };
 
-function ticks(): void {
+function ticks(assert: any): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   let note = new TabNote({ positions: [{ str: 6, fret: 6 }], duration: '1' });
-  equal(note.getTicks().value(), BEAT * 4, 'Whole note has 4 beats');
+  assert.equal(note.getTicks().value(), BEAT * 4, 'Whole note has 4 beats');
 
   note = new TabNote({ positions: [{ str: 3, fret: 4 }], duration: '4' });
-  equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beat');
+  assert.equal(note.getTicks().value(), BEAT, 'Quarter note has 1 beat');
 }
 
-function tabStaveLine(): void {
+function tabStaveLine(assert: any): void {
   const note = new TabNote({
     positions: [
       { str: 6, fret: 6 },
@@ -56,22 +56,22 @@ function tabStaveLine(): void {
   });
 
   const positions = note.getPositions();
-  equal(positions[0].str, 6, 'String 6, Fret 6');
-  equal(positions[0].fret, 6, 'String 6, Fret 6');
-  equal(positions[1].str, 4, 'String 4, Fret 5');
-  equal(positions[1].fret, 5, 'String 4, Fret 5');
+  assert.equal(positions[0].str, 6, 'String 6, Fret 6');
+  assert.equal(positions[0].fret, 6, 'String 6, Fret 6');
+  assert.equal(positions[1].str, 4, 'String 4, Fret 5');
+  assert.equal(positions[1].fret, 5, 'String 4, Fret 5');
 
   const stave = new Stave(10, 10, 300);
   note.setStave(stave);
 
   const ys = note.getYs();
-  equal(ys.length, 2, 'Chord should be rendered on two lines');
-  equal(ys[0], 100, 'Line for String 6, Fret 6');
-  equal(ys[1], 80, 'Line for String 4, Fret 5');
+  assert.equal(ys.length, 2, 'Chord should be rendered on two lines');
+  assert.equal(ys[0], 100, 'Line for String 6, Fret 6');
+  assert.equal(ys[1], 80, 'Line for String 4, Fret 5');
 }
 
-function width(): void {
-  expect(1);
+function width(assert: any): void {
+  assert.expect(1);
   const note = new TabNote({
     positions: [
       { str: 6, fret: 6 },
@@ -80,10 +80,10 @@ function width(): void {
     duration: '1',
   });
 
-  throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
+  assert.throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
 }
 
-function tickContext(): void {
+function tickContext(assert: any): void {
   const note = new TabNote({
     positions: [
       { str: 6, fret: 6 },
@@ -94,7 +94,7 @@ function tickContext(): void {
 
   const tickContext = new TickContext().addTickable(note).preFormat().setX(10).setPadding(0);
 
-  equal(tickContext.getWidth(), 7);
+  assert.equal(tickContext.getWidth(), 7);
 }
 
 function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -168,8 +168,8 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
     const note = notes[i];
     const tabNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-    ok(tabNote.getX() > 0, 'Note ' + i + ' has X value');
-    ok(tabNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(tabNote.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(tabNote.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -242,7 +242,7 @@ function drawStemsUp(options: TestOptions, contextBuilder: ContextBuilder): void
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
   voice.draw(ctx, stave);
-  ok(true, 'TabNotes successfully drawn');
+  options.assert.ok(true, 'TabNotes successfully drawn');
 }
 
 function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -315,7 +315,7 @@ function drawStemsDown(options: TestOptions, contextBuilder: ContextBuilder): vo
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
   voice.draw(ctx, stave);
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -389,7 +389,7 @@ function drawStemsUpThrough(options: TestOptions, contextBuilder: ContextBuilder
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
   voice.draw(ctx, stave);
-  ok(true, 'TabNotes successfully drawn');
+  options.assert.ok(true, 'TabNotes successfully drawn');
 }
 
 function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -468,7 +468,7 @@ function drawStemsDownThrough(options: TestOptions, contextBuilder: ContextBuild
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
   voice.draw(ctx, stave);
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -519,7 +519,7 @@ function drawStemsDotted(options: TestOptions, contextBuilder: ContextBuilder): 
   voice.addTickables(notes);
   new Formatter().joinVoices([voice]).formatToStave([voice], stave);
   voice.draw(ctx, stave);
-  ok(true, 'TabNotes successfully drawn');
+  options.assert.ok(true, 'TabNotes successfully drawn');
 }
 
 VexFlowTests.register(TabNoteTests);

@@ -334,7 +334,7 @@ function crossClef(options: TestOptions): void {
     }
   }
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(CrossBeamTests);

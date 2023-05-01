@@ -146,7 +146,7 @@ function stringElementId(options: TestOptions): void {
   } else {
     useFactoryAPI(elementId, options.backend);
   }
-  ok(true);
+  options.assert.ok(true);
 }
 
 /**
@@ -159,7 +159,7 @@ function canvasOrDivElement(options: TestOptions): void {
   } else {
     useFactoryAPI(element, options.backend);
   }
-  ok(true);
+  options.assert.ok(true);
 }
 
 /**
@@ -181,7 +181,7 @@ function passRenderContext(options: TestOptions): void {
   const renderer = new Renderer(context);
   renderer.resize(STAVE_WIDTH, STAVE_HEIGHT);
   drawStave(new Stave(0, 0, STAVE_WIDTH - STAVE_RIGHT_MARGIN).setContext(context), context);
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(RendererTests);

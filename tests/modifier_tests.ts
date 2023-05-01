@@ -10,17 +10,17 @@ import { Modifier, ModifierContext } from '../src/index';
 const ModifierContextTests = {
   Start(): void {
     QUnit.module('ModifierContext');
-    test('Modifier Width Test', width);
-    test('Modifier Management', management);
+    QUnit.test('Modifier Width Test', width);
+    QUnit.test('Modifier Management', management);
   },
 };
 
-function width(): void {
+function width(assert: any): void {
   const mc = new ModifierContext();
-  equal(mc.getWidth(), 0, 'New modifier context has no width');
+  assert.equal(mc.getWidth(), 0, 'New modifier context has no width');
 }
 
-function management(): void {
+function management(assert: any): void {
   const mc = new ModifierContext();
   const modifier1 = new Modifier();
   const modifier2 = new Modifier();
@@ -29,7 +29,7 @@ function management(): void {
   mc.addMember(modifier2);
 
   const modifiers = mc.getMembers(Modifier.CATEGORY);
-  equal(modifiers.length, 2, 'Added two modifiers');
+  assert.equal(modifiers.length, 2, 'Added two modifiers');
 }
 
 VexFlowTests.register(ModifierContextTests);

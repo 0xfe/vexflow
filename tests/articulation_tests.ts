@@ -47,7 +47,7 @@ function drawArticulations(options: TestOptions): void {
   const width = 125 - Stave.defaultPadding;
   const f = VexFlowTests.makeFactory(options, 675, 195);
   const ctx = f.getContext();
-  expect(0);
+  options.assert.expect(0);
   let x = 10;
   const y = 30;
   const score = f.EasyScore();
@@ -151,7 +151,7 @@ function drawFermata(options: TestOptions): void {
     return stave.getWidth();
   };
 
-  expect(0);
+  options.assert.expect(0);
 
   const notesBar1 = [
     f.StaveNote({ keys: ['c/4'], duration: 'q', stem_direction: 1 }),
@@ -239,7 +239,7 @@ function verticalPlacement(options: TestOptions, contextBuilder: ContextBuilder)
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, ' Annotation Placement');
+  options.assert.ok(true, ' Annotation Placement');
 }
 
 function verticalPlacement2(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -300,11 +300,11 @@ function verticalPlacement2(options: TestOptions, contextBuilder: ContextBuilder
   ];
 
   Formatter.FormatAndDraw(ctx, stave, notes);
-  ok(true, ' Annotation Placement (Glyph codes)');
+  options.assert.ok(true, ' Annotation Placement (Glyph codes)');
 }
 
 function drawArticulations2(options: TestOptions): void {
-  expect(0);
+  options.assert.expect(0);
   const scale = 0.8;
   const f = VexFlowTests.makeFactory(options, 1500, 195);
 
@@ -489,7 +489,7 @@ function tabNotes(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   voice.draw(ctx, stave);
 
-  ok(true, 'TabNotes successfully drawn');
+  options.assert.ok(true, 'TabNotes successfully drawn');
 }
 
 VexFlowTests.register(ArticulationTests);

@@ -48,7 +48,7 @@ function drawSingle(options: TestOptions, contextBuilder: ContextBuilder): void 
   stave2.draw();
   connector.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawSingle4pxStaveLines(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -67,7 +67,7 @@ function drawSingle4pxStaveLines(options: TestOptions, contextBuilder: ContextBu
   connector.draw();
   Flow.STAVE_LINE_THICKNESS = oldThickness;
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawSingleBoth(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -87,7 +87,7 @@ function drawSingleBoth(options: TestOptions, contextBuilder: ContextBuilder): v
   connector1.draw();
   connector2.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -108,7 +108,7 @@ function drawDouble(options: TestOptions, contextBuilder: ContextBuilder): void 
   connector.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawBrace(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -130,7 +130,7 @@ function drawBrace(options: TestOptions, contextBuilder: ContextBuilder): void {
   connector.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawBraceWide(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -151,7 +151,7 @@ function drawBraceWide(options: TestOptions, contextBuilder: ContextBuilder): vo
   connector.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawBracket(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -172,7 +172,7 @@ function drawBracket(options: TestOptions, contextBuilder: ContextBuilder): void
   connector.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawRepeatBegin(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -191,7 +191,7 @@ function drawRepeatBegin(options: TestOptions, contextBuilder: ContextBuilder): 
   stave2.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawRepeatEnd(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -210,7 +210,7 @@ function drawRepeatEnd(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave2.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawThinDouble(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -229,7 +229,7 @@ function drawThinDouble(options: TestOptions, contextBuilder: ContextBuilder): v
   stave2.draw();
   line.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawRepeatAdjacent(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -273,7 +273,7 @@ function drawRepeatAdjacent(options: TestOptions, contextBuilder: ContextBuilder
   connector3.draw();
   connector4.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawRepeatOffset2(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -338,7 +338,7 @@ function drawRepeatOffset2(options: TestOptions, contextBuilder: ContextBuilder)
   connector4.draw();
   connector5.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawRepeatOffset(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -406,7 +406,7 @@ function drawRepeatOffset(options: TestOptions, contextBuilder: ContextBuilder):
   connector4.draw();
   connector5.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawCombined(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -458,7 +458,7 @@ function drawCombined(options: TestOptions, contextBuilder: ContextBuilder): voi
   conn_none.draw();
   conn_brace.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(StaveConnectorTests);

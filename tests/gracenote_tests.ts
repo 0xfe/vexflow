@@ -108,7 +108,7 @@ function basic(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteBasic');
+  options.assert.ok(true, 'GraceNoteBasic');
 }
 function graceNoteModifiers(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 700, 130);
@@ -153,7 +153,7 @@ function graceNoteModifiers(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteModifiers');
+  options.assert.ok(true, 'GraceNoteModifiers');
 }
 function basicSlurred(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 700, 130);
@@ -215,7 +215,7 @@ function basicSlurred(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteBasic');
+  options.assert.ok(true, 'GraceNoteBasic');
 }
 
 /**
@@ -264,7 +264,7 @@ function stem(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteStem');
+  options.assert.ok(true, 'GraceNoteStem');
 }
 
 function stemWithBeamed(options: TestOptions): void {
@@ -314,7 +314,7 @@ function stemWithBeamed(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteStem');
+  options.assert.ok(true, 'GraceNoteStem');
 }
 
 function slash(options: TestOptions): void {
@@ -366,7 +366,7 @@ function slash(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteSlash');
+  options.assert.ok(true, 'GraceNoteSlash');
 }
 
 function slashWithBeams(options: TestOptions): void {
@@ -412,7 +412,7 @@ function slashWithBeams(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'GraceNoteSlashWithBeams');
+  options.assert.ok(true, 'GraceNoteSlashWithBeams');
 }
 
 function multipleVoices(options: TestOptions): void {
@@ -477,7 +477,7 @@ function multipleVoices(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Sixteenth Test');
+  options.assert.ok(true, 'Sixteenth Test');
 }
 
 function multipleVoicesMultipleDraws(options: TestOptions): void {
@@ -543,7 +543,7 @@ function multipleVoicesMultipleDraws(options: TestOptions): void {
   f.draw();
   f.draw();
 
-  ok(true, 'Seventeenth Test');
+  options.assert.ok(true, 'Seventeenth Test');
 }
 
 VexFlowTests.register(GraceNoteTests);

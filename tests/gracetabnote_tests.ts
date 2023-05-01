@@ -78,7 +78,7 @@ function simple(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   voice.draw(context, stave);
 
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -111,7 +111,7 @@ function slurred(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   voice.draw(context, stave);
 
-  ok(true, 'Slurred Test');
+  options.assert.ok(true, 'Slurred Test');
 }
 
 VexFlowTests.register(GraceTabNoteTests);

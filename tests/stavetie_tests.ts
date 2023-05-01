@@ -46,7 +46,7 @@ function createTest(
 
     factory.Formatter().joinVoices([voice]).formatToStave([voice], stave);
     factory.draw();
-    ok(true);
+    options.assert.ok(true);
   };
 }
 
