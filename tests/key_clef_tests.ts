@@ -91,7 +91,7 @@ function keys(options: TestOptions, contextBuilder: ContextBuilder): void {
     staves[i + clefs.length].setContext(ctx);
     staves[i + clefs.length].draw();
   }
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -131,7 +131,7 @@ function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void
   stave4.setContext(ctx);
   stave4.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(ClefKeySignatureTests);

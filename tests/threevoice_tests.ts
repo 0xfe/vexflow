@@ -62,7 +62,7 @@ function createThreeVoicesTest(
       beams[i].setContext(factory.getContext()).draw();
     }
 
-    ok(true);
+    options.assert.ok(true);
   };
 }
 
@@ -157,7 +157,7 @@ function autoRestTwoVoices(options: TestOptions): void {
     beams[i].setContext(f.getContext()).draw();
   }
 
-  ok(true, 'Auto Adjust Rests - Two Voices');
+  options.assert.ok(true, 'Auto Adjust Rests - Two Voices');
 }
 
 function autoRestThreeVoices1(options: TestOptions): void {
@@ -190,7 +190,7 @@ function autoRestThreeVoices1(options: TestOptions): void {
   createMeasure('Rests Repositioned To Avoid Collisions', 400, true);
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function autoRestThreeVoices2(options: TestOptions): void {
@@ -217,7 +217,7 @@ function autoRestThreeVoices2(options: TestOptions): void {
   createMeasure('Rests Repositioned To Avoid Collisions', 400, true);
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(ThreeVoicesTests);

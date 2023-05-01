@@ -10,21 +10,21 @@ import { Barline, BarlineType } from '../src/stavebarline';
 const BarlineTests = {
   Start(): void {
     QUnit.module('Barline');
-    test('Enums', enums);
+    QUnit.test('Enums', enums);
     const run = VexFlowTests.runTests;
     run('Simple BarNotes', simple);
     run('Style BarNotes', style);
   },
 };
 
-function enums(): void {
+function enums(assert: any): void {
   // VexFlow 4.0 renamed Barline.type => BarlineType.
   // The old way still works, for backwards compatibility.
-  equal(Barline.type, BarlineType);
+  assert.equal(Barline.type, BarlineType);
 
   const a = BarlineType['DOUBLE'];
   const b = BarlineType.DOUBLE;
-  equal(a, b);
+  assert.equal(a, b);
 }
 
 function simple(options: TestOptions): void {
@@ -44,7 +44,7 @@ function simple(options: TestOptions): void {
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
   f.draw();
 
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 function style(options: TestOptions): void {
@@ -65,7 +65,7 @@ function style(options: TestOptions): void {
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
   f.draw();
 
-  ok(true, 'Style');
+  options.assert.ok(true, 'Style');
 }
 
 VexFlowTests.register(BarlineTests);

@@ -79,7 +79,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   Formatter.FormatAndDraw(context, stave, notes);
 
-  ok(true, 'Dotted Rest Test');
+  options.assert.ok(true, 'Dotted Rest Test');
 }
 
 /**
@@ -98,7 +98,7 @@ function ledgerRest(options: TestOptions, contextBuilder: ContextBuilder): void 
   ];
   Formatter.FormatAndDraw(context, stave, notes);
 
-  ok(true, 'Leger/Ledger Rest Test');
+  options.assert.ok(true, 'Leger/Ledger Rest Test');
 }
 
 // Optional: Use a helper function to make your code more concise.
@@ -137,7 +137,7 @@ function beamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
   beam2.setContext(context).draw();
   beam3.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Beams Up Test');
+  options.assert.ok(true, 'Auto Align Rests - Beams Up Test');
 }
 
 /**
@@ -173,7 +173,7 @@ function beamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
   beam2.setContext(context).draw();
   beam3.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Beams Down Test');
+  options.assert.ok(true, 'Auto Align Rests - Beams Down Test');
 }
 
 /**
@@ -213,7 +213,7 @@ function tupletsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
   tuplet3.setContext(context).draw();
   tuplet4.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Tuplets Stem Up Test');
+  options.assert.ok(true, 'Auto Align Rests - Tuplets Stem Up Test');
 }
 
 /**
@@ -263,7 +263,7 @@ function tupletsDown(options: TestOptions, contextBuilder: ContextBuilder): void
   beam3.setContext(context).draw();
   beam4.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Tuplets Stem Down Test');
+  options.assert.ok(true, 'Auto Align Rests - Tuplets Stem Down Test');
 }
 
 /**
@@ -304,7 +304,7 @@ function singleVoiceDefaultAlignment(options: TestOptions, contextBuilder: Conte
   tuplet.setContext(context).draw();
   beam.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Default Test');
+  options.assert.ok(true, 'Auto Align Rests - Default Test');
 }
 
 /**
@@ -345,7 +345,7 @@ function singleVoiceAlignAll(options: TestOptions, contextBuilder: ContextBuilde
   tuplet.setContext(context).draw();
   beam.setContext(context).draw();
 
-  ok(true, 'Auto Align Rests - Align All Test');
+  options.assert.ok(true, 'Auto Align Rests - Align All Test');
 }
 
 /**
@@ -393,7 +393,7 @@ function multiVoice(options: TestOptions, contextBuilder: ContextBuilder): void 
   beam2_1.setContext(ctx).draw();
   beam2_2.setContext(ctx).draw();
 
-  ok(true, 'Strokes Test Multi Voice');
+  options.assert.ok(true, 'Strokes Test Multi Voice');
 }
 
 VexFlowTests.register(RestsTests);

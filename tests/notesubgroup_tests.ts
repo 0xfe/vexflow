@@ -72,7 +72,7 @@ function basic(options: TestOptions): void {
 
   VexFlowTests.plotLegendForNoteWidth(ctx, 620, 120);
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function multiVoiceSingleDraw(options: TestOptions): void {
@@ -137,7 +137,7 @@ function multiVoiceHelper(options: TestOptions, numDraws: number) {
 
   notes1.forEach((note) => Note.plotMetrics(ctx, note, 150));
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function multiStaff(options: TestOptions): void {
@@ -200,7 +200,7 @@ function multiStaff(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(NoteSubGroupTests);

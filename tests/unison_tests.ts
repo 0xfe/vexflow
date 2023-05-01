@@ -44,7 +44,7 @@ function simple(options: TestOptions): void {
   system.getStaves()[0].setClef('treble');
   system.getStaves()[0].setTimeSignature('4/4');
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function style(options: TestOptions): void {
@@ -64,7 +64,7 @@ function style(options: TestOptions): void {
   system.getStaves()[0].setClef('treble');
   system.getStaves()[0].setTimeSignature('4/4');
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function breve(options: TestOptions): void {
@@ -83,7 +83,7 @@ function breve(options: TestOptions): void {
   system.getStaves()[0].setClef('treble');
   system.getStaves()[0].setTimeSignature('8/4');
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 VexFlowTests.register(UnisonTests);

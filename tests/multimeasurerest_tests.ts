@@ -101,7 +101,7 @@ function simple(options: TestOptions): void {
   context.fillText(str, xs.left + (xs.right - xs.left) * 0.5 - metrics.width * 0.5, strY);
   context.restore();
 
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 function staveWithModifiers(options: TestOptions): void {
@@ -163,7 +163,7 @@ function staveWithModifiers(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Stave with modifiers Test');
+  options.assert.ok(true, 'Stave with modifiers Test');
 }
 
 VexFlowTests.register(MultiMeasureRestTests);

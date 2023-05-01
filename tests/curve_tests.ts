@@ -51,7 +51,7 @@ function createTest(
     factory.Formatter().joinVoices(voices).formatToStave(voices, stave);
     factory.draw();
 
-    ok('Simple Curve');
+    options.assert.ok('Simple Curve');
   };
 }
 

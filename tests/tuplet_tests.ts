@@ -71,7 +71,7 @@ function simple(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 function beamed(options: TestOptions): void {
@@ -108,7 +108,7 @@ function beamed(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Beamed Test');
+  options.assert.ok(true, 'Beamed Test');
 }
 
 function ratio(options: TestOptions): void {
@@ -151,7 +151,7 @@ function ratio(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Ratioed Test');
+  options.assert.ok(true, 'Ratioed Test');
 }
 
 function bottom(options: TestOptions): void {
@@ -192,7 +192,7 @@ function bottom(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Bottom Test');
+  options.assert.ok(true, 'Bottom Test');
 }
 
 function bottomRatio(options: TestOptions): void {
@@ -239,7 +239,7 @@ function bottomRatio(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Bottom Ratioed Test');
+  options.assert.ok(true, 'Bottom Ratioed Test');
 }
 
 function awkward(options: TestOptions): void {
@@ -288,7 +288,7 @@ function awkward(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Awkward Test');
+  options.assert.ok(true, 'Awkward Test');
 }
 
 function complex(options: TestOptions): void {
@@ -355,7 +355,7 @@ function complex(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Complex Test');
+  options.assert.ok(true, 'Complex Test');
 }
 
 function mixedTop(options: TestOptions): void {
@@ -400,7 +400,7 @@ function mixedTop(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Mixed Stem Direction Tuplet');
+  options.assert.ok(true, 'Mixed Stem Direction Tuplet');
 }
 
 function mixedBottom(options: TestOptions): void {
@@ -445,7 +445,7 @@ function mixedBottom(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Mixed Stem Direction Bottom Tuplet');
+  options.assert.ok(true, 'Mixed Stem Direction Bottom Tuplet');
 }
 
 function nested(options: TestOptions): void {
@@ -493,7 +493,7 @@ function nested(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Nested Tuplets');
+  options.assert.ok(true, 'Nested Tuplets');
 }
 
 function single(options: TestOptions): void {
@@ -568,7 +568,7 @@ function single(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Nested Tuplets');
+  options.assert.ok(true, 'Nested Tuplets');
 }
 
 VexFlowTests.register(TupletTests);

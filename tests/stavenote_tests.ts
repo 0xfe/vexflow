@@ -31,15 +31,15 @@ import { TickContext } from '../src/tickcontext';
 const StaveNoteTests = {
   Start(): void {
     QUnit.module('StaveNote');
-    test('Tick', ticks);
-    test('Tick - New API', ticksNewAPI);
-    test('Stem', stem);
-    test('Automatic Stem Direction', autoStem);
-    test('Stem Extension Pitch', stemExtensionPitch);
-    test('Displacement after calling setStemDirection', setStemDirectionDisplacement);
-    test('StaveLine', staveLine);
-    test('Width', width);
-    test('TickContext', tickContext);
+    QUnit.test('Tick', ticks);
+    QUnit.test('Tick - New API', ticksNewAPI);
+    QUnit.test('Stem', stem);
+    QUnit.test('Automatic Stem Direction', autoStem);
+    QUnit.test('Stem Extension Pitch', stemExtensionPitch);
+    QUnit.test('Displacement after calling setStemDirection', setStemDirectionDisplacement);
+    QUnit.test('StaveLine', staveLine);
+    QUnit.test('Width', width);
+    QUnit.test('TickContext', tickContext);
 
     const run = VexFlowTests.runTests;
     run('StaveNote Draw - Treble', drawBasic, { clef: 'treble', octaveShift: 0, restKey: 'r/4' });
@@ -115,7 +115,7 @@ function draw(
   return note;
 }
 
-function ticks(): void {
+function ticks(assert: any): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   // Key value pairs of `testName: [durationString, expectedBeats, expectedNoteType]`
@@ -143,30 +143,30 @@ function ticks(): void {
     const expectedBeats = testData[1];
     const expectedNoteType = testData[2];
     const note = new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: durationString });
-    equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
-    equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
+    assert.equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
+    assert.equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
   });
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' }),
     /BadArguments/,
     "Invalid note duration '8.7' throws BadArguments exception"
   );
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' }),
     /BadArguments/,
     "Invalid note type 'Z' throws BadArguments exception"
   );
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' }),
     /BadArguments/,
     "Invalid note type 'Z' throws BadArguments exception"
   );
 }
 
-function ticksNewAPI(): void {
+function ticksNewAPI(assert: any): void {
   const BEAT = (1 * Flow.RESOLUTION) / 4;
 
   // Key value pairs of `testName: [noteData, expectedBeats, expectedNoteType]`
@@ -197,35 +197,35 @@ function ticksNewAPI(): void {
     noteData.keys = ['c/4', 'e/4', 'g/4'];
 
     const note = new StaveNote(noteData);
-    equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
-    equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
+    assert.equal(note.getTicks().value(), BEAT * expectedBeats, testName + ' must have ' + expectedBeats + ' beats');
+    assert.equal(note.getNoteType(), expectedNoteType, 'Note type must be ' + expectedNoteType);
   });
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '8.7dddm' }),
     /BadArguments/,
     "Invalid note duration '8.7' throws BadArguments exception"
   );
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2Z' }),
     /BadArguments/,
     "Invalid note type 'Z' throws BadArguments exception"
   );
 
-  throws(
+  assert.throws(
     () => new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: '2dddZ' }),
     /BadArguments/,
     "Invalid note type 'Z' throws BadArguments exception"
   );
 }
 
-function stem(): void {
+function stem(assert: any): void {
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'g/4'], duration: 'w' });
-  equal(note.getStemDirection(), Stem.UP, 'Default note has UP stem');
+  assert.equal(note.getStemDirection(), Stem.UP, 'Default note has UP stem');
 }
 
-function autoStem(): void {
+function autoStem(assert: any): void {
   const testData: [/* keys */ string[], /* expectedStemDirection */ number][] = [
     [['c/5', 'e/5', 'g/5'], Stem.DOWN],
     [['e/4', 'g/4', 'c/5'], Stem.UP],
@@ -237,7 +237,7 @@ function autoStem(): void {
     const keys = td[0];
     const expectedStemDirection = td[1];
     const note = new StaveNote({ keys: keys, auto_stem: true, duration: '8' });
-    equal(
+    assert.equal(
       note.getStemDirection(),
       expectedStemDirection,
       'Stem must be ' + (expectedStemDirection === Stem.UP ? 'up' : 'down')
@@ -245,7 +245,7 @@ function autoStem(): void {
   });
 }
 
-function stemExtensionPitch(): void {
+function stemExtensionPitch(assert: any): void {
   // [keys, expectedStemExtension, override stem direction]
   const testData: [string[], number, number][] = [
     [['c/5', 'e/5', 'g/5'], 0, 0],
@@ -269,7 +269,7 @@ function stemExtensionPitch(): void {
     } else {
       note = new StaveNote({ keys: keys, duration: '4', stem_direction: overrideStemDirection });
     }
-    equal(
+    assert.equal(
       note.getStemExtension(),
       expectedStemExtension,
       'For ' + keys.toString() + ' StemExtension must be ' + expectedStemExtension
@@ -277,14 +277,14 @@ function stemExtensionPitch(): void {
     // set to weird Stave
     const stave = new Stave(10, 10, 300, { spacing_between_lines_px: 20 });
     note.setStave(stave);
-    equal(
+    assert.equal(
       note.getStemExtension(),
       expectedStemExtension * 2,
       'For wide staff ' + keys.toString() + ' StemExtension must be ' + expectedStemExtension * 2
     );
 
     //    const whole_note = new StaveNote({ keys: keys, duration: 'w' });
-    //    equal(
+    //    assert.equal(
     //      whole_note.getStemExtension(),
     //      -1 * Flow.STEM_HEIGHT,
     //      'For ' + keys.toString() + ' whole_note StemExtension must always be -1 * Flow.STEM_HEIGHT'
@@ -292,7 +292,7 @@ function stemExtensionPitch(): void {
   });
 }
 
-function setStemDirectionDisplacement(): void {
+function setStemDirectionDisplacement(assert: any): void {
   function getDisplacements(note: StaveNote) {
     return note.noteHeads.map((noteHead) => noteHead.isDisplaced());
   }
@@ -301,42 +301,42 @@ function setStemDirectionDisplacement(): void {
   const stemDownDisplacements = [true, false, false];
 
   const note = new StaveNote({ keys: ['c/5', 'd/5', 'g/5'], stem_direction: Stem.UP, duration: '4' });
-  deepEqual(getDisplacements(note), stemUpDisplacements);
+  assert.deepEqual(getDisplacements(note), stemUpDisplacements);
   note.setStemDirection(Stem.DOWN);
-  deepEqual(getDisplacements(note), stemDownDisplacements);
+  assert.deepEqual(getDisplacements(note), stemDownDisplacements);
   note.setStemDirection(Stem.UP);
-  deepEqual(getDisplacements(note), stemUpDisplacements);
+  assert.deepEqual(getDisplacements(note), stemUpDisplacements);
 }
 
-function staveLine(): void {
+function staveLine(assert: any): void {
   const stave = new Stave(10, 10, 300);
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
   note.setStave(stave);
 
   const props = note.getKeyProps();
-  equal(props[0].line, 0, 'C/4 on line 0');
-  equal(props[1].line, 1, 'E/4 on line 1');
-  equal(props[2].line, 2.5, 'A/4 on line 2.5');
+  assert.equal(props[0].line, 0, 'C/4 on line 0');
+  assert.equal(props[1].line, 1, 'E/4 on line 1');
+  assert.equal(props[2].line, 2.5, 'A/4 on line 2.5');
 
   const ys = note.getYs();
-  equal(ys.length, 3, 'Chord should be rendered on three lines');
-  equal(ys[0], 100, 'Line for C/4');
-  equal(ys[1], 90, 'Line for E/4');
-  equal(ys[2], 75, 'Line for A/4');
+  assert.equal(ys.length, 3, 'Chord should be rendered on three lines');
+  assert.equal(ys[0], 100, 'Line for C/4');
+  assert.equal(ys[1], 90, 'Line for E/4');
+  assert.equal(ys[2], 75, 'Line for A/4');
 }
 
-function width(): void {
+function width(assert: any): void {
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' });
-  throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
+  assert.throws(() => note.getWidth(), /UnformattedNote/, 'Unformatted note should have no width');
 }
 
-function tickContext(): void {
+function tickContext(assert: any): void {
   const stave = new Stave(10, 10, 400);
   const note = new StaveNote({ keys: ['c/4', 'e/4', 'a/4'], duration: 'w' }).setStave(stave);
 
   new TickContext().addTickable(note).preFormat().setX(10).setPadding(0);
 
-  expect(0);
+  assert.expect(0);
 }
 
 function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -390,7 +390,7 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
     { clef: clef, keys: restKeys, duration: '128r' },
     { keys: ['x/4'], duration: 'h' },
   ];
-  expect(noteStructs.length * 2);
+  options.assert.expect(noteStructs.length * 2);
 
   const colorDescendants = (parentItem: SVGElement, color: string) => () =>
     parentItem.querySelectorAll('*').forEach((child) => {
@@ -409,8 +409,8 @@ function drawBasic(options: TestOptions, contextBuilder: ContextBuilder): void {
         item.addEventListener('mouseout', colorDescendants(item, 'black'), false);
       }
     }
-    ok(note.getX() > 0, 'Note ' + i + ' has X value');
-    ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(note.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -465,7 +465,7 @@ function drawBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder)
     { clef: clef, keys: restKeys, duration: '128r' },
     { keys: ['x/4'], duration: 'h' },
   ];
-  expect(noteStructs.length * 2);
+  options.assert.expect(noteStructs.length * 2);
 
   for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(
@@ -477,13 +477,13 @@ function drawBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder)
       false /* addModifierContext */
     );
 
-    ok(note.getX() > 0, 'Note ' + i + ' has X value');
-    ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(note.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
 function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(40);
+  options.assert.expect(40);
   const ctx = contextBuilder(options.elementId, 600, 280);
   const stave = new Stave(10, 10, 650);
   stave.setContext(ctx);
@@ -517,8 +517,8 @@ function drawBass(options: TestOptions, contextBuilder: ContextBuilder): void {
   for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 25);
 
-    ok(note.getX() > 0, 'Note ' + i + ' has X value');
-    ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(note.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -550,13 +550,13 @@ function displacements(options: TestOptions, contextBuilder: ContextBuilder): vo
       stem_direction: Stem.DOWN,
     },
   ];
-  expect(noteStructs.length * 2);
+  options.assert.expect(noteStructs.length * 2);
 
   for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(staveNote(noteStructs[i]), stave, ctx, (i + 1) * 45);
 
-    ok(note.getX() > 0, 'Note ' + i + ' has X value');
-    ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(note.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -605,13 +605,13 @@ function drawHarmonicAndMuted(options: TestOptions, contextBuilder: ContextBuild
     { keys: ['c/4', 'e/4', 'a/4'], duration: '64m', stem_direction: Stem.DOWN },
     { keys: ['c/4', 'e/4', 'a/4'], duration: '128m', stem_direction: Stem.DOWN },
   ];
-  expect(noteStructs.length * 2);
+  options.assert.expect(noteStructs.length * 2);
 
   for (let i = 0; i < noteStructs.length; ++i) {
     const note = draw(staveNote(noteStructs[i]), stave, ctx, i * 25 + 5);
 
-    ok(note.getX() > 0, 'Note ' + i + ' has X value');
-    ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(note.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(note.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -658,7 +658,7 @@ function drawSlash(options: TestOptions, contextBuilder: ContextBuilder): void {
   beam1.setContext(ctx).draw();
   beam2.setContext(ctx).draw();
 
-  ok('Slash Note Heads');
+  options.assert.ok('Slash Note Heads');
 }
 
 function drawKeyStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -677,8 +677,8 @@ function drawKeyStyles(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave.setContext(ctx).draw();
   note.setContext(ctx).draw();
 
-  ok(note.getX() > 0, 'Note has X value');
-  ok(note.getYs().length > 0, 'Note has Y values');
+  options.assert.ok(note.getX() > 0, 'Note has X value');
+  options.assert.ok(note.getYs().length > 0, 'Note has Y values');
 }
 
 function drawNoteStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -697,8 +697,8 @@ function drawNoteStyles(options: TestOptions, contextBuilder: ContextBuilder): v
   stave.setContext(ctx).draw();
   note.setContext(ctx).draw();
 
-  ok(note.getX() > 0, 'Note has X value');
-  ok(note.getYs().length > 0, 'Note has Y values');
+  options.assert.ok(note.getX() > 0, 'Note has X value');
+  options.assert.ok(note.getYs().length > 0, 'Note has Y values');
 }
 
 function drawNoteStemStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -717,7 +717,7 @@ function drawNoteStemStyles(options: TestOptions, contextBuilder: ContextBuilder
   stave.setContext(ctx).draw();
   note.setContext(ctx).draw();
 
-  ok('Note Stem Style');
+  options.assert.ok('Note Stem Style');
 }
 
 function drawNoteStemLengths(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -771,7 +771,7 @@ function drawNoteStemLengths(options: TestOptions, contextBuilder: ContextBuilde
   }
   Formatter.FormatAndDraw(ctx, stave, notes);
 
-  ok('Note Stem Length');
+  options.assert.ok('Note Stem Length');
 }
 
 function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -790,8 +790,8 @@ function drawNoteStylesWithFlag(options: TestOptions, contextBuilder: ContextBui
   stave.setContext(ctx).draw();
   note.setContext(ctx).draw();
 
-  ok(note.getX() > 0, 'Note has X value');
-  ok(note.getYs().length > 0, 'Note has Y values');
+  options.assert.ok(note.getX() > 0, 'Note has X value');
+  options.assert.ok(note.getYs().length > 0, 'Note has Y values');
 }
 
 function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -857,7 +857,7 @@ function drawBeamStyles(options: TestOptions, contextBuilder: ContextBuilder): v
   beam3.setContext(ctx).draw();
   beam4.setContext(ctx).draw();
 
-  ok('draw beam styles');
+  options.assert.ok('draw beam styles');
 }
 
 function dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -889,7 +889,7 @@ function dotsAndFlagsStemUp(options: TestOptions, contextBuilder: ContextBuilder
     draw(notes[i], stave, ctx, i * 65);
   }
 
-  ok(true, 'Full Dot');
+  options.assert.ok(true, 'Full Dot');
 }
 
 function dotsAndFlagsStemDown(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -920,7 +920,7 @@ function dotsAndFlagsStemDown(options: TestOptions, contextBuilder: ContextBuild
     draw(staveNotes[i], stave, ctx, i * 65);
   }
 
-  ok(true, 'Full Dot');
+  options.assert.ok(true, 'Full Dot');
 }
 
 function dotsAndBeamsUp(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -954,7 +954,7 @@ function dotsAndBeamsUp(options: TestOptions, contextBuilder: ContextBuilder): v
 
   beam.setContext(ctx).draw();
 
-  ok(true, 'Full Dot');
+  options.assert.ok(true, 'Full Dot');
 }
 
 function dotsAndBeamsDown(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -987,7 +987,7 @@ function dotsAndBeamsDown(options: TestOptions, contextBuilder: ContextBuilder):
 
   beam.setContext(ctx).draw();
 
-  ok(true, 'Full Dot');
+  options.assert.ok(true, 'Full Dot');
 }
 
 function noteHeadsSimple(options: TestOptions): void {
@@ -1024,7 +1024,7 @@ function noteHeadsSimple(options: TestOptions): void {
   });
 
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function noPadding(options: TestOptions): void {
@@ -1062,7 +1062,7 @@ function noPadding(options: TestOptions): void {
   newStave(100, true);
   newStave(200, false);
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function noteHeadsHidden(options: TestOptions): void {
@@ -1103,7 +1103,7 @@ function noteHeadsHidden(options: TestOptions): void {
   });
 
   vf.draw();
-  expect(0);
+  options.assert.expect(0);
 }
 
 function centerAlignedRest(options: TestOptions): void {
@@ -1113,7 +1113,7 @@ function centerAlignedRest(options: TestOptions): void {
   const voice = f.Voice().setStrict(false).addTickables([note]);
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function centerAlignedRestFermata(options: TestOptions): void {
@@ -1131,7 +1131,7 @@ function centerAlignedRestFermata(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function centerAlignedRestAnnotation(options: TestOptions): void {
@@ -1149,7 +1149,7 @@ function centerAlignedRestAnnotation(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function centerAlignedNoteMultiModifiers(options: TestOptions): void {
@@ -1178,7 +1178,7 @@ function centerAlignedNoteMultiModifiers(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function centerAlignedMultiVoice(options: TestOptions): void {
@@ -1216,7 +1216,7 @@ function centerAlignedMultiVoice(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(StaveNoteTests);

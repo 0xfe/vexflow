@@ -28,7 +28,7 @@ import { TimeSignature } from '../src/timesignature';
 const StaveTests = {
   Start(): void {
     QUnit.module('Stave');
-    test('StaveModifiers SortByCategory', sortByCategory);
+    QUnit.test('StaveModifiers SortByCategory', sortByCategory);
     const run = VexFlowTests.runTests;
     run('Stave Draw Test', draw);
     run('Open Stave Draw Test', drawOpenStave);
@@ -50,7 +50,7 @@ const StaveTests = {
   },
 };
 
-function sortByCategory(): void {
+function sortByCategory(assert: any): void {
   const stave = new Stave(0, 0, 300);
   const clef0 = new Clef('treble');
   const clef1 = new Clef('alto');
@@ -79,7 +79,7 @@ function sortByCategory(): void {
     for (let i = 0; i < a.length; ++i) {
       if (a[i] !== b[i]) isSame = false;
     }
-    ok(isSame, title);
+    assert.ok(isSame, title);
   };
 
   sortAndCompare(
@@ -120,12 +120,12 @@ function draw(options: TestOptions, contextBuilder: ContextBuilder): void {
   stave.setContext(ctx);
   stave.draw();
 
-  equal(stave.getYForNote(0), 100, 'getYForNote(0)');
-  equal(stave.getYForLine(5), 100, 'getYForLine(5)');
-  equal(stave.getYForLine(0), 50, 'getYForLine(0) - Top Line');
-  equal(stave.getYForLine(4), 90, 'getYForLine(4) - Bottom Line');
+  options.assert.equal(stave.getYForNote(0), 100, 'getYForNote(0)');
+  options.assert.equal(stave.getYForLine(5), 100, 'getYForLine(5)');
+  options.assert.equal(stave.getYForLine(0), 50, 'getYForLine(0) - Top Line');
+  options.assert.equal(stave.getYForLine(4), 90, 'getYForLine(4) - Bottom Line');
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawOpenStave(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -138,11 +138,11 @@ function drawOpenStave(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave.setContext(ctx);
   stave.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawMultipleMeasures(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 550, 200);
@@ -197,7 +197,7 @@ function drawMultipleMeasures(options: TestOptions, contextBuilder: ContextBuild
 }
 
 function drawRepeats(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 750, 120);
@@ -282,7 +282,7 @@ function drawRepeats(options: TestOptions, contextBuilder: ContextBuilder): void
 }
 
 function drawEndModifiers(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   const staveWidth = 230;
   const blockHeight = 80;
@@ -405,7 +405,7 @@ function drawEndModifiers(options: TestOptions, contextBuilder: ContextBuilder):
 }
 
 function drawStaveRepetition(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 725, 200);
@@ -469,7 +469,7 @@ function drawStaveRepetition(options: TestOptions, contextBuilder: ContextBuilde
 }
 
 function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 725, 200);
@@ -568,7 +568,7 @@ function drawVolta(options: TestOptions, contextBuilder: ContextBuilder): void {
 }
 
 function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 1100, 200);
@@ -647,7 +647,7 @@ function drawVoltaModifier(options: TestOptions, contextBuilder: ContextBuilder)
 }
 
 function drawTempo(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   const ctx = contextBuilder(options.elementId, 725, 350);
   const padding = 10;
@@ -717,13 +717,13 @@ function configureSingleLine(options: TestOptions, contextBuilder: ContextBuilde
   stave.setContext(ctx).draw();
 
   const config = stave.getConfigForLines();
-  equal(config[0].visible, true, 'getLinesConfiguration() - Line 0');
-  equal(config[1].visible, false, 'getLinesConfiguration() - Line 1');
-  equal(config[2].visible, true, 'getLinesConfiguration() - Line 2');
-  equal(config[3].visible, false, 'getLinesConfiguration() - Line 3');
-  equal(config[4].visible, true, 'getLinesConfiguration() - Line 4');
+  options.assert.equal(config[0].visible, true, 'getLinesConfiguration() - Line 0');
+  options.assert.equal(config[1].visible, false, 'getLinesConfiguration() - Line 1');
+  options.assert.equal(config[2].visible, true, 'getLinesConfiguration() - Line 2');
+  options.assert.equal(config[3].visible, false, 'getLinesConfiguration() - Line 3');
+  options.assert.equal(config[4].visible, true, 'getLinesConfiguration() - Line 4');
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function configureAllLines(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -735,13 +735,13 @@ function configureAllLines(options: TestOptions, contextBuilder: ContextBuilder)
     .draw();
 
   const config = stave.getConfigForLines();
-  equal(config[0].visible, false, 'getLinesConfiguration() - Line 0');
-  equal(config[1].visible, true, 'getLinesConfiguration() - Line 1');
-  equal(config[2].visible, false, 'getLinesConfiguration() - Line 2');
-  equal(config[3].visible, true, 'getLinesConfiguration() - Line 3');
-  equal(config[4].visible, false, 'getLinesConfiguration() - Line 4');
+  options.assert.equal(config[0].visible, false, 'getLinesConfiguration() - Line 0');
+  options.assert.equal(config[1].visible, true, 'getLinesConfiguration() - Line 1');
+  options.assert.equal(config[2].visible, false, 'getLinesConfiguration() - Line 2');
+  options.assert.equal(config[3].visible, true, 'getLinesConfiguration() - Line 3');
+  options.assert.equal(config[4].visible, false, 'getLinesConfiguration() - Line 4');
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawStaveText(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -753,7 +753,7 @@ function drawStaveText(options: TestOptions, contextBuilder: ContextBuilder): vo
   stave.setText('Below Text', Modifier.Position.BELOW);
   stave.setContext(ctx).draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function drawStaveTextMultiLine(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -769,7 +769,7 @@ function drawStaveTextMultiLine(options: TestOptions, contextBuilder: ContextBui
   stave.setText('Right Below Text', Modifier.Position.BELOW, { shift_y: 10, justification: TextJustification.RIGHT });
   stave.setContext(ctx).draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 function factoryAPI(options: TestOptions): void {
@@ -779,7 +779,7 @@ function factoryAPI(options: TestOptions): void {
   stave.setText('2nd line', Modifier.Position.LEFT, { shift_y: 10 });
   f.draw();
 
-  ok(true, 'all pass');
+  options.assert.ok(true, 'all pass');
 }
 
 VexFlowTests.register(StaveTests);

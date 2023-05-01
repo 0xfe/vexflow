@@ -35,7 +35,7 @@ function createTest(noteGroup: string, setupVibratoBracket: (f: Factory, notes: 
     factory.Formatter().joinVoices([voice]).formatToStave([voice], stave);
     factory.draw();
 
-    ok(true);
+    options.assert.ok(true);
   };
 }
 

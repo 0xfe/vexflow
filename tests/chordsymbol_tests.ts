@@ -141,7 +141,7 @@ function withModifiers(options: TestOptions): void {
   ];
   draw(chords, 240);
 
-  ok(true, 'Font Size Chord Symbol');
+  options.assert.ok(true, 'Font Size Chord Symbol');
 }
 
 function fontSize(options: TestOptions): void {
@@ -237,7 +237,7 @@ function fontSize(options: TestOptions): void {
   ];
   draw(chords, 240);
 
-  ok(true, 'Font Size Chord Symbol');
+  options.assert.ok(true, 'Font Size Chord Symbol');
 }
 
 function kern(options: TestOptions): void {
@@ -292,7 +292,7 @@ function kern(options: TestOptions): void {
   ];
   draw(chords, 310);
 
-  ok(true, 'Chord Symbol Kerning Tests');
+  options.assert.ok(true, 'Chord Symbol Kerning Tests');
 }
 
 function top(options: TestOptions): void {
@@ -347,7 +347,7 @@ function top(options: TestOptions): void {
   chord2 = f.ChordSymbol().addText('C').addTextSuperscript('sus4');
   draw(chord1, chord2, 240);
 
-  ok(true, 'Top Chord Symbol');
+  options.assert.ok(true, 'Top Chord Symbol');
 }
 
 function topJustify(options: TestOptions): void {
@@ -395,7 +395,7 @@ function topJustify(options: TestOptions): void {
   chord2 = f.ChordSymbol({ hJustify: 'centerStem' }).addText('C').addTextSuperscript('Maj.');
   draw(chord1, chord2, 340);
 
-  ok(true, 'Top Chord Justified');
+  options.assert.ok(true, 'Top Chord Justified');
 }
 
 function bottom(options: TestOptions): void {
@@ -423,7 +423,7 @@ function bottom(options: TestOptions): void {
   ];
 
   draw(chords, 10);
-  ok(true, 'Bottom Chord Symbol');
+  options.assert.ok(true, 'Bottom Chord Symbol');
 }
 
 function bottomStemDown(options: TestOptions): void {
@@ -454,7 +454,7 @@ function bottomStemDown(options: TestOptions): void {
   ];
 
   draw(chords, 10);
-  ok(true, 'Bottom Stem Down Chord Symbol');
+  options.assert.ok(true, 'Bottom Stem Down Chord Symbol');
 }
 
 function doubleBottom(options: TestOptions): void {
@@ -491,7 +491,7 @@ function doubleBottom(options: TestOptions): void {
   ];
 
   draw(chords1, chords2, 10);
-  ok(true, '2 Bottom Chord Symbol');
+  options.assert.ok(true, '2 Bottom Chord Symbol');
 }
 
 VexFlowTests.register(ChordSymbolTests);

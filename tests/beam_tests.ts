@@ -70,7 +70,7 @@ function simple(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Simple Test');
+  options.assert.ok(true, 'Simple Test');
 }
 
 function multi(options: TestOptions): void {
@@ -97,7 +97,7 @@ function multi(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Multi Test');
+  options.assert.ok(true, 'Multi Test');
 }
 
 function sixteenth(options: TestOptions): void {
@@ -130,7 +130,7 @@ function sixteenth(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Sixteenth Test');
+  options.assert.ok(true, 'Sixteenth Test');
 }
 
 function breakSecondaryBeams(options: TestOptions): void {
@@ -165,7 +165,7 @@ function breakSecondaryBeams(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Breaking Secondary Beams Test');
+  options.assert.ok(true, 'Breaking Secondary Beams Test');
 }
 
 function partialBeamDirection(options: TestOptions): void {
@@ -195,7 +195,7 @@ function partialBeamDirection(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Partial beam direction test');
+  options.assert.ok(true, 'Partial beam direction test');
 }
 
 function slopey(options: TestOptions): void {
@@ -216,7 +216,7 @@ function slopey(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Slopey Test');
+  options.assert.ok(true, 'Slopey Test');
 }
 
 function autoStem(options: TestOptions): void {
@@ -244,16 +244,16 @@ function autoStem(options: TestOptions): void {
   const UP = Stem.UP;
   const DOWN = Stem.DOWN;
 
-  equal(beams[0].getStemDirection(), UP);
-  equal(beams[1].getStemDirection(), UP);
-  equal(beams[2].getStemDirection(), UP);
-  equal(beams[3].getStemDirection(), UP);
-  equal(beams[4].getStemDirection(), DOWN);
-  equal(beams[5].getStemDirection(), DOWN);
+  options.assert.equal(beams[0].getStemDirection(), UP);
+  options.assert.equal(beams[1].getStemDirection(), UP);
+  options.assert.equal(beams[2].getStemDirection(), UP);
+  options.assert.equal(beams[3].getStemDirection(), UP);
+  options.assert.equal(beams[4].getStemDirection(), DOWN);
+  options.assert.equal(beams[5].getStemDirection(), DOWN);
 
   f.draw();
 
-  ok(true, 'AutoStem Beam Test');
+  options.assert.ok(true, 'AutoStem Beam Test');
 }
 
 function mixed(options: TestOptions): void {
@@ -285,7 +285,7 @@ function mixed(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Multi Test');
+  options.assert.ok(true, 'Multi Test');
 }
 
 function mixed2(options: TestOptions): void {
@@ -314,7 +314,7 @@ function mixed2(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Multi Test');
+  options.assert.ok(true, 'Multi Test');
 }
 
 function dotted(options: TestOptions): void {
@@ -336,7 +336,7 @@ function dotted(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Dotted Test');
+  options.assert.ok(true, 'Dotted Test');
 }
 
 function partial(options: TestOptions): void {
@@ -361,7 +361,7 @@ function partial(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Partial Test');
+  options.assert.ok(true, 'Partial Test');
 }
 
 function tradeoffs(options: TestOptions): void {
@@ -379,7 +379,7 @@ function tradeoffs(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Close Trade-offs Test');
+  options.assert.ok(true, 'Close Trade-offs Test');
 }
 
 function insane(options: TestOptions): void {
@@ -399,7 +399,7 @@ function insane(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Insane Test');
+  options.assert.ok(true, 'Insane Test');
 }
 
 function lenghty(options: TestOptions): void {
@@ -413,7 +413,7 @@ function lenghty(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Lengthy Test');
+  options.assert.ok(true, 'Lengthy Test');
 }
 
 function outlier(options: TestOptions): void {
@@ -438,7 +438,7 @@ function outlier(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Outlier Test');
+  options.assert.ok(true, 'Outlier Test');
 }
 
 function tabBeamsUp(options: TestOptions): void {
@@ -517,7 +517,7 @@ function tabBeamsUp(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 function tabBeamsDown(options: TestOptions): void {
@@ -611,7 +611,7 @@ function tabBeamsDown(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 function autoTabBeams(options: TestOptions): void {
@@ -673,7 +673,7 @@ function autoTabBeams(options: TestOptions): void {
 
   beams.forEach((beam) => beam.setContext(f.getContext()).draw());
 
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 // This tests makes sure the auto_stem functionality is works.
@@ -743,7 +743,7 @@ function tabBeamsAutoStem(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'All objects have been drawn');
+  options.assert.ok(true, 'All objects have been drawn');
 }
 
 function complexWithAnnotation(options: TestOptions): void {
@@ -798,7 +798,7 @@ function complexWithAnnotation(options: TestOptions): void {
 
   factory.draw();
 
-  ok(true, 'Complex beam annotations');
+  options.assert.ok(true, 'Complex beam annotations');
 }
 
 function complexWithArticulation(options: TestOptions): void {
@@ -841,7 +841,7 @@ function complexWithArticulation(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Complex beam articulations');
+  options.assert.ok(true, 'Complex beam articulations');
 }
 
 function complexWithArticulation2(options: TestOptions): void {
@@ -895,7 +895,7 @@ function complexWithArticulation2(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Complex beam articulations two staves');
+  options.assert.ok(true, 'Complex beam articulations two staves');
 }
 
 VexFlowTests.register(BeamTests);

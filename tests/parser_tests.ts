@@ -10,10 +10,10 @@ import { Grammar, Parser, Result, RuleFunction } from '../src/parser';
 const ParserTests = {
   Start(): void {
     QUnit.module('Parser');
-    test('Basic', basic);
-    test('Advanced', advanced);
-    test('Mixed', mixed);
-    test('Micro Score', microscore);
+    QUnit.test('Basic', basic);
+    QUnit.test('Advanced', advanced);
+    QUnit.test('Mixed', mixed);
+    QUnit.test('Micro Score', microscore);
   },
 };
 
@@ -92,53 +92,53 @@ class MicroScoreGrammar {
 /**
  * Check that the result is a parse failure, and verify the error position.
  */
-function fails(result: Result, expectedErrorPos: number, msg?: string): void {
-  notOk(result.success, msg);
-  equal(result.errorPos, expectedErrorPos, msg);
+function fails(assert: any, result: Result, expectedErrorPos: number, msg?: string): void {
+  assert.notOk(result.success, msg);
+  assert.equal(result.errorPos, expectedErrorPos, msg);
 }
 
-function basic(): void {
+function basic(assert: any): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.LITTLELINE, grammar.EOL];
   const parser = new Parser(grammar);
 
   // Each of these strings will parse correctly.
   const mustPass = ['first, second', 'first,second', 'first', 'first,second, third'];
-  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
+  mustPass.forEach((line) => assert.equal(parser.parse(line).success, true, line));
 
-  fails(parser.parse(''), 0);
-  fails(parser.parse('first second'), 6);
-  fails(parser.parse('first,,'), 5);
-  fails(parser.parse('first,'), 5);
-  fails(parser.parse(',,'), 0);
+  fails(assert, parser.parse(''), 0);
+  fails(assert, parser.parse('first second'), 6);
+  fails(assert, parser.parse('first,,'), 5);
+  fails(assert, parser.parse('first,'), 5);
+  fails(assert, parser.parse(',,'), 0);
 }
 
-function advanced(): void {
+function advanced(assert: any): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.BIGLINE, grammar.EOL];
   const parser = new Parser(grammar);
 
   const mustPass = ['{first}', '{first!}', '{first,second}', '{first,second!}', '{first,second,third!}'];
-  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
+  mustPass.forEach((line) => assert.equal(parser.parse(line).success, true, line));
 
-  fails(parser.parse('{first,second,third,}'), 19);
-  fails(parser.parse('first,second,third'), 0);
-  fails(parser.parse('{first,second,third'), 19);
-  fails(parser.parse('{!}'), 1);
+  fails(assert, parser.parse('{first,second,third,}'), 19);
+  fails(assert, parser.parse('first,second,third'), 0);
+  fails(assert, parser.parse('{first,second,third'), 19);
+  fails(assert, parser.parse('{!}'), 1);
 }
 
-function mixed(): void {
+function mixed(assert: any): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.BIGORLITTLE, grammar.EOL];
   const parser = new Parser(grammar);
 
   const mustPass = ['{first,second,third!}', 'first, second'];
-  mustPass.forEach((line) => equal(parser.parse(line).success, true, line));
+  mustPass.forEach((line) => assert.equal(parser.parse(line).success, true, line));
 
-  fails(parser.parse('first second'), 6);
+  fails(assert, parser.parse('first second'), 6);
 }
 
-function microscore(): void {
+function microscore(assert: any): void {
   const grammar = new MicroScoreGrammar();
   const parser = new Parser(grammar);
 
@@ -150,13 +150,13 @@ function microscore(): void {
 
   mustPass.forEach((line) => {
     const result = parser.parse(line);
-    equal(result.success, true, line);
-    equal(result.matches?.length, 3, line);
+    assert.equal(result.success, true, line);
+    assert.equal(result.matches?.length, 3, line);
   });
 
-  fails(parser.parse('40 42 44 45 47 49 5A 52'), 19);
-  fails(parser.parse('40.44.47] [45.49.52] [47.51.54] [49.52.56]'), 2);
-  fails(parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
+  fails(assert, parser.parse('40 42 44 45 47 49 5A 52'), 19);
+  fails(assert, parser.parse('40.44.47] [45.49.52] [47.51.54] [49.52.56]'), 2);
+  fails(assert, parser.parse('40 [40] 45 47 [44.47.51]'), 3); // A chord with a single note is not allowed.
 }
 
 VexFlowTests.register(ParserTests);

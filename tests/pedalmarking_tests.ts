@@ -46,7 +46,7 @@ function createTest(makePedal: (f: Factory, v1: Tickable[], v2: Tickable[]) => v
 
     f.draw();
 
-    ok(true, 'Must render');
+    options.assert.ok(true, 'Must render');
   };
 }
 

@@ -35,7 +35,7 @@ const OrnamentTests = {
 };
 
 function drawOrnaments(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 750, 195);
@@ -77,7 +77,7 @@ function drawOrnaments(options: TestOptions, contextBuilder: ContextBuilder): vo
 }
 
 function drawOrnamentsDisplaced(options: TestOptions, contextBuilder: ContextBuilder): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const ctx = contextBuilder(options.elementId, 750, 195);
@@ -146,7 +146,7 @@ const addDelayedTurns = (f: Factory) => {
 };
 
 function drawOrnamentsDelayed(options: TestOptions): void {
-  expect(0);
+  options.assert.expect(0);
 
   const f = VexFlowTests.makeFactory(options, 550, 195);
   const { context, stave, notes } = addDelayedTurns(f);
@@ -156,7 +156,7 @@ function drawOrnamentsDelayed(options: TestOptions): void {
 }
 
 function drawOrnamentsDelayedMultipleDraws(options: TestOptions): void {
-  expect(0);
+  options.assert.expect(0);
   const f = VexFlowTests.makeFactory(options, 550, 195);
 
   const { context, stave, notes } = addDelayedTurns(f);
@@ -168,7 +168,7 @@ function drawOrnamentsDelayedMultipleDraws(options: TestOptions): void {
 }
 
 function drawOrnamentsStacked(options: TestOptions): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const f = VexFlowTests.makeFactory(options, 550, 195);
@@ -198,7 +198,7 @@ function drawOrnamentsStacked(options: TestOptions): void {
 }
 
 function drawOrnamentsWithAccidentals(options: TestOptions): void {
-  expect(0);
+  options.assert.expect(0);
 
   // Get the rendering context
   const f = VexFlowTests.makeFactory(options, 650, 250);
@@ -278,7 +278,7 @@ function jazzOrnaments(options: TestOptions): void {
     voice.draw(ctx, stave);
   }
 
-  expect(0);
+  options.assert.expect(0);
 
   const f = VexFlowTests.makeFactory(options, 950, 400);
   const ctx = f.getContext();

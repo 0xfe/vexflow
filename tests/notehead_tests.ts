@@ -61,7 +61,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
 
   voice.draw(ctx, stave);
 
-  ok('Basic NoteHead test');
+  options.assert.ok('Basic NoteHead test');
 }
 
 /**
@@ -116,8 +116,8 @@ function variousHeads(options: TestOptions, contextBuilder: ContextBuilder): voi
       note.stem_direction = staveNum === 0 ? -1 : 1;
       const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-      ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-      ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+      options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+      options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
     }
   }
 }
@@ -185,8 +185,8 @@ function variousNoteHeads(options: TestOptions, contextBuilder: ContextBuilder):
       note.stem_direction = staveNum === 0 ? -1 : 1;
       const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-      ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-      ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+      options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+      options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
     }
   }
 }
@@ -211,8 +211,8 @@ function variousNoteHeads2(options: TestOptions, contextBuilder: ContextBuilder)
     const note = notes[i];
     const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-    ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-    ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+    options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+    options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
   }
 }
 
@@ -251,8 +251,8 @@ function drumChordHeads(options: TestOptions, contextBuilder: ContextBuilder): v
       note.stem_direction = h === 0 ? -1 : 1;
       const staveNote = showNote(note, stave, ctx, (i + 1) * 25);
 
-      ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
-      ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
+      options.assert.ok(staveNote.getX() > 0, 'Note ' + i + ' has X value');
+      options.assert.ok(staveNote.getYs().length > 0, 'Note ' + i + ' has Y values');
     }
   }
 }
@@ -282,7 +282,7 @@ function basicBoundingBoxes(options: TestOptions, contextBuilder: ContextBuilder
   }
   ctx.stroke();
 
-  ok('NoteHead Bounding Boxes');
+  options.assert.ok('NoteHead Bounding Boxes');
 }
 
 VexFlowTests.register(NoteHeadTests);

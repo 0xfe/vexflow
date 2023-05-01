@@ -51,7 +51,7 @@ function tremoloBasic(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Tremolo - Basic');
+  options.assert.ok(true, 'Tremolo - Basic');
 }
 
 function tremoloBig(options: TestOptions): void {
@@ -106,7 +106,7 @@ function tremoloBig(options: TestOptions): void {
 
   f.draw();
 
-  ok(true, 'Tremolo - Big');
+  options.assert.ok(true, 'Tremolo - Big');
 }
 
 VexFlowTests.register(TremoloTests);

@@ -74,7 +74,7 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   Formatter.FormatAndDraw(ctx, stave, notes);
   notes.forEach((note) => Note.plotMetrics(ctx, note, 140));
 
-  ok(true, 'Double Bends');
+  options.assert.ok(true, 'Double Bends');
 }
 
 function doubleBendsWithRelease(options: TestOptions, contextBuilder: ContextBuilder): void {
@@ -119,7 +119,7 @@ function doubleBendsWithRelease(options: TestOptions, contextBuilder: ContextBui
 
   Formatter.FormatAndDraw(ctx, stave, notes);
   notes.forEach((note) => Note.plotMetrics(ctx, note, 140));
-  ok(true, 'Bend Release');
+  options.assert.ok(true, 'Bend Release');
 }
 
 /**
@@ -176,7 +176,7 @@ function reverseBends(options: TestOptions, contextBuilder: ContextBuilder): voi
 
     note.setStave(stave).setContext(ctx).draw();
     Note.plotMetrics(ctx, note, 140);
-    ok(true, 'Bend ' + i);
+    options.assert.ok(true, 'Bend ' + i);
   }
 }
 
@@ -214,7 +214,7 @@ function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void 
 
     note.setStave(stave).setContext(ctx).draw();
     Note.plotMetrics(ctx, note, 140);
-    ok(true, 'Bend ' + i);
+    options.assert.ok(true, 'Bend ' + i);
   }
 }
 
@@ -257,7 +257,7 @@ function whackoBends(options: TestOptions, contextBuilder: ContextBuilder): void
 
   Formatter.FormatAndDraw(ctx, stave, notes);
   Note.plotMetrics(ctx, notes[0], 140);
-  ok(true, 'Whacko Bend & Release');
+  options.assert.ok(true, 'Whacko Bend & Release');
 }
 
 VexFlowTests.register(BendTests);

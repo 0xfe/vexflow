@@ -33,7 +33,7 @@ import { MockTickable } from './mocks';
 const FormatterTests = {
   Start(): void {
     QUnit.module('Formatter');
-    test('TickContext Building', buildTickContexts);
+    QUnit.test('TickContext Building', buildTickContexts);
 
     const run = VexFlowTests.runTests;
     run('Penultimate Note Padding', penultimateNote);
@@ -74,7 +74,7 @@ function getGlyphWidth(glyphName: string): number {
   return widthInEm * 38 * Font.scaleToPxFrom.pt;
 }
 
-function buildTickContexts(): void {
+function buildTickContexts(assert: any): void {
   function createTickable(beat: number) {
     return new MockTickable().setTicks(beat);
   }
@@ -102,19 +102,19 @@ function buildTickContexts(): void {
   const formatter = new Formatter();
   const tContexts = formatter.createTickContexts([voice1, voice2]);
 
-  equal(tContexts.list.length, 4, 'Voices should have four tick contexts');
+  assert.equal(tContexts.list.length, 4, 'Voices should have four tick contexts');
 
-  throws(() => formatter.getMinTotalWidth(), /NoMinTotalWidth/, 'Expected to throw exception');
+  assert.throws(() => formatter.getMinTotalWidth(), /NoMinTotalWidth/, 'Expected to throw exception');
 
-  ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
-  equal(formatter.getMinTotalWidth(), 88, 'Get minimum total width without passing voices');
+  assert.ok(formatter.preCalculateMinTotalWidth([voice1, voice2]), 'Successfully runs preCalculateMinTotalWidth');
+  assert.equal(formatter.getMinTotalWidth(), 88, 'Get minimum total width without passing voices');
 
   formatter.preFormat();
 
-  equal(formatter.getMinTotalWidth(), 88, 'Minimum total width');
-  equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
-  equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
-  ok(
+  assert.equal(formatter.getMinTotalWidth(), 88, 'Minimum total width');
+  assert.equal(tickables1[0].getX(), tickables2[0].getX(), 'First notes of both voices have the same X');
+  assert.equal(tickables1[2].getX(), tickables2[2].getX(), 'Last notes of both voices have the same X');
+  assert.ok(
     tickables1[1].getX() < tickables2[1].getX(),
     'Second note of voice 2 is to the right of the second note of voice 1'
   );
@@ -146,7 +146,7 @@ function rightJustify(options: TestOptions): void {
   renderTest({ num_beats: 4, beat_value: 4, resolution: 4 * 4096 }, 1, 'w', 'w', 310, 300);
   renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 3, '4', '4', 610, 300);
   renderTest({ num_beats: 3, beat_value: 4, resolution: 4 * 4096 }, 6, '8', '8', 910, 300);
-  ok(true);
+  options.assert.ok(true);
 }
 
 function penultimateNote(options: TestOptions): void {
@@ -195,7 +195,7 @@ function penultimateNote(options: TestOptions): void {
   draw(5);
   draw(2);
   draw(1);
-  ok(true);
+  options.assert.ok(true);
 }
 
 function noteHeadPadding(options: TestOptions): void {
@@ -225,7 +225,7 @@ function noteHeadPadding(options: TestOptions): void {
   voice1.draw(f.getContext(), stave1);
   voice2.draw(f.getContext(), stave2);
   beams.forEach((b) => b.setContext(f.getContext()).draw());
-  ok(true);
+  options.assert.ok(true);
 }
 
 function longMeasureProblems(options: TestOptions): void {
@@ -254,7 +254,7 @@ function longMeasureProblems(options: TestOptions): void {
   stave2.draw();
   voice1.draw(f.getContext(), stave1);
   voice2.draw(f.getContext(), stave2);
-  ok(true);
+  options.assert.ok(true);
 }
 
 function accidentalJustification(options: TestOptions): void {
@@ -282,7 +282,7 @@ function accidentalJustification(options: TestOptions): void {
   voice11.draw(ctx, stave11);
   voice21.draw(ctx, stave21);
   beams.forEach((b) => b.setContext(ctx).draw());
-  ok(true);
+  options.assert.ok(true);
 }
 
 function unalignedNoteDurations1(options: TestOptions): void {
@@ -322,7 +322,7 @@ function unalignedNoteDurations1(options: TestOptions): void {
   beams21.forEach((b) => b.setContext(ctx).draw());
   beams11.forEach((b) => b.setContext(ctx).draw());
 
-  ok(voice11.getTickables()[1].getX() > voice21.getTickables()[1].getX());
+  options.assert.ok(voice11.getTickables()[1].getX() > voice21.getTickables()[1].getX());
 }
 
 function unalignedNoteDurations2(options: TestOptions): void {
@@ -372,7 +372,7 @@ function unalignedNoteDurations2(options: TestOptions): void {
   voice1.draw(context, stave1);
   voice2.draw(context, stave2);
 
-  ok(voice1.getTickables()[1].getX() > voice2.getTickables()[1].getX());
+  options.assert.ok(voice1.getTickables()[1].getX() > voice2.getTickables()[1].getX());
 }
 
 function alignedMixedElements(options: TestOptions): void {
@@ -441,7 +441,7 @@ function alignedMixedElements(options: TestOptions): void {
   tuplet.setContext(context).draw();
   tuplet2.setContext(context).draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function justifyStaveNotes(options: TestOptions): void {
@@ -473,7 +473,7 @@ function justifyStaveNotes(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function notesWithTab(options: TestOptions): void {
@@ -522,7 +522,7 @@ function notesWithTab(options: TestOptions): void {
 
   f.draw();
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 function multiStaves(options: TestOptions): void {
@@ -607,7 +607,7 @@ function multiStaves(options: TestOptions): void {
     voices[i].getTickables().forEach((note) => Note.plotMetrics(ctx, note, staveYs[i] - 20));
   }
   beams.forEach((beam) => beam.setContext(ctx).draw());
-  ok(true);
+  options.assert.ok(true);
 }
 
 function proportional(options: TestOptions): void {
@@ -651,7 +651,7 @@ function proportional(options: TestOptions): void {
   // console.log(table);
 
   Registry.disableDefaultRegistry();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function softMax(options: TestOptions): void {
@@ -685,7 +685,7 @@ function softMax(options: TestOptions): void {
 
     f.draw();
     f.getContext().fillText(`softmax: ${factor.toString()}`, textX, y + 50);
-    ok(true);
+    options.assert.ok(true);
   }
 
   draw(50, 1);
@@ -720,7 +720,7 @@ function mixTime(options: TestOptions): void {
     .addTimeSignature('4/4');
 
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function tightNotes1(options: TestOptions): void {
@@ -752,7 +752,7 @@ function tightNotes1(options: TestOptions): void {
     .addTimeSignature('4/4');
 
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function tightNotes2(options: TestOptions): void {
@@ -781,7 +781,7 @@ function tightNotes2(options: TestOptions): void {
     .addTimeSignature('4/4');
 
   f.draw();
-  ok(true);
+  options.assert.ok(true);
 }
 
 function annotations(options: TestOptions): void {
@@ -883,7 +883,7 @@ function annotations(options: TestOptions): void {
     beams.forEach((b) => b.setContext(context).draw());
   });
 
-  ok(true);
+  options.assert.ok(true);
 }
 
 VexFlowTests.register(FormatterTests);
