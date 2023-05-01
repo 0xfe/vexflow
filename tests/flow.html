@@ -149,7 +149,7 @@
 
       // Load qunit.js as late as possible to avoid a race condition!
       // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
-      //await loadScript('../node_modules/qunit/qunit/qunit.js');
+      await loadScript('../node_modules/qunit/qunit/qunit.js');
 
       // Optionally specify the QUnit module or filter in the fragment identifier.
       if (hashParams) {

@@ -268,7 +268,7 @@ const launchTestPage = async (jobs, job) => {
         throw Error(`Error: test timeout (${d / 1000} sec).`);
       }
 
-      if (!data.startsWith('Tests completed in')) {
+      if (!data.includes('completed in')) {
         progress(`${job}/${jobs}: ${data}`);
         page.waitForTimeout(200);
       } else {

@@ -5,8 +5,6 @@
 
 import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/index';
 
-import * as QUnit from 'qunit';
-
 import { globalObject } from '../src/util';
 
 // eslint-disable-next-line
