@@ -322,10 +322,10 @@ export class VexFlowTests {
     }
     const testTypeLowerCase = testType.toLowerCase();
     fontStacks.forEach((fontStackName: string) => {
-      QUnit.test(name, (assert: Assert) => {
+      QUnit.test(name, (assert: any) => {
         useTempFontStack(fontStackName);
         const elementId = VexFlowTests.generateTestID(`${testTypeLowerCase}_` + fontStackName);
-        const moduleName = QUnit.module.name;
+        const moduleName = assert.test.module.name;
         const title = moduleName + ' › ' + name + ` › ${testType} + ${fontStackName}`;
 
         // Add an element id for the title div, so that we can scroll directly to a test case.
