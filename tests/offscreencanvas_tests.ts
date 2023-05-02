@@ -24,7 +24,7 @@ const OffscreenCanvasTests = {
   },
 };
 
-function simpleTest(assert: any): void {
+function simpleTest(assert: Assert): void {
   // Create a CanvasContext from an OffscreenCanvas.
   // eslint-disable-next-line
   // @ts-ignore

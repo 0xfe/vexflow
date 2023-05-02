@@ -25,7 +25,7 @@ const TypeGuardTests = {
   },
 };
 
-function real(assert: any): void {
+function real(assert: Assert): void {
   const s = new StaveNote({ keys: ['c/4'], duration: 'w' });
   assert.ok(isStaveNote(s), 'isStaveNote helper function');
   assert.ok(isCategory(s, 'StaveNote'), 'Use isCategory(s, "StaveNote") directly');
@@ -49,7 +49,7 @@ function real(assert: any): void {
 /**
  * Helper function to test the fake VexFlow objects we create in fakeES5() and fakeES6().
  */
-function checkFakeObjects(assert: any, fakeStemmableNote: unknown, fakeStaveNote: unknown): void {
+function checkFakeObjects(assert: Assert, fakeStemmableNote: unknown, fakeStaveNote: unknown): void {
   assert.ok(isStemmableNote(fakeStemmableNote), 'Fake StemmableNote is a StemmableNote.');
   assert.notOk(isNote(fakeStemmableNote), 'Fake StemmableNote is not a Note (no ancestors with the correct CATEGORY).');
 
@@ -63,7 +63,7 @@ function checkFakeObjects(assert: any, fakeStemmableNote: unknown, fakeStaveNote
  * Demonstrate that an object (ES5-style) can pass the isCategory(...) test if it
  * has the correct static .CATEGORY property.
  */
-function fakeES5(assert: any): void {
+function fakeES5(assert: Assert): void {
   function FakeStemmableNote() {
     this.isFake = true;
   }
@@ -85,7 +85,7 @@ function fakeES5(assert: any): void {
  * Demonstrate that an object (ES6-style) can pass the isCategory(...) test if it
  * or its ancestor has the correct static .CATEGORY property.
  */
-function fakeES6(assert: any): void {
+function fakeES6(assert: Assert): void {
   class FakeStemmableNote {
     static CATEGORY = StemmableNote.CATEGORY;
   }
@@ -101,7 +101,7 @@ function fakeES6(assert: any): void {
 /**
  * The tsconfig.json target is ES6 (as of August 18, 2021), so isCategory() works even when the root class "extends Object".
  */
-function edgeCaseES5vsES6(assert: any): void {
+function edgeCaseES5vsES6(assert: Assert): void {
   class Z extends Object {}
   class Y extends Z {}
   class X extends Y {}

@@ -17,7 +17,7 @@ const BarlineTests = {
   },
 };
 
-function enums(assert: any): void {
+function enums(assert: Assert): void {
   // VexFlow 4.0 renamed Barline.type => BarlineType.
   // The old way still works, for backwards compatibility.
   assert.equal(Barline.type, BarlineType);

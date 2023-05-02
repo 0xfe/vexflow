@@ -64,7 +64,7 @@ function makeNewAccid(factory: Factory) {
 /**
  *
  */
-function autoAccidentalWorking(assert: any): void {
+function autoAccidentalWorking(assert: Assert): void {
   const createStaveNote = (noteStruct: StaveNoteStruct) => new StaveNote(noteStruct);
 
   let notes = [

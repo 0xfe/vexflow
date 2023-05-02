@@ -21,7 +21,7 @@ const BoundingBoxComputationTests = {
   },
 };
 
-function point(assert: any): void {
+function point(assert: Assert): void {
   const bboxComp = new BoundingBoxComputation();
   bboxComp.addPoint(2, 3);
   assert.equal(bboxComp.getX1(), 2, 'Bad X1');

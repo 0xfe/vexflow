@@ -27,7 +27,7 @@ const TimeSignatureTests = {
   },
 };
 
-function parser(assert: any): void {
+function parser(assert: Assert): void {
   const timeSig = new TimeSignature();
   assert.equal(timeSig.getTimeSpec(), '4/4', 'default time signature is 4/4');
 

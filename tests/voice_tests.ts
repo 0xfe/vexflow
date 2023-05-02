@@ -28,7 +28,7 @@ const BEAT = (1 * Flow.RESOLUTION) / 4;
 // Helper function to create a tickable with a preset number of ticks.
 const createTickable = () => new MockTickable().setTicks(BEAT);
 
-function strict(assert: any): void {
+function strict(assert: Assert): void {
   assert.expect(8);
 
   const tickables = [createTickable(), createTickable(), createTickable()];
@@ -56,7 +56,7 @@ function strict(assert: any): void {
   assert.equal(voice.getSmallestTickCount().value(), BEAT, 'Smallest tick count is BEAT');
 }
 
-function ignore(assert: any): void {
+function ignore(assert: Assert): void {
   const tickables = [
     createTickable(),
     createTickable(),

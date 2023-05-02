@@ -96,7 +96,7 @@ const savePNGData = (filename, pngDataURL) => {
 };
 
 const launch = async (query, jobInfo) => {
-  const browser = await puppeteer.launch({ headless: true, devtools: false });
+  const browser = await puppeteer.launch({ headless: "new", devtools: false });
   const page = await browser.newPage();
   page.on('error', (msg) => {
     jobLog(msg, 'error', jobInfo);
@@ -268,7 +268,7 @@ const launchTestPage = async (jobs, job) => {
         throw Error(`Error: test timeout (${d / 1000} sec).`);
       }
 
-      if (!data.startsWith('Tests completed in')) {
+      if (!data.includes('completed in')) {
         progress(`${job}/${jobs}: ${data}`);
         page.waitForTimeout(200);
       } else {

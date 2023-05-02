@@ -6,7 +6,6 @@
 import { ContextBuilder, Factory, Flow, Font, RenderContext, Renderer } from '../src/index';
 
 import { globalObject } from '../src/util';
-import { Assert } from './types/qunit';
 
 // eslint-disable-next-line
 declare const $: any;
@@ -16,7 +15,7 @@ const global = globalObject();
 export interface TestOptions {
   elementId: string;
   params: any /* eslint-disable-line */;
-  assert: any;
+  assert: Assert;
   backend: number;
 
   // Some tests use this field to pass around the ContextBuilder function.
@@ -298,8 +297,8 @@ export class VexFlowTests {
    */
   static runNodeTestHelper(fontName: string, element: HTMLElement): void {
     if (Renderer.lastContext !== undefined) {
-      const moduleName = sanitizeName(QUnit.current_module);
-      const testName = sanitizeName(QUnit.current_test);
+      const moduleName = sanitizeName(QUnit.module.name);
+      const testName = sanitizeName(QUnit.test.name);
       // If we are only testing Bravura, we OMIT the font name from the
       // output image file name, which allows visual diffs against
       // the previous release: version 3.0.9. In the future, if we decide

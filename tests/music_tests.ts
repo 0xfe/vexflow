@@ -24,7 +24,7 @@ const MusicTests = {
   },
 };
 
-function validNotes(assert: any): void {
+function validNotes(assert: Assert): void {
   assert.expect(10);
 
   const music = new Music();
@@ -50,7 +50,7 @@ function validNotes(assert: any): void {
   assert.throws(() => music.getNoteParts(''), /BadArguments/, "Invalid note: ''");
 }
 
-function validKeys(assert: any): void {
+function validKeys(assert: Assert): void {
   assert.expect(18);
 
   const music = new Music();
@@ -85,7 +85,7 @@ function validKeys(assert: any): void {
   assert.throws(() => music.getKeyParts('#m'), /BadArguments/, 'Invalid key: #m');
 }
 
-function noteValue(assert: any): void {
+function noteValue(assert: Assert): void {
   assert.expect(3);
 
   const music = new Music();
@@ -99,7 +99,7 @@ function noteValue(assert: any): void {
   assert.equal(note, 6);
 }
 
-function intervalValue(assert: any): void {
+function intervalValue(assert: Assert): void {
   assert.expect(2);
 
   const music = new Music();
@@ -110,7 +110,7 @@ function intervalValue(assert: any): void {
   assert.throws(() => music.getIntervalValue('7'), /BadArguments/, 'Invalid interval name');
 }
 
-function relativeNotes(assert: any): void {
+function relativeNotes(assert: Assert): void {
   assert.expect(8);
 
   const music = new Music();
@@ -153,7 +153,7 @@ function relativeNotes(assert: any): void {
   assert.equal(value, 2);
 }
 
-function relativeNoteNames(assert: any): void {
+function relativeNoteNames(assert: Assert): void {
   assert.expect(9);
 
   const music = new Music();
@@ -172,7 +172,7 @@ function relativeNoteNames(assert: any): void {
   );
 }
 
-function canonicalNotes(assert: any): void {
+function canonicalNotes(assert: Assert): void {
   assert.expect(3);
 
   const music = new Music();
@@ -183,7 +183,7 @@ function canonicalNotes(assert: any): void {
   assert.throws(() => music.getCanonicalNoteName(-1), /BadArguments/, 'Invalid note value');
 }
 
-function canonicalIntervals(assert: any): void {
+function canonicalIntervals(assert: Assert): void {
   assert.expect(3);
 
   const music = new Music();
@@ -194,7 +194,7 @@ function canonicalIntervals(assert: any): void {
   assert.throws(() => music.getCanonicalIntervalName(-1), /BadArguments/, 'Invalid interval value');
 }
 
-function scaleTones(assert: any): void {
+function scaleTones(assert: Assert): void {
   assert.expect(24);
 
   // C Major
@@ -233,7 +233,7 @@ function scaleTones(assert: any): void {
   }
 }
 
-function scaleIntervals(assert: any): void {
+function scaleIntervals(assert: Assert): void {
   assert.expect(6);
 
   const m = new Music();

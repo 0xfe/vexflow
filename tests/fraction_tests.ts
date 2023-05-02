@@ -15,7 +15,7 @@ const FractionTests = {
   },
 };
 
-function basic(assert: any): void {
+function basic(assert: Assert): void {
   const f_1_2 = new Fraction(1, 2);
   assert.ok(f_1_2.equals(0.5), 'Fraction: 1/2 equals 0.5');
   assert.ok(f_1_2.equals(new Fraction(1, 2)), 'Fraction: 1/2 equals 1/2');
@@ -72,7 +72,7 @@ function basic(assert: any): void {
   assert.equal(Fraction.GCD(15, 10), 5);
 }
 
-function withOtherFractions(assert: any): void {
+function withOtherFractions(assert: Assert): void {
   const f_1_2 = new Fraction(1, 2);
   const f_1_4 = new Fraction(1, 4);
   const f_1_8 = new Fraction(1, 8);

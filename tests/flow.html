@@ -9,7 +9,7 @@
   <head>
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css" type="text/css" media="screen" />
     <meta charset="UTF-8" />
   </head>
   <body>
@@ -149,7 +149,7 @@
 
       // Load qunit.js as late as possible to avoid a race condition!
       // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
-      await loadScript('support/qunit.js');
+      await loadScript('../node_modules/qunit/qunit/qunit.js');
 
       // Optionally specify the QUnit module or filter in the fragment identifier.
       if (hashParams) {
@@ -164,7 +164,7 @@
       // Show only failed tests.
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
-
+      QUnit.start();
       VF.Test.run();
     </script>
   </body>

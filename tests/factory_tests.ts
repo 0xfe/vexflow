@@ -18,7 +18,7 @@ const FactoryTests = {
   },
 };
 
-function defaults(assert: any): void {
+function defaults(assert: Assert): void {
   // Throws RuntimeError: 'HTML DOM element not set in Factory'
   assert.throws(
     () => new Factory({ renderer: { elementId: '', width: 700, height: 500 } }),

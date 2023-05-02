@@ -92,12 +92,12 @@ class MicroScoreGrammar {
 /**
  * Check that the result is a parse failure, and verify the error position.
  */
-function fails(assert: any, result: Result, expectedErrorPos: number, msg?: string): void {
+function fails(assert: Assert, result: Result, expectedErrorPos: number, msg?: string): void {
   assert.notOk(result.success, msg);
   assert.equal(result.errorPos, expectedErrorPos, msg);
 }
 
-function basic(assert: any): void {
+function basic(assert: Assert): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.LITTLELINE, grammar.EOL];
   const parser = new Parser(grammar);
@@ -113,7 +113,7 @@ function basic(assert: any): void {
   fails(assert, parser.parse(',,'), 0);
 }
 
-function advanced(assert: any): void {
+function advanced(assert: Assert): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.BIGLINE, grammar.EOL];
   const parser = new Parser(grammar);
@@ -127,7 +127,7 @@ function advanced(assert: any): void {
   fails(assert, parser.parse('{!}'), 1);
 }
 
-function mixed(assert: any): void {
+function mixed(assert: Assert): void {
   const grammar = new TestGrammar();
   grammar.expect = [grammar.BIGORLITTLE, grammar.EOL];
   const parser = new Parser(grammar);
@@ -138,7 +138,7 @@ function mixed(assert: any): void {
   fails(assert, parser.parse('first second'), 6);
 }
 
-function microscore(assert: any): void {
+function microscore(assert: Assert): void {
   const grammar = new MicroScoreGrammar();
   const parser = new Parser(grammar);
 
