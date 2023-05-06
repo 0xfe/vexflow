@@ -158,22 +158,19 @@ export class Stroke extends Modifier {
       case Stroke.Type.ROLL_DOWN:
       case Stroke.Type.RASQUEDO_DOWN:
         arrow = 'arrowheadBlackUp';
-        topY += 0.5 * line_space;
-        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
+        botY += line_space / 2;
         text_shift_x = this.x_shift - 5;
-        text_y = botY + 1.25 * line_space;
+        text_y = botY + 2 * line_space;
         break;
       case Stroke.Type.ROLL_UP:
       case Stroke.Type.RASQUEDO_UP:
         arrow = 'arrowheadBlackDown';
-        topY += 0.5 * line_space;
-        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
+        topY -= line_space / 2;
         text_shift_x = this.x_shift - 5;
-        text_y = topY - 1.25 * line_space;
+        text_y = topY - line_space / 2;
         break;
       case Stroke.Type.ARPEGGIO_DIRECTIONLESS:
-        topY += 0.5 * line_space;
-        botY += line_space; // * 0.5 can lead to slight underlap instead of overlap sometimes
+        topY -= line_space / 2;
         break;
       default:
         throw new RuntimeError('InvalidType', `The stroke type ${this.type} does not exist`);
@@ -185,55 +182,48 @@ export class Stroke extends Modifier {
       // Draw the arrow head
       Glyph.renderGlyph(
         ctx,
+        // Center the arrow head substracting its width / 2
         x + this.x_shift - Glyph.getWidth(arrow, this.render_options.font_scale) / 2,
         arrow_y,
         this.render_options.font_scale,
         arrow
       );
     } else {
-      const h = Glyph.getWidth(
-        arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp',
-        this.render_options.font_scale
-      );
-      ctx.openRotation(90, x + this.x_shift - h / 4, topY - (h * 3) / 4);
+      const lineGlyph = arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp';
+      const arrowGlyph = arrow == 'arrowheadBlackDown' ? 'arrowheadBlackRight' : 'arrowheadBlackLeft';
+      const lineW = Glyph.getWidth(lineGlyph, this.render_options.font_scale);
+      const lineH = Glyph.getHeight(lineGlyph, this.render_options.font_scale);
+      const arrowH = Glyph.getHeight(arrowGlyph, this.render_options.font_scale);
+      ctx.openRotation(90, x + this.x_shift, topY);
       let i = 0;
       if (arrow == 'arrowheadBlackUp') {
         // Draw the arrow head
         Glyph.renderGlyph(
           ctx,
-          x + this.x_shift - h / 4 - 4,
-          topY -
-            (h * 3) / 4 -
-            Glyph.getHeight('wiggleArpeggiatoUp', this.render_options.font_scale) / 2 +
-            Glyph.getHeight('arrowheadBlackLeft', this.render_options.font_scale) / 2,
+          // overlap the arrow half line space
+          x + this.x_shift - line_space / 2,
+          // center height by half arrow
+          topY + arrowH / 2,
           this.render_options.font_scale,
-          'arrowheadBlackLeft'
+          arrowGlyph
         );
       }
-      for (; i <= botY - topY; i += 10) {
-        Glyph.renderGlyph(
-          ctx,
-          x + this.x_shift - h / 4 + i,
-          topY - (h * 3) / 4,
-          this.render_options.font_scale,
-          arrow == 'arrowheadBlackDown' ? 'wiggleArpeggiatoDown' : 'wiggleArpeggiatoUp'
-        );
+      // 2 pixels overlap of arpeggiato glyphs
+      for (; i <= botY - topY; i += lineW - 2) {
+        // center height by half arpeggiato
+        Glyph.renderGlyph(ctx, x + this.x_shift + i, topY + lineH / 2, this.render_options.font_scale, lineGlyph);
       }
       if (arrow == 'arrowheadBlackDown') {
         // Draw the arrow head
         Glyph.renderGlyph(
           ctx,
-          x + this.x_shift - h / 4 + i - 10 + 4,
-          topY -
-            (h * 3) / 4 -
-            Glyph.getHeight('wiggleArpeggiatoDown', this.render_options.font_scale) / 2 +
-            Glyph.getHeight('arrowheadBlackRight', this.render_options.font_scale) / 2,
+          // overlap the arrow half line space
+          x + this.x_shift + i - line_space / 2,
+          // center height by half arrow
+          topY + arrowH / 2,
           this.render_options.font_scale,
-          'arrowheadBlackRight'
+          arrowGlyph
         );
-      }
-      if (this.type === Stroke.Type.RASQUEDO_DOWN) {
-        text_y = topY + i + 0.25 * line_space;
       }
       ctx.closeRotation();
     }
