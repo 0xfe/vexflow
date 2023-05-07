@@ -250,6 +250,10 @@ export class Flow {
     return fonts.map((font) => font.getName());
   }
 
+  static getMusicFontStack(): Font[] {
+    return Tables.MUSIC_FONT_STACK;
+  }
+
   static get RENDER_PRECISION_PLACES(): number {
     return Tables.RENDER_PRECISION_PLACES;
   }
