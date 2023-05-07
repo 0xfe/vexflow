@@ -1,3 +1,8 @@
+See: 
+https://makemusic.zendesk.com/hc/en-us/articles/1500013053461-MakeMusic-Fonts-and-Licensing-Information
+https://makemusic.zendesk.com/hc/en-us/article_attachments/4402710909975/OFL.txt
+
+
 Copyright © 2021 MakeMusic, Inc. (https://www.makemusic.com/), with Reserved Font Name “Finale”.
 Copyright © 2021 MakeMusic, Inc. (https://www.makemusic.com/), with Reserved Font Name “Maestro”.
 Copyright © 2021 MakeMusic, Inc. (https://www.makemusic.com/), with Reserved Font Name “Broadway”.
