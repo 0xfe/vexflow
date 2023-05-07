@@ -1,0 +1,5 @@
+Designed by Grzegorz Pruchniakowski.
+
+This font is licensed under the SIL Open Font License (http://scripts.sil.org/OFL).
+
+The Gootville font templates based on SMuFL and Bravura, designed by Daniel Spreadbury at Steinberg.
