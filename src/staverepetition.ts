@@ -15,7 +15,7 @@ export class Repetition extends StaveModifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SERIF,
-    size: 12,
+    size: Tables.NOTATION_FONT_SCALE / 3,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
   };
@@ -192,7 +192,9 @@ export class Repetition extends StaveModifier {
       this.y_shift +
       Tables.currentMusicFont().lookupMetric('staveRepetition.symbolText.offsetY');
     if (draw_coda) {
-      Glyph.renderGlyph(ctx, symbol_x, y, 40, 'coda', { category: 'coda' });
+      Glyph.renderGlyph(ctx, symbol_x, y, Font.convertSizeToPointValue(this.textFont?.size) * 2, 'coda', {
+        category: 'coda',
+      });
     }
 
     ctx.fillText(text, text_x, y + 5);
