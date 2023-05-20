@@ -38,6 +38,7 @@ export interface ChordSymbolBlock {
 }
 
 export interface ChordSymbolGlyphMetrics {
+  scale: number;
   leftSideBearing: number;
   advanceWidth: number;
   yOffset: number;
