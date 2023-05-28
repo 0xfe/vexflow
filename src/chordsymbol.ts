@@ -562,10 +562,6 @@ export class ChordSymbol extends Modifier {
       const glyphArgs = ChordSymbol.glyphs[params.glyph];
       const glyphPoints = 20;
       symbolBlock.glyph = new Glyph(glyphArgs.code, glyphPoints, { category: 'chordSymbol' });
-      // Beware: glyph.metrics is not the same as glyph.getMetrics() !
-      // rv.glyph.point = rv.glyph.point * rv.glyph.metrics.scale;
-      // rv.width = rv.glyph.getMetrics().width;
-      // don't set yShift here, b/c we need to do it at formatting time after the font is set.
     } else if (symbolType === SymbolTypes.TEXT) {
       symbolBlock.width = this.textFormatter.getWidthForTextInEm(symbolBlock.text);
     } else if (symbolType === SymbolTypes.LINE) {
