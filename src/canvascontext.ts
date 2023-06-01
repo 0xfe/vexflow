@@ -169,19 +169,19 @@ export class CanvasContext extends RenderContext {
     return this;
   }
 
-  resize(width: number, height: number): this {
+  resize(width: number, height: number, devicePixelRatio?: number): this {
     const canvas = this.context2D.canvas;
-    const devicePixelRatio = globalObject().devicePixelRatio || 1;
+    const dpr: number = devicePixelRatio ?? globalObject().devicePixelRatio ?? 1;
 
     // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
-    [width, height] = CanvasContext.sanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
+    [width, height] = CanvasContext.sanitizeCanvasDims(width * dpr, height * dpr);
 
     // Divide back down by the pixel ratio and convert to integers.
-    width = (width / devicePixelRatio) | 0;
-    height = (height / devicePixelRatio) | 0;
+    width = (width / dpr) | 0;
+    height = (height / dpr) | 0;
 
-    canvas.width = width * devicePixelRatio;
-    canvas.height = height * devicePixelRatio;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
 
     // The canvas could be an instance of either HTMLCanvasElement or an OffscreenCanvas.
     // Only HTMLCanvasElement has a style attribute.
@@ -190,7 +190,7 @@ export class CanvasContext extends RenderContext {
       canvas.style.height = height + 'px';
     }
 
-    return this.scale(devicePixelRatio, devicePixelRatio);
+    return this.scale(dpr, dpr);
   }
 
   rect(x: number, y: number, width: number, height: number): this {
