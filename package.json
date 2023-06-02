@@ -76,6 +76,8 @@
     "entry",
     "tests/flow.html",
     "tests/flow.css",
+    "tests/qunit/qunit.css",
+    "tests/qunit/qunit.js",
     "releases/vexflow-min.js",
     "releases/vexflow-debug.js",
     "AUTHORS.md"
