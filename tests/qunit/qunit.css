@@ -236,6 +236,9 @@
 	color: #0D3349;
 	background-color: #F5F5F5;
 	z-index: 99;
+
+    max-height: 80vh;
+    overflow: auto;
 }
 
 #qunit-modulefilter-actions {

@@ -5509,7 +5509,7 @@
           // module names, indicating how the interface works. This also makes
           // for a quicker interaction in the common case of small projects.
           // Don't mandate typing just to get the menu.
-          results = dropdownData.options.slice(0, 20).map(function (obj) {
+          results = dropdownData.options.map(function (obj) {
             // Fake empty results. https://github.com/farzher/fuzzysort/issues/41
             return {
               obj: obj
@@ -5517,7 +5517,7 @@
           });
         } else {
           results = fuzzysort.go(searchText, dropdownData.options, {
-            limit: 20,
+            limit: 1000,
             key: 'name',
             allowTypo: true
           });
