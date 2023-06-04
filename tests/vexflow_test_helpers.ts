@@ -243,7 +243,7 @@ export class VexFlowTests {
     const title = $('<div/>').addClass('name').attr('id', titleId).html(anchorTestTitle).get(0);
     const vexOutput = $(`<${tagName}/>`).addClass('vex-tabdiv').attr('id', elementId).get(0);
     const container = $('<div/>').addClass('testcanvas').append(title, vexOutput).get(0);
-    $('#vexflow_testoutput').append(container);
+    $('#qunit-tests').append(container);
     return vexOutput;
   }
 

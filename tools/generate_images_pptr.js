@@ -125,7 +125,7 @@ const launchTestPage = async (jobs, job) => {
   });
 
   const genImages = async () => {
-    const elmDefs = await page.$$eval('#vexflow_testoutput .testcanvas', (elms) => {
+    const elmDefs = await page.$$eval('#qunit-tests .testcanvas', (elms) => {
       window.VF_TEST_GLOBAL = {};
       const { VF_TEST_GLOBAL } = window;
       const ret = [];
