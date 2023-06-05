@@ -8,7 +8,7 @@ const { JSDOM } = require('jsdom');
 const fs = require('fs');
 const path = require('path');
 
-const dom = new JSDOM(`<!DOCTYPE html><body><div id="vexflow_testoutput"></div></body>`);
+const dom = new JSDOM(`<!DOCTYPE html><body><div id="qunit-tests"></div></body>`);
 global.window = dom.window;
 global.document = dom.window.document;
 
