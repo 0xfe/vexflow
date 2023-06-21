@@ -9,7 +9,8 @@
   <head>
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="qunit/qunit.css" />
+    <script src="qunit/qunit.js"></script>
     <meta charset="UTF-8" />
   </head>
   <body>
@@ -119,9 +120,6 @@
             return Vex.Flow.Font.loadWebFonts();
           }
         })
-        // Load qunit.js as late as possible to avoid a race condition!
-        // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
-        .then(() => loadScript('support/qunit.js'))
         .then(() => {
           // Show only failed tests.
           QUnit.config.hidepassed = true;
