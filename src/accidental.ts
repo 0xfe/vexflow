@@ -143,8 +143,6 @@ export class Accidental extends Modifier {
     // Sort accidentals by line number.
     accidentalLinePositionsAndSpaceNeeds.sort((a, b) => b.line - a.line);
 
-    // FIXME: Confusing name. Each object in this array has a property called `line`.
-    // So if this is a list of lines, you end up with: `line.line` which is very awkward.
     const staveLineAccidentalLayoutMetrics: StaveLineAccidentalLayoutMetrics[] = [];
 
     // amount by which all accidentals must be shifted right or left for
@@ -176,7 +174,6 @@ export class Accidental extends Modifier {
 
       // if this accidental is not a flat, the accidental needs 3.0 lines lower
       // clearance instead of 2.5 lines for b or bb.
-      // FIXME: Naming could use work. acc.acc is very awkward
       if (
         accidentalLinePositionAndSpaceNeeds.acc.type !== 'b' &&
         accidentalLinePositionAndSpaceNeeds.acc.type !== 'bb'
