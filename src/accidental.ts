@@ -108,37 +108,15 @@ export class Accidental extends Modifier {
       const index = acc.checkIndex();
       const props = note.getKeyProps()[index];
 
-      let headDisplacementXShift = 0;
       if (note !== prevNote) {
         // Iterate through all notes to get the displaced pixels
         for (let n = 0; n < note.keys.length; ++n) {
-          const priorShiftL = extraXSpaceNeededForLeftDisplacedNotehead;
-          // The extra space we need for the accidental to the left is the amount
-          // that the left-displaced notehead has been shifted left, less any
-          // extra space that has already been added via the note's xShift.
-          const leftDisplacedNoteheadShift = note.getLeftDisplacedHeadPx() - note.getXShift();
-          // If the current extra left-space needed (shiftL) isn't as big as that,
-          // then we need to set it. But, this will give the accidental ownership of
-          // that x-space, and later when formatting the note, its x_begin would have
-          // twice the getLeftDisplacedHeadPx included in it. So: we need to remove
-          // it from the note's x shift.
-          // if (leftDisplacedNoteheadShift > extraXSpaceNeededForLeftDisplacedNotehead) {
-          //   extraXSpaceNeededForLeftDisplacedNotehead = leftDisplacedNoteheadShift;
-          //   note.setLeftDisplacedHeadPx(-note.getXShift());
-          // }
+          // If the current extra left-space needed isn't as big as this note's,
+          // then we need to use this note's.
           extraXSpaceNeededForLeftDisplacedNotehead = Math.max(
             note.getLeftDisplacedHeadPx() - note.getXShift(),
             extraXSpaceNeededForLeftDisplacedNotehead
           );
-          headDisplacementXShift = note.getLeftDisplacedHeadPx();
-
-          // console.log({
-          //   getLeftDisplacedHeadPx: note.getLeftDisplacedHeadPx(),
-          //   getXShift: note.getXShift(),
-          //   getLeftDisplacedHeadPx_minus_getXShift: note.getLeftDisplacedHeadPx() - note.getXShift(),
-          //   shiftL: extraXSpaceNeededForLeftDisplacedNotehead,
-          //   priorShiftL,
-          // });
         }
         prevNote = note;
       }
@@ -412,11 +390,9 @@ export class Accidental extends Modifier {
         // keep track of the width of accidentals we've added so far, so that when
         // we loop, we add space for them.
         lineWidth += accidentalLinePositionsAndSpaceNeeds[accCount].acc.getWidth() + accidentalSpacing;
-        // console.log('Line, accCount, shift: ', line.line, accCount, xShift);
         L('Line, accCount, shift: ', line.line, accCount, xShift);
       }
     });
-    // console.log({ totalShift, columnXOffsets, additionalPadding });
     // update the overall layout with the full width of the accidental shapes:
     state.left_shift = totalShift + additionalPadding;
   }
