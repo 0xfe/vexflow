@@ -1,0 +1,64 @@
+<!DOCTYPE >
+<!-- 
+  This example is available at:
+  https://jsfiddle.net/wjm3t5su/ -->
+<html>
+  <style>
+    body {
+      font-family: Arial, 'sans-serif';
+    }
+  </style>
+  <body>
+    <div id="output"></div>
+    <div style="height: 1000px"></div>
+    <script src="./build/cjs/vexflow-debug.js"></script>
+    <script>
+      const { Factory, EasyScore, System } = Vex.Flow;
+
+      [
+        '(A4 B#4)',
+        '(B4 C#5)',
+
+        // 'C5 D#5',
+        // 'D5 E#5',
+        // 'E5 F#5',
+        // 'E#4 F4',
+        // 'F#4 G4',
+        // 'G#4 A4',
+        // 'A#4 B4',
+        // 'B#4 C5',
+        // 'C#5 D5',
+        // 'D#5 E5',
+        // 'E#5 F5',
+        // 'E#4 F#4',
+        // 'F#4 G#4',
+        // 'G#4 A#4',
+        // 'A#4 B#4',
+        // 'B#4 C#5',
+        // 'C#5 D#5',
+        // 'D#5 E#5',
+        // 'E#5 F#5',
+      ].forEach((noteNames) => {
+        console.log(`%cNotes: ${noteNames}`, 'color: #990000; background-color: #AAAAAA; padding: 1em 1em;');
+        const id = crypto.randomUUID();
+        const div = document.createElement('div');
+        div.setAttribute('id', id);
+        document.querySelector('#output').appendChild(div);
+        const vf = new Factory({
+          renderer: { elementId: id, width: 500, height: 200 },
+        });
+
+        const score = vf.EasyScore().set({ time: '2/4' });
+        const system = vf.System();
+
+        system
+          .addStave({
+            voices: [score.voice(score.notes(`${noteNames}/h`))],
+          })
+          .addClef('treble')
+          .addTimeSignature('2/4');
+        vf.draw();
+      });
+    </script>
+  </body>
+</html>
