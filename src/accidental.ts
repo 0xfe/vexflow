@@ -358,8 +358,6 @@ export class Accidental extends Modifier {
       columnXOffsets[i] = 0;
     }
 
-    // columnWidths[0] = maxExtraXSpaceNeeded + leftShift;
-    // columnXOffsets[0] = maxExtraXSpaceNeeded + leftShift;
     columnWidths[0] = leftShift + maxExtraXSpaceNeeded;
     columnXOffsets[0] = leftShift;
 
