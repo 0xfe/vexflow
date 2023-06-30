@@ -103,7 +103,6 @@ export class Accidental extends Modifier {
       const acc: Accidental = accidentals[i];
 
       const note = acc.getNote();
-      const stemDirection = note.getStemDirection();
       const stave = note.getStave();
       const index = acc.checkIndex();
       const props = note.getKeyProps()[index];
