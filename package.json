@@ -131,7 +131,10 @@
     "test": "grunt test",
     "reference": "grunt reference",
     "test:reference": "grunt test:reference",
-    "test:reference:cache": "grunt test:reference:cache"
+    "test:reference:cache": "grunt test:reference:cache",
+    "generate:current": "grunt generate:current",
+    "generate:reference": "grunt generate:reference",
+    "diff:reference": "grunt diff:reference"
   },
   "homepage": "https://vexflow.com/",
   "keywords": [
