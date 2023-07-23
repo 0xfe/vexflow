@@ -487,7 +487,7 @@ export class StaveNote extends StemmableNote {
   }
 
   // Builds a `NoteHead` for each key in the note
-  buildNoteHeads(): void {
+  buildNoteHeads(): NoteHead[] {
     this._noteHeads = [];
     const stemDirection = this.getStemDirection();
     const keys = this.getKeys();
@@ -548,6 +548,7 @@ export class StaveNote extends StemmableNote {
       this.addChildElement(notehead);
       this._noteHeads[this.sortedKeyProps[i].index] = notehead;
     }
+    return this._noteHeads;
   }
 
   // Automatically sets the stem direction based on the keys in the note
