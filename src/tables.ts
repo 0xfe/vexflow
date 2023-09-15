@@ -615,7 +615,7 @@ export class Tables {
     let octave = parseInt(pieces[1], 10);
 
     // Octave_shift is the shift to compensate for clef 8va/8vb.
-    octave += -1 * options.octave_shift;
+    octave -= options.octave_shift;
 
     const baseIndex = octave * 7 - 4 * 7;
     let line = (baseIndex + value.index) / 2;
