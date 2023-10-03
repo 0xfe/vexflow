@@ -308,11 +308,12 @@ export class Ornament extends Modifier {
         delayXShift = this.delayXShift;
       } else {
         delayXShift += this.glyph.getMetrics().width / 2;
-        const nextContext = TickContext.getNextContext(note.getTickContext());
-        if (nextContext) {
+        const context = note.getTickContext();
+        const nextContext = TickContext.getNextContext(context);
+        if (nextContext && context.getTickID() < nextContext.getTickID()) {
           delayXShift += (nextContext.getX() - startX) * 0.5;
         } else {
-          delayXShift += (stave.getX() + stave.getWidth() - startX) * 0.5;
+          delayXShift += (stave.getX() + stave.getWidth() - glyphX) * 0.5;
         }
         this.delayXShift = delayXShift;
       }
