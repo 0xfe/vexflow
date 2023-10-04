@@ -303,7 +303,7 @@ export class Ornament extends Modifier {
     // Ajdust x position if ornament is delayed
     if (this.delayed) {
       let delayXShift = 0;
-      const startX = glyphX - (stave.getX() - 10);
+      const startX = glyphX - stave.getNoteStartX();
       if (this.delayXShift !== undefined) {
         delayXShift = this.delayXShift;
       } else {
