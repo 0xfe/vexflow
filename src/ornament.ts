@@ -8,7 +8,6 @@ import { ModifierContextState } from './modifiercontext';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TickContext } from './tickcontext';
 import { Category, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
@@ -303,16 +302,18 @@ export class Ornament extends Modifier {
     // Ajdust x position if ornament is delayed
     if (this.delayed) {
       let delayXShift = 0;
-      const startX = glyphX - (stave.getX() - 10);
+      const startX = glyphX - stave.getNoteStartX();
       if (this.delayXShift !== undefined) {
         delayXShift = this.delayXShift;
       } else {
         delayXShift += this.glyph.getMetrics().width / 2;
-        const nextContext = TickContext.getNextContext(note.getTickContext());
+        const tickables = note.getVoice().getTickables();
+        const index = tickables.indexOf(note);
+        const nextContext = index + 1 < tickables.length ? tickables[index + 1].checkTickContext() : undefined;
         if (nextContext) {
           delayXShift += (nextContext.getX() - startX) * 0.5;
         } else {
-          delayXShift += (stave.getX() + stave.getWidth() - startX) * 0.5;
+          delayXShift += (stave.getX() + stave.getWidth() - glyphX) * 0.5;
         }
         this.delayXShift = delayXShift;
       }
