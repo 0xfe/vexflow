@@ -28,6 +28,7 @@ const OrnamentTests = {
     run('Ornaments Vertically Shifted', drawOrnamentsDisplaced);
     run('Ornaments - Delayed turns', drawOrnamentsDelayed);
     run('Ornaments - Delayed turns, Multiple Draws', drawOrnamentsDelayedMultipleDraws);
+    run('Ornaments - Delayed turns, Multiple Voices', drawOrnamentsDelayedMultipleVoices);
     run('Stacked', drawOrnamentsStacked);
     run('With Upper/Lower Accidentals', drawOrnamentsWithAccidentals);
     run('Jazz Ornaments', jazzOrnaments);
@@ -165,6 +166,46 @@ function drawOrnamentsDelayedMultipleDraws(options: TestOptions): void {
   // However, if you inspect the SVG element, you will see duplicate paths.
   Formatter.FormatAndDraw(context, stave, notes);
   Formatter.FormatAndDraw(context, stave, notes);
+}
+
+function drawOrnamentsDelayedMultipleVoices(options: TestOptions, contextBuilder: ContextBuilder): void {
+  options.assert.expect(0);
+
+  // Get the rendering context
+  const ctx = contextBuilder(options.elementId, 550, 195);
+
+  const stave = new Stave(10, 30, 500);
+  stave.addClef('treble');
+  stave.addKeySignature('C#');
+  stave.addTimeSignature('4/4');
+
+  const notes1 = [
+    new StaveNote({ keys: ['f/5'], duration: '2r'}),
+    new StaveNote({ keys: ['c/5'], duration: '2', stem_direction: 1 }),
+  ];
+  const notes2 = [
+    new StaveNote({ keys: ['a/4'], duration: '4', stem_direction: -1 }),
+    new StaveNote({ keys: ['e/4'], duration: '4r'}),
+    new StaveNote({ keys: ['e/4'], duration: '2r'}),
+  ];
+
+  notes1[1].addModifier(new Ornament('turn_inverted').setDelayed(true), 0);
+  notes2[0].addModifier(new Ornament('turn').setDelayed(true), 0);
+
+  const voice1 = new Voice({ num_beats: 4, beat_value: 4, });
+  voice1.addTickables(notes1);
+  const voice2 = new Voice({ num_beats: 4, beat_value: 4, });
+  voice2.addTickables(notes2);
+
+  const formatWidth = stave.getNoteEndX() - stave.getNoteStartX();
+  const formatter = new Formatter();
+  formatter.joinVoices([voice1]);
+  formatter.joinVoices([voice2]);
+  formatter.format([voice1, voice2], formatWidth);
+
+  stave.setContext(ctx).draw();
+  voice1.draw(ctx, stave);
+  voice2.draw(ctx, stave);
 }
 
 function drawOrnamentsStacked(options: TestOptions): void {
