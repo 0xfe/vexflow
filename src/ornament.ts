@@ -8,7 +8,6 @@ import { ModifierContextState } from './modifiercontext';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
 import { Tables } from './tables';
-import { TickContext } from './tickcontext';
 import { Category, isTabNote } from './typeguard';
 import { defined, log, RuntimeError } from './util';
 
