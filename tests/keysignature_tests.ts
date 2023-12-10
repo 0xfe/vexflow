@@ -382,16 +382,16 @@ function clefKeySignature(options: TestOptions): void {
     .setStrict(false)
     .addTickables([
       f.KeySigNote({ key: 'Bb' }),
-      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass' }),
       f.BarNote(),
       f.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
-      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass'  }),
       f.BarNote(),
       f.KeySigNote({ key: 'Bb' }),
-      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass'  }),
       f.BarNote(),
       f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }), // TODO: alterKey needs to be a string[]
-      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass'  }),
     ]);
 
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
