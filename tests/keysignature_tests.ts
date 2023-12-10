@@ -26,6 +26,7 @@ const KeySignatureTests = {
     run('Altered key test', majorKeysAltered);
     run('End key with clef test', endKeyWithClef);
     run('Key Signature Change test', changeKey);
+    run('Key Signature with/without clef symbol', clefKeySignature);
   },
 };
 
@@ -370,5 +371,34 @@ function changeKey(options: TestOptions): void {
   options.assert.ok(true, 'all pass');
 }
 
+function clefKeySignature(options: TestOptions): void {
+  const f = VexFlowTests.makeFactory(options, 900);
+
+  // The previous code was buggy: f.Stave(10, 10, 800), even though Factory.Stave() only accepts 1 argument.
+  const stave = f.Stave({ x: 10, y: 10, width: 800 }).addClef('bass').addTimeSignature('C|').setClefLines('bass');
+
+  const voice = f
+    .Voice()
+    .setStrict(false)
+    .addTickables([
+      f.KeySigNote({ key: 'Bb' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.BarNote(),
+      f.KeySigNote({ key: 'D', cancelKey: 'Bb' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.BarNote(),
+      f.KeySigNote({ key: 'Bb' }),
+      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+      f.BarNote(),
+      f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }), // TODO: alterKey needs to be a string[]
+      f.StaveNote({ keys: ['c/4'], duration: '1' }),
+    ]);
+
+  f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
+
+  f.draw();
+
+  options.assert.ok(true, 'all pass');
+}
 VexFlowTests.register(KeySignatureTests);
 export { KeySignatureTests };
