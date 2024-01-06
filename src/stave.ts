@@ -444,6 +444,14 @@ export class Stave extends Element {
     return this;
   }
 
+  /**
+   * treat the stave as if the clef is clefSpec, but don't display the clef
+   */
+  setClefLines(clefSpec: string) {
+    this.clef = clefSpec;
+    return this;
+  }
+
   setClef(clefSpec: string, size?: string, annotation?: string, position?: number): this {
     if (position === undefined) {
       position = StaveModifierPosition.BEGIN;
