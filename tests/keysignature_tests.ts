@@ -373,8 +373,6 @@ function changeKey(options: TestOptions): void {
 
 function clefKeySignature(options: TestOptions): void {
   const f = VexFlowTests.makeFactory(options, 900);
-
-  // The previous code was buggy: f.Stave(10, 10, 800), even though Factory.Stave() only accepts 1 argument.
   const stave = f.Stave({ x: 10, y: 10, width: 800 }).addClef('bass').addTimeSignature('C|').setClefLines('bass');
 
   const voice = f
@@ -390,7 +388,7 @@ function clefKeySignature(options: TestOptions): void {
       f.KeySigNote({ key: 'Bb' }),
       f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass'  }),
       f.BarNote(),
-      f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }), // TODO: alterKey needs to be a string[]
+      f.KeySigNote({ key: 'D', alterKey: ['b', 'n'] }),
       f.StaveNote({ keys: ['c/4'], duration: '1', clef: 'bass'  }),
     ]);
 
@@ -400,5 +398,6 @@ function clefKeySignature(options: TestOptions): void {
 
   options.assert.ok(true, 'all pass');
 }
+
 VexFlowTests.register(KeySignatureTests);
 export { KeySignatureTests };
