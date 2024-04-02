@@ -40,6 +40,14 @@ interface OffscreenCanvasRenderingContext2D
  * underlying CanvasRenderingContext2D object, part of the browser's API.
  */
 export class CanvasContext extends RenderContext {
+  getHeight(): number {
+    return this.context2D.canvas.height;
+  }
+
+  getWidth(): number {
+    return this.context2D.canvas.width;
+  }
+
   /**  The 2D rendering context from the Canvas API. Forward method calls to this object. */
   context2D: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 

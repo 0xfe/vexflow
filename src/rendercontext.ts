@@ -31,6 +31,8 @@ export abstract class RenderContext {
   abstract setLineDash(dashPattern: number[]): this;
   abstract scale(x: number, y: number): this;
   abstract rect(x: number, y: number, width: number, height: number): this;
+  abstract getHeight(): number;
+  abstract getWidth(): number;
   abstract resize(width: number, height: number): this;
   abstract fillRect(x: number, y: number, width: number, height: number): this;
   abstract clearRect(x: number, y: number, width: number, height: number): this;

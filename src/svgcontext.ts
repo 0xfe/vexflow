@@ -302,6 +302,14 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
+  getHeight(): number {
+    return this.height;
+  }
+
+  getWidth(): number {
+    return this.width;
+  }
+
   // ### Sizing & Scaling Methods:
 
   // TODO (GCR): See note at scale() -- separate our internal
