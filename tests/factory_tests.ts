@@ -5,8 +5,9 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
-import { Factory } from '../src/factory';
+import { Factory, RendererDescription } from '../src/factory';
 import { Barline } from '../src/stavebarline';
+import { Renderer } from '../src';
 
 const FactoryTests = {
   Start(): void {
@@ -32,9 +33,11 @@ function defaults(assert: Assert): void {
   // eslint-disable-next-line
   // @ts-ignore access a protected member for testing purposes.
   const options = factory.options;
-  assert.equal(options.renderer.width, 700);
-  assert.equal(options.renderer.height, 500);
-  assert.equal(options.renderer.elementId, null);
+  assert.false(options.renderer instanceof Renderer)
+  const renderer = options.renderer as RendererDescription;
+  assert.equal(renderer.width, 700);
+  assert.equal(renderer.height, 500);
+  assert.equal(renderer.elementId, null);
   assert.equal(options.stave.space, 10);
 }
 

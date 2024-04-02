@@ -52,17 +52,19 @@ import { VibratoBracket } from './vibratobracket';
 import { Voice, VoiceTime } from './voice';
 import { isHTMLCanvas } from './web';
 
+export interface RendererDescription {
+  elementId: string | null;
+  backend?: number;
+  width: number;
+  height: number;
+  background?: string;
+}
+
 export interface FactoryOptions {
   stave?: {
     space: number;
   };
-  renderer?: {
-    elementId: string | null;
-    backend?: number;
-    width: number;
-    height: number;
-    background?: string;
-  };
+  renderer?: RendererDescription | Renderer;
   font?: FontInfo;
 }
 
@@ -143,6 +145,11 @@ export class Factory {
   }
 
   initRenderer(): void {
+    if (this.options.renderer instanceof Renderer) {
+      this.context = this.options.renderer.getContext()
+      return;
+    }
+
     const { elementId, width, height, background } = this.options.renderer;
     if (elementId == null) {
       return;
@@ -187,6 +194,14 @@ export class Factory {
     return this.voices;
   }
 
+  protected getWidth(): number {
+    if (!(this.options.renderer instanceof Renderer)) {
+      return this.options.renderer.width;
+    }
+
+    return this.options.renderer.getContext().getWidth();
+  }
+
   /** Return pixels from current stave spacing. */
 
   Stave(params?: { x?: number; y?: number; width?: number; options?: StaveOptions }): Stave {
@@ -194,7 +209,7 @@ export class Factory {
     const p = {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - staveSpace * 1.0,
+      width: this.getWidth() - staveSpace * 1.0,
       options: { spacing_between_lines_px: staveSpace * 1.0 },
       ...params,
     };
@@ -211,7 +226,7 @@ export class Factory {
     const p = {
       x: 0,
       y: 0,
-      width: this.options.renderer.width - staveSpace * 1.0,
+      width: this.getWidth() - staveSpace * 1.0,
       options: { spacing_between_lines_px: staveSpace * 1.3 },
       ...params,
     };
