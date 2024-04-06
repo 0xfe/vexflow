@@ -195,11 +195,11 @@ export class Factory {
   }
 
   protected getWidth(): number {
-    if (!(this.options.renderer instanceof Renderer)) {
-      return this.options.renderer.width;
+    if (this.options.renderer instanceof Renderer) {
+      return this.options.renderer.getContext().getWidth();
     }
 
-    return this.options.renderer.getContext().getWidth();
+    return this.options.renderer.width;
   }
 
   /** Return pixels from current stave spacing. */
