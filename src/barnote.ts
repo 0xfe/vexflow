@@ -30,6 +30,7 @@ export class BarNote extends Note {
   protected metrics: { widths: Record<string, number> };
   // Initialized by the constructor via this.setType(type)
   protected type!: BarlineType;
+  public barline!: Barline;
 
   constructor(type: string | BarlineType = BarlineType.SINGLE) {
     super({ duration: 'b' });
@@ -52,6 +53,7 @@ export class BarNote extends Note {
     // Tell the formatter that bar notes have no duration.
     this.ignore_ticks = true;
     this.setType(type);
+    this.barline = new Barline(type);
   }
 
   /** Get the type of bar note.*/
@@ -86,9 +88,13 @@ export class BarNote extends Note {
     const ctx = this.checkContext();
     L('Rendering bar line at: ', this.getAbsoluteX());
     this.applyStyle(ctx);
-    const barline = new Barline(this.type);
-    barline.setX(this.getAbsoluteX());
-    barline.draw(this.checkStave());
+
+    ctx.openGroup('barnote', this.getAttribute('id'));
+    this.barline.setType(this.type);
+    this.barline.setX(this.getAbsoluteX());
+    this.barline.draw(this.checkStave());
+    ctx.closeGroup();
+
     this.restoreStyle(ctx);
     this.setRendered();
   }
