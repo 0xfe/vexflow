@@ -5,6 +5,7 @@
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
+import { Renderer } from '../src';
 import { Barline, BarlineType } from '../src/stavebarline';
 
 const BarlineTests = {
@@ -44,9 +45,11 @@ function simple(options: TestOptions): void {
   f.Formatter().joinVoices([voice]).formatToStave([voice], stave);
   f.draw();
 
-  notes.forEach((note) => {
-    options.assert.notEqual(note.getSVGElement(), undefined);
-  });
+  if (options.backend === Renderer.Backends.SVG) {
+    notes.forEach((note) => {
+      options.assert.notEqual(note.getSVGElement(), undefined);
+    });
+  }
 
   options.assert.ok(true, 'Simple Test');
 }
