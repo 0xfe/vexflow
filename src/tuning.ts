@@ -15,6 +15,9 @@ export class Tuning {
       dropd: 'E/5,B/4,G/4,D/4,A/3,D/3',
       eb: 'Eb/5,Bb/4,Gb/4,Db/4,Ab/3,Db/3',
       standardBanjo: 'D/5,B/4,G/4,D/4,G/5',
+      doubleCBanjo: 'D/5,C/5,G/4,C/4,G/5',
+      doubleDBanjo: 'E/5,D/5,A/4,D/4,A/5',
+      sawmillBanjo: 'D/5,C/5,G/4,D/4,G/5',
     };
   }
 
