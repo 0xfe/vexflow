@@ -387,7 +387,7 @@ module.exports = (grunt) => {
       files: ['tests/flow-headless-browser.html'],
       options: {
         puppeteer: {
-          headless: "new",
+          headless: 'new',
           args: ['--no-sandbox', '--disable-setuid-sandbox'],
         },
       },
@@ -750,15 +750,12 @@ module.exports = (grunt) => {
       verbose: 1, // See the output of each hook.
       // verbose: 2, // Only for debugging.
       hooks: {
-        'before:init': ['grunt clean', 'grunt v309:add'],
+        'before:init': ['grunt clean'],
         'after:bump': ['grunt', 'echo Adding build/ folder...', 'git add -f build/'],
         'after:npm:release': [],
         'after:git:release': [],
         'after:github:release': [],
-        'after:release': [
-          'grunt v309:remove',
-          'echo Successfully released ${name} ${version} to https://github.com/${repo.repository}',
-        ],
+        'after:release': ['echo Successfully released ${name} ${version} to https://github.com/${repo.repository}'],
       },
       git: {
         commitMessage: 'Release VexFlow ${version}',
@@ -826,38 +823,6 @@ module.exports = (grunt) => {
         }
         done();
       });
-  });
-
-  // VexFlow examples on JSFiddle and other websites broke because VexFlow 4 removed these URLs:
-  //   https://unpkg.com/vexflow/releases/vexflow-debug.js
-  //   https://unpkg.com/vexflow/releases/vexflow-min.js
-  // This command restores version 3.0.9 to those locations, but adds a console.warn(...) to the JS file to alert developers
-  // that a new version has been released.
-  //
-  // Use this command during the release script to publish version 3.0.9 to npm alongside version 4.x.
-  //   grunt v309:add
-  //   grunt v309:remove
-  grunt.registerTask('v309', 'Include the legacy version when publishing to npm.', function (command) {
-    const minifiedFile = 'releases/vexflow-min.js';
-    const debugFile = 'releases/vexflow-debug.js';
-
-    if (command === 'add') {
-      // Commit ID 00ec15c67ff333ea49f4d3defbd9e22374c03684 is version 3.0.9.
-      const commitID = '00ec15c67ff333ea49f4d3defbd9e22374c03684';
-      runCommand('git', 'checkout', commitID, minifiedFile);
-      runCommand('git', 'checkout', commitID, debugFile);
-
-      const message =
-        '\nconsole.warn("Please upgrade to the newest release of VexFlow.\\n' +
-        'See: https://github.com/0xfe/vexflow for more information.\\nThis page uses version 3.0.9, which is no longer supported.");\n\n' +
-        '// YOU ARE LOOKING AT VEXFLOW LEGACY VERSION 3.0.9.\n' +
-        '// SEE THE `build/` FOLDER FOR THE NEWEST RELEASE.\n';
-      fs.appendFileSync(minifiedFile, message);
-      fs.appendFileSync(debugFile, message);
-    } else {
-      runCommand('git', 'rm', '-f', minifiedFile);
-      runCommand('git', 'rm', '-f', debugFile);
-    }
   });
 };
 
