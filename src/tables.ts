@@ -759,8 +759,6 @@ export class Tables {
   static keySignature(spec: string): { type: string; line: number }[] {
     const keySpec = keySignatures[spec];
 
-    console.log({keySignatures});
-
     if (!keySpec) {
       throw new RuntimeError('BadKeySignature', `Bad key signature spec: '${spec}'`);
     }
