@@ -24,6 +24,8 @@ const KeySignatureTests = {
     run('Cancelled key test', majorKeysCanceled);
     run('Cancelled key (for each clef) test', keysCanceledForEachClef);
     run('Altered key test', majorKeysAltered);
+    run('Extended Keys Test', extendedKeysTest);
+    run('Extended Keys Canceled test', extendedKeysCanceled);
     run('End key with clef test', endKeyWithClef);
     run('Key Signature Change test', changeKey);
     run('Key Signature with/without clef symbol', clefKeySignature);
@@ -40,7 +42,7 @@ const fontWidths = () => {
 };
 
 function parser(assert: Assert): void {
-  assert.expect(11);
+  assert.expect(13);
 
   function catchError(spec: string): void {
     assert.throws(() => Flow.keySignature(spec), /BadKeySignature/);
@@ -49,13 +51,15 @@ function parser(assert: Assert): void {
   catchError('asdf');
   catchError('D!');
   catchError('E#');
-  catchError('D#');
   catchError('#');
   catchError('b');
   catchError('Kb');
   catchError('Fb');
-  catchError('Dbm');
   catchError('B#m');
+  catchError('flats_15');
+  catchError('sharps_-1');
+  catchError('b:invalid');
+  catchError('#:not_a_number');
 
   Flow.keySignature('B');
   Flow.keySignature('C');
@@ -64,6 +68,14 @@ function parser(assert: Assert): void {
   Flow.keySignature('Abm');
   Flow.keySignature('F#');
   Flow.keySignature('G#m');
+  Flow.keySignature('G#');
+  Flow.keySignature('Dbm');
+
+  Flow.keySignature('flats_8');
+  Flow.keySignature('sharps_14');
+  Flow.keySignature('flats_10');
+  Flow.keySignature('sharps_8');
+
 
   assert.ok(true, 'all pass');
 }
@@ -339,6 +351,102 @@ function staveHelper(options: TestOptions, contextBuilder: ContextBuilder): void
   stave2.draw();
 
   options.assert.ok(true, 'all pass');
+}
+
+function extendedKeysTest(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const ctx = contextBuilder(options.elementId, 1200, 300);
+  const stave = new Stave(10, 10, 1150).addClef('treble');
+
+  const keys = [
+    'flats_8',
+    'flats_9',
+    'flats_14',
+    'sharps_8',
+    'sharps_14',
+  ];
+
+  keys.forEach((key) => {
+    const keySig = new KeySignature(key);
+    keySig.addToStave(stave);
+  });
+
+  stave.setContext(ctx).draw();
+
+  options.assert.ok(true, 'Extended keys rendered correctly');
+}
+
+function extendedKeysCanceled(options: TestOptions, contextBuilder: ContextBuilder): void {
+  const scale = 0.9;
+  const w = fontWidths();
+  const flatPadding = 18;
+  const sharpPadding = 20;
+
+  const flatTestWidth = 14 * w.flatWidth + 14 * w.naturalWidth + flatPadding * 8 + Stave.defaultPadding;
+  const sharpTestWidth = 14 * w.sharpWidth + 14 * w.naturalWidth + sharpPadding * 7 + Stave.defaultPadding;
+  const maxWidth = Math.max(flatTestWidth, sharpTestWidth);
+  const ctx = contextBuilder(options.elementId, maxWidth + 100, 500);
+  ctx.scale(scale, scale);
+
+  const stave1 = new Stave(10, 10, flatTestWidth).addClef('treble');
+  const stave2 = new Stave(10, 90, sharpTestWidth).addClef('treble');
+  const stave3 = new Stave(10, 170, flatTestWidth).addClef('treble');
+  const stave4 = new Stave(10, 250, sharpTestWidth).addClef('treble');
+
+  const extendedKeys = [
+    'flats_8', 'flats_9', 'flats_10', 'flats_14',
+    'sharps_8', 'sharps_9', 'sharps_10', 'sharps_14',
+  ];
+
+  const cancelKeys = {
+    flats: 'C',
+    sharps: 'C',
+  };
+
+  let keySig = null;
+  let i;
+  let n;
+
+  // Test canceling extended flat keys
+  for (i = 0; i < 4; ++i) {
+    keySig = new KeySignature(extendedKeys[i]);
+    keySig.cancelKey(cancelKeys.flats);
+    keySig.setPadding(flatPadding);
+    keySig.addToStave(stave1);
+  }
+
+  // Test canceling extended sharp keys
+  for (n = 4; n < 8; ++n) {
+    keySig = new KeySignature(extendedKeys[n]);
+    keySig.cancelKey(cancelKeys.sharps);
+    keySig.setPadding(sharpPadding);
+    keySig.addToStave(stave2);
+  }
+
+  // Additional flat and sharp cancellation tests
+  for (i = 0; i < 4; ++i) {
+    keySig = new KeySignature(extendedKeys[i]);
+    keySig.cancelKey('Ab');
+    keySig.setPadding(flatPadding);
+    keySig.addToStave(stave3);
+  }
+
+  for (n = 4; n < 8; ++n) {
+    keySig = new KeySignature(extendedKeys[n]);
+    keySig.cancelKey('E');
+    keySig.setPadding(sharpPadding);
+    keySig.addToStave(stave4);
+  }
+
+  stave1.setContext(ctx);
+  stave1.draw();
+  stave2.setContext(ctx);
+  stave2.draw();
+  stave3.setContext(ctx);
+  stave3.draw();
+  stave4.setContext(ctx);
+  stave4.draw();
+
+  options.assert.ok(true, 'Extended key cancellations rendered correctly');
 }
 
 function changeKey(options: TestOptions): void {
