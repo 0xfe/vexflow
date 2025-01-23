@@ -54,6 +54,8 @@ const keySignatures: Record<string, { acc?: string; num: number }> = {
   Ebm: { acc: 'b', num: 6 },
   Cb: { acc: 'b', num: 7 },
   Abm: { acc: 'b', num: 7 },
+  Dbm: { acc: 'b', num: 8 },
+  Gbm: { acc: 'b', num: 9 },
   G: { acc: '#', num: 1 },
   Em: { acc: '#', num: 1 },
   D: { acc: '#', num: 2 },
@@ -68,6 +70,9 @@ const keySignatures: Record<string, { acc?: string; num: number }> = {
   'D#m': { acc: '#', num: 6 },
   'C#': { acc: '#', num: 7 },
   'A#m': { acc: '#', num: 7 },
+  'G#': { acc: '#', num: 8 },
+  'D#': { acc: '#', num: 9 },
+  'A#': { acc: '#', num: 10 },
 };
 
 const clefs: Record<string, { line_shift: number }> = {
