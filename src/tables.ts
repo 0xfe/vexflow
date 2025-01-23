@@ -37,7 +37,32 @@ const durationAliases: Record<string, string> = {
   b: '256',
 };
 
+type KeySignature = {
+  acc?: string;
+  num: number;
+};
+
+type KeySignatures = Record<string, KeySignature>;
+
+const generateKeySignatures = (): KeySignatures => {
+  const keySignatures: KeySignatures = {};
+
+  // Generate flats
+  for (let i = 1; i <= 14; i++) {
+    keySignatures[`flats_${i}`] = { acc: 'b', num: i };
+  }
+
+  // Generate sharps
+  for (let i = 1; i <= 14; i++) {
+    keySignatures[`sharps_${i}`] = { acc: '#', num: i };
+  }
+
+  return keySignatures;
+};
+
+
 const keySignatures: Record<string, { acc?: string; num: number }> = {
+  ...generateKeySignatures(),
   C: { num: 0 },
   Am: { num: 0 },
   F: { acc: 'b', num: 1 },
@@ -733,6 +758,8 @@ export class Tables {
 
   static keySignature(spec: string): { type: string; line: number }[] {
     const keySpec = keySignatures[spec];
+
+    console.log({keySignatures});
 
     if (!keySpec) {
       throw new RuntimeError('BadKeySignature', `Bad key signature spec: '${spec}'`);
