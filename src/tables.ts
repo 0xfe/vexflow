@@ -61,7 +61,7 @@ const generateKeySignatures = (): KeySignatures => {
 };
 
 
-const keySignatures: Record<string, { acc?: string; num: number }> = {
+const keySignatures: Record<string, KeySignature> = {
   ...generateKeySignatures(),
   C: { num: 0 },
   Am: { num: 0 },
