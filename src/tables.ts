@@ -742,15 +742,28 @@ export class Tables {
       '#': [0, 1.5, -0.5, 1, 2.5, 0.5, 2],
     };
 
-    const notes = accidentalList[keySpec.acc];
-
-    const acc_list = [];
-    for (let i = 0; i < keySpec.num; ++i) {
-      const line = notes[i];
-      acc_list.push({ type: keySpec.acc, line });
+    // Check if the accidental type exists in accidentalList
+    const baseNotes = accidentalList[keySpec.acc];
+    if (!baseNotes) {
+      throw new RuntimeError('UnsupportedAccidental', `Unsupported accidental type: '${keySpec.acc}'`);
     }
 
-    return acc_list;
+    const accidentalCount = Math.min(keySpec.num, 7);
+    const doubleAccidentalCount = Math.max(keySpec.num - 7, 0);
+
+    // Map the first `accidentalCount` notes as regular accidentals
+    const regularAccidentals = baseNotes.slice(doubleAccidentalCount, accidentalCount).map((line) => ({
+      type: `${keySpec.acc}`,
+      line,
+    }));
+
+    // Map the last `doubleAccidentalCount` notes as double accidentals
+    const doubleAccidentals = baseNotes
+      .slice(0, doubleAccidentalCount)
+      .map((line) => ({ type: `${keySpec.acc}${keySpec.acc}`, line }));
+
+    // Combine regular and double accidentals
+    return [...regularAccidentals, ...doubleAccidentals];
   }
 
   static getKeySignatures(): Record<string, { acc?: string; num: number }> {
