@@ -635,7 +635,7 @@ export class Tables {
     let customNoteHeadProps = {};
     if (pieces.length > 2 && pieces[2]) {
       const glyphName = pieces[2].toUpperCase();
-      customNoteHeadProps = { code: this.codeNoteHead(glyphName, duration) } || {};
+      customNoteHeadProps = { code: this.codeNoteHead(glyphName, duration) };
     }
 
     return {
