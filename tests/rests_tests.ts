@@ -66,6 +66,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
   const { context, stave } = setupContext(options, contextBuilder, 700);
 
   const notes = [
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '1/2r' }),
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'wr' }),
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: 'hr' }),
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '4r' }),
@@ -74,6 +75,7 @@ function basic(options: TestOptions, contextBuilder: ContextBuilder): void {
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '32r' }),
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '64r' }),
     new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '128r' }),
+    new StaveNote({ keys: ['b/4'], stem_direction: 1, duration: '256r' }),
   ];
   Dot.buildAndAttach(notes, { all: true });
 

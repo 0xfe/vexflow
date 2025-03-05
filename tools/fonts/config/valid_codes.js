@@ -117,6 +117,8 @@ module.exports = {
   flag64thDown: 'v58',
   flag128thUp: 'v9b',
   flag128thDown: 'v30',
+  flag256thUp: null,
+  flag256thDown: null,
 
   // standard accidentals (e260-e26f)
   accidentalFlat: 'v44',
@@ -186,6 +188,7 @@ module.exports = {
   rest32nd: 'v55',
   rest64th: 'v38',
   rest128th: 'vaa',
+  rest256th: null,
 
   // dynamics (e520-e54f)
   dynamicPiano: 'vbf',
