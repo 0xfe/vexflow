@@ -1129,7 +1129,7 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
       code_head: 'restDoubleWhole',
       rest: true,
       position: 'B/5',
-      dot_shiftY: 0.5,
+      dot_shiftY: 0,
     },
     s: {
       // Breve note slash -
@@ -1403,6 +1403,42 @@ const durationCodes: Record<string, Record<string, Partial<GlyphProps>>> = {
     },
     s: {
       // Hundred-twenty-eight slash
+      // Drawn with canvas primitives
+      getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
+      position: 'B/4',
+    },
+  },
+
+  256: {
+    common: {
+      code_head: '',
+      beam_count: 6,
+      stem_beam_extension: 25,
+      stem: true,
+      flag: true,
+      code_flag_upstem: 'flag256thUp',
+      code_flag_downstem: 'flag256thDown',
+      stem_up_extension: 24,
+      stem_down_extension: 24,
+      tabnote_stem_up_extension: 24,
+      tabnote_stem_down_extension: 24,
+      dot_shiftY: 0,
+      line_above: 0,
+      line_below: 0,
+    },
+    r: {
+      // Two-Hundred-fifty-six rest
+      code_head: 'rest256th',
+      stem: false,
+      flag: false,
+      rest: true,
+      position: 'B/4',
+      dot_shiftY: -2.5,
+      line_above: 3.0,
+      line_below: 3.0,
+    },
+    s: {
+      // Two-Hundred-fifty-six slash
       // Drawn with canvas primitives
       getWidth: () => Tables.SLASH_NOTEHEAD_WIDTH,
       position: 'B/4',
