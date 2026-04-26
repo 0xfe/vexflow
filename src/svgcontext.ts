@@ -51,6 +51,7 @@ export interface State {
   attributes: Attributes;
   shadow_attributes: Attributes;
   lineWidth: number;
+  fontCSSString: string;
 }
 
 class MeasureTextCache {
@@ -613,60 +614,25 @@ export class SVGContext extends RenderContext {
     return this;
   }
 
-  // TODO: State should be deep-copied.
   save(): this {
     this.state_stack.push({
-      state: {
-        'font-family': this.state['font-family'],
-        'font-weight': this.state['font-weight'],
-        'font-style': this.state['font-style'],
-        'font-size': this.state['font-size'],
-        scale: this.state.scale,
-      },
-      attributes: {
-        'font-family': this.attributes['font-family'],
-        'font-weight': this.attributes['font-weight'],
-        'font-style': this.attributes['font-style'],
-        'font-size': this.attributes['font-size'],
-        fill: this.attributes.fill,
-        stroke: this.attributes.stroke,
-        'stroke-width': this.attributes['stroke-width'],
-        'stroke-dasharray': this.attributes['stroke-dasharray'],
-      },
-      shadow_attributes: {
-        width: this.shadow_attributes.width,
-        color: this.shadow_attributes.color,
-      },
+      state: { ...this.state },
+      attributes: { ...this.attributes },
+      shadow_attributes: { ...this.shadow_attributes },
       lineWidth: this.lineWidth,
+      fontCSSString: this.fontCSSString,
     });
     return this;
   }
 
-  // TODO: State should be deep-restored.
   restore(): this {
-    const savedState = this.state_stack.pop();
-    if (savedState) {
-      const state = savedState;
-      this.state['font-family'] = state.state['font-family'];
-      this.state['font-weight'] = state.state['font-weight'];
-      this.state['font-style'] = state.state['font-style'];
-      this.state['font-size'] = state.state['font-size'];
-      this.state.scale = state.state.scale;
-
-      this.attributes['font-family'] = state.attributes['font-family'];
-      this.attributes['font-weight'] = state.attributes['font-weight'];
-      this.attributes['font-style'] = state.attributes['font-style'];
-      this.attributes['font-size'] = state.attributes['font-size'];
-
-      this.attributes.fill = state.attributes.fill;
-      this.attributes.stroke = state.attributes.stroke;
-      this.attributes['stroke-width'] = state.attributes['stroke-width'];
-      this.attributes['stroke-dasharray'] = state.attributes['stroke-dasharray'];
-
-      this.shadow_attributes.width = state.shadow_attributes.width;
-      this.shadow_attributes.color = state.shadow_attributes.color;
-
+    const state = this.state_stack.pop();
+    if (state) {
+      this.state = state.state;
+      this.attributes = state.attributes;
+      this.shadow_attributes = state.shadow_attributes;
       this.lineWidth = state.lineWidth;
+      this.fontCSSString = state.fontCSSString;
     }
     return this;
   }

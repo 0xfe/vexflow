@@ -61,6 +61,7 @@ export * from './stavehairpin_tests';
 export * from './staveline_tests';
 export * from './stavemodifier_tests';
 export * from './stavenote_tests';
+export * from './svgcontext_state_tests';
 export * from './stavetie_tests';
 export * from './stringnumber_tests';
 export * from './strokes_tests';
